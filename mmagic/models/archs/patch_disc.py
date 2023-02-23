@@ -11,7 +11,7 @@ from mmagic.registry import MODELS
 
 
 @MODELS.register_module()
-class PatchDiscriminator(nn.Module):
+class PatchDiscriminator(BaseModule):
     """A PatchGAN discriminator.
 
     Args:

@@ -14,7 +14,7 @@ from .biggan_snmodule import SNLinear
 
 
 @MODELS.register_module()
-class BigGANGenerator(nn.Module):
+class BigGANGenerator(BaseModule):
     """BigGAN Generator. The implementation refers to
     https://github.com/ajbrock/BigGAN-PyTorch/blob/master/BigGAN.py # noqa.
 

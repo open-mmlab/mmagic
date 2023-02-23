@@ -11,7 +11,7 @@ from ...utils import get_module_device
 
 
 @MODELS.register_module()
-class DCGANGenerator(nn.Module):
+class DCGANGenerator(BaseModule):
     """Generator for DCGAN.
 
     Implementation Details for DCGAN architecture:

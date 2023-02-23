@@ -9,7 +9,7 @@ from mmagic.registry import MODELS
 
 
 @MODELS.register_module()
-class DCGANDiscriminator(nn.Module):
+class DCGANDiscriminator(BaseModule):
     """Discriminator for DCGAN.
 
     Implementation Details for DCGAN architecture:

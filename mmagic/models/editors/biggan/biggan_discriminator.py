@@ -13,7 +13,7 @@ from .biggan_snmodule import SNEmbedding, SNLinear
 
 
 @MODELS.register_module()
-class BigGANDiscriminator(nn.Module):
+class BigGANDiscriminator(BaseModule):
     """BigGAN Discriminator. The implementation refers to
     https://github.com/ajbrock/BigGAN-PyTorch/blob/master/BigGAN.py # noqa.
 

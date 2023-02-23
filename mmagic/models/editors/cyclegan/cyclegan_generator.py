@@ -9,7 +9,7 @@ from .cyclegan_modules import ResidualBlockWithDropout
 
 
 @MODELS.register_module()
-class ResnetGenerator(nn.Module):
+class ResnetGenerator(BaseModule):
     """Construct a Resnet-based generator that consists of residual blocks
     between a few downsampling/upsampling operations.
 
