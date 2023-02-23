@@ -12,7 +12,7 @@ from mmengine.optim import OptimWrapperDict
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
-from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
+from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
 from mmedit.structures import EditDataSample, PixelData
 from mmedit.utils.typing import ForwardInputs, SampleList
 
@@ -59,11 +59,11 @@ class Glide(BaseModel):
                  pretrained_cfgs=None):
 
         super().__init__(data_preprocessor=data_preprocessor)
-        self.unet = MODULES.build(unet)
+        self.unet = MODELS.build(unet)
         self.diffusion_scheduler = DIFFUSION_SCHEDULERS.build(
             diffusion_scheduler)
         if classifier:
-            self.classifier = MODULES.build(classifier)
+            self.classifier = MODELS.build(classifier)
         else:
             self.classifier = None
         self.classifier_scale = classifier_scale
