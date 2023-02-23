@@ -78,6 +78,30 @@ valid_pipeline = [
 ]
 test_pipeline = valid_pipeline
 
+inference_pipeline = [
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb',
+        imdecode_backend='cv2'),
+    dict(
+        type='Resize',
+        scale=(128, 128),
+        keys=['img'],
+        interpolation='bicubic',
+        backend='pillow'),
+    dict(
+        type='Resize',
+        scale=1 / 8,
+        keep_ratio=True,
+        keys=['img'],
+        output_keys=['img'],
+        interpolation='bicubic',
+        backend='pillow'),
+    dict(type='PackEditInputs')
+]
+
 # dataset settings
 dataset_type = 'BasicImageDataset'
 data_root = 'data'

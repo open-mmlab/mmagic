@@ -61,8 +61,16 @@ class MMEdit:
         'pix2pix',
         'cyclegan',
 
-        # restoration models
+        # image super-resolution models
+        'srcnn',
+        'srgan_resnet',
+        'edsr',
         'esrgan',
+        'rdn',
+        'dic',
+        'ttsr',
+        'glean',
+        'real_esrgan',
 
         # video_interpolation models
         'flavr',
