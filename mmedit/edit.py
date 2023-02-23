@@ -39,7 +39,9 @@ class MMEdit:
         >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
     """
     # unsupported now
-    # singan
+    # singan, liif
+    # output should be checked
+    # dic, glean
 
     inference_supported_models = [
         # colorization models
