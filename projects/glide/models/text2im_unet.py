@@ -177,6 +177,8 @@ class SuperResText2ImUNet(Text2ImUNet):
     def forward(self, x, timesteps, low_res=None, **kwargs):
         _, _, new_height, new_width = x.shape
         upsampled = F.interpolate(
-            low_res, (new_height, new_width), mode='bilinear')
+            low_res, (new_height, new_width),
+            mode='bilinear',
+            align_corners=False)
         x = torch.cat([x, upsampled], dim=1)
         return super().forward(x, timesteps, **kwargs)
