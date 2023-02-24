@@ -1,5 +1,23 @@
 # 变更日志
 
+## v0.16.1 (24/02/2023)
+
+**新特性和改进**
+
+- 支持新评价指标 FID 和 KID。 [#775](https://github.com/open-mmlab/mmediting/pull/775)
+- 支持 ResidualBlockNoBN 模块设置 `groups` 参数。 [#1510](https://github.com/open-mmlab/mmediting/pull/1510)
+
+**Bug 修复**
+
+- 修复 TTSR 配置文件的 Bug。 [#1435](https://github.com/open-mmlab/mmediting/pull/1435)
+- 修复 RealESRGAN 测试数据集配置。 [#1489](https://github.com/open-mmlab/mmediting/pull/1489)
+- 修复训练脚本储存 config 文件的功能。 [#1584](https://github.com/open-mmlab/mmediting/pull/1584)
+- 修复 `pixel-unshuffle` 模块动态输入导出 ONNX 的Bug。 [#1637](https://github.com/open-mmlab/mmediting/pull/1637)
+
+**贡献者**
+
+一共有 10 位开发者对本次发布做出贡献。感谢 @LeoXing1996, @Z-Fran, @zengyh1900, @liuky74, @KKIEEK, @zeakey, @Sqhttwl, @yhna940, @gihwan-kim, @vansin。
+
 ## v0.16.0 (31/10/2022)
 
 **接口变更**
