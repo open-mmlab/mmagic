@@ -204,7 +204,7 @@ class EditDataSample(BaseDataElement):
             if k == 'gt_label':
                 self.set_gt_label(v)
             else:
-                setattr(self, k, all_to_tensor(v))
+                self.set_field(all_to_tensor(v), k, dtype=torch.Tensor)
 
     def set_gt_label(
         self, value: Union[np.ndarray, torch.Tensor, Sequence[Number], Number]
@@ -239,3 +239,83 @@ class EditDataSample(BaseDataElement):
     def gt_label(self):
         """Delete gt label."""
         del self._gt_label
+
+    @classmethod
+    def stack(cls,
+              data_samples: Sequence['EditDataSample']) -> 'EditDataSample':
+        """Stack a list of data samples to one. All tensor fields will be
+        stacked at first dimension. Otherwise the values will be saved in a
+        list.
+
+        Args:
+            data_samples (Sequence['EditDataSample']): A sequence of
+                `EditDataSample` to stack.
+
+        Returns:
+            EditDataSample: The stacked data sample.
+        """
+        # 1. check key consistency
+        keys = data_samples[0].keys()
+        assert all([data.keys() == keys for data in data_samples])
+
+        meta_keys = data_samples[0].metainfo_keys()
+        assert all(
+            [data.metainfo_keys() == meta_keys for data in data_samples])
+
+        # 2. stack data
+        stacked_data_sample = EditDataSample()
+        for k in keys:
+            values = [getattr(data, k) for data in data_samples]
+            # 3. check type consistent
+            value_type = type(values[0])
+            assert all([type(val) == value_type for val in values])
+
+            # 4. stack
+            if isinstance(values[0], torch.Tensor):
+                stacked_value = torch.stack(values)
+            elif isinstance(values[0], LabelData):
+                values = torch.cat([data.label for data in values])
+                stacked_value = LabelData(label=values)
+            else:
+                stacked_value = values
+            stacked_data_sample.set_field(stacked_value, k)
+
+        # 5. stack metainfo
+        for k in meta_keys:
+            values = [data.metainfo[k] for data in data_samples]
+            stacked_data_sample.set_metainfo({k: values})
+
+        return stacked_data_sample
+
+    def split(self) -> Sequence['EditDataSample']:
+        """Split a sequence of data sample in the first dimension.
+
+        Returns:
+            Sequence[EditDataSample]: The list of data samples after splitting.
+        """
+        # 1. check length
+        value_length = []
+        for v in self.items():
+            if isinstance(v, LabelData):
+                value_length.append(v.label.shape[0])
+            else:
+                value_length.append(len(v))
+        assert len(list(set(value_length))) == 1
+        length = value_length[0]
+        # 2. split
+        data_sample_list = [EditDataSample() for _ in range(length)]
+        for k in self.all_keys():
+            stacked_value = self.get(k)
+            if isinstance(stacked_value, torch.Tensor):
+                values = stacked_value.split(1)
+            elif isinstance(stacked_value, LabelData):
+                labels = stacked_value.label.split(1)
+                values = [LabelData(label=l_) for l_ in labels]
+            else:
+                values = stacked_value
+
+            field = 'metainfo' if k in self.metainfo_keys() else 'data'
+            for data, v in zip(data_sample_list, values):
+                data.set_field(v, k, field_type=field)
+
+        return data_sample_list

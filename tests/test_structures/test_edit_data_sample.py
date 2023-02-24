@@ -170,3 +170,42 @@ class TestEditDataSample(TestCase):
         self.assertIn('gt_label', data_sample)
         del data_sample.gt_label
         self.assertNotIn('gt_label', data_sample)
+
+    def test_stack_and_split(self):
+        # test stack
+        data_sample1 = EditDataSample()
+        data_sample1.set_gt_label(1)
+        data_sample1.set_tensor_data({'img': torch.randn(3, 4, 5)})
+        data_sample1.set_data({'mode': 'a'})
+        data_sample1.set_metainfo({
+            'channel_order': 'rgb',
+            'color_flag': 'color'
+        })
+        data_sample2 = EditDataSample()
+        data_sample2.set_gt_label(2)
+        data_sample2.set_tensor_data({'img': torch.randn(3, 4, 5)})
+        data_sample2.set_data({'mode': 'b'})
+        data_sample2.set_metainfo({
+            'channel_order': 'rgb',
+            'color_flag': 'color'
+        })
+
+        data_sample_merged = EditDataSample.stack([data_sample1, data_sample2])
+        assert (data_sample_merged.img == torch.stack(
+            [data_sample1.img, data_sample2.img])).all()
+        assert (data_sample_merged.gt_label.label == torch.LongTensor(
+            [1, 2])).all()
+        assert data_sample_merged.mode == ['a', 'b']
+        assert data_sample_merged.metainfo == dict(
+            channel_order=['rgb', 'rgb'], color_flag=['color', 'color'])
+
+        # test split
+        data_splited_1, data_splited_2 = data_sample_merged.split()
+        assert (data_splited_1.gt_label.label == 1).all()
+        assert (data_splited_2.gt_label.label == 2).all()
+        assert (data_splited_1.img == data_sample1.img).all()
+        assert (data_splited_2.img == data_sample2.img).all()
+        assert (data_splited_1.metainfo == dict(
+            channel_order='rgb', color_flag='color'))
+        assert (data_splited_2.metainfo == dict(
+            channel_order='rgb', color_flag='color'))
