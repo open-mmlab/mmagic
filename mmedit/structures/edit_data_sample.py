@@ -169,6 +169,12 @@ class EditDataSample(BaseDataElement):
         'ori_trimap': 'ori_trimap'
     }
 
+    _is_stacked = False
+
+    @property
+    def is_stacked(self):
+        return self._is_stacked
+
     def set_predefined_data(self, data: dict) -> None:
         """set or change pre-defined key-value pairs in ``data_field`` by
         parameter ``data``.
@@ -285,6 +291,7 @@ class EditDataSample(BaseDataElement):
             values = [data.metainfo[k] for data in data_samples]
             stacked_data_sample.set_metainfo({k: values})
 
+        stacked_data_sample._is_stacked = True
         return stacked_data_sample
 
     def split(self) -> Sequence['EditDataSample']:

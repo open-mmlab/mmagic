@@ -64,6 +64,9 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             argument maybe deleted in the future. Defaults to None.
         output_view (tuple, optional): The view of output tensor. This
             argument maybe deleted in the future. Defaults to None.
+        stack_data_sample (bool): Whether stack a list of data samples to one
+            data sample. Only support with input data samples are
+            `EditDataSamples`. Defaults to True.
     """
     _NON_IMAGE_KEYS = ['noise']
     _NON_CONCATENATE_KEYS = ['num_batches', 'mode', 'sample_kwargs', 'eq_cfg']
@@ -79,7 +82,8 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                  output_channel_order: Optional[str] = None,
                  data_keys: Union[List[str], str] = 'gt_img',
                  input_view: Optional[tuple] = None,
-                 output_view: Optional[tuple] = None):
+                 output_view: Optional[tuple] = None,
+                 stack_data_sample=True):
 
         if not isinstance(mean, (list, tuple)) and mean is not None:
             mean = [mean]
@@ -116,6 +120,8 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         self._done_padding = False  # flag for padding checking
         self._conversion_warning_raised = False  # flag for conversion warning
+
+        self.stack_data_sample = stack_data_sample
 
     def cast_data(self, data: CastData) -> CastData:
         """Copying data to the target device.
@@ -168,13 +174,22 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         # have been parsed.
         color_flag = data_sample.metainfo.get(color_type_key, None)
         channel_order = data_sample.metainfo.get(channel_order_key, None)
+
+        # handle stacked data sample, refers to `EditDataSample.stack`
+        if isinstance(color_flag, list):
+            assert all([c == color_flag[0] for c in color_flag])
+            color_flag = color_flag[0]
+        if isinstance(channel_order, list):
+            assert all([c == channel_order[0] for c in channel_order])
+            channel_order = channel_order[0]
+
+        # NOTE: to handle inputs such as Y, users may modify the following code
         if color_flag == 'grayscale':
             assert num_color_channels == 1
             return 'single'
         elif color_flag == 'unchanged':
             # if inputs is not None:
             return 'single' if num_color_channels == 1 else 'BGR'
-        # TODO: handle Y later
         else:
             # inference from channel_order
             if channel_order:
@@ -519,7 +534,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         return batch_inputs, data_samples
 
     def _preprocess_data_sample(self, data_samples: SampleList,
-                                training: bool) -> list:
+                                training: bool) -> EditDataSample:
         """Preprocess data samples. When `training` is True, fields belong to
         :attr:`self.data_keys` will be converted to
         :attr:`self.output_channel_order` and then normalized by `self.mean`
@@ -566,6 +581,11 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                 }
                 data_sample.set_metainfo(data_process_meta)
 
+        if self.stack_data_sample:
+            assert is_seq_of(data_samples, EditDataSample), (
+                'Only support \'stack_data_sample\' for EditDataSample '
+                'object. Please refer to \'EditDataSample.stack\'.')
+            return EditDataSample.stack(data_samples)
         return data_samples
 
     def forward(self, data: dict, training: bool = False) -> dict:
@@ -614,7 +634,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             _batch_data_samples = self._preprocess_data_sample(
                 _batch_data_samples, training)
 
-        data.setdefault('data_samples', _batch_data_samples)
+        data['data_samples'] = _batch_data_samples
 
         return data
 
@@ -737,14 +757,29 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         if data_samples is None:
             return batch_tensor
 
-        if not isinstance(data_samples, list):
-            is_batch_data = False
-            data_samples = [data_samples]
-            batch_tensor = batch_tensor[None, ...]
-        else:
+        if isinstance(data_samples, list):
             is_batch_data = True
+            if 'padding_size' in data_samples[0].metainfo_keys():
+                pad_infos = [
+                    sample.metainfo['padding_size'] for sample in data_samples
+                ]
+            else:
+                pad_infos = None
+        elif hasattr(data_samples, 'is_stacked') and data_samples.is_stacked:
+            is_batch_data = True
+            if 'padding_size' in data_samples.metainfo_keys():
+                pad_infos = data_samples.metainfo['padding_size']
+            else:
+                pad_infos = None
+        else:
+            is_batch_data = False
+            if 'padding_size' in data_samples.metainfo_keys():
+                pad_infos = [data_samples.metainfo['padding_size']]
+            else:
+                pad_infos = None
+            batch_tensor = batch_tensor[None, ...]
 
-        if not hasattr(data_samples[0], 'padding_size'):
+        if pad_infos is None:
             if self._done_padding:
                 print_log(
                     'Cannot find padding information (\'padding_size\') in '
@@ -753,9 +788,6 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                     WARNING)
             return batch_tensor if is_batch_data else batch_tensor[0]
 
-        pad_infos = [
-            sample.metainfo['padding_size'] for sample in data_samples
-        ]
         if same_padding:
             # un-pad with the padding info of the first sample
             padded_h, padded_w = pad_infos[0][-2:]
