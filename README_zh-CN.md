@@ -82,7 +82,7 @@ MMEditing 同时维护 0.x 和 1.x 版本，详情见[分支维护计划](README
 
 ### 💎 稳定版本
 
-最新的 **0.16.1** 版本已经在 25/02/2023 发布：
+最新的 **0.16.1** 版本已经在 24/02/2023 发布：
 
 - 支持新评价指标 FID 和 KID。
 - 支持 ResidualBlockNoBN 模块设置 `groups` 参数。
@@ -93,7 +93,7 @@ MMEditing 同时维护 0.x 和 1.x 版本，详情见[分支维护计划](README
 
 ### 🌟 1.x 预览版本
 
-全新的 [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) 已经在 25/02/2023 发布:
+全新的 [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) 已经在 24/02/2023 发布:
 
 - 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
 - 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。

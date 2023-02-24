@@ -82,7 +82,7 @@ MMEditing maintains both master and 1.x branches. See more details in  [Branch M
 
 ### 💎 Stable version
 
-**0.16.1** was released in 25/02/2023:
+**0.16.1** was released in 24/02/2023:
 
 - Support FID and KID metrics.
 - Support groups parameter in ResidualBlockNoBN.
@@ -93,7 +93,7 @@ Please refer to [changelog.md](docs/en/changelog.md) for details and release his
 
 ### 🌟 Preview of 1.x version
 
-A brand new version of [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc1) was released in 25/02/2023:
+A brand new version of [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) was released in 24/02/2023:
 
 - Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍。
 - Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).

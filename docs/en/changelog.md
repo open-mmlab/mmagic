@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.16.1 (25/02/2023)
+## v0.16.1 (24/02/2023)
 
 **New Features & Improvements**
 
