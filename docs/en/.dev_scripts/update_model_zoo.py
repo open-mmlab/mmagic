@@ -52,9 +52,9 @@ def update_model_zoo():
     papers = set()
     checkpoints = set()
     for m in full_models:
-        papers.update(m.paper)
+        papers.add(m.paper['Title'])
         if m.weights is not None and m.weights.startswith('https:'):
-            checkpoints.update(m.weights)
+            checkpoints.add(m.weights)
     task_desc = '\n'.join([
         f"  - [{t}]({t.replace('-', '_').replace(' ', '_')}.md)"
         for t in list(tasks.keys())
