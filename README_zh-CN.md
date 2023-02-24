@@ -105,7 +105,7 @@ MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您�
 
 ### 🌟 1.x 预览版本
 
-全新的 [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) 已经在 25/02/2023 发布:
+全新的 [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) 已经在 24/02/2023 发布:
 
 - 支持了著名的文本生成图像方法 [stable diffusion](configs/stable_diffusion/README.md)!
 - 支持了一个高效的图像复原算法 [Restormer](configs/restormer/README.md)!

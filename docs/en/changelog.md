@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.0.0rc6 (25/02/2023)
+## v1.0.0rc6 (24/02/2023)
 
 **Highlights**
 We are excited to announce the release of MMEditing 1.0.0rc6. This release supports 50+ models, 222+ configs and 209+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
