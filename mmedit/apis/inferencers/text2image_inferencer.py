@@ -6,7 +6,7 @@ import numpy as np
 from mmengine import mkdir_or_exist
 from torchvision.utils import save_image
 
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from ..inferencer_utils import BaseMMEditInferencer, InputsType, PredType
 
 
 class Text2ImageInferencer(BaseMMEditInferencer):

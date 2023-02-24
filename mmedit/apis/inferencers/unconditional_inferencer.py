@@ -8,7 +8,7 @@ from mmengine import mkdir_or_exist
 from torchvision import utils
 
 from mmedit.structures import EditDataSample
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from ..inferencer_utils import BaseMMEditInferencer, InputsType, PredType
 
 
 class UnconditionalInferencer(BaseMMEditInferencer):

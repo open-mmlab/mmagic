@@ -13,9 +13,9 @@ from mmengine.dataset.utils import default_collate as collate
 from mmengine.logging import MMLogger
 from mmengine.utils import ProgressBar
 
-from .base_mmedit_inferencer import (BaseMMEditInferencer, InputsType,
-                                     PredType, ResType)
-from .inference_functions import VIDEO_EXTENSIONS, read_frames, read_image
+from ..inferencer_utils import (VIDEO_EXTENSIONS, BaseMMEditInferencer,
+                                InputsType, PredType, ResType, read_frames,
+                                read_image)
 
 
 class VideoInterpolationInferencer(BaseMMEditInferencer):

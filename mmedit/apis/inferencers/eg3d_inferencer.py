@@ -15,8 +15,8 @@ from torchvision.utils import make_grid
 
 from mmedit.structures import EditDataSample
 from mmedit.utils import ForwardInputs, try_import
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
-from .inference_functions import calculate_grid_size
+from ..inferencer_utils import (BaseMMEditInferencer, InputsType, PredType,
+                                calculate_grid_size)
 
 imageio = try_import('imageio')
 

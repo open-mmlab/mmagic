@@ -3,96 +3,508 @@ import glob
 import math
 import os
 import os.path as osp
+import warnings
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import cv2
 import mmcv
 import numpy as np
 import torch
-from mmengine import Config, is_list_of
-from mmengine.config import ConfigDict
+import yaml
+from mmengine import is_list_of, mkdir_or_exist
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
-from mmengine.fileio import get_file_backend
+from mmengine.infer import BaseInferencer
 from mmengine.registry import init_default_scope
 from mmengine.runner import load_checkpoint
-from mmengine.runner import set_random_seed as set_random_seed_engine
 from mmengine.utils import ProgressBar
+from models.base_models import BaseTranslationModel
 from torch.nn.parallel import scatter
+from torchvision import utils
 
-from mmedit.models.base_models import BaseTranslationModel
 from mmedit.registry import MODELS
+from mmedit.utils import (VIDEO_EXTENSIONS, ConfigType, InputsType, PredType,
+                          ResType, pad_sequence, read_frames, read_image,
+                          register_all_modules, set_random_seed)
 
-VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
-FILE_CLIENT = get_file_backend(backend_args={'backend': 'local'})
 
-
-def set_random_seed(seed, deterministic=False, use_rank_shift=True):
-    """Set random seed.
-
-    In this function, we just modify the default behavior of the similar
-    function defined in MMCV.
+class BaseMMEditInferencer(BaseInferencer):
+    """Base inferencer.
 
     Args:
-        seed (int): Seed to be used.
-        deterministic (bool): Whether to set the deterministic option for
-            CUDNN backend, i.e., set `torch.backends.cudnn.deterministic`
-            to True and `torch.backends.cudnn.benchmark` to False.
-            Default: False.
-        rank_shift (bool): Whether to add rank number to the random seed to
-            have different random seed in different threads. Default: True.
+        config (str or ConfigType): Model config or the path to it.
+        ckpt (str, optional): Path to the checkpoint.
+        device (str, optional): Device to run inference. If None, the best
+            device will be automatically used.
+        result_out_dir (str): Output directory of images. Defaults to ''.
     """
-    set_random_seed_engine(seed, deterministic, use_rank_shift)
+
+    func_kwargs = dict(
+        preprocess=[],
+        forward=[],
+        visualize=['result_out_dir'],
+        postprocess=['get_datasample'])
+    func_order = dict(preprocess=0, forward=1, visualize=2, postprocess=3)
+
+    extra_parameters = dict()
+
+    def __init__(self,
+                 config: Union[ConfigType, str],
+                 ckpt: Optional[str] = None,
+                 device: Optional[str] = None,
+                 extra_parameters: Optional[Dict] = None,
+                 seed: int = 2022,
+                 **kwargs) -> None:
+        # Load config to cfg
+        if device is None:
+            device = torch.device(
+                'cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = device
+        register_all_modules()
+        super().__init__(config, ckpt, device)
+
+        self._init_extra_parameters(extra_parameters)
+        self.base_params = self._dispatch_kwargs(**kwargs)
+        self.seed = seed
+        set_random_seed(self.seed)
+
+    def _init_model(self, cfg: Union[ConfigType, str], ckpt: Optional[str],
+                    device: str) -> None:
+        """Initialize the model with the given config and checkpoint on the
+        specific device."""
+        model = MODELS.build(cfg.model)
+        if ckpt is not None and ckpt != '':
+            ckpt = load_checkpoint(model, ckpt, map_location='cpu')
+        model.cfg = cfg
+        model.to(device)
+        model.eval()
+        return model
+
+    def _init_pipeline(self, cfg: ConfigType) -> Compose:
+        """Initialize the test pipeline."""
+        if 'test_dataloader' in cfg and \
+            'dataset' in cfg.test_dataloader and \
+                'pipeline' in cfg.test_dataloader.dataset:
+            pipeline_cfg = cfg.test_dataloader.dataset.pipeline
+            return Compose(pipeline_cfg)
+        return None
+
+    def _init_extra_parameters(self, extra_parameters: Dict) -> None:
+        """Initialize extra_parameters of each kind of inferencer."""
+        if extra_parameters is not None:
+            for key in self.extra_parameters.keys():
+                if key in extra_parameters.keys():
+                    self.extra_parameters[key] = extra_parameters[key]
+
+    def _update_extra_parameters(self, **kwargs) -> None:
+        """update extra_parameters during run time."""
+        if 'extra_parameters' in kwargs:
+            input_extra_parameters = kwargs['extra_parameters']
+            if input_extra_parameters is not None:
+                for key in self.extra_parameters.keys():
+                    if key in input_extra_parameters.keys():
+                        self.extra_parameters[key] = \
+                            input_extra_parameters[key]
+
+    def _dispatch_kwargs(self, **kwargs) -> Tuple[Dict, Dict, Dict, Dict]:
+        """Dispatch kwargs to preprocess(), forward(), visualize() and
+        postprocess() according to the actual demands."""
+        results = [{}, {}, {}, {}]
+        dispatched_kwargs = set()
+
+        # Dispatch kwargs according to self.func_kwargs
+        for func_name, func_kwargs in self.func_kwargs.items():
+            for func_kwarg in func_kwargs:
+                if func_kwarg in kwargs:
+                    dispatched_kwargs.add(func_kwarg)
+                    results[self.func_order[func_name]][func_kwarg] = kwargs[
+                        func_kwarg]
+
+        return results
+
+    @torch.no_grad()
+    def __call__(self, **kwargs) -> Union[Dict, List[Dict]]:
+        """Call the inferencer.
+
+        Args:
+            kwargs: Keyword arguments for the inferencer.
+
+        Returns:
+            Union[Dict, List[Dict]]: Results of inference pipeline.
+        """
+        self._update_extra_parameters(**kwargs)
+
+        params = self._dispatch_kwargs(**kwargs)
+        preprocess_kwargs = self.base_params[0].copy()
+        preprocess_kwargs.update(params[0])
+        forward_kwargs = self.base_params[1].copy()
+        forward_kwargs.update(params[1])
+        visualize_kwargs = self.base_params[2].copy()
+        visualize_kwargs.update(params[2])
+        postprocess_kwargs = self.base_params[3].copy()
+        postprocess_kwargs.update(params[3])
+
+        data = self.preprocess(**preprocess_kwargs)
+        preds = self.forward(data, **forward_kwargs)
+        imgs = self.visualize(preds, **visualize_kwargs)
+        results = self.postprocess(preds, imgs, **postprocess_kwargs)
+        return results
+
+    def get_extra_parameters(self) -> List[str]:
+        """Each inferencer may has its own parameters. Call this function to
+        get these parameters.
+
+        Returns:
+            List[str]: List of unique parameters.
+        """
+        return list(self.extra_parameters.keys())
+
+    def postprocess(
+        self,
+        preds: PredType,
+        imgs: Optional[List[np.ndarray]] = None,
+        is_batch: bool = False,
+        get_datasample: bool = False,
+    ) -> Union[ResType, Tuple[ResType, np.ndarray]]:
+        """Postprocess predictions.
+
+        Args:
+            preds (List[Dict]): Predictions of the model.
+            imgs (Optional[np.ndarray]): Visualized predictions.
+            is_batch (bool): Whether the inputs are in a batch.
+                Defaults to False.
+            get_datasample (bool): Whether to use Datasample to store
+                inference results. If False, dict will be used.
+
+        Returns:
+            result (Dict): Inference results as a dict.
+            imgs (torch.Tensor): Image result of inference as a tensor or
+                tensor list.
+        """
+        results = preds
+        if not get_datasample:
+            results = []
+            for pred in preds:
+                result = self._pred2dict(pred)
+                results.append(result)
+        if not is_batch:
+            results = results[0]
+        return results, imgs
+
+    def _pred2dict(self, pred_tensor: torch.Tensor) -> Dict:
+        """Extract elements necessary to represent a prediction into a
+        dictionary. It's better to contain only basic data elements such as
+        strings and numbers in order to guarantee it's json-serializable.
+
+        Args:
+            pred_tensor (torch.Tensor): The tensor to be converted.
+
+        Returns:
+            dict: The output dictionary.
+        """
+        result = {}
+        result['infer_results'] = pred_tensor
+        return result
+
+    def visualize(self,
+                  inputs: list,
+                  preds: Any,
+                  show: bool = False,
+                  result_out_dir: str = '',
+                  **kwargs) -> List[np.ndarray]:
+        """Visualize predictions.
+
+        Customize your visualization by overriding this method. visualize
+        should return visualization results, which could be np.ndarray or any
+        other objects.
+
+        Args:
+            inputs (list): Inputs preprocessed by :meth:`_inputs_to_list`.
+            preds (Any): Predictions of the model.
+            show (bool): Whether to display the image in a popup window.
+                Defaults to False.
+            result_out_dir (str): Output directory of images. Defaults to ''.
+
+        Returns:
+            List[np.ndarray]: Visualization results.
+        """
+        results = (preds[:, [2, 1, 0]] + 1.) / 2.
+
+        # save images
+        if result_out_dir:
+            mkdir_or_exist(os.path.dirname(result_out_dir))
+            utils.save_image(results, result_out_dir)
+
+        return results
 
 
-def delete_cfg(cfg, key='init_cfg'):
-    """Delete key from config object.
+def inferencer():
+    """MMEdit API for mmediting models inference.
 
     Args:
-        cfg (str or :obj:`mmengine.Config`): Config object.
-        key (str): Which key to delete.
+        model_name (str): Name of the editing model.
+        model_setting (str): Setting of a specific model.
+            Default to 'a'.
+        model_config (str): Path to the config file for the editing model.
+            Default to None.
+        model_ckpt (str): Path to the checkpoint file for the editing model.
+            Default to None.
+        config_dir (str): Path to the directory containing config files.
+            Default to 'configs/'.
+        device (torch.device): Device to use for inference. Default to 'cuda'.
+
+    Examples:
+        >>> # inference of a conditional model, biggan for example
+        >>> editor = MMEdit(model_name='biggan')
+        >>> editor.infer(label=1, result_out_dir='./biggan_res.jpg')
+
+        >>> # inference of a translation model, pix2pix for example
+        >>> editor = MMEdit(model_name='pix2pix')
+        >>> editor.infer(img='./test.jpg', result_out_dir='./pix2pix_res.jpg')
+
+        >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
     """
+    inference_supported_models = [
+        # colorization models
+        'inst_colorization',
 
-    if key in cfg:
-        cfg.pop(key)
-    for _key in cfg.keys():
-        if isinstance(cfg[_key], ConfigDict):
-            delete_cfg(cfg[_key], key)
+        # conditional models
+        'biggan',
+        'sngan_proj',
+        'sagan',
+
+        # unconditional models
+        'styleganv1',
+
+        # matting models
+        'gca',
+
+        # inpainting models
+        'global_local',
+        'aot_gan',
+
+        # translation models
+        'pix2pix',
+        'cyclegan',
+
+        # restoration models
+        'esrgan',
+
+        # video_interpolation models
+        'flavr',
+        'cain',
+
+        # video_restoration models
+        'edvr',
+
+        # text2image models
+        'disco_diffusion',
+
+        # 3D-aware generation
+        'eg3d',
+    ]
+
+    inference_supported_models_cfg = {}
+    inference_supported_models_cfg_inited = False
+
+    def __init__(self,
+                 model_name: str = None,
+                 model_setting: int = None,
+                 model_config: str = None,
+                 model_ckpt: str = None,
+                 device: torch.device = None,
+                 extra_parameters: Dict = None,
+                 seed: int = 2022,
+                 **kwargs) -> None:
+        init_default_scope('mmedit')
+        inferencer_kwargs = {}
+        inferencer_kwargs.update(
+            self._get_inferencer_kwargs(model_name, model_setting,
+                                        model_config, model_ckpt,
+                                        extra_parameters))
+        # self.inferencer = MMEditInferencer(
+        #     device=device, seed=seed, **inferencer_kwargs)
 
 
-def init_model(config, checkpoint=None, device='cuda:0'):
-    """Initialize a model from config file.
+#         self.task = task
+#         if self.task in ['conditional', 'Conditional GANs']:
+#             self.inferencer = ConditionalInferencer(
+#                 config, ckpt, device, extra_parameters, seed=seed)
+#         elif self.task in ['colorization', 'Colorization']:
+#             self.inferencer = ColorizationInferencer(
+#                 config, ckpt, device, extra_parameters, seed=seed)
+#         elif self.task in ['unconditional', 'Unconditional GANs']:
+#             self.inferencer = UnconditionalInferencer(
+#                 config, ckpt, device, extra_parameters, seed=seed)
+#         elif self.task in ['matting', 'Matting']:
+#             self.inferencer = MattingInferencer(
+#                 config, ckpt, device, extra_parameters, seed=seed)
+#         elif self.task in ['inpainting', 'Inpainting']:
+#             self.inferencer = InpaintingInferencer(
+#                 config, ckpt, device, extra_parameters, seed=seed)
+#         elif self.task in ['translation', 'Image2Image']:
+#             self.inferencer = TranslationInferencer(
+#                 config, ckpt, device, extra_parameters, seed=seed)
+#         elif self.task in ['restoration', 'Image Super-Resolution']:
+#             self.inferencer = RestorationInferencer(
+#                 config, ckpt, device, extra_parameters, seed=seed)
+#         elif self.task in ['video_restoration', 'Video Super-Resolution']:
+#             self.inferencer = VideoRestorationInferencer(
+#                 config, ckpt, device, extra_parameters, seed=seed)
+#         elif self.task in ['video_interpolation', 'Video Interpolation']:
+#             self.inferencer = VideoInterpolationInferencer(
+#                 config, ckpt, device, extra_parameters)
+#         elif self.task in ['text2image', 'Text2Image']:
+#             self.inferencer = Text2ImageInferencer(
+#                 config, ckpt, device, extra_parameters, seed=seed)
+#         elif self.task in ['3D_aware_generation', '3D-aware Generation']:
+#             self.inferencer = EG3DInferencer(
+#                 config, ckpt, device, extra_parameters, seed=seed)
+#         else:
+#             raise ValueError(f'Unknown inferencer task: {self.task}')
 
-    Args:
-        config (str or :obj:`mmengine.Config`): Config file path or the config
-            object.
-        checkpoint (str, optional): Checkpoint path. If left as None, the model
-            will not load any weights.
-        device (str): Which device the model will deploy. Default: 'cuda:0'.
+    inference_supported_models_cfg_inited = False
 
-    Returns:
-        nn.Module: The constructed model.
-    """
+    def _get_inferencer_kwargs(self, model_name: Optional[str],
+                               model_setting: Optional[int],
+                               model_config: Optional[str],
+                               model_ckpt: Optional[str],
+                               extra_parameters: Optional[Dict]) -> Dict:
+        """Get the kwargs for the inferencer."""
+        kwargs = {}
 
-    if isinstance(config, str):
-        config = Config.fromfile(config)
-    elif not isinstance(config, Config):
-        raise TypeError('config must be a filename or Config object, '
-                        f'but got {type(config)}')
-    # config.test_cfg.metrics = None
-    delete_cfg(config.model, 'init_cfg')
+        if model_name is not None:
+            cfgs = self.get_model_config(model_name)
+            kwargs['task'] = cfgs['task']
+            setting_to_use = 0
+            if model_setting:
+                setting_to_use = model_setting
+            config_dir = cfgs['settings'][setting_to_use]['Config']
+            config_dir = config_dir[config_dir.find('configs'):]
+            kwargs['config'] = os.path.join(
+                osp.dirname(__file__), '..', config_dir)
+            kwargs['ckpt'] = cfgs['settings'][setting_to_use]['Weights']
 
-    init_default_scope(config.get('default_scope', 'mmedit'))
+        if model_config is not None:
+            if kwargs.get('config', None) is not None:
+                warnings.warn(
+                    f'{model_name}\'s default config '
+                    f'is overridden by {model_config}', UserWarning)
+            kwargs['config'] = model_config
 
-    model = MODELS.build(config.model)
+        if model_ckpt is not None:
+            if kwargs.get('ckpt', None) is not None:
+                warnings.warn(
+                    f'{model_name}\'s default checkpoint '
+                    f'is overridden by {model_ckpt}', UserWarning)
+            kwargs['ckpt'] = model_ckpt
 
-    if checkpoint is not None:
-        checkpoint = load_checkpoint(model, checkpoint)
+        if extra_parameters is not None:
+            kwargs['extra_parameters'] = extra_parameters
 
-    model.cfg = config  # save the config in the model for convenience
-    model.to(device)
-    model.eval()
+        return kwargs
 
-    return model
+    def print_extra_parameters(self):
+        """Print the unique parameters of each kind of inferencer."""
+        extra_parameters = self.inferencer.get_extra_parameters()
+        print(extra_parameters)
+
+    def infer(self,
+              img: InputsType = None,
+              video: InputsType = None,
+              label: InputsType = None,
+              trimap: InputsType = None,
+              mask: InputsType = None,
+              result_out_dir: str = '',
+              **kwargs) -> Union[Dict, List[Dict]]:
+        """Infer edit model on an image(video).
+
+        Args:
+            img (str): Img path.
+            video (str): Video path.
+            label (int): Label for conditional or unconditional models.
+            trimap (str): Trimap path for matting models.
+            mask (str): Mask path for inpainting models.
+            result_out_dir (str): Output directory of result image or video.
+                Defaults to ''.
+
+        Returns:
+            Dict or List[Dict]: Each dict contains the inference result of
+            each image or video.
+        """
+        return self.inferencer(
+            img=img,
+            video=video,
+            label=label,
+            trimap=trimap,
+            mask=mask,
+            result_out_dir=result_out_dir,
+            **kwargs)
+
+    def get_model_config(self, model_name: str) -> Dict:
+        """Get the model configuration including model config and checkpoint
+        url.
+
+        Args:
+            model_name (str): Name of the model.
+        Returns:
+            dict: Model configuration.
+        """
+        if model_name not in self.inference_supported_models:
+            raise ValueError(f'Model {model_name} is not supported.')
+        else:
+            return self.inference_supported_models_cfg[model_name]
+
+    @staticmethod
+    def init_inference_supported_models_cfg() -> None:
+        inference_supported_models_cfg_inited = False
+        if not inference_supported_models_cfg_inited:
+            all_cfgs_dir = osp.join(osp.dirname(__file__), '..', 'configs')
+
+            for model_name in inference_supported_models:
+                meta_file_dir = osp.join(all_cfgs_dir, model_name,
+                                         'metafile.yml')
+                with open(meta_file_dir, 'r') as stream:
+                    parsed_yaml = yaml.safe_load(stream)
+                task = parsed_yaml['Models'][0]['Results'][0]['Task']
+                inference_supported_models_cfg[model_name] = {}
+                inference_supported_models_cfg[model_name][
+                    'task'] = task  # noqa
+                inference_supported_models_cfg[model_name][
+                    'settings'] = parsed_yaml['Models']  # noqa
+
+            inference_supported_models_cfg_inited = True
+
+    @staticmethod
+    def get_inference_supported_models() -> List:
+        """static function for getting inference supported modes."""
+        return inference_supported_models
+
+    @staticmethod
+    def get_inference_supported_tasks() -> List:
+        """static function for getting inference supported tasks."""
+        inference_supported_models_cfg_inited = False
+        if not inference_supported_models_cfg_inited:
+            init_inference_supported_models_cfg()
+
+        supported_task = set()
+        for key in inference_supported_models_cfg.keys():
+            if inference_supported_models_cfg[key]['task'] \
+               not in supported_task:
+                supported_task.add(inference_supported_models_cfg[key]['task'])
+        return list(supported_task)
+
+    @staticmethod
+    def get_task_supported_models(task: str) -> List:
+        """static function for getting task supported models."""
+        if not inference_supported_models_cfg_inited:
+            init_inference_supported_models_cfg()
+
+        supported_models = []
+        for key in inference_supported_models_cfg.keys():
+            if inference_supported_models_cfg[key]['task'] == task:
+                supported_models.append(key)
+        return supported_models
 
 
 @torch.no_grad()
@@ -515,28 +927,6 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
     return restored_img
 
 
-def pad_sequence(data, window_size):
-    """Pad frame sequence data.
-
-    Args:
-        data (Tensor): The frame sequence data.
-        window_size (int): The window size used in sliding-window framework.
-
-    Returns:
-        data (Tensor): The padded result.
-    """
-
-    padding = window_size // 2
-
-    data = torch.cat([
-        data[:, 1 + padding:1 + 2 * padding].flip(1), data,
-        data[:, -1 - 2 * padding:-1 - padding].flip(1)
-    ],
-                     dim=1)
-
-    return data
-
-
 def restoration_video_inference(model,
                                 img_dir,
                                 window_size,
@@ -637,48 +1027,6 @@ def restoration_video_inference(model,
                             mode='tensor').cpu())
                 result = torch.cat(result, dim=1)
     return result
-
-
-def read_image(filepath):
-    """Read image from file.
-
-    Args:
-        filepath (str): File path.
-
-    Returns:
-        image (np.array): Image.
-    """
-    img_bytes = FILE_CLIENT.get(filepath)
-    image = mmcv.imfrombytes(
-        img_bytes, flag='color', channel_order='rgb', backend='pillow')
-    return image
-
-
-def read_frames(source, start_index, num_frames, from_video, end_index):
-    """Read frames from file or video.
-
-    Args:
-        source (list | mmcv.VideoReader): Source of frames.
-        start_index (int): Start index of frames.
-        num_frames (int): frames number to be read.
-        from_video (bool): Weather read frames from video.
-        end_index (int): The end index of frames.
-
-    Returns:
-        images (np.array): Images.
-    """
-    images = []
-    last_index = min(start_index + num_frames, end_index)
-    # read frames from video
-    if from_video:
-        for index in range(start_index, last_index):
-            if index >= source.frame_cnt:
-                break
-            images.append(np.flip(source.get_frame(index), axis=2))
-    else:
-        files = source[start_index:last_index]
-        images = [read_image(f) for f in files]
-    return images
 
 
 def video_interpolation_inference(model,
@@ -864,33 +1212,3 @@ def colorization_inference(model, img):
         result = model(mode='tensor', **data)
 
     return result
-
-
-def calculate_grid_size(num_batches: int = 1, aspect_ratio: int = 1) -> int:
-    """Calculate the number of images per row (nrow) to make the grid closer to
-    square when formatting a batch of images to grid.
-
-    Args:
-        num_batches (int, optional): Number of images per batch. Defaults to 1.
-        aspect_ratio (int, optional): The aspect ratio (width / height) of
-            each image sample. Defaults to 1.
-
-    Returns:
-        int: Calculated number of images per row.
-    """
-    curr_ncol, curr_nrow = 1, num_batches
-    curr_delta = curr_nrow * aspect_ratio - curr_ncol
-
-    nrow = curr_nrow
-    delta = curr_delta
-
-    while curr_delta > 0:
-
-        curr_ncol += 1
-        curr_nrow = math.ceil(num_batches / curr_ncol)
-
-        curr_delta = curr_nrow * aspect_ratio - curr_ncol
-        if curr_delta < delta and curr_delta >= 0:
-            nrow, delta = curr_nrow, curr_delta
-
-    return nrow

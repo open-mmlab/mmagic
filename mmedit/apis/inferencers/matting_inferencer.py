@@ -11,7 +11,7 @@ from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter
 
 from mmedit.structures import EditDataSample
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from ..inferencer_utils import BaseMMEditInferencer, InputsType, PredType
 
 
 class MattingInferencer(BaseMMEditInferencer):

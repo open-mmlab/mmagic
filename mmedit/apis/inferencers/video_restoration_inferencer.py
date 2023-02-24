@@ -12,9 +12,8 @@ from mmengine.dataset import Compose
 from mmengine.logging import MMLogger
 
 from mmedit.utils import tensor2img
-from .base_mmedit_inferencer import (BaseMMEditInferencer, InputsType,
-                                     PredType, ResType)
-from .inference_functions import VIDEO_EXTENSIONS, pad_sequence
+from ..inferencer_utils import (VIDEO_EXTENSIONS, BaseMMEditInferencer,
+                                InputsType, PredType, ResType, pad_sequence)
 
 
 class VideoRestorationInferencer(BaseMMEditInferencer):

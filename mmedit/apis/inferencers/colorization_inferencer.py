@@ -10,7 +10,7 @@ from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 
 from mmedit.utils import tensor2img
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from ..inferencer_utils import BaseMMEditInferencer, InputsType, PredType
 
 
 class ColorizationInferencer(BaseMMEditInferencer):

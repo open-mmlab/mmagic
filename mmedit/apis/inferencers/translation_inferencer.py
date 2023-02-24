@@ -10,7 +10,7 @@ from mmengine.dataset.utils import default_collate as collate
 from torchvision import utils
 
 from mmedit.models.base_models import BaseTranslationModel
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from ..inferencer_utils import BaseMMEditInferencer, InputsType, PredType
 
 
 class TranslationInferencer(BaseMMEditInferencer):
