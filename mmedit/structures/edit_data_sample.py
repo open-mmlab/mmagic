@@ -277,6 +277,9 @@ class EditDataSample(BaseDataElement):
         Returns:
             Sequence[EditDataSample]: The list of data samples after splitting.
         """
+        assert self.is_stacked, (
+            'Only support to call \'split\' for stacked data sample. Please '
+            'refer to \'EditDataSample.stack\' for more details.')
         # 1. split
         data_sample_list = [EditDataSample() for _ in range(len(self))]
         for k in self.all_keys():
