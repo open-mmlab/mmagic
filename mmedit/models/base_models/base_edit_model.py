@@ -125,7 +125,7 @@ class BaseEditModel(BaseModel):
         """Add predictions and destructed inputs (if passed) to data samples.
 
         Args:
-            predictions (List[EditDataSample]): The predictions of the model.
+            predictions (EditDataSample): The predictions of the model.
             data_samples (EditDataSample): The data samples loaded from
                 dataloader.
             inputs (Optional[torch.Tensor]): The input of model. Defaults to
@@ -135,12 +135,13 @@ class BaseEditModel(BaseModel):
             List[EditDataSample]: Modified data samples.
         """
 
-        # data_samples.output = predictions.pred_img
         if inputs is not None:
             destructed_input = self.data_preprocessor.destruct(
                 inputs, data_samples, 'img')
             data_samples.set_tensor_data({'input': destructed_input})
+        # split to list of data samples
         data_samples = data_samples.split()
+        predictions = predictions.split()
 
         for data_sample, pred in zip(data_samples, predictions):
             data_sample.output = pred
@@ -170,7 +171,7 @@ class BaseEditModel(BaseModel):
     def forward_inference(self,
                           inputs: torch.Tensor,
                           data_samples: Optional[List[EditDataSample]] = None,
-                          **kwargs) -> List[EditDataSample]:
+                          **kwargs) -> EditDataSample:
         """Forward inference. Returns predictions of validation, testing, and
         simple inference.
 
@@ -181,14 +182,15 @@ class BaseEditModel(BaseModel):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            List[EditDataSample]: predictions.
+            EditDataSample: predictions.
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
         feats = self.data_preprocessor.destruct(feats, data_samples)
-        predictions = []
-        for idx in range(feats.shape[0]):
-            predictions.append(EditDataSample(pred_img=feats[idx].to('cpu')))
+
+        # create a stacked data sample here
+        predictions = EditDataSample(pred_img=feats.cpu())
+        predictions._is_stacked = True
 
         return predictions
 

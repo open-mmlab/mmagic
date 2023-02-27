@@ -74,7 +74,7 @@ def test_one_stage_inpaintor():
 
         # test forward test
         predictions = inpaintor.forward_test(inputs, data_samples)
-        assert predictions[0].fake_img.data.shape == (3, 256, 256)
+        assert predictions.fake_img.shape == (1, 3, 256, 256)
 
         # test train_step
         optim_g = torch.optim.SGD(inpaintor.generator.parameters(), lr=0.1)

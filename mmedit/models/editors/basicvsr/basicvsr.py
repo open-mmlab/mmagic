@@ -124,7 +124,7 @@ class BasicVSR(BaseEditModel):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            List[EditDataSample]: predictions.
+            EditDataSample: predictions.
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
@@ -143,11 +143,9 @@ class BasicVSR(BaseEditModel):
                 # without mirror extension
                 feats = feats[:, t // 2]
 
-        predictions = []
-        for idx in range(feats.shape[0]):
-            metainfo = {k: v[idx] for k, v in data_samples.metainfo.items()}
-            predictions.append(
-                EditDataSample(
-                    pred_img=feats[idx].to('cpu'), metainfo=metainfo))
+        # create a stacked data sample
+        predictions = EditDataSample(
+            pred_img=feats.cpu(), metainfo=data_samples.metainfo)
+        predictions._is_stacked = True
 
         return predictions
