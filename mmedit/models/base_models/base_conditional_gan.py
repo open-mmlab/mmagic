@@ -200,6 +200,8 @@ class BaseConditionalGAN(BaseGAN):
             outputs = dict(ema=outputs, orig=outputs_orig)
 
         batch_sample_list = []
+        if data_samples:
+            data_samples = data_samples.split()
         for idx in range(num_batches):
             gen_sample = EditDataSample()
             if data_samples:

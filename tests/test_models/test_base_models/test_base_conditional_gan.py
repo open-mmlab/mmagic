@@ -162,7 +162,8 @@ class TestBaseGAN(TestCase):
         data_sample = [EditDataSample() for _ in range(3)]
         for idx, sample in enumerate(data_sample):
             sample.set_gt_label(label[idx])
-        outputs = gan(inputs, data_sample)
+        print(EditDataSample.stack(data_sample))
+        outputs = gan(inputs, EditDataSample.stack(data_sample))
         self.assertEqual(len(outputs), 3)
         for idx, output in enumerate(outputs):
             self.assertEqual(output.gt_label.label, label[idx])
