@@ -65,7 +65,7 @@ def test_one_stage_inpaintor():
             mask_bbox=mask_bbox,
             gt_img=gt_img,
         )
-        data_samples = [data_sample]
+        data_samples = EditDataSample.stack([data_sample])
         data_batch = {'inputs': inputs, 'data_samples': [data_sample]}
 
         # test forward_tensor

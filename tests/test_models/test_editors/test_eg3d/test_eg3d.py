@@ -117,6 +117,7 @@ class TestEG3D(TestCase):
             data_sample = EditDataSample()
             data_sample.set_gt_label(torch.randn(25))
             data_samples.append(data_sample)
+        data_samples = EditDataSample.stack(data_samples)
         outputs = model(dict(num_batches=4), data_samples)
         self.assertEqual(len(outputs), 4)
         self._check_datasample_output(outputs, 32, 5)

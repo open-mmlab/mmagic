@@ -118,15 +118,15 @@ class BaseEditModel(BaseModel):
         elif mode == 'loss':
             return self.forward_train(inputs, data_samples, **kwargs)
 
-    def convert_to_datasample(self, predictions: List[EditDataSample],
-                              data_samples: List[EditDataSample],
+    def convert_to_datasample(self, predictions: EditDataSample,
+                              data_samples: EditDataSample,
                               inputs: Optional[torch.Tensor]
                               ) -> List[EditDataSample]:
         """Add predictions and destructed inputs (if passed) to data samples.
 
         Args:
             predictions (List[EditDataSample]): The predictions of the model.
-            data_samples (List[EditDataSample]): The data samples loaded from
+            data_samples (EditDataSample): The data samples loaded from
                 dataloader.
             inputs (Optional[torch.Tensor]): The input of model. Defaults to
                 None.
@@ -134,17 +134,16 @@ class BaseEditModel(BaseModel):
         Returns:
             List[EditDataSample]: Modified data samples.
         """
+
+        # data_samples.output = predictions.pred_img
+        if inputs is not None:
+            destructed_input = self.data_preprocessor.destruct(
+                inputs, data_samples, 'img')
+            data_samples.set_tensor_data({'input': destructed_input})
+        data_samples = data_samples.split()
+
         for data_sample, pred in zip(data_samples, predictions):
             data_sample.output = pred
-
-        if inputs is not None:
-            assert inputs.shape[0] == len(predictions), (
-                'The length of inputs and outputs must be same.')
-            for idx, data_sample in enumerate(data_samples):
-                # destruct input
-                destructed_input = self.data_preprocessor.destruct(
-                    inputs[idx], data_sample, 'img')
-                data_sample.set_data({'input': destructed_input})
 
         return data_samples
 
@@ -210,8 +209,7 @@ class BaseEditModel(BaseModel):
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
-        gt_imgs = [data_sample.gt_img for data_sample in data_samples]
-        batch_gt_data = torch.stack(gt_imgs)
+        batch_gt_data = data_samples.gt_img
 
         loss = self.pixel_loss(feats, batch_gt_data)
 

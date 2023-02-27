@@ -183,9 +183,8 @@ class OneStageInpaintor(BaseModel):
         log_vars = {}
 
         masked_img = batch_inputs  # float
-        gt_img = torch.stack([d.gt_img.data
-                              for d in data_samples])  # float, [-1,1]
-        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        # gt_img: float [-1, 1], mask: uint8 [0/1]
+        gt_img, mask = data_samples.gt_img, data_samples.mask
         mask = mask.float()
 
         # get common output from encdec
@@ -377,8 +376,7 @@ class OneStageInpaintor(BaseModel):
         # Pre-process runs in BaseModel.val_step / test_step
         masked_imgs = inputs  # N,3,H,W
 
-        masks = torch.stack(
-            list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
+        masks = data_samples.mask  # N,1,H,W
         input_xs = torch.cat([masked_imgs, masks], dim=1)  # N,4,H,W
         fake_reses = self.generator(input_xs)
         fake_imgs = fake_reses * masks + masked_imgs * (1. - masks)
@@ -422,16 +420,14 @@ class OneStageInpaintor(BaseModel):
         Returns:
             List[EditDataSample]: Modified data samples.
         """
+        if inputs is not None:
+            destructed_input = self.data_preprocessor.destruct(
+                inputs, data_samples, 'img')
+            data_samples.set_tensor_data({'input': destructed_input})
+        data_samples = data_samples.split()
+
         for data_sample, pred in zip(data_samples, predictions):
             data_sample.output = pred
-
-        if inputs is not None:
-            assert inputs.shape[0] == len(predictions), (
-                'The length of inputs and outputs must be same.')
-            for idx, data_sample in enumerate(data_samples):
-                destructed_input = self.data_preprocessor.destruct(
-                    inputs[idx], data_sample)
-                data_sample.set_data({'input': destructed_input})
 
         return data_samples
 

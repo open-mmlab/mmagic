@@ -36,12 +36,8 @@ class LIIF(BaseEditModel):
             Tensor: result of simple forward.
         """
 
-        coord = torch.stack([
-            data_sample.metainfo['coord'] for data_sample in data_samples
-        ]).to(inputs)
-        cell = torch.stack([
-            data_sample.metainfo['cell'] for data_sample in data_samples
-        ]).to(inputs)
+        coord = torch.stack(data_samples.metainfo['coord']).to(inputs)
+        cell = torch.stack(data_samples.metainfo['cell']).to(inputs)
 
         feats = self.generator(inputs, coord, cell, **kwargs)
 

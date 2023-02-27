@@ -107,7 +107,7 @@ class TestSAGAN(TestCase):
                 disc_optim, accumulative_counts=accu_iter))
         # prepare inputs
         img = torch.randn(3, 16, 16)
-        label = torch.randint(0, 10, (3, 1))
+        label = torch.randint(0, 10, (1, ))
 
         data_sample = EditDataSample(gt_img=img)
         data_sample.set_gt_label(label)

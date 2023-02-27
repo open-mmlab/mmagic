@@ -107,8 +107,7 @@ class BasicVSR(BaseEditModel):
             self.generator.requires_grad_(True)
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
-        gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
-        batch_gt_data = torch.stack(gt_imgs)
+        batch_gt_data = data_samples.gt_img
 
         loss = self.pixel_loss(feats, batch_gt_data)
         self.step_counter += 1
@@ -134,7 +133,7 @@ class BasicVSR(BaseEditModel):
 
         # If the GT is an image (i.e. the center frame), the output sequence is
         # turned to an image.
-        gt = data_samples[0].get('gt_img', None)
+        gt = data_samples.gt_img[0]
         if gt is not None and gt.data.ndim == 3:
             t = feats.size(1)
             if self.check_if_mirror_extended(inputs):
@@ -146,9 +145,9 @@ class BasicVSR(BaseEditModel):
 
         predictions = []
         for idx in range(feats.shape[0]):
+            metainfo = {k: v[idx] for k, v in data_samples.metainfo.items()}
             predictions.append(
                 EditDataSample(
-                    pred_img=feats[idx].to('cpu'),
-                    metainfo=data_samples[idx].metainfo))
+                    pred_img=feats[idx].to('cpu'), metainfo=metainfo))
 
         return predictions

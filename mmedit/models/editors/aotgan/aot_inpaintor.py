@@ -110,8 +110,7 @@ class AOTInpaintor(OneStageInpaintor):
                 and ground-truth image.
         """
         # Pre-process runs in BaseModel.val_step / test_step
-        masks = torch.stack(
-            list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
+        masks = data_samples.mask
 
         masked_imgs = inputs  # N,3,H,W
         masked_imgs = masked_imgs.float() + masks
@@ -146,9 +145,8 @@ class AOTInpaintor(OneStageInpaintor):
         log_vars = {}
 
         # prepare data for training
-        gt_img = torch.stack([d.gt_img.data
-                              for d in data_samples])  # float, [-1,1]
-        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        gt_img = data_samples.gt_img
+        mask = data_samples.mask
         mask = mask.float()
 
         masked_img = batch_inputs

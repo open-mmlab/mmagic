@@ -79,7 +79,7 @@ class GGAN(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = torch.stack([data.gt_img for data in data_samples])
+        real_imgs = data_samples.gt_img
 
         num_batches = real_imgs.shape[0]
 

@@ -172,11 +172,13 @@ class DIM(BaseMattor):
             dict: Contains the loss items and batch information.
         """
         # merged, trimap, meta, alpha, ori_merged, fg, bg
-        gt_alpha = torch.stack(tuple(ds.gt_alpha.data for ds in data_samples))
-        gt_fg = torch.stack(tuple(ds.gt_fg.data for ds in data_samples))
-        gt_bg = torch.stack(tuple(ds.gt_bg.data for ds in data_samples))
-        gt_merged = torch.stack(
-            tuple(ds.gt_merged.data for ds in data_samples))
+
+        # import ipdb
+        # ipdb.set_trace()
+        gt_alpha = data_samples.gt_alpha
+        gt_fg = data_samples.gt_fg
+        gt_bg = data_samples.gt_bg
+        gt_merged = data_samples.gt_merged
 
         pred_alpha, pred_refine = self._forward(
             inputs, refine=self.train_cfg.train_refiner)
