@@ -184,43 +184,69 @@ class EG3D(BaseConditionalGAN):
             labels = self.label_fn(num_batches=num_batches)
 
         sample_model = self._get_valid_model(inputs)
-        if sample_model in ['ema', 'ema/orig']:
-            generator = self.generator_ema
-        else:  # sample model is `orig`
-            generator = self.generator
-        outputs = generator(noise, label=labels)
-
-        if sample_model == 'ema/orig':
-            generator = self.generator
-            outputs_orig = generator(noise, label=labels)
-
-            outputs = dict(ema=outputs, orig=outputs_orig)
-
-        if data_samples is not None:
-            data_samples = data_samples.split()
         batch_sample_list = []
-        for idx in range(num_batches):
-            gen_sample = EditDataSample()
-            if data_samples:
-                gen_sample.update(data_samples[idx])
-            if sample_model == 'ema/orig':
-                gen_sample.ema = self.pack_to_data_sample(outputs['ema'], idx)
-                gen_sample.orig = self.pack_to_data_sample(
-                    outputs['orig'], idx)
-                gen_sample.sample_model = 'ema/orig'
-                gen_sample.set_gt_label(labels[idx])
-                gen_sample.ema.set_gt_label(labels[idx])
-                gen_sample.orig.set_gt_label(labels[idx])
+        if sample_model in ['ema', 'orig']:
+            if sample_model == 'ema':
+                generator = self.generator_ema
             else:
+                generator = self.generator
+            outputs = generator(noise, label=labels)
+            outputs['fake_img'] = self.data_preprocessor.destruct(
+                outputs['fake_img'], data_samples)
+
+            if data_samples is not None:
+                data_samples = data_samples.split()
+            # save to data sample
+            for idx in range(num_batches):
+                gen_sample = EditDataSample()
+                # save inputs to data sample
+                if data_samples:
+                    gen_sample.update(data_samples[idx])
+                if isinstance(inputs, dict) and 'img' in inputs:
+                    gen_sample.gt_img = inputs['img'][idx]
+                # save outputs to data sample
                 gen_sample = self.pack_to_data_sample(outputs, idx, gen_sample)
                 gen_sample.sample_model = sample_model
                 gen_sample.set_gt_label(labels[idx])
 
-            # Append input condition (noise and sample_kwargs) to
-            # batch_sample_list
-            gen_sample.noise = noise[idx]
-            gen_sample.sample_kwargs = deepcopy(sample_kwargs)
-            batch_sample_list.append(gen_sample)
+                # Append input condition (noise and sample_kwargs) to
+                # batch_sample_list
+                gen_sample.noise = noise[idx]
+                gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+
+                batch_sample_list.append(gen_sample)
+
+        else:
+            outputs_orig = self.generator(noise, label=labels)
+            outputs_ema = self.generator_ema(noise, label=labels)
+            outputs_orig['fake_img'] = self.data_preprocessor.destruct(
+                outputs_orig['fake_img'], data_samples)
+            outputs_ema['fake_img'] = self.data_preprocessor.destruct(
+                outputs_ema['fake_img'], data_samples)
+
+            if data_samples is not None:
+                data_samples = data_samples.split()
+            # save to data sample
+            for idx in range(num_batches):
+                gen_sample = EditDataSample()
+                # save inputs to data sample
+                if data_samples:
+                    gen_sample.update(data_samples[idx])
+                if isinstance(inputs, dict) and 'img' in inputs:
+                    gen_sample.gt_img = inputs['img'][idx]
+                # save outputs to data sample
+                gen_sample.ema = self.pack_to_data_sample(outputs_ema, idx)
+                gen_sample.orig = self.pack_to_data_sample(outputs_orig, idx)
+                gen_sample.sample_model = sample_model
+                gen_sample.set_gt_label(labels[idx])
+
+                # Append input condition (noise and sample_kwargs) to
+                # batch_sample_list
+                gen_sample.noise = noise[idx]
+                gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+
+                batch_sample_list.append(gen_sample)
+
         return batch_sample_list
 
     @torch.no_grad()

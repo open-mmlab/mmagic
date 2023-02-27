@@ -185,46 +185,71 @@ class BaseConditionalGAN(BaseGAN):
             labels = self.label_fn(num_batches=num_batches)
 
         sample_model = self._get_valid_model(inputs)
-        if sample_model in ['ema', 'ema/orig']:
-            generator = self.generator_ema
-        else:  # sample model is `orig`
-            generator = self.generator
-        outputs = generator(noise, label=labels, return_noise=False)
-        outputs = self.data_preprocessor.destruct(outputs, data_samples)
-
-        if sample_model == 'ema/orig':
-            generator = self.generator
-            outputs_orig = generator(noise, label=labels, return_noise=False)
-            outputs_orig = self.data_preprocessor.destruct(
-                outputs_orig, data_samples)
-            outputs = dict(ema=outputs, orig=outputs_orig)
-
         batch_sample_list = []
-        if data_samples:
-            data_samples = data_samples.split()
-        for idx in range(num_batches):
-            gen_sample = EditDataSample()
-            if data_samples:
-                gen_sample.update(data_samples[idx])
-            if sample_model == 'ema/orig':
-                gen_sample.ema = EditDataSample(
-                    fake_img=outputs['ema'][idx], sample_model='ema')
-                gen_sample.orig = EditDataSample(
-                    fake_img=outputs['orig'][idx], sample_model='orig')
-                gen_sample.sample_model = 'ema/orig'
-                gen_sample.set_gt_label(labels[idx])
-                gen_sample.ema.set_gt_label(labels[idx])
-                gen_sample.orig.set_gt_label(labels[idx])
+        if sample_model in ['ema', 'orig']:
+            if sample_model == 'ema':
+                generator = self.generator_ema
             else:
+                generator = self.generator
+            outputs = generator(noise, label=labels, return_noise=False)
+            outputs = self.data_preprocessor.destruct(outputs, data_samples)
+
+            if data_samples:
+                data_samples = data_samples.split()
+            # save to data sample
+            for idx in range(num_batches):
+                gen_sample = EditDataSample()
+                # save inputs to data sample
+                if data_samples:
+                    gen_sample.update(data_samples[idx])
+                if isinstance(inputs, dict) and 'img' in inputs:
+                    gen_sample.gt_img = inputs['img'][idx]
+                # save outputs to data sample
                 gen_sample.fake_img = outputs[idx]
                 gen_sample.sample_model = sample_model
-                gen_sample.set_gt_label(labels[idx])
 
-            # Append input condition (noise and sample_kwargs) to
-            # batch_sample_list
-            gen_sample.noise = noise[idx]
-            gen_sample.sample_kwargs = deepcopy(sample_kwargs)
-            batch_sample_list.append(gen_sample)
+                # Append input condition (noise and sample_kwargs) to
+                # batch_sample_list
+                gen_sample.noise = noise[idx]
+                gen_sample.set_gt_label(labels[idx])
+                gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+
+                batch_sample_list.append(gen_sample)
+        else:  # sample model in 'ema/orig'
+            outputs_orig = self.generator(
+                noise, label=labels, return_noise=False, **sample_kwargs)
+            outputs_ema = self.generator_ema(
+                noise, label=labels, return_noise=False, **sample_kwargs)
+            outputs_orig = self.data_preprocessor.destruct(
+                outputs_orig, data_samples)
+            outputs_ema = self.data_preprocessor.destruct(
+                outputs_ema, data_samples)
+
+            if data_samples:
+                data_samples = data_samples.split()
+            # save to data sample
+            for idx in range(num_batches):
+                gen_sample = EditDataSample()
+                # save inputs to data sample
+                if data_samples:
+                    gen_sample.update(data_samples[idx])
+                if isinstance(inputs, dict) and 'img' in inputs:
+                    gen_sample.gt_img = inputs['img'][idx]
+                # save outputs to data sample
+                gen_sample.ema = EditDataSample(
+                    fake_img=outputs_ema[idx], sample_model='ema')
+                gen_sample.orig = EditDataSample(
+                    fake_img=outputs_orig[idx], sample_model='orig')
+                gen_sample.sample_model = 'ema/orig'
+
+                # Append input condition (noise and sample_kwargs) to
+                # batch_sample_list
+                gen_sample.noise = noise[idx]
+                gen_sample.set_gt_label(labels[idx])
+                gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+
+                batch_sample_list.append(gen_sample)
+
         return batch_sample_list
 
     def train_generator(self, inputs: dict, data_samples: List[EditDataSample],

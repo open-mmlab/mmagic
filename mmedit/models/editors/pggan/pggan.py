@@ -153,46 +153,69 @@ class ProgressiveGrowingGAN(BaseGAN):
             transition_weight = self._curr_transition_weight.item()
 
         sample_model = self._get_valid_model(inputs)
-
-        if sample_model in ['ema', 'ema/orig']:
-            _model = self.generator_ema
-        else:
-            _model = self.generator
-
-        outputs = _model(
-            noise, curr_scale=curr_scale, transition_weight=transition_weight)
-        outputs = self.data_preprocessor.destruct(outputs, data_samples)
-
-        if sample_model == 'ema/orig':
-            _model = self.generator
-            outputs_orig = _model(
+        batch_sample_list = []
+        if sample_model in ['ema', 'orig']:
+            if sample_model == 'ema':
+                generator = self.generator_ema
+            else:
+                generator = self.generator
+            outputs = generator(
                 noise,
                 curr_scale=curr_scale,
                 transition_weight=transition_weight)
             outputs = self.data_preprocessor.destruct(outputs, data_samples)
-            outputs = dict(ema=outputs, orig=outputs_orig)
 
-        batch_sample_list = []
-        for idx in range(num_batches):
-            gen_sample = EditDataSample()
-            if data_samples:
-                gen_sample.update(data_samples[idx])
-            if isinstance(inputs, dict) and 'img' in inputs:
-                gen_sample.gt_img = inputs['img'][idx]
-            if isinstance(outputs, dict):
-                gen_sample.ema = EditDataSample(
-                    fake_img=outputs['ema'][idx], sample_model='ema')
-                gen_sample.orig = EditDataSample(
-                    fake_img=outputs['orig'][idx], sample_model='orig')
-                gen_sample.sample_model = 'ema/orig'
-            else:
+            # save to data sample
+            for idx in range(num_batches):
+                gen_sample = EditDataSample()
+                # save inputs to data sample
+                if data_samples:
+                    gen_sample.update(data_samples[idx])
+                if isinstance(inputs, dict) and 'img' in inputs:
+                    gen_sample.gt_img = inputs['img'][idx]
+                # save outputs to data sample
                 gen_sample.fake_img = outputs[idx]
                 gen_sample.sample_model = sample_model
 
-            # Append input condition (noise and sample_kwargs) to
-            # batch_sample_list
-            gen_sample.noise = noise
-            batch_sample_list.append(gen_sample)
+                # Append input condition (noise and sample_kwargs) to
+                # batch_sample_list
+                gen_sample.noise = noise
+                batch_sample_list.append(gen_sample)
+
+        else:  # sample model is 'ema/orig'
+            outputs_orig = self.generator(
+                noise,
+                curr_scale=curr_scale,
+                transition_weight=transition_weight)
+            outputs_ema = self.generator_ema(
+                noise,
+                curr_scale=curr_scale,
+                transition_weight=transition_weight)
+            outputs_orig = self.data_preprocessor.destruct(
+                outputs_orig, data_samples)
+            outputs_ema = self.data_preprocessor.destruct(
+                outputs_ema, data_samples)
+
+            # save to data sample
+            for idx in range(num_batches):
+                gen_sample = EditDataSample()
+                # save inputs to data sample
+                if data_samples:
+                    gen_sample.update(data_samples[idx])
+                if isinstance(inputs, dict) and 'img' in inputs:
+                    gen_sample.gt_img = inputs['img'][idx]
+                # save outputs to data sample
+
+                gen_sample.ema = EditDataSample(
+                    fake_img=outputs_ema[idx], sample_model='ema')
+                gen_sample.orig = EditDataSample(
+                    fake_img=outputs_orig[idx], sample_model='orig')
+                gen_sample.sample_model = sample_model
+
+                # Append input condition (noise and sample_kwargs) to
+                # batch_sample_list
+                gen_sample.noise = noise
+                batch_sample_list.append(gen_sample)
 
         return batch_sample_list
 

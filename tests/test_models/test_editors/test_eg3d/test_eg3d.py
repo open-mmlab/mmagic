@@ -48,7 +48,9 @@ class TestEG3D(TestCase):
             radius=1.2)
         # self.discriminator_cfg = dict()
         self.default_cfg = dict(
-            generator=self.generator_cfg, camera=self.camera_cfg)
+            generator=self.generator_cfg,
+            camera=self.camera_cfg,
+            data_preprocessor=dict(type='EditDataPreprocessor'))
 
     def test_init(self):
         cfg_ = deepcopy(self.default_cfg)
