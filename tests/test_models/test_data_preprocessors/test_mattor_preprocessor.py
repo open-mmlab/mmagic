@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List
-
 import pytest
 import torch
 from mmengine.testing import assert_allclose
@@ -24,9 +22,9 @@ def test_mattor_preprocessor():
     batch_inputs, batch_data_samples = data['inputs'], data['data_samples']
     assert isinstance(batch_inputs, torch.Tensor)
     assert batch_inputs.shape == (1, 6, 20, 20)
-    assert isinstance(batch_data_samples, List)
-    assert isinstance(batch_data_samples[0], EditDataSample)
-    assert batch_data_samples[0].trimap.shape == (3, 20, 20)
+    assert isinstance(batch_data_samples, EditDataSample)
+    assert batch_data_samples.is_stacked
+    assert batch_data_samples.trimap.shape == (1, 3, 20, 20)
 
     # test proc_batch_trimap
     processor = MattorPreprocessor(proc_trimap='as_is')
@@ -38,15 +36,15 @@ def test_mattor_preprocessor():
     batch_inputs, batch_data_samples = data['inputs'], data['data_samples']
     assert isinstance(batch_inputs, torch.Tensor)
     assert batch_inputs.shape == (1, 6, 20, 20)
-    assert isinstance(batch_data_samples, List)
-    assert isinstance(batch_data_samples[0], EditDataSample)
-    assert batch_data_samples[0].trimap.shape == (3, 20, 20)
-    assert_allclose(batch_data_samples[0].trimap, target)
+    assert isinstance(batch_data_samples, EditDataSample)
+    assert batch_data_samples.is_stacked
+    assert batch_data_samples.trimap.shape == (1, 3, 20, 20)
+    assert_allclose(batch_data_samples.trimap[0], target)
 
     # test error in proc_batch_trimap
     processor = MattorPreprocessor(proc_trimap='wrong_method')
     with pytest.raises(ValueError):
-        processor(data)
+        processor(dict(inputs=inputs, data_samples=[data_sample]))
 
     # test training is False
     processor = MattorPreprocessor(proc_trimap='as_is')
