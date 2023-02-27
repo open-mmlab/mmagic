@@ -237,4 +237,5 @@ class EditDataSample(BaseDataElement):
 
     @gt_label.deleter
     def gt_label(self):
+        """Delete gt label."""
         del self._gt_label

@@ -188,12 +188,32 @@ class GrowScaleImgDataset(BaseDataset):
         return self.pipeline(results)
 
     def __getitem__(self, idx):
+        """Get the idx-th image and data information of dataset after
+        ``self.pipeline``, and ``full_init`` will be called if the dataset has
+        not been fully initialized.
+
+        During training phase, if ``self.pipeline`` get ``None``,
+        ``self._rand_another`` will be called until a valid image is fetched or
+         the maximum limit of refetech is reached.
+
+        Args:
+            idx (int): The index of self.data_list.
+
+        Returns:
+            dict: The idx-th image and data information of dataset after
+            ``self.pipeline``.
+        """
         if not self.test_mode:
             return self.prepare_train_data(idx)
 
         return self.prepare_test_data(idx)
 
     def __repr__(self):
+        """Print ``self.transforms`` in sequence.
+
+        Returns:
+            str: Formatted string.
+        """
         dataset_name = self.__class__
         imgs_root = self.data_root
         num_imgs = len(self)
