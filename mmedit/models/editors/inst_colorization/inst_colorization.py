@@ -133,6 +133,18 @@ class InstColorization(BaseModel):
             return self.forward_train(inputs, data_samples, **kwargs)
 
     def convert_to_datasample(self, inputs, data_samples):
+        """Add predictions and destructed inputs (if passed) to data samples.
+
+        Args:
+            inputs (Optional[torch.Tensor]): The input of model. Defaults to
+                None.
+            data_samples (List[EditDataSample]): The data samples loaded from
+                dataloader.
+
+        Returns:
+            List[EditDataSample]: Modified data samples.
+        """
+
         for data_sample, output in zip(inputs, data_samples):
             data_sample.output = output
         return inputs

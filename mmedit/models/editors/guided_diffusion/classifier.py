@@ -113,6 +113,14 @@ class Upsample(nn.Module):
                 self.channels, self.out_channels, 3, padding=1)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor): The tensor to upsample.
+
+        Returns:
+            torch.Tensor: The upsample results.
+        """
         assert x.shape[1] == self.channels
         if self.dims == 3:
             x = F.interpolate(
@@ -173,9 +181,26 @@ class AttentionBlock(nn.Module):
         self.proj_out = zero_module(nn.Conv1d(channels, channels, 1))
 
     def forward(self, x):
+        """Forward function. This function support gradient checkpoint to save
+        memory.
+
+        Args:
+            x (torch.Tensor): The input tensor for attention.
+
+        Returns:
+            torch.Tensor: The attention results
+        """
         return checkpoint(self._forward, (x, ), self.parameters(), True)
 
     def _forward(self, x):
+        """Forward function of attention block.
+
+        Args:
+            x (torch.Tensor): The input tensor for attention.
+
+        Returns:
+            torch.Tensor: The attention results
+        """
         b, c, *spatial = x.shape
         x = x.reshape(b, c, -1)
         qkv = self.qkv(self.norm(x))
@@ -189,6 +214,16 @@ class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
     support it as an extra input."""
 
     def forward(self, x, emb):
+        """Forward function. This function support sequential forward with
+        embedding input.
+
+        Args:
+            x (torch.Tensor): Input tensor to forward.
+            emb (torch.Tensor): Input timestep embedding.
+
+        Returns:
+            torch.Tensor: The forward results.
+        """
         for layer in self:
             if isinstance(layer, TimestepBlock):
                 x = layer(x, emb)
@@ -200,6 +235,14 @@ class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
 class GroupNorm32(nn.GroupNorm):
 
     def forward(self, x):
+        """Forward group normalization.
+
+        Args:
+            x (torch.Tensor): The input tensor.
+
+        Returns:
+            torch.Tensor: Tensor after group norm.
+        """
         return super().forward(x.float()).type(x.dtype)
 
 
@@ -236,6 +279,14 @@ class Downsample(nn.Module):
             self.op = nn.AvgPool2d(kernel_size=stride, stride=stride)
 
     def forward(self, x):
+        """Forward function for downsample.
+
+        Args:
+            x (torch.Tensor): The input tensor.
+
+        Returns:
+            torch.Tenor: Results after downsample.
+        """
         assert x.shape[1] == self.channels
         return self.op(x)
 
@@ -330,6 +381,15 @@ class ResBlock(TimestepBlock):
                           self.use_checkpoint)
 
     def _forward(self, x, emb):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor): Input feature tensor to forward.
+            emb (torch.Tensor): The timesteps embedding to forward.
+
+        Returns:
+            torch.Tensor: The forward results.
+        """
         if self.updown:
             in_rest, in_conv = self.in_layers[:-1], self.in_layers[-1]
             h = in_rest(x)
@@ -374,6 +434,14 @@ class AttentionPool2d(nn.Module):
         self.attention = QKVAttention(self.num_heads)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor): Input feature tensor to forward.
+
+        Returns:
+            torch.Tensor: The forward results.
+        """
         b, c, *_spatial = x.shape
         x = x.reshape(b, c, -1)  # NC(HW)
         x = torch.cat([x.mean(dim=-1, keepdim=True), x], dim=-1)  # NC(HW+1)
