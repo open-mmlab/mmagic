@@ -206,6 +206,8 @@ class TestEditDataSample(TestCase):
         data_splited_1, data_splited_2 = data_sample_merged.split()
         assert (data_splited_1.gt_label.label == 1).all()
         assert (data_splited_2.gt_label.label == 2).all()
+        assert (data_splited_1.img.shape == data_sample1.img.shape)
+        assert (data_splited_2.img.shape == data_sample2.img.shape)
         assert (data_splited_1.img == data_sample1.img).all()
         assert (data_splited_2.img == data_sample2.img).all()
         assert (data_splited_1.metainfo == dict(

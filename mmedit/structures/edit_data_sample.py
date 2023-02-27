@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from itertools import chain
 from numbers import Number
 from typing import Sequence, Union
 
@@ -236,6 +237,8 @@ class EditDataSample(BaseDataElement):
         Returns:
             EditDataSample: The stacked data sample.
         """
+        # 0. check if is empty
+
         # 1. check key consistency
         keys = data_samples[0].keys()
         assert all([data.keys() == keys for data in data_samples])
@@ -287,19 +290,15 @@ class EditDataSample(BaseDataElement):
                 continue
             stacked_value = self.get(k)
             if isinstance(stacked_value, torch.Tensor):
-                values = stacked_value.split(1)
                 # handle tensor shape like [1, *shape] split a tuple like
                 # ([1, *shape], ), therefore we convert it to [1, *shape]
                 # manually
-                if len(values) == 1:
-                    values = values[0]
+                values = [v for v in stacked_value]
             elif isinstance(stacked_value, LabelData):
-                labels = stacked_value.label.split(1)
                 # handle tensor shape like [1, *shape] split a tuple like
                 # ([1, *shape], ), therefore we convert it to [1, *shape]
                 # manually
-                if len(labels) == 1:
-                    labels = labels[0]
+                labels = [l_ for l_ in stacked_value.label]
                 values = [LabelData(label=l_) for l_ in labels]
             else:
                 values = stacked_value
@@ -314,14 +313,14 @@ class EditDataSample(BaseDataElement):
         """Get the length of the data sample."""
         if self._is_stacked:
             value_length = []
-            for k, v in self.items():
+            for k, v in chain(self.items(), self.metainfo_items()):
                 if k == '_is_stacked':
                     continue
                 if isinstance(v, LabelData):
                     value_length.append(v.label.shape[0])
                 else:
                     value_length.append(len(v))
-            assert len(list(set(value_length))) == 1
+                assert len(list(set(value_length))) == 1
             length = value_length[0]
             return length
         return 1
