@@ -28,6 +28,8 @@ class TestEditDataSample(TestCase):
         assert 'target_size' in edit_data_sample
         assert edit_data_sample.target_size == [256, 256]
         assert edit_data_sample.get('target_size') == [256, 256]
+        assert not edit_data_sample.is_stacked
+        assert len(edit_data_sample) == 1
 
     def _check_in_and_same(self, data_sample, field, value, is_meta=False):
         if is_meta:
@@ -194,10 +196,11 @@ class TestEditDataSample(TestCase):
         assert (data_sample_merged.img == torch.stack(
             [data_sample1.img, data_sample2.img])).all()
         assert (data_sample_merged.gt_label.label == torch.LongTensor(
-            [1, 2])).all()
+            [[1], [2]])).all()
         assert data_sample_merged.mode == ['a', 'b']
         assert data_sample_merged.metainfo == dict(
             channel_order=['rgb', 'rgb'], color_flag=['color', 'color'])
+        assert len(data_sample_merged) == 2
 
         # test split
         data_splited_1, data_splited_2 = data_sample_merged.split()
@@ -208,4 +211,32 @@ class TestEditDataSample(TestCase):
         assert (data_splited_1.metainfo == dict(
             channel_order='rgb', color_flag='color'))
         assert (data_splited_2.metainfo == dict(
+            channel_order='rgb', color_flag='color'))
+
+        # test stack and split when batch size is 1
+        data_sample = EditDataSample()
+        data_sample.set_gt_label(3)
+        data_sample.set_tensor_data({'img': torch.randn(3, 4, 5)})
+        data_sample.set_data({'mode': 'c'})
+        data_sample.set_metainfo({
+            'channel_order': 'rgb',
+            'color_flag': 'color'
+        })
+
+        data_sample_merged = EditDataSample.stack([data_sample])
+        assert (data_sample_merged.img == torch.stack([data_sample.img])).all()
+        assert (data_sample_merged.gt_label.label == torch.LongTensor(
+            [[3]])).all()
+        assert data_sample_merged.mode == ['c']
+        assert data_sample_merged.metainfo == dict(
+            channel_order=['rgb'], color_flag=['color'])
+        assert len(data_sample_merged) == 1
+
+        # test split
+        data_splited = data_sample_merged.split()
+        assert len(data_splited) == 1
+        data_splited = data_splited[0]
+        assert (data_splited.gt_label.label == 3).all()
+        assert (data_splited.img == data_sample.img).all()
+        assert (data_splited.metainfo == dict(
             channel_order='rgb', color_flag='color'))

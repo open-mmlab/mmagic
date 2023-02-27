@@ -81,42 +81,18 @@ class EditDataSample(BaseDataElement):
 
          >>> import torch
          >>> import numpy as np
-         >>> from mmedit.structures import EditDataSample, PixelData
-         >>> data_sample = EditDataSample()
+         >>> from mmedit.structures import EditDataSample
          >>> img_meta = dict(img_shape=(800, 1196, 3))
          >>> img = torch.rand((3, 800, 1196))
-         >>> gt_img = PixelData(data=img, metainfo=img_meta)
-         >>> data_sample.gt_img = gt_img
-         >>> assert 'img_shape' in data_sample.gt_img.metainfo_keys()
+         >>> data_sample = EditDataSample(gt_img=img, metainfo=img_meta)
+         >>> assert 'img_shape' in data_sample.metainfo_keys()
         <EditDataSample(
 
             META INFORMATION
+            img_shape: (800, 1196, 3)
 
             DATA FIELDS
-            _gt_img: <PixelData(
-
-                    META INFORMATION
-                    img_shape: (800, 1196, 3)
-
-                    DATA FIELDS
-                    data: tensor([[[0.8069, 0.4279,  ..., 0.6603, 0.0292],
-
-                                ...,
-
-                                [0.8139, 0.0908,  ..., 0.4964, 0.9672]]])
-                ) at 0x1f6ae000af0>
-            gt_img: <PixelData(
-
-                    META INFORMATION
-                    img_shape: (800, 1196, 3)
-
-                    DATA FIELDS
-                    data: tensor([[[0.8069, 0.4279,  ..., 0.6603, 0.0292],
-
-                                ...,
-
-                                [0.8139, 0.0908,  ..., 0.4964, 0.9672]]])
-                ) at 0x1f6ae000af0>
+            gt_img: tensor(...)
         ) at 0x1f6a5a99a00>
     """
 
@@ -280,7 +256,8 @@ class EditDataSample(BaseDataElement):
             if isinstance(values[0], torch.Tensor):
                 stacked_value = torch.stack(values)
             elif isinstance(values[0], LabelData):
-                values = torch.cat([data.label for data in values])
+                labels = [data.label for data in values]
+                values = torch.stack(labels)
                 stacked_value = LabelData(label=values)
             else:
                 stacked_value = values
@@ -300,23 +277,26 @@ class EditDataSample(BaseDataElement):
         Returns:
             Sequence[EditDataSample]: The list of data samples after splitting.
         """
-        # 1. check length
-        value_length = []
-        for v in self.items():
-            if isinstance(v, LabelData):
-                value_length.append(v.label.shape[0])
-            else:
-                value_length.append(len(v))
-        assert len(list(set(value_length))) == 1
-        length = value_length[0]
-        # 2. split
-        data_sample_list = [EditDataSample() for _ in range(length)]
+        # 1. split
+        data_sample_list = [EditDataSample() for _ in range(len(self))]
         for k in self.all_keys():
+            if k == '_is_stacked':
+                continue
             stacked_value = self.get(k)
             if isinstance(stacked_value, torch.Tensor):
                 values = stacked_value.split(1)
+                # handle tensor shape like [1, *shape] split a tuple like
+                # ([1, *shape], ), therefore we convert it to [1, *shape]
+                # manually
+                if len(values) == 1:
+                    values = values[0]
             elif isinstance(stacked_value, LabelData):
                 labels = stacked_value.label.split(1)
+                # handle tensor shape like [1, *shape] split a tuple like
+                # ([1, *shape], ), therefore we convert it to [1, *shape]
+                # manually
+                if len(values) == 1:
+                    labels = labels[0]
                 values = [LabelData(label=l_) for l_ in labels]
             else:
                 values = stacked_value
@@ -326,3 +306,19 @@ class EditDataSample(BaseDataElement):
                 data.set_field(v, k, field_type=field)
 
         return data_sample_list
+
+    def __len__(self):
+        """Get the length of the data sample."""
+        if self._is_stacked:
+            value_length = []
+            for k, v in self.items():
+                if k == '_is_stacked':
+                    continue
+                if isinstance(v, LabelData):
+                    value_length.append(v.label.shape[0])
+                else:
+                    value_length.append(len(v))
+            assert len(list(set(value_length))) == 1
+            length = value_length[0]
+            return length
+        return 1
