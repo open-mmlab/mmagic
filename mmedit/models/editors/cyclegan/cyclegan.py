@@ -236,6 +236,8 @@ class CycleGAN(BaseTranslationModel):
 
         batch_sample_list = []
         num_batches = next(iter(outputs.values())).shape[0]
+        import ipdb
+        ipdb.set_trace()
         data_samples = data_samples.split()
         for idx in range(num_batches):
             gen_sample = EditDataSample()

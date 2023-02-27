@@ -213,6 +213,8 @@ class Pix2Pix(BaseTranslationModel):
             inputs_dict[f'img_{source_domain}'], target_domain=target_domain)
 
         batch_sample_list = []
+        if data_samples:
+            data_samples = data_samples.split()
         num_batches = next(iter(outputs.values())).shape[0]
         for idx in range(num_batches):
             gen_sample = EditDataSample()
