@@ -155,10 +155,6 @@ class MattorPreprocessor(EditDataPreprocessor):
         data = super().forward(data, training=training)
 
         batch_images = data['inputs']
-        # import ipdb
-        # ipdb.set_trace()
-        # batch_trimaps = torch.stack(
-        #     [data.trimap for data in data['data_samples']])
         batch_trimaps = data['data_samples'].trimap
         batch_trimaps = self._proc_batch_trimap(batch_trimaps)
 

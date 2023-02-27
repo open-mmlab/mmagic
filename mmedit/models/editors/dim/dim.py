@@ -173,8 +173,6 @@ class DIM(BaseMattor):
         """
         # merged, trimap, meta, alpha, ori_merged, fg, bg
 
-        # import ipdb
-        # ipdb.set_trace()
         gt_alpha = data_samples.gt_alpha
         gt_fg = data_samples.gt_fg
         gt_bg = data_samples.gt_bg

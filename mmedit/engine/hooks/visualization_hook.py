@@ -353,8 +353,6 @@ class GenVisualizationHook(Hook):
             need_save = fixed_input and not self.inputs_buffer[sampler_type]
 
             for inputs in sampler:
-                # import ipdb
-                # ipdb.set_trace()
                 output_list += [out for out in forward_func(inputs)]
 
                 # save inputs
