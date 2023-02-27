@@ -298,7 +298,7 @@ class EditDataSample(BaseDataElement):
                 # handle tensor shape like [1, *shape] split a tuple like
                 # ([1, *shape], ), therefore we convert it to [1, *shape]
                 # manually
-                if len(values) == 1:
+                if len(labels) == 1:
                     labels = labels[0]
                 values = [LabelData(label=l_) for l_ in labels]
             else:
