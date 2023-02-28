@@ -7,30 +7,17 @@ from mmengine.structures import LabelData
 from mmengine.testing import assert_allclose
 
 from mmedit.structures import EditDataSample
-from mmedit.structures.edit_data_sample import is_stacked_var
-
-
-def _equal(a, b):
-    if isinstance(a, (torch.Tensor, np.ndarray)):
-        return (a == b).all()
-    else:
-        return a == b
+from mmedit.structures.edit_data_sample import is_splitable_var
 
 
 def test_is_stacked_var():
-    data_sample = EditDataSample()
-    assert not is_stacked_var(data_sample)
-
-    data_sample._is_stacked = True
-    assert is_stacked_var(data_sample)
-
-    data = torch.randn(10, 10)
-    assert is_stacked_var(data)
-
-    assert is_stacked_var([1, 2])
-    assert is_stacked_var((1, 2))
-    assert not is_stacked_var({'a': 1})
-    assert not is_stacked_var('a')
+    assert is_splitable_var(EditDataSample())
+    assert is_splitable_var(torch.randn(10, 10))
+    assert is_splitable_var(np.ndarray((10, 10)))
+    assert is_splitable_var([1, 2])
+    assert is_splitable_var((1, 2))
+    assert not is_splitable_var({'a': 1})
+    assert not is_splitable_var('a')
 
 
 class TestEditDataSample(TestCase):
@@ -45,7 +32,6 @@ class TestEditDataSample(TestCase):
         assert 'target_size' in edit_data_sample
         assert edit_data_sample.target_size == [256, 256]
         assert edit_data_sample.get('target_size') == [256, 256]
-        assert not edit_data_sample.is_stacked
         assert len(edit_data_sample) == 1
 
     def _check_in_and_same(self, data_sample, field, value, is_meta=False):
@@ -223,7 +209,6 @@ class TestEditDataSample(TestCase):
         data_sample_merged.sample_model = 'ema'
         data_sample_merged.fake_img = EditDataSample(
             img=torch.randn(2, 3, 4, 4))
-        data_sample_merged.fake_img._is_stacked = True
 
         data_splited_1, data_splited_2 = data_sample_merged.split(True)
         assert (data_splited_1.gt_label.label == 1).all()
@@ -272,7 +257,13 @@ class TestEditDataSample(TestCase):
         assert (data_splited.metainfo == dict(
             channel_order='rgb', color_flag='color'))
 
-        # test split empty
+    def test_len(self):
         empty_data = EditDataSample(sample_kwargs={'a': 'a'})
-        empty_data._is_stacked = True
+        assert len(empty_data) == 1
+
+        empty_data = EditDataSample()
+        assert len(empty_data) == 1
+
+        empty_data = EditDataSample(
+            img=torch.randn(3, 3), metainfo=dict(img_shape=[3, 3]))
         assert len(empty_data) == 1

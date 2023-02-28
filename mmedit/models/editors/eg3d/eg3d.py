@@ -140,7 +140,6 @@ class EG3D(BaseConditionalGAN):
                           dict), ('Output of EG3D generator should be a dict.')
 
         data_sample = EditDataSample() if data_sample is None else data_sample
-        data_sample._is_stacked = True
         for k, v in output.items():
             assert isinstance(v, torch.Tensor), (
                 f'Output must be tensor. But \'{k}\' is type of '
@@ -197,7 +196,6 @@ class EG3D(BaseConditionalGAN):
                 outputs['fake_img'], data_samples)
 
             gen_sample = EditDataSample()
-            gen_sample._is_stacked = True
             if data_samples:
                 gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
@@ -217,7 +215,6 @@ class EG3D(BaseConditionalGAN):
                 outputs_ema['fake_img'], data_samples)
 
             gen_sample = EditDataSample()
-            gen_sample._is_stacked = True
             if data_samples:
                 gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:

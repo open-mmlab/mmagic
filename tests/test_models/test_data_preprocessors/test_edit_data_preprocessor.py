@@ -706,7 +706,6 @@ class TestBaseDataPreprocessor(TestCase):
 
         # test stacked data sample + metainfo is None
         stacked_data_sample = EditDataSample()
-        stacked_data_sample._is_stacked = True
         batch_tensor = torch.randint(0, 255, (2, 3, 5, 5))
         output = cov_fn(batch_tensor, stacked_data_sample, True)
         self.assertEqual(output.shape, (2, 3, 5, 5))

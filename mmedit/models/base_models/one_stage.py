@@ -403,7 +403,6 @@ class OneStageInpaintor(BaseModel):
         # create a stacked data sample here
         predictions = EditDataSample(
             fake_res=fake_reses, fake_img=fake_imgs, pred_img=fake_imgs)
-        predictions._is_stacked = True
 
         return predictions
 

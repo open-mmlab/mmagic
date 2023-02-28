@@ -4,7 +4,6 @@ from copy import deepcopy
 from itertools import chain
 from numbers import Number
 from typing import Any, Sequence, Union
-from warnings import warn
 
 import mmengine
 import numpy as np
@@ -53,18 +52,20 @@ def format_label(value: Union[torch.Tensor, np.ndarray, Sequence, int],
     return label
 
 
-def is_stacked_var(var: Any) -> bool:
-    """Check whether input variable is a stacked variable and can be split.
+def is_splitable_var(var: Any) -> bool:
+    """Check whether input is a splitable variable.
 
     Args:
         var (Any): The input variable to check.
 
     Returns:
-        bool: Whether input variable is a stacked variable.
+        bool: Whether input variable is a splitable variable.
     """
-    if isinstance(var, EditDataSample) and var.is_stacked:
+    if isinstance(var, EditDataSample):
         return True
     if isinstance(var, torch.Tensor):
+        return True
+    if isinstance(var, np.ndarray):
         return True
     if isinstance(var, abc.Sequence) and not isinstance(var, str):
         return True
@@ -167,12 +168,6 @@ class EditDataSample(BaseDataElement):
         'ori_trimap': 'ori_trimap'
     }
 
-    _is_stacked = False
-
-    @property
-    def is_stacked(self):
-        return self._is_stacked
-
     def set_predefined_data(self, data: dict) -> None:
         """set or change pre-defined key-value pairs in ``data_field`` by
         parameter ``data``.
@@ -258,8 +253,6 @@ class EditDataSample(BaseDataElement):
         Returns:
             EditDataSample: The stacked data sample.
         """
-        # 0. check if is empty
-
         # 1. check key consistency
         keys = data_samples[0].keys()
         assert all([data.keys() == keys for data in data_samples])
@@ -292,7 +285,6 @@ class EditDataSample(BaseDataElement):
             values = [data.metainfo[k] for data in data_samples]
             stacked_data_sample.set_metainfo({k: values})
 
-        stacked_data_sample._is_stacked = True
         return stacked_data_sample
 
     def split(self,
@@ -308,14 +300,9 @@ class EditDataSample(BaseDataElement):
         Returns:
             Sequence[EditDataSample]: The list of data samples after splitting.
         """
-        assert self.is_stacked, (
-            'Only support to call \'split\' for stacked data sample. Please '
-            'refer to \'EditDataSample.stack\' for more details.')
         # 1. split
         data_sample_list = [EditDataSample() for _ in range(len(self))]
         for k in self.all_keys():
-            if k == '_is_stacked':
-                continue
             stacked_value = self.get(k)
             if isinstance(stacked_value, torch.Tensor):
                 # split tensor shape like (N, *shape) to N (*shape) tensors
@@ -325,13 +312,9 @@ class EditDataSample(BaseDataElement):
                 labels = [l_ for l_ in stacked_value.label]
                 values = [LabelData(label=l_) for l_ in labels]
             elif isinstance(stacked_value, EditDataSample):
-                assert stacked_value.is_stacked, (
-                    f'Field \'{k}\' is \'EditDataSample\' type but '
-                    '\'is_stacked\' is False. Do not support split unstacked '
-                    'EditDataSample.')
                 values = stacked_value.split()
             else:
-                if is_stacked_var(stacked_value):
+                if is_splitable_var(stacked_value):
                     values = stacked_value
                 elif allow_nonseq_value:
                     values = [deepcopy(stacked_value)] * len(self)
@@ -340,7 +323,7 @@ class EditDataSample(BaseDataElement):
                         f'\'{k}\' is non-sequential data and '
                         '\'allow_nonseq_value\' is False. Please check your '
                         'data sample or set \'allow_nonseq_value\' as True '
-                        f'to copy fiedl \'{k}\' for all split data sample.')
+                        f'to copy field \'{k}\' for all split data sample.')
 
             field = 'metainfo' if k in self.metainfo_keys() else 'data'
             for data, v in zip(data_sample_list, values):
@@ -350,22 +333,20 @@ class EditDataSample(BaseDataElement):
 
     def __len__(self):
         """Get the length of the data sample."""
-        if self._is_stacked:
-            value_length = []
-            for k, v in chain(self.items(), self.metainfo_items()):
-                if k == '_is_stacked':
-                    continue
-                if isinstance(v, LabelData):
-                    value_length.append(v.label.shape[0])
-                elif is_stacked_var(v):
-                    value_length.append(len(v))
-                else:
-                    continue
-            if not value_length:
-                warn('Cannot found any element in stacked data sample, '
-                     'please check your data sample carefully.')
-                return 1
-            assert len(list(set(value_length))) == 1
-            length = value_length[0]
-            return length
-        return 1
+
+        value_length = []
+        for v in chain(self.values(), self.metainfo_values()):
+            if isinstance(v, LabelData):
+                value_length.append(v.label.shape[0])
+            elif is_splitable_var(v):
+                value_length.append(len(v))
+            else:
+                continue
+
+        # NOTE: If length of values are not same or the current data sample
+        # is empty, return length as 1
+        if len(list(set(value_length))) != 1:
+            return 1
+
+        length = value_length[0]
+        return length

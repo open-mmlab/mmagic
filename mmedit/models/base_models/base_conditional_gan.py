@@ -195,7 +195,6 @@ class BaseConditionalGAN(BaseGAN):
             outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
             gen_sample = EditDataSample()
-            gen_sample._is_stacked = True
             if data_samples:
                 gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
@@ -218,14 +217,12 @@ class BaseConditionalGAN(BaseGAN):
                 outputs_ema, data_samples)
 
             gen_sample = EditDataSample()
-            gen_sample._is_stacked = True
             if data_samples:
                 gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
                 gen_sample.gt_img = inputs['img']
             gen_sample.ema = EditDataSample(fake_img=outputs_ema)
             gen_sample.orig = EditDataSample(fake_img=outputs_orig)
-            gen_sample.ema._is_stacked = gen_sample.orig._is_stacked = True
             gen_sample.noise = noise
             gen_sample.set_gt_label(labels)
             gen_sample.sample_kwargs = deepcopy(sample_kwargs)

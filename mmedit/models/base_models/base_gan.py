@@ -353,7 +353,6 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
             gen_sample = EditDataSample()
-            gen_sample._is_stacked = True
             if data_samples:
                 gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
@@ -362,7 +361,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             gen_sample.noise = noise
             gen_sample.sample_kwargs = deepcopy(sample_kwargs)
             gen_sample.sample_model = sample_model
-            batch_sample_list = gen_sample.split(allow_nonseq_value=True)
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True, )
 
         else:  # sample model is 'ema/orig
             outputs_orig = self.generator(
@@ -375,14 +374,12 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 outputs_ema, data_samples)
 
             gen_sample = EditDataSample()
-            gen_sample._is_stacked = True
             if data_samples:
                 gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
                 gen_sample.gt_img = inputs['img']
             gen_sample.ema = EditDataSample(fake_img=outputs_ema)
             gen_sample.orig = EditDataSample(fake_img=outputs_orig)
-            gen_sample.ema._is_stacked = gen_sample.orig._is_stacked = True
             gen_sample.noise = noise
             gen_sample.sample_kwargs = deepcopy(sample_kwargs)
             gen_sample.sample_model = 'ema/orig'
