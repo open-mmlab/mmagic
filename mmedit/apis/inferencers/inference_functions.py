@@ -21,6 +21,7 @@ from torch.nn.parallel import scatter
 
 from mmedit.models.base_models import BaseTranslationModel
 from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 FILE_CLIENT = get_file_backend(backend_args={'backend': 'local'})
@@ -257,7 +258,7 @@ def inpainting_inference(model, masked_img, mask):
     data = dict()
     data['inputs'] = _data['inputs'] / 255.0
     data = collate([data])
-    data['data_samples'] = [_data['data_samples']]
+    data['data_samples'] = EditDataSample.stack([_data['data_samples']])
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
         data['data_samples'][0].mask.data = scatter(
@@ -308,7 +309,7 @@ def matting_inference(model, img, trimap):
     data = dict()
     data['inputs'] = torch.cat([_data['inputs'], trimap], dim=0).float()
     data = collate([data])
-    data['data_samples'] = [_data['data_samples']]
+    data['data_samples'] = EditDataSample.stack([_data['data_samples']])
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
     # forward the model

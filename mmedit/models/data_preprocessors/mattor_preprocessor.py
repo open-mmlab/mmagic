@@ -42,20 +42,25 @@ class MattorPreprocessor(EditDataPreprocessor):
         proc_trimap (str): Methods to process gt tensors.
             Default: 'rescale_to_zero_one'.
             Available options are ``rescale_to_zero_one`` and ``as-is``.
+        stack_data_sample (bool): Whether stack a list of data samples to one
+            data sample. Only support with input data samples are
+            `EditDataSamples`. Defaults to True.
     """
 
     def __init__(self,
                  mean: MEAN_STD_TYPE = [123.675, 116.28, 103.53],
                  std: MEAN_STD_TYPE = [58.395, 57.12, 57.375],
                  output_channel_order: str = 'RGB',
-                 proc_trimap: str = 'rescale_to_zero_one'):
+                 proc_trimap: str = 'rescale_to_zero_one',
+                 stack_data_sample=True):
         # specific data_keys for matting task
         data_keys = ['gt_fg', 'gt_bg', 'gt_merged', 'gt_alpha']
         super().__init__(
             mean,
             std,
             output_channel_order=output_channel_order,
-            data_keys=data_keys)
+            data_keys=data_keys,
+            stack_data_sample=stack_data_sample)
 
         self.proc_trimap = proc_trimap
         # self.proc_gt = proc_gt
@@ -124,6 +129,9 @@ class MattorPreprocessor(EditDataPreprocessor):
                 }
                 data_sample.set_metainfo(data_process_meta)
 
+        if self.stack_data_sample:
+            return EditDataSample.stack(data_samples)
+
         return data_samples
 
     def forward(self,
@@ -147,8 +155,7 @@ class MattorPreprocessor(EditDataPreprocessor):
         data = super().forward(data, training=training)
 
         batch_images = data['inputs']
-        batch_trimaps = torch.stack(
-            [data.trimap for data in data['data_samples']])
+        batch_trimaps = data['data_samples'].trimap
         batch_trimaps = self._proc_batch_trimap(batch_trimaps)
 
         # Stack image and trimap along channel dimension

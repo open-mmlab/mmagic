@@ -265,8 +265,7 @@ class SRGAN(BaseEditModel):
             Tensor: Extract gt data.
         """
 
-        gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
-        batch_gt_data = torch.stack(gt_imgs)
+        batch_gt_data = data_samples.gt_img
 
         return batch_gt_data
 

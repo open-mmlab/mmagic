@@ -402,7 +402,7 @@ def prepare_inception_feat(dataloader: DataLoader,
         data_samples = data_preprocessor(data, False)['data_samples']
 
         real_key = 'gt_img' if metric.real_key is None else metric.real_key
-        img = torch.stack([getattr(data, real_key) for data in data_samples])
+        img = getattr(data_samples, real_key)
 
         real_feat_ = metric.forward_inception(img).cpu()
         real_feat.append(real_feat_)
@@ -540,7 +540,7 @@ def prepare_vgg_feat(dataloader: DataLoader,
         data_samples = data_preprocessor(data, False)['data_samples']
 
         real_key = 'gt_img' if metric.real_key is None else metric.real_key
-        img = torch.stack([getattr(data, real_key) for data in data_samples])
+        img = getattr(data_samples, real_key)
 
         real_feat_ = metric.extract_features(img)
         real_feat.append(real_feat_)

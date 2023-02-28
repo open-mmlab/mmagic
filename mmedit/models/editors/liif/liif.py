@@ -36,12 +36,8 @@ class LIIF(BaseEditModel):
             Tensor: result of simple forward.
         """
 
-        coord = torch.stack([
-            data_sample.metainfo['coord'] for data_sample in data_samples
-        ]).to(inputs)
-        cell = torch.stack([
-            data_sample.metainfo['cell'] for data_sample in data_samples
-        ]).to(inputs)
+        coord = torch.stack(data_samples.metainfo['coord']).to(inputs)
+        cell = torch.stack(data_samples.metainfo['cell']).to(inputs)
 
         feats = self.generator(inputs, coord, cell, **kwargs)
 
@@ -54,7 +50,7 @@ class LIIF(BaseEditModel):
         Args:
             inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
-            data_samples (List[BaseDataElement], optional):
+            data_samples (BaseDataElement, optional):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
@@ -65,15 +61,15 @@ class LIIF(BaseEditModel):
 
         # reshape for eval, [bz, N, 3] -> [bz, 3, H, W]
         ih, iw = inputs.shape[-2:]
-        coord_count = data_samples[0].metainfo['coord'].shape[0]
+        # metainfo in stacked data sample is a list, fetch by indexing
+        coord_count = data_samples.metainfo['coord'][0].shape[0]
         s = math.sqrt(coord_count / (ih * iw))
         shape = [len(data_samples), round(ih * s), round(iw * s), 3]
         feats = feats.view(shape).permute(0, 3, 1, 2).contiguous()
 
         feats = self.data_preprocessor.destruct(feats, data_samples)
 
-        predictions = []
-        for idx in range(feats.shape[0]):
-            predictions.append(EditDataSample(pred_img=feats[idx]))
+        predictions = EditDataSample(pred_img=feats.cpu())
+        predictions._is_stacked = True
 
         return predictions

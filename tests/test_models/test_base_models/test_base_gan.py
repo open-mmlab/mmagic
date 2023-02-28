@@ -285,7 +285,7 @@ class TestBaseGAN(TestCase):
             EditDataSample(id=2),
             EditDataSample(id=3)
         ]
-        outputs = gan(inputs, data_samples)
+        outputs = gan(inputs, EditDataSample.stack(data_samples))
         self.assertEqual(len(outputs), 3)
         for idx, output in enumerate(outputs):
             self.assertEqual(output.id, idx + 1)

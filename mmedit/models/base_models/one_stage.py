@@ -183,9 +183,8 @@ class OneStageInpaintor(BaseModel):
         log_vars = {}
 
         masked_img = batch_inputs  # float
-        gt_img = torch.stack([d.gt_img.data
-                              for d in data_samples])  # float, [-1,1]
-        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        # gt_img: float [-1, 1], mask: uint8 [0/1]
+        gt_img, mask = data_samples.gt_img, data_samples.mask
         mask = mask.float()
 
         # get common output from encdec
@@ -377,15 +376,14 @@ class OneStageInpaintor(BaseModel):
         # Pre-process runs in BaseModel.val_step / test_step
         masked_imgs = inputs  # N,3,H,W
 
-        masks = torch.stack(
-            list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
+        masks = data_samples.mask  # N,1,H,W
         input_xs = torch.cat([masked_imgs, masks], dim=1)  # N,4,H,W
         fake_reses = self.generator(input_xs)
         fake_imgs = fake_reses * masks + masked_imgs * (1. - masks)
         return fake_reses, fake_imgs
 
     def forward_test(self, inputs: torch.Tensor,
-                     data_samples: SampleList) -> SampleList:
+                     data_samples: SampleList) -> EditDataSample:
         """Forward function for testing.
 
         Args:
@@ -401,20 +399,23 @@ class OneStageInpaintor(BaseModel):
         predictions = []
         fake_reses = self.data_preprocessor.destruct(fake_reses, data_samples)
         fake_imgs = self.data_preprocessor.destruct(fake_imgs, data_samples)
-        for (fr, fi) in zip(fake_reses, fake_imgs):
-            pred = EditDataSample(fake_res=fr, fake_img=fi, pred_img=fi)
-            predictions.append(pred)
+
+        # create a stacked data sample here
+        predictions = EditDataSample(
+            fake_res=fake_reses, fake_img=fake_imgs, pred_img=fake_imgs)
+        predictions._is_stacked = True
+
         return predictions
 
-    def convert_to_datasample(self, predictions: List[EditDataSample],
-                              data_samples: List[EditDataSample],
+    def convert_to_datasample(self, predictions: EditDataSample,
+                              data_samples: EditDataSample,
                               inputs: Optional[torch.Tensor]
                               ) -> List[EditDataSample]:
         """Add predictions and destructed inputs (if passed) to data samples.
 
         Args:
-            predictions (List[EditDataSample]): The predictions of the model.
-            data_samples (List[EditDataSample]): The data samples loaded from
+            predictions (EditDataSample): The predictions of the model.
+            data_samples (EditDataSample): The data samples loaded from
                 dataloader.
             inputs (Optional[torch.Tensor]): The input of model. Defaults to
                 None.
@@ -422,16 +423,15 @@ class OneStageInpaintor(BaseModel):
         Returns:
             List[EditDataSample]: Modified data samples.
         """
+        if inputs is not None:
+            destructed_input = self.data_preprocessor.destruct(
+                inputs, data_samples, 'img')
+            data_samples.set_tensor_data({'input': destructed_input})
+        data_samples = data_samples.split()
+        predictions = predictions.split()
+
         for data_sample, pred in zip(data_samples, predictions):
             data_sample.output = pred
-
-        if inputs is not None:
-            assert inputs.shape[0] == len(predictions), (
-                'The length of inputs and outputs must be same.')
-            for idx, data_sample in enumerate(data_samples):
-                destructed_input = self.data_preprocessor.destruct(
-                    inputs[idx], data_sample)
-                data_sample.set_data({'input': destructed_input})
 
         return data_samples
 

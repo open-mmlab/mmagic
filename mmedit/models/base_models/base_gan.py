@@ -360,6 +360,8 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 outputs_orig, data_samples)
             outputs = dict(ema=outputs, orig=outputs_orig)
 
+        if data_samples:
+            data_samples = data_samples.split()
         batch_sample_list = []
         for idx in range(num_batches):
             gen_sample = EditDataSample()

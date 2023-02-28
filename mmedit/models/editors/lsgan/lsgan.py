@@ -71,21 +71,20 @@ class LSGAN(BaseGAN):
         loss, log_var = self.parse_losses(losses_dict)
         return loss, log_var
 
-    def train_discriminator(self, inputs: dict,
-                            data_samples: List[EditDataSample],
+    def train_discriminator(self, inputs: dict, data_samples: EditDataSample,
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = torch.stack([data.gt_img for data in data_samples])
+        real_imgs = data_samples.gt_img
 
         num_batches = real_imgs.shape[0]
 

@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -109,21 +109,20 @@ class SAGAN(BaseConditionalGAN):
         loss, log_var = self.parse_losses(losses_dict)
         return loss, log_var
 
-    def train_discriminator(self, inputs: dict,
-                            data_samples: List[EditDataSample],
+    def train_discriminator(self, inputs: dict, data_samples: EditDataSample,
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = torch.stack([data.gt_img for data in data_samples])
+        real_imgs = data_samples.gt_img
         real_labels = self.data_sample_to_label(data_samples)
         assert real_labels is not None, (
             'Cannot found \'gt_label\' in \'data_sample\'.')
@@ -144,13 +143,13 @@ class SAGAN(BaseConditionalGAN):
         optimizer_wrapper.update_params(parsed_losses)
         return log_vars
 
-    def train_generator(self, inputs: dict, data_samples: List[EditDataSample],
+    def train_generator(self, inputs: dict, data_samples: EditDataSample,
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.

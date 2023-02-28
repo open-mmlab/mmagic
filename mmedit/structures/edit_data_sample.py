@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from itertools import chain
 from numbers import Number
 from typing import Sequence, Union
 
@@ -81,42 +82,18 @@ class EditDataSample(BaseDataElement):
 
          >>> import torch
          >>> import numpy as np
-         >>> from mmedit.structures import EditDataSample, PixelData
-         >>> data_sample = EditDataSample()
+         >>> from mmedit.structures import EditDataSample
          >>> img_meta = dict(img_shape=(800, 1196, 3))
          >>> img = torch.rand((3, 800, 1196))
-         >>> gt_img = PixelData(data=img, metainfo=img_meta)
-         >>> data_sample.gt_img = gt_img
-         >>> assert 'img_shape' in data_sample.gt_img.metainfo_keys()
+         >>> data_sample = EditDataSample(gt_img=img, metainfo=img_meta)
+         >>> assert 'img_shape' in data_sample.metainfo_keys()
         <EditDataSample(
 
             META INFORMATION
+            img_shape: (800, 1196, 3)
 
             DATA FIELDS
-            _gt_img: <PixelData(
-
-                    META INFORMATION
-                    img_shape: (800, 1196, 3)
-
-                    DATA FIELDS
-                    data: tensor([[[0.8069, 0.4279,  ..., 0.6603, 0.0292],
-
-                                ...,
-
-                                [0.8139, 0.0908,  ..., 0.4964, 0.9672]]])
-                ) at 0x1f6ae000af0>
-            gt_img: <PixelData(
-
-                    META INFORMATION
-                    img_shape: (800, 1196, 3)
-
-                    DATA FIELDS
-                    data: tensor([[[0.8069, 0.4279,  ..., 0.6603, 0.0292],
-
-                                ...,
-
-                                [0.8139, 0.0908,  ..., 0.4964, 0.9672]]])
-                ) at 0x1f6ae000af0>
+            gt_img: tensor(...)
         ) at 0x1f6a5a99a00>
     """
 
@@ -169,6 +146,12 @@ class EditDataSample(BaseDataElement):
         'ori_trimap': 'ori_trimap'
     }
 
+    _is_stacked = False
+
+    @property
+    def is_stacked(self):
+        return self._is_stacked
+
     def set_predefined_data(self, data: dict) -> None:
         """set or change pre-defined key-value pairs in ``data_field`` by
         parameter ``data``.
@@ -204,7 +187,7 @@ class EditDataSample(BaseDataElement):
             if k == 'gt_label':
                 self.set_gt_label(v)
             else:
-                setattr(self, k, all_to_tensor(v))
+                self.set_field(all_to_tensor(v), k, dtype=torch.Tensor)
 
     def set_gt_label(
         self, value: Union[np.ndarray, torch.Tensor, Sequence[Number], Number]
@@ -239,3 +222,101 @@ class EditDataSample(BaseDataElement):
     def gt_label(self):
         """Delete gt label."""
         del self._gt_label
+
+    @classmethod
+    def stack(cls,
+              data_samples: Sequence['EditDataSample']) -> 'EditDataSample':
+        """Stack a list of data samples to one. All tensor fields will be
+        stacked at first dimension. Otherwise the values will be saved in a
+        list.
+
+        Args:
+            data_samples (Sequence['EditDataSample']): A sequence of
+                `EditDataSample` to stack.
+
+        Returns:
+            EditDataSample: The stacked data sample.
+        """
+        # 0. check if is empty
+
+        # 1. check key consistency
+        keys = data_samples[0].keys()
+        assert all([data.keys() == keys for data in data_samples])
+
+        meta_keys = data_samples[0].metainfo_keys()
+        assert all(
+            [data.metainfo_keys() == meta_keys for data in data_samples])
+
+        # 2. stack data
+        stacked_data_sample = EditDataSample()
+        for k in keys:
+            values = [getattr(data, k) for data in data_samples]
+            # 3. check type consistent
+            value_type = type(values[0])
+            assert all([type(val) == value_type for val in values])
+
+            # 4. stack
+            if isinstance(values[0], torch.Tensor):
+                stacked_value = torch.stack(values)
+            elif isinstance(values[0], LabelData):
+                labels = [data.label for data in values]
+                values = torch.stack(labels)
+                stacked_value = LabelData(label=values)
+            else:
+                stacked_value = values
+            stacked_data_sample.set_field(stacked_value, k)
+
+        # 5. stack metainfo
+        for k in meta_keys:
+            values = [data.metainfo[k] for data in data_samples]
+            stacked_data_sample.set_metainfo({k: values})
+
+        stacked_data_sample._is_stacked = True
+        return stacked_data_sample
+
+    def split(self) -> Sequence['EditDataSample']:
+        """Split a sequence of data sample in the first dimension.
+
+        Returns:
+            Sequence[EditDataSample]: The list of data samples after splitting.
+        """
+        assert self.is_stacked, (
+            'Only support to call \'split\' for stacked data sample. Please '
+            'refer to \'EditDataSample.stack\' for more details.')
+        # 1. split
+        data_sample_list = [EditDataSample() for _ in range(len(self))]
+        for k in self.all_keys():
+            if k == '_is_stacked':
+                continue
+            stacked_value = self.get(k)
+            if isinstance(stacked_value, torch.Tensor):
+                # split tensor shape like (N, *shape) to N (*shape) tensors
+                values = [v for v in stacked_value]
+            elif isinstance(stacked_value, LabelData):
+                # split tensor shape like (N, *shape) to N (*shape) tensors
+                labels = [l_ for l_ in stacked_value.label]
+                values = [LabelData(label=l_) for l_ in labels]
+            else:
+                values = stacked_value
+
+            field = 'metainfo' if k in self.metainfo_keys() else 'data'
+            for data, v in zip(data_sample_list, values):
+                data.set_field(v, k, field_type=field)
+
+        return data_sample_list
+
+    def __len__(self):
+        """Get the length of the data sample."""
+        if self._is_stacked:
+            value_length = []
+            for k, v in chain(self.items(), self.metainfo_items()):
+                if k == '_is_stacked':
+                    continue
+                if isinstance(v, LabelData):
+                    value_length.append(v.label.shape[0])
+                else:
+                    value_length.append(len(v))
+                assert len(list(set(value_length))) == 1
+            length = value_length[0]
+            return length
+        return 1

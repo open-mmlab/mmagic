@@ -65,7 +65,7 @@ def test_one_stage_inpaintor():
             mask_bbox=mask_bbox,
             gt_img=gt_img,
         )
-        data_samples = [data_sample]
+        data_samples = EditDataSample.stack([data_sample])
         data_batch = {'inputs': inputs, 'data_samples': [data_sample]}
 
         # test forward_tensor
@@ -74,7 +74,7 @@ def test_one_stage_inpaintor():
 
         # test forward test
         predictions = inpaintor.forward_test(inputs, data_samples)
-        assert predictions[0].fake_img.data.shape == (3, 256, 256)
+        assert predictions.fake_img.shape == (1, 3, 256, 256)
 
         # test train_step
         optim_g = torch.optim.SGD(inpaintor.generator.parameters(), lr=0.1)

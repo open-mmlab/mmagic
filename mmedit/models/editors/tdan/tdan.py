@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch
-
 from mmedit.models import BaseEditModel
 from mmedit.registry import MODELS
 
@@ -58,8 +56,7 @@ class TDAN(BaseEditModel):
 
         feats, aligned_img = self.forward_tensor(
             inputs, data_samples, training=True, **kwargs)
-        gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
-        batch_gt_data = torch.stack(gt_imgs)
+        batch_gt_data = data_samples.gt_img
 
         losses = dict()
         # loss on the HR image

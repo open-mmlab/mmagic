@@ -60,6 +60,7 @@ def test_liif():
 
     # val
     predictions = model.val_step(data)
+    # predictions = predictions.split()
     assert isinstance(predictions, List)
     assert len(predictions) == 1
     assert isinstance(predictions[0], EditDataSample)
@@ -67,5 +68,8 @@ def test_liif():
     assert predictions[0].output.pred_img.shape == (3, 16, 16)
 
     # feat
-    output = model(torch.rand(1, 3, 8, 8), [data_sample], mode='tensor')
+    output = model(
+        torch.rand(1, 3, 8, 8),
+        EditDataSample.stack([data_sample]),
+        mode='tensor')
     assert output.shape == (1, 256, 3)
