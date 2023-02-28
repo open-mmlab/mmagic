@@ -202,11 +202,6 @@ class SinGAN(BaseGAN):
         mode = 'rand' if mode is None else mode
         curr_scale = gen_kwargs.pop('curr_scale', self.curr_stage)
 
-        # if sample_model in ['ema', 'ema/orig']:
-        #     generator = self.generator_ema
-        # else:  # model is 'orig'
-        #     generator = self.generator
-
         self.fixed_noises = [
             x.to(self.data_preprocessor.device) for x in self.fixed_noises
         ]
@@ -227,6 +222,7 @@ class SinGAN(BaseGAN):
                 curr_scale=curr_scale,
                 **gen_kwargs)
 
+            gen_sample = EditDataSample()
             # destruct
             if isinstance(outputs, dict):
                 outputs['fake_img'] = self.data_preprocessor.destruct(
@@ -235,6 +231,10 @@ class SinGAN(BaseGAN):
                     self.data_preprocessor.destruct(r, data_samples)
                     for r in outputs['prev_res_list']
                 ]
+                gen_sample.fake_img = self.data_preprocessor.destruct(
+                    outputs['fake_img'], data_samples)
+                # gen_sample.prev_res_list = self.data_preprocessor.destruct(
+                #     outputs['fake_img'], data_samples)
             else:
                 outputs = self.data_preprocessor.destruct(
                     outputs, data_samples)
