@@ -299,12 +299,6 @@ class MultiScaleStructureSimilarity(GenerativeMetric):
         minibatch = torch.stack(fake_imgs, dim=0)
 
         assert minibatch.shape[0] % 2 == 0, 'batch size must be divided by 2.'
-        # minibatch = ((minibatch + 1) / 2)
-        # minibatch = minibatch.clamp_(0, 1)
-        # half1 = minibatch[0::2].cpu().data.numpy().transpose((0, 2, 3, 1))
-        # half1 = (half1 * 255).astype('uint8')
-        # half2 = minibatch[1::2].cpu().data.numpy().transpose((0, 2, 3, 1))
-        # half2 = (half2 * 255).astype('uint8')
 
         half1 = minibatch[0::2].cpu().data.numpy().transpose((0, 2, 3, 1))
         half2 = minibatch[1::2].cpu().data.numpy().transpose((0, 2, 3, 1))
