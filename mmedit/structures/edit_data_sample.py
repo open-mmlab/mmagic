@@ -1,7 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from collections import abc
+from copy import deepcopy
 from itertools import chain
 from numbers import Number
-from typing import Sequence, Union
+from typing import Any, Sequence, Union
+from warnings import warn
 
 import mmengine
 import numpy as np
@@ -48,6 +51,24 @@ def format_label(value: Union[torch.Tensor, np.ndarray, Sequence, int],
                              f'exceed num_classes ({num_classes}).')
     label = LabelData(label=value, metainfo=metainfo)
     return label
+
+
+def is_stacked_var(var: Any) -> bool:
+    """Check whether input variable is a stacked variable and can be split.
+
+    Args:
+        var (Any): The input variable to check.
+
+    Returns:
+        bool: Whether input variable is a stacked variable.
+    """
+    if isinstance(var, EditDataSample) and var.is_stacked:
+        return True
+    if isinstance(var, torch.Tensor):
+        return True
+    if isinstance(var, abc.Sequence) and not isinstance(var, str):
+        return True
+    return False
 
 
 class EditDataSample(BaseDataElement):
@@ -274,8 +295,15 @@ class EditDataSample(BaseDataElement):
         stacked_data_sample._is_stacked = True
         return stacked_data_sample
 
-    def split(self) -> Sequence['EditDataSample']:
+    def split(self,
+              allow_nonseq_value: bool = False) -> Sequence['EditDataSample']:
         """Split a sequence of data sample in the first dimension.
+
+        Args:
+            allow_nonseq_value (bool): Whether allow non-sequential data in
+                split operation. If True, non-sequential data will be copied
+                for all split data samples. Otherwise, an error will be
+                raised. Defaults to False.
 
         Returns:
             Sequence[EditDataSample]: The list of data samples after splitting.
@@ -296,8 +324,23 @@ class EditDataSample(BaseDataElement):
                 # split tensor shape like (N, *shape) to N (*shape) tensors
                 labels = [l_ for l_ in stacked_value.label]
                 values = [LabelData(label=l_) for l_ in labels]
+            elif isinstance(stacked_value, EditDataSample):
+                assert stacked_value.is_stacked, (
+                    f'Field \'{k}\' is \'EditDataSample\' type but '
+                    '\'is_stacked\' is False. Do not support split unstacked '
+                    'EditDataSample.')
+                values = stacked_value.split()
             else:
-                values = stacked_value
+                if is_stacked_var(stacked_value):
+                    values = stacked_value
+                elif allow_nonseq_value:
+                    values = [deepcopy(stacked_value)] * len(self)
+                else:
+                    raise TypeError(
+                        f'\'{k}\' is non-sequential data and '
+                        '\'allow_nonseq_value\' is False. Please check your '
+                        'data sample or set \'allow_nonseq_value\' as True '
+                        f'to copy fiedl \'{k}\' for all split data sample.')
 
             field = 'metainfo' if k in self.metainfo_keys() else 'data'
             for data, v in zip(data_sample_list, values):
@@ -314,9 +357,15 @@ class EditDataSample(BaseDataElement):
                     continue
                 if isinstance(v, LabelData):
                     value_length.append(v.label.shape[0])
-                else:
+                elif is_stacked_var(v):
                     value_length.append(len(v))
-                assert len(list(set(value_length))) == 1
+                else:
+                    continue
+            if not value_length:
+                warn('Cannot found any element in stacked data sample, '
+                     'please check your data sample carefully.')
+                return 1
+            assert len(list(set(value_length))) == 1
             length = value_length[0]
             return length
         return 1
