@@ -13,9 +13,10 @@
 #                                   set_random_seed,
 #                                   video_interpolation_inference)
 
-from .diffusers_wrapped import StableDiffusionInferencer
+# from .diffusers_wrapped import StableDiffusionInferencer
+from .inferencers import TranslationInferencer
 
-__all__ = ['StableDiffusionInferencer']
+__all__ = ['TranslationInferencer']
 
 # __all__ = [
 #     'init_model', 'delete_cfg', 'set_random_seed',

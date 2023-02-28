@@ -1,4 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .colorization_inferencer import ColorizationInferencer
+from .translation_inferencer import TranslationInferencer
 
-__all__ = ['ColorizationInferencer']
+__all__ = ['TranslationInferencer']

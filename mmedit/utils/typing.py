@@ -15,7 +15,9 @@ LabelVar = Union[Tensor, Callable, List[int], None]
 ConfigType = Union[ConfigDict, Dict]
 
 InputType = Union[str, int, np.ndarray]
-InputsType = Union[InputType, Sequence[InputType]]
+InputsType = Union[Union[str, int, np.ndarray], Sequence[Union[str, int,
+                                                               np.ndarray]]]
+
 PredType = Union[BaseDataElement, SampleList]
 ImgType = Union[np.ndarray, Sequence[np.ndarray]]
 ResType = Union[Dict, List[Dict], BaseDataElement, List[BaseDataElement]]

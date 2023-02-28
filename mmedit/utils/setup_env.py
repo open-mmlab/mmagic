@@ -6,8 +6,10 @@ from types import ModuleType
 from typing import Optional
 
 from mmengine import Config, DefaultScope
+from mmengine.config import ConfigDict
+from mmengine.registry import init_default_scope
+from mmengine.runner import load_checkpoint
 from mmengine.runner import set_random_seed as set_random_seed_engine
-from mmengine.utils import ConfigDict, init_default_scope, load_checkpoint
 
 from mmedit.registry import MODELS
 

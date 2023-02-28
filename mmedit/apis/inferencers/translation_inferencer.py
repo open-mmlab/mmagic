@@ -7,52 +7,19 @@ import torch
 from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
+from mmengine.infer import BaseInferencer
 from torchvision import utils
 
 from mmedit.models.base_models import BaseTranslationModel
-from ..inferencer_utils import BaseMMEditInferencer, InputsType, PredType
 
 
-class TranslationInferencer(BaseMMEditInferencer):
+class TranslationInferencer(BaseInferencer):
     """inferencer that predicts with translation models."""
 
-    func_kwargs = dict(
-        preprocess=['img'],
-        forward=[],
-        visualize=['result_out_dir'],
-        postprocess=[])
-
-    def preprocess(self, img: InputsType) -> Dict:
-        """Process the inputs into a model-feedable format.
-
-        Args:
-            img(InputsType): Image to be translated by models.
-
-        Returns:
-            results(Dict): Results of preprocess.
-        """
-        assert isinstance(self.model, BaseTranslationModel)
-
-        # get source domain and target domain
-        self.target_domain = self.model._default_domain
-        source_domain = self.model.get_other_domains(self.target_domain)[0]
-
-        cfg = self.model.cfg
-        # build the data pipeline
-        test_pipeline = Compose(cfg.test_pipeline)
-
-        # prepare data
-        # dirty code to deal with test data pipeline
-        data = dict()
-        data['pair_path'] = img
-        data['img_A_path'] = img
-        data['img_B_path'] = img
-        data = collate([test_pipeline(data)])
-        data = self.model.data_preprocessor(data, False)
-
-        inputs_dict = data['inputs']
-        results = inputs_dict[f'img_{source_domain}']
-        return results
+    preprocess_kwargs: set = set('img')
+    forward_kwargs: set = set()
+    visualize_kwargs: set = set('result_out_dir')
+    postprocess_kwargs: set = set()
 
     def forward(self, inputs: InputsType) -> PredType:
         """Forward the inputs to the model."""
@@ -84,4 +51,39 @@ class TranslationInferencer(BaseMMEditInferencer):
             mkdir_or_exist(os.path.dirname(result_out_dir))
             utils.save_image(results, result_out_dir)
 
+        return results
+
+    def preprocess(
+        self, inputs: Union[Union[str, int, np.ndarray],
+                            Sequence[Union[str, int, np.ndarray]]]
+    ) -> Dict:
+        """Process the inputs into a model-feedable format.
+
+        Args:
+            img(InputsType): Image to be translated by models.
+
+        Returns:
+            results(Dict): Results of preprocess.
+        """
+        assert isinstance(self.model, BaseTranslationModel)
+
+        # get source domain and target domain
+        self.target_domain = self.model._default_domain
+        source_domain = self.model.get_other_domains(self.target_domain)[0]
+
+        cfg = self.model.cfg
+        # build the data pipeline
+        test_pipeline = Compose(cfg.test_pipeline)
+
+        # prepare data
+        # dirty code to deal with test data pipeline
+        data = dict()
+        data['pair_path'] = img
+        data['img_A_path'] = img
+        data['img_B_path'] = img
+        data = collate([test_pipeline(data)])
+        data = self.model.data_preprocessor(data, False)
+
+        inputs_dict = data['inputs']
+        results = inputs_dict[f'img_{source_domain}']
         return results

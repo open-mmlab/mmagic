@@ -14,7 +14,6 @@ from requests.exceptions import InvalidURL, RequestException, Timeout
 
 MMEDIT_CACHE_DIR = os.path.expanduser('~') + '/.cache/openmmlab/mmedit/'
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
-FILE_CLIENT = get_file_backend(backend_args={'backend': 'local'})
 
 
 def get_content_from_url(url, timeout=15, stream=False):
@@ -112,6 +111,7 @@ def read_image(filepath):
     Returns:
         image (np.array): Image.
     """
+    FILE_CLIENT = get_file_backend(backend_args={'backend': 'local'})
     img_bytes = FILE_CLIENT.get(filepath)
     image = mmcv.imfrombytes(
         img_bytes, flag='color', channel_order='rgb', backend='pillow')

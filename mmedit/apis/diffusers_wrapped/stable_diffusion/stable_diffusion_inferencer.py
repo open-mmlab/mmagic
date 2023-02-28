@@ -44,21 +44,27 @@ class StableDiffusionInferencer(DiffusersInferencer):
         cutn_batches=4,
         seed=2022)
 
-    def __init__(self, model: str, device: str = 'gpu', **kwargs):
+    def __init__(self,
+                 config: Union[ConfigType, str],
+                 ckpt: Optional[str],
+                 device: Optional[str] = None,
+                 extra_parameters: Optional[Dict] = None,
+                 seed: int = 2022,
+                 **kwargs) -> None:
         """
         use `model` to create a stable diffusion pipeline
         Args:
             model: model id on modelscope hub.
             device: str = 'gpu'
         """
-        super().__init__(model, device, **kwargs)
-
-        torch_dtype = kwargs.get('torch_dtype', torch.float32)
+        # Load config to cfg
+        if device is None:
+            device = torch.device(
+                'cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = device
 
         # build upon the diffuser stable diffusion pipeline
-        self.inferencer = StableDiffusionPipeline.from_pretrained(
-            model, torch_dtype=torch_dtype)
-        self.pipeline.to(self.device)
+        self.inferencer = StableDiffusionPipeline.from_pretrained(config)
 
     def preprocess(self, text: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
