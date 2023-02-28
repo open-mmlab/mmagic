@@ -64,7 +64,7 @@ class MMEditInferencer:
         elif self.task in ['video_interpolation', 'Video Interpolation']:
             self.inferencer = VideoInterpolationInferencer(
                 config, ckpt, device, extra_parameters)
-        elif self.task in ['text2image', 'Text2Image']:
+        elif self.task in ['text2image', 'Text2Image','Text2Image,Image2Image,diffusion']:
             self.inferencer = Text2ImageInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['3D_aware_generation', '3D-aware Generation']:
