@@ -66,6 +66,7 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
             ds = ds.cuda()
         data_samples.append(ds)
 
+    data_samples = EditDataSample.stack(data_samples)
     return inputs, data_samples
 
 
@@ -101,7 +102,7 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
         if cuda:
             ds = ds.cuda()
         data_samples.append(ds)
-
+    data_samples = EditDataSample.stack(data_samples)
     return inputs, data_samples
 
 

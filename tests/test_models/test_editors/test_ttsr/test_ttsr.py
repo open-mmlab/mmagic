@@ -101,7 +101,9 @@ def test_ttsr(init_weights):
     assert output[0].output.pred_img.shape == (3, 128, 128)
 
     # feat
-    output = model(torch.rand(1, 3, 32, 32), [data_sample], mode='tensor')
+    stacked_data_sample = EditDataSample.stack([data_sample])
+    output = model(
+        torch.rand(1, 3, 32, 32), stacked_data_sample, mode='tensor')
     assert output.shape == (1, 3, 128, 128)
 
     # reset mock to clear some memory usage

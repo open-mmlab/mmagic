@@ -7,6 +7,9 @@ from torch.optim import Adam
 from mmedit.models import EDVR, EDVRNet
 from mmedit.models.losses import CharbonnierLoss
 from mmedit.structures import EditDataSample
+from mmedit.utils import register_all_modules
+
+register_all_modules()
 
 
 def test_edvr():
@@ -25,7 +28,8 @@ def test_edvr():
             with_tsa=True),
         pixel_loss=dict(
             type='CharbonnierLoss', loss_weight=1.0, reduction='sum'),
-        train_cfg=dict(tsa_iter=5000))
+        train_cfg=dict(tsa_iter=5000),
+        data_preprocessor=dict(type='EditDataPreprocessor'))
 
     assert isinstance(model, EDVR)
     assert isinstance(model.generator, EDVRNet)

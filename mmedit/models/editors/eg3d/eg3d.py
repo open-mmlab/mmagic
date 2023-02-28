@@ -112,12 +112,9 @@ class EG3D(BaseConditionalGAN):
             Optional[torch.Tensor]: Packed label tensor.
         """
 
-        if not data_sample or 'gt_label' not in data_sample[0].keys():
+        if not data_sample or 'gt_label' not in data_sample.keys():
             return None
-        cond = [sample.gt_label.label for sample in data_sample]
-        # `stack` here, not `cat`
-        cond = torch.stack(cond, dim=0)
-        return cond
+        return data_sample.gt_label.label
 
     def pack_to_data_sample(self,
                             output: Dict[str, Tensor],
@@ -146,12 +143,8 @@ class EG3D(BaseConditionalGAN):
             assert isinstance(v, torch.Tensor), (
                 f'Output must be tensor. But \'{k}\' is type of '
                 f'\'{type(v)}\'.')
-            # if v.ndim == 4 and v.shape[1] == 3:
-            #     setattr(data_sample, k, PixelData(data=v[index]))
-            # else:
-            #     # NOTE: hard code here, we assume all tensor are [bz, ...]
-            #     setattr(data_sample, k, v[index])
-            setattr(data_sample, k, v[index])
+            # NOTE: hard code here, we assume all tensor are [bz, ...]
+            data_sample.set_tensor_data({k: v[index]})
 
         return data_sample
 
@@ -203,6 +196,8 @@ class EG3D(BaseConditionalGAN):
 
             outputs = dict(ema=outputs, orig=outputs_orig)
 
+        if data_samples is not None:
+            data_samples = data_samples.split()
         batch_sample_list = []
         for idx in range(num_batches):
             gen_sample = EditDataSample()

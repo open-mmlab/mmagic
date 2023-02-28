@@ -57,7 +57,7 @@ def test_pconv_inpaintor():
     data = inpaintor.data_preprocessor(data_batch, True)
     data_inputs, data_sample = data['inputs'], data['data_samples']
     output = inpaintor.forward_test(data_inputs, data_sample)
-    prediction = output[0]
+    prediction = output.split()[0]
     assert 'fake_res' in prediction
     assert 'fake_img' in prediction
     assert 'pred_img' in prediction

@@ -393,7 +393,7 @@ class ProgressiveGrowingGAN(BaseGAN):
 
         data = self.data_preprocessor(data, True)
         data_sample = data['data_samples']
-        real_imgs = torch.stack([data.gt_img for data in data_sample])
+        real_imgs = data_sample.gt_img
 
         curr_scale = str(self.curr_scale[0])
         disc_optimizer_wrapper: OptimWrapper = optim_wrapper[

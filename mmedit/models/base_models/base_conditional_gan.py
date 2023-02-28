@@ -85,23 +85,22 @@ class BaseConditionalGAN(BaseGAN):
             num_classes=self.num_classes,
             device=self.device)
 
-    def data_sample_to_label(self, data_sample: List[EditDataSample]
+    def data_sample_to_label(self, data_sample: EditDataSample
                              ) -> Optional[torch.Tensor]:
         """Get labels from input `data_sample` and pack to `torch.Tensor`. If
         no label is found in the passed `data_sample`, `None` would be
         returned.
 
         Args:
-            data_sample (List[EditDataSample]): Input data samples.
+            data_sample (EditDataSample): Input data samples.
 
         Returns:
             Optional[torch.Tensor]: Packed label tensor.
         """
         # assume all data_sample have the same data fields
-        if not data_sample or 'gt_label' not in data_sample[0].keys():
+        if not data_sample or 'gt_label' not in data_sample.keys():
             return None
-        gt_labels = [sample.gt_label.label for sample in data_sample]
-        gt_labels = torch.cat(gt_labels, dim=0)
+        gt_labels = data_sample.gt_label.label
         return gt_labels
 
     @staticmethod
@@ -183,7 +182,6 @@ class BaseConditionalGAN(BaseGAN):
 
         labels = self.data_sample_to_label(data_samples)
         if labels is None:
-            # num_batches = get_valid_num_batches(inputs)
             labels = self.label_fn(num_batches=num_batches)
 
         sample_model = self._get_valid_model(inputs)
@@ -202,6 +200,8 @@ class BaseConditionalGAN(BaseGAN):
             outputs = dict(ema=outputs, orig=outputs_orig)
 
         batch_sample_list = []
+        if data_samples:
+            data_samples = data_samples.split()
         for idx in range(num_batches):
             gen_sample = EditDataSample()
             if data_samples:

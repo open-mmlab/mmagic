@@ -236,6 +236,7 @@ class CycleGAN(BaseTranslationModel):
 
         batch_sample_list = []
         num_batches = next(iter(outputs.values())).shape[0]
+        data_samples = data_samples.split()
         for idx in range(num_batches):
             gen_sample = EditDataSample()
             if data_samples:
@@ -275,6 +276,7 @@ class CycleGAN(BaseTranslationModel):
 
         batch_sample_list = []
         num_batches = next(iter(outputs.values())).shape[0]
+        data_samples = data_samples.split()
         for idx in range(num_batches):
             gen_sample = EditDataSample()
             if data_samples:
@@ -285,7 +287,7 @@ class CycleGAN(BaseTranslationModel):
                 fake_img = outputs[f'img_{target_domain}'][idx]
                 fake_img = self.data_preprocessor.destruct(
                     fake_img, data_samples[idx], f'img_{target_domain}')
-                setattr(gen_sample, f'fake_{target_domain}', fake_img)
+                gen_sample.set_tensor_data({f'fake_{target_domain}': fake_img})
 
             batch_sample_list.append(gen_sample)
         return batch_sample_list

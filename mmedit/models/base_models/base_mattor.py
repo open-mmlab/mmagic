@@ -159,7 +159,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
     def postprocess(
         self,
         batch_pred_alpha: torch.Tensor,  # N, 1, H, W, float32
-        data_samples: List[EditDataSample],
+        data_samples: EditDataSample,
     ) -> List[EditDataSample]:
         """Post-process alpha predictions.
 
@@ -184,9 +184,13 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         """
 
         assert batch_pred_alpha.ndim == 4  # N, 1, H, W, float32
-        assert len(batch_pred_alpha) == len(data_samples) == 1
+        assert len(batch_pred_alpha) == 1
 
+        # NOTE: for mattors, we split datasamples here, not in
+        # `convert_to_datasample`
+        data_samples = data_samples.split()
         predictions = []
+
         for pa, ds in zip(batch_pred_alpha, data_samples):
             pa = self.restore_size(pa, ds)  # 1, H, W
             pa = pa[0]  # H, W
@@ -241,7 +245,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
             inputs = self.resize_inputs(inputs)
             batch_pred_alpha = self._forward_test(inputs)
             predictions = self.postprocess(batch_pred_alpha, data_samples)
-            predictions = self.convert_to_datasample(data_samples, predictions)
+            predictions = self.convert_to_datasample(predictions, data_samples)
             return predictions
         elif mode == 'loss':
             loss = self._forward_train(inputs, data_samples)
@@ -249,9 +253,20 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         else:
             raise ValueError('Invalid forward mode.')
 
-    def convert_to_datasample(self, inputs: DataSamples,
-                              data_samples: List[EditDataSample]
+    def convert_to_datasample(self, predictions: List[EditDataSample],
+                              data_samples: EditDataSample
                               ) -> List[EditDataSample]:
-        for data_sample, output in zip(inputs, data_samples):
-            data_sample.output = output
-        return inputs
+        """Add predictions to data samples.
+
+        Args:
+            predictions (List[EditDataSample]): The predictions of the model.
+            data_samples (EditDataSample): The data samples loaded from
+                dataloader.
+
+        Returns:
+            List[EditDataSample]: Modified data samples.
+        """
+        data_samples = data_samples.split()
+        for data_sample, pred in zip(data_samples, predictions):
+            data_sample.output = pred
+        return data_samples

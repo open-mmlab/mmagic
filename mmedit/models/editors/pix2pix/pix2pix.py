@@ -188,14 +188,10 @@ class Pix2Pix(BaseTranslationModel):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
-            # setattr(gen_sample, f'gt_{target_domain}',
-            #         inputs_dict[f'img_{target_domain}'][idx])
             target = outputs['target'][idx]
             target = self.data_preprocessor.destruct(target, data_samples[idx],
                                                      f'img_{target_domain}')
             setattr(gen_sample, f'fake_{target_domain}', target)
-            # setattr(gen_sample, f'gt_{source_domain}',
-            #         inputs_dict[f'img_{source_domain}'][idx])
             batch_sample_list.append(gen_sample)
         return batch_sample_list
 
@@ -217,18 +213,16 @@ class Pix2Pix(BaseTranslationModel):
             inputs_dict[f'img_{source_domain}'], target_domain=target_domain)
 
         batch_sample_list = []
+        if data_samples:
+            data_samples = data_samples.split()
         num_batches = next(iter(outputs.values())).shape[0]
         for idx in range(num_batches):
             gen_sample = EditDataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
-            # setattr(gen_sample, f'gt_{target_domain}',
-            #         inputs_dict[f'img_{target_domain}'][idx])
             target = outputs['target'][idx]
             target = self.data_preprocessor.destruct(target, data_samples[idx],
                                                      f'img_{target_domain}')
-            setattr(gen_sample, f'fake_{target_domain}', target)
-            # setattr(gen_sample, f'gt_{source_domain}',
-            #         inputs_dict[f'img_{source_domain}'][idx])
+            gen_sample.set_tensor_data({f'fake_{target_domain}': target})
             batch_sample_list.append(gen_sample)
         return batch_sample_list
