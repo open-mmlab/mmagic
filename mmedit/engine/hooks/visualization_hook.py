@@ -359,8 +359,6 @@ class GenVisualizationHook(Hook):
                 if need_save:
                     self.inputs_buffer[sampler_type].append(inputs)
 
-            # import ipdb
-            # ipdb.set_trace()
             self._visualizer.add_datasample(
                 name=name,
                 gen_samples=output_list[:n_samples],
