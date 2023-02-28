@@ -116,11 +116,12 @@ class EG3D(BaseConditionalGAN):
             return None
         return data_sample.gt_label.label
 
-    def pack_to_data_sample(self,
-                            output: Dict[str, Tensor],
-                            index: int,
-                            data_sample: Optional[EditDataSample] = None
-                            ) -> EditDataSample:
+    def pack_to_data_sample(
+        self,
+        output: Dict[str, Tensor],
+        # index: int,
+        data_sample: Optional[EditDataSample] = None
+    ) -> EditDataSample:
         """Pack output to data sample. If :attr:`data_sample` is not passed, a
         new EditDataSample will be instantiated. Otherwise, outputs will be
         added to the passed datasample.
@@ -139,12 +140,13 @@ class EG3D(BaseConditionalGAN):
                           dict), ('Output of EG3D generator should be a dict.')
 
         data_sample = EditDataSample() if data_sample is None else data_sample
+        data_sample._is_stacked = True
         for k, v in output.items():
             assert isinstance(v, torch.Tensor), (
                 f'Output must be tensor. But \'{k}\' is type of '
                 f'\'{type(v)}\'.')
             # NOTE: hard code here, we assume all tensor are [bz, ...]
-            data_sample.set_tensor_data({k: v[index]})
+            data_sample.set_tensor_data({k: v})
 
         return data_sample
 
@@ -194,27 +196,17 @@ class EG3D(BaseConditionalGAN):
             outputs['fake_img'] = self.data_preprocessor.destruct(
                 outputs['fake_img'], data_samples)
 
-            if data_samples is not None:
-                data_samples = data_samples.split()
-            # save to data sample
-            for idx in range(num_batches):
-                gen_sample = EditDataSample()
-                # save inputs to data sample
-                if data_samples:
-                    gen_sample.update(data_samples[idx])
-                if isinstance(inputs, dict) and 'img' in inputs:
-                    gen_sample.gt_img = inputs['img'][idx]
-                # save outputs to data sample
-                gen_sample = self.pack_to_data_sample(outputs, idx, gen_sample)
-                gen_sample.sample_model = sample_model
-                gen_sample.set_gt_label(labels[idx])
-
-                # Append input condition (noise and sample_kwargs) to
-                # batch_sample_list
-                gen_sample.noise = noise[idx]
-                gen_sample.sample_kwargs = deepcopy(sample_kwargs)
-
-                batch_sample_list.append(gen_sample)
+            gen_sample = EditDataSample()
+            gen_sample._is_stacked = True
+            if data_samples:
+                gen_sample.update(data_samples)
+            if isinstance(inputs, dict) and 'img' in inputs:
+                gen_sample.gt_img = inputs['img']
+            gen_sample = self.pack_to_data_sample(outputs, gen_sample)
+            gen_sample.noise = noise
+            gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+            gen_sample.sample_model = sample_model
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True)
 
         else:
             outputs_orig = self.generator(noise, label=labels)
@@ -224,28 +216,18 @@ class EG3D(BaseConditionalGAN):
             outputs_ema['fake_img'] = self.data_preprocessor.destruct(
                 outputs_ema['fake_img'], data_samples)
 
-            if data_samples is not None:
-                data_samples = data_samples.split()
-            # save to data sample
-            for idx in range(num_batches):
-                gen_sample = EditDataSample()
-                # save inputs to data sample
-                if data_samples:
-                    gen_sample.update(data_samples[idx])
-                if isinstance(inputs, dict) and 'img' in inputs:
-                    gen_sample.gt_img = inputs['img'][idx]
-                # save outputs to data sample
-                gen_sample.ema = self.pack_to_data_sample(outputs_ema, idx)
-                gen_sample.orig = self.pack_to_data_sample(outputs_orig, idx)
-                gen_sample.sample_model = sample_model
-                gen_sample.set_gt_label(labels[idx])
-
-                # Append input condition (noise and sample_kwargs) to
-                # batch_sample_list
-                gen_sample.noise = noise[idx]
-                gen_sample.sample_kwargs = deepcopy(sample_kwargs)
-
-                batch_sample_list.append(gen_sample)
+            gen_sample = EditDataSample()
+            gen_sample._is_stacked = True
+            if data_samples:
+                gen_sample.update(data_samples)
+            if isinstance(inputs, dict) and 'img' in inputs:
+                gen_sample.gt_img = inputs['img']
+            gen_sample.ema = self.pack_to_data_sample(outputs_ema)
+            gen_sample.orig = self.pack_to_data_sample(outputs_orig)
+            gen_sample.noise = noise
+            gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+            gen_sample.sample_model = sample_model
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True)
 
         return batch_sample_list
 
