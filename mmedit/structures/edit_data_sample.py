@@ -290,14 +290,10 @@ class EditDataSample(BaseDataElement):
                 continue
             stacked_value = self.get(k)
             if isinstance(stacked_value, torch.Tensor):
-                # handle tensor shape like [1, *shape] split a tuple like
-                # ([1, *shape], ), therefore we convert it to [1, *shape]
-                # manually
+                # split tensor shape like (N, *shape) to N (*shape) tensors
                 values = [v for v in stacked_value]
             elif isinstance(stacked_value, LabelData):
-                # handle tensor shape like [1, *shape] split a tuple like
-                # ([1, *shape], ), therefore we convert it to [1, *shape]
-                # manually
+                # split tensor shape like (N, *shape) to N (*shape) tensors
                 labels = [l_ for l_ in stacked_value.label]
                 values = [LabelData(label=l_) for l_ in labels]
             else:
