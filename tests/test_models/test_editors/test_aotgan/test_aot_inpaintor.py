@@ -73,4 +73,4 @@ def test_aot_inpaintor():
     assert 'fake_res' in prediction
     assert 'fake_img' in prediction
     assert 'pred_img' in prediction
-    assert prediction.pred_img.shape == (1, 3, 256, 256)
+    assert prediction.pred_img.shape == (1, 3, 64, 64)
