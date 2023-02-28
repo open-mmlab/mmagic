@@ -343,48 +343,47 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
         num_batches = noise.shape[0]
 
         sample_model = self._get_valid_model(inputs)
-        if sample_model in ['ema', 'ema/orig']:
-            generator = self.generator_ema
-        else:  # sample model is 'orig'
-            generator = self.generator
+        batch_sample_list = []
+        if sample_model in ['ema', 'orig']:
+            if sample_model == 'ema':
+                generator = self.generator_ema
+            else:
+                generator = self.generator
+            outputs = generator(noise, return_noise=False, **sample_kwargs)
+            outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
-        num_batches = noise.shape[0]
-        outputs = generator(noise, return_noise=False, **sample_kwargs)
-        outputs = self.data_preprocessor.destruct(outputs, data_samples)
+            gen_sample = EditDataSample()
+            if data_samples:
+                gen_sample.update(data_samples)
+            if isinstance(inputs, dict) and 'img' in inputs:
+                gen_sample.gt_img = inputs['img']
+            gen_sample.fake_img = outputs
+            gen_sample.noise = noise
+            gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+            gen_sample.sample_model = sample_model
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True, )
 
-        if sample_model == 'ema/orig':
-            generator = self.generator
-            outputs_orig = generator(
+        else:  # sample model is 'ema/orig
+            outputs_orig = self.generator(
+                noise, return_noise=False, **sample_kwargs)
+            outputs_ema = self.generator_ema(
                 noise, return_noise=False, **sample_kwargs)
             outputs_orig = self.data_preprocessor.destruct(
                 outputs_orig, data_samples)
-            outputs = dict(ema=outputs, orig=outputs_orig)
+            outputs_ema = self.data_preprocessor.destruct(
+                outputs_ema, data_samples)
 
-        if data_samples:
-            data_samples = data_samples.split()
-        batch_sample_list = []
-        for idx in range(num_batches):
             gen_sample = EditDataSample()
             if data_samples:
-                gen_sample.update(data_samples[idx])
+                gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
-                gen_sample.gt_img = inputs['img'][idx]
-            if isinstance(outputs, dict):
-                gen_sample.ema = EditDataSample(
-                    fake_img=outputs['ema'][idx], sample_model='ema')
-                gen_sample.orig = EditDataSample(
-                    fake_img=outputs['orig'][idx], sample_model='orig')
-                gen_sample.sample_model = 'ema/orig'
-            else:
-                gen_sample.fake_img = outputs[idx]
-                gen_sample.sample_model = sample_model
-
-            # Append input condition (noise and sample_kwargs) to
-            # batch_sample_list
-            gen_sample.noise = noise[idx]
+                gen_sample.gt_img = inputs['img']
+            gen_sample.ema = EditDataSample(fake_img=outputs_ema)
+            gen_sample.orig = EditDataSample(fake_img=outputs_orig)
+            gen_sample.noise = noise
             gen_sample.sample_kwargs = deepcopy(sample_kwargs)
-
-            batch_sample_list.append(gen_sample)
+            gen_sample.sample_model = 'ema/orig'
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True)
 
         return batch_sample_list
 

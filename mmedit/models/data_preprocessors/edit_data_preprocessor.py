@@ -758,6 +758,8 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         if data_samples is None:
             return batch_tensor
 
+        # import ipdb
+        # ipdb.set_trace()
         if isinstance(data_samples, list):
             is_batch_data = True
             if 'padding_size' in data_samples[0].metainfo_keys():
@@ -766,18 +768,21 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                 ]
             else:
                 pad_infos = None
-        elif hasattr(data_samples, 'is_stacked') and data_samples.is_stacked:
-            is_batch_data = True
+        else:
             if 'padding_size' in data_samples.metainfo_keys():
                 pad_infos = data_samples.metainfo['padding_size']
             else:
                 pad_infos = None
-        else:
-            is_batch_data = False
-            if 'padding_size' in data_samples.metainfo_keys():
-                pad_infos = [data_samples.metainfo['padding_size']]
+            # NOTE: here we assume padding size in metainfo are saved as tensor
+            if not isinstance(pad_infos, list):
+                pad_infos = [pad_infos]
+                is_batch_data = False
             else:
+                is_batch_data = True
+            if all([pad_info is None for pad_info in pad_infos]):
                 pad_infos = None
+
+        if not is_batch_data:
             batch_tensor = batch_tensor[None, ...]
 
         if pad_infos is None:
@@ -789,6 +794,8 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                     WARNING)
             return batch_tensor if is_batch_data else batch_tensor[0]
 
+        # import ipdb
+        # ipdb.set_trace()
         if same_padding:
             # un-pad with the padding info of the first sample
             padded_h, padded_w = pad_infos[0][-2:]

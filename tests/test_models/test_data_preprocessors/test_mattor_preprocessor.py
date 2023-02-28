@@ -23,7 +23,6 @@ def test_mattor_preprocessor():
     assert isinstance(batch_inputs, torch.Tensor)
     assert batch_inputs.shape == (1, 6, 20, 20)
     assert isinstance(batch_data_samples, EditDataSample)
-    assert batch_data_samples.is_stacked
     assert batch_data_samples.trimap.shape == (1, 3, 20, 20)
 
     # test proc_batch_trimap
@@ -37,7 +36,6 @@ def test_mattor_preprocessor():
     assert isinstance(batch_inputs, torch.Tensor)
     assert batch_inputs.shape == (1, 6, 20, 20)
     assert isinstance(batch_data_samples, EditDataSample)
-    assert batch_data_samples.is_stacked
     assert batch_data_samples.trimap.shape == (1, 3, 20, 20)
     assert_allclose(batch_data_samples.trimap[0], target)
 

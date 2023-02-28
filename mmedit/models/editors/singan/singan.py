@@ -202,27 +202,18 @@ class SinGAN(BaseGAN):
         mode = 'rand' if mode is None else mode
         curr_scale = gen_kwargs.pop('curr_scale', self.curr_stage)
 
-        if sample_model in ['ema', 'ema/orig']:
-            generator = self.generator_ema
-        else:  # model is 'orig'
-            generator = self.generator
-
         self.fixed_noises = [
             x.to(self.data_preprocessor.device) for x in self.fixed_noises
         ]
 
-        outputs = generator(
-            None,
-            fixed_noises=self.fixed_noises,
-            noise_weights=self.noise_weights,
-            rand_mode=mode,
-            num_batches=1,
-            curr_scale=curr_scale,
-            **gen_kwargs)
+        batch_sample_list = []
+        if sample_model in ['ema', 'orig']:
+            if sample_model == 'ema':
+                generator = self.generator_ema
+            else:
+                generator = self.generator
 
-        if sample_model == 'ema/orig':
-            generator = self.generator
-            outputs_orig = generator(
+            outputs = generator(
                 None,
                 fixed_noises=self.fixed_noises,
                 noise_weights=self.noise_weights,
@@ -230,47 +221,103 @@ class SinGAN(BaseGAN):
                 num_batches=1,
                 curr_scale=curr_scale,
                 **gen_kwargs)
-            outputs = dict(ema=outputs, orig=outputs_orig)
 
-        batch_sample_list = []
-        for idx in range(num_batches):
             gen_sample = EditDataSample()
-            if data_samples:
-                gen_sample.update(data_samples[idx])
-                _data_sample = data_samples[idx]  # for destruct
-            else:
-                _data_sample = None  # for destruct
-            if sample_model == 'ema/orig':
-                for model_ in ['ema', 'orig']:
-                    model_sample_ = EditDataSample()
-                    output_ = outputs[model_]
-                    if isinstance(output_, dict):
-                        fake_img = self.data_preprocessor.destruct(
-                            output_['fake_img'][idx], _data_sample)
-                        prev_res_list = [
-                            self.data_preprocessor.destruct(
-                                r[idx], _data_sample)
-                            for r in outputs[model_]['prev_res_list']
-                        ]
-                        model_sample_.prev_res_list = prev_res_list
-                    else:
-                        fake_img = self.data_preprocessor.destruct(
-                            output_[idx], _data_sample)
-                    model_sample_.fake_img = fake_img
-                    model_sample_.sample_model = sample_model
-                    gen_sample.set_field(model_sample_, model_)
-            elif isinstance(outputs, dict):
-                gen_sample.fake_img = outputs['fake_img'][idx]
-                gen_sample.prev_res_list = [
-                    r[idx] for r in outputs['prev_res_list']
+            # destruct
+            if isinstance(outputs, dict):
+                outputs['fake_img'] = self.data_preprocessor.destruct(
+                    outputs['fake_img'], data_samples)
+                outputs['prev_res_list'] = [
+                    self.data_preprocessor.destruct(r, data_samples)
+                    for r in outputs['prev_res_list']
                 ]
-                gen_sample.sample_model = sample_model
+                gen_sample.fake_img = self.data_preprocessor.destruct(
+                    outputs['fake_img'], data_samples)
+                # gen_sample.prev_res_list = self.data_preprocessor.destruct(
+                #     outputs['fake_img'], data_samples)
             else:
-                gen_sample.fake_img = outputs[idx]
+                outputs = self.data_preprocessor.destruct(
+                    outputs, data_samples)
+
+            # save to data sample
+            for idx in range(num_batches):
+                gen_sample = EditDataSample()
+                # save inputs to data sample
+                if data_samples:
+                    gen_sample.update(data_samples[idx])
+                if isinstance(outputs, dict):
+                    gen_sample.fake_img = outputs['fake_img'][idx]
+                    gen_sample.prev_res_list = [
+                        r[idx] for r in outputs['prev_res_list']
+                    ]
+                else:
+                    gen_sample.fake_img = outputs[idx]
+
+                gen_sample.sample_model = sample_model
+                batch_sample_list.append(gen_sample)
+
+        else:  # sample model is 'ema/orig'
+
+            outputs_orig = self.generator(
+                None,
+                fixed_noises=self.fixed_noises,
+                noise_weights=self.noise_weights,
+                rand_mode=mode,
+                num_batches=1,
+                curr_scale=curr_scale,
+                **gen_kwargs)
+            outputs_ema = self.generator_ema(
+                None,
+                fixed_noises=self.fixed_noises,
+                noise_weights=self.noise_weights,
+                rand_mode=mode,
+                num_batches=1,
+                curr_scale=curr_scale,
+                **gen_kwargs)
+
+            # destruct
+            if isinstance(outputs_orig, dict):
+                outputs_orig['fake_img'] = self.data_preprocessor.destruct(
+                    outputs_orig['fake_img'], data_samples)
+                outputs_orig['prev_res_list'] = [
+                    self.data_preprocessor.destruct(r, data_samples)
+                    for r in outputs_orig['prev_res_list']
+                ]
+                outputs_ema['fake_img'] = self.data_preprocessor.destruct(
+                    outputs_ema['fake_img'], data_samples)
+                outputs_ema['prev_res_list'] = [
+                    self.data_preprocessor.destruct(r, data_samples)
+                    for r in outputs_ema['prev_res_list']
+                ]
+            else:
+                outputs_orig = self.data_preprocessor.destruct(
+                    outputs_orig, data_samples)
+                outputs_ema = self.data_preprocessor.destruct(
+                    outputs_ema, data_samples)
+
+            # save to data sample
+            for idx in range(num_batches):
+                gen_sample = EditDataSample()
+                gen_sample.ema = EditDataSample()
+                gen_sample.orig = EditDataSample()
+                # save inputs to data sample
+                if data_samples:
+                    gen_sample.update(data_samples[idx])
+                if isinstance(outputs_orig, dict):
+                    gen_sample.ema.fake_img = outputs_ema['fake_img'][idx]
+                    gen_sample.ema.prev_res_list = [
+                        r[idx] for r in outputs_ema['prev_res_list']
+                    ]
+                    gen_sample.orig.fake_img = outputs_orig['fake_img'][idx]
+                    gen_sample.orig.prev_res_list = [
+                        r[idx] for r in outputs_orig['prev_res_list']
+                    ]
+                else:
+                    gen_sample.ema.fake_img = outputs_ema[idx]
+                    gen_sample.orig.fake_img = outputs_orig[idx]
                 gen_sample.sample_model = sample_model
 
-            batch_sample_list.append(gen_sample)
-
+                batch_sample_list.append(gen_sample)
         return batch_sample_list
 
     def gen_loss(self, disc_pred_fake: Tensor,

@@ -190,7 +190,6 @@ class BaseEditModel(BaseModel):
 
         # create a stacked data sample here
         predictions = EditDataSample(pred_img=feats.cpu())
-        predictions._is_stacked = True
 
         return predictions
 

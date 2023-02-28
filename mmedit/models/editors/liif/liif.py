@@ -70,6 +70,5 @@ class LIIF(BaseEditModel):
         feats = self.data_preprocessor.destruct(feats, data_samples)
 
         predictions = EditDataSample(pred_img=feats.cpu())
-        predictions._is_stacked = True
 
         return predictions

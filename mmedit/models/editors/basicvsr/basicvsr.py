@@ -146,6 +146,5 @@ class BasicVSR(BaseEditModel):
         # create a stacked data sample
         predictions = EditDataSample(
             pred_img=feats.cpu(), metainfo=data_samples.metainfo)
-        predictions._is_stacked = True
 
         return predictions

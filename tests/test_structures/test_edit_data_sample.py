@@ -7,13 +7,17 @@ from mmengine.structures import LabelData
 from mmengine.testing import assert_allclose
 
 from mmedit.structures import EditDataSample
+from mmedit.structures.edit_data_sample import is_splitable_var
 
 
-def _equal(a, b):
-    if isinstance(a, (torch.Tensor, np.ndarray)):
-        return (a == b).all()
-    else:
-        return a == b
+def test_is_stacked_var():
+    assert is_splitable_var(EditDataSample())
+    assert is_splitable_var(torch.randn(10, 10))
+    assert is_splitable_var(np.ndarray((10, 10)))
+    assert is_splitable_var([1, 2])
+    assert is_splitable_var((1, 2))
+    assert not is_splitable_var({'a': 1})
+    assert not is_splitable_var('a')
 
 
 class TestEditDataSample(TestCase):
@@ -28,7 +32,6 @@ class TestEditDataSample(TestCase):
         assert 'target_size' in edit_data_sample
         assert edit_data_sample.target_size == [256, 256]
         assert edit_data_sample.get('target_size') == [256, 256]
-        assert not edit_data_sample.is_stacked
         assert len(edit_data_sample) == 1
 
     def _check_in_and_same(self, data_sample, field, value, is_meta=False):
@@ -203,7 +206,11 @@ class TestEditDataSample(TestCase):
         assert len(data_sample_merged) == 2
 
         # test split
-        data_splited_1, data_splited_2 = data_sample_merged.split()
+        data_sample_merged.sample_model = 'ema'
+        data_sample_merged.fake_img = EditDataSample(
+            img=torch.randn(2, 3, 4, 4))
+
+        data_splited_1, data_splited_2 = data_sample_merged.split(True)
         assert (data_splited_1.gt_label.label == 1).all()
         assert (data_splited_2.gt_label.label == 2).all()
         assert (data_splited_1.img.shape == data_sample1.img.shape)
@@ -214,6 +221,13 @@ class TestEditDataSample(TestCase):
             channel_order='rgb', color_flag='color'))
         assert (data_splited_2.metainfo == dict(
             channel_order='rgb', color_flag='color'))
+        assert data_splited_1.sample_model == 'ema'
+        assert data_splited_2.sample_model == 'ema'
+        assert data_splited_1.fake_img.img.shape == (3, 4, 4)
+        assert data_splited_2.fake_img.img.shape == (3, 4, 4)
+
+        with self.assertRaises(TypeError):
+            data_sample_merged.split()
 
         # test stack and split when batch size is 1
         data_sample = EditDataSample()
@@ -242,3 +256,14 @@ class TestEditDataSample(TestCase):
         assert (data_splited.img == data_sample.img).all()
         assert (data_splited.metainfo == dict(
             channel_order='rgb', color_flag='color'))
+
+    def test_len(self):
+        empty_data = EditDataSample(sample_kwargs={'a': 'a'})
+        assert len(empty_data) == 1
+
+        empty_data = EditDataSample()
+        assert len(empty_data) == 1
+
+        empty_data = EditDataSample(
+            img=torch.randn(3, 3), metainfo=dict(img_shape=[3, 3]))
+        assert len(empty_data) == 1
