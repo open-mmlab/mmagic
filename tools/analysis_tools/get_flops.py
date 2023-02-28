@@ -8,20 +8,32 @@ from mmengine.registry import init_default_scope
 from mmedit.registry import MODELS
 
 try:
-    from mmcv.cnn import get_model_complexity_info
+    from mmengine.analysis import get_model_complexity_info
 except ImportError:
-    raise ImportError('Please upgrade mmcv to >0.6.2')
+    raise ImportError('Please upgrade mmengine >= 0.6.0')
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Train a editor')
+    parser = argparse.ArgumentParser(description='Get a editor complexity')
     parser.add_argument('config', help='train config file path')
     parser.add_argument(
         '--shape',
         type=int,
         nargs='+',
-        default=[250, 250],
-        help='input image size')
+        default=[3, 250, 250],
+        help='input shape')
+    parser.add_argument(
+        '--activations',
+        action='store_true',
+        help='Whether to show the Activations')
+    parser.add_argument(
+        '--out-table',
+        action='store_true',
+        help='Whether to show the complexity table')
+    parser.add_argument(
+        '--out-arch',
+        action='store_true',
+        help='Whether to show the complexity arch')
     args = parser.parse_args()
     return args
 
@@ -30,14 +42,7 @@ def main():
 
     args = parse_args()
 
-    if len(args.shape) == 1:
-        input_shape = (3, args.shape[0], args.shape[0])
-    elif len(args.shape) == 2:
-        input_shape = (3, ) + tuple(args.shape)
-    elif len(args.shape) in [3, 4]:  # 4 for video inputs (t, c, h, w)
-        input_shape = tuple(args.shape)
-    else:
-        raise ValueError('invalid input shape')
+    input_shape = tuple(args.shape)
 
     cfg = Config.fromfile(args.config)
 
@@ -48,20 +53,21 @@ def main():
         model.cuda()
     model.eval()
 
-    if hasattr(model, 'forward_dummy'):
-        model.forward = model.forward_dummy
-    elif hasattr(model, 'forward_tensor'):
-        model.forward = model.forward_tensor
-    # else:
-    #     raise NotImplementedError(
-    #         'FLOPs counter is currently not currently supported '
-    #         f'with {model.__class__.__name__}')
-
-    flops, params = get_model_complexity_info(model, input_shape)
+    analysis_results = get_model_complexity_info(model, input_shape)
+    flops = analysis_results['flops_str']
+    params = analysis_results['params_str']
+    activations = analysis_results['activations_str']
 
     split_line = '=' * 30
     print(f'{split_line}\nInput shape: {input_shape}\n'
-          f'Flops: {flops}\nParams: {params}\n{split_line}')
+          f'Flops: {flops}\nParams: {params}\n{split_line}\n')
+    if args.activations:
+        print(f'Activations: {activations}\n{split_line}\n')
+    if args.out_table:
+        print(analysis_results['out_table'], '\n')
+    if args.out_arch:
+        print(analysis_results['out_arch'], '\n')
+
     if len(input_shape) == 4:
         print('!!!If your network computes N frames in one forward pass, you '
               'may want to divide the FLOPs by N to get the average FLOPs '
