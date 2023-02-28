@@ -352,8 +352,8 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         corresponding data samples.
 
         Args:
-            inputs (Tensor): Image tensor with shape (B, C, H, W) to
-                preprocess.
+            inputs (Tensor): Image tensor with shape (C, H, W), (N, C, H, W) or
+                (N, t, C, H, W) to preprocess.
             data_samples (List[EditDataSample], optional): The data samples
                 of corresponding inputs. If not passed, a list of empty data
                 samples will be initialized to save metainfo. Defaults to None.
@@ -367,16 +367,17 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         if not data_samples:  # none or empty list
             data_samples = [EditDataSample() for _ in range(inputs.shape[0])]
 
-        assert inputs.dim() == 4, (
-            'The input of `_preprocess_image_tensor` should be a NCHW '
-            'tensor or a list of tensor, but got a tensor with shape: '
-            f'{inputs.shape}')
+        assert inputs.dim() in [
+            3, 4, 5
+        ], ('The input of `_preprocess_image_tensor` should be a (C, H, W), '
+            '(N, C, H, W) or (N, t, C, H, W)tensor, but got a tensor with '
+            f'shape: {inputs.shape}')
         channel_order = self._parse_batch_channel_order(
             key, inputs, data_samples)
         inputs, output_channel_order = self._do_conversion(
             inputs, channel_order, self.output_channel_order)
         inputs = self._do_norm(inputs)
-        h, w = inputs.shape[2:]
+        h, w = inputs.shape[-2:]
         target_h = math.ceil(h / self.pad_size_divisor) * self.pad_size_divisor
         target_w = math.ceil(w / self.pad_size_divisor) * self.pad_size_divisor
         pad_h = target_h - h

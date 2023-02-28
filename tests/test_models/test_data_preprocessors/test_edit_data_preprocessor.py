@@ -256,7 +256,7 @@ class TestBaseDataPreprocessor(TestCase):
         process_fn = data_preprocessor._preprocess_image_tensor
         # 1. raise error
         with self.assertRaises(AssertionError):
-            process_fn(torch.rand(2, 4, 3, 5, 5), None)
+            process_fn(torch.rand(2, 25), None)
         # [0, 0, 0] for all time
         target_padding_info = torch.FloatTensor([0, 0, 0])
 
@@ -325,10 +325,10 @@ class TestBaseDataPreprocessor(TestCase):
             self.assertEqual(padding_size.shape, (3, ))
             self.assertTrue((padding_size == target_padding_info).all())
 
-        # 6. data sample is None
+        # 6. data sample is None + video inputs
         data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')
-        inputs = torch.randint(0, 255, (4, 3, 5, 5))
-        targets = ((inputs - 127.5) / 127.5)[:, [2, 1, 0]]
+        inputs = torch.randint(0, 255, (4, 5, 3, 5, 5))
+        targets = ((inputs - 127.5) / 127.5)[:, :, [2, 1, 0]]
         outputs, data_samples = process_fn(inputs, None, 'sin')
         for data in data_samples:
             self.assertEqual(data.metainfo['sin_output_channel_order'], 'RGB')
