@@ -194,27 +194,19 @@ class BaseConditionalGAN(BaseGAN):
             outputs = generator(noise, label=labels, return_noise=False)
             outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
+            gen_sample = EditDataSample()
+            gen_sample._is_stacked = True
             if data_samples:
-                data_samples = data_samples.split()
-            # save to data sample
-            for idx in range(num_batches):
-                gen_sample = EditDataSample()
-                # save inputs to data sample
-                if data_samples:
-                    gen_sample.update(data_samples[idx])
-                if isinstance(inputs, dict) and 'img' in inputs:
-                    gen_sample.gt_img = inputs['img'][idx]
-                # save outputs to data sample
-                gen_sample.fake_img = outputs[idx]
-                gen_sample.sample_model = sample_model
+                gen_sample.update(data_samples)
+            if isinstance(inputs, dict) and 'img' in inputs:
+                gen_sample.gt_img = inputs['img']
+            gen_sample.fake_img = outputs
+            gen_sample.noise = noise
+            gen_sample.set_gt_label(labels)
+            gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+            gen_sample.sample_model = sample_model
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True)
 
-                # Append input condition (noise and sample_kwargs) to
-                # batch_sample_list
-                gen_sample.noise = noise[idx]
-                gen_sample.set_gt_label(labels[idx])
-                gen_sample.sample_kwargs = deepcopy(sample_kwargs)
-
-                batch_sample_list.append(gen_sample)
         else:  # sample model in 'ema/orig'
             outputs_orig = self.generator(
                 noise, label=labels, return_noise=False, **sample_kwargs)
@@ -225,30 +217,20 @@ class BaseConditionalGAN(BaseGAN):
             outputs_ema = self.data_preprocessor.destruct(
                 outputs_ema, data_samples)
 
+            gen_sample = EditDataSample()
+            gen_sample._is_stacked = True
             if data_samples:
-                data_samples = data_samples.split()
-            # save to data sample
-            for idx in range(num_batches):
-                gen_sample = EditDataSample()
-                # save inputs to data sample
-                if data_samples:
-                    gen_sample.update(data_samples[idx])
-                if isinstance(inputs, dict) and 'img' in inputs:
-                    gen_sample.gt_img = inputs['img'][idx]
-                # save outputs to data sample
-                gen_sample.ema = EditDataSample(
-                    fake_img=outputs_ema[idx], sample_model='ema')
-                gen_sample.orig = EditDataSample(
-                    fake_img=outputs_orig[idx], sample_model='orig')
-                gen_sample.sample_model = 'ema/orig'
-
-                # Append input condition (noise and sample_kwargs) to
-                # batch_sample_list
-                gen_sample.noise = noise[idx]
-                gen_sample.set_gt_label(labels[idx])
-                gen_sample.sample_kwargs = deepcopy(sample_kwargs)
-
-                batch_sample_list.append(gen_sample)
+                gen_sample.update(data_samples)
+            if isinstance(inputs, dict) and 'img' in inputs:
+                gen_sample.gt_img = inputs['img']
+            gen_sample.ema = EditDataSample(fake_img=outputs_ema)
+            gen_sample.orig = EditDataSample(fake_img=outputs_orig)
+            gen_sample.ema._is_stacked = gen_sample.orig._is_stacked = True
+            gen_sample.noise = noise
+            gen_sample.set_gt_label(labels)
+            gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+            gen_sample.sample_model = 'ema/orig'
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True)
 
         return batch_sample_list
 
