@@ -295,7 +295,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             # do conversion
             inputs = torch.index_select(
                 inputs, channel_index,
-                torch.IntTensor(new_index).to(inputs.device))
+                torch.LongTensor(new_index).to(inputs.device))
             return inputs
 
         channel_index = self._parse_channel_index(inputs)
