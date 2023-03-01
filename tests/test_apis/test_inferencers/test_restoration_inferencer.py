@@ -30,7 +30,3 @@ def test_restoration_inferencer():
         img=img_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.shape == (480, 500, 3)
-
-
-if __name__ == '__main__':
-    test_restoration_inferencer()

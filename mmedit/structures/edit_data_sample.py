@@ -1,14 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from collections import abc
+from copy import deepcopy
+from itertools import chain
 from numbers import Number
-from typing import Sequence, Union
+from typing import Any, Sequence, Union
 
 import mmengine
 import numpy as np
 import torch
 from mmengine.structures import BaseDataElement, LabelData
-from torch import Tensor
 
-from .pixel_data import PixelData
+from mmedit.utils import all_to_tensor
 
 
 def format_label(value: Union[torch.Tensor, np.ndarray, Sequence, int],
@@ -50,9 +52,38 @@ def format_label(value: Union[torch.Tensor, np.ndarray, Sequence, int],
     return label
 
 
+def is_splitable_var(var: Any) -> bool:
+    """Check whether input is a splitable variable.
+
+    Args:
+        var (Any): The input variable to check.
+
+    Returns:
+        bool: Whether input variable is a splitable variable.
+    """
+    if isinstance(var, EditDataSample):
+        return True
+    if isinstance(var, torch.Tensor):
+        return True
+    if isinstance(var, np.ndarray):
+        return True
+    if isinstance(var, abc.Sequence) and not isinstance(var, str):
+        return True
+    return False
+
+
 class EditDataSample(BaseDataElement):
     """A data structure interface of MMEditing. They are used as interfaces
-    between different components.
+    between different components, e.g., model, visualizer, evaluator, etc.
+    Typically, EditDataSample contains all the information and data from
+    ground-truth and predictions.
+
+    `EditDataSample` inherits from `BaseDataElement`. See more details in:
+      https://mmengine.readthedocs.io/en/latest/advanced_tutorials/data_element.html
+      Specifically, an instance of BaseDataElement consists of two components,
+      - ``metainfo``, which contains some meta information,
+        e.g., `img_shape`, `img_id`, etc.
+      - ``data``, which contains the data used in the loop.
 
     The attributes in ``EditDataSample`` are divided into several parts:
 
@@ -73,581 +104,106 @@ class EditDataSample(BaseDataElement):
 
          >>> import torch
          >>> import numpy as np
-         >>> from mmedit.structures import EditDataSample, PixelData
-         >>> data_sample = EditDataSample()
+         >>> from mmedit.structures import EditDataSample
          >>> img_meta = dict(img_shape=(800, 1196, 3))
          >>> img = torch.rand((3, 800, 1196))
-         >>> gt_img = PixelData(data=img, metainfo=img_meta)
-         >>> data_sample.gt_img = gt_img
-         >>> assert 'img_shape' in data_sample.gt_img.metainfo_keys()
+         >>> data_sample = EditDataSample(gt_img=img, metainfo=img_meta)
+         >>> assert 'img_shape' in data_sample.metainfo_keys()
         <EditDataSample(
 
             META INFORMATION
+            img_shape: (800, 1196, 3)
 
             DATA FIELDS
-            _gt_img: <PixelData(
-
-                    META INFORMATION
-                    img_shape: (800, 1196, 3)
-
-                    DATA FIELDS
-                    data: tensor([[[0.8069, 0.4279,  ..., 0.6603, 0.0292],
-
-                                ...,
-
-                                [0.8139, 0.0908,  ..., 0.4964, 0.9672]]])
-                ) at 0x1f6ae000af0>
-            gt_img: <PixelData(
-
-                    META INFORMATION
-                    img_shape: (800, 1196, 3)
-
-                    DATA FIELDS
-                    data: tensor([[[0.8069, 0.4279,  ..., 0.6603, 0.0292],
-
-                                ...,
-
-                                [0.8139, 0.0908,  ..., 0.4964, 0.9672]]])
-                ) at 0x1f6ae000af0>
+            gt_img: tensor(...)
         ) at 0x1f6a5a99a00>
     """
 
-    @property
-    def gt_img(self) -> PixelData:
-        """This is the function to fetch gt_img in PixelData.
+    # source_key_in_results: target_key_in_metainfo
+    META_KEYS = {
+        'img_path': 'img_path',
+        'gt_path': 'gt_path',
+        'merged_path': 'merged_path',
+        'trimap_path': 'trimap_path',
+        'ori_shape': 'ori_shape',
+        'img_shape': 'img_shape',
+        'ori_merged_shape': 'ori_merged_shape',
+        'ori_trimap_shape': 'ori_trimap_shape',
+        'trimap_channel_order': 'trimap_channel_order',
+        'empty_box': 'empty_box',
+        'ori_img_shape': 'ori_img_shape',
+        'ori_gt_shape': 'ori_gt_shape',
+        'img_channel_order': 'img_channel_order',
+        'gt_channel_order': 'gt_channel_order',
+        'gt_color_type': 'gt_color_type',
+        'img_color_type': 'img_color_type',
+        'sample_idx': 'sample_idx',
+        'num_input_frames': 'num_input_frames',
+        'num_output_frames': 'num_output_frames',
+        # for LIIF
+        'coord': 'coord',
+        'cell': 'cell',
+    }
 
-        Returns:
-            PixelData: data element
-        """
-        return self._gt_img
+    # source_key_in_results: target_key_in_datafield
+    DATA_KEYS = {
+        'gt': 'gt_img',
+        'gt_label': 'gt_label',
+        'gt_heatmap': 'gt_heatmap',
+        'gt_unsharp': 'gt_unsharp',
+        'merged': 'gt_merged',
+        'ori_alpha': 'ori_alpha',
+        'fg': 'gt_fg',
+        'bg': 'gt_bg',
+        'gt_rgb': 'gt_rgb',
+        'alpha': 'gt_alpha',
+        'img_lq': 'img_lq',
+        'ref': 'ref_img',
+        'ref_lq': 'ref_lq',
+        'mask': 'mask',
+        'trimap': 'trimap',
+        'gray': 'gray',
+        'cropped_img': 'cropped_img',
+        'pred_img': 'pred_img',
+        'ori_trimap': 'ori_trimap'
+    }
 
-    @gt_img.setter
-    def gt_img(self, value: PixelData):
-        """This is the function used to set gt_img in PixelData.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_gt_img', dtype=PixelData)
-
-    @gt_img.deleter
-    def gt_img(self):
-        """This is the function to fetch gt_img."""
-        del self._gt_img
-
-    @property
-    def gt_samples(self) -> 'EditDataSample':
-        """This is the function to fetch gt_samples.
-
-        Returns:
-            EditDataSample: gt samples.
-        """
-        return self._gt_samples
-
-    @gt_samples.setter
-    def gt_samples(self, value: 'EditDataSample'):
-        """This is the function to set gt_samples.
-
-        Args:
-            value (EditDataSample): gt samples.
-        """
-        self.set_field(value, '_gt_samples', dtype=EditDataSample)
-
-    @gt_samples.deleter
-    def gt_samples(self):
-        """This is the function to delete gt_samples."""
-        del self._gt_samples
-
-    @property
-    def noise(self) -> torch.Tensor:
-        """This is the function to fetch noise.
-
-        Returns:
-            torch.Tensor: noise.
-        """
-        return self._noise
-
-    @noise.setter
-    def noise(self, value: PixelData):
-        """This is the function to set noise.
+    def set_predefined_data(self, data: dict) -> None:
+        """set or change pre-defined key-value pairs in ``data_field`` by
+        parameter ``data``.
 
         Args:
-            value (PixelData): noise.
+            data (dict): A dict contains annotations of image or
+                model predictions.
         """
-        self.set_field(value, '_noise', dtype=torch.Tensor)
 
-    @noise.deleter
-    def noise(self):
-        """This is the functionto delete noise."""
-        del self._noise
+        metainfo = {
+            self.META_KEYS[k]: v
+            for (k, v) in data.items() if k in self.META_KEYS
+        }
+        self.set_metainfo(metainfo)
 
-    @property
-    def pred_img(self) -> PixelData:
-        """This is the function to fetch pred_img in PixelData.
+        data = {
+            self.DATA_KEYS[k]: v
+            for (k, v) in data.items() if k in self.DATA_KEYS
+        }
+        self.set_tensor_data(data)
 
-        Returns:
-            PixelData: data element
-        """
-        return self._pred_img
-
-    @pred_img.setter
-    def pred_img(self, value: PixelData):
-        """This is the function to set the value of pred_img in PixelData.
+    def set_tensor_data(self, data: dict) -> None:
+        """convert input data to tensor, and then set or change key-value pairs
+        in ``data_field`` by parameter ``data``.
 
         Args:
-            value (PixelData):  data element
+            data (dict): A dict contains annotations of image or
+                model predictions.
         """
-        self.set_field(value, '_pred_img', dtype=PixelData)
-
-    @pred_img.deleter
-    def pred_img(self):
-        """This is the function to fetch pred_img."""
-        del self._pred_img
-
-    @property
-    def fake_img(self) -> Union[PixelData, Tensor]:
-        """This is the function to fetch fake_img.
-
-        Returns:
-            Union[PixelData, Tensor]: The fake img.
-        """
-        return self._fake_img
-
-    @fake_img.setter
-    def fake_img(self, value: Union[PixelData, Tensor]):
-        """This is the function to set fake_img.
-
-        Args:
-            value (Union[PixelData, Tensor]): The value of fake img.
-        """
-        assert isinstance(value, (PixelData, Tensor))
-        if isinstance(value, PixelData):
-            self.set_field(value, '_fake_img', dtype=PixelData)
-        else:
-            self.set_field(value, '_fake_img', dtype=Tensor)
-
-    @fake_img.deleter
-    def fake_img(self):
-        """This is the function to delete fake_img."""
-        del self._fake_img
-
-    @property
-    def img_lq(self) -> PixelData:
-        """This is the function to fetch img_lq in PixelData.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._img_lq
-
-    @img_lq.setter
-    def img_lq(self, value: PixelData):
-        """This is the function to set img_lq in PixelData.
-
-        Args:
-            value (PixelData): data element
-        """
-        self.set_field(value, '_img_lq', dtype=PixelData)
-
-    @img_lq.deleter
-    def img_lq(self):
-        """This is the function to delete img_lq."""
-        del self._img_lq
-
-    @property
-    def ref_img(self) -> PixelData:
-        """This is the function to fetch ref_img.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._ref_img
-
-    @ref_img.setter
-    def ref_img(self, value: PixelData):
-        """This is the function to set the value of ref_img.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_ref_img', dtype=PixelData)
-
-    @ref_img.deleter
-    def ref_img(self):
-        """This is the function to fetch ref_img."""
-        del self._ref_img
-
-    @property
-    def ref_lq(self) -> PixelData:
-        """This is the function to fetch ref_lq.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._ref_lq
-
-    @ref_lq.setter
-    def ref_lq(self, value: PixelData):
-        """This is the function to set the value of ref_lq.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_ref_lq', dtype=PixelData)
-
-    @ref_lq.deleter
-    def ref_lq(self):
-        """This is the function to delete ref_lq."""
-        del self._ref_lq
-
-    @property
-    def gt_unsharp(self) -> PixelData:
-        """This is the function to fetch gt_unsharp in PixelData.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._gt_unsharp
-
-    @gt_unsharp.setter
-    def gt_unsharp(self, value: PixelData):
-        """This is the function to set the value of gt_unsharp.
-
-        Args:
-            value (PixelData): base element
-        """
-        self.set_field(value, '_gt_unsharp', dtype=PixelData)
-
-    @gt_unsharp.deleter
-    def gt_unsharp(self):
-        """This is the function to delete gt_unsharp."""
-        del self._gt_unsharp
-
-    @property
-    def mask(self) -> PixelData:
-        """This is the function to fetch mask.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._mask
-
-    @mask.setter
-    def mask(self, value: Union[PixelData, Tensor]):
-        """This is the function to set the value of mask.
-
-        Args:
-            value (Union[PixelData, Tensor]):  data element
-        """
-        assert isinstance(value, (PixelData, Tensor))
-        if isinstance(value, PixelData):
-            self.set_field(value, '_mask', dtype=PixelData)
-        else:
-            self.set_field(value, '_mask', dtype=Tensor)
-
-    @mask.deleter
-    def mask(self):
-        """This is the function to delete mask."""
-        del self._mask
-
-    @property
-    def gt_heatmap(self) -> PixelData:
-        """This is the function to fetch gt_heatmap.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._gt_heatmap
-
-    @gt_heatmap.setter
-    def gt_heatmap(self, value: PixelData):
-        """This is the function to set the value of gt_heatmap.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_gt_heatmap', dtype=PixelData)
-
-    @gt_heatmap.deleter
-    def gt_heatmap(self):
-        """This is the function to delete gt_heatmap."""
-        del self._gt_heatmap
-
-    @property
-    def pred_heatmap(self) -> PixelData:
-        """This is the function to fetch pred_heatmap.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._pred_heatmap
-
-    @pred_heatmap.setter
-    def pred_heatmap(self, value: PixelData):
-        """This is the function to set the value of pred_heatmap.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_pred_heatmap', dtype=PixelData)
-
-    @pred_heatmap.deleter
-    def pred_heatmap(self):
-        """This is the function to fetch pred_heatmap."""
-        del self._pred_heatmap
-
-    @property
-    def trimap(self) -> PixelData:
-        """This is the function to fetch trimap.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._trimap
-
-    @trimap.setter
-    def trimap(self, value: PixelData):
-        """This is the function to set the value of trimap.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_trimap', dtype=PixelData)
-
-    @trimap.deleter
-    def trimap(self):
-        """This is the function to delete trimap."""
-        del self._trimap
-
-    @property
-    def gt_alpha(self) -> PixelData:
-        """This is the function to fetch gt_alpha.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._gt_alpha
-
-    @gt_alpha.setter
-    def gt_alpha(self, value: PixelData):
-        """This is the function to set the value of gt_alpha.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_gt_alpha', dtype=PixelData)
-
-    @gt_alpha.deleter
-    def gt_alpha(self):
-        """This is the function to delete gt_alpha."""
-        del self._gt_alpha
-
-    @property
-    def pred_alpha(self) -> PixelData:
-        """This is the function to fetch pred_alpha.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._pred_alpha
-
-    @pred_alpha.setter
-    def pred_alpha(self, value: PixelData):
-        """This is the function to set the value of pred_alpha.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_pred_alpha', dtype=PixelData)
-
-    @pred_alpha.deleter
-    def pred_alpha(self):
-        """This is the function to delete pred_alpha."""
-        del self._pred_alpha
-
-    @property
-    def gt_fg(self) -> PixelData:
-        """This is the function to fetch gt_fg.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._gt_fg
-
-    @gt_fg.setter
-    def gt_fg(self, value: PixelData):
-        """This is the function to set the value of gt_fg.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_gt_fg', dtype=PixelData)
-
-    @gt_fg.deleter
-    def gt_fg(self):
-        """This is the function to delete gt_fg."""
-        del self._gt_fg
-
-    @property
-    def pred_fg(self) -> PixelData:
-        """This is the function to fetch pred_fg.
-
-        Returns:
-            PixelData: _description_
-        """
-        return self._pred_fg
-
-    @pred_fg.setter
-    def pred_fg(self, value: PixelData):
-        """This is the function to set the value of pred_fg in PixelData.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_pred_fg', dtype=PixelData)
-
-    @pred_fg.deleter
-    def pred_fg(self):
-        """This is the function to delete pred_fg."""
-        del self._pred_fg
-
-    @property
-    def gt_bg(self) -> PixelData:
-        """This is the function to fetch gt_bg.
-
-        Returns:
-            PixelData: data element
-        """
-        return self._gt_bg
-
-    @gt_bg.setter
-    def gt_bg(self, value: PixelData):
-        """This is the function to set the value of gt_bg in PixelData.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_gt_bg', dtype=PixelData)
-
-    @gt_bg.deleter
-    def gt_bg(self):
-        """This is the function to delete gt_bg."""
-        del self._gt_bg
-
-    @property
-    def pred_bg(self) -> PixelData:
-        """This is the function to fetch pred_bg in PixelData.
-
-        Returns:
-            PixelData:  data element
-        """
-        return self._pred_bg
-
-    @pred_bg.setter
-    def pred_bg(self, value: PixelData):
-        """This is the function to set the value of pred_bg in PixelData.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_pred_bg', dtype=PixelData)
-
-    @pred_bg.deleter
-    def pred_bg(self):
-        """This is the function to fetch pred_bg."""
-        del self._pred_bg
-
-    @property
-    def gt_merged(self) -> PixelData:
-        """This is the function to fetch gt_merged in PixelData.
-
-        Returns:
-            PixelData: _description_
-        """
-        return self._gt_merged
-
-    @gt_merged.setter
-    def gt_merged(self, value: PixelData):
-        """This is the function to set gt_merged in PixelDate.
-
-        Args:
-            value (PixelData):  data element
-        """
-        self.set_field(value, '_gt_merged', dtype=PixelData)
-
-    @gt_merged.deleter
-    def gt_merged(self):
-        """This is the function to fetch gt_merged."""
-        del self._gt_merged
-
-    @property
-    def sample_model(self) -> str:
-        """This is the function to fetch sample model.
-
-        Returns:
-            str: Mode of Sample model.
-        """
-        return self._sample_model
-
-    @sample_model.setter
-    def sample_model(self, value: str):
-        """This is the function to set sample model.
-
-        Args:
-            value (str): The mode of sample model.
-        """
-        self.set_field(value, '_sample_model', dtype=str)
-
-    @sample_model.deleter
-    def sample_model(self):
-        """This is the function to delete sample model."""
-        del self._sample_model
-
-    @property
-    def ema(self) -> 'EditDataSample':
-        """This is the function to fetch ema results.
-
-        Returns:
-            EditDataSample: Results of the ema model.
-        """
-        return self._ema
-
-    @ema.setter
-    def ema(self, value: 'EditDataSample'):
-        """This is the function to set ema results.
-
-        Args:
-            value (EditDataSample): Results of the ema model.
-        """
-        self.set_field(value, '_ema', dtype=EditDataSample)
-
-    @ema.deleter
-    def ema(self):
-        """This is the function to delete ema results."""
-        del self._ema
-
-    @property
-    def orig(self) -> 'EditDataSample':
-        """This is the function to fetch original results.
-
-        Returns:
-            EditDataSample: Results of the ema model.
-        """
-        return self._orig
-
-    @orig.setter
-    def orig(self, value: 'EditDataSample'):
-        """This is the function to set ema results.
-
-        Args:
-            value (EditDataSample): Results of the ema model.
-        """
-        self.set_field(value, '_orig', dtype=EditDataSample)
-
-    @orig.deleter
-    def orig(self):
-        """This is the function to delete ema results."""
-        del self._orig
+        assert isinstance(data,
+                          dict), f'data should be a `dict` but got {data}'
+        for k, v in data.items():
+            if k == 'gt_label':
+                self.set_gt_label(v)
+            else:
+                self.set_field(all_to_tensor(v), k, dtype=torch.Tensor)
 
     def set_gt_label(
         self, value: Union[np.ndarray, torch.Tensor, Sequence[Number], Number]
@@ -680,5 +236,117 @@ class EditDataSample(BaseDataElement):
 
     @gt_label.deleter
     def gt_label(self):
-        """This is the function to delete gt label."""
+        """Delete gt label."""
         del self._gt_label
+
+    @classmethod
+    def stack(cls,
+              data_samples: Sequence['EditDataSample']) -> 'EditDataSample':
+        """Stack a list of data samples to one. All tensor fields will be
+        stacked at first dimension. Otherwise the values will be saved in a
+        list.
+
+        Args:
+            data_samples (Sequence['EditDataSample']): A sequence of
+                `EditDataSample` to stack.
+
+        Returns:
+            EditDataSample: The stacked data sample.
+        """
+        # 1. check key consistency
+        keys = data_samples[0].keys()
+        assert all([data.keys() == keys for data in data_samples])
+
+        meta_keys = data_samples[0].metainfo_keys()
+        assert all(
+            [data.metainfo_keys() == meta_keys for data in data_samples])
+
+        # 2. stack data
+        stacked_data_sample = EditDataSample()
+        for k in keys:
+            values = [getattr(data, k) for data in data_samples]
+            # 3. check type consistent
+            value_type = type(values[0])
+            assert all([type(val) == value_type for val in values])
+
+            # 4. stack
+            if isinstance(values[0], torch.Tensor):
+                stacked_value = torch.stack(values)
+            elif isinstance(values[0], LabelData):
+                labels = [data.label for data in values]
+                values = torch.stack(labels)
+                stacked_value = LabelData(label=values)
+            else:
+                stacked_value = values
+            stacked_data_sample.set_field(stacked_value, k)
+
+        # 5. stack metainfo
+        for k in meta_keys:
+            values = [data.metainfo[k] for data in data_samples]
+            stacked_data_sample.set_metainfo({k: values})
+
+        return stacked_data_sample
+
+    def split(self,
+              allow_nonseq_value: bool = False) -> Sequence['EditDataSample']:
+        """Split a sequence of data sample in the first dimension.
+
+        Args:
+            allow_nonseq_value (bool): Whether allow non-sequential data in
+                split operation. If True, non-sequential data will be copied
+                for all split data samples. Otherwise, an error will be
+                raised. Defaults to False.
+
+        Returns:
+            Sequence[EditDataSample]: The list of data samples after splitting.
+        """
+        # 1. split
+        data_sample_list = [EditDataSample() for _ in range(len(self))]
+        for k in self.all_keys():
+            stacked_value = self.get(k)
+            if isinstance(stacked_value, torch.Tensor):
+                # split tensor shape like (N, *shape) to N (*shape) tensors
+                values = [v for v in stacked_value]
+            elif isinstance(stacked_value, LabelData):
+                # split tensor shape like (N, *shape) to N (*shape) tensors
+                labels = [l_ for l_ in stacked_value.label]
+                values = [LabelData(label=l_) for l_ in labels]
+            elif isinstance(stacked_value, EditDataSample):
+                values = stacked_value.split()
+            else:
+                if is_splitable_var(stacked_value):
+                    values = stacked_value
+                elif allow_nonseq_value:
+                    values = [deepcopy(stacked_value)] * len(self)
+                else:
+                    raise TypeError(
+                        f'\'{k}\' is non-sequential data and '
+                        '\'allow_nonseq_value\' is False. Please check your '
+                        'data sample or set \'allow_nonseq_value\' as True '
+                        f'to copy field \'{k}\' for all split data sample.')
+
+            field = 'metainfo' if k in self.metainfo_keys() else 'data'
+            for data, v in zip(data_sample_list, values):
+                data.set_field(v, k, field_type=field)
+
+        return data_sample_list
+
+    def __len__(self):
+        """Get the length of the data sample."""
+
+        value_length = []
+        for v in chain(self.values(), self.metainfo_values()):
+            if isinstance(v, LabelData):
+                value_length.append(v.label.shape[0])
+            elif is_splitable_var(v):
+                value_length.append(len(v))
+            else:
+                continue
+
+        # NOTE: If length of values are not same or the current data sample
+        # is empty, return length as 1
+        if len(list(set(value_length))) != 1:
+            return 1
+
+        length = value_length[0]
+        return length

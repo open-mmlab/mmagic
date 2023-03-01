@@ -13,7 +13,7 @@ from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
 from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import ForwardInputs, SampleList
 
 
@@ -227,7 +227,7 @@ class AblatedDiffusionModel(BaseModel):
             if data_samples:
                 gen_sample.update(data_samples[idx])
             if isinstance(outputs, dict):
-                gen_sample.fake_img = PixelData(data=outputs['samples'][idx])
+                gen_sample.fake_img = outputs['samples'][idx]
                 gen_sample.set_gt_label(labels[idx])
 
             # Append input condition (noise and sample_kwargs) to

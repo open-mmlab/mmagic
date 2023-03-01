@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Dict, List, Optional, Union
+from typing import Dict, Optional, Union
 
 import numpy as np
 import torch
@@ -69,7 +69,7 @@ class StyleGAN3(StyleGAN2):
         inputs_dict, data_samples = data['inputs'], data['data_samples']
         # hard code to compute equivarience
         if 'mode' in inputs_dict and 'eq_cfg' in inputs_dict['mode']:
-            batch_size = get_valid_num_batches(inputs_dict)
+            batch_size = get_valid_num_batches(inputs_dict, data_samples)
             outputs = self.sample_equivarience_pairs(
                 batch_size,
                 sample_mode=inputs_dict['mode']['sample_mode'],
@@ -93,7 +93,7 @@ class StyleGAN3(StyleGAN2):
         inputs_dict, data_samples = data['inputs'], data['data_samples']
         # hard code to compute equivarience
         if 'mode' in inputs_dict and 'eq_cfg' in inputs_dict['mode']:
-            batch_size = get_valid_num_batches(inputs_dict)
+            batch_size = get_valid_num_batches(inputs_dict, data_samples)
             outputs = self.sample_equivarience_pairs(
                 batch_size,
                 sample_mode=inputs_dict['mode']['sample_mode'],
@@ -103,21 +103,20 @@ class StyleGAN3(StyleGAN2):
             outputs = self(inputs_dict, data_samples)
         return outputs
 
-    def train_discriminator(self, inputs: dict,
-                            data_samples: List[EditDataSample],
+    def train_discriminator(self, inputs: dict, data_samples: EditDataSample,
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs['img']
+        real_imgs = data_samples.gt_img
 
         num_batches = real_imgs.shape[0]
 
@@ -137,13 +136,13 @@ class StyleGAN3(StyleGAN2):
         message_hub.update_info('disc_pred_real', disc_pred_real)
         return log_vars
 
-    def train_generator(self, inputs: dict, data_samples: List[EditDataSample],
+    def train_generator(self, inputs: dict, data_samples: EditDataSample,
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
@@ -151,7 +150,7 @@ class StyleGAN3(StyleGAN2):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        num_batches = inputs['img'].shape[0]
+        num_batches = len(data_samples)
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_imgs = self.generator(

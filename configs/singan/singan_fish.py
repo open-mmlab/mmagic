@@ -15,7 +15,7 @@ test_pkl_data = None
 model = dict(
     type='SinGAN',
     data_preprocessor=dict(
-        type='GenDataPreprocessor', non_image_keys=['input_sample']),
+        type='EditDataPreprocessor', non_image_keys=['input_sample']),
     generator=dict(
         type='SinGANMultiScaleGenerator',
         in_channels=3,
@@ -41,7 +41,11 @@ max_size = 300
 dataset_type = 'SinGANDataset'
 data_root = './data/singan/fish-crop.jpg'
 
-pipeline = [dict(type='PackEditInputs', pack_all=True)]
+pipeline = [
+    dict(
+        type='PackEditInputs',
+        keys=[f'real_scale{i}' for i in range(num_scales)] + ['input_sample'])
+]
 dataset = dict(
     type=dataset_type,
     data_root=data_root,

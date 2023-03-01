@@ -110,8 +110,7 @@ class TwoStageInpaintor(OneStageInpaintor):
         # Pre-process runs in BaseModel.val_step / test_step
         masked_imgs = inputs  # N,3,H,W
 
-        masks = torch.stack(
-            list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
+        masks = data_samples.mask
         if self.input_with_ones:
             tmp_ones = torch.ones_like(masks)
             input_xs = torch.cat([masked_imgs, tmp_ones, masks], dim=1)
@@ -249,9 +248,8 @@ class TwoStageInpaintor(OneStageInpaintor):
         log_vars = {}
 
         masked_img = batch_inputs  # float
-        gt_img = torch.stack([d.gt_img.data
-                              for d in data_samples])  # float, [-1,1]
-        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        gt_img = data_samples.gt_img
+        mask = data_samples.mask
         mask = mask.float()
 
         # get common output from encdec

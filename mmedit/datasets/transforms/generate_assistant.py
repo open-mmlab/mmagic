@@ -4,8 +4,7 @@ import torch
 from mmcv.transforms.base import BaseTransform
 
 from mmedit.registry import TRANSFORMS
-from mmedit.utils import make_coord
-from .formatting import images_to_tensor
+from mmedit.utils import all_to_tensor, make_coord
 
 try:
     import face_alignment
@@ -85,7 +84,7 @@ class GenerateCoordinateAndCell(BaseTransform):
         # generate hr_coord (and hr_rgb)
         if 'gt' in results:
             crop_hr = results['gt']
-            crop_hr = images_to_tensor(crop_hr)
+            crop_hr = all_to_tensor(crop_hr)
             self.target_size = crop_hr.shape
             if self.reshape_gt:
                 hr_rgb = crop_hr.contiguous().view(3, -1).permute(1, 0)

@@ -14,8 +14,7 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0.485 * 255, 0.456 * 255, 0.406 * 255],
         std=[0.229 * 255, 0.224 * 255, 0.225 * 255],
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1)))
+    ))
 
 val_pipeline = [
     dict(type='GenerateFrameIndiceswithPadding', padding='reflection_circle'),
@@ -62,12 +61,14 @@ val_dataloader = dict(
 # TODO: data is not uploaded yet
 # test_dataloader = val_dataloader
 
-val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
-]
+val_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[
+        dict(type='MAE'),
+        dict(type='PSNR'),
+        dict(type='SSIM'),
+    ])
 # test_evaluator = val_evaluator
 
-val_cfg = dict(type='ValLoop')
-# test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+# test_cfg = dict(type='EditTestLoop')

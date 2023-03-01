@@ -15,8 +15,13 @@ class TestSinGANDataset(object):
             osp.dirname(osp.dirname(__file__)), 'data/image/gt/baboon.png')
         cls.min_size = 25
         cls.max_size = 250
+        cls.num_scales = 10
         cls.scale_factor_init = 0.75
-        cls.pipeline = [dict(type='PackEditInputs', pack_all=True)]
+        cls.pipeline = [
+            dict(
+                type='PackEditInputs',
+                keys=[f'real_scale{i}' for i in range(cls.num_scales)])
+        ]
 
     def test_singan_dataset(self):
         dataset = SinGANDataset(
@@ -28,4 +33,10 @@ class TestSinGANDataset(object):
         assert len(dataset) == 1000000
 
         data_dict = dataset[0]['inputs']
-        assert all([f'real_scale{i}' in data_dict for i in range(10)])
+        assert all(
+            [f'real_scale{i}' in data_dict for i in range(self.num_scales)])
+
+
+a = TestSinGANDataset()
+a.setup_class()
+a.test_singan_dataset()

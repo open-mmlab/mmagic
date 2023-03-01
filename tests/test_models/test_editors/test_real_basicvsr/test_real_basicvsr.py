@@ -11,7 +11,7 @@ from mmedit.models.data_preprocessors import EditDataPreprocessor
 from mmedit.models.editors import (RealBasicVSR, RealBasicVSRNet,
                                    UNetDiscriminatorWithSpectralNorm)
 from mmedit.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 @patch.object(PerceptualVGG, 'init_weights')
@@ -78,11 +78,10 @@ def test_real_basicvsr(init_weights):
         discriminator=OptimWrapper(optimizer_d))
 
     # prepare data
-    inputs = torch.rand(1, 5, 3, 64, 64)
+    inputs = torch.rand(5, 3, 64, 64)
     target = torch.rand(5, 3, 256, 256)
-    data_sample = EditDataSample(
-        gt_img=PixelData(data=target), gt_unsharp=PixelData(data=target))
-    data = dict(inputs=inputs, data_samples=[data_sample])
+    data_sample = EditDataSample(gt_img=target, gt_unsharp=target)
+    data = dict(inputs=[inputs], data_samples=[data_sample])
 
     # train
     log_vars = model.train_step(data, optim_wrapper)
@@ -94,7 +93,7 @@ def test_real_basicvsr(init_weights):
 
     # val
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (5, 3, 256, 256)
+    assert output[0].output.pred_img.shape == (5, 3, 256, 256)
 
     # feat
     output = model(torch.rand(1, 5, 3, 64, 64), mode='tensor')

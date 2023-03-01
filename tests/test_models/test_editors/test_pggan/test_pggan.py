@@ -8,6 +8,7 @@ from mmengine import MessageHub
 
 from mmedit.engine import PGGANOptimWrapperConstructor
 from mmedit.models import ProgressiveGrowingGAN
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
 register_all_modules()
@@ -25,7 +26,7 @@ class TestPGGAN(TestCase):
     discriminator_cfg = dict(
         type='PGGANDiscriminator', in_scale=16, label_size=0)
 
-    data_preprocessor = dict(type='GenDataPreprocessor')
+    data_preprocessor = dict(type='EditDataPreprocessor')
 
     nkimgs_per_scale = {'4': 0.004, '8': 0.008, '16': 0.016}
 
@@ -52,7 +53,11 @@ class TestPGGAN(TestCase):
         constructor = PGGANOptimWrapperConstructor(self.optim_wrapper_cfg)
         optim_wrapper_dict = constructor(pggan)
 
-        data_batch = dict(inputs=torch.randn(3, 3, 16, 16))
+        data_batch = dict(
+            inputs=dict(),
+            data_samples=[
+                EditDataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
+            ])
 
         for iter_num in range(6):
             pggan.train_step(data_batch, optim_wrapper_dict)
@@ -78,7 +83,7 @@ class TestPGGAN(TestCase):
 
         outputs = pggan.forward(dict(num_batches=2))
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 16, 16) for out in outputs])
+        assert all([out.fake_img.shape == (3, 16, 16) for out in outputs])
 
         outputs = pggan.forward(
             dict(
@@ -87,34 +92,37 @@ class TestPGGAN(TestCase):
                 transition_weight=0.2,
                 sample_model='ema'))
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 16, 16) for out in outputs])
+        assert all([out.fake_img.shape == (3, 16, 16) for out in outputs])
 
         outputs = pggan.forward(dict(num_batches=2, sample_model='orig'))
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 16, 16) for out in outputs])
+        assert all([out.fake_img.shape == (3, 16, 16) for out in outputs])
 
         outputs = pggan.forward(dict(num_batches=2, sample_model='ema/orig'))
         assert len(outputs) == 2
-        assert all(
-            [out.ema.fake_img.data.shape == (3, 16, 16) for out in outputs])
-        assert all(
-            [out.orig.fake_img.data.shape == (3, 16, 16) for out in outputs])
+        assert all([out.ema.fake_img.shape == (3, 16, 16) for out in outputs])
+        assert all([out.orig.fake_img.shape == (3, 16, 16) for out in outputs])
 
         outputs = pggan.forward(dict(num_batches=2, curr_scale=8))
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 8, 8) for out in outputs])
+        assert all([out.fake_img.shape == (3, 8, 8) for out in outputs])
 
         outputs = pggan.forward(dict(noise=torch.randn(2, 8)))
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 16, 16) for out in outputs])
+        assert all([out.fake_img.shape == (3, 16, 16) for out in outputs])
 
         outputs = pggan.forward(torch.randn(2, 8))
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 16, 16) for out in outputs])
+        assert all([out.fake_img.shape == (3, 16, 16) for out in outputs])
 
         # test train_step with error
         with pytest.raises(RuntimeError):
-            data_batch = dict(inputs=torch.randn(3, 3, 4, 32))
+            data_batch = dict(
+                inputs=dict(),
+                data_samples=[
+                    EditDataSample(gt_img=torch.randn(3, 4, 32))
+                    for _ in range(3)
+                ])
             _ = pggan.train_step(data_batch, optim_wrapper_dict)
 
         # test train_step without ema
@@ -124,7 +132,11 @@ class TestPGGAN(TestCase):
             data_preprocessor=self.data_preprocessor,
             nkimgs_per_scale=self.nkimgs_per_scale)
         optim_wrapper_dict = constructor(pggan)
-        data_batch = dict(inputs=torch.randn(3, 3, 16, 16))
+        data_batch = dict(
+            inputs=dict(),
+            data_samples=[
+                EditDataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
+            ])
         pggan.train_step(data_batch, optim_wrapper_dict)
 
         # test train_step with disc_step != 1
@@ -152,7 +164,11 @@ class TestPGGAN(TestCase):
         constructor = PGGANOptimWrapperConstructor(self.optim_wrapper_cfg)
         optim_wrapper_dict = constructor(pggan)
 
-        data_batch = dict(inputs=torch.randn(3, 3, 16, 16))
+        data_batch = dict(
+            inputs=dict(),
+            data_samples=[
+                EditDataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
+            ])
 
         for iter_num in range(6):
             pggan.train_step(data_batch, optim_wrapper_dict)
