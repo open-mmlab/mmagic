@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 from glob import glob
 from os import path as osp
@@ -90,12 +91,12 @@ def update_model_zoo():
         checkpoints = set()
         for m in models:
             if m.weights is not None and m.weights.startswith('https:'):
-                checkpoints.update(m.weights)
+                checkpoints.add(m.weights)
         collections = set([m.in_collection for m in models])
 
         papers = set()
         for m in models:
-            papers.update(m.paper)
+            papers.add(m.paper['Title'])
 
         content = ''
         readme = set()
