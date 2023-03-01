@@ -217,12 +217,12 @@ class InstColorization(BaseModel):
         full_hint_B = full_img_data['hint_B']
         full_mask_B = full_img_data['mask_B']
 
-        if not data_samples[0].empty_box:
+        if not data_samples.empty_box[0]:
             # preprocess instance input
-            cropped_img = data_samples[0].cropped_img.data
+            cropped_img = data_samples.cropped_img[0]
             box_info_list = [
-                data_samples[0].box_info, data_samples[0].box_info_2x,
-                data_samples[0].box_info_4x, data_samples[0].box_info_8x
+                data_samples.box_info[0], data_samples.box_info_2x[0],
+                data_samples.box_info_4x[0], data_samples.box_info_8x[0]
             ]
             cropped_data = get_colorization_data(cropped_img,
                                                  self.color_data_opt)

@@ -261,16 +261,17 @@ def inpainting_inference(model, masked_img, mask):
     data['data_samples'] = EditDataSample.stack([_data['data_samples']])
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
-        data['data_samples'][0].mask.data = scatter(
-            data['data_samples'][0].mask.data, [device])[0] / 255.0
+        data['data_samples'].mask.data = scatter(
+            data['data_samples'].mask.data, [device])[0] / 255.0
     # else:
     #     data.pop('meta')
     # forward the model
     with torch.no_grad():
         result, x = model(mode='tensor', **data)
 
+    result = result.cpu()
     masks = _data['data_samples'].mask.data * 255
-    masked_imgs = data['inputs'][0]
+    masked_imgs = data['inputs'][0].cpu()
     result = result[0] * masks + masked_imgs * (1. - masks)
     return result
 
@@ -498,7 +499,7 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
         data = dict(lq=img.astype(np.float32), img_path='demo/tmp.png')
         _data = test_pipeline(data)
         data = dict()
-        data['inputs'] = dict(img=(_data['inputs'] / 255.0))
+        data['inputs'] = _data['inputs'] / 255.
         data = collate([data])
         if 'cuda' in str(device):
             data = scatter(data, [device])[0]
@@ -839,7 +840,7 @@ def colorization_inference(model, img):
     data = dict(img_path=img)
     _data = test_pipeline(data)
     data = dict()
-    data['inputs'] = dict(img=(_data['inputs'] / 255.0))
+    data['inputs'] = _data['inputs'] / 255.0
     data = collate([data])
     data['data_samples'] = [_data['data_samples']]
     if 'cuda' in str(device):
@@ -859,6 +860,7 @@ def colorization_inference(model, img):
 
             data['data_samples'][0].box_info_8x.data = scatter(
                 data['data_samples'][0].box_info_8x.data, [device])[0]
+    data['data_samples'] = EditDataSample.stack(data['data_samples'])
 
     # forward the model
     with torch.no_grad():
