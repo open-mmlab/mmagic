@@ -25,4 +25,4 @@ def test_translation_inferencer():
     inference_result = inferencer_instance(
         img=data_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]
-    assert result_img[0].numpy().shape == (3, 256, 256)
+    assert result_img[0].cpu().numpy().shape == (3, 256, 256)

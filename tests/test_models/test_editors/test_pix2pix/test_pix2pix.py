@@ -154,7 +154,7 @@ def test_pix2pix():
                 data_batch_cuda['inputs']['img_mask'],
                 target_domain=domain,
                 test_mode=True)
-        assert torch.equal(outputs['source'],
+        assert torch.equal(outputs['source'].cpu(),
                            data_batch_cuda['inputs']['img_mask'].cpu())
         assert torch.is_tensor(outputs['target'])
         assert outputs['target'].size() == (1, 3, 256, 256)

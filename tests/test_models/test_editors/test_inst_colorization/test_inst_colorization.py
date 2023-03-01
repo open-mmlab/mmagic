@@ -114,7 +114,8 @@ class TestInstColorization:
             empty_box=False)
         data_sample.set_metainfo(metainfo=metainfo)
 
-        data = dict(inputs=inputs, data_samples=[data_sample])
+        data = dict(
+            inputs=inputs, data_samples=EditDataSample.stack([data_sample]))
 
         res = model(mode='tensor', **data)
 

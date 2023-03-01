@@ -174,7 +174,7 @@ def test_cyclegan():
                 data_batch_cuda['img_mask'],
                 target_domain='photo',
                 test_mode=True)
-        assert torch.equal(outputs['source'],
+        assert torch.equal(outputs['source'].cpu(),
                            data_batch_cuda['img_mask'].cpu())
         assert torch.is_tensor(outputs['target'])
         assert outputs['target'].size() == (1, 3, 64, 64)
@@ -184,7 +184,7 @@ def test_cyclegan():
                 data_batch_cuda['img_photo'],
                 target_domain='mask',
                 test_mode=True)
-        assert torch.equal(outputs['source'],
+        assert torch.equal(outputs['source'].cpu(),
                            data_batch_cuda['img_photo'].cpu())
         assert torch.is_tensor(outputs['target'])
         assert outputs['target'].size() == (1, 3, 64, 64)
