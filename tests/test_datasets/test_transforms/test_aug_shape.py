@@ -75,6 +75,9 @@ class TestAugmentations:
     def test_flip(self):
         results = copy.deepcopy(self.results)
 
+        trans = Flip(keys='img', flip_ratio=0)
+        assert trans.keys == ['img']
+
         with pytest.raises(ValueError):
             Flip(keys=['img', 'gt'], direction='vertically')
 
@@ -194,6 +197,10 @@ class TestAugmentations:
         assert random_rotation_results['ori_img'].shape == (256, 256, 1)
 
     def test_random_transposehw(self):
+
+        trans = RandomTransposeHW(keys='img', transpose_ratio=1)
+        assert trans.keys == ['img']
+
         results = self.results.copy()
         target_keys = ['img', 'gt', 'transpose']
         transposehw = RandomTransposeHW(keys=['img', 'gt'], transpose_ratio=1)
@@ -295,6 +302,33 @@ class TestAugmentations:
         assert results['img'].shape == (128, 128, 1)
         assert results['alpha'].shape == (240, 320)
         assert results['beta'].shape == (128, 128, 1)
+
+        name_ = str(resize_keep_ratio)
+        assert name_ == resize_keep_ratio.__class__.__name__ + (
+            "(keys=['gt_img'], output_keys=['gt_img'], "
+            'scale=(128, 128), '
+            f'keep_ratio={False}, size_factor=None, '
+            'max_size=None, interpolation=bilinear)')
+
+        # test input with shape (256, 256) + out keys and metainfo copy
+        results = dict(
+            gt_img=self.results['ori_img'][..., 0].copy(),
+            alpha=alpha,
+            ori_alpha_shape=[3, 3],
+            gt_img_channel_order='rgb',
+            alpha_color_type='grayscale')
+        resize = Resize(['gt_img', 'alpha'],
+                        scale=(128, 128),
+                        keep_ratio=False,
+                        output_keys=['img', 'beta'])
+        results = resize(results)
+        assert results['gt_img'].shape == (256, 256)
+        assert results['img'].shape == (128, 128, 1)
+        assert results['alpha'].shape == (240, 320)
+        assert results['beta'].shape == (128, 128, 1)
+        assert results['ori_beta_shape'] == [3, 3]
+        assert results['img_channel_order'] == 'rgb'
+        assert results['beta_color_type'] == 'grayscale'
 
         name_ = str(resize_keep_ratio)
         assert name_ == resize_keep_ratio.__class__.__name__ + (

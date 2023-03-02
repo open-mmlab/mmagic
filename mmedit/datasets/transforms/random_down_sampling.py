@@ -80,6 +80,12 @@ class RandomDownSampling(BaseTransform):
         results['img'] = crop_lr
         results['scale'] = scale
 
+        # copy metainfo to lr image
+        if 'gt_channel_order' in results:
+            results['img_channel_order'] = results['gt_channel_order']
+        if 'gt_color_type' in results:
+            results['img_color_type'] = results['gt_color_type']
+
         return results
 
     def __repr__(self):

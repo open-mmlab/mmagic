@@ -12,7 +12,7 @@ init_cfg = dict(type='studio')
 model = dict(
     num_classes=num_classes,
     # CIFAR images are RGB, convert to BGR
-    data_preprocessor=dict(rgb_to_bgr=True),
+    data_preprocessor=dict(output_channel_order='BGR'),
     generator=dict(num_classes=num_classes, init_cfg=init_cfg),
     discriminator=dict(num_classes=num_classes, init_cfg=init_cfg),
     discriminator_steps=discriminator_steps)

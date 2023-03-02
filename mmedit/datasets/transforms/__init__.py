@@ -11,7 +11,7 @@ from .crop import (CenterCropLongEdge, Crop, CropAroundCenter, CropAroundFg,
                    RandomResizedCrop)
 from .fgbg import (CompositeFg, MergeFgAndBg, PerturbBg, RandomJitter,
                    RandomLoadResizeBg)
-from .formatting import PackEditInputs, ToTensor
+from .formatting import PackEditInputs
 from .generate_assistant import (GenerateCoordinateAndCell,
                                  GenerateFacialHeatmap)
 from .generate_frame_indices import (GenerateFrameIndices,

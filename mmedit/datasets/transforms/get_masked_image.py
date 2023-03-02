@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from copy import deepcopy
+
 import numpy as np
 from mmcv.transforms.base import BaseTransform
 
@@ -45,6 +47,16 @@ class GetMaskedImage(BaseTransform):
         masked_img = masked_img.astype(np.float32)
         results[self.out_key] = masked_img
 
+        # copy metainfo
+        if f'ori_{self.img_key}_shape' in results:
+            results[f'ori_{self.out_key}_shape'] = deepcopy(
+                results[f'ori_{self.img_key}_shape'])
+        if f'{self.img_key}_channel_order' in results:
+            results[f'{self.out_key}_channel_order'] = deepcopy(
+                results[f'{self.img_key}_channel_order'])
+        if f'{self.img_key}_color_type' in results:
+            results[f'{self.out_key}_color_type'] = deepcopy(
+                results[f'{self.img_key}_color_type'])
         return results
 
     def __repr__(self):

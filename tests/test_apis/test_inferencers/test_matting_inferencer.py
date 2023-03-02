@@ -22,7 +22,3 @@ def test_matting_inferencer():
         img=img_path, trimap=trimap_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.numpy().shape == (552, 800)
-
-
-if __name__ == '__main__':
-    test_matting_inferencer()

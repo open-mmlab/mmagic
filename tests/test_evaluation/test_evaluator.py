@@ -3,7 +3,7 @@ from copy import deepcopy
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from mmedit.evaluation import (FrechetInceptionDistance, GenEvaluator,
+from mmedit.evaluation import (EditEvaluator, FrechetInceptionDistance,
                                InceptionScore)
 from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
@@ -16,7 +16,7 @@ is_loading_str = 'mmedit.evaluation.metrics.inception_score.InceptionScore._load
 loading_mock = MagicMock(return_value=(MagicMock(), 'StyleGAN'))
 
 
-class TestGenEvaluator(TestCase):
+class TestEditEvaluator(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -37,13 +37,13 @@ class TestGenEvaluator(TestCase):
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_init(self):
-        evaluator = GenEvaluator(self.metrics)
+        evaluator = EditEvaluator(self.metrics)
         self.assertFalse(evaluator.is_ready)
 
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_prepare_metric(self):
-        evaluator = GenEvaluator(self.metrics)
+        evaluator = EditEvaluator(self.metrics)
         model = MagicMock()
         model.data_preprocessor.device = 'cpu'
         dataloader = MagicMock()
@@ -51,7 +51,7 @@ class TestGenEvaluator(TestCase):
             evaluator.prepare_metrics(model, dataloader)
             self.assertTrue(evaluator.is_ready)
 
-        evaluator = GenEvaluator(self.metrics)
+        evaluator = EditEvaluator(self.metrics)
         evaluator.metrics = [MagicMock()]
         evaluator.is_ready = True
         evaluator.prepare_metrics(model, dataloader)
@@ -60,7 +60,7 @@ class TestGenEvaluator(TestCase):
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_prepare_samplers(self):
-        evaluator = GenEvaluator(self.metrics)
+        evaluator = EditEvaluator(self.metrics)
 
         model = MagicMock()
         model.data_preprocessor.device = 'cpu'
@@ -86,7 +86,7 @@ class TestGenEvaluator(TestCase):
                 fake_nums=12,
                 inception_style='pytorch',
                 sample_model='ema'))
-        evaluator = GenEvaluator(cfg)
+        evaluator = EditEvaluator(cfg)
 
         # mock metrics
         model = MagicMock()
@@ -128,7 +128,7 @@ class TestGenEvaluator(TestCase):
         # all metrics (5 groups): [[IS-orig, FID-orig], [TransFID-orig],
         #                          [FID-ema], [FID-cond-ema, IS-cond-ema],
         #                          [IS-cond-orig]]
-        evaluator = GenEvaluator(cfg)
+        evaluator = EditEvaluator(cfg)
 
         # mock metrics
         model = MagicMock()
@@ -143,7 +143,7 @@ class TestGenEvaluator(TestCase):
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_process(self):
-        evaluator = GenEvaluator(self.metrics)
+        evaluator = EditEvaluator(self.metrics)
         metrics_mock = [MagicMock(), MagicMock()]
 
         data_samples = [EditDataSample(a=1, b=2), dict(c=3, d=4)]
@@ -164,7 +164,7 @@ class TestGenEvaluator(TestCase):
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_evaluate(self):
-        evaluator = GenEvaluator(self.metrics)
+        evaluator = EditEvaluator(self.metrics)
 
         # mock metrics
         metric_mock1, metric_mock2 = MagicMock(), MagicMock()

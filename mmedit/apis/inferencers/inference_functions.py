@@ -21,6 +21,7 @@ from torch.nn.parallel import scatter
 
 from mmedit.models.base_models import BaseTranslationModel
 from mmedit.registry import MODELS
+from mmedit.structures import EditDataSample
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 FILE_CLIENT = get_file_backend(backend_args={'backend': 'local'})
@@ -257,19 +258,20 @@ def inpainting_inference(model, masked_img, mask):
     data = dict()
     data['inputs'] = _data['inputs'] / 255.0
     data = collate([data])
-    data['data_samples'] = [_data['data_samples']]
+    data['data_samples'] = EditDataSample.stack([_data['data_samples']])
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
-        data['data_samples'][0].mask.data = scatter(
-            data['data_samples'][0].mask.data, [device])[0] / 255.0
+        data['data_samples'].mask.data = scatter(
+            data['data_samples'].mask.data, [device])[0] / 255.0
     # else:
     #     data.pop('meta')
     # forward the model
     with torch.no_grad():
         result, x = model(mode='tensor', **data)
 
+    result = result.cpu()
     masks = _data['data_samples'].mask.data * 255
-    masked_imgs = data['inputs'][0]
+    masked_imgs = data['inputs'][0].cpu()
     result = result[0] * masks + masked_imgs * (1. - masks)
     return result
 
@@ -304,11 +306,11 @@ def matting_inference(model, img, trimap):
     # prepare data
     data = dict(merged_path=img, trimap_path=trimap)
     _data = test_pipeline(data)
-    trimap = _data['data_samples'].trimap.data
+    trimap = _data['data_samples'].trimap
     data = dict()
     data['inputs'] = torch.cat([_data['inputs'], trimap], dim=0).float()
     data = collate([data])
-    data['data_samples'] = [_data['data_samples']]
+    data['data_samples'] = EditDataSample.stack([_data['data_samples']])
     if 'cuda' in str(device):
         data = scatter(data, [device])[0]
     # forward the model
@@ -407,7 +409,7 @@ def restoration_inference(model, img, ref=None):
         data = dict(img_path=img)
     _data = test_pipeline(data)
     data = dict()
-    data['inputs'] = _data['inputs'] / 255.0
+    data['inputs'] = dict(img=(_data['inputs'] / 255.0))
     data = collate([data])
     if ref:
         data['data_samples'] = [_data['data_samples']]
@@ -497,7 +499,7 @@ def restoration_face_inference(model, img, upscale_factor=1, face_size=1024):
         data = dict(lq=img.astype(np.float32), img_path='demo/tmp.png')
         _data = test_pipeline(data)
         data = dict()
-        data['inputs'] = _data['inputs'] / 255.0
+        data['inputs'] = _data['inputs'] / 255.
         data = collate([data])
         if 'cuda' in str(device):
             data = scatter(data, [device])[0]
@@ -858,6 +860,7 @@ def colorization_inference(model, img):
 
             data['data_samples'][0].box_info_8x.data = scatter(
                 data['data_samples'][0].box_info_8x.data, [device])[0]
+    data['data_samples'] = EditDataSample.stack(data['data_samples'])
 
     # forward the model
     with torch.no_grad():

@@ -5,7 +5,7 @@ import torch
 
 from mmedit.models.base_models import BaseEditModel
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 @MODELS.register_module()
@@ -36,12 +36,8 @@ class LIIF(BaseEditModel):
             Tensor: result of simple forward.
         """
 
-        coord = torch.stack([
-            data_sample.metainfo['coord'] for data_sample in data_samples
-        ]).to(inputs)
-        cell = torch.stack([
-            data_sample.metainfo['cell'] for data_sample in data_samples
-        ]).to(inputs)
+        coord = torch.stack(data_samples.metainfo['coord']).to(inputs)
+        cell = torch.stack(data_samples.metainfo['cell']).to(inputs)
 
         feats = self.generator(inputs, coord, cell, **kwargs)
 
@@ -54,28 +50,25 @@ class LIIF(BaseEditModel):
         Args:
             inputs (torch.Tensor): batch input tensor collated by
                 :attr:`data_preprocessor`.
-            data_samples (List[BaseDataElement], optional):
+            data_samples (BaseDataElement, optional):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
             List[EditDataSample]: predictions.
         """
-
+        # NOTE: feats: shape [bz, N, 3]
         feats = self.forward_tensor(inputs, data_samples, test_mode=True)
-        feats = self.data_preprocessor.destructor(feats)
 
-        # reshape for eval
+        # reshape for eval, [bz, N, 3] -> [bz, 3, H, W]
         ih, iw = inputs.shape[-2:]
-        coord_count = data_samples[0].metainfo['coord'].shape[0]
+        # metainfo in stacked data sample is a list, fetch by indexing
+        coord_count = data_samples.metainfo['coord'][0].shape[0]
         s = math.sqrt(coord_count / (ih * iw))
         shape = [len(data_samples), round(ih * s), round(iw * s), 3]
-        feats = feats.view(shape).permute(0, 3, 1, 2).contiguous().to('cpu')
+        feats = feats.view(shape).permute(0, 3, 1, 2).contiguous()
 
-        predictions = []
-        for idx in range(feats.shape[0]):
-            predictions.append(
-                EditDataSample(
-                    pred_img=PixelData(data=feats[idx]),
-                    metainfo=data_samples[idx].metainfo))
+        feats = self.data_preprocessor.destruct(feats, data_samples)
+
+        predictions = EditDataSample(pred_img=feats.cpu())
 
         return predictions

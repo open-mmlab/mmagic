@@ -56,7 +56,8 @@ class MattingInferencer(BaseMMEditInferencer):
         preprocess_res['inputs'] = torch.cat([_data['inputs'], trimap],
                                              dim=0).float()
         preprocess_res = collate([preprocess_res])
-        preprocess_res['data_samples'] = [_data['data_samples']]
+        preprocess_res['data_samples'] = EditDataSample.stack(
+            [_data['data_samples']])
         preprocess_res['mode'] = 'predict'
         if 'cuda' in str(self.device):
             preprocess_res = scatter(preprocess_res, [self.device])[0]

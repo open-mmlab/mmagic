@@ -1,11 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import List
 
-import torch
-
 from mmedit.models.base_models import OneStageInpaintor
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
 
 
 @MODELS.register_module()
@@ -15,27 +12,6 @@ class PConvInpaintor(OneStageInpaintor):
     This inpaintor is implemented according to the paper: Image inpainting for
     irregular holes using partial convolutions
     """
-
-    def forward_test(self, inputs, data_samples):
-        """Forward function for testing.
-
-        Args:
-            inputs (torch.Tensor): Input tensor.
-            data_samples (List[dict]): List of data sample dict.
-
-        Returns:
-            dict: Contain output results and eval metrics (if have).
-        """
-        fake_reses, fake_imgs = self.forward_tensor(inputs, data_samples)
-
-        predictions = []
-        for (fr, fi) in zip(fake_reses, fake_imgs):
-            fi = (fi * 127.5 + 127.5)
-            fr = (fr * 127.5 + 127.5)
-            pred = EditDataSample(
-                fake_res=fr, fake_img=fi, pred_img=PixelData(data=fi))
-            predictions.append(pred)
-        return predictions
 
     def forward_tensor(self, inputs, data_samples):
         """Forward function in tensor mode.
@@ -49,8 +25,7 @@ class PConvInpaintor(OneStageInpaintor):
         """
 
         masked_img = inputs  # N,3,H,W
-        masks = torch.stack(
-            list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
+        masks = data_samples.mask
         masks = 1. - masks
         masks = masks.repeat(1, 3, 1, 1)
         fake_reses, _ = self.generator(masked_img, masks)
@@ -86,10 +61,8 @@ class PConvInpaintor(OneStageInpaintor):
         log_vars = {}
 
         masked_img = batch_inputs  # float
-        gt_img = torch.stack([d.gt_img.data
-                              for d in data_samples])  # float, [-1,1]
-        # print(gt_img.min(), gt_img.max(), gt_img.dtype)
-        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        gt_img = data_samples.gt_img
+        mask = data_samples.mask
         mask = mask.float()
 
         mask_input = mask.expand_as(gt_img)

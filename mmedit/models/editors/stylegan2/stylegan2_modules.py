@@ -666,7 +666,7 @@ class ModMBStddevLayer(nn.Module):
         if self.sync_std:
             assert torch.distributed.is_initialized(
             ), 'Only in distributed training can the sync_std be activated.'
-            mmengine.print_log('Adopt synced minibatch stddev layer', 'mmgen')
+            mmengine.print_log('Adopt synced minibatch stddev layer', 'mmedit')
 
     def forward(self, x):
         """Forward function.

@@ -33,7 +33,7 @@ The input and output types of transformations are both dict.
 ### A simple example of data transform
 
 ```python
->>> from mmgen.transforms import LoadPairedImageFromFile
+>>> from mmedit.transforms import LoadPairedImageFromFile
 >>> transforms = LoadPairedImageFromFile(
 >>>     key='pair',
 >>>     domain_a='horse',
@@ -112,9 +112,9 @@ pipeline = [
         share_random_params=True,
         transforms=[
             dict(
-                type='mmgen.Resize', scale=(286, 286),
+                type='mmedit.Resize', scale=(286, 286),
                 interpolation='bicubic'),
-            dict(type='mmgen.FixedCrop', crop_size=(256, 256))
+            dict(type='mmedit.FixedCrop', crop_size=(256, 256))
         ]),
     dict(
         type='Flip',

@@ -13,7 +13,7 @@ from .metrics.base_gen_metric import GenMetric
 
 
 @EVALUATORS.register_module()
-class GenEvaluator(Evaluator):
+class EditEvaluator(Evaluator):
     """Evaluator for generative models. Unlike high-level vision tasks, metrics
     for generative models have various input types. For example, Inception
     Score (IS, :class:`~mmedit.evaluation.InceptionScore`) only needs to

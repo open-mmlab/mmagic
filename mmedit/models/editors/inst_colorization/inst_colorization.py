@@ -7,7 +7,7 @@ from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from .color_utils import get_colorization_data, lab2rgb
 
 
@@ -133,6 +133,18 @@ class InstColorization(BaseModel):
             return self.forward_train(inputs, data_samples, **kwargs)
 
     def convert_to_datasample(self, inputs, data_samples):
+        """Add predictions and destructed inputs (if passed) to data samples.
+
+        Args:
+            inputs (Optional[torch.Tensor]): The input of model. Defaults to
+                None.
+            data_samples (List[EditDataSample]): The data samples loaded from
+                dataloader.
+
+        Returns:
+            List[EditDataSample]: Modified data samples.
+        """
+
         for data_sample, output in zip(inputs, data_samples):
             data_sample.output = output
         return inputs
@@ -170,10 +182,10 @@ class InstColorization(BaseModel):
             List[EditDataSample]: predictions.
         """
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
+        feats = self.data_preprocessor.destruct(feats, data_samples)
         predictions = []
         for idx in range(feats.shape[0]):
-            batch_tensor = feats[idx] * 127.5 + 127.5
-            pred_img = PixelData(data=batch_tensor.to('cpu'))
+            pred_img = feats[idx].to('cpu')
             predictions.append(
                 EditDataSample(
                     pred_img=pred_img, metainfo=data_samples[idx].metainfo))
@@ -205,12 +217,12 @@ class InstColorization(BaseModel):
         full_hint_B = full_img_data['hint_B']
         full_mask_B = full_img_data['mask_B']
 
-        if not data_samples[0].empty_box:
+        if not data_samples.empty_box[0]:
             # preprocess instance input
-            cropped_img = data_samples[0].cropped_img.data
+            cropped_img = data_samples.cropped_img[0]
             box_info_list = [
-                data_samples[0].box_info, data_samples[0].box_info_2x,
-                data_samples[0].box_info_4x, data_samples[0].box_info_8x
+                data_samples.box_info[0], data_samples.box_info_2x[0],
+                data_samples.box_info_4x[0], data_samples.box_info_8x[0]
             ]
             cropped_data = get_colorization_data(cropped_img,
                                                  self.color_data_opt)
