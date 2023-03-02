@@ -53,7 +53,7 @@ English | [简体中文](README_zh-CN.md)
 
 ## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### New release [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) \[01/03/2023\]:
+### New release [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) \[02/03/2023\]:
 
 - Support Gradio gui of Inpainting inference.
 - Support Colorization, Translationin and all GAN models inferencer.
