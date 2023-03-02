@@ -62,8 +62,6 @@
 
 如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmediting/tree/master) MMEditing 0.x 迁移到新版本 MMEditing 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
 
-如果想使用旧版本 MMEditing 0.x ，请使用 [master](https://github.com/open-mmlab/mmediting/tree/master) 分支。
-
 ## 📄 目录
 
 - [📖 介绍](#📖-介绍)

@@ -62,9 +62,7 @@ English | [简体中文](README_zh-CN.md)
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
-Please refer to [migration documents](docs/en/migration/overview.md) to migrate from MMEditing 0.x to our brand new 1.x version.
-
-Please use [master](https://github.com/open-mmlab/mmediting/tree/master) branch for old versions (MMEditing 0.x).
+Please refer to [migration documents](docs/en/migration/overview.md) to migrate from [old version](https://github.com/open-mmlab/mmediting/tree/master) MMEditing 0.x to our brand new 1.x version.
 
 ## 📄 Table of Contents
 
