@@ -1,13 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch.nn as nn
+from mmengine.model import BaseModule
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
 from mmedit.models.editors.pconv.mask_conv_module import MaskConvModule
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
-class PConvEncoder(nn.Module):
+@MODELS.register_module()
+class PConvEncoder(BaseModule):
     """Encoder with partial conv.
 
     About the details for this architecture, pls see:

@@ -1,12 +1,10 @@
 Collections:
-- Metadata:
-    Architecture:
-    - Unsupervised Representation Learning with Deep Convolutional Generative Adversarial
-      Networks
-  Name: Unsupervised Representation Learning with Deep Convolutional Generative Adversarial
+- Name: Unsupervised Representation Learning with Deep Convolutional Generative Adversarial
     Networks
   Paper:
-  - https://arxiv.org/abs/1511.06434
+    Title: Unsupervised Representation Learning with Deep Convolutional Generative
+      Adversarial Networks
+    URL: https://arxiv.org/abs/1511.06434
   README: configs/dcgan/README.md
   Task:
   - unconditional gans
@@ -15,11 +13,9 @@ Models:
 - Config: configs/dcgan/dcgan_Glr4e-4_Dlr1e-4_1xb128-5kiters_mnist-64x64.py
   In Collection: Unsupervised Representation Learning with Deep Convolutional Generative
     Adversarial Networks
-  Metadata:
-    Training Data: Others
   Name: dcgan_Glr4e-4_Dlr1e-4_1xb128-5kiters_mnist-64x64
   Results:
-  - Dataset: Others
+  - Dataset: MNIST(64x64)
     Metrics:
       MS-SSIM: 0.1395
     Task: Unconditional GANs
@@ -27,11 +23,9 @@ Models:
 - Config: configs/dcgan/dcgan_1xb128-300kiters_celeba-cropped-64.py
   In Collection: Unsupervised Representation Learning with Deep Convolutional Generative
     Adversarial Networks
-  Metadata:
-    Training Data: CELEBA
   Name: dcgan_1xb128-300kiters_celeba-cropped-64
   Results:
-  - Dataset: CELEBA
+  - Dataset: CelebA-Cropped
     Metrics:
       MS-SSIM: 0.2899
     Task: Unconditional GANs
@@ -39,11 +33,9 @@ Models:
 - Config: configs/dcgan/dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
   In Collection: Unsupervised Representation Learning with Deep Convolutional Generative
     Adversarial Networks
-  Metadata:
-    Training Data: Others
   Name: dcgan_1xb128-5epoches_lsun-bedroom-64x64
   Results:
-  - Dataset: Others
+  - Dataset: LSUN-Bedroom
     Metrics:
       MS-SSIM: 0.2095
     Task: Unconditional GANs

@@ -9,12 +9,12 @@ from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 from torch import Tensor
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ..stylegan2 import StyleGAN2Discriminator
 
 
-@MODULES.register_module('EG3DDiscriminator')
-@MODULES.register_module()
+@MODELS.register_module('EG3DDiscriminator')
+@MODELS.register_module()
 class DualDiscriminator(StyleGAN2Discriminator):
     """Dual Discriminator for EG3D. DualDiscriminator shares the same network
     structure with StyleGAN2's Discriminator. However, DualDiscriminator take

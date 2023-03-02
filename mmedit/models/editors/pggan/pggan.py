@@ -15,7 +15,7 @@ from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import ForwardInputs, SampleList
 from ...base_models import BaseGAN
 from ...utils import get_valid_num_batches, set_requires_grad
@@ -132,7 +132,7 @@ class ProgressiveGrowingGAN(BaseGAN):
             curr_scale = transition_weight = None
         else:
             noise = inputs.get('noise', None)
-            num_batches = get_valid_num_batches(inputs)
+            num_batches = get_valid_num_batches(inputs, data_samples)
             noise = self.noise_fn(noise, num_batches=num_batches)
 
             curr_scale = inputs.get('curr_scale', None)
@@ -153,46 +153,52 @@ class ProgressiveGrowingGAN(BaseGAN):
             transition_weight = self._curr_transition_weight.item()
 
         sample_model = self._get_valid_model(inputs)
-
-        if sample_model in ['ema', 'ema/orig']:
-            _model = self.generator_ema
-        else:
-            _model = self.generator
-
-        outputs = _model(
-            noise, curr_scale=curr_scale, transition_weight=transition_weight)
-
-        if sample_model == 'ema/orig':
-            _model = self.generator
-            outputs_orig = _model(
+        batch_sample_list = []
+        if sample_model in ['ema', 'orig']:
+            if sample_model == 'ema':
+                generator = self.generator_ema
+            else:
+                generator = self.generator
+            outputs = generator(
                 noise,
                 curr_scale=curr_scale,
                 transition_weight=transition_weight)
-            outputs = dict(ema=outputs, orig=outputs_orig)
+            outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
-        batch_sample_list = []
-        for idx in range(num_batches):
             gen_sample = EditDataSample()
             if data_samples:
-                gen_sample.update(data_samples[idx])
+                gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
-                gen_sample.gt_img = PixelData(data=inputs['img'][idx])
-            if isinstance(outputs, dict):
-                gen_sample.ema = EditDataSample(
-                    fake_img=PixelData(data=outputs['ema'][idx]),
-                    sample_model='ema')
-                gen_sample.orig = EditDataSample(
-                    fake_img=PixelData(data=outputs['orig'][idx]),
-                    sample_model='orig')
-                gen_sample.sample_model = 'ema/orig'
-            else:
-                gen_sample.fake_img = PixelData(data=outputs[idx])
-                gen_sample.sample_model = sample_model
-
-            # Append input condition (noise and sample_kwargs) to
-            # batch_sample_list
+                gen_sample.gt_img = inputs['img']
+            gen_sample.fake_img = outputs
+            gen_sample.sample_model = sample_model
             gen_sample.noise = noise
-            batch_sample_list.append(gen_sample)
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True)
+
+        else:  # sample model is 'ema/orig'
+            outputs_orig = self.generator(
+                noise,
+                curr_scale=curr_scale,
+                transition_weight=transition_weight)
+            outputs_ema = self.generator_ema(
+                noise,
+                curr_scale=curr_scale,
+                transition_weight=transition_weight)
+            outputs_orig = self.data_preprocessor.destruct(
+                outputs_orig, data_samples)
+            outputs_ema = self.data_preprocessor.destruct(
+                outputs_ema, data_samples)
+
+            gen_sample = EditDataSample()
+            if data_samples:
+                gen_sample.update(data_samples)
+            if isinstance(inputs, dict) and 'img' in inputs:
+                gen_sample.gt_img = inputs['img']
+            gen_sample.ema = EditDataSample(fake_img=outputs_ema)
+            gen_sample.orig = EditDataSample(fake_img=outputs_orig)
+            gen_sample.noise = noise
+            gen_sample.sample_model = 'ema/orig'
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True)
 
         return batch_sample_list
 
@@ -203,7 +209,7 @@ class ProgressiveGrowingGAN(BaseGAN):
         """Train discriminator.
 
         Args:
-            inputs (dict): Inputs from dataloader.
+            inputs (Tensor): Inputs from current resolution training.
             data_samples (List[EditDataSample]): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
@@ -213,7 +219,7 @@ class ProgressiveGrowingGAN(BaseGAN):
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
         real_imgs = inputs
-        num_batches = real_imgs.shape[0]
+        num_batches = len(data_samples)
         noise_batch = self.noise_fn(num_batches=num_batches)
 
         with torch.no_grad():
@@ -303,7 +309,7 @@ class ProgressiveGrowingGAN(BaseGAN):
         """Train generator.
 
         Args:
-            inputs (dict): Inputs from dataloader.
+            inputs (Tensor): Inputs from current resolution training.
             data_samples (List[EditDataSample]): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
@@ -313,8 +319,7 @@ class ProgressiveGrowingGAN(BaseGAN):
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
 
-        real_imgs = inputs
-        num_batches = real_imgs.shape[0]
+        num_batches = len(data_samples)
         noise_batch = self.noise_fn(num_batches=num_batches)
 
         fake_imgs = self.generator(
@@ -393,11 +398,8 @@ class ProgressiveGrowingGAN(BaseGAN):
             self._actual_nkimgs.append(self.shown_nkimg.item())
 
         data = self.data_preprocessor(data, True)
-        inputs, data_sample = data['inputs'], data['data_samples']
-        if isinstance(inputs, dict):
-            real_imgs = inputs['img']
-        else:  # tensor
-            real_imgs = inputs
+        data_sample = data['data_samples']
+        real_imgs = data_sample.gt_img
 
         curr_scale = str(self.curr_scale[0])
         disc_optimizer_wrapper: OptimWrapper = optim_wrapper[

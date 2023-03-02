@@ -11,6 +11,10 @@ register_all_modules()
 
 def test_mmedit_inferencer():
     with pytest.raises(Exception) as e_info:
+        inferencer_instance = MMEditInferencer('colorization', ['error_type'],
+                                               None)
+
+    with pytest.raises(Exception) as e_info:
         inferencer_instance = MMEditInferencer('unconditional', ['error_type'],
                                                None)
 
@@ -56,7 +60,3 @@ def test_mmedit_inferencer():
 
     extra_parameters = inferencer_instance.get_extra_parameters()
     assert len(extra_parameters) == 2
-
-
-if __name__ == '__main__':
-    test_mmedit_inferencer()

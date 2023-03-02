@@ -7,6 +7,7 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
 from mmedit.models import StyleGAN3
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
 register_all_modules()
@@ -17,7 +18,7 @@ class TestStyleGAN3(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.default_cfg = dict(
-            data_preprocessor=dict(type='GenDataPreprocessor'),
+            data_preprocessor=dict(type='EditDataPreprocessor'),
             generator=dict(
                 type='StyleGANv3Generator',
                 noise_size=6,
@@ -53,12 +54,12 @@ class TestStyleGAN3(TestCase):
         cfg = deepcopy(self.default_cfg)
         stylegan = StyleGAN3(**cfg)
 
-        data = dict(inputs=dict(num_batches=2), data_samples=[])
+        data = dict(inputs=dict(num_batches=2))
         outputs = stylegan.test_step(data)
         self.assertEqual(len(outputs), 2)
         self.assertEqual(outputs[0].fake_img.data.shape, (3, 16, 16))
 
-        data = dict(inputs=dict(num_batches=2), data_samples=[])
+        data = dict(inputs=dict(num_batches=2))
         outputs = stylegan.val_step(data)
         self.assertEqual(len(outputs), 2)
         self.assertEqual(outputs[0].fake_img.data.shape, (3, 16, 16))
@@ -80,7 +81,7 @@ class TestStyleGAN3(TestCase):
             generator=OptimWrapper(optimizer_g, accumulative_counts=1),
             discriminator=OptimWrapper(optimizer_d, accumulative_counts=1))
 
-        img = torch.randn(1, 3, 16, 16)
-        data = dict(inputs=dict(img=img), data_samples=[])
+        img = torch.randn(3, 16, 16)
+        data = dict(inputs=dict(), data_samples=[EditDataSample(gt_img=img)])
         message_hub.update_info('iter', 0)
         _ = stylegan.train_step(data, optim_wrapper_dict)

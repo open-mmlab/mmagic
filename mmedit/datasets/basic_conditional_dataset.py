@@ -3,8 +3,8 @@ from typing import List, Optional, Sequence, Union
 
 import mmengine
 import numpy as np
-from mmengine import FileClient
 from mmengine.dataset import BaseDataset
+from mmengine.fileio import get_file_backend
 from mmengine.logging import MMLogger
 
 from mmedit.registry import DATASETS
@@ -123,7 +123,7 @@ class BasicConditionalDataset(BaseDataset):
             'One of `ann_file`, `data_root` and `data_prefix` must '\
             'be specified.'
         if isinstance(data_prefix, str):
-            data_prefix = dict(img_path=expanduser(data_prefix))
+            data_prefix = dict(gt_path=expanduser(data_prefix))
 
         ann_file = expanduser(ann_file)
         metainfo = self._compat_classes(metainfo, classes)
@@ -143,14 +143,14 @@ class BasicConditionalDataset(BaseDataset):
         if not lazy_init:
             self.full_init()
 
-    def _find_samples(self, file_client):
+    def _find_samples(self, file_backend):
         """find samples from ``data_prefix``."""
-        classes, folder_to_idx = find_folders(self.img_prefix, file_client)
+        classes, folder_to_idx = find_folders(self.img_prefix, file_backend)
         samples, empty_classes = get_samples(
             self.img_prefix,
             folder_to_idx,
             is_valid_file=self.is_valid_file,
-            file_client=file_client,
+            file_backend=file_backend,
         )
 
         if len(samples) == 0:
@@ -180,10 +180,10 @@ class BasicConditionalDataset(BaseDataset):
     def load_data_list(self):
         """Load image paths and gt_labels."""
         if self.img_prefix:
-            file_client = FileClient.infer_client(uri=self.img_prefix)
+            file_backend = get_file_backend(uri=self.img_prefix)
 
         if not self.ann_file:
-            samples = self._find_samples(file_client)
+            samples = self._find_samples(file_backend)
         elif self.ann_file.endswith('json'):
             samples = mmengine.fileio.io.load(self.ann_file)
             samples = [[name, label] for name, label in samples.items()]
@@ -197,7 +197,7 @@ class BasicConditionalDataset(BaseDataset):
             if not prefix:
                 return filename
             else:
-                return file_client.join_path(prefix, filename)
+                return file_backend.join_path(prefix, filename)
 
         data_list = []
         for filename, gt_label in samples:
@@ -205,7 +205,7 @@ class BasicConditionalDataset(BaseDataset):
             # convert digit label to int
             if isinstance(gt_label, str):
                 gt_label = int(gt_label) if gt_label.isdigit() else gt_label
-            info = {'img_path': img_path, 'gt_label': gt_label}
+            info = {'gt_path': img_path, 'gt_label': gt_label}
             data_list.append(info)
         return data_list
 
@@ -216,7 +216,7 @@ class BasicConditionalDataset(BaseDataset):
     @property
     def img_prefix(self):
         """The prefix of images."""
-        return self.data_prefix['img_path']
+        return self.data_prefix['gt_path']
 
     @property
     def CLASSES(self):

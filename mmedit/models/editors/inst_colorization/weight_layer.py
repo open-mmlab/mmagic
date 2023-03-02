@@ -5,7 +5,7 @@ import torch
 from mmengine.model import BaseModule
 from torch import nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
 def get_norm_layer(norm_type='instance'):
@@ -30,7 +30,7 @@ def get_norm_layer(norm_type='instance'):
     return norm_layer
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class WeightLayer(BaseModule):
     """Weight layer of the fusion_net. A small neural network with three
     convolutional layers to predict full-image weight map and perinstance

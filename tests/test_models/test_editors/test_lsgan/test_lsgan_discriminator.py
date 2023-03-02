@@ -3,7 +3,7 @@ import pytest
 import torch
 
 from mmedit.models.editors.lsgan import LSGANDiscriminator
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
 class TestLSGANDiscriminator(object):
@@ -17,14 +17,14 @@ class TestLSGANDiscriminator(object):
     def test_lsgan_discriminator(self):
 
         # test default setting with builder
-        d = MODULES.build(self.default_config)
+        d = MODELS.build(self.default_config)
         assert isinstance(d, LSGANDiscriminator)
         score = d(self.x)
         assert score.shape == (2, 1)
 
         # test different input_scale
         config = dict(type='LSGANDiscriminator', in_channels=3, input_scale=64)
-        d = MODULES.build(config)
+        d = MODELS.build(config)
         assert isinstance(d, LSGANDiscriminator)
         x = torch.randn((2, 3, 64, 64))
         score = d(x)
@@ -36,7 +36,7 @@ class TestLSGANDiscriminator(object):
             in_channels=3,
             input_scale=64,
             out_act_cfg=dict(type='Sigmoid'))
-        d = MODULES.build(config)
+        d = MODELS.build(config)
         assert isinstance(d, LSGANDiscriminator)
         x = torch.randn((2, 3, 64, 64))
         score = d(x)
@@ -46,14 +46,14 @@ class TestLSGANDiscriminator(object):
     def test_lsgan_discriminator_cuda(self):
 
         # test default setting with builder
-        d = MODULES.build(self.default_config).cuda()
+        d = MODELS.build(self.default_config).cuda()
         assert isinstance(d, LSGANDiscriminator)
         score = d(self.x.cuda())
         assert score.shape == (2, 1)
 
         # test different input_scale
         config = dict(type='LSGANDiscriminator', in_channels=3, input_scale=64)
-        d = MODULES.build(config).cuda()
+        d = MODELS.build(config).cuda()
         assert isinstance(d, LSGANDiscriminator)
         x = torch.randn((2, 3, 64, 64))
         score = d(x.cuda())
@@ -65,7 +65,7 @@ class TestLSGANDiscriminator(object):
             in_channels=3,
             input_scale=64,
             out_act_cfg=dict(type='Sigmoid'))
-        d = MODULES.build(config).cuda()
+        d = MODELS.build(config).cuda()
         assert isinstance(d, LSGANDiscriminator)
         x = torch.randn((2, 3, 64, 64))
         score = d(x.cuda())

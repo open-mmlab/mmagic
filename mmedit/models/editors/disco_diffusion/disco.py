@@ -10,7 +10,7 @@ from mmengine.runner.checkpoint import (_load_checkpoint,
                                         _load_checkpoint_with_prefix)
 from tqdm import tqdm
 
-from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
+from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
 from .guider import ImageTextGuider
 
 ModelType = Union[Dict, nn.Module]
@@ -53,8 +53,7 @@ class DiscoDiffusion(nn.Module):
                  use_fp16=False,
                  pretrained_cfgs=None):
         super().__init__()
-        self.unet = unet if isinstance(unet,
-                                       nn.Module) else MODULES.build(unet)
+        self.unet = unet if isinstance(unet, nn.Module) else MODELS.build(unet)
         self.diffusion_scheduler = DIFFUSION_SCHEDULERS.build(
             diffusion_scheduler) if isinstance(diffusion_scheduler,
                                                dict) else diffusion_scheduler
@@ -65,12 +64,12 @@ class DiscoDiffusion(nn.Module):
         else:
             _clip_models = []
             for clip_cfg in clip_models:
-                _clip_models.append(MODULES.build(clip_cfg))
+                _clip_models.append(MODELS.build(clip_cfg))
         self.guider = ImageTextGuider(_clip_models)
 
         if secondary_model is not None:
             self.secondary_model = secondary_model if isinstance(
-                secondary_model, nn.Module) else MODULES.build(secondary_model)
+                secondary_model, nn.Module) else MODELS.build(secondary_model)
             self.with_secondary_model = True
         else:
             self.with_secondary_model = False

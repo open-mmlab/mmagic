@@ -18,7 +18,7 @@ model = dict(
     ema_config=dict(
         type='ExponentialMovingAverage',
         interval=1,
-        momentum=0.5**(32. / (ema_half_life * 1000.))),
+        momentum=1. - (0.5**(32. / (ema_half_life * 1000.)))),
     loss_config=dict(
         r1_loss_weight=10. / 2. * d_reg_interval,
         r1_interval=d_reg_interval,
@@ -44,13 +44,13 @@ data_root = './data/lsun/images/car'
 dataset_type = 'BasicImageDataset'
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
+    dict(type='LoadImageFromFile', key='gt'),
     dict(
         type='NumpyPad',
         keys='img',
         padding=((64, 64), (0, 0), (0, 0)),
     ),
-    dict(type='Flip', keys=['img'], direction='horizontal'),
+    dict(type='Flip', keys=['gt'], direction='horizontal'),
     dict(type='PackEditInputs')
 ]
 

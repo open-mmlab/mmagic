@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import platform
-import sys
 from unittest import TestCase
 
 import pytest
@@ -8,7 +7,8 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import GenDataPreprocessor, StyleGAN2
+from mmedit.models import EditDataPreprocessor, StyleGAN2
+from mmedit.structures import EditDataSample
 
 
 class TestStyleGAN2(TestCase):
@@ -27,7 +27,7 @@ class TestStyleGAN2(TestCase):
         cls.ema_config = dict(
             type='ExponentialMovingAverage',
             interval=1,
-            momentum=0.5**(32. / (ema_half_life * 1000.)))
+            momentum=1. - (0.5**(32. / (ema_half_life * 1000.))))
 
         cls.loss_config = dict(
             r1_loss_weight=10. / 2. * d_reg_interval,
@@ -40,16 +40,13 @@ class TestStyleGAN2(TestCase):
     @pytest.mark.skipif(
         'win' in platform.system().lower() and 'cu' in torch.__version__,
         reason='skip on windows-cuda due to limited RAM.')
-    @pytest.mark.skipif(
-        sys.version_info < (3, 8),
-        reason='skip because python version is old.')
     def test_stylegan2_cpu(self):
         accu_iter = 1
         message_hub = MessageHub.get_instance('test-s2')
         stylegan2 = StyleGAN2(
             self.generator_cfg,
             self.disc_cfg,
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=EditDataPreprocessor(),
             ema_config=self.ema_config,
             loss_config=self.loss_config)
 
@@ -64,8 +61,8 @@ class TestStyleGAN2(TestCase):
                 optimizer_d, accumulative_counts=accu_iter))
 
         # prepare inputs
-        img = torch.randn(1, 3, 32, 32)
-        data = dict(inputs=dict(img=img))
+        img = torch.randn(3, 32, 32)
+        data = dict(inputs=dict(), data_samples=[EditDataSample(gt_img=img)])
 
         # simulate train_loop here
         message_hub.update_info('iter', 0)

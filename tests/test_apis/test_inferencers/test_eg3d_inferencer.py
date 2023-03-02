@@ -44,14 +44,15 @@ config = dict(
             vertical_std=3.141 / 2,
             focal=1.025390625,
             up=[0, 0, 1],
-            radius=1.2)))
+            radius=1.2),
+        data_preprocessor=dict(type='EditDataPreprocessor')))
 
 
 def test_eg3d_inferencer():
     cfg = Config(config)
 
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data', 'eg3d_output')
+        osp.dirname(__file__), '..', '..', 'data/out', 'eg3d_output')
 
     inferencer_instance = EG3DInferencer(cfg, None)
     output = inferencer_instance(

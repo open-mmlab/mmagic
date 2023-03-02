@@ -1,15 +1,17 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import LOSSES
+from mmedit.registry import MODELS
 from .pixelwise_loss import l1_loss
 
 _reduction_modes = ['none', 'mean', 'sum']
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class GradientLoss(nn.Module):
     """Gradient loss.
 
@@ -19,7 +21,9 @@ class GradientLoss(nn.Module):
             Supported choices are 'none' | 'mean' | 'sum'. Default: 'mean'.
     """
 
-    def __init__(self, loss_weight=1.0, reduction='mean'):
+    def __init__(self,
+                 loss_weight: float = 1.0,
+                 reduction: str = 'mean') -> None:
         super().__init__()
         self.loss_weight = loss_weight
         self.reduction = reduction
@@ -27,7 +31,10 @@ class GradientLoss(nn.Module):
             raise ValueError(f'Unsupported reduction mode: {self.reduction}. '
                              f'Supported ones are: {_reduction_modes}')
 
-    def forward(self, pred, target, weight=None):
+    def forward(self,
+                pred: torch.Tensor,
+                target: torch.Tensor,
+                weight: Optional[torch.Tensor] = None) -> torch.Tensor:
         """
         Args:
             pred (Tensor): of shape (N, C, H, W). Predicted tensor.

@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import List, Optional, Tuple
+
 import torch
 import torch.nn as nn
 import torchvision.models.vgg as vgg
@@ -6,7 +8,7 @@ from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
 from torch.nn import functional as F
 
-from mmedit.registry import LOSSES
+from mmedit.registry import MODELS
 
 
 class PerceptualVGG(nn.Module):
@@ -30,10 +32,10 @@ class PerceptualVGG(nn.Module):
     """
 
     def __init__(self,
-                 layer_name_list,
-                 vgg_type='vgg19',
-                 use_input_norm=True,
-                 pretrained='torchvision://vgg19'):
+                 layer_name_list: List[str],
+                 vgg_type: str = 'vgg19',
+                 use_input_norm: bool = True,
+                 pretrained: str = 'torchvision://vgg19') -> None:
         super().__init__()
         if pretrained.startswith('torchvision://'):
             assert vgg_type in pretrained
@@ -62,7 +64,7 @@ class PerceptualVGG(nn.Module):
         for v in self.vgg_layers.parameters():
             v.requires_grad = False
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward function.
 
         Args:
@@ -82,7 +84,7 @@ class PerceptualVGG(nn.Module):
                 output[name] = x.clone()
         return output
 
-    def init_weights(self, model, pretrained):
+    def init_weights(self, model: nn.Module, pretrained: str) -> None:
         """Init weights.
 
         Args:
@@ -93,7 +95,7 @@ class PerceptualVGG(nn.Module):
         load_checkpoint(model, pretrained, logger=logger)
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class PerceptualLoss(nn.Module):
     """Perceptual loss with commonly used style loss.
 
@@ -126,15 +128,15 @@ class PerceptualLoss(nn.Module):
     """
 
     def __init__(self,
-                 layer_weights,
-                 layer_weights_style=None,
-                 vgg_type='vgg19',
-                 use_input_norm=True,
-                 perceptual_weight=1.0,
-                 style_weight=1.0,
-                 norm_img=True,
-                 pretrained='torchvision://vgg19',
-                 criterion='l1'):
+                 layer_weights: dict,
+                 layer_weights_style: Optional[dict] = None,
+                 vgg_type: str = 'vgg19',
+                 use_input_norm: bool = True,
+                 perceptual_weight: float = 1.0,
+                 style_weight: float = 1.0,
+                 norm_img: bool = True,
+                 pretrained: str = 'torchvision://vgg19',
+                 criterion: str = 'l1') -> None:
         super().__init__()
         self.norm_img = norm_img
         self.perceptual_weight = perceptual_weight
@@ -169,7 +171,8 @@ class PerceptualLoss(nn.Module):
                 f'{criterion} criterion has not been supported in'
                 ' this version.')
 
-    def forward(self, x, gt):
+    def forward(self, x: torch.Tensor,
+                gt: torch.Tensor) -> Tuple[torch.Tensor]:
         """Forward function.
 
         Args:
@@ -215,7 +218,7 @@ class PerceptualLoss(nn.Module):
 
         return percep_loss, style_loss
 
-    def _gram_mat(self, x):
+    def _gram_mat(self, x: torch.Tensor) -> torch.Tensor:
         """Calculate Gram matrix.
 
         Args:
@@ -231,7 +234,7 @@ class PerceptualLoss(nn.Module):
         return gram
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class TransferalPerceptualLoss(nn.Module):
     """Transferal perceptual loss.
 
@@ -242,7 +245,10 @@ class TransferalPerceptualLoss(nn.Module):
             Default: 'mse'.
     """
 
-    def __init__(self, loss_weight=1.0, use_attention=True, criterion='mse'):
+    def __init__(self,
+                 loss_weight: float = 1.0,
+                 use_attention: bool = True,
+                 criterion: str = 'mse') -> None:
         super().__init__()
         self.use_attention = use_attention
         self.loss_weight = loss_weight
@@ -255,7 +261,8 @@ class TransferalPerceptualLoss(nn.Module):
             raise ValueError(
                 f"criterion should be 'l1' or 'mse', but got {criterion}")
 
-    def forward(self, maps, soft_attention, textures):
+    def forward(self, maps: Tuple[torch.Tensor], soft_attention: torch.Tensor,
+                textures: Tuple[torch.Tensor]) -> torch.Tensor:
         """Forward function.
 
         Args:

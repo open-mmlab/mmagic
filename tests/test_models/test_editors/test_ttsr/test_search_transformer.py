@@ -1,12 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
 def test_search_transformer():
     model_cfg = dict(type='SearchTransformer')
-    model = COMPONENTS.build(model_cfg)
+    model = MODELS.build(model_cfg)
 
     lr_pad_level3 = torch.randn((2, 32, 32, 32))
     ref_pad_level3 = torch.randn((2, 32, 32, 32))

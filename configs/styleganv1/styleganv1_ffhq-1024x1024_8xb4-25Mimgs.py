@@ -7,7 +7,8 @@ _base_ = [
 # MODEL
 model_wrapper_cfg = dict(find_unused_parameters=True)
 ema_half_life = 10.  # G_smoothing_kimg
-ema_config = dict(interval=1, momentum=0.5**(32. / (ema_half_life * 1000.)))
+ema_config = dict(
+    interval=1, momentum=1. - (0.5**(32. / (ema_half_life * 1000.))))
 model = dict(
     generator=dict(out_size=1024),
     discriminator=dict(in_size=1024),

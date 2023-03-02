@@ -1,16 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
-from mmengine import MMLogger
+from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init, normal_init
-from mmengine.runner import load_checkpoint
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class DeepFillEncoderDecoder(nn.Module):
+@MODELS.register_module()
+class DeepFillEncoderDecoder(BaseModule):
     """Two-stage encoder-decoder structure used in DeepFill model.
 
     The details are in:
@@ -37,8 +36,8 @@ class DeepFillEncoderDecoder(nn.Module):
                  stage2=dict(type='DeepFillRefiner'),
                  return_offset=False):
         super().__init__()
-        self.stage1 = BACKBONES.build(stage1)
-        self.stage2 = BACKBONES.build(stage2)
+        self.stage1 = MODELS.build(stage1)
+        self.stage2 = MODELS.build(stage2)
 
         self.return_offset = return_offset
 
@@ -73,22 +72,13 @@ class DeepFillEncoderDecoder(nn.Module):
         return stage1_res, stage2_res
 
     # TODO: study the effects of init functions
-    def init_weights(self, pretrained=None):
-        """Init weights for models.
+    def init_weights(self):
+        """Init weights for models."""
 
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-        """
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif pretrained is None:
-            for m in self.modules():
-                if isinstance(m, nn.Conv2d):
-                    normal_init(m, 0, 0.02)
-                elif isinstance(m, (_BatchNorm, nn.InstanceNorm2d)):
-                    constant_init(m, 1)
-        else:
-            raise TypeError('pretrained must be a str or None but'
-                            f' got {type(pretrained)} instead.')
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                normal_init(m, 0, 0.02)
+            elif isinstance(m, (_BatchNorm, nn.InstanceNorm2d)):
+                constant_init(m, 1)
+
+        self._is_init = True

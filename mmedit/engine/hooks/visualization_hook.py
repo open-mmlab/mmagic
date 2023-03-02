@@ -15,7 +15,7 @@ from mmengine.structures import BaseDataElement
 from mmengine.utils import is_list_of
 from mmengine.visualization import Visualizer
 
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import get_sampler
 
 
@@ -88,7 +88,7 @@ class GenVisualizationHook(Hook):
 
     - Required key words:
         - 'type': Value must be string. Denotes what kind of sampler is used to
-            generate image. Refers to `:meth:~mmgen.core.sampler.get_sampler`.
+            generate image. Refers to :meth:`~mmedit.utils.get_sampler`.
     - Optional key words (If not passed, will use the default value):
         - 'n_rows': Value must be int. The number of images in one row.
         - 'num_samples': Value must be int. The number of samples to visualize.
@@ -242,29 +242,19 @@ class GenVisualizationHook(Hook):
         if not self.save_at_test:
             return
 
-        # get color order, mean and std
-        module = runner.model
-        if hasattr(module, 'module'):
-            module = module.module
-        data_preprocessor = module.data_preprocessor
-        if hasattr(data_preprocessor, 'output_color_order'):
-            output_color_order = data_preprocessor.output_color_order
-        else:
-            output_color_order = 'bgr'
-        mean = data_preprocessor.mean
-        std = data_preprocessor.std
         for idx, sample in enumerate(outputs):
             curr_idx = batch_idx * len(outputs) + idx
             if (self.max_save_at_test is not None
                     and curr_idx >= self.max_save_at_test):
                 continue
+            # NOTE: only support visualize image tensors (ndim == 3)
             if self.test_vis_keys_list is None:
                 target_keys = [
-                    k for k, v in sample.items()
-                    if not k.startswith('_') and isinstance(v, PixelData)
+                    k for k, v in sample.items() if not k.startswith('_')
+                    and isinstance(v, torch.Tensor) and v.ndim == 3
                 ]
                 assert len(target_keys), (
-                    'Cannot found PixelData in outputs. Please specific '
+                    'Cannot found Tensor in outputs. Please specific '
                     '\'vis_test_keys_list\'.')
             elif isinstance(self.test_vis_keys_list, str):
                 target_keys = [self.test_vis_keys_list]
@@ -280,10 +270,7 @@ class GenVisualizationHook(Hook):
                     gen_samples=[sample],
                     step=curr_idx,
                     target_keys=key,
-                    n_row=1,
-                    color_order=output_color_order,
-                    target_mean=mean.cpu(),
-                    target_std=std.cpu())
+                    n_row=1)
 
     @master_only
     def after_train_iter(self,
@@ -327,14 +314,6 @@ class GenVisualizationHook(Hook):
             module = module.module
 
         forward_func = module.val_step
-        # get color order, mean and std
-        data_preprocessor = module.data_preprocessor
-        if hasattr(data_preprocessor, 'output_color_order'):
-            output_color_order = data_preprocessor.output_color_order
-        else:
-            output_color_order = 'bgr'
-        mean = data_preprocessor.mean
-        std = data_preprocessor.std
 
         for vis_kwargs in self.vis_kwargs_list:
             # pop the sample-unrelated values
@@ -386,22 +365,17 @@ class GenVisualizationHook(Hook):
                 target_keys=target_keys,
                 vis_mode=vis_mode,
                 n_row=n_row,
-                color_order=output_color_order,
-                target_mean=mean.cpu(),
-                target_std=std.cpu(),
                 show=self.show,
                 wait_time=self.wait_time,
                 step=batch_idx + 1,
                 **vis_kwargs_)
 
         # save images in message_hub
-        self.vis_from_message_hub(batch_idx, output_color_order, mean, std)
+        self.vis_from_message_hub(batch_idx)
 
         module.train()
 
-    def vis_from_message_hub(self, batch_idx: int, color_order: str,
-                             target_mean: Sequence[Union[float, int]],
-                             target_std: Sequence[Union[float, int]]):
+    def vis_from_message_hub(self, batch_idx: int):
         """Visualize samples from message hub.
 
         Args:
@@ -414,6 +388,7 @@ class GenVisualizationHook(Hook):
                 image tensor before preprocessing. Image will be re-scaled to
                 ``target_std`` before visualizing.
         """
+        # TODO: add destruct in this function
         if self.message_vis_kwargs is None:
             return
 
@@ -453,7 +428,7 @@ class GenVisualizationHook(Hook):
                 num_batches = value.shape[0]
                 for idx in range(num_batches):
                     gen_sample = EditDataSample()
-                    setattr(gen_sample, key, PixelData(data=value[idx]))
+                    setattr(gen_sample, key, value[idx])
                     gen_samples.append(gen_sample)
             elif is_list_of(value, BaseDataElement):
                 # already packed
@@ -470,8 +445,5 @@ class GenVisualizationHook(Hook):
                 target_keys=key,
                 vis_mode=vis_mode,
                 n_row=min(self.n_row, num_batches),
-                color_order=color_order,
-                target_mean=target_mean.cpu(),
-                target_std=target_std.cpu(),
                 show=self.show,
                 step=batch_idx)

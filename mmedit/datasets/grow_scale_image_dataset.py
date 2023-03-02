@@ -1,11 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional, Union
 
-from mmengine import FileClient, print_log
+from mmengine import print_log
 from mmengine.dataset import BaseDataset
+from mmengine.fileio import get_file_backend
 
 from mmedit.registry import DATASETS
-from .data_utils import infer_io_backend
 
 
 @DATASETS.register_module()
@@ -88,8 +88,10 @@ class GrowScaleImgDataset(BaseDataset):
 
         if io_backend is None:
             data_root_ = list(data_roots.values())[0]
-            io_backend = infer_io_backend(data_root_)
-        self.file_client = FileClient(backend=io_backend)
+            self.file_backend = get_file_backend(uri=data_root_)
+        else:
+            self.file_backend = get_file_backend(
+                backend_args={'backend': io_backend})
 
         # use current data root to initialize and do not support
         # `serialize_data`
@@ -105,13 +107,13 @@ class GrowScaleImgDataset(BaseDataset):
     def load_data_list(self):
         """Load annotations."""
         # recursively find all of the valid images from imgs_root
-        data_list = self.file_client.list_dir_or_file(
+        data_list = self.file_backend.list_dir_or_file(
             self.data_root,
             list_dir=False,
             suffix=self._VALID_IMG_SUFFIX,
             recursive=True)
         self.data_list = [
-            self.file_client.join_path(self.data_root, x) for x in data_list
+            self.file_backend.join_path(self.data_root, x) for x in data_list
         ]
 
         if self.len_per_stage > 0:
@@ -170,7 +172,7 @@ class GrowScaleImgDataset(BaseDataset):
         Returns:
             dict: Prepared training data batch.
         """
-        results = dict(img_path=self.data_list[idx])
+        results = dict(gt_path=self.data_list[idx])
         return self.pipeline(results)
 
     def prepare_test_data(self, idx):
@@ -182,16 +184,36 @@ class GrowScaleImgDataset(BaseDataset):
         Returns:
             dict: Prepared training data batch.
         """
-        results = dict(img_path=self.data_list[idx])
+        results = dict(gt_path=self.data_list[idx])
         return self.pipeline(results)
 
     def __getitem__(self, idx):
+        """Get the idx-th image and data information of dataset after
+        ``self.pipeline``, and ``full_init`` will be called if the dataset has
+        not been fully initialized.
+
+        During training phase, if ``self.pipeline`` get ``None``,
+        ``self._rand_another`` will be called until a valid image is fetched or
+         the maximum limit of refetech is reached.
+
+        Args:
+            idx (int): The index of self.data_list.
+
+        Returns:
+            dict: The idx-th image and data information of dataset after
+            ``self.pipeline``.
+        """
         if not self.test_mode:
             return self.prepare_train_data(idx)
 
         return self.prepare_test_data(idx)
 
     def __repr__(self):
+        """Print ``self.transforms`` in sequence.
+
+        Returns:
+            str: Formatted string.
+        """
         dataset_name = self.__class__
         imgs_root = self.data_root
         num_imgs = len(self)

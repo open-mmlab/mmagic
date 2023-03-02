@@ -8,7 +8,7 @@ d_reg_ratio = d_reg_interval / (d_reg_interval + 1)
 
 model = dict(
     type='StyleGAN3',
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='EditDataPreprocessor'),
     generator=dict(
         type='StyleGANv3Generator',
         noise_size=512,

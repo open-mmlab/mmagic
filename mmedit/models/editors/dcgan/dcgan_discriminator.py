@@ -7,10 +7,10 @@ from mmengine.model import normal_init
 from mmengine.runner import load_checkpoint
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class DCGANDiscriminator(nn.Module):
     """Discriminator for DCGAN.
 

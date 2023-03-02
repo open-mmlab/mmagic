@@ -1,13 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch.nn as nn
-from mmengine import MMLogger
-from mmengine.runner import load_checkpoint
+from mmengine.model import BaseModule
 
-from mmedit.registry import BACKBONES, COMPONENTS
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class GLEncoderDecoder(nn.Module):
+@MODELS.register_module()
+class GLEncoderDecoder(BaseModule):
     """Encoder-Decoder used in Global&Local model.
 
     This implementation follows:
@@ -27,9 +25,9 @@ class GLEncoderDecoder(nn.Module):
                  decoder=dict(type='GLDecoder'),
                  dilation_neck=dict(type='GLDilationNeck')):
         super().__init__()
-        self.encoder = COMPONENTS.build(encoder)
-        self.decoder = COMPONENTS.build(decoder)
-        self.dilation_neck = COMPONENTS.build(dilation_neck)
+        self.encoder = MODELS.build(encoder)
+        self.decoder = MODELS.build(decoder)
+        self.dilation_neck = MODELS.build(dilation_neck)
 
         # support fp16
         self.fp16_enabled = False
@@ -50,20 +48,3 @@ class GLEncoderDecoder(nn.Module):
         x = self.decoder(x)
 
         return x
-
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults: None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is not None:
-            raise TypeError(f'"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')

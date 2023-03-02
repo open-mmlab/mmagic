@@ -27,8 +27,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(1, -1, 1, 1),
     ))
 
 train_pipeline = [
@@ -36,7 +34,6 @@ train_pipeline = [
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='SetValues', dictionary=dict(scale=scale)),
     dict(type='FixedCrop', keys=['gt'], crop_size=(256, 256)),
-    dict(type='RescaleToZeroOne', keys=['gt']),
     dict(type='Flip', keys=['gt'], flip_ratio=0.5, direction='horizontal'),
     dict(type='Flip', keys=['gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['gt'], transpose_ratio=0.5),
@@ -257,18 +254,20 @@ test_dataloader = dict(
         data_prefix=dict(img='', gt=''),
         pipeline=test_pipeline))
 
-val_evaluator = [
-    dict(type='PSNR'),
-    dict(type='SSIM'),
-]
+val_evaluator = dict(
+    type='EditEvaluator', metrics=[
+        dict(type='PSNR'),
+        dict(type='SSIM'),
+    ])
 
-test_evaluator = [dict(type='NIQE', input_order='CHW', convert_to='Y')]
-# test_evaluator = val_evaluator
+test_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[dict(type='NIQE', input_order='CHW', convert_to='Y')])
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=300_000, val_interval=5000)
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(
@@ -301,7 +300,7 @@ custom_hooks = [
         type='ExponentialMovingAverageHook',
         module_keys=('generator_ema'),
         interval=1,
-        interp_cfg=dict(momentum=0.999),
+        interp_cfg=dict(momentum=0.001),
     )
 ]
 

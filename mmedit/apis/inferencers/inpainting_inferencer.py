@@ -10,6 +10,7 @@ from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter
 
+from mmedit.structures import EditDataSample
 from mmedit.utils import tensor2img
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
@@ -22,6 +23,10 @@ class InpaintingInferencer(BaseMMEditInferencer):
         forward=[],
         visualize=['result_out_dir'],
         postprocess=[])
+
+    def _init_pipeline(self, cfg) -> Compose:
+        """Initialize the test pipeline."""
+        return None
 
     def preprocess(self, img: InputsType, mask: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
@@ -60,6 +65,7 @@ class InpaintingInferencer(BaseMMEditInferencer):
         self.masks = data['data_samples'][0].mask.data * 255
         self.masked_imgs = data['inputs'][0]
 
+        data['data_samples'] = EditDataSample.stack(data['data_samples'])
         return data
 
     def forward(self, inputs: InputsType) -> PredType:

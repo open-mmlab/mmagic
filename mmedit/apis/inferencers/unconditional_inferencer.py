@@ -20,7 +20,7 @@ class UnconditionalInferencer(BaseMMEditInferencer):
         visualize=['result_out_dir'],
         postprocess=[])
 
-    extra_parameters = dict(num_batches=4, sample_model='ema')
+    extra_parameters = dict(num_batches=4, sample_model='orig')
 
     def preprocess(self) -> Dict:
         """Process the inputs into a model-feedable format.
@@ -57,7 +57,10 @@ class UnconditionalInferencer(BaseMMEditInferencer):
         res_list = []
         res_list.extend([item.fake_img.data.cpu() for item in preds])
         results = torch.stack(res_list, dim=0)
-        results = (results[:, [2, 1, 0]] + 1.) / 2.
+        if results.shape[1] == 3:
+            results = (results[:, [2, 1, 0]] + 1.) / 2.
+        else:
+            results = (results + 1.) / 2.
 
         # save images
         if result_out_dir:

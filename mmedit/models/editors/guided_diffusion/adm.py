@@ -4,6 +4,7 @@ from typing import List, Optional
 
 import mmengine
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 from mmengine import MessageHub
 from mmengine.model import BaseModel, is_model_wrapper
@@ -11,8 +12,8 @@ from mmengine.optim import OptimWrapperDict
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
-from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import ForwardInputs, SampleList
 
 
@@ -21,7 +22,8 @@ def classifier_grad(classifier, x, t, y=None, classifier_scale=1.0):
     assert y is not None
     with torch.enable_grad():
         x_in = x.detach().requires_grad_(True)
-        logits = classifier(x_in, t)
+        timesteps = torch.ones_like(y) * t
+        logits = classifier(x_in, timesteps)
         log_probs = F.log_softmax(logits, dim=-1)
         selected = log_probs[range(len(logits)), y.view(-1)]
         return torch.autograd.grad(selected.sum(), x_in)[0] * classifier_scale
@@ -53,14 +55,15 @@ class AblatedDiffusionModel(BaseModel):
                  use_fp16=False,
                  classifier=None,
                  classifier_scale=1.0,
+                 rgb2bgr=False,
                  pretrained_cfgs=None):
 
         super().__init__(data_preprocessor=data_preprocessor)
-        self.unet = MODULES.build(unet)
+        self.unet = MODELS.build(unet)
         self.diffusion_scheduler = DIFFUSION_SCHEDULERS.build(
             diffusion_scheduler)
         if classifier:
-            self.classifier = MODULES.build(classifier)
+            self.classifier = MODELS.build(classifier)
         else:
             self.classifier = None
         self.classifier_scale = classifier_scale
@@ -70,6 +73,7 @@ class AblatedDiffusionModel(BaseModel):
         if use_fp16:
             mmengine.print_log('Convert unet modules to floatpoint16')
             self.unet.convert_to_fp16()
+        self.rgb2bgr = rgb2bgr
 
     def load_pretrained_models(self, pretrained_cfgs):
         """_summary_
@@ -82,8 +86,11 @@ class AblatedDiffusionModel(BaseModel):
             map_location = ckpt_cfg.get('map_location', 'cpu')
             strict = ckpt_cfg.get('strict', True)
             ckpt_path = ckpt_cfg.get('ckpt_path')
-            state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
-                                                      map_location)
+            if prefix == '':
+                state_dict = torch.load(ckpt_path, map_location=map_location)
+            else:
+                state_dict = _load_checkpoint_with_prefix(
+                    prefix, ckpt_path, map_location)
             getattr(self, key).load_state_dict(state_dict, strict=strict)
             mmengine.print_log(f'Load pretrained {key} from {ckpt_path}')
 
@@ -96,7 +103,9 @@ class AblatedDiffusionModel(BaseModel):
         """
         return next(self.parameters()).device
 
+    @torch.no_grad()
     def infer(self,
+              scheduler_kwargs=None,
               init_image=None,
               batch_size=1,
               num_inference_steps=1000,
@@ -116,28 +125,38 @@ class AblatedDiffusionModel(BaseModel):
         Returns:
             _type_: _description_
         """
+        if scheduler_kwargs is not None:
+            mmengine.print_log('Switch to infer diffusion scheduler!',
+                               'current')
+            infer_scheduler = DIFFUSION_SCHEDULERS.build(scheduler_kwargs)
+        else:
+            infer_scheduler = self.diffusion_scheduler
+
         # Sample gaussian noise to begin loop
         if init_image is None:
-            image = torch.randn((batch_size, self.unet.in_channels,
-                                 self.unet.image_size, self.unet.image_size))
-            image = image.to(self.device)
+            image = torch.randn(
+                (batch_size, self.get_module(self.unet, 'in_channels'),
+                 self.get_module(self.unet, 'image_size'),
+                 self.get_module(self.unet, 'image_size')))
         else:
             image = init_image
+        image = image.to(self.device)
 
         if isinstance(labels, int):
-            labels = torch.tensor(labels).repeat(batch_size, 1)
+            labels = torch.tensor(labels).repeat(batch_size)
         elif labels is None:
             labels = torch.randint(
                 low=0,
-                high=self.unet.num_classes,
+                high=self.get_module(self.unet, 'num_classes'),
                 size=(batch_size, ),
                 device=self.device)
+        labels = labels.to(self.device)
 
         # set step values
         if num_inference_steps > 0:
-            self.diffusion_scheduler.set_timesteps(num_inference_steps)
+            infer_scheduler.set_timesteps(num_inference_steps)
 
-        timesteps = self.diffusion_scheduler.timesteps
+        timesteps = infer_scheduler.timesteps
 
         if show_progress and mmengine.dist.is_main_process():
             timesteps = tqdm(timesteps)
@@ -146,24 +165,25 @@ class AblatedDiffusionModel(BaseModel):
             model_output = self.unet(image, t, label=labels)['outputs']
 
             # 2. compute previous image: x_t -> x_t-1
-            diffusion_scheduler_output = self.diffusion_scheduler.step(
-                model_output, t, image)
-
-            # 3. applying classifier guide
-            if self.classifier and classifier_scale != 0.0:
-                gradient = classifier_grad(
-                    self.classifier,
-                    image,
-                    t,
-                    labels,
+            if classifier_scale > 0 and self.classifier is not None:
+                cond_fn = classifier_grad
+                cond_kwargs = dict(
+                    y=labels,
+                    classifier=self.classifier,
                     classifier_scale=classifier_scale)
-                guided_mean = (
-                    diffusion_scheduler_output['mean'].float() +
-                    diffusion_scheduler_output['sigma'] * gradient.float())
-                image = guided_mean + diffusion_scheduler_output[
-                    'sigma'] * diffusion_scheduler_output['noise']
             else:
-                image = diffusion_scheduler_output['prev_sample']
+                cond_fn = None
+                cond_kwargs = {}
+            diffusion_scheduler_output = infer_scheduler.step(
+                model_output,
+                t,
+                image,
+                cond_fn=cond_fn,
+                cond_kwargs=cond_kwargs)
+            image = diffusion_scheduler_output['prev_sample']
+
+        if self.rgb2bgr:
+            image = image[:, [2, 1, 0], ...]
 
         return {'samples': image}
 
@@ -183,10 +203,10 @@ class AblatedDiffusionModel(BaseModel):
             List[EditDataSample]: _description_
         """
         init_image = inputs.get('init_image', None)
-        batch_size = inputs.get('batch_size', 1)
-        labels = data_samples.get('labels', None)
+        batch_size = inputs.get('num_batches', 1)
         sample_kwargs = inputs.get('sample_kwargs', dict())
 
+        labels = sample_kwargs.get('labels', None)
         num_inference_steps = sample_kwargs.get(
             'num_inference_steps',
             self.diffusion_scheduler.num_train_timesteps)
@@ -207,18 +227,7 @@ class AblatedDiffusionModel(BaseModel):
             if data_samples:
                 gen_sample.update(data_samples[idx])
             if isinstance(outputs, dict):
-                gen_sample.ema = EditDataSample(
-                    fake_img=PixelData(data=outputs['ema'][idx]),
-                    sample_model='ema')
-                gen_sample.orig = EditDataSample(
-                    fake_img=PixelData(data=outputs['orig'][idx]),
-                    sample_model='orig')
-                gen_sample.sample_model = 'ema/orig'
-                gen_sample.set_gt_label(labels[idx])
-                gen_sample.ema.set_gt_label(labels[idx])
-                gen_sample.orig.set_gt_label(labels[idx])
-            else:
-                gen_sample.fake_img = PixelData(data=outputs[idx])
+                gen_sample.fake_img = outputs['samples'][idx]
                 gen_sample.set_gt_label(labels[idx])
 
             # Append input condition (noise and sample_kwargs) to
@@ -302,3 +311,19 @@ class AblatedDiffusionModel(BaseModel):
                 module if is_model_wrapper(self.denoising) else self.denoising)
 
         return log_vars
+
+    def get_module(self, model: nn.Module, module_name: str) -> nn.Module:
+        """Get an inner module from model.
+
+        Since we will wrapper DDP for some model, we have to judge whether the
+        module can be indexed directly.
+
+        Args:
+            model (nn.Module): This model may wrapped with DDP or not.
+            module_name (str): The name of specific module.
+
+        Return:
+            nn.Module: Returned sub module.
+        """
+        module = model.module if hasattr(model, 'module') else model
+        return getattr(module, module_name)

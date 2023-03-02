@@ -1,10 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
+import torch
 import torch.nn as nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class FaceIdLossComps(nn.Module):
     """Face similarity loss. Generally this loss is used to keep the id
     consistency of the input face image and output face image.
@@ -37,18 +40,18 @@ class FaceIdLossComps(nn.Module):
     """
 
     def __init__(self,
-                 loss_weight=1.0,
-                 data_info=None,
-                 facenet=dict(type='ArcFace', ir_se50_weights=None),
-                 loss_name='loss_id'):
+                 loss_weight: float = 1.0,
+                 data_info: Optional[dict] = None,
+                 facenet: dict = dict(type='ArcFace', ir_se50_weights=None),
+                 loss_name: str = 'loss_id') -> None:
 
         super().__init__()
         self.loss_weight = loss_weight
         self.data_info = data_info
-        self.net = MODULES.build(facenet)
+        self.net = MODELS.build(facenet)
         self._loss_name = loss_name
 
-    def forward(self, *args, **kwargs):
+    def forward(self, *args, **kwargs) -> torch.Tensor:
         """Forward function.
 
         If ``self.data_info`` is not ``None``, a dictionary containing all of
@@ -88,7 +91,7 @@ class FaceIdLossComps(nn.Module):
         # NOTE: only return the loss term
         return self.net(*args, **kwargs)[0] * self.loss_weight
 
-    def loss_name(self):
+    def loss_name(self) -> str:
         """Loss Name.
 
         This function must be implemented and will return the name of this

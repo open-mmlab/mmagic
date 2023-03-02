@@ -40,7 +40,6 @@ train_pipeline = [
         keys=['gt'],
         crop_size=(gt_crop_size, gt_crop_size),
         random_crop=True),
-    dict(type='RescaleToZeroOne', keys=['gt']),
     dict(
         type='UnsharpMasking',
         keys=['gt'],
@@ -211,16 +210,17 @@ val_dataloader = dict(
 
 test_dataloader = val_dataloader
 
-val_evaluator = [
-    dict(type='PSNR'),
-    dict(type='SSIM'),
-]
+val_evaluator = dict(
+    type='EditEvaluator', metrics=[
+        dict(type='PSNR'),
+        dict(type='SSIM'),
+    ])
 test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_000_000, val_interval=2000)
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(
@@ -259,6 +259,6 @@ custom_hooks = [
         type='ExponentialMovingAverageHook',
         module_keys=('generator_ema'),
         interval=1,
-        interp_cfg=dict(momentum=0.999),
+        interp_cfg=dict(momentum=0.001),
     )
 ]

@@ -1,15 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
-from mmengine import MMLogger
-from mmengine.runner import load_checkpoint
+from mmengine.model import BaseModule
 
 from mmedit.models.base_archs import MultiLayerDiscriminator
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
-class GLDiscs(nn.Module):
+@MODELS.register_module()
+class GLDiscs(BaseModule):
     """Discriminators in Global&Local.
 
     This discriminator contains a local discriminator and a global
@@ -47,22 +46,14 @@ class GLDiscs(nn.Module):
 
         return pred
 
-    def init_weights(self, pretrained=None):
-        """Init weights for models.
+    def init_weights(self):
+        """Init weights for models."""
 
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
-        """
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif pretrained is None:
-            for m in self.modules():
-                # Here, we only initialize the module with fc layer since the
-                # conv and norm layers has been initialized in `ConvModule`.
-                if isinstance(m, nn.Linear):
-                    nn.init.normal_(m.weight.data, 0.0, 0.02)
-                    nn.init.constant_(m.bias.data, 0.0)
-        else:
-            raise TypeError('pretrained must be a str or None')
+        for m in self.modules():
+            # Here, we only initialize the module with fc layer since the
+            # conv and norm layers has been initialized in `ConvModule`.
+            if isinstance(m, nn.Linear):
+                nn.init.normal_(m.weight.data, 0.0, 0.02)
+                nn.init.constant_(m.bias.data, 0.0)
+
+        self._is_init = True

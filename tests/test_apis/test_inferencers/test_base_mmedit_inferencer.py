@@ -23,7 +23,3 @@ def test_base_mmedit_inferencer():
     inferencer_instance = BaseMMEditInferencer(cfg, None)
     extra_parameters = inferencer_instance.get_extra_parameters()
     assert len(extra_parameters) == 0
-
-
-if __name__ == '__main__':
-    test_base_mmedit_inferencer()

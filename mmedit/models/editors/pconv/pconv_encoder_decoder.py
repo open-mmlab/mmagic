@@ -1,14 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from mmengine.model import BaseModule
 
-import torch.nn as nn
-from mmengine import MMLogger
-from mmengine.runner import load_checkpoint
-
-from mmedit.registry import BACKBONES
+from mmedit.registry import MODELS
 
 
-@BACKBONES.register_module()
-class PConvEncoderDecoder(nn.Module):
+@MODELS.register_module()
+class PConvEncoderDecoder(BaseModule):
     """Encoder-Decoder with partial conv module.
 
     Args:
@@ -18,8 +15,8 @@ class PConvEncoderDecoder(nn.Module):
 
     def __init__(self, encoder, decoder):
         super().__init__()
-        self.encoder = BACKBONES.build(encoder)
-        self.decoder = BACKBONES.build(decoder)
+        self.encoder = MODELS.build(encoder)
+        self.decoder = MODELS.build(decoder)
 
         # support fp16
         self.fp16_enabled = False
@@ -38,20 +35,3 @@ class PConvEncoderDecoder(nn.Module):
         x, final_mask = self.decoder(enc_outputs)
 
         return x, final_mask
-
-    def init_weights(self, pretrained=None, strict=True):
-        """Init weights for models.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults: None.
-            strict (boo, optional): Whether strictly load the pretrained model.
-                Defaults to True.
-        """
-
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is not None:
-            raise TypeError(f'"pretrained" must be a str or None. '
-                            f'But received {type(pretrained)}.')

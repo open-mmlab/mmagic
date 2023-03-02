@@ -13,7 +13,7 @@ from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
 from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import ForwardInputs, SampleList
 
 # from .guider import ImageTextGuider
@@ -160,13 +160,13 @@ class Glide(BaseModel):
         for t in timesteps:
             # 1. predicted model_output
             half = image[:len(image) // 2]
-            combined = torch.concat([half, half], dim=0)
+            combined = torch.cat([half, half], dim=0)
             model_output = self.unet(combined, t, tokens=tokens, mask=mask)
             eps, rest = model_output[:, :3], model_output[:, 3:]
             cond_eps, uncond_eps = torch.split(eps, len(eps) // 2, dim=0)
             half_eps = uncond_eps + guidance_scale * (cond_eps - uncond_eps)
             eps = torch.cat([half_eps, half_eps], dim=0)
-            noise_pred = torch.concat([eps, rest], dim=1)
+            noise_pred = torch.cat([eps, rest], dim=1)
             # noise_pred_text, noise_pred_uncond = model_output.chunk(2)
             # noise_pred = noise_pred_uncond + guidance_scale *
             # (noise_pred_text - noise_pred_uncond)
@@ -234,17 +234,15 @@ class Glide(BaseModel):
                 gen_sample.update(data_samples[idx])
             if isinstance(outputs, dict):
                 gen_sample.ema = EditDataSample(
-                    fake_img=PixelData(data=outputs['ema'][idx]),
-                    sample_model='ema')
+                    fake_img=outputs['ema'][idx], sample_model='ema')
                 gen_sample.orig = EditDataSample(
-                    fake_img=PixelData(data=outputs['orig'][idx]),
-                    sample_model='orig')
+                    fake_img=outputs['orig'][idx], sample_model='orig')
                 gen_sample.sample_model = 'ema/orig'
                 gen_sample.set_gt_label(labels[idx])
                 gen_sample.ema.set_gt_label(labels[idx])
                 gen_sample.orig.set_gt_label(labels[idx])
             else:
-                gen_sample.fake_img = PixelData(data=outputs[idx])
+                gen_sample.fake_img = outputs[idx]
                 gen_sample.set_gt_label(labels[idx])
 
             # Append input condition (noise and sample_kwargs) to
