@@ -58,9 +58,7 @@ English | [简体中文](README_zh-CN.md)
 - Support Gradio gui of Inpainting inference.
 - Support Colorization, Translationin and all GAN models inferencer.
 
-**MMEditing** has supported all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
-
-Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
+**MMEditing** has supported all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) and unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine) 😍.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 

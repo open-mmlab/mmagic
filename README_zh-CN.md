@@ -58,13 +58,9 @@
 - 支持了 Inpainting 任务推理的 Gradio gui.
 - 支持了图像上色、图像翻译和 GAN 模型的 inferencer.
 
-**MMEditing** 已经支持了[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
+**MMEditing** 已经支持了[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
 
-基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
-
-如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。
-
-如果想从旧版本 MMEditing 0.x 迁移到新版本 MMEditing 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
+如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmediting/tree/master) MMEditing 0.x 迁移到新版本 MMEditing 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
 
 如果想使用旧版本 MMEditing 0.x ，请使用 [master](https://github.com/open-mmlab/mmediting/tree/master) 分支。
 
