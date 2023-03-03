@@ -27,3 +27,28 @@ __all__ = [
     'MultiLayerDiscriminator', 'PatchDiscriminator', 'VGG16', 'ResNet',
     'AllGatherLayer', 'ResidualBlockNoBN'
 ]
+
+import inspect
+from typing import List
+
+import diffusers
+
+from mmedit.registry import MODELS
+
+
+def register_diffusers_models() -> List[str]:
+    """Register models in ``diffusers.models`` to the ``MODELS`` registry.
+
+    Returns:
+        List[str]: A list of registered DIFFUSION_MODELS' name.
+    """
+    DIFFUSERS_MODELS = []
+    for module_name in dir(diffusers.models):
+        module = getattr(diffusers.models, module_name)
+        if inspect.isclass(module):
+            MODELS.register_module(module=module)
+            DIFFUSERS_MODELS.append(module_name)
+    return DIFFUSERS_MODELS
+
+
+REGISTERED_DIFFUSERS_MODELS = register_diffusers_models()
