@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.16.1 (24/02/2023)
+
+**New Features & Improvements**
+
+- Support FID and KID metrics. [#775](https://github.com/open-mmlab/mmediting/pull/775)
+- Support groups parameter in ResidualBlockNoBN. [#1510](https://github.com/open-mmlab/mmediting/pull/1510)
+
+**Bug Fixes**
+
+- Fix bug of TTSR configuration file. [#1435](https://github.com/open-mmlab/mmediting/pull/1435)
+- Fix RealESRGAN test dataset. [#1489](https://github.com/open-mmlab/mmediting/pull/1489)
+- Fix dump config in train scrips. [#1584](https://github.com/open-mmlab/mmediting/pull/1584)
+- Fix dynamic exportable ONNX of `pixel-unshuffle`. [#1637](https://github.com/open-mmlab/mmediting/pull/1637)
+
+**Contributors**
+
+A total of 10 developers contributed to this release.
+Thanks @LeoXing1996, @Z-Fran, @zengyh1900, @liuky74, @KKIEEK, @zeakey, @Sqhttwl, @yhna940, @gihwan-kim, @vansin
+
+**New Contributors**
+
+- @liuky74 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1435
+- @KKIEEK made their first contribution in https://github.com/open-mmlab/mmediting/pull/775
+- @zeakey made their first contribution in https://github.com/open-mmlab/mmediting/pull/1584
+- @Sqhttwl made their first contribution in https://github.com/open-mmlab/mmediting/pull/1627
+- @yhna940 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1637
+- @gihwan-kim made their first contribution in https://github.com/open-mmlab/mmediting/pull/1510
+
 ## v0.16.0 (31/10/2022)
 
 **Deprecations**

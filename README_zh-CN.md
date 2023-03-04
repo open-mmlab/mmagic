@@ -82,21 +82,33 @@ MMEditing 同时维护 0.x 和 1.x 版本，详情见[分支维护计划](README
 
 ### 💎 稳定版本
 
-最新的 **0.16.0** 版本已经在 31/10/2022 发布：
+最新的 **0.16.1** 版本已经在 24/02/2023 发布：
 
-- `VisualizationHook` 将被启用，建议用户使用 `MMEditVisualizationHook`。
-- 修复 FLAVR 的注册问题。
-- 修正 RDB 模型中的通道数。
+- 支持新评价指标 FID 和 KID。
+- 支持 ResidualBlockNoBN 模块设置 `groups` 参数。
+- 修复 RealESRGAN 测试数据集配置。
+- 修复 `pixel-unshuffle` 模块动态输入导出 ONNX 的Bug。
 
-如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/changelog.md)。
+如果像了解更多版本更新细节和历史信息，请阅读[更新日志](/docs/zh_cn/changelog.md)。
 
 ### 🌟 1.x 预览版本
 
-全新的 [**MMEditing v1.0.0rc1**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc1) 已经在 24/09/2022 发布:
+全新的 [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) 已经在 24/02/2023 发布:
 
 - 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
 - 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
 - 重构之后更加灵活 [architecture](https://mmediting.readthedocs.io/en/1.x/1_overview.html)。
+- 支持了著名的文本生成图像方法 [Stable Diffusion](https://github.com/open-mmlab/mmediting/tree/1.x/configs/stable_diffusion/README.md)!
+- 支持了一个新的文本到图像生成算法 [GLIDE](https://github.com/open-mmlab/mmediting/tree/1.x/projects/glide/configs/README.md)!
+- 支持了一个新的文本到图像生成算法 [Disco-Diffusion](https://github.com/open-mmlab/mmediting/tree/1.x/configs/disco_diffusion/README.md)!
+- 支持了3D生成算法 [EG3D](https://github.com/open-mmlab/mmediting/tree/1.x/configs/eg3d/README.md)!
+- 支持了一个高效的图像复原算法 [Restormer](https://github.com/open-mmlab/mmediting/tree/1.x/configs/restormer/README.md)!
+- 支持了基于swin的图像复原算法 [SwinIR](https://github.com/open-mmlab/mmediting/tree/1.x/configs/swinir/README.md)!
+- 支持图像上色算法 [Image Colorization](https://github.com/open-mmlab/mmediting/tree/1.x/configs/inst_colorization/README.md).
+- 开启了[Projects](https://github.com/open-mmlab/mmediting/tree/1.x/projects/README.md)以便社区用户添加新的项目到MMEditing.
+- 支持了 High-level apis and inferencer.
+- 支持Inpainting任务的Gradio交互GUI.
+- 支持基于patch以及滑动条的图像和视频可视化比较工具.
 
 在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
 

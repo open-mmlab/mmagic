@@ -82,21 +82,33 @@ MMEditing maintains both master and 1.x branches. See more details in  [Branch M
 
 ### 💎 Stable version
 
-**0.16.0** was released in 31/10/2022:
+**0.16.1** was released in 24/02/2023:
 
-- `VisualizationHook` is deprecated. Users should use `MMEditVisualizationHook` instead.
-- Fix FLAVR register.
-- Fix the number of channels in RDB.
+- Support FID and KID metrics.
+- Support groups parameter in ResidualBlockNoBN.
+- Fix RealESRGAN test dataset.
+- Fix dynamic exportable ONNX of `pixel-unshuffle`.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
 ### 🌟 Preview of 1.x version
 
-A brand new version of [**MMEditing v1.0.0rc1**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc1) was released in 24/09/2022:
+A brand new version of [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) was released in 24/02/2023:
 
 - Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍。
 - Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
 - Refactored and more flexible [architecture](https://mmediting.readthedocs.io/en/1.x/1_overview.html).
+- Support well-known text-to-image method [Stable Diffusion](https://github.com/open-mmlab/mmediting/tree/1.x/configs/stable_diffusion/README.md)!
+- Support a new text-to-image algorithm [GLIDE](https://github.com/open-mmlab/mmediting/tree/1.x/projects/glide/configs/README.md)!
+- Support Text2Image Task! [Disco-Diffusion](https://github.com/open-mmlab/mmediting/tree/1.x/configs/disco_diffusion/README.md)!
+- Support 3D-aware Generation Task! [EG3D](https://github.com/open-mmlab/mmediting/tree/1.x/configs/eg3d/README.md)!
+- Support an efficient image restoration algorithm [Restormer](https://github.com/open-mmlab/mmediting/tree/1.x/configs/restormer/README.md)!
+- Support swin based image restoration algorithm [SwinIR](https://github.com/open-mmlab/mmediting/tree/1.x/configs/swinir/README.md)!
+- Support [Image Colorization](https://github.com/open-mmlab/mmediting/tree/1.x/configs/inst_colorization/README.md).
+- [Projects](https://github.com/open-mmlab/mmediting/tree/1.x/projects/README.md) is opened for the community to add projects to MMEditing.
+- Support High-level apis and inferencer.
+- Support Gradio gui of Inpainting inference.
+- Support patch-based and slider-based image and video comparison viewer.
 
 Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
 
