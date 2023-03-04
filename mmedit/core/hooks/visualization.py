@@ -72,7 +72,7 @@ class MMEditVisualizationHook(Hook):
 
         filename = self.filename_tmpl.format(runner.iter + 1)
 
-        img_list = [x for k, x in results.items() if k in self.res_name_list]
+        img_list = [results[k] for k in self.res_name_list if k in results]
         img_cat = torch.cat(img_list, dim=3).detach()
         if self.rerange:
             img_cat = ((img_cat + 1) / 2)
