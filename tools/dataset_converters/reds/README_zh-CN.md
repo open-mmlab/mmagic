@@ -37,9 +37,15 @@ mmediting
 │   │   │   ├── 001
 │   │   │   ├── ...
 │   │   ├── train_sharp_bicubic
-│   │   │   ├── 000
-│   │   │   ├── 001
-│   │   │   ├── ...
+│   │   │   ├── X4
+│   │   │   |   ├── 000
+│   │   │   |   ├── 001
+│   │   │   |   ├── ...
+│   │   ├── meta_info_reds4_train.txt
+│   │   ├── meta_info_reds4_val.txt
+│   │   ├── meta_info_official_train.txt
+│   │   ├── meta_info_official_val.txt
+│   │   ├── meta_info_REDS_GT.txt
 │   ├── REDS4
 │   │   ├── GT
 │   │   ├── sharp_bicubic

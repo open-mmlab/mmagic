@@ -8,6 +8,7 @@ from multiprocessing import Pool
 
 import cv2
 import mmcv
+import mmengine
 import numpy as np
 
 
@@ -54,7 +55,7 @@ def worker(path, opt):
             cropped_img = img[x:x + crop_size, y:y + crop_size, ...]
             sub_folder = osp.join(opt['save_folder'],
                                   f'{sequence}_s{index:03d}')
-            mmcv.mkdir_or_exist(sub_folder)
+            mmengine.mkdir_or_exist(sub_folder)
             cv2.imwrite(
                 osp.join(sub_folder, f'{img_name}{extension}'), cropped_img,
                 [cv2.IMWRITE_PNG_COMPRESSION, opt['compression_level']])
@@ -80,10 +81,10 @@ def extract_subimages(opt):
         print(f'Folder {save_folder} already exists. Exit.')
         sys.exit(1)
 
-    img_list = list(mmcv.scandir(input_folder, recursive=True))
+    img_list = list(mmengine.scandir(input_folder, recursive=True))
 
     img_list = [osp.join(input_folder, v) for v in img_list]
-    prog_bar = mmcv.ProgressBar(len(img_list))
+    prog_bar = mmengine.ProgressBar(len(img_list))
     pool = Pool(opt['n_thread'])
     for path in img_list:
         pool.apply_async(
