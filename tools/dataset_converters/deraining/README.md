@@ -1,4 +1,4 @@
-# Preparing DPDD Dataset
+# Preparing Deraining Dataset
 
 <!-- [DATASET] -->
 
@@ -11,7 +11,7 @@
 }
 ```
 
-The test datasets can be download from [here](https://drive.google.com/file/d/1dDWUQ_D93XGtcywoUcZE1HOXCV4EuLyw/).
+The test datasets (Rain100H, Rain100L, Test100, Test1200, Test2800) can be download from [here](https://drive.google.com/file/d/1P_-RAvltEoEhfT-9GrWRdpEi6NSswTs8/).
 
 The folder structure should look like:
 
@@ -21,9 +21,22 @@ mmediting
 ├── tools
 ├── configs
 ├── data
-|   ├── DPDD
-|   |   ├── inputL
-|   |   ├── inputR
-|   |   ├── inputC
+|   ├── Rain100H
+|   |   ├── input
+|   |   ├── target
+|   ├── Rain100L
+|   |   ├── input
+|   |   ├── target
+|   ├── Test100
+|   |   ├── input
+|   |   ├── target
+|   ├── Test1200
+|   |   ├── input
+|   |   ├── target
+|   ├── Test2800
+|   |   ├── input
+|   |   ├── target
+|   ├── Test100
+|   |   ├── input
 |   |   ├── target
 ```
