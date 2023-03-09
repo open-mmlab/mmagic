@@ -46,7 +46,7 @@ def register_diffusers_models() -> List[str]:
     for module_name in dir(diffusers.models):
         module = getattr(diffusers.models, module_name)
         if inspect.isclass(module):
-            MODELS.register_module(module=module)
+            MODELS.register_module(name='Diffusers'+module_name, module=module)
             DIFFUSERS_MODELS.append(module_name)
     return DIFFUSERS_MODELS
 

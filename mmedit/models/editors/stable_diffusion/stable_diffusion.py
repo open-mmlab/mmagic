@@ -34,7 +34,7 @@ class StableDiffusion(BaseModel):
     """
 
     def __init__(self,
-                 diffusion_scheduler,
+                 diffusion_scheduler: Union[dict],
                  unet,
                  vae,
                  requires_safety_checker=True,

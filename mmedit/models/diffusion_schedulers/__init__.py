@@ -26,8 +26,8 @@ def register_diffusers_schedulers() -> List[str]:
         elif module_name.endswith('Scheduler'):
             _scheduler = getattr(diffusers.schedulers, module_name)
             if inspect.isclass(_scheduler):
-                DIFFUSION_SCHEDULERS.register_module(module=_scheduler)
-                DIFFUSERS_SCHEDULERS.append(module_name)
+                DIFFUSION_SCHEDULERS.register_module(name='Diffusers'+module_name, module=_scheduler)
+                DIFFUSERS_SCHEDULERS.append('Diffusers' + module_name)
     return DIFFUSERS_SCHEDULERS
 
 
