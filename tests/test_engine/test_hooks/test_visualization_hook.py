@@ -208,7 +208,8 @@ class TestGenVisualizationHook(TestCase):
         runner = MagicMock()
         runner.model = model
         runner.train_dataloader = train_dataloader
-        runner.val_dataloader = val_dataloader
+        runner.val_loop = MagicMock()
+        runner.val_loop.dataloader = val_dataloader
 
         hook = GenVisualizationHook(
             interval=10,
