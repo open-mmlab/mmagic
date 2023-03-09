@@ -38,7 +38,7 @@ vae = dict(
     ])
 
 diffusion_scheduler = dict(
-    type='DDIMScheduler',
+    type='EditDDIMScheduler',
     variance_type='learned_range',
     beta_end=0.012,
     beta_schedule='scaled_linear',
