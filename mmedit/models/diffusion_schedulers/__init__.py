@@ -9,7 +9,11 @@ from .ddpm_scheduler import EditDDPMScheduler
 
 def register_diffusers_schedulers() -> List[str]:
     """Register schedulers in ``diffusers.schedulers`` to the
-    ``DIFFUSION_SCHEDULERS`` registry.
+    ``DIFFUSION_SCHEDULERS`` registry. Specifically, the registered schedulers
+    from diffusers define the methodology for iteratively adding noise to an
+    image or for updating a sample based on model outputs. See more details
+    about schedulers in diffusers here:
+    https://huggingface.co/docs/diffusers/api/schedulers/overview.
 
     Returns:
         List[str]: A list of registered DIFFUSION_SCHEDULERS' name.

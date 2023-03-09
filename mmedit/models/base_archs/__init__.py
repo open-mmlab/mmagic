@@ -26,6 +26,9 @@ from .vgg import VGG16
 
 def register_diffusers_models() -> List[str]:
     """Register models in ``diffusers.models`` to the ``MODELS`` registry.
+    Specifically, the registered models from diffusers only defines the network
+    forward without training. See more details about diffusers in:
+    https://huggingface.co/docs/diffusers/api/models.
 
     Returns:
         List[str]: A list of registered DIFFUSION_MODELS' name.
