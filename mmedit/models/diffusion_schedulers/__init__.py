@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import warnings
 from typing import List
 
+from mmedit.utils import try_import
 from .ddim_scheduler import EditDDIMScheduler
 from .ddpm_scheduler import EditDDPMScheduler
 
@@ -15,9 +17,14 @@ def register_diffusers_schedulers() -> List[str]:
 
     import inspect
 
-    import diffusers
-
     from mmedit.registry import DIFFUSION_SCHEDULERS
+
+    diffusers = try_import('diffusers')
+    if diffusers is None:
+        warnings.warn('Diffusion Schedulers are not registered as expect. '
+                      'If you want to use diffusion models, '
+                      'please install diffusers>=0.12.0.')
+        return None
 
     DIFFUSERS_SCHEDULERS = []
     for module_name in dir(diffusers.schedulers):

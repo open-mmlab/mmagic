@@ -1,7 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 # To register Deconv
+import warnings
 from typing import List
 
+from mmedit.utils import try_import
 from .all_gather_layer import AllGatherLayer
 from .aspp import ASPP
 from .conv import *  # noqa: F401, F403
@@ -30,9 +32,14 @@ def register_diffusers_models() -> List[str]:
     """
     import inspect
 
-    import diffusers
-
     from mmedit.registry import MODELS
+
+    diffusers = try_import('diffusers')
+    if diffusers is None:
+        warnings.warn('Diffusion Models are not registered as expect. '
+                      'If you want to use diffusion models, '
+                      'please install diffusers>=0.12.0.')
+        return None
 
     DIFFUSERS_MODELS = []
     for module_name in dir(diffusers.models):
