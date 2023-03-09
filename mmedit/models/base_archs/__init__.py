@@ -54,5 +54,3 @@ __all__ = [
     'MultiLayerDiscriminator', 'PatchDiscriminator', 'VGG16', 'ResNet',
     'AllGatherLayer', 'ResidualBlockNoBN'
 ]
-
-__all__.extend(REGISTERED_DIFFUSERS_MODELS)

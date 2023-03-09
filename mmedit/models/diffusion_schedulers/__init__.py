@@ -35,5 +35,3 @@ def register_diffusers_schedulers() -> List[str]:
 REGISTERED_DIFFUSERS_SCHEDULERS = register_diffusers_schedulers()
 
 __all__ = ['DDIMScheduler', 'DDPMScheduler']
-
-__all__.extend(REGISTERED_DIFFUSERS_SCHEDULERS)
