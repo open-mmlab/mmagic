@@ -1,5 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 # To register Deconv
+from typing import List
+
 from .all_gather_layer import AllGatherLayer
 from .aspp import ASPP
 from .conv import *  # noqa: F401, F403
@@ -19,6 +21,31 @@ from .sr_backbone import ResidualBlockNoBN
 from .upsample import PixelShufflePack
 from .vgg import VGG16
 
+
+def register_diffusers_models() -> List[str]:
+    """Register models in ``diffusers.models`` to the ``MODELS`` registry.
+
+    Returns:
+        List[str]: A list of registered DIFFUSION_MODELS' name.
+    """
+    import inspect
+
+    import diffusers
+
+    from mmedit.registry import MODELS
+
+    DIFFUSERS_MODELS = []
+    for module_name in dir(diffusers.models):
+        module = getattr(diffusers.models, module_name)
+        if inspect.isclass(module):
+            MODELS.register_module(
+                name='Diffusers' + module_name, module=module)
+            DIFFUSERS_MODELS.append(module_name)
+    return DIFFUSERS_MODELS
+
+
+REGISTERED_DIFFUSERS_MODELS = register_diffusers_models()
+
 __all__ = [
     'ASPP', 'DepthwiseSeparableConvModule', 'SimpleGatedConvModule',
     'LinearModule', 'conv2d', 'conv_transpose2d', 'pixel_unshuffle',
@@ -27,3 +54,5 @@ __all__ = [
     'MultiLayerDiscriminator', 'PatchDiscriminator', 'VGG16', 'ResNet',
     'AllGatherLayer', 'ResidualBlockNoBN'
 ]
+
+__all__.extend(REGISTERED_DIFFUSERS_MODELS)
