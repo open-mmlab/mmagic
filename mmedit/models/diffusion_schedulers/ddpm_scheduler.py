@@ -9,7 +9,7 @@ from mmedit.registry import DIFFUSION_SCHEDULERS
 
 
 @DIFFUSION_SCHEDULERS.register_module()
-class DDPMScheduler:
+class EditDDPMScheduler:
 
     def __init__(self,
                  num_train_timesteps: int = 1000,
@@ -19,7 +19,7 @@ class DDPMScheduler:
                  trained_betas: Optional[Union[np.array, list]] = None,
                  variance_type='fixed_small',
                  clip_sample=True):
-        """```DDPMScheduler``` support the diffusion and reverse process
+        """```EditDDPMScheduler``` support the diffusion and reverse process
         formulated in https://arxiv.org/abs/2006.11239.
 
         The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddpm.py. # noqa

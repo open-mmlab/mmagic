@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import List
 
-from .ddim_scheduler import DDIMScheduler
-from .ddpm_scheduler import DDPMScheduler
+from .ddim_scheduler import EditDDIMScheduler
+from .ddpm_scheduler import EditDDPMScheduler
 
 
 def register_diffusers_schedulers() -> List[str]:
@@ -27,11 +27,11 @@ def register_diffusers_schedulers() -> List[str]:
             _scheduler = getattr(diffusers.schedulers, module_name)
             if inspect.isclass(_scheduler):
                 DIFFUSION_SCHEDULERS.register_module(
-                    name='Diffusers' + module_name, module=_scheduler)
-                DIFFUSERS_SCHEDULERS.append('Diffusers' + module_name)
+                    name=module_name, module=_scheduler)
+                DIFFUSERS_SCHEDULERS.append(module_name)
     return DIFFUSERS_SCHEDULERS
 
 
 REGISTERED_DIFFUSERS_SCHEDULERS = register_diffusers_schedulers()
 
-__all__ = ['DDIMScheduler', 'DDPMScheduler']
+__all__ = ['EditDDIMScheduler', 'EditDDPMScheduler']
