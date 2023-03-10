@@ -25,7 +25,7 @@ class NAFNet(BaseModule):
     """
 
     def __init__(self,
-                 img_channel=3,
+                 img_channels=3,
                  mid_channels=16,
                  middle_blk_num=1,
                  enc_blk_nums=[],
@@ -33,7 +33,7 @@ class NAFNet(BaseModule):
         super().__init__()
 
         self.intro = nn.Conv2d(
-            in_channels=img_channel,
+            in_channels=img_channels,
             out_channels=mid_channels,
             kernel_size=3,
             padding=1,
@@ -42,7 +42,7 @@ class NAFNet(BaseModule):
             bias=True)
         self.ending = nn.Conv2d(
             in_channels=mid_channels,
-            out_channels=img_channel,
+            out_channels=img_channels,
             kernel_size=3,
             padding=1,
             stride=1,

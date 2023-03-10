@@ -276,6 +276,9 @@ class SNGANGenerator(nn.Module):
             noise_batch = torch.randn((num_batches, self.noise_size))
 
         if isinstance(label, torch.Tensor):
+            if label.ndim != 1:
+                assert all([s == 1 for s in label.shape[1:]])
+                label = label.view(-1)
             assert label.ndim == 1, ('The label shoube be in shape of (n, )'
                                      f'but got {label.shape}.')
             label_batch = label

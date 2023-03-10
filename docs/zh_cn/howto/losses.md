@@ -82,10 +82,10 @@ Class DiscShiftLoss(nn.Module)：
 
      def __init__(self, loss_weight=1.0, data_info=None):
          super(DiscShiftLoss，self).__init__()
-         # 代码可以在``mmgen/models/losses/disc_auxiliary_loss.py``中找到
+         # 代码可以在``mmedit/models/losses/disc_auxiliary_loss.py``中找到
 
      def forward(self, *args, **kwargs):
-         # 代码可以在``mmgen/models/losses/disc_auxiliary_loss.py``中找到
+         # 代码可以在``mmedit/models/losses/disc_auxiliary_loss.py``中找到
 ```
 
 这种损失模块设计的目标是允许在生成模型(`MODELS`)中自动使用它，而无需其他复杂代码来定义数据和关键字参数之间的映射。 因此，与 OpenMMLab 中的其他框架不同，我们的损失模块包含一个特殊的关键字 data_info，它是一个定义输入参数与生成模型数据之间映射的字典。 以`DiscShiftLoss`为例，用户在编写配置文件时，可能会用到这个loss，如下：

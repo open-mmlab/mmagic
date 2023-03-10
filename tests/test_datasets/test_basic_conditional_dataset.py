@@ -47,14 +47,14 @@ class TestBasicConditonalDataset(TestCase):
         data = dataset[0]
         self.assertEqual(data['sample_idx'], 0)
         self.assertEqual(data['gt_label'], 0)
-        self.assertIn('a/1.JPG', data['img_path'])
+        self.assertIn('a/1.JPG', data['gt_path'])
 
         # test data prefix --> b/subb
         dataset = BasicConditionalDataset(data_root=DATA_DIR, data_prefix='b')
         self.assertIn('subb', dataset.CLASSES)
 
         dataset = BasicConditionalDataset(
-            data_root=DATA_DIR, data_prefix={'img_path': 'b'})
+            data_root=DATA_DIR, data_prefix={'gt_path': 'b'})
         self.assertIn('subb', dataset.CLASSES)
 
         # test runtime error --> no samples

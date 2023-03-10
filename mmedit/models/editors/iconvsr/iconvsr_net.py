@@ -1,9 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from logging import WARNING
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule
-from mmengine import MMLogger
+from mmengine import MMLogger, print_log
 from mmengine.model import BaseModule
 from mmengine.runner import load_checkpoint
 
@@ -85,6 +87,8 @@ class IconVSRNet(BaseModule):
 
         # activation function
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
+
+        self._raised_warning = False
 
     def spatial_padding(self, lrs):
         """Apply pdding spatially.
@@ -189,9 +193,13 @@ class IconVSRNet(BaseModule):
         """
 
         n, t, c, h_input, w_input = lrs.size()
-        assert h_input >= 64 and w_input >= 64, (
-            'The height and width of inputs should be at least 64, '
-            f'but got {h_input} and {w_input}.')
+        if (h_input < 64 or w_input < 64) and not self._raised_warning:
+            print_log(
+                f'{self.__class__.__name__} is designed for input '
+                'larger than 64x64, but the resolution of current image '
+                f'is {h_input}x{w_input}. We recommend you to check your '
+                'input.', 'current', WARNING)
+            self._raised_warning = True
 
         # check whether the input is an extended sequence
         self.check_if_mirror_extended(lrs)

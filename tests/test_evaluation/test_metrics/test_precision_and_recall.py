@@ -9,7 +9,7 @@ from mmengine.runner import Runner
 from mmedit.datasets import BasicImageDataset
 from mmedit.datasets.transforms import PackEditInputs
 from mmedit.evaluation import PrecisionAndRecall
-from mmedit.models import LSGAN, GenDataPreprocessor
+from mmedit.models import LSGAN, EditDataPreprocessor
 from mmedit.models.editors.dcgan import DCGANGenerator
 from mmedit.utils import register_all_modules
 
@@ -46,13 +46,14 @@ class TestPR:
     @classmethod
     def setup_class(cls):
         pipeline = [
-            dict(type='LoadImageFromFile', key='img'),
-            dict(type='Resize', scale=(128, 128)),
+            dict(type='LoadImageFromFile', key='gt'),
+            dict(type='Resize', keys='gt', scale=(128, 128)),
             PackEditInputs()
         ]
         dataset = BasicImageDataset(
             data_root='tests/data/image/img_root',
             pipeline=pipeline,
+            data_prefix=dict(gt=''),
             test_mode=True,
             recursive=True)
         cls.dataloader = Runner.build_dataloader(
@@ -60,7 +61,7 @@ class TestPR:
                 batch_size=2,
                 dataset=dataset,
                 sampler=dict(type='DefaultSampler')))
-        gan_data_preprocessor = GenDataPreprocessor()
+        gan_data_preprocessor = EditDataPreprocessor()
         generator = DCGANGenerator(128, noise_size=10, base_channels=20)
         cls.module = LSGAN(
             generator, data_preprocessor=gan_data_preprocessor)  # noqa

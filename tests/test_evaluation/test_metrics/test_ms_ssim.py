@@ -4,7 +4,7 @@ from unittest import TestCase
 import torch
 
 from mmedit.evaluation import MultiScaleStructureSimilarity
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
 register_all_modules()
@@ -26,10 +26,9 @@ class TestMS_SSIM(TestCase):
 
         input_batch_size = 6
         input_pairs = 6 // 2
-        gen_images = torch.randn(input_batch_size, 3, 32, 32)
+        gen_images = torch.randint(0, 255, (input_batch_size, 3, 32, 32))
         gen_samples = [
-            EditDataSample(fake_img=PixelData(data=img)).to_dict()
-            for img in gen_images
+            EditDataSample(fake_img=img).to_dict() for img in gen_images
         ]
 
         MS_SSIM.process(None, gen_samples)
@@ -48,17 +47,16 @@ class TestMS_SSIM(TestCase):
         gen_samples = [
             EditDataSample(
                 ema=EditDataSample(
-                    fake_img=PixelData(data=torch.randn(3, 32, 32))),
+                    fake_img=torch.randint(0, 255, (3, 32, 32))),
                 orig=EditDataSample(
-                    fake_img=PixelData(
-                        data=torch.randn(3, 32, 32)))).to_dict()
+                    fake_img=torch.randint(0, 255, (3, 32, 32)))).to_dict()
         ] * 2
         MS_SSIM.process(None, gen_samples)
 
         gen_samples = [
             EditDataSample(
                 ema=EditDataSample(
-                    fake=PixelData(data=torch.randn(3, 32, 32)))).to_dict()
+                    fake=torch.randint(0, 255, (3, 32, 32)))).to_dict()
         ] * 2
         MS_SSIM.process(None, gen_samples)
 

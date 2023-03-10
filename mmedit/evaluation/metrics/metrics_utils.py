@@ -31,8 +31,8 @@ def _fetch_data_and_check(data_samples):
         ori_alpha (Tensor): Ori_alpha data of data_batch.
         ori_trimap (Tensor): Ori_trimap data of data_batch.
     """
-    ori_trimap = data_samples['ori_trimap'][:, :, 0]
-    ori_alpha = data_samples['ori_alpha'][:, :, 0]
+    ori_trimap = data_samples['ori_trimap'][0, :, :].cpu().numpy()
+    ori_alpha = data_samples['ori_alpha'][0, :, :].cpu().numpy()
     pred_alpha = data_samples['output']['pred_alpha']['data']  # 2D tensor
     pred_alpha = pred_alpha.cpu().numpy()
 
@@ -107,9 +107,9 @@ def img_transform(img,
     img = img.astype(np.float32)
 
     if isinstance(convert_to, str) and convert_to.lower() == 'y':
-        if channel_order == 'rgb':
+        if channel_order.upper() == 'RGB':
             img = mmcv.rgb2ycbcr(img / 255., y_only=True) * 255.
-        elif channel_order == 'bgr':
+        elif channel_order.upper() == 'BGR':
             img = mmcv.bgr2ycbcr(img / 255., y_only=True) * 255.
         else:
             raise ValueError(

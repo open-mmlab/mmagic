@@ -8,7 +8,7 @@ from torch.optim import Adam
 from mmedit.models import DIC, DICNet, EditDataPreprocessor, LightCNN
 from mmedit.models.losses import (GANLoss, L1Loss, LightCNNFeatureLoss,
                                   PerceptualVGG)
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 @patch.object(PerceptualVGG, 'init_weights')
@@ -57,8 +57,7 @@ def test_dic(init_weights):
     inputs = torch.rand(1, 3, 16, 16)
     target = torch.rand(3, 128, 128)
     data_sample = EditDataSample(
-        gt_img=PixelData(data=target),
-        gt_heatmap=PixelData(data=torch.rand(68, 32, 32)))
+        gt_img=target, gt_heatmap=torch.rand(68, 32, 32))
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
@@ -73,7 +72,7 @@ def test_dic(init_weights):
 
     # val
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (3, 128, 128)
+    assert output[0].output.pred_img.shape == (3, 128, 128)
 
     # feat
     output = model(torch.rand(1, 3, 16, 16), mode='tensor')

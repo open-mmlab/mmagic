@@ -69,7 +69,6 @@ class BinarizeImage(BaseTransform):
         return results
 
     def __repr__(self):
-
         repr_str = self.__class__.__name__
         repr_str += (
             f'(keys={self.keys}, binary_thr={self.binary_thr}, '
@@ -97,7 +96,14 @@ class Clip(BaseTransform):
         self.a_max = a_max
 
     def _clip(self, input_):
+        """Clip the pixels.
 
+        Args:
+            input_ (Union[List, np.ndarray]): Pixels to clip.
+
+        Returns:
+            Union[List, np.ndarray]: Clipped pixels.
+        """
         is_single_image = False
         if isinstance(input_, np.ndarray):
             is_single_image = True

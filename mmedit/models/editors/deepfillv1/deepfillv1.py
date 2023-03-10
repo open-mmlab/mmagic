@@ -280,13 +280,10 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         log_vars = {}
 
         masked_img = batch_inputs  # float
-        gt_img = torch.stack([d.gt_img.data
-                              for d in data_samples])  # float, [-1,1]
-
-        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        gt_img = data_samples.gt_img
+        mask = data_samples.mask
         mask = mask.float()
-
-        bbox_tensor = torch.tensor([d.mask_bbox for d in data_samples])  # int
+        bbox_tensor = torch.LongTensor(data_samples.mask_bbox)
 
         # get common output from encdec
         # input with ones

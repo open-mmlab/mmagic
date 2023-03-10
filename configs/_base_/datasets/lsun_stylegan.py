@@ -1,12 +1,12 @@
 dataset_type = 'BasicImageDataset'
 
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
+    dict(type='LoadImageFromFile', key='gt'),
     dict(type='PackEditInputs')
 ]
 
 val_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
+    dict(type='LoadImageFromFile', key='gt'),
     dict(type='PackEditInputs')
 ]
 
@@ -18,6 +18,7 @@ train_dataloader = dict(
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
+        data_prefix=dict(gt=''),
         data_root=None,  # set by user
         pipeline=train_pipeline))
 
@@ -26,6 +27,7 @@ val_dataloader = dict(
     num_workers=8,
     dataset=dict(
         type=dataset_type,
+        data_prefix=dict(gt=''),
         data_root=None,  # set by user
         pipeline=val_pipeline),
     sampler=dict(type='DefaultSampler', shuffle=False),
@@ -36,6 +38,7 @@ test_dataloader = dict(
     num_workers=8,
     dataset=dict(
         type=dataset_type,
+        data_prefix=dict(gt=''),
         data_root=None,  # set by user
         pipeline=val_pipeline),
     sampler=dict(type='DefaultSampler', shuffle=False),

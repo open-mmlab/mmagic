@@ -4,7 +4,7 @@ from typing import Optional
 
 from mmengine.dataset import pseudo_collate
 from mmengine.runner import Runner
-from torch.utils.data.dataloader import DataLoader
+from torch.utils.data import ConcatDataset, DataLoader
 
 
 def _check_keys(sample_kwargs: dict, key: str) -> None:
@@ -124,7 +124,7 @@ class DataSampler:
 
 
 class ValDataSampler:
-    """Sampler loop the train_dataloader."""
+    """Sampler loop the val_dataloader."""
 
     def __init__(self, sample_kwargs: dict, runner: Runner) -> None:
         _check_keys(sample_kwargs, 'max_times')
@@ -134,8 +134,15 @@ class ValDataSampler:
 
         # build a new vanilla dataloader, because we should not reset the one
         # used in the training process.
-        dataset = runner.val_dataloader.dataset
-        batch_size = runner.val_dataloader.batch_size
+        if hasattr(runner.val_loop, 'dataloader'):
+            dataset = runner.val_loop.dataloader.dataset
+            batch_size = runner.val_loop.dataloader.batch_size
+        else:
+            # EditValLoop use `dataloaders` instead `dataloader`
+            loaders = runner.val_loop.dataloaders
+            dataset = ConcatDataset([loader.dataset for loader in loaders])
+            batch_size = loaders[0].batch_size
+
         self._dataloader = DataLoader(
             dataset, batch_size=batch_size, collate_fn=pseudo_collate)
         self._iterator = iter(self._dataloader)

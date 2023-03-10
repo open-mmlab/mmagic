@@ -15,7 +15,7 @@ class TestAdm(TestCase):
     def setup_class(cls):
         # test init
         cls.model = AblatedDiffusionModel(
-            data_preprocessor=dict(type='GenDataPreprocessor'),
+            data_preprocessor=dict(type='EditDataPreprocessor'),
             unet=dict(
                 type='DenoisingUnet',
                 image_size=64,
@@ -35,7 +35,7 @@ class TestAdm(TestCase):
                     use_new_attention_order=True),
                 use_scale_shift_norm=True),
             diffusion_scheduler=dict(
-                type='DDIMScheduler',
+                type='EditDDIMScheduler',
                 variance_type='learned_range',
                 beta_schedule='squaredcos_cap_v2'),
             rgb2bgr=True,
@@ -64,8 +64,8 @@ class TestAdm(TestCase):
         assert samples.shape == (1, 3, 64, 64)
         # test with ddpm scheduler
         scheduler_kwargs = dict(
-            type='DDPMScheduler',
-            variance_type='leanred_range',
+            type='EditDDPMScheduler',
+            variance_type='learned_range',
             num_train_timesteps=5)
         # test no label infer
         samples = self.model.infer(
