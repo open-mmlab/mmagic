@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .evaluator import GenEvaluator
+from .evaluator import EditEvaluator
 from .functional import gauss_gradient
 from .metrics import (MAE, MSE, NIQE, PSNR, SAD, SNR, SSIM, ConnectivityError,
                       Equivariance, FrechetInceptionDistance, GradientError,
@@ -9,7 +9,7 @@ from .metrics import (MAE, MSE, NIQE, PSNR, SAD, SNR, SSIM, ConnectivityError,
                       TransIS, niqe, psnr, snr, ssim)
 
 __all__ = [
-    'GenEvaluator',
+    'EditEvaluator',
     'gauss_gradient',
     'ConnectivityError',
     'GradientError',

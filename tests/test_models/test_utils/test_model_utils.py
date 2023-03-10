@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 
 from mmedit.models.utils import (generation_init_weights, get_module_device,
-                                 set_requires_grad)
+                                 get_valid_num_batches, set_requires_grad)
 
 
 def test_generation_init_weights():
@@ -53,3 +53,29 @@ def test_get_module_device_cpu():
     # The input module should contain parameters.
     with pytest.raises(ValueError):
         get_module_device(nn.Flatten())
+
+
+def test_get_valid_num_batches():
+
+    # 1. batch inputs is Tensor
+    assert get_valid_num_batches(torch.rand(5, 3, 4, 4)) == 5
+
+    # 2. batch inputs is dict
+    batch_inputs = dict(num_batches=1, img=torch.randn(1, 3, 5, 5))
+    assert get_valid_num_batches(batch_inputs) == 1
+
+    # 3. batch inputs is dict but no tensor in it
+    batch_inputs = dict(aaa='aaa', bbb='bbb')
+    assert get_valid_num_batches(batch_inputs) == 1
+
+    # 4. test no batch input and no data samples
+    assert get_valid_num_batches() == 1
+
+    # 5. test batch is None but data sample is not None
+    data_samples = [None, None]
+    assert get_valid_num_batches(None, data_samples) == 2
+
+    # 6. test batch input and data sample are neither not None
+    batch_inputs = dict(num_batches=2, img=torch.randn(2, 3, 5, 5))
+    data_samples = [None, None]
+    assert get_valid_num_batches(batch_inputs, data_samples) == 2

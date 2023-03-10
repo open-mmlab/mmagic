@@ -9,6 +9,7 @@ from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 
+from mmedit.structures import EditDataSample
 from mmedit.utils import tensor2img
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
@@ -48,6 +49,7 @@ class ColorizationInferencer(BaseMMEditInferencer):
         if 'cuda' in str(self.device):
             data['inputs'] = data['inputs'].cuda()
             data['data_samples'][0] = data['data_samples'][0].cuda()
+        data['data_samples'] = EditDataSample.stack(data['data_samples'])
         return data
 
     def forward(self, inputs: InputsType) -> PredType:

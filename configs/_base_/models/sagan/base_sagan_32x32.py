@@ -1,6 +1,6 @@
 model = dict(
     type='SAGAN',
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='EditDataPreprocessor'),
     num_classes=10,
     generator=dict(
         type='SAGANGenerator',

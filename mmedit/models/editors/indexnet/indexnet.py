@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch
-
 from mmedit.models.base_models import BaseMattor
 from mmedit.models.utils import get_unknown_tensor
 from mmedit.registry import MODELS
@@ -82,11 +80,10 @@ class IndexNet(BaseMattor):
             dict: Contains the loss items and batch information.
         """
         trimap = inputs[:, 3:, :, :]
-        gt_alpha = torch.stack(tuple(ds.gt_alpha.data for ds in data_samples))
-        gt_fg = torch.stack(tuple(ds.gt_fg.data for ds in data_samples))
-        gt_bg = torch.stack(tuple(ds.gt_bg.data for ds in data_samples))
-        gt_merged = torch.stack(
-            tuple(ds.gt_merged.data for ds in data_samples))
+        gt_alpha = data_samples.gt_alpha
+        gt_fg = data_samples.gt_fg
+        gt_bg = data_samples.gt_bg
+        gt_merged = data_samples.gt_merged
 
         pred_alpha = self.backbone(inputs)
 

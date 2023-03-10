@@ -48,7 +48,9 @@ class TestEG3D(TestCase):
             radius=1.2)
         # self.discriminator_cfg = dict()
         self.default_cfg = dict(
-            generator=self.generator_cfg, camera=self.camera_cfg)
+            generator=self.generator_cfg,
+            camera=self.camera_cfg,
+            data_preprocessor=dict(type='EditDataPreprocessor'))
 
     def test_init(self):
         cfg_ = deepcopy(self.default_cfg)
@@ -84,10 +86,8 @@ class TestEG3D(TestCase):
         target_keys = [
             'fake_img', 'depth', 'lr_img', 'ray_origins', 'ray_directions'
         ]
-        # NOTE: fake_img and lr_img are PixelData, shape do not contains
-        # the number of channel
-        target_shape = [(out_size, out_size), (1, n_points, n_points),
-                        (n_points, n_points), (n_points**2, 3),
+        target_shape = [(3, out_size, out_size), (1, n_points, n_points),
+                        (3, n_points, n_points), (n_points**2, 3),
                         (n_points**2, 3)]
         for output in outputs:
             for key, shape in zip(target_keys, target_shape):
@@ -119,6 +119,7 @@ class TestEG3D(TestCase):
             data_sample = EditDataSample()
             data_sample.set_gt_label(torch.randn(25))
             data_samples.append(data_sample)
+        data_samples = EditDataSample.stack(data_samples)
         outputs = model(dict(num_batches=4), data_samples)
         self.assertEqual(len(outputs), 4)
         self._check_datasample_output(outputs, 32, 5)

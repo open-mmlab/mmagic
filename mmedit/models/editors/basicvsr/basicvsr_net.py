@@ -1,9 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from logging import WARNING
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule
-from mmengine import MMLogger
+from mmengine import MMLogger, print_log
 from mmengine.model import BaseModule
 from mmengine.runner import load_checkpoint
 
@@ -61,6 +63,8 @@ class BasicVSRNet(BaseModule):
         # activation function
         self.lrelu = nn.LeakyReLU(negative_slope=0.1, inplace=True)
 
+        self._raised_warning = False
+
     def check_if_mirror_extended(self, lrs):
         """Check whether the input is a mirror-extended sequence.
 
@@ -116,9 +120,13 @@ class BasicVSRNet(BaseModule):
             Tensor: Output HR sequence with shape (n, t, c, 4h, 4w).
         """
         n, t, c, h, w = lrs.size()
-        assert h >= 64 and w >= 64, (
-            'The height and width of inputs should be at least 64, '
-            f'but got {h} and {w}.')
+        if (h < 64 or w < 64) and not self._raised_warning:
+            print_log(
+                f'{self.__class__.__name__} is designed for input '
+                'larger than 64x64, but the resolution of current image '
+                f'is {h}x{w}. We recommend you to check your input.',
+                'current', WARNING)
+            self._raised_warning = True
 
         # check whether the input is an extended sequence
         self.check_if_mirror_extended(lrs)

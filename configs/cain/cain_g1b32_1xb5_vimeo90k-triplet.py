@@ -16,9 +16,8 @@ model = dict(
     init_cfg=None,
     data_preprocessor=dict(
         type='EditDataPreprocessor',
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1),
-        pad_args=dict(mode='reflect')))
+        pad_mode='reflect',
+    ))
 
 train_pipeline = [
     dict(
@@ -119,8 +118,8 @@ val_evaluator = [
 test_evaluator = val_evaluator
 
 train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=500)
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(

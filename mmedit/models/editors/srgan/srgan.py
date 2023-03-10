@@ -265,8 +265,7 @@ class SRGAN(BaseEditModel):
             Tensor: Extract gt data.
         """
 
-        gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
-        batch_gt_data = torch.stack(gt_imgs)
+        batch_gt_data = data_samples.gt_img
 
         return batch_gt_data
 
@@ -286,7 +285,8 @@ class SRGAN(BaseEditModel):
         g_optim_wrapper = optim_wrapper['generator']
 
         data = self.data_preprocessor(data, True)
-        batch_inputs, data_samples = data['inputs'], data['data_samples']
+        batch_inputs = data['inputs']
+        data_samples = data['data_samples']
         batch_gt_data = self.extract_gt_data(data_samples)
 
         log_vars = dict()

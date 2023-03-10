@@ -3,7 +3,10 @@
 
 from typing import List, Optional, Sequence
 
+import torch.nn as nn
 from mmengine.evaluator import BaseMetric
+from mmengine.model import is_model_wrapper
+from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
 from .metrics_utils import average, obtain_data
@@ -35,7 +38,9 @@ class BaseSampleWiseMetric(BaseMetric):
             for output. Default: 1
     """
 
-    metric = None
+    SAMPLER_MODE = 'normal'
+    sample_model = 'orig'  # TODO: low-level models only support origin model
+    metric = None  # the name of metric
 
     def __init__(self,
                  gt_key: str = 'gt_img',
@@ -45,6 +50,8 @@ class BaseSampleWiseMetric(BaseMetric):
                  device='cpu',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None) -> None:
+        assert self.metric is not None, (
+            '\'metric\' must be defined for \'BaseSampleWiseMetric\'.')
         super().__init__(collect_device, prefix)
 
         self.gt_key = gt_key
@@ -52,6 +59,8 @@ class BaseSampleWiseMetric(BaseMetric):
         self.mask_key = mask_key
         self.scaling = scaling
         self.device = device
+
+        self.channel_order = 'BGR'
 
     def compute_metrics(self, results: List):
         """Compute the metrics from processed results.
@@ -82,13 +91,6 @@ class BaseSampleWiseMetric(BaseMetric):
         for data in data_samples:
             prediction = data['output']
 
-            self.channel_order = 'rgb'
-            metainfo = data
-            if 'gt_channel_order' in metainfo:
-                self.channel_order = metainfo['gt_channel_order']
-            elif 'img_channel_order' in metainfo:
-                self.channel_order = metainfo['img_channel_order']
-
             gt = obtain_data(data, self.gt_key, self.device)
             pred = obtain_data(prediction, self.pred_key, self.device)
             if self.mask_key is not None:
@@ -108,4 +110,30 @@ class BaseSampleWiseMetric(BaseMetric):
             self.results.append({self.metric: result})
 
     def process_image(self, gt, pred, mask):
-        return 0
+        raise NotImplementedError
+
+    def evaluate(self) -> dict:
+        assert hasattr(self, 'size'), (
+            'Cannot find \'size\', please make sure \'self.prepare\' is '
+            'called correctly.')
+        return super().evaluate(self.size)
+
+    def prepare(self, module: nn.Module, dataloader: DataLoader):
+        self.size = len(dataloader.dataset)
+        if is_model_wrapper(module):
+            module = module.module
+        self.data_preprocessor = module.data_preprocessor
+
+    def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
+                           metrics) -> DataLoader:
+        """Get sampler for normal metrics. Directly returns the dataloader.
+
+        Args:
+            model (nn.Module): Model to evaluate.
+            dataloader (DataLoader): Dataloader for real images.
+            metrics (List['GenMetric']): Metrics with the same sample mode.
+
+        Returns:
+            DataLoader: Default sampler for normal metrics.
+        """
+        return dataloader

@@ -3,7 +3,10 @@ from typing import List, Sequence
 
 import cv2
 import numpy as np
+import torch.nn as nn
 from mmengine.evaluator import BaseMetric
+from mmengine.model import is_model_wrapper
+from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
 from ..functional import gauss_gradient
@@ -45,6 +48,12 @@ class GradientError(BaseMetric):
         self.sigma = sigma
         self.norm_constant = norm_constant
         super().__init__(**kwargs)
+
+    def prepare(self, module: nn.Module, dataloader: DataLoader):
+        self.size = len(dataloader.dataset)
+        if is_model_wrapper(module):
+            module = module.module
+        self.data_preprocessor = module.data_preprocessor
 
     def process(self, data_batch: Sequence[dict],
                 data_samples: Sequence[dict]) -> None:

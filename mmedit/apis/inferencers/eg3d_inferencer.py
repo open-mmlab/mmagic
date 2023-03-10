@@ -74,7 +74,11 @@ class EG3DInferencer(BaseMMEditInferencer):
             num_batches=num_batches,
             sample_model=sample_model,
             add_noise=add_noise)
-        data_samples = data_sample_list
+
+        if data_sample_list is None:
+            data_samples = None
+        else:
+            data_samples = EditDataSample.stack(data_sample_list)
 
         return inputs, data_samples
 

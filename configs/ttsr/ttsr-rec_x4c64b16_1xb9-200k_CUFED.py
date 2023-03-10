@@ -188,17 +188,19 @@ val_dataloader = dict(
 
 test_dataloader = val_dataloader
 
-val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR', crop_border=scale),
-    dict(type='SSIM', crop_border=scale),
-]
+val_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[
+        dict(type='MAE'),
+        dict(type='PSNR', crop_border=scale),
+        dict(type='SSIM', crop_border=scale),
+    ])
 test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=200_000, val_interval=5000)
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(

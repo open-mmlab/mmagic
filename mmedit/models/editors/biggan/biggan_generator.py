@@ -344,6 +344,9 @@ class BigGANGenerator(nn.Module):
 
         elif isinstance(label, torch.Tensor):
             if not use_outside_embedding:
+                if label.ndim != 1:
+                    assert all([s == 1 for s in label.shape[1:]])
+                    label = label.view(-1)
                 assert label.ndim == 1, (
                     'The label shoube be in shape of (n, )'
                     f'but got {label.shape}.')

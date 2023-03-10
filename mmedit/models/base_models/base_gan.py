@@ -11,7 +11,7 @@ from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import ForwardInputs, NoiseVar, SampleList
 from ..utils import (get_valid_noise_size, get_valid_num_batches,
                      noise_sample_fn, set_requires_grad)
@@ -27,7 +27,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
         discriminator (Optional[ModelType]): The config or model of the
             discriminator. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmedit.models.GenDataPreprocessor`.
+            config or :class:`~mmedit.models.EditDataPreprocessor`.
         generator_steps (int): The number of times the generator is completely
             updated before the discriminator is updated. Defaults to 1.
         discriminator_steps (int): The number of times the discriminator is
@@ -337,51 +337,53 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             sample_kwargs = {}
         else:
             noise = inputs.get('noise', None)
-            num_batches = get_valid_num_batches(inputs)
+            num_batches = get_valid_num_batches(inputs, data_samples)
             noise = self.noise_fn(noise, num_batches=num_batches)
             sample_kwargs = inputs.get('sample_kwargs', dict())
         num_batches = noise.shape[0]
 
         sample_model = self._get_valid_model(inputs)
-        if sample_model in ['ema', 'ema/orig']:
-            generator = self.generator_ema
-        else:  # sample model is 'orig'
-            generator = self.generator
-
-        num_batches = noise.shape[0]
-        outputs = generator(noise, return_noise=False, **sample_kwargs)
-
-        if sample_model == 'ema/orig':
-            generator = self.generator
-            outputs_orig = generator(
-                noise, return_noise=False, **sample_kwargs)
-            outputs = dict(ema=outputs, orig=outputs_orig)
-
         batch_sample_list = []
-        for idx in range(num_batches):
+        if sample_model in ['ema', 'orig']:
+            if sample_model == 'ema':
+                generator = self.generator_ema
+            else:
+                generator = self.generator
+            outputs = generator(noise, return_noise=False, **sample_kwargs)
+            outputs = self.data_preprocessor.destruct(outputs, data_samples)
+
             gen_sample = EditDataSample()
             if data_samples:
-                gen_sample.update(data_samples[idx])
+                gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
-                gen_sample.gt_img = PixelData(data=inputs['img'][idx])
-            if isinstance(outputs, dict):
-                gen_sample.ema = EditDataSample(
-                    fake_img=PixelData(data=outputs['ema'][idx]),
-                    sample_model='ema')
-                gen_sample.orig = EditDataSample(
-                    fake_img=PixelData(data=outputs['orig'][idx]),
-                    sample_model='orig')
-                gen_sample.sample_model = 'ema/orig'
-            else:
-                gen_sample.fake_img = PixelData(data=outputs[idx])
-                gen_sample.sample_model = sample_model
-
-            # Append input condition (noise and sample_kwargs) to
-            # batch_sample_list
-            gen_sample.noise = noise[idx]
+                gen_sample.gt_img = inputs['img']
+            gen_sample.fake_img = outputs
+            gen_sample.noise = noise
             gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+            gen_sample.sample_model = sample_model
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True, )
 
-            batch_sample_list.append(gen_sample)
+        else:  # sample model is 'ema/orig
+            outputs_orig = self.generator(
+                noise, return_noise=False, **sample_kwargs)
+            outputs_ema = self.generator_ema(
+                noise, return_noise=False, **sample_kwargs)
+            outputs_orig = self.data_preprocessor.destruct(
+                outputs_orig, data_samples)
+            outputs_ema = self.data_preprocessor.destruct(
+                outputs_ema, data_samples)
+
+            gen_sample = EditDataSample()
+            if data_samples:
+                gen_sample.update(data_samples)
+            if isinstance(inputs, dict) and 'img' in inputs:
+                gen_sample.gt_img = inputs['img']
+            gen_sample.ema = EditDataSample(fake_img=outputs_ema)
+            gen_sample.orig = EditDataSample(fake_img=outputs_orig)
+            gen_sample.noise = noise
+            gen_sample.sample_kwargs = deepcopy(sample_kwargs)
+            gen_sample.sample_model = 'ema/orig'
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True)
 
         return batch_sample_list
 

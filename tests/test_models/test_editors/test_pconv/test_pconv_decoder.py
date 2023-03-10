@@ -2,6 +2,9 @@
 import torch
 
 from mmedit.models.editors import PConvDecoder, PConvEncoder
+from mmedit.utils import register_all_modules
+
+register_all_modules()
 
 
 def test_pconv_dec():
