@@ -1,7 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional, Sequence
 
+import torch.nn as nn
+from mmengine.model import is_model_wrapper
 from mmeval import SAD as _SAD
+from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
 from .metrics_utils import _fetch_data_and_check
@@ -53,6 +56,12 @@ class SAD(_SAD):
         super().__init__(**kwargs)
         self.scaling = scaling
         self.prefix = prefix
+
+    def prepare(self, module: nn.Module, dataloader: DataLoader):
+        self.size = len(dataloader.dataset)
+        if is_model_wrapper(module):
+            module = module.module
+        self.data_preprocessor = module.data_preprocessor
 
     def process(self, data_batch: Sequence[dict],
                 data_samples: Sequence[dict]) -> None:
