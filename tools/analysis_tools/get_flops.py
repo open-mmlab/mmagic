@@ -49,11 +49,23 @@ def main():
     init_default_scope(cfg.get('default_scope', 'mmedit'))
 
     model = MODELS.build(cfg.model)
+    inputs = torch.randn(1, *input_shape)
     if torch.cuda.is_available():
         model.cuda()
+        inputs = inputs.cuda()
     model.eval()
 
-    analysis_results = get_model_complexity_info(model, input_shape)
+    if hasattr(model, 'generator'):
+        model = model.generator
+    elif hasattr(model, 'backbone'):
+        model = model.backbone
+    if hasattr(model, 'translation'):
+        model.forward = model.translation
+    elif hasattr(model, 'infer'):
+        model.forward = model.infer
+
+    analysis_results = get_model_complexity_info(
+        model, input_shape, inputs=inputs)
     flops = analysis_results['flops_str']
     params = analysis_results['params_str']
     activations = analysis_results['activations_str']
