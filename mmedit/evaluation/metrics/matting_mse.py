@@ -2,8 +2,8 @@
 from typing import Optional, Sequence
 
 import torch.nn as nn
-from mmeval import MattingMSE as _MattingMSE
 from mmengine.model import is_model_wrapper
+from mmeval import MattingMeanSquaredError as _MattingMeanSquaredError
 from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
@@ -11,7 +11,7 @@ from .metrics_utils import _fetch_data_and_check
 
 
 @METRICS.register_module()
-class MattingMSE(_MattingMSE):
+class MattingMSE(_MattingMeanSquaredError):
     """Mean Squared Error metric for image matting. A wrapper of
     :class:`mmeval.MattingMSE`.
 
