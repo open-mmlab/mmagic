@@ -17,7 +17,7 @@ class DiffusersWrapper(BaseModule):
     >>> config = dict(
     >>>     type='ControlNetModel',  # has been registered in `MODELS`
     >>>     from_pretrained='lllyasviel/sd-controlnet-canny',
-    >>>     torch_dtype='torch.float16')
+    >>>     torch_dtype=torch.float16)
     >>> controlnet = MODELS.build(config)
 
     >>> 2. Initialize model with pre-defined configs.
