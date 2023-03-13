@@ -32,7 +32,7 @@ class DiffusersWrapper(BaseModule):
     >>>     type='ControlNetModel',  # has been registered in `MODELS`
     >>>     in_channels=3,
     >>>     down_block_types=['DownBlock2D'],
-    >>>     block_out_channels=(20, ),
+    >>>     block_out_channels=(32, ),
     >>>     conditioning_embedding_out_channels=(16, ))
     >>> controlnet = MODELS.build(config)
 
@@ -67,8 +67,6 @@ class DiffusersWrapper(BaseModule):
                  **kwargs):
         super().__init__(init_cfg)
 
-        # import ipdb
-        # ipdb.set_trace()
         module_cls = self._module_cls
         assert not (from_pretrained and from_config), (
             '\'from_pretrained\' and \'from_config\' should not be passed '
@@ -80,9 +78,12 @@ class DiffusersWrapper(BaseModule):
         if from_pretrained is not None:
             self.model = module_cls.from_pretrained(from_pretrained, *args,
                                                     **kwargs)
+            # weight has been initialized from pretrained, therefore we
+            # `self._is_init` as True manually
             self._is_init = True
         elif from_config is not None:
-            self.model = module_cls.from_config(from_config, *args, **kwargs)
+            _config = module_cls.load_config(from_config, *args, **kwargs)
+            self.model = module_cls(**_config)
         else:
             self.model = module_cls(*args, **kwargs)
 
