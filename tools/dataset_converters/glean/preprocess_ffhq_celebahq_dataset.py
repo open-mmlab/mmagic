@@ -12,22 +12,6 @@ from skimage.io import imread, imsave
 from mmedit.datasets.transforms import MATLABLikeResize
 
 
-def generate_anno_file(args, file_name='meta_info_FFHQ_GT.txt'):
-    """Generate annotation file from the ground-truth folder.
-
-    Args:
-        file_name (str): Annotation file name.
-    """
-
-    print('Generate annotation files ...')
-    txt_file = osp.join(args.data_root, '..', file_name)
-    mmengine.utils.mkdir_or_exist(osp.dirname(txt_file))
-    img_list = sorted(os.listdir((args.data_root)))
-    with open(txt_file, 'w') as f:
-        for img in img_list:
-            f.write(f'{img} (1024, 1024, 3)\n')
-
-
 def imresize(img_path, output_path, scale=None, output_shape=None):
     """Resize the image using MATLAB-like downsampling.
 
@@ -118,6 +102,3 @@ if __name__ == '__main__':
 
     # downsample images
     downsample_images(args)
-
-    # generate annotation files
-    generate_anno_file(args)

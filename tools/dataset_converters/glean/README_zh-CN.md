@@ -11,47 +11,21 @@
 }
 ```
 
-- 训练集:  [DIV2K dataset](https://data.vision.ee.ethz.ch/cvl/DIV2K/).
-- 验证集:  Set5 and Set14.
+## 准备 cat_train 数据集
 
-```text
-mmediting
-├── mmedit
-├── tools
-├── configs
-├── data
-│   ├── DIV2K
-│   │   ├── DIV2K_train_HR
-│   │   ├── DIV2K_train_LR_bicubic
-│   │   │   ├── X2
-│   │   │   ├── X3
-│   │   │   ├── X4
-│   │   ├── DIV2K_valid_HR
-│   │   ├── DIV2K_valid_LR_bicubic
-│   │   │   ├── X2
-│   │   │   ├── X3
-│   │   │   ├── X4
-│   ├── Set5
-│   │   ├── GTmod12
-│   │   ├── LRbicx2
-│   │   ├── LRbicx3
-│   │   ├── LRbicx4
-│   ├── Set14
-│   │   ├── GTmod12
-│   │   ├── LRbicx2
-│   │   ├── LRbicx3
-│   │   ├── LRbicx4
-```
+1. 从[LSUN 主页](https://www.yf.io/p/lsun)下载[cat 数据集](http://dl.yf.io/lsun/objects/cat.zip)。
 
-## 裁剪子图
+2. 从[GLEAN 主页](https://github.com/ckkelvinchan/GLEAN)下载[cat_train/meta_info_LSUNcat_GT.txt](https://github.com/ckkelvinchan/GLEAN/blob/main/data/cat_train/meta_info_LSUNcat_GT.txt)。
 
-为了加快 IO，建议将 DIV2K 中的图片裁剪为一系列子图，为此，我们提供了一个脚本：
+3. 导出图像并下采样
+
+从 lmdb 文件中导出图像，并下采样到所需尺寸。为此，我们提供了一个脚本：
 
 ```shell
-python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
+python tools/dataset_converters/glean/preprocess_cat_train_dataset.py --lmdb-path .data/cat --meta-file-path ./data/cat_train/meta_info_LSUNcat_GT.txt --out-dir ./data/cat_train
 ```
 
-生成的数据保存在 `DIV2K` 目录下，其文件结构如下所示，其中 `_sub` 表示子图:
+生成的数据存储在 `cat_train` 目录下，目录结构应如下所示：
 
 ```text
 mmediting
@@ -59,38 +33,139 @@ mmediting
 ├── tools
 ├── configs
 ├── data
-│   ├── DIV2K
-│   │   ├── DIV2K_train_HR
-│   │   ├── DIV2K_train_HR_sub
-│   │   ├── DIV2K_train_LR_bicubic
-│   │   │   ├── X2
-│   │   │   ├── X3
-│   │   │   ├── X4
-│   │   │   ├── X2_sub
-│   │   │   ├── X3_sub
-│   │   │   ├── X4_sub
-│   │   ├── DIV2K_valid_HR
-│   │   ├── ...
+│   ├── cat_train
+│   │   ├── GT
+│   │   ├── BIx8_down
+│   │   ├── BIx16_down
+│   │   ├── meta_info_LSUNcat_GT.txt
 ...
 ```
 
-## 准备标注列表文件
+## 准备 cat_test 数据集
 
-如果您想使用`标注模式`来处理数据集，需要先准备一个 `txt` 格式的标注文件。
+1. 从数据集[主页](https://archive.org/details/CAT_DATASET)下载[CAT 数据集](https://archive.org/download/CAT_DATASET/CAT_DATASET_02.zip)。
 
-标注文件中的每一行包含了图片名以及图片尺寸（这些通常是 ground-truth 图片），这两个字段用空格间隔开。
+2. 从[GLEAN 主页](https://github.com/ckkelvinchan/GLEAN)下载[cat_test/meta_info_Cat100_GT.txt](https://github.com/ckkelvinchan/GLEAN/blob/main/data/cat_test/meta_info_Cat100_GT.txt)。
 
-标注文件示例:
+3. 下采样
 
-```text
-0001_s001.png (480,480,3)
-0001_s002.png (480,480,3)
-```
-
-## 准备 LMDB 格式的 DIV2K 数据集
-
-如果您想使用 `LMDB` 以获得更快的 IO 速度，可以通过以下脚本来构建 LMDB 文件
+将图像下采样到所需尺寸。为此，我们提供了一个脚本：
 
 ```shell
-python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K --make-lmdb
+python tools/dataset_converters/glean/preprocess_cat_test_dataset.py --data-path ./data/CAT_03 --meta-file-path ./data/cat_test/meta_info_Cat100_GT.txt --out-dir ./data/cat_test
+```
+
+生成的数据存储在 `cat_test` 目录下，目录结构应如下所示：
+
+```text
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── cat_test
+│   │   ├── GT
+│   │   ├── BIx8_down
+│   │   ├── BIx16_down
+│   │   ├── meta_info_Cat100_GT.txt
+...
+```
+
+## 准备 FFHQ 数据集
+
+1. 从数据集[主页](https://github.com/NVlabs/ffhq-dataset)下载[FFHQ 数据集 (images1024x1024)](https://drive.google.com/drive/folders/1tZUcXDBeOibC6jcMCtgRRz67pzrAHeHL)。
+
+将文件目录重构为如下所示：
+
+```text
+ffhq
+├── images
+|   ├── 00000.png
+|   ├── 00001.png
+|   ├── ...
+|   ├── 69999.png
+```
+
+2. 从[GLEAN 主页](https://github.com/ckkelvinchan/GLEAN)下载[ffhq/meta_info_FFHQ_GT.txt](https://github.com/ckkelvinchan/GLEAN/blob/main/data/FFHQ/meta_info_FFHQ_GT.txt)。
+
+3. 下采样
+
+将图像下采样到所需尺寸。为此，我们提供了一个脚本：
+
+```shell
+python tools/dataset_converters/glean/preprocess_ffhq_celebahq_dataset.py --data-root ./data/ffhq/images
+```
+
+生成的数据存储在 `ffhq` 目录下，目录结构应如下所示：
+
+```text
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+|   ├── ffhq
+|   |   ├── images
+│   │   ├── BIx8_down
+|   |   ├── BIx16_down
+|   |   ├── meta_info_FFHQ_GT.txt
+...
+```
+
+## 准备 CelebA-HQ 数据集
+
+1. 根据数据集[主页](https://github.com/tkarras/progressive_growing_of_gans)文档准备数据集。
+
+将文件目录重构为如下所示：
+
+```text
+CelebA-HQ
+├── GT
+|   ├── 00000.png
+|   ├── 00001.png
+|   ├── ...
+|   ├── 30000.png
+```
+
+2. 从[GLEAN 主页](https://github.com/ckkelvinchan/GLEAN)下载[CelebA-HQ/meta_info_CelebAHQ_val100_GT.txt](https://github.com/ckkelvinchan/GLEAN/blob/main/data/CelebA-HQ/meta_info_CelebAHQ_val100_GT.txt)。
+
+3. 下采样
+
+将图像下采样到所需尺寸。为此，我们提供了一个脚本：
+
+```shell
+python tools/dataset_converters/glean/preprocess_ffhq_celebahq_dataset.py --data-root ./data/CelebA-HQ/GT
+```
+
+生成的数据存储在 `CelebA-HQ` 目录下，目录结构应如下所示：
+
+```text
+mmediting
+├── mmedit
+├── tools
+├── configsdata
+├── data
+|   ├── CelebA-HQ
+|   |   ├── GT
+│   │   ├── BIx8_down
+|   |   ├── BIx16_down
+|   |   ├── meta_info_CelebAHQ_val100_GT.txt
+...
+```
+
+## 准备 FFHQ_CelebAHQ 数据集
+
+将 FFHQ(`ffhq/images`) 和 CelebA-HQ(`CelebA-HQ/GT`) 合并，生成 FFHQ_CelebAHQ 数据集。
+
+文件目录重构应如下所示：
+
+```text
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+|   ├── FFHQ_CelebAHQ
+|   |   ├── GT
+...
 ```
