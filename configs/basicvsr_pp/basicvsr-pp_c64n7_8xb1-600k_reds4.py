@@ -20,11 +20,10 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(1, -1, 1, 1),
     ))
 
-train_dataloader = dict(num_workers=6, batch_size=1)
+train_dataloader = dict(
+    num_workers=6, batch_size=1, dataset=dict(num_input_frames=30))
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=600_000, val_interval=5000)

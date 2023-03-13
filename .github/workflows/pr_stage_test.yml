@@ -6,6 +6,7 @@ on:
       - 'README.md'
       - 'README_zh-CN.md'
       - 'docs/**'
+      - 'projects/**'
       - '.dev_scripts/**'
       - '.circleci/**'
       - 'configs/**'
@@ -35,15 +36,13 @@ jobs:
         run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install MMEngine
         run: pip install git+https://github.com/open-mmlab/mmengine.git@main
-      - name: Install MMCV and MMDet
+      - name: Install MMCV
         run: |
           pip install -U openmim
           mim install 'mmcv >= 2.0.0rc1'
-          mim install 'mmdet >= 3.0.0rc2'
       - name: Install other dependencies
         run: |
           pip install -r requirements/tests.txt
-          pip install git+https://github.com/openai/CLIP.git
       - name: Build and install
         run: rm -rf .eggs && pip install -e .
       - name: Run unittests and generate coverage report
@@ -97,9 +96,7 @@ jobs:
           pip install git+https://github.com/open-mmlab/mmengine.git@main
           pip install -U openmim
           mim install 'mmcv >= 2.0.0rc1'
-          mim install 'mmdet >= 3.0.0rc2'
           pip install -r requirements/tests.txt
-          pip install git+https://github.com/openai/CLIP.git
       - name: Build and install
         run: |
           python setup.py check -m -s
@@ -132,9 +129,7 @@ jobs:
           python -m pip install git+https://github.com/open-mmlab/mmengine.git@main
           python -m pip install -U openmim
           mim install 'mmcv >= 2.0.0rc1'
-          mim install 'mmdet >= 3.0.0rc2'
           python -m pip install -r requirements/tests.txt
-          pip install git+https://github.com/openai/CLIP.git
       - name: Build and install
         run: |
           python -m pip install -e .

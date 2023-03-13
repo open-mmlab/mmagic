@@ -1,0 +1,40 @@
+Collections:
+- Name: EG3D
+  Paper:
+    Title: Efficient geometry-aware 3D generative adversarial networks
+    URL: https://openaccess.thecvf.com/content/CVPR2022/html/Chan_Efficient_Geometry-Aware_3D_Generative_Adversarial_Networks_CVPR_2022_paper.html
+  README: configs/eg3d/README.md
+  Task:
+  - 3d-aware generation
+  Year: 2022
+Models:
+- Config: configs/eg3d/eg3d_cvt-official-rgb_shapenet-128x128.py
+  In Collection: EG3D
+  Name: eg3d_cvt-official-rgb_shapenet-128x128
+  Results:
+  - Dataset: ShaperNet-Car
+    Metrics:
+      FID50k: 5.6573
+      FID50k-Camera: 5.2325
+    Task: 3D-aware Generation
+  Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_shapenet-128x128-85757f4d.pth
+- Config: configs/eg3d/eg3d_cvt-official-rgb_afhq-512x512.py
+  In Collection: EG3D
+  Name: eg3d_cvt-official-rgb_afhq-512x512
+  Results:
+  - Dataset: AFHQ
+    Metrics:
+      FID50k: 2.9134
+      FID50k-Camera: 6.4213
+    Task: 3D-aware Generation
+  Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_afhq-512x512-ca1dd7c9.pth
+- Config: configs/eg3d/eg3d_cvt-official-rgb_ffhq-512x512.py
+  In Collection: EG3D
+  Name: eg3d_cvt-official-rgb_ffhq-512x512
+  Results:
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 4.3076
+      FID50k-Camera: 6.4453
+    Task: 3D-aware Generation
+  Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_ffhq-512x512-5a0ddcb6.pth

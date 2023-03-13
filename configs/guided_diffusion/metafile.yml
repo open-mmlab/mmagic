@@ -1,0 +1,69 @@
+Collections:
+- Name: Guided Diffusion
+  Paper:
+    Title: Diffusion Models Beat GANs on Image Synthesis
+    URL: https://papers.nips.cc/paper/2021/file/49ad23d1ec9fa4bd8d77d02681df5cfa-Paper.pdf
+  README: configs/guided_diffusion/README.md
+  Task:
+  - image generation
+  Year: 2021
+Models:
+- Config: configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py
+  In Collection: Guided Diffusion
+  Name: adm_ddim250_8xb32_imagenet-64x64
+  Results:
+  - Dataset: ImageNet64x64
+    Metrics:
+      FID-Full-50K: 3.2284
+      Steps: 250.0
+    Task: Image Generation
+  Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth
+- Config: configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py
+  In Collection: Guided Diffusion
+  Name: adm-g_ddim25_8xb32_imagenet-64x64
+  Results:
+  - Dataset: ImageNet64x64
+    Metrics:
+      CGS: 1.0
+      FID-Full-50K: 3.7566
+      Steps: 25.0
+    Task: Image Generation
+  Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-g_8xb32_imagenet-64x64-2c0fbeda.pth
+- Config: configs/guided_diffusion/adm_ddim250_8xb32_imagenet-256x256.py
+  In Collection: Guided Diffusion
+  Name: adm_ddim250_8xb32_imagenet-256x256
+  Results:
+  - Dataset: ImageNet256x256
+    Metrics:
+      Steps: 250.0
+    Task: Image Generation
+  Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm_8xb32_imagenet-256x256-f94735fe.pth
+- Config: configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-256x256.py
+  In Collection: Guided Diffusion
+  Name: adm-g_ddim25_8xb32_imagenet-256x256
+  Results:
+  - Dataset: ImageNet256x256
+    Metrics:
+      CGS: 1.0
+      Steps: 25.0
+    Task: Image Generation
+  Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-g_8xb32_imagenet-256x256-aec3fc9f.pth
+- Config: configs/guided_diffusion/adm_ddim250_8xb32_imagenet-512x512.py
+  In Collection: Guided Diffusion
+  Name: adm_ddim250_8xb32_imagenet-512x512
+  Results:
+  - Dataset: ImageNet512x512
+    Metrics:
+      Steps: 250.0
+    Task: Image Generation
+  Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-u_8xb32_imagenet-512x512-60b381cb.pth
+- Config: configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-512x512.py
+  In Collection: Guided Diffusion
+  Name: adm-g_ddim25_8xb32_imagenet-512x512
+  Results:
+  - Dataset: ImageNet512x512
+    Metrics:
+      CGS: 1.0
+      Steps: 25.0
+    Task: Image Generation
+  Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-g_8xb32_imagenet-512x512-23cf0b58.pth

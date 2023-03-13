@@ -68,8 +68,8 @@ train_cfg = dict(
     max_iters=500000,
     val_interval=50000,
 )
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(
@@ -79,3 +79,5 @@ optim_wrapper = dict(
 
 checkpoint_config = dict(
     type='CheckpointHook', by_epoch=False, interval=50000, out_dir=save_dir)
+
+# load_from = 'pconv_stage1_8xb1_places-256x256/iter_800002.pth'

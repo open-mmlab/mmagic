@@ -99,16 +99,10 @@ def create_test_job_batch(commands, model_info, args, port, script_name):
     assert config.exists(), f'{fname}: {config} not found.'
 
     http_prefix_short = 'https://download.openmmlab.com/mmediting/'
-    http_prefix_long = 'https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/'  # noqa
-    http_prefix_gen = 'https://download.openmmlab.com/mmgen/'
     model_weight_url = model_info.weights
 
-    if model_weight_url.startswith(http_prefix_long):
-        model_name = model_weight_url[len(http_prefix_long):]
-    elif model_weight_url.startswith(http_prefix_short):
+    if model_weight_url.startswith(http_prefix_short):
         model_name = model_weight_url[len(http_prefix_short):]
-    elif model_weight_url.startswith(http_prefix_gen):
-        model_name = model_weight_url[len(http_prefix_gen):]
     elif model_weight_url == '':
         print(f'{fname} weight is missing')
         return None
@@ -169,6 +163,7 @@ def create_test_job_batch(commands, model_info, args, port, script_name):
                   f'#SBATCH --ntasks=2\n'
                   f'#SBATCH --cpus-per-task=16\n\n'
                   f'export MASTER_PORT={port}\n'
+                  f'export CUBLAS_WORKSPACE_CONFIG=:4096:8\n'
                   f'{runner} -u {script_name} {config} {checkpoint} '
                   f'--work-dir={work_dir} '
                   f'--out={result_file} '

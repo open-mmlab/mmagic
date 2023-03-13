@@ -1,16 +1,15 @@
 Collections:
-- Metadata:
-    Architecture:
-    - StyleGANv2
-  Name: StyleGANv2
+- Name: StyleGANv2
   Paper:
-  - https://openaccess.thecvf.com/content_CVPR_2020/html/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.html
+    Title: Analyzing and Improving the Image Quality of Stylegan
+    URL: https://openaccess.thecvf.com/content_CVPR_2020/html/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.html
   README: configs/styleganv2/README.md
+  Task:
+  - unconditional gans
+  Year: 2020
 Models:
 - Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan2_c2_8xb4_ffhq-1024x1024
   Results:
   - Dataset: FFHQ
@@ -18,55 +17,57 @@ Models:
       FID50k: 2.8134
       Precision50k: 62.856
       Recall50k: 49.4
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
+    Task: Unconditional GANs
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 2.8185
+      Precision50k: 68.236
+      Recall50k: 49.583
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4_lsun-car-384x512.py
   In Collection: StyleGANv2
-  Metadata:
-    Training Data: Others
   Name: stylegan2_c2_8xb4_lsun-car-384x512
   Results:
-  - Dataset: Others
+  - Dataset: LSUN_CAR
     Metrics:
       FID50k: 5.4316
       Precision50k: 65.986
       Recall50k: 48.19
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-car-config-f-official_20210327_172340-8cfe053c.pth
+    Task: Unconditional GANs
+  - Dataset: LSUN_CAR
+    Metrics:
+      FID50k: 2.4116
+      Precision50k: 66.76
+      Recall50k: 50.576
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_lsun-car_384x512_b4x8_1800k_20210424_160929-fc9072ca.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-horse-256x256.py
   In Collection: StyleGANv2
-  Metadata:
-    Training Data: Others
   Name: stylegan2_c2_8xb4-800kiters_lsun-horse-256x256
   Results:
-  - Dataset: Others
+  - Dataset: LSUN_HORSE
     Metrics: {}
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-horse-config-f-official_20210327_173203-ef3e69ca.pth
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-horse-config-f-official_20210327_173203-ef3e69ca.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-church-256x256.py
   In Collection: StyleGANv2
-  Metadata:
-    Training Data: Others
   Name: stylegan2_c2_8xb4-800kiters_lsun-church-256x256
   Results:
-  - Dataset: Others
+  - Dataset: LSUN_CHURCH
     Metrics: {}
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-cat-256x256.py
   In Collection: StyleGANv2
-  Metadata:
-    Training Data: CAT
   Name: stylegan2_c2_8xb4-800kiters_lsun-cat-256x256
   Results:
-  - Dataset: CAT
+  - Dataset: LSUN_CAT
     Metrics: {}
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-cat-config-f-official_20210327_172444-15bc485b.pth
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-cat-config-f-official_20210327_172444-15bc485b.pth
 - Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan2_c2_8xb4-800kiters_ffhq-256x256
   Results:
   - Dataset: FFHQ
@@ -74,119 +75,36 @@ Models:
       FID50k: 3.992
       Precision50k: 69.012
       Recall50k: 40.417
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
-- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
-  In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
-  Name: stylegan2_c2_8xb4_ffhq-1024x1024
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 2.8185
-      Precision50k: 68.236
-      Recall50k: 49.583
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
-- Config: configs/styleganv2/stylegan2_c2_8xb4_lsun-car-384x512.py
-  In Collection: StyleGANv2
-  Metadata:
-    Training Data: Others
-  Name: stylegan2_c2_8xb4_lsun-car-384x512
-  Results:
-  - Dataset: Others
-    Metrics:
-      FID50k: 2.4116
-      Precision50k: 66.76
-      Recall50k: 50.576
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_lsun-car_384x512_b4x8_1800k_20210424_160929-fc9072ca.pth
-- Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_ffhq-256x256.py
-  In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
-  Name: stylegan2_c2_8xb4-800kiters_ffhq-256x256
-  Results:
-  - Dataset: FFHQ
+    Task: Unconditional GANs
+  - Dataset: FFHQ256
     Metrics:
       FID50k: 3.992
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
 - Config: configs/styleganv2/stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256
   Results:
-  - Dataset: FFHQ
+  - Dataset: FFHQ256
     Metrics:
       FID50k: 4.331
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_fp16_partial-GD_PL-no-scaler_ffhq_256_b4x8_800k_20210508_114854-dacbe4c9.pth
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_fp16_partial-GD_PL-no-scaler_ffhq_256_b4x8_800k_20210508_114854-dacbe4c9.pth
 - Config: configs/styleganv2/stylegan2_c2-PL-R1_8xb4-fp16-globalG-partialD-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan2_c2-PL-R1_8xb4-fp16-globalG-partialD-no-scaler-800kiters_ffhq-256x256
   Results:
-  - Dataset: FFHQ
+  - Dataset: FFHQ256
     Metrics:
       FID50k: 4.362
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_fp16-globalG-partialD_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114930-ef8270d4.pth
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_fp16-globalG-partialD_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114930-ef8270d4.pth
 - Config: configs/styleganv2/stylegan2_c2-PL-R1_8xb4-apex-fp16-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
   Name: stylegan2_c2-PL-R1_8xb4-apex-fp16-no-scaler-800kiters_ffhq-256x256
   Results:
-  - Dataset: FFHQ
+  - Dataset: FFHQ256
     Metrics:
       FID50k: 4.614
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_apex_fp16_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114701-c2bb8afd.pth
-- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
-  In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
-  Name: stylegan2_c2_8xb4_ffhq-1024x1024
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 2.8732
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
-- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
-  In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
-  Name: stylegan2_c2_8xb4_ffhq-1024x1024
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 2.9413
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
-- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
-  In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
-  Name: stylegan2_c2_8xb4_ffhq-1024x1024
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 2.8134
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth
-- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
-  In Collection: StyleGANv2
-  Metadata:
-    Training Data: FFHQ
-  Name: stylegan2_c2_8xb4_ffhq-1024x1024
-  Results:
-  - Dataset: FFHQ
-    Metrics:
-      FID50k: 2.8185
-    Task: Styleganv2
-  Weights: https://download.openmmlab.com/mmgen/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_apex_fp16_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114701-c2bb8afd.pth

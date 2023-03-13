@@ -1,141 +1,91 @@
 Collections:
-- Metadata:
-    Architecture:
-    - 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial
-      Networks'
-  Name: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial
-    Networks'
+- Name: CycleGAN
   Paper:
-  - https://openaccess.thecvf.com/content_iccv_2017/html/Zhu_Unpaired_Image-To-Image_Translation_ICCV_2017_paper.html
+    Title: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent Adversarial
+      Networks'
+    URL: https://openaccess.thecvf.com/content_iccv_2017/html/Zhu_Unpaired_Image-To-Image_Translation_ICCV_2017_paper.html
   README: configs/cyclegan/README.md
+  Task:
+  - image2image
+  Year: 2017
 Models:
 - Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-80kiters_facades.py
-  In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
-    Adversarial Networks'
-  Metadata:
-    Training Data: FACADES
+  In Collection: CycleGAN
   Name: cyclegan_lsgan-resnet-in_1xb1-80kiters_facades
   Results:
-  - Dataset: FACADES
+  - Dataset: facades
     Metrics:
       FID: 124.8033
       IS: 1.792
-    Task: Cyclegan
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_80k_facades_20210902_165905-5e2c0876.pth
+    Task: Image2Image
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_80k_facades_20210902_165905-5e2c0876.pth
 - Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-80kiters_facades.py
-  In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
-    Adversarial Networks'
-  Metadata:
-    Training Data: FACADES
+  In Collection: CycleGAN
   Name: cyclegan_lsgan-id0-resnet-in_1xb1-80kiters_facades
   Results:
-  - Dataset: FACADES
+  - Dataset: facades-id0
     Metrics:
       FID: 125.1694
       IS: 1.905
-    Task: Cyclegan
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades_convert-bgr_20210902_164411-d8e72b45.pth
+    Task: Image2Image
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_80k_facades_convert-bgr_20210902_164411-d8e72b45.pth
 - Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-250kiters_summer2winter.py
-  In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
-    Adversarial Networks'
-  Metadata:
-    Training Data: SUMMER2WINTER
+  In Collection: CycleGAN
   Name: cyclegan_lsgan-resnet-in_1xb1-250kiters_summer2winter
   Results:
-  - Dataset: SUMMER2WINTER
+  - Dataset: summer2winter
     Metrics:
       FID: 83.7177
       IS: 2.771
-    Task: Cyclegan
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165932-fcf08dc1.pth
-- Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py
-  In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
-    Adversarial Networks'
-  Metadata:
-    Training Data: SUMMER2WINTER
-  Name: cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter
-  Results:
-  - Dataset: SUMMER2WINTER
-    Metrics:
-      FID: 83.1418
-      IS: 2.72
-    Task: Cyclegan
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165640-8b825581.pth
-- Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-250kiters_summer2winter.py
-  In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
-    Adversarial Networks'
-  Metadata:
-    Training Data: SUMMER2WINTER
-  Name: cyclegan_lsgan-resnet-in_1xb1-250kiters_summer2winter
-  Results:
-  - Dataset: SUMMER2WINTER
+    Task: Image2Image
+  - Dataset: winter2summer
     Metrics:
       FID: 72.8025
       IS: 3.129
-    Task: Cyclegan
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165932-fcf08dc1.pth
+    Task: Image2Image
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165932-fcf08dc1.pth
 - Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py
-  In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
-    Adversarial Networks'
-  Metadata:
-    Training Data: SUMMER2WINTER
+  In Collection: CycleGAN
   Name: cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter
   Results:
-  - Dataset: SUMMER2WINTER
+  - Dataset: summer2winter-id0
+    Metrics:
+      FID: 83.1418
+      IS: 2.72
+    Task: Image2Image
+  - Dataset: winter2summer-id0
     Metrics:
       FID: 73.5001
       IS: 3.107
-    Task: Cyclegan
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165640-8b825581.pth
+    Task: Image2Image
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_246200_summer2winter_convert-bgr_20210902_165640-8b825581.pth
 - Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-270kiters_horse2zebra.py
-  In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
-    Adversarial Networks'
-  Metadata:
-    Training Data: HORSE2ZEBRA
+  In Collection: CycleGAN
   Name: cyclegan_lsgan-resnet-in_1xb1-270kiters_horse2zebra
   Results:
-  - Dataset: HORSE2ZEBRA
+  - Dataset: horse2zebra
     Metrics:
       FID: 64.5225
       IS: 1.418
-    Task: Cyclegan
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_170004-a32c733a.pth
-- Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-270kiters_horse2zebra.py
-  In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
-    Adversarial Networks'
-  Metadata:
-    Training Data: HORSE2ZEBRA
-  Name: cyclegan_lsgan-id0-resnet-in_1xb1-270kiters_horse2zebra
-  Results:
-  - Dataset: HORSE2ZEBRA
-    Metrics:
-      FID: 74.777
-      IS: 1.542
-    Task: Cyclegan
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_165724-77c9c806.pth
-- Config: configs/cyclegan/cyclegan_lsgan-resnet-in_1xb1-270kiters_horse2zebra.py
-  In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
-    Adversarial Networks'
-  Metadata:
-    Training Data: HORSE2ZEBRA
-  Name: cyclegan_lsgan-resnet-in_1xb1-270kiters_horse2zebra
-  Results:
-  - Dataset: HORSE2ZEBRA
+    Task: Image2Image
+  - Dataset: zebra2horse
     Metrics:
       FID: 141.1517
       IS: 3.154
-    Task: Cyclegan
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_170004-a32c733a.pth
+    Task: Image2Image
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_170004-a32c733a.pth
 - Config: configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-270kiters_horse2zebra.py
-  In Collection: 'CycleGAN: Unpaired Image-to-Image Translation Using Cycle-Consistent
-    Adversarial Networks'
-  Metadata:
-    Training Data: HORSE2ZEBRA
+  In Collection: CycleGAN
   Name: cyclegan_lsgan-id0-resnet-in_1xb1-270kiters_horse2zebra
   Results:
-  - Dataset: HORSE2ZEBRA
+  - Dataset: horse2zebra-id0
+    Metrics:
+      FID: 74.777
+      IS: 1.542
+    Task: Image2Image
+  - Dataset: zebra2horse-id0
     Metrics:
       FID: 134.3728
       IS: 3.091
-    Task: Cyclegan
-  Weights: https://download.openmmlab.com/mmgen/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_165724-77c9c806.pth
+    Task: Image2Image
+  Weights: https://download.openmmlab.com/mmediting/cyclegan/refactor/cyclegan_lsgan_id0_resnet_in_1x1_266800_horse2zebra_convert-bgr_20210902_165724-77c9c806.pth

@@ -19,3 +19,16 @@ def test_masked_img():
     class_name = get_masked_img.__class__.__name__
     assert name_ == class_name + ("(img_key='gt', mask_key='mask'"
                                   ", out_key='img', zero_value=0)")
+
+    # test copy meta info
+    results = dict(
+        gt=img,
+        mask=mask,
+        ori_gt_shape=img.shape,
+        gt_channel_order='rgb',
+        gt_color_type='color')
+    get_masked_img = GetMaskedImage(zero_value=0)
+    results = get_masked_img(results)
+    assert results['ori_img_shape'] == img.shape
+    assert results['img_channel_order'] == 'rgb'
+    assert results['img_color_type'] == 'color'

@@ -7,13 +7,14 @@ _base_ = [
 ema_config = dict(
     type='ExponentialMovingAverage',
     interval=1,
-    momentum=0.9999,
+    momentum=0.0001,
     start_iter=1000)
 
 model = dict(
     type='BigGAN',
     num_classes=10,
-    data_preprocessor=dict(type='GenDataPreprocessor', rgb_to_bgr=True),
+    data_preprocessor=dict(
+        type='EditDataPreprocessor', output_channel_order='BGR'),
     generator=dict(
         type='BigGANGenerator',
         output_scale=32,

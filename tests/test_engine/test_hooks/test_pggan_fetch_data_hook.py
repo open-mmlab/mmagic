@@ -19,7 +19,7 @@ class TestPGGANFetchDataHook(TestCase):
 
     pggan_cfg = dict(
         type='ProgressiveGrowingGAN',
-        data_preprocessor=dict(type='GenDataPreprocessor'),
+        data_preprocessor=dict(type='EditDataPreprocessor'),
         noise_size=512,
         generator=dict(type='PGGANGenerator', out_scale=8),
         discriminator=dict(type='PGGANDiscriminator', in_scale=8),

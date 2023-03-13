@@ -9,6 +9,7 @@ from mmengine import MessageHub
 
 from mmedit.engine import PGGANOptimWrapperConstructor
 from mmedit.models import StyleGAN1
+from mmedit.structures import EditDataSample
 from mmedit.utils import register_all_modules
 
 register_all_modules()
@@ -22,7 +23,7 @@ class TestStyleGAN1(TestCase):
 
     nkimgs_per_scale = {'16': 0.004, '32': 0.008, '64': 0.016}
 
-    data_preprocessor = dict(type='GenDataPreprocessor')
+    data_preprocessor = dict(type='EditDataPreprocessor')
 
     lr_schedule = dict(generator={'32': 0.0015}, discriminator={'32': 0.0015})
     optim_wrapper_cfg = dict(
@@ -51,7 +52,11 @@ class TestStyleGAN1(TestCase):
         constructor = PGGANOptimWrapperConstructor(self.optim_wrapper_cfg)
         optim_wrapper_dict = constructor(stylegan)
 
-        data_batch = dict(inputs=torch.randn(3, 3, 64, 64))
+        data_batch = dict(
+            inputs=dict(),
+            data_samples=[
+                EditDataSample(gt_img=torch.randn(3, 64, 64)) for _ in range(3)
+            ])
 
         for iter_num in range(6):
             stylegan.train_step(data_batch, optim_wrapper_dict)
@@ -74,7 +79,7 @@ class TestStyleGAN1(TestCase):
         outputs = stylegan.forward(dict(num_batches=2))
         # assert outputs.shape == (2, 3, 64, 64)
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 64, 64) for out in outputs])
+        assert all([out.fake_img.shape == (3, 64, 64) for out in outputs])
 
         outputs = stylegan.forward(
             dict(
@@ -84,12 +89,12 @@ class TestStyleGAN1(TestCase):
                 sample_model='ema'))
         # assert outputs.shape == (2, 3, 64, 64)
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 64, 64) for out in outputs])
+        assert all([out.fake_img.shape == (3, 64, 64) for out in outputs])
 
         outputs = stylegan.forward(dict(num_batches=2, sample_model='orig'))
         # assert outputs.shape == (2, 3, 64, 64)
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 64, 64) for out in outputs])
+        assert all([out.fake_img.shape == (3, 64, 64) for out in outputs])
 
         outputs = stylegan.forward(
             dict(num_batches=2, sample_model='ema/orig'))
@@ -97,29 +102,32 @@ class TestStyleGAN1(TestCase):
         # assert list(outputs.keys()) == ['ema', 'orig']
         # assert all([o.shape == (2, 3, 64, 64) for o in outputs.values()])
         assert len(outputs) == 2
-        assert all(
-            [out.ema.fake_img.data.shape == (3, 64, 64) for out in outputs])
-        assert all(
-            [out.orig.fake_img.data.shape == (3, 64, 64) for out in outputs])
+        assert all([out.ema.fake_img.shape == (3, 64, 64) for out in outputs])
+        assert all([out.orig.fake_img.shape == (3, 64, 64) for out in outputs])
 
         outputs = stylegan.forward(dict(num_batches=2, curr_scale=8))
         # assert outputs.shape == (2, 3, 8, 8)
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 8, 8) for out in outputs])
+        assert all([out.fake_img.shape == (3, 8, 8) for out in outputs])
 
         outputs = stylegan.forward(dict(noise=torch.randn(2, 16)))
         # assert outputs.shape == (2, 3, 64, 64)
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 64, 64) for out in outputs])
+        assert all([out.fake_img.shape == (3, 64, 64) for out in outputs])
 
         outputs = stylegan.forward(torch.randn(2, 16))
         # assert outputs.shape == (2, 3, 64, 64)
         assert len(outputs) == 2
-        assert all([out.fake_img.data.shape == (3, 64, 64) for out in outputs])
+        assert all([out.fake_img.shape == (3, 64, 64) for out in outputs])
 
         # test train_step with error
         with pytest.raises(RuntimeError):
-            data_batch = dict(inputs=torch.randn(3, 3, 4, 32))
+            data_batch = dict(
+                inputs=dict(),
+                data_samples=[
+                    EditDataSample(gt_img=torch.randn(3, 4, 32))
+                    for _ in range(3)
+                ])
             _ = stylegan.train_step(data_batch, optim_wrapper_dict)
 
         # test train_step without ema
@@ -131,7 +139,11 @@ class TestStyleGAN1(TestCase):
             nkimgs_per_scale=self.nkimgs_per_scale)
         optim_wrapper_dict = constructor(stylegan)
 
-        data_batch = dict(inputs=torch.randn(3, 3, 64, 64))
+        data_batch = dict(
+            inputs=dict(),
+            data_samples=[
+                EditDataSample(gt_img=torch.randn(3, 64, 64)) for _ in range(3)
+            ])
         stylegan.train_step(data_batch, optim_wrapper_dict)
 
         # test train_step with disc_step != 1
@@ -161,7 +173,11 @@ class TestStyleGAN1(TestCase):
         constructor = PGGANOptimWrapperConstructor(self.optim_wrapper_cfg)
         optim_wrapper_dict = constructor(stylegan)
 
-        data_batch = dict(inputs=torch.randn(3, 3, 64, 64))
+        data_batch = dict(
+            inputs=dict(),
+            data_samples=[
+                EditDataSample(gt_img=torch.randn(3, 64, 64)) for _ in range(3)
+            ])
 
         for iter_num in range(6):
             stylegan.train_step(data_batch, optim_wrapper_dict)

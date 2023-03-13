@@ -12,7 +12,9 @@ target_domain = domain_b = 'photo'
 model = dict(
     default_domain=target_domain,
     reachable_domains=[target_domain],
-    related_domains=[target_domain, source_domain])
+    related_domains=[target_domain, source_domain],
+    data_preprocessor=dict(
+        data_keys=[f'img_{source_domain}', f'img_{target_domain}']))
 
 train_cfg = dict(max_iters=190000)
 
@@ -47,7 +49,9 @@ key_mapping = dict(
         f'img_{domain_b}': f'img_{domain_b}'
     })
 pack_input = dict(
-    type='PackEditInputs', keys=[f'img_{domain_a}', f'img_{domain_b}'])
+    type='PackEditInputs',
+    keys=[f'img_{domain_a}', f'img_{domain_b}'],
+    data_keys=[f'img_{domain_a}', f'img_{domain_b}'])
 
 train_pipeline += [key_mapping, pack_input]
 val_pipeline += [key_mapping, pack_input]

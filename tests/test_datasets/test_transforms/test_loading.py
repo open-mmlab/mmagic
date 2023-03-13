@@ -4,7 +4,7 @@ from pathlib import Path
 import mmcv
 import numpy as np
 import pytest
-from mmengine.fileio.file_client import HardDiskBackend
+from mmengine.fileio.backends import LocalBackend
 
 from mmedit.datasets.transforms import (GetSpatialDiscountMask,
                                         LoadImageFromFile, LoadMask)
@@ -39,6 +39,8 @@ def test_load_image_from_file():
     assert results['ori_gt_shape'] == (h, w, 3)
     np.testing.assert_almost_equal(results['gt'], img_baboon)
     assert results['gt_path'] == str(path_baboon)
+    assert results['gt_channel_order'] == 'bgr'
+    assert results['gt_color_type'] == 'color'
 
     # read input image
     # input path is Path object
@@ -60,8 +62,8 @@ def test_load_image_from_file():
         ('(key=img, color_type=color, channel_order=bgr, '
          'imdecode_backend=None, use_cache=False, to_float32=False, '
          'to_y_channel=False, save_original_img=False, '
-         'file_client_args=None)'))
-    assert isinstance(image_loader.file_client.client, HardDiskBackend)
+         'backend_args=None)'))
+    assert isinstance(image_loader.file_backend, LocalBackend)
 
     # test save_original_img
     results = dict(img_path=path_baboon)
@@ -72,6 +74,8 @@ def test_load_image_from_file():
     assert results['ori_img_shape'] == (h, w, 1)
     np.testing.assert_almost_equal(results['ori_img'], results['img'])
     assert id(results['ori_img']) != id(results['img'])
+    assert results['img_channel_order'] == 'bgr'
+    assert results['img_color_type'] == 'grayscale'
 
     # test: use_cache
     results = dict(gt_path=path_baboon)
@@ -83,14 +87,16 @@ def test_load_image_from_file():
         ('(key=gt, color_type=color, channel_order=bgr, '
          'imdecode_backend=None, use_cache=True, to_float32=False, '
          'to_y_channel=False, save_original_img=False, '
-         'file_client_args=None)'))
+         'backend_args=None)'))
     results = image_loader(results)
     assert image_loader.cache is not None
     assert str(path_baboon) in image_loader.cache
     assert results['gt'].shape == (h, w, 3)
     assert results['gt_path'] == path_baboon
     np.testing.assert_almost_equal(results['gt'], img_baboon)
-    assert isinstance(image_loader.file_client.client, HardDiskBackend)
+    assert isinstance(image_loader.file_backend, LocalBackend)
+    assert results['gt_channel_order'] == 'bgr'
+    assert results['gt_color_type'] == 'color'
 
     # convert to y-channel (bgr2y)
     results = dict(gt_path=path_baboon)
@@ -102,6 +108,8 @@ def test_load_image_from_file():
     img_baboon_y = np.expand_dims(img_baboon_y, axis=2)
     np.testing.assert_almost_equal(results['gt'], img_baboon_y)
     assert results['gt_path'] == path_baboon
+    assert results['gt_channel_order'] == 'bgr'
+    assert results['gt_color_type'] == 'color'
 
     # convert to y-channel (rgb2y)
     results = dict(gt_path=path_baboon)
@@ -136,7 +144,7 @@ def test_load_image_from_file():
     results = dict(img_path=path_baboon)
     config = dict(
         key='img',
-        file_client_args=dict(
+        backend_args=dict(
             backend='lmdb',
             db_path=Path(__file__).parent.parent.parent / 'data' / 'lq.lmdb'))
     image_loader = LoadImageFromFile(**config)
@@ -214,7 +222,7 @@ class TestInpaintLoading:
         mask_config = dict(
             mask_list_file='tests/data/inpainting/mask_list.txt',
             prefix='tests/data/inpainting/',
-            io_backend='disk',
+            io_backend='local',
             color_type='unchanged',
             file_client_kwargs=dict())
 
@@ -231,7 +239,7 @@ class TestInpaintLoading:
         mask_config = dict(
             mask_list_file='tests/data/inpainting/mask_list_single_ch.txt',
             prefix='tests/data/inpainting/',
-            io_backend='disk',
+            io_backend='local',
             color_type='unchanged',
             file_client_kwargs=dict())
 

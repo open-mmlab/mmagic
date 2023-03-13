@@ -13,15 +13,15 @@ from .metrics.base_gen_metric import GenMetric
 
 
 @EVALUATORS.register_module()
-class GenEvaluator(Evaluator):
+class EditEvaluator(Evaluator):
     """Evaluator for generative models. Unlike high-level vision tasks, metrics
     for generative models have various input types. For example, Inception
-    Score (IS, :class:`~mmedit.core.evaluation.InceptionScore`) only needs to
+    Score (IS, :class:`~mmedit.evaluation.InceptionScore`) only needs to
     take fake images as input. However, Frechet Inception Distance (FID,
-    :class:`~mmedit.engine.evaluation.FrechetInceptionDistance`) needs to take
+    :class:`~mmedit.evaluation.FrechetInceptionDistance`) needs to take
     both real images and fake images as input, and the numbers of real images
     and fake images can be set arbitrarily. For Perceptual path length (PPL,
-    :class:`~mmedit.engine.evaluation.PerceptualPathLength.`), generator need
+    :class:`~mmedit.evaluation.PerceptualPathLength`), generator need
     to sample images along a latent path.
 
     In order to be compatible with different metrics, we designed two critical
@@ -31,13 +31,13 @@ class GenEvaluator(Evaluator):
     - :meth:`prepare_metrics` set the image images' color order
       and pass the dataloader to all metrics. Therefore metrics need
       pre-processing to prepare the corresponding feature.
-    - :meth:`premare_samplers` pass the dataloader and model to the metrics,
+    - :meth:`prepare_samplers` pass the dataloader and model to the metrics,
       and get the corresponding sampler of each kind of metrics. Metrics with
       same sample mode can share the sampler.
 
     The whole evaluation process can be found in
-    :meth:~`mmedit.engine.runners.loops.GenValLoop.run` and
-    :meth:~`mmedit.engine.runners.loops.GenTestLoop.run`.
+    :meth:`mmedit.engine.runner.GenValLoop.run` and
+    :meth:`mmedit.engine.runner.GenTestLoop.run`.
 
     Args:
         metrics (dict or BaseMetric or Sequence): The config of metrics.
@@ -82,6 +82,8 @@ class GenEvaluator(Evaluator):
             'SAMPLER_MODE': sampler_mode,
             'sample_model': sample_model
         }
+        if hasattr(metric, 'need_cond_input'):
+            metric_dict['need_cond_input'] = metric.need_cond_input
         md5 = hashlib.md5(repr(metric_dict).encode('utf-8')).hexdigest()
         return md5
 

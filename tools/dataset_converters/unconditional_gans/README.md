@@ -3,7 +3,7 @@
 **Data preparation for unconditional model** is simple. What you need to do is downloading the images and put them into a directory. Next, you should set a symlink in the `data` directory. For standard unconditional gans with static architectures, like DCGAN and StyleGAN2, `UnconditionalImageDataset` is designed to train such unconditional models. Here is an example config for FFHQ dataset:
 
 ```python
-dataset_type = 'UnconditionalImageDataset'
+dataset_type = 'BasicImageDataset'
 
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),

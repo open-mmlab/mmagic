@@ -1,10 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Optional, Union
+from typing import List, Optional, Sequence, Tuple, Union
 
 import torch
 from mmengine.config import Config
+from mmengine.optim import OptimWrapperDict
 
 from mmedit.registry import MODELS
+from mmedit.utils import SampleList
 from ..utils import set_requires_grad
 from .one_stage import OneStageInpaintor
 
@@ -50,25 +52,27 @@ class TwoStageInpaintor(OneStageInpaintor):
             discriminator. Default: False.
     """
 
-    def __init__(self,
-                 data_preprocessor: Union[dict, Config],
-                 encdec: dict,
-                 disc=None,
-                 loss_gan=None,
-                 loss_gp=None,
-                 loss_disc_shift=None,
-                 loss_composed_percep=None,
-                 loss_out_percep=False,
-                 loss_l1_hole=None,
-                 loss_l1_valid=None,
-                 loss_tv=None,
-                 train_cfg=None,
-                 test_cfg=None,
-                 init_cfg: Optional[dict] = None,
-                 stage1_loss_type=('loss_l1_hole', ),
-                 stage2_loss_type=('loss_l1_hole', 'loss_gan'),
-                 input_with_ones=True,
-                 disc_input_with_mask=False):
+    def __init__(
+            self,
+            data_preprocessor: Union[dict, Config],
+            encdec: dict,
+            disc: Optional[dict] = None,
+            loss_gan: Optional[dict] = None,
+            loss_gp: Optional[dict] = None,
+            loss_disc_shift: Optional[dict] = None,
+            loss_composed_percep: Optional[dict] = None,
+            loss_out_percep: bool = False,
+            loss_l1_hole: Optional[dict] = None,
+            loss_l1_valid: Optional[dict] = None,
+            loss_tv: Optional[dict] = None,
+            train_cfg: Optional[dict] = None,
+            test_cfg: Optional[dict] = None,
+            init_cfg: Optional[dict] = None,
+            stage1_loss_type: Optional[Sequence[str]] = ('loss_l1_hole', ),
+            stage2_loss_type: Optional[Sequence[str]] = ('loss_l1_hole',
+                                                         'loss_gan'),
+            input_with_ones: bool = True,
+            disc_input_with_mask: bool = False):
         super().__init__(
             data_preprocessor=data_preprocessor,
             encdec=encdec,
@@ -93,7 +97,8 @@ class TwoStageInpaintor(OneStageInpaintor):
         if self.train_cfg is not None:
             self.cur_iter = self.train_cfg.start_iter
 
-    def forward_tensor(self, inputs, data_samples):
+    def forward_tensor(self, inputs: torch.Tensor, data_samples: SampleList
+                       ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Forward function in tensor mode.
 
         Args:
@@ -105,8 +110,7 @@ class TwoStageInpaintor(OneStageInpaintor):
         # Pre-process runs in BaseModel.val_step / test_step
         masked_imgs = inputs  # N,3,H,W
 
-        masks = torch.stack(
-            list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
+        masks = data_samples.mask
         if self.input_with_ones:
             tmp_ones = torch.ones_like(masks)
             input_xs = torch.cat([masked_imgs, tmp_ones, masks], dim=1)
@@ -116,7 +120,9 @@ class TwoStageInpaintor(OneStageInpaintor):
         fake_imgs = stage2_fake_res * masks + masked_imgs * (1. - masks)
         return stage2_fake_res, fake_imgs
 
-    def two_stage_loss(self, stage1_data, stage2_data, gt, mask, masked_img):
+    def two_stage_loss(self, stage1_data: dict, stage2_data: dict,
+                       gt: torch.Tensor, mask: torch.Tensor,
+                       masked_img: torch.Tensor) -> Tuple[dict, dict]:
         """Calculate two-stage loss.
 
         Args:
@@ -164,12 +170,12 @@ class TwoStageInpaintor(OneStageInpaintor):
         return results, loss
 
     def calculate_loss_with_type(self,
-                                 loss_type,
-                                 fake_res,
-                                 fake_img,
-                                 gt,
-                                 mask,
-                                 prefix='stage1_'):
+                                 loss_type: str,
+                                 fake_res: torch.Tensor,
+                                 fake_img: torch.Tensor,
+                                 gt: torch.Tensor,
+                                 mask: torch.Tensor,
+                                 prefix: Optional[str] = 'stage1_') -> dict:
         """Calculate multiple types of losses.
 
         Args:
@@ -213,7 +219,8 @@ class TwoStageInpaintor(OneStageInpaintor):
 
         return loss_dict
 
-    def train_step(self, data: List[dict], optim_wrapper):
+    def train_step(self, data: List[dict],
+                   optim_wrapper: OptimWrapperDict) -> dict:
         """Train step function.
 
         In this function, the inpaintor will finish the train step following
@@ -241,9 +248,8 @@ class TwoStageInpaintor(OneStageInpaintor):
         log_vars = {}
 
         masked_img = batch_inputs  # float
-        gt_img = torch.stack([d.gt_img.data
-                              for d in data_samples])  # float, [-1,1]
-        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        gt_img = data_samples.gt_img
+        mask = data_samples.mask
         mask = mask.float()
 
         # get common output from encdec

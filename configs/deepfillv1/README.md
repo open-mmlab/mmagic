@@ -22,15 +22,15 @@ Recent deep learning based approaches have shown promising results for the chall
 
 **Places365-Challenge**
 
-|                             Method                              |  Mask Type  | Resolution | Train Iters |   Test Set    | l1 error |  PSNR  | SSIM  | GPU Info |                             Download                              |
-| :-------------------------------------------------------------: | :---------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :------: | :---------------------------------------------------------------: |
-| [DeepFillv1](/configs/deepfillv1/deepfillv1_8xb2_places-256x256.py) | square bbox |  256x256   |    3500k    | Places365-val |  11.019  | 23.429 | 0.862 |    8     | [model](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.log.json) |
+|                       Model                       |  Mask Type  | Resolution | Train Iters |    Dataset    | l1 error |  PSNR  | SSIM  | Training Resources |                               Download                                |
+| :-----------------------------------------------: | :---------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :----------------: | :-------------------------------------------------------------------: |
+| [DeepFillv1](./deepfillv1_8xb2_places-256x256.py) | square bbox |  256x256   |    3500k    | Places365-val |  11.019  | 23.429 | 0.862 |         8          | [model](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.log.json) |
 
 **CelebA-HQ**
 
-|                              Method                              |  Mask Type  | Resolution | Train Iters |  Test Set  | l1 error |  PSNR  | SSIM  | GPU Info |                              Download                               |
-| :--------------------------------------------------------------: | :---------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :------: | :-----------------------------------------------------------------: |
-| [DeepFillv1](/configs/deepfillv1/deepfillv1_4xb4_celeba-256x256.py) | square bbox |  256x256   |    1500k    | CelebA-val |  6.677   | 26.878 | 0.911 |    4     | [model](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba_20200619-dd51a855.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba_20200619-dd51a855.log.json) |
+|                       Model                       |  Mask Type  | Resolution | Train Iters |  Dataset   | l1 error |  PSNR  | SSIM  | Training Resources |                                 Download                                 |
+| :-----------------------------------------------: | :---------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :----------------: | :----------------------------------------------------------------------: |
+| [DeepFillv1](./deepfillv1_4xb4_celeba-256x256.py) | square bbox |  256x256   |    1500k    | CelebA-val |  6.677   | 26.878 | 0.911 |         4          | [model](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba_20200619-dd51a855.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba_20200619-dd51a855.log.json) |
 
 ## Quick Start
 

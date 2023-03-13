@@ -3,7 +3,7 @@ import pytest
 import torch
 
 from mmedit.models.editors.dcgan import DCGANGenerator
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
 class TestDCGANGenerator(object):
@@ -17,7 +17,7 @@ class TestDCGANGenerator(object):
     def test_dcgan_generator(self):
 
         # test default setting with builder
-        g = MODULES.build(self.default_config)
+        g = MODELS.build(self.default_config)
         assert isinstance(g, DCGANGenerator)
         assert g.num_upsamples == 2
         assert not g.output_layer.with_norm
@@ -72,7 +72,7 @@ class TestDCGANGenerator(object):
         if not torch.cuda.is_available():
             return
 
-        g = MODULES.build(self.default_config).cuda()
+        g = MODELS.build(self.default_config).cuda()
         assert isinstance(g, DCGANGenerator)
         assert g.num_upsamples == 2
         assert not g.output_layer.with_norm

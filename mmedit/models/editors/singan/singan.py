@@ -15,7 +15,7 @@ from torch import Tensor
 
 from mmedit.models.utils import get_module_device
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils import ForwardInputs, SampleList
 from ...base_models import BaseGAN
 from ...utils import set_requires_grad
@@ -53,7 +53,7 @@ class SinGAN(BaseGAN):
         discriminator (Optional[ModelType]): The config or model of the
             discriminator. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmgen.models.GANDataPreprocessor`.
+            config or :class:`~mmedit.models.EditDataPreprocessor`.
         generator_steps (int): The number of times the generator is completely
             updated before the discriminator is updated. Defaults to 1.
         discriminator_steps (int): The number of times the discriminator is
@@ -202,27 +202,18 @@ class SinGAN(BaseGAN):
         mode = 'rand' if mode is None else mode
         curr_scale = gen_kwargs.pop('curr_scale', self.curr_stage)
 
-        if sample_model in ['ema', 'ema/orig']:
-            generator = self.generator_ema
-        else:  # model is 'orig'
-            generator = self.generator
-
         self.fixed_noises = [
             x.to(self.data_preprocessor.device) for x in self.fixed_noises
         ]
 
-        outputs = generator(
-            None,
-            fixed_noises=self.fixed_noises,
-            noise_weights=self.noise_weights,
-            rand_mode=mode,
-            num_batches=1,
-            curr_scale=curr_scale,
-            **gen_kwargs)
+        batch_sample_list = []
+        if sample_model in ['ema', 'orig']:
+            if sample_model == 'ema':
+                generator = self.generator_ema
+            else:
+                generator = self.generator
 
-        if sample_model == 'ema/orig':
-            generator = self.generator
-            outputs_orig = generator(
+            outputs = generator(
                 None,
                 fixed_noises=self.fixed_noises,
                 noise_weights=self.noise_weights,
@@ -230,40 +221,103 @@ class SinGAN(BaseGAN):
                 num_batches=1,
                 curr_scale=curr_scale,
                 **gen_kwargs)
-            outputs = dict(ema=outputs, orig=outputs_orig)
 
-        batch_sample_list = []
-        for idx in range(num_batches):
             gen_sample = EditDataSample()
-            if data_samples:
-                gen_sample.update(data_samples[idx])
-            if sample_model == 'ema/orig':
-                for model_ in ['ema', 'orig']:
-                    model_sample_ = EditDataSample()
-                    output_ = outputs[model_]
-                    if isinstance(output_, dict):
-                        fake_img = PixelData(data=output_['fake_img'][idx])
-                        prev_res_list = [
-                            r[idx] for r in outputs[model_]['prev_res_list']
-                        ]
-                        model_sample_.prev_res_list = prev_res_list
-                    else:
-                        fake_img = PixelData(data=output_[idx])
-                    model_sample_.fake_img = fake_img
-                    model_sample_.sample_model = sample_model
-                    gen_sample.set_field(model_sample_, model_)
-            elif isinstance(outputs, dict):
-                gen_sample.fake_img = PixelData(data=outputs['fake_img'][idx])
-                gen_sample.prev_res_list = [
-                    r[idx] for r in outputs['prev_res_list']
+            # destruct
+            if isinstance(outputs, dict):
+                outputs['fake_img'] = self.data_preprocessor.destruct(
+                    outputs['fake_img'], data_samples)
+                outputs['prev_res_list'] = [
+                    self.data_preprocessor.destruct(r, data_samples)
+                    for r in outputs['prev_res_list']
                 ]
-                gen_sample.sample_model = sample_model
+                gen_sample.fake_img = self.data_preprocessor.destruct(
+                    outputs['fake_img'], data_samples)
+                # gen_sample.prev_res_list = self.data_preprocessor.destruct(
+                #     outputs['fake_img'], data_samples)
             else:
-                gen_sample.fake_img = PixelData(data=outputs[idx])
+                outputs = self.data_preprocessor.destruct(
+                    outputs, data_samples)
+
+            # save to data sample
+            for idx in range(num_batches):
+                gen_sample = EditDataSample()
+                # save inputs to data sample
+                if data_samples:
+                    gen_sample.update(data_samples[idx])
+                if isinstance(outputs, dict):
+                    gen_sample.fake_img = outputs['fake_img'][idx]
+                    gen_sample.prev_res_list = [
+                        r[idx] for r in outputs['prev_res_list']
+                    ]
+                else:
+                    gen_sample.fake_img = outputs[idx]
+
+                gen_sample.sample_model = sample_model
+                batch_sample_list.append(gen_sample)
+
+        else:  # sample model is 'ema/orig'
+
+            outputs_orig = self.generator(
+                None,
+                fixed_noises=self.fixed_noises,
+                noise_weights=self.noise_weights,
+                rand_mode=mode,
+                num_batches=1,
+                curr_scale=curr_scale,
+                **gen_kwargs)
+            outputs_ema = self.generator_ema(
+                None,
+                fixed_noises=self.fixed_noises,
+                noise_weights=self.noise_weights,
+                rand_mode=mode,
+                num_batches=1,
+                curr_scale=curr_scale,
+                **gen_kwargs)
+
+            # destruct
+            if isinstance(outputs_orig, dict):
+                outputs_orig['fake_img'] = self.data_preprocessor.destruct(
+                    outputs_orig['fake_img'], data_samples)
+                outputs_orig['prev_res_list'] = [
+                    self.data_preprocessor.destruct(r, data_samples)
+                    for r in outputs_orig['prev_res_list']
+                ]
+                outputs_ema['fake_img'] = self.data_preprocessor.destruct(
+                    outputs_ema['fake_img'], data_samples)
+                outputs_ema['prev_res_list'] = [
+                    self.data_preprocessor.destruct(r, data_samples)
+                    for r in outputs_ema['prev_res_list']
+                ]
+            else:
+                outputs_orig = self.data_preprocessor.destruct(
+                    outputs_orig, data_samples)
+                outputs_ema = self.data_preprocessor.destruct(
+                    outputs_ema, data_samples)
+
+            # save to data sample
+            for idx in range(num_batches):
+                gen_sample = EditDataSample()
+                gen_sample.ema = EditDataSample()
+                gen_sample.orig = EditDataSample()
+                # save inputs to data sample
+                if data_samples:
+                    gen_sample.update(data_samples[idx])
+                if isinstance(outputs_orig, dict):
+                    gen_sample.ema.fake_img = outputs_ema['fake_img'][idx]
+                    gen_sample.ema.prev_res_list = [
+                        r[idx] for r in outputs_ema['prev_res_list']
+                    ]
+                    gen_sample.orig.fake_img = outputs_orig['fake_img'][idx]
+                    gen_sample.orig.prev_res_list = [
+                        r[idx] for r in outputs_orig['prev_res_list']
+                    ]
+                else:
+                    gen_sample.ema.fake_img = outputs_ema[idx]
+                    gen_sample.orig.fake_img = outputs_orig[idx]
                 gen_sample.sample_model = sample_model
 
-            batch_sample_list.append(gen_sample)
-
+                batch_sample_list.append(gen_sample)
         return batch_sample_list
 
     def gen_loss(self, disc_pred_fake: Tensor,
@@ -414,7 +468,7 @@ class SinGAN(BaseGAN):
     def train_gan(self, inputs_dict: dict, data_sample: List[EditDataSample],
                   optim_wrapper: OptimWrapperDict) -> Dict[str, torch.Tensor]:
         """Train GAN model. In the training of GAN models, generator and
-        discriminator are updated alternatively. In MMGeneration's design,
+        discriminator are updated alternatively. In MMEditing's design,
         `self.train_step` is called with data input. Therefore we always update
         discriminator, whose updating is relay on real data, and then determine
         if the generator needs to be updated based on the current number of

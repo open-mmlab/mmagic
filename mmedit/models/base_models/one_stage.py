@@ -1,13 +1,18 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 import torch
 from mmengine.config import Config
 from mmengine.model import BaseModel
+from mmengine.optim import OptimWrapperDict
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
+from mmedit.utils import SampleList
 from ..utils import set_requires_grad
+
+FORWARD_RETURN_TYPE = Union[dict, torch.Tensor,
+                            Tuple[torch.Tensor, torch.Tensor], SampleList]
 
 
 @MODELS.register_module()
@@ -45,18 +50,18 @@ class OneStageInpaintor(BaseModel):
 
     def __init__(self,
                  data_preprocessor: Union[dict, Config],
-                 encdec,
-                 disc=None,
-                 loss_gan=None,
-                 loss_gp=None,
-                 loss_disc_shift=None,
-                 loss_composed_percep=None,
-                 loss_out_percep=False,
-                 loss_l1_hole=None,
-                 loss_l1_valid=None,
-                 loss_tv=None,
-                 train_cfg=None,
-                 test_cfg=None,
+                 encdec: dict,
+                 disc: Optional[dict] = None,
+                 loss_gan: Optional[dict] = None,
+                 loss_gp: Optional[dict] = None,
+                 loss_disc_shift: Optional[dict] = None,
+                 loss_composed_percep: Optional[dict] = None,
+                 loss_out_percep: bool = False,
+                 loss_l1_hole: Optional[dict] = None,
+                 loss_l1_valid: Optional[dict] = None,
+                 loss_tv: Optional[dict] = None,
+                 train_cfg: Optional[dict] = None,
+                 test_cfg: Optional[dict] = None,
                  init_cfg: Optional[dict] = None):
         super().__init__(
             data_preprocessor=data_preprocessor, init_cfg=init_cfg)
@@ -99,7 +104,10 @@ class OneStageInpaintor(BaseModel):
 
         self.disc_step_count = 0
 
-    def forward(self, inputs, data_samples, mode='tensor'):
+    def forward(self,
+                inputs: torch.Tensor,
+                data_samples: Optional[SampleList],
+                mode: str = 'tensor') -> FORWARD_RETURN_TYPE:
         """Forward function.
 
         Args:
@@ -135,7 +143,8 @@ class OneStageInpaintor(BaseModel):
         elif mode == 'predict':
             # Pre-process runs in BaseModel.val_step / test_step
             predictions = self.forward_test(inputs, data_samples)
-            predictions = self.convert_to_datasample(data_samples, predictions)
+            predictions = self.convert_to_datasample(predictions, data_samples,
+                                                     inputs)
             return predictions
         elif mode == 'loss':
             raise NotImplementedError('This mode should not be used in '
@@ -144,7 +153,8 @@ class OneStageInpaintor(BaseModel):
         else:
             raise ValueError('Invalid forward mode.')
 
-    def train_step(self, data: List[dict], optim_wrapper):
+    def train_step(self, data: List[dict],
+                   optim_wrapper: OptimWrapperDict) -> dict:
         """Train step function.
 
         In this function, the inpaintor will finish the train step following
@@ -173,9 +183,8 @@ class OneStageInpaintor(BaseModel):
         log_vars = {}
 
         masked_img = batch_inputs  # float
-        gt_img = torch.stack([d.gt_img.data
-                              for d in data_samples])  # float, [-1,1]
-        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        # gt_img: float [-1, 1], mask: uint8 [0/1]
+        gt_img, mask = data_samples.gt_img, data_samples.mask
         mask = mask.float()
 
         # get common output from encdec
@@ -244,7 +253,7 @@ class OneStageInpaintor(BaseModel):
 
         return log_vars
 
-    def forward_train(self, *args, **kwargs):
+    def forward_train(self, *args, **kwargs) -> None:
         """Forward function for training.
 
         In this version, we do not use this interface.
@@ -253,7 +262,8 @@ class OneStageInpaintor(BaseModel):
                                   'current training schedule. Please use '
                                   '`train_step` for training.')
 
-    def forward_train_d(self, data_batch, is_real, is_disc):
+    def forward_train_d(self, data_batch: torch.Tensor, is_real: bool,
+                        is_disc: bool) -> dict:
         """Forward function in discriminator training step.
 
         In this function, we compute the prediction for each data batch (real
@@ -285,7 +295,9 @@ class OneStageInpaintor(BaseModel):
 
         return loss
 
-    def generator_loss(self, fake_res, fake_img, gt, mask, masked_img):
+    def generator_loss(self, fake_res: torch.Tensor, fake_img: torch.Tensor,
+                       gt: torch.Tensor, mask: torch.Tensor,
+                       masked_img: torch.Tensor) -> Tuple[dict, dict]:
         """Forward function in generator training step.
 
         In this function, we mainly compute the loss items for generator with
@@ -349,7 +361,8 @@ class OneStageInpaintor(BaseModel):
 
         return res, loss
 
-    def forward_tensor(self, inputs, data_samples):
+    def forward_tensor(self, inputs: torch.Tensor, data_samples: SampleList
+                       ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Forward function in tensor mode.
 
         Args:
@@ -363,14 +376,14 @@ class OneStageInpaintor(BaseModel):
         # Pre-process runs in BaseModel.val_step / test_step
         masked_imgs = inputs  # N,3,H,W
 
-        masks = torch.stack(
-            list(d.mask.data for d in data_samples), dim=0)  # N,1,H,W
+        masks = data_samples.mask  # N,1,H,W
         input_xs = torch.cat([masked_imgs, masks], dim=1)  # N,4,H,W
         fake_reses = self.generator(input_xs)
         fake_imgs = fake_reses * masks + masked_imgs * (1. - masks)
         return fake_reses, fake_imgs
 
-    def forward_test(self, inputs, data_samples):
+    def forward_test(self, inputs: torch.Tensor,
+                     data_samples: SampleList) -> EditDataSample:
         """Forward function for testing.
 
         Args:
@@ -384,20 +397,44 @@ class OneStageInpaintor(BaseModel):
         fake_reses, fake_imgs = self.forward_tensor(inputs, data_samples)
 
         predictions = []
-        for (fr, fi) in zip(fake_reses, fake_imgs):
-            fi = (fi * 127.5 + 127.5)
-            fr = (fr * 127.5 + 127.5)
-            pred = EditDataSample(
-                fake_res=fr, fake_img=fi, pred_img=PixelData(data=fi))
-            predictions.append(pred)
+        fake_reses = self.data_preprocessor.destruct(fake_reses, data_samples)
+        fake_imgs = self.data_preprocessor.destruct(fake_imgs, data_samples)
+
+        # create a stacked data sample here
+        predictions = EditDataSample(
+            fake_res=fake_reses, fake_img=fake_imgs, pred_img=fake_imgs)
+
         return predictions
 
-    def convert_to_datasample(self, inputs, data_samples):
-        for data_sample, output in zip(inputs, data_samples):
-            data_sample.output = output
-        return inputs
+    def convert_to_datasample(self, predictions: EditDataSample,
+                              data_samples: EditDataSample,
+                              inputs: Optional[torch.Tensor]
+                              ) -> List[EditDataSample]:
+        """Add predictions and destructed inputs (if passed) to data samples.
 
-    def forward_dummy(self, x):
+        Args:
+            predictions (EditDataSample): The predictions of the model.
+            data_samples (EditDataSample): The data samples loaded from
+                dataloader.
+            inputs (Optional[torch.Tensor]): The input of model. Defaults to
+                None.
+
+        Returns:
+            List[EditDataSample]: Modified data samples.
+        """
+        if inputs is not None:
+            destructed_input = self.data_preprocessor.destruct(
+                inputs, data_samples, 'img')
+            data_samples.set_tensor_data({'input': destructed_input})
+        data_samples = data_samples.split()
+        predictions = predictions.split()
+
+        for data_sample, pred in zip(data_samples, predictions):
+            data_sample.output = pred
+
+        return data_samples
+
+    def forward_dummy(self, x: torch.Tensor) -> torch.Tensor:
         """Forward dummy function for getting flops.
 
         Args:

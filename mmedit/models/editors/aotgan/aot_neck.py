@@ -2,12 +2,13 @@
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
-class AOTBlockNeck(nn.Module):
+@MODELS.register_module()
+class AOTBlockNeck(BaseModule):
     """Dilation backbone used in AOT-GAN model.
 
     This implementation follows:
@@ -45,7 +46,7 @@ class AOTBlockNeck(nn.Module):
         return x
 
 
-class AOTBlock(nn.Module):
+class AOTBlock(BaseModule):
     """AOT Block which constitutes the dilation backbone.
 
     This implementation follows:

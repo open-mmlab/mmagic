@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -10,7 +10,7 @@ from mmengine.model import BaseModel, is_model_wrapper
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
-from mmedit.registry import MODELS, MODULES
+from mmedit.registry import MODELS
 from mmedit.structures import EditDataSample
 from ...base_models import BaseGAN
 from ...losses import gen_path_regularizer, r1_gradient_penalty_loss
@@ -26,16 +26,16 @@ class StyleGAN2(BaseGAN):
 
     Paper link: https://openaccess.thecvf.com/content_CVPR_2020/html/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.html. # noqa
 
-    :class:~`mmgen.models.architectures.stylegan.generator_discriminator_v2.StyleGANv2Generator`  # noqa
+    :class:`~mmedit.models.editors.stylegan2.StyleGAN2Generator`
     and
-    :class:~`mmgen.models.architectures.stylegan.generator_discriminator_v2.StyleGAN2Discriminator`  # noqa
+    :class:`~mmedit.models.editors.stylegan2.StyleGAN2Discriminator`
 
     Args:
         generator (ModelType): The config or model of the generator.
         discriminator (Optional[ModelType]): The config or model of the
             discriminator. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmgen.models.GenDataPreprocessor`.
+            config or :class:`~mmedit.models.EditDataPreprocessor`.
         generator_steps (int): The number of times the generator is completely
             updated before the discriminator is updated. Defaults to 1.
         discriminator_steps (int): The number of times the discriminator is
@@ -57,7 +57,7 @@ class StyleGAN2(BaseGAN):
         # build generator
         if isinstance(generator, dict):
             self._gen_cfg = deepcopy(generator)
-            generator = MODULES.build(generator)
+            generator = MODELS.build(generator)
         self.generator = generator
 
         # get valid noise_size
@@ -71,7 +71,7 @@ class StyleGAN2(BaseGAN):
                 disc_args = dict()
                 if hasattr(self, 'num_classes'):
                     disc_args['num_classes'] = self.num_classes
-                discriminator = MODULES.build(
+                discriminator = MODELS.build(
                     discriminator, default_args=disc_args)
         self.discriminator = discriminator
 
@@ -166,21 +166,20 @@ class StyleGAN2(BaseGAN):
         loss, log_var = self.parse_losses(losses_dict)
         return loss, log_var
 
-    def train_discriminator(self, inputs: dict,
-                            data_samples: List[EditDataSample],
+    def train_discriminator(self, inputs: dict, data_samples: EditDataSample,
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs['img']
+        real_imgs = data_samples.gt_img
 
         num_batches = real_imgs.shape[0]
 
@@ -199,13 +198,13 @@ class StyleGAN2(BaseGAN):
         message_hub.update_info('disc_pred_real', disc_pred_real)
         return log_vars
 
-    def train_generator(self, inputs: dict, data_samples: List[EditDataSample],
+    def train_generator(self, inputs: dict, data_samples: EditDataSample,
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
@@ -213,7 +212,7 @@ class StyleGAN2(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        num_batches = inputs['img'].shape[0]
+        num_batches = len(data_samples)
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_imgs = self.generator(noise, return_noise=False)
@@ -253,11 +252,11 @@ class StyleGAN2(BaseGAN):
         # NOTE: Do not use context manager of optim_wrapper. Because
         # in mixed-precision training, StyleGAN2 only enable fp16 in
         # specified blocks (refers to `:attr:enable_fp16` in
-        # :class:~`StyleGANv2Generator` and :class:~`StyleGAN2Discriminator`
-        # for more details), but in :func:~`AmpOptimWrapper.optim_context`,
+        # :class:`~StyleGANv2Generator` and :class:`~StyleGAN2Discriminator`
+        # for more details), but in :func:`~AmpOptimWrapper.optim_context`,
         # fp16 is applied to all modules. This may slow down gradient
         # accumulation because `no_sycn` in
-        # :func:~`OptimWrapper.optim_context` will not be called any more.
+        # :func:`~OptimWrapper.optim_context` will not be called any more.
         log_vars = self.train_discriminator(inputs_dict, data_samples,
                                             disc_optimizer_wrapper)
 
@@ -305,7 +304,7 @@ class StyleGAN2(BaseGAN):
 
             log_vars.update(log_vars_gen)
 
-        batch_size = data['inputs']['img'].shape[0]
+        batch_size = len(data['data_samples'])
         # update ada p
         if hasattr(self.discriminator,
                    'with_ada') and self.discriminator.with_ada:

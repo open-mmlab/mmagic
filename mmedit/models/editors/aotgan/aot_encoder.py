@@ -1,12 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
-class AOTEncoder(nn.Module):
+@MODELS.register_module()
+class AOTEncoder(BaseModule):
     """Encoder used in AOT-GAN model.
 
     This implementation follows:

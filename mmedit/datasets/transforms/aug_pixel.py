@@ -20,8 +20,8 @@ class BinarizeImage(BaseTransform):
     Args:
         keys (Sequence[str]): The images to be binarized.
         binary_thr (float): Threshold for binarization.
-        amin (int): Lower limits of pixel value.
-        amx (int): Upper limits of pixel value.
+        a_min (int): Lower limits of pixel value.
+        a_max (int): Upper limits of pixel value.
         dtype (np.dtype): Set the data type of the output. Default: np.uint8
     """
 
@@ -69,7 +69,6 @@ class BinarizeImage(BaseTransform):
         return results
 
     def __repr__(self):
-
         repr_str = self.__class__.__name__
         repr_str += (
             f'(keys={self.keys}, binary_thr={self.binary_thr}, '
@@ -86,8 +85,8 @@ class Clip(BaseTransform):
 
     Args:
         keys (list[str]): The keys whose values are clipped.
-        amin (int): Lower limits of pixel value.
-        amx (int): Upper limits of pixel value.
+        a_min (int): Lower limits of pixel value.
+        a_max (int): Upper limits of pixel value.
     """
 
     def __init__(self, keys, a_min=0, a_max=255):
@@ -97,7 +96,14 @@ class Clip(BaseTransform):
         self.a_max = a_max
 
     def _clip(self, input_):
+        """Clip the pixels.
 
+        Args:
+            input_ (Union[List, np.ndarray]): Pixels to clip.
+
+        Returns:
+            Union[List, np.ndarray]: Clipped pixels.
+        """
         is_single_image = False
         if isinstance(input_, np.ndarray):
             is_single_image = True
@@ -574,10 +580,11 @@ class UnsharpMasking(BaseTransform):
 
         outputs = []
         for img in imgs:
+            img = img.astype(np.float32)
             residue = img - cv2.filter2D(img, -1, self.kernel)
-            mask = np.float32(np.abs(residue) * 255 > self.threshold)
+            mask = np.float32(np.abs(residue) > self.threshold)
             soft_mask = cv2.filter2D(mask, -1, self.kernel)
-            sharpened = np.clip(img + self.weight * residue, 0, 1)
+            sharpened = np.clip(img + self.weight * residue, 0, 255)
 
             outputs.append(soft_mask * sharpened + (1 - soft_mask) * img)
 

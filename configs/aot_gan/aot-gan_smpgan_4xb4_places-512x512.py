@@ -72,7 +72,7 @@ train_pipeline = [
         mask_config=dict(
             mask_list_file=f'{mask_root}/train_mask_list.txt',
             prefix=mask_root,
-            io_backend='disk',
+            io_backend='local',
             flag='unchanged',
             color_type='unchanged',
             file_client_kwargs=dict())),
@@ -108,7 +108,7 @@ test_pipeline = [
         mask_config=dict(
             mask_list_file=f'{mask_root}/mask_0.5-0.6_list.txt',
             prefix=mask_root,
-            io_backend='disk',
+            io_backend='local',
             color_type='unchanged',
             flag='unchanged',
             file_client_kwargs=dict())),
@@ -139,8 +139,8 @@ train_cfg = dict(
     max_iters=500002,
     val_interval=50000,
 )
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(

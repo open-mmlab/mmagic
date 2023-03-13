@@ -4,7 +4,6 @@ from typing import List, Optional
 import torch
 
 from mmedit.models.base_models import OneStageInpaintor
-# from .one_stage import OneStageInpaintor
 from mmedit.models.utils import extract_around_bbox, extract_bbox_patch
 from mmedit.registry import MODELS
 from ...utils import set_requires_grad
@@ -177,12 +176,11 @@ class GLInpaintor(OneStageInpaintor):
         log_vars = {}
 
         masked_img = batch_inputs  # float
-        gt_img = torch.stack([d.gt_img.data
-                              for d in data_samples])  # float, [-1,1]
-        mask = torch.stack([d.mask.data for d in data_samples])  # uint8, {0,1}
+        gt_img = data_samples.gt_img
+        mask = data_samples.mask
         mask = mask.float()
 
-        bbox_tensor = torch.tensor([d.mask_bbox for d in data_samples])  # int
+        bbox_tensor = torch.LongTensor(data_samples.mask_bbox)
 
         input_x = torch.cat([masked_img, mask], dim=1)
         fake_res = self.generator(input_x)

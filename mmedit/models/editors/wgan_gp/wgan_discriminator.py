@@ -5,11 +5,11 @@ import numpy as np
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from .wgan_gp_module import ConvLNModule, WGANDecisionHead
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class WGANGPDiscriminator(nn.Module):
     r"""Discriminator for WGANGP.
 

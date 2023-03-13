@@ -1,11 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Optional
+from typing import Dict, List, Optional, Union
 
 import torch
 from mmengine.model import BaseModel
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 @MODELS.register_module()
@@ -33,12 +33,12 @@ class BaseEditModel(BaseModel):
     """
 
     def __init__(self,
-                 generator,
-                 pixel_loss,
-                 train_cfg=None,
-                 test_cfg=None,
-                 init_cfg=None,
-                 data_preprocessor=None):
+                 generator: dict,
+                 pixel_loss: dict,
+                 train_cfg: Optional[dict] = None,
+                 test_cfg: Optional[dict] = None,
+                 init_cfg: Optional[dict] = None,
+                 data_preprocessor: Optional[dict] = None):
         super().__init__(
             init_cfg=init_cfg, data_preprocessor=data_preprocessor)
 
@@ -55,7 +55,7 @@ class BaseEditModel(BaseModel):
                 inputs: torch.Tensor,
                 data_samples: Optional[List[EditDataSample]] = None,
                 mode: str = 'tensor',
-                **kwargs):
+                **kwargs) -> Union[torch.Tensor, List[EditDataSample], dict]:
         """Returns losses or predictions of training, validation, testing, and
         simple inference process.
 
@@ -103,25 +103,55 @@ class BaseEditModel(BaseModel):
                 - If ``mode == tensor``, return a tensor or ``tuple`` of tensor
                   or ``dict`` or tensor for custom use.
         """
-
+        if isinstance(inputs, dict):
+            inputs = inputs['img']
         if mode == 'tensor':
             return self.forward_tensor(inputs, data_samples, **kwargs)
 
         elif mode == 'predict':
             predictions = self.forward_inference(inputs, data_samples,
                                                  **kwargs)
-            predictions = self.convert_to_datasample(data_samples, predictions)
+            predictions = self.convert_to_datasample(predictions, data_samples,
+                                                     inputs)
             return predictions
 
         elif mode == 'loss':
             return self.forward_train(inputs, data_samples, **kwargs)
 
-    def convert_to_datasample(self, inputs, data_samples):
-        for data_sample, output in zip(inputs, data_samples):
-            data_sample.output = output
-        return inputs
+    def convert_to_datasample(self, predictions: EditDataSample,
+                              data_samples: EditDataSample,
+                              inputs: Optional[torch.Tensor]
+                              ) -> List[EditDataSample]:
+        """Add predictions and destructed inputs (if passed) to data samples.
 
-    def forward_tensor(self, inputs, data_samples=None, **kwargs):
+        Args:
+            predictions (EditDataSample): The predictions of the model.
+            data_samples (EditDataSample): The data samples loaded from
+                dataloader.
+            inputs (Optional[torch.Tensor]): The input of model. Defaults to
+                None.
+
+        Returns:
+            List[EditDataSample]: Modified data samples.
+        """
+
+        if inputs is not None:
+            destructed_input = self.data_preprocessor.destruct(
+                inputs, data_samples, 'img')
+            data_samples.set_tensor_data({'input': destructed_input})
+        # split to list of data samples
+        data_samples = data_samples.split()
+        predictions = predictions.split()
+
+        for data_sample, pred in zip(data_samples, predictions):
+            data_sample.output = pred
+
+        return data_samples
+
+    def forward_tensor(self,
+                       inputs: torch.Tensor,
+                       data_samples: Optional[List[EditDataSample]] = None,
+                       **kwargs) -> torch.Tensor:
         """Forward tensor. Returns result of simple forward.
 
         Args:
@@ -138,7 +168,10 @@ class BaseEditModel(BaseModel):
 
         return feats
 
-    def forward_inference(self, inputs, data_samples=None, **kwargs):
+    def forward_inference(self,
+                          inputs: torch.Tensor,
+                          data_samples: Optional[List[EditDataSample]] = None,
+                          **kwargs) -> EditDataSample:
         """Forward inference. Returns predictions of validation, testing, and
         simple inference.
 
@@ -149,21 +182,21 @@ class BaseEditModel(BaseModel):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            List[EditDataSample]: predictions.
+            EditDataSample: predictions.
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
-        feats = self.data_preprocessor.destructor(feats)
-        predictions = []
-        for idx in range(feats.shape[0]):
-            predictions.append(
-                EditDataSample(
-                    pred_img=PixelData(data=feats[idx].to('cpu')),
-                    metainfo=data_samples[idx].metainfo))
+        feats = self.data_preprocessor.destruct(feats, data_samples)
+
+        # create a stacked data sample here
+        predictions = EditDataSample(pred_img=feats.cpu())
 
         return predictions
 
-    def forward_train(self, inputs, data_samples=None, **kwargs):
+    def forward_train(self,
+                      inputs: torch.Tensor,
+                      data_samples: Optional[List[EditDataSample]] = None,
+                      **kwargs) -> Dict[str, torch.Tensor]:
         """Forward training. Returns dict of losses of training.
 
         Args:
@@ -177,8 +210,7 @@ class BaseEditModel(BaseModel):
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
-        gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
-        batch_gt_data = torch.stack(gt_imgs)
+        batch_gt_data = data_samples.gt_img
 
         loss = self.pixel_loss(feats, batch_gt_data)
 

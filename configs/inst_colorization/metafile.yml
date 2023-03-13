@@ -1,19 +1,18 @@
 Collections:
-- Metadata:
-    Architecture:
-    - Instance-aware Image Colorization
-  Name: Instance-aware Image Colorization
+- Name: Instance-aware Image Colorization
   Paper:
-  - https://openaccess.thecvf.com/content_CVPR_2020/html/Su_Instance-Aware_Image_Colorization_CVPR_2020_paper.html
+    Title: Instance-Aware Image Colorization
+    URL: https://openaccess.thecvf.com/content_CVPR_2020/html/Su_Instance-Aware_Image_Colorization_CVPR_2020_paper.html
   README: configs/inst_colorization/README.md
+  Task:
+  - colorization
+  Year: 2020
 Models:
 - Config: configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py
   In Collection: Instance-aware Image Colorization
-  Metadata:
-    Training Data: Others
   Name: inst-colorizatioon_full_official_cocostuff-256x256
   Results:
-  - Dataset: Others
+  - Dataset: MS-COCO
     Metrics: {}
-    Task: Inst_colorization
-  Weights: https://openmmlab-share.oss-cn-hangzhou.aliyuncs.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth
+    Task: Colorization
+  Weights: https://download.openmmlab.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth

@@ -6,7 +6,7 @@ from mmengine.model import BaseModule
 
 from mmedit.models.base_archs import PixelShufflePack
 from mmedit.models.utils import make_layer
-from mmedit.registry import COMPONENTS, MODELS
+from mmedit.registry import MODELS
 from ..esrgan.rrdb_net import RRDB
 
 
@@ -29,11 +29,11 @@ class GLEANStyleGANv2(BaseModule):
     ``pretrained`` argument. We have already offered official weights as
     follows:
 
-    - styelgan2-ffhq-config-f: http://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth  # noqa
-    - stylegan2-horse-config-f: http://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-horse-config-f-official_20210327_173203-ef3e69ca.pth  # noqa
-    - stylegan2-car-config-f: http://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-car-config-f-official_20210327_172340-8cfe053c.pth  # noqa
-    - styelgan2-cat-config-f: http://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-cat-config-f-official_20210327_172444-15bc485b.pth  # noqa
-    - stylegan2-church-config-f: http://download.openmmlab.com/mmgen/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth  # noqa
+    - styelgan2-ffhq-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth  # noqa
+    - stylegan2-horse-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-horse-config-f-official_20210327_173203-ef3e69ca.pth  # noqa
+    - stylegan2-car-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-car-config-f-official_20210327_172340-8cfe053c.pth  # noqa
+    - styelgan2-cat-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-cat-config-f-official_20210327_172444-15bc485b.pth  # noqa
+    - stylegan2-church-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth  # noqa
 
     If you want to load the ema model, you can just use following codes:
 
@@ -111,7 +111,7 @@ class GLEANStyleGANv2(BaseModule):
                              f'{in_size} and {out_size}.')
 
         # latent bank (StyleGANv2), with weights being fixed
-        self.generator = COMPONENTS.build(
+        self.generator = MODELS.build(
             dict(
                 type='StyleGANv2Generator',
                 out_size=out_size,

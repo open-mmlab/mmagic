@@ -1,11 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Union
+
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class GANLossComps(nn.Module):
     """Define GAN loss.
 
@@ -20,10 +23,10 @@ class GANLossComps(nn.Module):
     """
 
     def __init__(self,
-                 gan_type,
-                 real_label_val=1.0,
-                 fake_label_val=0.0,
-                 loss_weight=1.0):
+                 gan_type: str,
+                 real_label_val: float = 1.0,
+                 fake_label_val: float = 0.0,
+                 loss_weight: float = 1.0) -> None:
         super().__init__()
         self.gan_type = gan_type
         self.loss_weight = loss_weight
@@ -44,7 +47,7 @@ class GANLossComps(nn.Module):
             raise NotImplementedError(
                 f'GAN type {self.gan_type} is not implemented.')
 
-    def _wgan_loss(self, input, target):
+    def _wgan_loss(self, input: torch.Tensor, target: bool) -> torch.Tensor:
         """wgan loss.
 
         Args:
@@ -56,7 +59,8 @@ class GANLossComps(nn.Module):
         """
         return -input.mean() if target else input.mean()
 
-    def _wgan_logistic_ns_loss(self, input, target):
+    def _wgan_logistic_ns_loss(self, input: torch.Tensor,
+                               target: bool) -> torch.Tensor:
         """WGAN loss in logistically non-saturating mode.
 
         This loss is widely used in StyleGANv2.
@@ -72,7 +76,8 @@ class GANLossComps(nn.Module):
         return F.softplus(-input).mean() if target else F.softplus(
             input).mean()
 
-    def get_target_label(self, input, target_is_real):
+    def get_target_label(self, input: torch.Tensor,
+                         target_is_real: bool) -> Union[bool, torch.Tensor]:
         """Get target label.
 
         Args:
@@ -90,7 +95,10 @@ class GANLossComps(nn.Module):
             self.real_label_val if target_is_real else self.fake_label_val)
         return input.new_ones(input.size()) * target_val
 
-    def forward(self, input, target_is_real, is_disc=False):
+    def forward(self,
+                input: torch.Tensor,
+                target_is_real: bool,
+                is_disc: bool = False) -> torch.Tensor:
         """
         Args:
             input (Tensor): The input for the loss module, i.e., the network

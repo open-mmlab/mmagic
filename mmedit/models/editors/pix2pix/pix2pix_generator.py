@@ -3,12 +3,12 @@ import torch.nn as nn
 from mmengine.logging import MMLogger
 from mmengine.runner import load_checkpoint
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ...utils import generation_init_weights
 from .pix2pix_modules import UnetSkipConnectionBlock
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class UnetGenerator(nn.Module):
     """Construct the Unet-based generator from the innermost layer to the
     outermost layer, which is a recursive process.

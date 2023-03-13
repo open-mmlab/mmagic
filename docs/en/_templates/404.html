@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>Page Not Found</h1>
+<p>
+  Oops! The page you are looking for cannot be found.
+</p>
+<p>
+    This is likely to happen when you are switching document versions and the page you are reading is moved to another location in the new version. You can look for it in the content table left, or go to <a href="{{ pathto(root_doc) }}">the homepage</a>.
+</p>
+<p>
+  If you cannot find documentation you want, please <a href="https://github.com/open-mmlab/mmediting/issues/new/choose">open an issue</a> to tell us!
+</p>
+
+{% endblock %}

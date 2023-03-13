@@ -12,10 +12,7 @@ model = dict(
         type='MattorPreprocessor',
         mean=[123.675, 116.28, 103.53],
         std=[58.395, 57.12, 57.375],
-        bgr_to_rgb=True,
-        proc_inputs='normalize',
         proc_trimap='rescale_to_zero_one',
-        proc_gt='rescale_to_zero_one',
     ),
     backbone=dict(
         type='SimpleEncoderDecoder',
@@ -80,8 +77,8 @@ train_cfg = dict(
     max_iters=1_000_000,
     val_interval=40000,
 )
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(

@@ -7,7 +7,7 @@ import pytest
 import torch
 from mmengine.logging import HistoryBuffer, MessageHub, MMLogger
 
-from mmedit.engine import GenLogProcessor as LogProcessor
+from mmedit.engine import EditLogProcessor as LogProcessor
 
 
 class TestLogProcessor:
@@ -91,7 +91,7 @@ class TestLogProcessor:
         if by_epoch:
             if mode == 'train':
                 cur_epoch = log_processor._get_epoch(self.runner, mode)
-                log_str = (f'Epoch({mode}) [{cur_epoch}][2/'
+                log_str = (f'Epoch({mode})  [{cur_epoch}][ 2/'
                            f'{len(cur_loop.dataloader)}]  ')
             elif mode == 'val':
                 cur_epoch = log_processor._get_epoch(self.runner, mode)
@@ -158,6 +158,22 @@ class TestLogProcessor:
                 assert out == 'Iter(test) [5/5]  accuracy: 0.9000'
             else:
                 assert out == 'Iter(val) [10/10]  accuracy: 0.9000'
+
+    def test_non_scalar(self):
+        # test with non scalar
+        metric1 = np.random.rand(10)
+        metric2 = torch.tensor(10)
+
+        log_processor = LogProcessor()
+        # Collect with prefix.
+        log_infos = {'test/metric1': metric1, 'test/metric2': metric2}
+        self.runner.message_hub._runtime_info = log_infos
+        tag = log_processor._collect_non_scalars(self.runner, mode='test')
+        # Test training key in tag.
+        assert list(tag.keys()) == ['metric1', 'metric2']
+        # Test statistics lr with `current`, loss and time with 'mean'
+        assert tag['metric1'] is metric1
+        assert tag['metric2'] is metric2
 
     def test_collect_scalars(self):
         history_count = np.ones(100)
@@ -243,6 +259,7 @@ class TestLogProcessor:
         runner = MagicMock()
         runner.epoch = 1
         runner.iter = 10
+        runner.max_epochs = 10
         runner.max_iters = 50
         runner.train_dataloader = [0] * 20
         runner.val_dataloader = [0] * 10

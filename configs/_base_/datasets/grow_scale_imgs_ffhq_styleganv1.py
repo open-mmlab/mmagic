@@ -1,8 +1,8 @@
 dataset_type = 'GrowScaleImgDataset'
 
 pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
-    dict(type='Flip', keys=['img'], direction='horizontal'),
+    dict(type='LoadImageFromFile', key='gt'),
+    dict(type='Flip', keys='gt', direction='horizontal'),
     dict(type='PackEditInputs')
 ]
 
@@ -36,7 +36,8 @@ test_dataloader = dict(
     num_workers=4,
     batch_size=64,
     dataset=dict(
-        type='UnconditionalImageDataset',
+        type='BasicImageDataset',
+        data_prefix=dict(gt=''),
         pipeline=pipeline,
         data_root='./data/ffhq/images'),
     sampler=dict(type='DefaultSampler', shuffle=False))

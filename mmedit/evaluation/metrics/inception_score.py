@@ -61,8 +61,15 @@ class InceptionScore(GenerativeMetric):
             to False.
         fake_key (Optional[str]): Key for get fake images of the output dict.
             Defaults to None.
-        real_key (Optional[str]): Key for get real images from the input dict.
-            Defaults to 'img'.
+        need_cond_input (bool): If true, the sampler will return the
+            conditional input randomly sampled from the original dataset.
+            This require the dataset implement `get_data_info` and field
+            `gt_label` must be contained in the return value of
+            `get_data_info`. Noted that, for unconditional models, set
+            `need_cond_input` as True may influence the result of evaluation
+            results since the conditional inputs are sampled from the dataset
+            distribution; otherwise will be sampled from the uniform
+            distribution. Defaults to False.
         sample_model (str): Sampling mode for the generative model. Support
             'orig' and 'ema'. Defaults to 'orig'.
         collect_device (str, optional): Device name used for collecting results
@@ -91,11 +98,12 @@ class InceptionScore(GenerativeMetric):
                  resize_method='bicubic',
                  use_pillow_resize: bool = True,
                  fake_key: Optional[str] = None,
+                 need_cond_input: bool = False,
                  sample_model='orig',
                  collect_device: str = 'cpu',
                  prefix: str = None):
-        super().__init__(fake_nums, 0, fake_key, None, sample_model,
-                         collect_device, prefix)
+        super().__init__(fake_nums, 0, fake_key, None, need_cond_input,
+                         sample_model, collect_device, prefix)
 
         self.resize = resize
         self.splits = splits
@@ -166,7 +174,7 @@ class InceptionScore(GenerativeMetric):
         if not self.resize:
             return image
         if self.use_pillow_resize:
-            image = (image.clone() * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+            image = image.to(torch.uint8)
             x_np = [x_.permute(1, 2, 0).detach().cpu().numpy() for x_ in image]
 
             # use bicubic resize as default
@@ -177,7 +185,6 @@ class InceptionScore(GenerativeMetric):
             ]
             x_ten = torch.cat(
                 [torch.FloatTensor(np.array(x_)[None, ...]) for x_ in x_pil])
-            x_ten = (x_ten / 127.5 - 1).to(torch.float)
             return x_ten.permute(0, 3, 1, 2)
         else:
             return F.interpolate(
@@ -203,19 +210,20 @@ class InceptionScore(GenerativeMetric):
                 fake_img_ = fake_img_[self.sample_model]
             # get specific fake_keys
             if (self.fake_key is not None and self.fake_key in fake_img_):
-                fake_img_ = fake_img_[self.fake_key]['data']
+                fake_img_ = fake_img_[self.fake_key]
             else:
                 # get img tensor
-                fake_img_ = fake_img_['fake_img']['data']
+                fake_img_ = fake_img_['fake_img']
             fake_imgs.append(fake_img_)
         fake_imgs = torch.stack(fake_imgs, dim=0)
         fake_imgs = self._preprocess(fake_imgs).to(self.device)
 
         if self.inception_style == 'StyleGAN':
-            fake_imgs = (fake_imgs * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+            fake_imgs = fake_imgs.to(torch.uint8)
             with disable_gpu_fuser_on_pt19():
                 feat = self.inception(fake_imgs, no_output_bias=True)
         else:
+            fake_imgs = (fake_imgs - 127.5) / 127.5
             feat = F.softmax(self.inception(fake_imgs), dim=1)
 
         # NOTE: feat is shape like (bz, 1000), convert to a list
@@ -293,8 +301,6 @@ class TransIS(InceptionScore):
             to False.
         fake_key (Optional[str]): Key for get fake images of the output dict.
             Defaults to None.
-        real_key (Optional[str]): Key for get real images from the input dict.
-            Defaults to 'img'.
         sample_model (str): Sampling mode for the generative model. Support
             'orig' and 'ema'. Defaults to 'ema'.
         collect_device (str, optional): Device name used for collecting results
@@ -318,47 +324,12 @@ class TransIS(InceptionScore):
                  sample_model='ema',
                  collect_device: str = 'cpu',
                  prefix: str = None):
+        # NOTE: set `need_cond` as False since we direct return the original
+        # dataloader as sampler
         super().__init__(fake_nums, resize, splits, inception_style,
                          inception_path, resize_method, use_pillow_resize,
-                         fake_key, sample_model, collect_device, prefix)
+                         fake_key, False, sample_model, collect_device, prefix)
         self.SAMPLER_MODE = 'normal'
-
-    def process(self, data_batch: dict, data_samples: Sequence[dict]) -> None:
-        """Process one batch of data samples and predictions. The processed
-        results should be stored in ``self.fake_results``, which will be used
-        to compute the metrics when all batches have been processed.
-
-        Args:
-            data_batch (dict): A batch of data from the dataloader.
-            predictions (Sequence[dict]): A batch of outputs from the model.
-        """
-        if len(self.fake_results) >= self.fake_nums_per_device:
-            return
-
-        fake_imgs = []
-        for pred in data_samples:
-            fake_img_ = pred
-            # get ema/orig results
-            if self.sample_model in fake_img_:
-                fake_img_ = fake_img_[self.sample_model]
-            # get specific fake_keys
-            if (self.fake_key is not None and self.fake_key in fake_img_):
-                fake_img_ = fake_img_[self.fake_key]
-            # get img tensor
-            fake_img_ = fake_img_['data']
-            fake_imgs.append(fake_img_)
-        fake_imgs = torch.stack(fake_imgs, dim=0)
-        fake_imgs = self._preprocess(fake_imgs).to(self.device)
-
-        if self.inception_style == 'StyleGAN':
-            fake_imgs = (fake_imgs * 127.5 + 128).clamp(0, 255).to(torch.uint8)
-            with disable_gpu_fuser_on_pt19():
-                feat = self.inception(fake_imgs, no_output_bias=True)
-        else:
-            feat = F.softmax(self.inception(fake_imgs), dim=1)
-
-        # NOTE: feat is shape like (bz, 1000), convert to a list
-        self.fake_results += list(torch.split(feat, 1))
 
     def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
                            metrics: List['GenerativeMetric']) -> DataLoader:

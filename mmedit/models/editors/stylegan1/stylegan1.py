@@ -24,19 +24,19 @@ class StyleGAN1(ProgressiveGrowingGAN):
 
     <https://openaccess.thecvf.com/content_CVPR_2019/html/Karras_A_Style-Based_Generator_Architecture_for_Generative_Adversarial_Networks_CVPR_2019_paper.html>`_  # noqa
     (StyleGANv1). This class is inheriant from
-    :class:~`ProgressiveGrowingGAN` to support progressive training.
+    :class:`~ProgressiveGrowingGAN` to support progressive training.
 
     Detailed architecture can be found in
-    :class:~`mmgen.models.architectures.stylegan.generator_discriminator_v1.StyleGANv1Generator`  # noqa
+    :class:`~mmedit.models.editors.stylegan1.StyleGAN1Generator`
     and
-    :class:~`mmgen.models.architectures.stylegan.generator_discriminator_v1.StyleGAN1Discriminator`  # noqa
+    :class:`~mmedit.models.editors.stylegan1.StyleGAN1Discriminator`
 
     Args:
         generator (ModelType): The config or model of the generator.
         discriminator (Optional[ModelType]): The config or model of the
             discriminator. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmgen.models.GenDataPreprocessor`.
+            config or :class:`~mmedit.models.EditDataPreprocessor`.
         style_channels (int): The number of channels for style code. Defaults
             to 128.
         nkimgs_per_scale (dict): The number of images need for each

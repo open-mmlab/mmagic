@@ -1,14 +1,17 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch.nn as nn
 from mmcv.cnn import ConvModule
 from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
+from torch import Tensor
 
 from mmedit.models.base_archs import LinearModule
-from mmedit.registry import COMPONENTS
+from mmedit.registry import MODELS
 
 
-@COMPONENTS.register_module()
+@MODELS.register_module()
 class MultiLayerDiscriminator(nn.Module):
     """Multilayer Discriminator.
 
@@ -44,19 +47,19 @@ class MultiLayerDiscriminator(nn.Module):
     """
 
     def __init__(self,
-                 in_channels,
-                 max_channels,
-                 num_convs=5,
-                 fc_in_channels=None,
-                 fc_out_channels=1024,
-                 kernel_size=5,
-                 conv_cfg=None,
-                 norm_cfg=None,
-                 act_cfg=dict(type='ReLU'),
-                 out_act_cfg=dict(type='ReLU'),
-                 with_input_norm=True,
-                 with_out_convs=False,
-                 with_spectral_norm=False,
+                 in_channels: int,
+                 max_channels: int,
+                 num_convs: int = 5,
+                 fc_in_channels: Optional[int] = None,
+                 fc_out_channels: int = 1024,
+                 kernel_size: int = 5,
+                 conv_cfg: Optional[dict] = None,
+                 norm_cfg: Optional[dict] = None,
+                 act_cfg: Optional[dict] = dict(type='ReLU'),
+                 out_act_cfg: Optional[dict] = dict(type='ReLU'),
+                 with_input_norm: bool = True,
+                 with_out_convs: bool = False,
+                 with_spectral_norm: bool = False,
                  **kwargs):
         super().__init__()
         if fc_in_channels is not None:
@@ -128,7 +131,7 @@ class MultiLayerDiscriminator(nn.Module):
                 act_cfg=out_act_cfg,
                 with_spectral_norm=with_spectral_norm)
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """Forward Function.
 
         Args:
@@ -149,7 +152,7 @@ class MultiLayerDiscriminator(nn.Module):
 
         return x
 
-    def init_weights(self, pretrained=None):
+    def init_weights(self, pretrained: Optional[str] = None) -> None:
         """Init weights for models.
 
         Args:

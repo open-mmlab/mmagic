@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Dict, List, Tuple
+from typing import Dict, Tuple
 
 import torch
 import torch.nn.functional as F
@@ -20,9 +20,9 @@ class DCGAN(BaseGAN):
         <https://arxiv.org/abs/1511.06434>`_ (DCGAN).
 
     Detailed architecture can be found in
-    :class:~`mmgen.models.architectures.dcgan.generator_discriminator.DCGANGenerator`  # noqa
+    :class:`~mmedit.models.editors.dcgan.DCGANGenerator`  # noqa
     and
-    :class:~`mmgen.models.architectures.dcgan.generator_discriminator.DCGANDiscriminator`  # noqa
+    :class:`~mmedit.models.editors.dcgan.DCGANDiscriminator`  # noqa
     """
 
     def disc_loss(self, disc_pred_fake: Tensor,
@@ -64,22 +64,20 @@ class DCGAN(BaseGAN):
         loss, log_var = self.parse_losses(losses_dict)
         return loss, log_var
 
-    def train_discriminator(self, inputs: dict,
-                            data_samples: List[EditDataSample],
+    def train_discriminator(self, inputs: dict, data_samples: EditDataSample,
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs['img']
-
+        real_imgs = data_samples.gt_img
         num_batches = real_imgs.shape[0]
 
         noise_batch = self.noise_fn(num_batches=num_batches)
@@ -94,13 +92,13 @@ class DCGAN(BaseGAN):
         optimizer_wrapper.update_params(parsed_losses)
         return log_vars
 
-    def train_generator(self, inputs: dict, data_samples: List[EditDataSample],
+    def train_generator(self, inputs: dict, data_samples: EditDataSample,
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
@@ -108,7 +106,7 @@ class DCGAN(BaseGAN):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        num_batches = inputs['img'].shape[0]
+        num_batches = len(data_samples)
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_imgs = self.generator(noise=noise, return_noise=False)

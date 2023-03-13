@@ -237,6 +237,16 @@ class MultiScaleStructureSimilarity(GenerativeMetric):
             Defaults to None.
         real_key (Optional[str]): Key for get real images from the input dict.
             Defaults to 'img'.
+        need_cond_input (bool): If true, the sampler will return the
+            conditional input randomly sampled from the original dataset.
+            This require the dataset implement `get_data_info` and field
+            `gt_label` must be contained in the return value of
+            `get_data_info`. Noted that, for unconditional models, set
+            `need_cond_input` as True may influence the result of evaluation
+            results since the conditional inputs are sampled from the dataset
+            distribution; otherwise will be sampled from the uniform
+            distribution. Defaults to False.
+
         sample_model (str): Sampling mode for the generative model. Support
             'orig' and 'ema'. Defaults to 'ema'.
         collect_device (str, optional): Device name used for collecting results
@@ -252,11 +262,12 @@ class MultiScaleStructureSimilarity(GenerativeMetric):
     def __init__(self,
                  fake_nums: int,
                  fake_key: Optional[str] = None,
+                 need_cond_input: bool = False,
                  sample_model: str = 'ema',
                  collect_device: str = 'cpu',
                  prefix: Optional[str] = None) -> None:
-        super().__init__(fake_nums, 0, fake_key, None, sample_model,
-                         collect_device, prefix)
+        super().__init__(fake_nums, 0, fake_key, None, need_cond_input,
+                         sample_model, collect_device, prefix)
 
         assert fake_nums % 2 == 0
         self.num_pairs = fake_nums // 2
@@ -280,20 +291,17 @@ class MultiScaleStructureSimilarity(GenerativeMetric):
                 fake_img_ = fake_img_[self.sample_model]
             # get specific fake_keys
             if (self.fake_key is not None and self.fake_key in fake_img_):
-                fake_img_ = fake_img_[self.fake_key]['data']
+                fake_img_ = fake_img_[self.fake_key]
             else:
                 # get img tensor
-                fake_img_ = fake_img_['fake_img']['data']
+                fake_img_ = fake_img_['fake_img']
             fake_imgs.append(fake_img_)
         minibatch = torch.stack(fake_imgs, dim=0)
 
         assert minibatch.shape[0] % 2 == 0, 'batch size must be divided by 2.'
-        minibatch = ((minibatch + 1) / 2)
-        minibatch = minibatch.clamp_(0, 1)
+
         half1 = minibatch[0::2].cpu().data.numpy().transpose((0, 2, 3, 1))
-        half1 = (half1 * 255).astype('uint8')
         half2 = minibatch[1::2].cpu().data.numpy().transpose((0, 2, 3, 1))
-        half2 = (half2 * 255).astype('uint8')
 
         scores = ms_ssim(half1, half2, reduce_mean=False)
         self.fake_results += [torch.Tensor([s]) for s in scores.tolist()]

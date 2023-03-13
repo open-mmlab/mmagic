@@ -1,12 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
+import torch
 import torch.nn as nn
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ..gan_loss import (disc_shift_loss, gradient_penalty_loss,
                         r1_gradient_penalty_loss)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class DiscShiftLossComps(nn.Module):
     """Disc Shift Loss.
 
@@ -63,15 +66,15 @@ class DiscShiftLossComps(nn.Module):
     """
 
     def __init__(self,
-                 loss_weight=1.0,
-                 data_info=None,
-                 loss_name='loss_disc_shift'):
+                 loss_weight: float = 1.0,
+                 data_info: Optional[dict] = None,
+                 loss_name: str = 'loss_disc_shift') -> None:
         super().__init__()
         self.loss_weight = loss_weight
         self.data_info = data_info
         self._loss_name = loss_name
 
-    def forward(self, *args, **kwargs):
+    def forward(self, *args, **kwargs) -> torch.Tensor:
         """Forward function.
 
         If ``self.data_info`` is not ``None``, a dictionary containing all of
@@ -112,7 +115,7 @@ class DiscShiftLossComps(nn.Module):
             # module will just directly return the loss as usual.
             return disc_shift_loss(*args, **kwargs) * self.loss_weight
 
-    def loss_name(self):
+    def loss_name(self) -> str:
         """Loss Name.
 
         This function must be implemented and will return the name of this
@@ -127,7 +130,7 @@ class DiscShiftLossComps(nn.Module):
         return self._loss_name
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class GradientPenaltyLossComps(nn.Module):
     """Gradient Penalty for WGAN-GP.
 
@@ -187,17 +190,17 @@ class GradientPenaltyLossComps(nn.Module):
     """
 
     def __init__(self,
-                 loss_weight=1.0,
-                 norm_mode='pixel',
-                 data_info=None,
-                 loss_name='loss_gp'):
+                 loss_weight: float = 1.0,
+                 norm_mode: str = 'pixel',
+                 data_info: Optional[dict] = None,
+                 loss_name: str = 'loss_gp') -> None:
         super().__init__()
         self.loss_weight = loss_weight
         self.norm_mode = norm_mode
         self.data_info = data_info
         self._loss_name = loss_name
 
-    def forward(self, *args, **kwargs):
+    def forward(self, *args, **kwargs) -> torch.Tensor:
         """Forward function.
 
         If ``self.data_info`` is not ``None``, a dictionary containing all of
@@ -244,7 +247,7 @@ class GradientPenaltyLossComps(nn.Module):
             #     *args, weight=self.loss_weight, **kwargs)
             return gradient_penalty_loss(*args, **kwargs) * self.loss_weight
 
-    def loss_name(self):
+    def loss_name(self) -> str:
         """Loss Name.
 
         This function must be implemented and will return the name of this
@@ -259,7 +262,7 @@ class GradientPenaltyLossComps(nn.Module):
         return self._loss_name
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class R1GradientPenaltyComps(nn.Module):
     """R1 gradient penalty for WGAN-GP.
 
@@ -321,12 +324,12 @@ class R1GradientPenaltyComps(nn.Module):
     """
 
     def __init__(self,
-                 loss_weight=1.0,
-                 norm_mode='pixel',
-                 interval=1,
-                 data_info=None,
-                 use_apex_amp=False,
-                 loss_name='loss_r1_gp'):
+                 loss_weight: float = 1.0,
+                 norm_mode: str = 'pixel',
+                 interval: int = 1,
+                 data_info: Optional[dict] = None,
+                 use_apex_amp: bool = False,
+                 loss_name: str = 'loss_r1_gp') -> None:
         super().__init__()
         self.loss_weight = loss_weight
         self.norm_mode = norm_mode
@@ -335,7 +338,7 @@ class R1GradientPenaltyComps(nn.Module):
         self.use_apex_amp = use_apex_amp
         self._loss_name = loss_name
 
-    def forward(self, *args, **kwargs):
+    def forward(self, *args, **kwargs) -> torch.Tensor:
         """Forward function.
 
         If ``self.data_info`` is not ``None``, a dictionary containing all of
@@ -385,7 +388,7 @@ class R1GradientPenaltyComps(nn.Module):
             return r1_gradient_penalty_loss(
                 *args, norm_mode=self.norm_mode, **kwargs) * self.loss_weight
 
-    def loss_name(self):
+    def loss_name(self) -> str:
         """Loss Name.
 
         This function must be implemented and will return the name of this
