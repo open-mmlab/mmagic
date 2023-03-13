@@ -69,7 +69,9 @@ def main():
     results = sample_unconditional_model(model, args.num_samples,
                                          args.num_batches, args.sample_model,
                                          **args.sample_cfg)
-    results = (results[:, [2, 1, 0]] + 1.) / 2.
+
+    results = results/255
+    results = results[:, [2, 1, 0]]
 
     # save images
     mmengine.mkdir_or_exist(os.path.dirname(args.save_path))
