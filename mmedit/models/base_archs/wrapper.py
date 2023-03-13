@@ -1,13 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
-from copy import deepcopy
+from logging import WARNING
 from typing import Any, List, Optional, Union
-from warnings import warn
 
+from mmengine import print_log
 from mmengine.model import BaseModule
 
 
-class DiffuserWrapper(BaseModule):
+class DiffusersWrapper(BaseModule):
     """Wrapper for models from HuggingFace Diffusers. This wrapper will be set
     a attribute called `_module_cls` by wrapping function and will be used to
     initialize the model structure.
@@ -16,26 +16,20 @@ class DiffuserWrapper(BaseModule):
     >>> 1. Load pretrained model from HuggingFace Space.
     >>> config = dict(
     >>>     type='ControlNetModel',  # has been registered in `MODELS`
-    >>>     repo_id='lllyasviel/sd-controlnet-canny')
+    >>>     from_pretrained='lllyasviel/sd-controlnet-canny',
+    >>>     torch_dtype='torch.float16')
     >>> controlnet = MODELS.build(config)
 
-    >>> 2. Initialize model structure but do not load pretrained weight
+    >>> 2. Initialize model with pre-defined configs.
     >>> config = dict(
     >>>     type='ControlNetModel',  # has been registered in `MODELS`
-    >>>     repo_id='lllyasviel/sd-controlnet-canny',
-    >>>     no_loading=True)
+    >>>     from_config='lllyasviel/sd-controlnet-canny',
+    >>>     cache_dir='~/.cache/OpenMMLab')
     >>> controlnet = MODELS.build(config)
 
-    >>> 3. Loading pretrained model with specific settings (e.g., fp16).
+    >>> 3. Initialize model with own defined arguments
     >>> config = dict(
     >>>     type='ControlNetModel',  # has been registered in `MODELS`
-    >>>     repo_id='lllyasviel/sd-controlnet-canny',
-    >>>     init_cfg=dict(type='Pretrained', torch_dtype=torch.float16))
-    >>> controlnet = MODELS.build(config)
-
-    >>> 4. Initialize model with own defined arguments
-    >>> config = dict(
-    >>>     type='ControlNetModel',
     >>>     in_channels=3,
     >>>     down_block_types=['DownBlock2D'],
     >>>     block_out_channels=(20, ),
@@ -43,56 +37,56 @@ class DiffuserWrapper(BaseModule):
     >>> controlnet = MODELS.build(config)
 
     Args:
-        repo_id (Union[str, os.PathLike], optional): The *model id* or path to
-            pretrained model. Please refers to `diffusers.model.modeling_utils.ModelMixin.from_pretrained`.  # noqa
-            If passed, the structure of the model will be initialized as model
-            structure of `repo_id`. Defaults to None.
-        no_loading (bool): Whether loading the pretrained weights of `repo_id`.
-            If True, weight of `repo_id` will not be loaded. Defaults to False.
+        from_pretrained (Union[str, os.PathLike], optional): The *model id*
+            of a pretrained model or a path to a *directory* containing
+            model weights and config. Please refers to
+            `diffusers.model.modeling_utils.ModelMixin.from_pretrained`
+            for more detail. Defaults to None.
+        from_config (Union[str, os.PathLike], optional): The *model id*
+            of a pretrained model or a path to a *directory* containing
+            model weights and config. Please refers to
+            `diffusers.configuration_utils.ConfigMixin.load_config`
+            for more detail. Defaults to None.
         init_cfg (dict or List[dict], optional): Initialization config dict.
             Noted that, in `DiffuserWrapper`, if you want to load pretrained
-            weight of `repo_id`, please use `no_loading=False`. If you want to
-            modify the `from_pretrained` behavior, you should set `type` as
-            `Pretrained` and set corresponding arguments in `init_cfg`.
-            e.g. (`dict(type='Pretrained', cache_dir='~/.cache/OpenMMLab/')`)
-            Defaults to None.
+            weight from HuggingFace space, please use `from_pretrained`
+            argument instead of using `init_cfg`. Defaults to None.
 
-        *args, **kwargs: Arguments for `module_cls`.
+        *args, **kwargs: If `from_pretrained` is passed, *args and **kwargs
+            will be passed to `from_pretrained` function. If `from_config`
+            is passed, *args and **kwargs will be passed to `load_config`
+            function.  Otherwise, *args and **kwargs will be used to
+            initialize the model by `self._module_cls(*args, **kwargs)`.
     """
 
     def __init__(self,
-                 repo_id: Optional[Union[str, os.PathLike]] = None,
-                 no_loading: bool = False,
+                 from_pretrained: Optional[Union[str, os.PathLike]] = None,
+                 from_config: Optional[Union[str, os.PathLike]] = None,
                  init_cfg: Union[dict, List[dict], None] = None,
                  *args,
                  **kwargs):
         super().__init__(init_cfg)
 
-        self._repo_id = repo_id
-        self._no_loading = no_loading
-
+        # import ipdb
+        # ipdb.set_trace()
         module_cls = self._module_cls
+        assert not (from_pretrained and from_config), (
+            '\'from_pretrained\' and \'from_config\' should not be passed '
+            'at the same time.')
 
-        if repo_id is not None:
+        self._from_pretrained = from_pretrained
+        self._from_config = from_config
 
-            if no_loading:
-                _config = module_cls.load_config(repo_id)
-                self.model = module_cls(**_config)
-            else:
-                if init_cfg and init_cfg['type'] == 'Pretrained':
-                    from_pretrained_args = deepcopy(init_cfg)
-                    from_pretrained_args.pop('type')
-                else:
-                    from_pretrained_args = dict()
-
-                self.model = module_cls.from_pretrained(
-                    repo_id, **from_pretrained_args)
-                self._is_init = True
+        if from_pretrained is not None:
+            self.model = module_cls.from_pretrained(from_pretrained, *args,
+                                                    **kwargs)
+            self._is_init = True
+        elif from_config is not None:
+            self.model = module_cls.from_config(from_config, *args, **kwargs)
         else:
             self.model = module_cls(*args, **kwargs)
 
         self.config = self.model.config
-        self.init_weights()
 
     def init_weights(self):
         """Initialize the weights.
@@ -100,11 +94,12 @@ class DiffuserWrapper(BaseModule):
         If type is 'Pretrained' but the model has be loaded from `repo_id`, a
         warning will be raised.
         """
-
         if self.init_cfg and self.init_cfg['type'] == 'Pretrained':
-            if self._repo_id and not self._no_loading:
-                warn('Has been loaded from pretrained model. '
-                     'You behavior is very dangerous.')
+            if self._from_pretrained is not None:
+                print_log(
+                    'Has been loaded from pretrained model from '
+                    f'\'{self._from_pretrained}\'. Your behavior is '
+                    'very dangerous.', 'current', WARNING)
         super().init_weights()
 
     def __getattr__(self, name: str) -> Any:
@@ -132,7 +127,9 @@ class DiffuserWrapper(BaseModule):
         s = super().__repr__()
         prefix = f'Wrapped Module Class: {self._module_cls}\n'
         prefix += f'Wrapped Module Name: {self._module_name}\n'
-        if self._repo_id:
-            prefix += f'Repo ID: {self._repo_id}\n'
+        if self._from_pretrained:
+            prefix += f'From Pretrained: {self._from_pretrained}\n'
+        if self._from_config:
+            prefix += f'From Config: {self._from_config}\n'
         s = prefix + s
         return s

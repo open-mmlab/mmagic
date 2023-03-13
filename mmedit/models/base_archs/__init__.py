@@ -22,7 +22,7 @@ from .smpatch_disc import SoftMaskPatchDiscriminator
 from .sr_backbone import ResidualBlockNoBN
 from .upsample import PixelShufflePack
 from .vgg import VGG16
-from .wrapper import DiffuserWrapper
+from .wrapper import DiffusersWrapper
 
 
 def register_diffusers_models() -> List[str]:
@@ -46,8 +46,12 @@ def register_diffusers_models() -> List[str]:
         return None
 
     def gen_wrapped_cls(module, module_name):
-        return type(module_name, (DiffuserWrapper, ),
-                    dict(_module_cls=module, _module_name=module_name))
+        return type(
+            module_name, (DiffusersWrapper, ),
+            dict(
+                _module_cls=module,
+                _module_name=module_name,
+                __module__=__name__))
 
     DIFFUSERS_MODELS = []
     for module_name in dir(diffusers.models):
