@@ -73,7 +73,7 @@ class TestWrapper(TestCase):
                 type='ControlNetModel',
                 in_channels=3,
                 down_block_types=['DownBlock2D'],
-                block_out_channels=(20, ),
+                block_out_channels=(32, ),
                 conditioning_embedding_out_channels=(16, )), )
         model_str = repr(model)
         self.assertNotIn('From Config:', model_str)
