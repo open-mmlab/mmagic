@@ -93,7 +93,7 @@ def downsample_images(args):
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description='Prepare cat dataset',
+        description='Prepare ffhq dataset',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--data-root', help='dataset root')
     parser.add_argument(

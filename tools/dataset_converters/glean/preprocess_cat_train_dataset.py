@@ -162,7 +162,7 @@ if __name__ == '__main__':
     if not osp.exists(bix16_dir):
         os.makedirs(bix16_dir)
 
-    # extract subimages
+    # export images
     export_images(args.lmdb_path, args.meta_file_path, _gt_dir)
 
     # downsample images
