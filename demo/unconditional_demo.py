@@ -70,7 +70,7 @@ def main():
                                          args.num_batches, args.sample_model,
                                          **args.sample_cfg)
 
-    results = results/255
+    results = results / 255
     results = results[:, [2, 1, 0]]
 
     # save images
