@@ -12,6 +12,36 @@ class DiffuserWrapper(BaseModule):
     a attribute called `_module_cls` by wrapping function and will be used to
     initialize the model structure.
 
+    Example:
+    >>> 1. Load pretrained model from HuggingFace Space.
+    >>> config = dict(
+    >>>     type='ControlNetModel',  # has been registered in `MODELS`
+    >>>     repo_id='lllyasviel/sd-controlnet-canny')
+    >>> controlnet = MODELS.build(config)
+
+    >>> 2. Initialize model structure but do not load pretrained weight
+    >>> config = dict(
+    >>>     type='ControlNetModel',  # has been registered in `MODELS`
+    >>>     repo_id='lllyasviel/sd-controlnet-canny',
+    >>>     no_loading=True)
+    >>> controlnet = MODELS.build(config)
+
+    >>> 3. Loading pretrained model with specific settings (e.g., fp16).
+    >>> config = dict(
+    >>>     type='ControlNetModel',  # has been registered in `MODELS`
+    >>>     repo_id='lllyasviel/sd-controlnet-canny',
+    >>>     init_cfg=dict(type='Pretrained', torch_dtype=torch.float16))
+    >>> controlnet = MODELS.build(config)
+
+    >>> 4. Initialize model with own defined arguments
+    >>> config = dict(
+    >>>     type='ControlNetModel',
+    >>>     in_channels=3,
+    >>>     down_block_types=['DownBlock2D'],
+    >>>     block_out_channels=(20, ),
+    >>>     conditioning_embedding_out_channels=(16, ))
+    >>> controlnet = MODELS.build(config)
+
     Args:
         repo_id (Union[str, os.PathLike], optional): The *model id* or path to
             pretrained model. Please refers to `diffusers.model.modeling_utils.ModelMixin.from_pretrained`.  # noqa
