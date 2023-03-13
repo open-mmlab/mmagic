@@ -54,7 +54,7 @@ class UpsampleUpFIRDn(nn.Module):
         pad0 = (p + 1) // 2 + factor - 1
         pad1 = p // 2
 
-        self.pad = (pad0, pad1)
+        self.pad = (pad0, pad1, pad0, pad1)
 
     def forward(self, x):
         """Forward function.
@@ -109,7 +109,7 @@ class DownsampleUpFIRDn(nn.Module):
             self.kernel.to(input.dtype),
             up=1,
             down=self.factor,
-            pad=self.pad)
+            padding=self.pad)
 
         return out
 
