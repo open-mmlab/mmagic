@@ -6,7 +6,6 @@ import torch.nn as nn
 from mmcv.ops import bias_act, conv2d_gradfix, filtered_lrelu
 from mmengine.runner.amp import autocast
 
-from mmedit.registry import MODULES
 from mmedit.registry import MODELS
 
 
@@ -529,10 +528,10 @@ class SynthesisLayer(nn.Module):
             gain = 1 if self.is_torgb else np.sqrt(2)
             slope = 1 if self.is_torgb else 0.2
             x = filtered_lrelu(
-                x=x,
-                fu=self.up_filter,
-                fd=self.down_filter,
-                b=self.bias.to(x.dtype),
+                input=x,
+                filter_up=self.up_filter,
+                filter_down=self.down_filter,
+                bias=self.bias.to(x.dtype),
                 up=self.up_factor,
                 down=self.down_factor,
                 padding=self.padding,

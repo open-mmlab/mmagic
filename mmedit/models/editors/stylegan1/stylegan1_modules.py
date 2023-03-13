@@ -212,7 +212,7 @@ class Blur(nn.Module):
         """
 
         # In Tero's implementation, he uses fp32
-        return upfirdn2d(x, self.kernel.to(x.dtype), pad=self.pad)
+        return upfirdn2d(x, self.kernel.to(x.dtype), padding=self.pad)
 
 
 class AdaptiveInstanceNorm(nn.Module):

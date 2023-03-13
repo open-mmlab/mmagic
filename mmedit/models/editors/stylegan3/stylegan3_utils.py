@@ -138,7 +138,7 @@ def apply_affine_transformation(x, mat, up=4, **filter_kwargs):
     g = torch.nn.functional.affine_grid(theta, x.shape, align_corners=False)
 
     # Resample image.
-    y = upsample2d(x=x, f=f, up=up, padding=p)
+    y = upsample2d(input=x, filter=f, up=up, padding=p)
     z = torch.nn.functional.grid_sample(
         y, g, mode='bilinear', padding_mode='zeros', align_corners=False)
 
@@ -163,7 +163,7 @@ def apply_fractional_pseudo_rotation(x, angle, a=3, **filter_kwargs):
     mat = rotation_matrix(-angle)
     f = construct_affine_bandlimit_filter(
         mat, a=a, amax=a * 2, up=1, **filter_kwargs)
-    y = filter2d(x=x, f=f)
+    y = filter2d(input=x, filter=f)
     m = torch.zeros_like(y)
     c = f.shape[0] // 2
     m[:, :, c:-c, c:-c] = 1

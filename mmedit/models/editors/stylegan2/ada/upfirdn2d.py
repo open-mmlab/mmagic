@@ -81,8 +81,8 @@ def upsample2d(x, f, up=2, padding=0, flip_filter=False, gain=1, impl='cuda'):
     if flip_filter:
         f = f.flip(list(range(f.ndim)))
     if f.ndim == 1:
-        x = upfirdn2d(x, f.unsqueeze(0), up=(upx, 1), pad=(p[0], p[1], 0, 0))
-        x = upfirdn2d(x, f.unsqueeze(1), up=(1, upy), pad=(0, 0, p[2], p[3]))
+        x = upfirdn2d(x, f.unsqueeze(0), up=(upx, 1), padding=(p[0], p[1], 0, 0))
+        x = upfirdn2d(x, f.unsqueeze(1), up=(1, upy), padding=(0, 0, p[2], p[3]))
     return x
 
 
@@ -183,7 +183,7 @@ def downsample2d(x,
         f = f.flip(list(range(f.ndim)))
     if f.ndim == 1:
         x = upfirdn2d(
-            x, f.unsqueeze(0), down=(downx, 1), pad=(p[0], p[1], 0, 0))
+            x, f.unsqueeze(0), down=(downx, 1), padding=(p[0], p[1], 0, 0))
         x = upfirdn2d(
-            x, f.unsqueeze(1), down=(1, downy), pad=(0, 0, p[2], p[3]))
+            x, f.unsqueeze(1), down=(1, downy), padding=(0, 0, p[2], p[3]))
     return x
