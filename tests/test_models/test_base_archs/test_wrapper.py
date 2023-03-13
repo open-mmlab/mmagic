@@ -4,6 +4,8 @@ import shutil
 from unittest import TestCase
 
 import torch
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmedit.registry import MODELS
 
@@ -15,6 +17,9 @@ model_path = osp.join(test_dir, 'configs', 'tmp_weight')
 class TestWrapper(TestCase):
 
     def test_build(self):
+        if digit_version(TORCH_VERSION) <= digit_version('1.6.0'):
+            from mmedit.models.editors.ddpm.denoising_unet import SiLU
+            torch.nn.SiLU = SiLU
         # 1. test repo_id and no_loading
         model = MODELS.build(
             dict(type='ControlNetModel', repo_id=config_path, no_loading=True))
