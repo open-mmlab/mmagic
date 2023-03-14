@@ -1,12 +1,20 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
+import math
+import os
 import os.path as osp
 import sys
+from multiprocessing import Pool
 
 import cv2
 import lmdb
 import mmcv
+import mmengine
+import numpy as np
+from skimage import img_as_float
+from skimage.io import imread, imsave
 
+from mmedit.datasets.transforms import MATLABLikeResize, blur_kernels
 from mmedit.utils import modify_args
 
 
@@ -116,22 +124,146 @@ def make_lmdb(mode,
     print('\nFinish writing lmdb.')
 
 
-def generate_anno_file(train_list, file_name='meta_info_Vimeo90K_GT.txt'):
-    """Generate anno file for Vimeo90K datasets from the official train list.
+def generate_anno_file(clip_list, file_name='meta_info_Vimeo90K_GT.txt'):
+    """Generate anno file for Vimeo90K datasets from the official clip list.
 
     Args:
-        train_list (str): Train list path for Vimeo90K datasets.
+        clip_list (str): Clip list path for Vimeo90K datasets.
         file_name (str): Saved file name. Default: 'meta_info_Vimeo90K_GT.txt'.
     """
 
     print(f'Generate annotation files {file_name}...')
-    # read official train list
-    with open(train_list) as f:
+    with open(clip_list) as f:
         lines = [line.rstrip() for line in f]
-    txt_file = osp.join(osp.dirname(train_list), file_name)
+    txt_file = osp.join(osp.dirname(clip_list), file_name)
     with open(txt_file, 'w') as f:
         for line in lines:
-            f.write(f'{line} (256, 448, 3)\n')
+            f.write(f'{line} 7 (256, 448, 3)\n')
+
+
+def imresize(img_path, output_path, scale=None, output_shape=None):
+    """Resize the image using MATLAB-like downsampling.
+
+    Args:
+        img_path (str): Input image path.
+        output_path (str): Output image path.
+        scale (float | None, optional): The scale factor of the resize
+            operation. If None, it will be determined by output_shape.
+            Default: None.
+        output_shape (tuple(int) | None, optional): The size of the output
+            image. If None, it will be determined by scale. Note that if
+            scale is provided, output_shape will not be used.
+            Default: None.
+    """
+
+    matlab_resize = MATLABLikeResize(
+        keys=['data'], scale=scale, output_shape=output_shape)
+    img = imread(img_path)
+    img = img_as_float(img)
+    data = {'data': img}
+    output = matlab_resize(data)['data']
+    output = np.clip(output, 0.0, 1.0) * 255
+    output = np.around(output).astype(np.uint8)
+    imsave(output_path, output)
+
+
+def mesh_grid(kernel_size):
+    """Generate the mesh grid, centering at zero.
+
+    Args:
+        kernel_size (int): The size of the kernel.
+
+    Returns:
+        xy_grid (np.ndarray): stacked xy coordinates with shape
+            (kernel_size, kernel_size, 2).
+    """
+    range_ = np.arange(-(kernel_size - 1.) / 2., (kernel_size - 1.) / 2. + 1.)
+    x_grid, y_grid = np.meshgrid(range_, range_)
+    xy_grid = np.hstack((x_grid.reshape((kernel_size * kernel_size, 1)),
+                         y_grid.reshape(kernel_size * kernel_size,
+                                        1))).reshape(kernel_size, kernel_size,
+                                                     2)
+
+    return xy_grid
+
+
+def bd_downsample(img_path, output_path, sigma=1.6, scale=4):
+    """Downsampling using BD degradation(Gaussian blurring and downsampling).
+
+    Args:
+        img_path (str): Input image path.
+        output_path (str): Output image path.
+        sigma (float): The sigma of Gaussian blurring kernel. Default: 1.6.
+        scale (int): The scale factor of the downsampling. Default: 4.
+    """
+
+    # Gaussian blurring
+    kernelsize = math.ceil(sigma * 3) * 2 + 2
+    kernel = blur_kernels.bivariate_gaussian(
+        kernelsize, sigma, grid=mesh_grid(kernelsize))
+    img = cv2.imread(img_path)
+    img = img_as_float(img)
+    output = cv2.filter2D(
+        img,
+        -1,
+        kernel,
+        anchor=((kernelsize - 1) // 2, (kernelsize - 1) // 2),
+        borderType=cv2.BORDER_REPLICATE)
+
+    # downsampling
+    output = output[int(scale / 2) - 1:-int(scale / 2) + 1:scale,
+                    int(scale / 2) - 1:-int(scale / 2) + 1:scale, :]
+
+    output = np.clip(output, 0.0, 1.0) * 255
+    output = output.astype(np.float32)
+    output = np.floor(output + 0.5)
+    cv2.imwrite(output_path, output)
+
+
+def worker(clip_path, args):
+    """Worker for each process.
+
+    Args:
+        clip_name (str): Path of the clip.
+
+    Returns:
+        process_info (str): Process information displayed in progress bar.
+    """
+
+    gt_dir = osp.join(args.data_root, 'GT', clip_path)
+    bi_dir = osp.join(args.data_root, 'BIx4', clip_path)
+    bd_dir = osp.join(args.data_root, 'BDx4', clip_path)
+    mmengine.utils.mkdir_or_exist(bi_dir)
+    mmengine.utils.mkdir_or_exist(bd_dir)
+
+    img_list = sorted(os.listdir(gt_dir))
+    for img in img_list:
+        imresize(osp.join(gt_dir, img), osp.join(bi_dir, img), scale=1 / 4)
+        bd_downsample(osp.join(gt_dir, img), osp.join(bd_dir, img))
+
+    process_info = f'Processing {clip_path} ...'
+    return process_info
+
+
+def downsample_images(args):
+    """Downsample images."""
+
+    clip_list = []
+    gt_dir = osp.join(args.data_root, 'GT')
+    sequence_list = sorted(os.listdir(gt_dir))
+    for sequence in sequence_list:
+        sequence_root = osp.join(gt_dir, sequence)
+        clip_list.extend(
+            [osp.join(sequence, i) for i in sorted(os.listdir(sequence_root))])
+
+    prog_bar = mmengine.ProgressBar(len(clip_list))
+    pool = Pool(args.n_thread)
+    for path in clip_list:
+        pool.apply_async(
+            worker, args=(path, args), callback=lambda arg: prog_bar.update())
+    pool.close()
+    pool.join()
+    print('All processes done.')
 
 
 def parse_args():
@@ -140,8 +272,17 @@ def parse_args():
         description='Preprocess Vimeo90K datasets',
         epilog='You can download the Vimeo90K dataset '
         'from：http://toflow.csail.mit.edu/')
+    parser.add_argument('--data-root', help='dataset root')
     parser.add_argument(
-        'train_list', help='official training list path for Vimeo90K')
+        '--n-thread',
+        nargs='?',
+        default=8,
+        type=int,
+        help='thread number when using multiprocessing')
+    parser.add_argument(
+        '--train_list',
+        default=None,
+        help='official training list path for Vimeo90K')
     parser.add_argument('--gt-path', default=None, help='GT path for Vimeo90K')
     parser.add_argument('--lq-path', default=None, help='LQ path for Vimeo90K')
     parser.add_argument(
@@ -154,8 +295,16 @@ def parse_args():
 if __name__ == '__main__':
     args = parse_args()
 
+    # generate BIx4 and BDx4
+    downsample_images(args)
+
     # generate image list anno file
-    generate_anno_file(args.train_list)
+    generate_anno_file(
+        osp.join(args.data_root, 'sep_trainlist.txt'),
+        'meta_info_Vimeo90K_train_GT.txt')
+    generate_anno_file(
+        osp.join(args.data_root, 'sep_testlist.txt'),
+        'meta_info_Vimeo90K_test_GT.txt')
 
     # create lmdb files
     if args.make_lmdb:
