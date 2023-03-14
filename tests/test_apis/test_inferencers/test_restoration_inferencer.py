@@ -20,7 +20,8 @@ def test_restoration_inferencer():
     config = data_root + 'configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py'  # noqa
     img_path = data_root + 'tests/data/image/lq/baboon_x4.png'
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data', 'restoration_result.png')
+        osp.dirname(__file__), '..', '..', 'data/out',
+        'restoration_result.png')
 
     inferencer_instance = \
         RestorationInferencer(config, None)
@@ -29,7 +30,3 @@ def test_restoration_inferencer():
         img=img_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.shape == (480, 500, 3)
-
-
-if __name__ == '__main__':
-    test_restoration_inferencer()

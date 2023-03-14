@@ -10,7 +10,8 @@ from mmengine.utils import digit_version
 from torchvision.version import __version__ as TV_VERSION
 
 from mmedit.apis.inferencers.text2image_inferencer import Text2ImageInferencer
-from mmedit.models import DDIMScheduler, DenoisingUnet, DiscoDiffusion
+from mmedit.models import DenoisingUnet, DiscoDiffusion
+from mmedit.models.diffusion_schedulers import EditDDIMScheduler
 from mmedit.utils import register_all_modules
 
 register_all_modules()
@@ -66,7 +67,7 @@ class TestTranslationInferencer(TestCase):
         # mock clip
         self.clip_models = [clip_mock_wrapper(), clip_mock_wrapper()]
         # diffusion_scheduler
-        self.diffusion_scheduler = DDIMScheduler(
+        self.diffusion_scheduler = EditDDIMScheduler(
             variance_type='learned_range',
             beta_schedule='linear',
             clip_sample=False)
@@ -93,7 +94,7 @@ class TestTranslationInferencer(TestCase):
                        'disco-diffusion_adm-u-finetuned_imagenet-512x512.py')
         text = {0: ['sad']}
         result_out_dir = osp.join(
-            osp.dirname(__file__), '..', '..', 'data', 'disco_result.png')
+            osp.dirname(__file__), '..', '..', 'data/out', 'disco_result.png')
 
         with patch.object(Text2ImageInferencer, '_init_model'):
             inferencer_instance = Text2ImageInferencer(

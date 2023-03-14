@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from copy import deepcopy
+
 import torch
 
 from mmedit.registry import MODELS
@@ -79,6 +81,11 @@ class RealESRGAN(SRGAN):
         self.is_use_sharpened_gt_in_percep = is_use_sharpened_gt_in_percep
         self.is_use_sharpened_gt_in_gan = is_use_sharpened_gt_in_gan
         self.is_use_ema = is_use_ema
+
+        if is_use_ema:
+            self.generator_ema = deepcopy(self.generator)
+        else:
+            self.generator_ema = None
 
         if train_cfg is not None:  # used for initializing from ema model
             self.start_iter = train_cfg.get('start_iter', -1)
@@ -189,12 +196,8 @@ class RealESRGAN(SRGAN):
             Tensor: Extract gt data.
         """
 
-        gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
-        gt = torch.stack(gt_imgs)
-        gt_unsharp = [
-            data_sample.gt_unsharp.data / 255. for data_sample in data_samples
-        ]
-        gt_unsharp = torch.stack(gt_unsharp)
+        gt = data_samples.gt_img
+        gt_unsharp = data_samples.gt_unsharp / 255.
 
         gt_pixel, gt_percep, gt_gan = gt.clone(), gt.clone(), gt.clone()
         if self.is_use_sharpened_gt_in_pixel:

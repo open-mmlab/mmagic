@@ -10,13 +10,13 @@ from mmengine.runner import load_checkpoint
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from torch.nn.utils import spectral_norm
 
-from mmedit.registry import MODULES
+from mmedit.registry import MODELS
 from ...utils import get_module_device
 from .biggan_modules import SelfAttentionBlock, SNConvModule
 from .biggan_snmodule import SNLinear
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class BigGANGenerator(nn.Module):
     """BigGAN Generator. The implementation refers to
     https://github.com/ajbrock/BigGAN-PyTorch/blob/master/BigGAN.py # noqa.
@@ -208,7 +208,7 @@ class BigGANGenerator(nn.Module):
                     out_channels=out_ch,
                     upsample_cfg=self.upsample_cfg
                     if self.arch['upsample'][index] else None))
-            self.conv_blocks.append(MODULES.build(self.blocks_cfg))
+            self.conv_blocks.append(MODELS.build(self.blocks_cfg))
             if self.arch['attention'][index]:
                 self.conv_blocks.append(
                     SelfAttentionBlock(
@@ -344,6 +344,9 @@ class BigGANGenerator(nn.Module):
 
         elif isinstance(label, torch.Tensor):
             if not use_outside_embedding:
+                if label.ndim != 1:
+                    assert all([s == 1 for s in label.shape[1:]])
+                    label = label.view(-1)
                 assert label.ndim == 1, (
                     'The label shoube be in shape of (n, )'
                     f'but got {label.shape}.')

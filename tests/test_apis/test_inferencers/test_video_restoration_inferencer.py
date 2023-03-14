@@ -13,7 +13,7 @@ def test_video_restoration_inferencer():
         osp.dirname(__file__), '..', '..', '..', 'configs', 'basicvsr',
         'basicvsr_2xb4_reds4.py')
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data',
+        osp.dirname(__file__), '..', '..', 'data/out',
         'video_restoration_result.mp4')
     data_root = osp.join(osp.dirname(__file__), '../../../')
     video_path = data_root + 'tests/data/frames/test_inference.mp4'
@@ -32,7 +32,7 @@ def test_video_restoration_inferencer_input_dir():
         osp.dirname(__file__), '..', '..', '..', 'configs', 'basicvsr',
         'basicvsr_2xb4_reds4.py')
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data',
+        osp.dirname(__file__), '..', '..', 'data/out',
         'video_restoration_result.mp4')
     data_root = osp.join(osp.dirname(__file__), '../../../')
     input_dir = osp.join(data_root, 'tests/data/frames/sequence/gt/sequence_1')
@@ -52,7 +52,7 @@ def test_video_restoration_inferencer_window_size():
         osp.dirname(__file__), '..', '..', '..', 'configs', 'basicvsr',
         'basicvsr_2xb4_reds4.py')
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data',
+        osp.dirname(__file__), '..', '..', 'data/out',
         'video_restoration_result.mp4')
     data_root = osp.join(osp.dirname(__file__), '../../../')
     video_path = data_root + 'tests/data/frames/test_inference.mp4'
@@ -74,7 +74,7 @@ def test_video_restoration_inferencer_max_seq_len():
         osp.dirname(__file__), '..', '..', '..', 'configs', 'basicvsr',
         'basicvsr_2xb4_reds4.py')
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data',
+        osp.dirname(__file__), '..', '..', 'data/out',
         'video_restoration_result.mp4')
     data_root = osp.join(osp.dirname(__file__), '../../../')
     video_path = data_root + 'tests/data/frames/test_inference.mp4'
@@ -89,7 +89,3 @@ def test_video_restoration_inferencer_max_seq_len():
     inference_result = inferencer_instance(
         video=video_path, result_out_dir=result_out_dir)
     assert inference_result is None
-
-
-if __name__ == '__main__':
-    test_video_restoration_inferencer_input_dir()

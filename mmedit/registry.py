@@ -8,83 +8,186 @@ More details can be found at
 https://mmengine.readthedocs.io/en/latest/tutorials/registry.html.
 """
 
-from mmengine import registry
+from mmengine.registry import DATA_SAMPLERS as MMENGINE_DATA_SAMPLERS
+from mmengine.registry import DATASETS as MMENGINE_DATASETS
+from mmengine.registry import EVALUATOR as MMENGINE_EVALUATOR
+from mmengine.registry import HOOKS as MMENGINE_HOOKS
+from mmengine.registry import LOG_PROCESSORS as MMENGINE_LOG_PROCESSORS
+from mmengine.registry import LOOPS as MMENGINE_LOOPS
+from mmengine.registry import METRICS as MMENGINE_METRICS
+from mmengine.registry import MODEL_WRAPPERS as MMENGINE_MODEL_WRAPPERS
+from mmengine.registry import MODELS as MMENGINE_MODELS
+from mmengine.registry import \
+    OPTIM_WRAPPER_CONSTRUCTORS as MMENGINE_OPTIM_WRAPPER_CONSTRUCTORS
+from mmengine.registry import OPTIM_WRAPPERS as MMENGINE_OPTIM_WRAPPERS
+from mmengine.registry import OPTIMIZERS as MMENGINE_OPTIMIZERS
+from mmengine.registry import PARAM_SCHEDULERS as MMENGINE_PARAM_SCHEDULERS
+from mmengine.registry import \
+    RUNNER_CONSTRUCTORS as MMENGINE_RUNNER_CONSTRUCTORS
+from mmengine.registry import RUNNERS as MMENGINE_RUNNERS
+from mmengine.registry import TASK_UTILS as MMENGINE_TASK_UTILS
+from mmengine.registry import TRANSFORMS as MMENGINE_TRANSFORMS
+from mmengine.registry import VISBACKENDS as MMENGINE_VISBACKENDS
+from mmengine.registry import VISUALIZERS as MMENGINE_VISUALIZERS
+from mmengine.registry import \
+    WEIGHT_INITIALIZERS as MMENGINE_WEIGHT_INITIALIZERS
 from mmengine.registry import Registry
 
-# manage all kinds of runners like `EpochBasedRunner` and `IterBasedRunner`
+__all__ = [
+    'RUNNERS', 'RUNNER_CONSTRUCTORS', 'LOOPS', 'HOOKS', 'LOG_PROCESSORS',
+    'OPTIMIZERS', 'OPTIM_WRAPPERS', 'OPTIM_WRAPPER_CONSTRUCTORS',
+    'PARAM_SCHEDULERS', 'DATASETS', 'DATA_SAMPLERS', 'TRANSFORMS', 'MODELS',
+    'MODEL_WRAPPERS', 'WEIGHT_INITIALIZERS', 'TASK_UTILS',
+    'DIFFUSION_SCHEDULERS', 'METRICS', 'EVALUATORS', 'VISUALIZERS',
+    'VISBACKENDS'
+]
+
+#######################################################################
+#                            mmedit.engine                            #
+#######################################################################
+
+# Runners like `EpochBasedRunner` and `IterBasedRunner`
 RUNNERS = Registry(
-    'runner', parent=registry.RUNNERS, locations=['mmedit.engine.runner'])
-# manage runner constructors that define how to initialize runners
+    'runner',
+    parent=MMENGINE_RUNNERS,
+    locations=['mmedit.engine'],
+)
+# Runner constructors that define how to initialize runners
 RUNNER_CONSTRUCTORS = Registry(
     'runner constructor',
-    parent=registry.RUNNER_CONSTRUCTORS,
-    locations=['mmedit.engine.runner'])
-# manage all kinds of loops like `EpochBasedTrainLoop`
+    parent=MMENGINE_RUNNER_CONSTRUCTORS,
+    locations=['mmedit.engine'],
+)
+# Loops which define the training or test process, like `EpochBasedTrainLoop`
 LOOPS = Registry(
-    'loop', parent=registry.LOOPS, locations=['mmedit.engine.runner'])
-# manage all kinds of hooks like `CheckpointHook`
+    'loop',
+    parent=MMENGINE_LOOPS,
+    locations=['mmedit.engine'],
+)
+# Hooks to add additional functions during running, like `CheckpointHook`
 HOOKS = Registry(
-    'hook', parent=registry.HOOKS, locations=['mmedit.engine.hooks'])
-
-# manage data-related modules
-DATASETS = Registry(
-    'dataset', parent=registry.DATASETS, locations=['mmedit.datasets'])
-DATA_SAMPLERS = Registry('data sampler', parent=registry.DATA_SAMPLERS)
-TRANSFORMS = Registry(
-    'transform',
-    parent=registry.TRANSFORMS,
-    locations=['mmedit.datasets.transforms'])
-
-# manage all kinds of modules inheriting `nn.Module`
-MODELS = Registry('model', parent=registry.MODELS, locations=['mmedit.models'])
-MODULES = BACKBONES = COMPONENTS = LOSSES = MODELS
-# manage all kinds of model wrappers like 'MMDistributedDataParallel'
-MODEL_WRAPPERS = Registry('model_wrapper', parent=registry.MODEL_WRAPPERS)
-# manage all kinds of weight initialization modules like `Uniform`
-WEIGHT_INITIALIZERS = Registry(
-    'weight initializer', parent=registry.WEIGHT_INITIALIZERS)
-
-# manage all kinds of optimizers like `SGD` and `Adam`
-OPTIMIZERS = Registry('optimizer', parent=registry.OPTIMIZERS)
-# manage optimizer wrapper
-OPTIM_WRAPPERS = Registry('optim_wrapper', parent=registry.OPTIM_WRAPPERS)
-# manage constructors that customize the optimization hyperparameters.
+    'hook',
+    parent=MMENGINE_HOOKS,
+    locations=['mmedit.engine'],
+)
+# Log processors to process the scalar log data.
+LOG_PROCESSORS = Registry(
+    'log processor',
+    parent=MMENGINE_LOG_PROCESSORS,
+    locations=['mmedit.engine'],
+)
+# Optimizers to optimize the model weights, like `SGD` and `Adam`.
+OPTIMIZERS = Registry(
+    'optimizer',
+    parent=MMENGINE_OPTIMIZERS,
+    locations=['mmedit.engine'],
+)
+# Optimizer wrappers to enhance the optimization process.
+OPTIM_WRAPPERS = Registry(
+    'optimizer_wrapper',
+    parent=MMENGINE_OPTIM_WRAPPERS,
+    locations=['mmedit.engine'],
+)
+# Optimizer constructors to customize the hyper-parameters of optimizers.
 OPTIM_WRAPPER_CONSTRUCTORS = Registry(
     'optimizer wrapper constructor',
-    parent=registry.OPTIM_WRAPPER_CONSTRUCTORS,
-    locations=['mmedit.engine.optimizers'])
-# manage all kinds of parameter schedulers like `MultiStepLR`
+    parent=MMENGINE_OPTIM_WRAPPER_CONSTRUCTORS,
+    locations=['mmedit.engine'],
+)
+# Parameter schedulers to dynamically adjust optimization parameters.
 PARAM_SCHEDULERS = Registry(
     'parameter scheduler',
-    parent=registry.PARAM_SCHEDULERS,
-    locations=['mmedit.engine.schedulers'])
-# manage all kinds of metrics
+    parent=MMENGINE_PARAM_SCHEDULERS,
+    locations=['mmedit.engine'],
+)
+
+#######################################################################
+#                            mmedit.datasets                          #
+#######################################################################
+
+# Datasets like `ImageNet` and `CIFAR10`.
+DATASETS = Registry(
+    'dataset',
+    parent=MMENGINE_DATASETS,
+    locations=['mmedit.datasets'],
+)
+# Samplers to sample the dataset.
+DATA_SAMPLERS = Registry(
+    'data sampler',
+    parent=MMENGINE_DATA_SAMPLERS,
+    locations=['mmedit.datasets'],
+)
+# Transforms to process the samples from the dataset.
+TRANSFORMS = Registry(
+    'transform',
+    parent=MMENGINE_TRANSFORMS,
+    locations=['mmedit.datasets.transforms'],
+)
+
+#######################################################################
+#                            mmedit.models                            #
+#######################################################################
+
+# Neural network modules inheriting `nn.Module`.
+MODELS = Registry(
+    'model',
+    parent=MMENGINE_MODELS,
+    locations=['mmedit.models'],
+)
+# Model wrappers like 'MMDistributedDataParallel'
+MODEL_WRAPPERS = Registry(
+    'model_wrapper',
+    parent=MMENGINE_MODEL_WRAPPERS,
+    locations=['mmedit.models'],
+)
+# Weight initialization methods like uniform, xavier.
+WEIGHT_INITIALIZERS = Registry(
+    'weight initializer',
+    parent=MMENGINE_WEIGHT_INITIALIZERS,
+    locations=['mmedit.models'],
+)
+# Task-specific modules like anchor generators and box coders
+TASK_UTILS = Registry(
+    'task util',
+    parent=MMENGINE_TASK_UTILS,
+    locations=['mmedit.models'],
+)
+# modules for diffusion models that support adding noise and denoising
+DIFFUSION_SCHEDULERS = Registry(
+    'diffusion scheduler',
+    locations=['mmedit.models.diffusion_schedulers'],
+)
+
+#######################################################################
+#                          mmedit.evaluation                           #
+#######################################################################
+
+# Metrics to evaluate the model prediction results.
 METRICS = Registry(
-    'metric', parent=registry.METRICS, locations=['mmedit.evaluation'])
-# manage all kinds of evaluators
+    'metric',
+    parent=MMENGINE_METRICS,
+    locations=['mmedit.evaluation'],
+)
+# Evaluators to define the evaluation process.
 EVALUATORS = Registry(
-    'evaluator', parent=registry.EVALUATOR, locations=['mmedit.evaluation'])
+    'evaluator',
+    parent=MMENGINE_EVALUATOR,
+    locations=['mmedit.evaluation'],
+)
 
-# manage task-specific modules like anchor generators and box coders
-TASK_UTILS = Registry('task util', parent=registry.TASK_UTILS)
+#######################################################################
+#                         mmedit.visualization                         #
+#######################################################################
 
-# manage visualizer
+# Visualizers to display task-specific results.
 VISUALIZERS = Registry(
     'visualizer',
-    parent=registry.VISUALIZERS,
-    locations=['mmedit.visualization'])
-# manage visualizer backend
+    parent=MMENGINE_VISUALIZERS,
+    locations=['mmedit.visualization'],
+)
+# Backends to save the visualization results, like TensorBoard, WandB.
 VISBACKENDS = Registry(
     'vis_backend',
-    parent=registry.VISBACKENDS,
-    locations=['mmedit.visualization'])
-
-# manage logprocessor
-LOG_PROCESSORS = Registry(
-    'log_processor',
-    parent=registry.LOG_PROCESSORS,
-    locations=['mmedit.engine.runner'])
-
-# manage diffusion_schedulers
-DIFFUSION_SCHEDULERS = Registry(
-    'diffusion scheduler', locations=['mmedit.models.editors'])
+    parent=MMENGINE_VISBACKENDS,
+    locations=['mmedit.visualization'],
+)

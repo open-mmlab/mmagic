@@ -159,23 +159,31 @@ def parse_args():
         '--scales', nargs='*', default=[], help='scale factor list')
     parser.add_argument(
         '--crop-size',
+        type=int,
         nargs='?',
         default=480,
         help='cropped size for HR images')
     parser.add_argument(
-        '--step', nargs='?', default=240, help='step size for HR images')
+        '--step',
+        type=int,
+        nargs='?',
+        default=240,
+        help='step size for HR images')
     parser.add_argument(
         '--thresh-size',
+        type=int,
         nargs='?',
         default=0,
         help='threshold size for HR images')
     parser.add_argument(
         '--compression-level',
+        type=int,
         nargs='?',
         default=3,
         help='compression level when save png images')
     parser.add_argument(
         '--n-thread',
+        type=int,
         nargs='?',
         default=20,
         help='thread number when using multiprocessing')

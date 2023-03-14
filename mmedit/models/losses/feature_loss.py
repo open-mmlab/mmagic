@@ -8,7 +8,7 @@ from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
 
 from mmedit.models.editors.dic import LightCNN
-from mmedit.registry import LOSSES
+from mmedit.registry import MODELS
 
 
 class LightCNNFeature(nn.Module):
@@ -55,7 +55,7 @@ class LightCNNFeature(nn.Module):
                             f'But received {type(pretrained)}.')
 
 
-@LOSSES.register_module()
+@MODELS.register_module()
 class LightCNNFeatureLoss(nn.Module):
     """Feature loss of DICGAN, based on LightCNN.
 

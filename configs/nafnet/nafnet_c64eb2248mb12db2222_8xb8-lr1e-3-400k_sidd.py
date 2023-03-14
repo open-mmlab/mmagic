@@ -12,7 +12,7 @@ model = dict(
     type='BaseEditModel',
     generator=dict(
         type='NAFNet',
-        img_channel=3,
+        img_channels=3,
         mid_channels=64,
         enc_blk_nums=[2, 2, 4, 8],
         middle_blk_num=12,
@@ -89,8 +89,8 @@ test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=400_000, val_interval=20000)
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(

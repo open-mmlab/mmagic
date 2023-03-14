@@ -23,13 +23,14 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0.5 * 255, 0.5 * 255, 0.5 * 255],
         std=[255, 255, 255],
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1)))
+    ))
 
-val_evaluator = [
-    dict(type='PSNR', crop_border=8, convert_to='Y'),
-    dict(type='SSIM', crop_border=8, convert_to='Y'),
-]
+val_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[
+        dict(type='PSNR', crop_border=8, convert_to='Y'),
+        dict(type='SSIM', crop_border=8, convert_to='Y'),
+    ])
 
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
@@ -105,7 +106,7 @@ optim_wrapper = dict(
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=400_000, val_interval=50000)
-val_cfg = dict(type='ValLoop')
+val_cfg = dict(type='EditValLoop')
 
 # No learning policy
 

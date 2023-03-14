@@ -23,7 +23,7 @@ class Equivariance(GenerativeMetric):
                  fake_nums: int,
                  real_nums: int = 0,
                  fake_key: Optional[str] = None,
-                 real_key: Optional[str] = 'img',
+                 real_key: Optional[str] = 'gt_img',
                  need_cond_input: bool = False,
                  sample_mode: str = 'ema',
                  sample_kwargs: dict = dict(),

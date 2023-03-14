@@ -9,7 +9,7 @@ from mmedit.registry import DIFFUSION_SCHEDULERS
 
 
 @DIFFUSION_SCHEDULERS.register_module()
-class DDPMScheduler:
+class EditDDPMScheduler:
 
     def __init__(self,
                  num_train_timesteps: int = 1000,
@@ -19,7 +19,7 @@ class DDPMScheduler:
                  trained_betas: Optional[Union[np.array, list]] = None,
                  variance_type='fixed_small',
                  clip_sample=True):
-        """```DDPMScheduler``` support the diffusion and reverse process
+        """```EditDDPMScheduler``` support the diffusion and reverse process
         formulated in https://arxiv.org/abs/2006.11239.
 
         The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddpm.py. # noqa
@@ -134,7 +134,10 @@ class DDPMScheduler:
              timestep: int,
              sample: torch.FloatTensor,
              predict_epsilon=True,
+             cond_fn=None,
+             cond_kwargs={},
              generator=None):
+
         t = timestep
         """step forward"""
 
@@ -185,6 +188,21 @@ class DDPMScheduler:
                 t, predicted_variance=predicted_variance)**0.5
 
         pred_prev_sample = pred_prev_mean + sigma * noise
+
+        gradient = 0.
+        if cond_fn is not None:
+            y = cond_kwargs['y']
+            classifier = cond_kwargs['classifier']
+            classifier_scale = cond_kwargs['classifier_scale']
+            gradient = cond_fn(
+                classifier,
+                sample,
+                timestep,
+                y=y,
+                classifier_scale=classifier_scale)
+
+            guided_mean = pred_prev_mean + sigma * gradient
+            pred_prev_sample = guided_mean + sigma * noise
 
         return {
             'prev_sample': pred_prev_sample,

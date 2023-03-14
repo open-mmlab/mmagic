@@ -2,7 +2,7 @@ default_scope = 'mmedit'
 save_dir = './work_dirs'
 
 default_hooks = dict(
-    timer=dict(type='IterTimerHook'),
+    timer=dict(type='EditIterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
     checkpoint=dict(
@@ -24,7 +24,7 @@ env_cfg = dict(
 )
 
 log_level = 'INFO'
-log_processor = dict(type='LogProcessor', window_size=100, by_epoch=False)
+log_processor = dict(type='EditLogProcessor', window_size=100, by_epoch=False)
 
 load_from = None
 resume = False
@@ -35,5 +35,5 @@ visualizer = dict(
     vis_backends=vis_backends,
     fn_key='gt_path',
     img_keys=['gt_img', 'input', 'pred_img'],
-    bgr2rgb=False)
+    bgr2rgb=True)
 custom_hooks = [dict(type='BasicVisualizationHook', interval=1)]

@@ -7,7 +7,7 @@ _base_ = [
 loss_config = dict(gp_norm_mode='HWC', gp_loss_weight=10)
 model = dict(
     type='WGANGP',
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='EditDataPreprocessor'),
     generator=dict(type='WGANGPGenerator', noise_size=128, out_scale=128),
     discriminator=dict(
         type='WGANGPDiscriminator',

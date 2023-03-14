@@ -8,7 +8,7 @@ from torch.optim import Adam
 from mmedit.models import (EditDataPreprocessor, RealESRGAN, RRDBNet,
                            UNetDiscriminatorWithSpectralNorm)
 from mmedit.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 
 
 @patch.object(PerceptualVGG, 'init_weights')
@@ -74,8 +74,7 @@ def test_real_esrgan(init_weights):
     # prepare data
     inputs = torch.rand(1, 3, 32, 32)
     target = torch.rand(3, 128, 128)
-    data_sample = EditDataSample(
-        gt_img=PixelData(data=target), gt_unsharp=PixelData(data=target))
+    data_sample = EditDataSample(gt_img=target, gt_unsharp=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
@@ -87,13 +86,13 @@ def test_real_esrgan(init_weights):
 
     # val
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (3, 128, 128)
+    assert output[0].output.pred_img.shape == (3, 128, 128)
 
     # val_ema
     model.generator_ema = model.generator
     model.is_use_ema = True
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (3, 128, 128)
+    assert output[0].output.pred_img.shape == (3, 128, 128)
 
     # feat
     output = model(torch.rand(1, 3, 32, 32), mode='tensor')

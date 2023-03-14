@@ -10,6 +10,7 @@ from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter
 
+from mmedit.structures import EditDataSample
 from mmedit.utils import tensor2img
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
@@ -64,6 +65,7 @@ class InpaintingInferencer(BaseMMEditInferencer):
         self.masks = data['data_samples'][0].mask.data * 255
         self.masked_imgs = data['inputs'][0]
 
+        data['data_samples'] = EditDataSample.stack(data['data_samples'])
         return data
 
     def forward(self, inputs: InputsType) -> PredType:

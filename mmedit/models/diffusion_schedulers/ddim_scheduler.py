@@ -9,9 +9,9 @@ from mmedit.registry import DIFFUSION_SCHEDULERS
 
 
 @DIFFUSION_SCHEDULERS.register_module()
-class DDIMScheduler:
-    """```DDIMScheduler``` support the diffusion and reverse process formulated
-    in https://arxiv.org/abs/2010.02502.
+class EditDDIMScheduler:
+    """```EditDDIMScheduler``` support the diffusion and reverse process
+    formulated in https://arxiv.org/abs/2010.02502.
 
     The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddim.py. # noqa
     The difference is that we ensemble gradient-guided sampling in step function.
@@ -162,9 +162,20 @@ class DDIMScheduler:
 
         gradient = 0.
         if cond_fn is not None:
-            gradient = cond_fn(
-                cond_kwargs.pop('unet'), self, sample, timestep, beta_prod_t,
-                cond_kwargs.pop('model_stats'), **cond_kwargs)
+            if cond_fn.__name__ == 'classifier_grad':
+                y = cond_kwargs['y']
+                classifier = cond_kwargs['classifier']
+                classifier_scale = cond_kwargs['classifier_scale']
+                gradient = cond_fn(
+                    classifier,
+                    sample,
+                    timestep,
+                    y=y,
+                    classifier_scale=classifier_scale)
+            else:
+                gradient = cond_fn(
+                    cond_kwargs.pop('unet'), self, sample, timestep,
+                    beta_prod_t, cond_kwargs.pop('model_stats'), **cond_kwargs)
             model_output = model_output - (beta_prod_t**0.5) * gradient
             pred_original_sample = (
                 sample -

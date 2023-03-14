@@ -16,7 +16,7 @@ loss_config = dict(
 
 model = dict(
     type='StyleGAN2',
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='EditDataPreprocessor'),
     generator=dict(
         type='StyleGANv2Generator',
         out_size=None,  # Need to be set.

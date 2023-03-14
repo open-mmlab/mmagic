@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch
-
 from mmedit.registry import MODELS
 from ..srgan import SRGAN
 
@@ -157,11 +155,7 @@ class DIC(SRGAN):
             Tensor: Extract gt data.
         """
 
-        gt_imgs = [data_sample.gt_img.data for data_sample in data_samples]
-        batch_gt_img = torch.stack(gt_imgs)
-        gt_heatmaps = [
-            data_sample.gt_heatmap.data for data_sample in data_samples
-        ]
-        batch_gt_heatmap = torch.stack(gt_heatmaps)
+        batch_gt_img = data_samples.gt_img
+        batch_gt_heatmap = data_samples.gt_heatmap
 
         return [batch_gt_img, batch_gt_heatmap]
