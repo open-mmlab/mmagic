@@ -61,6 +61,7 @@ class TestEditDataSample(TestCase):
         # METAINFO
         img_path, gt_path, merged_path = 'aaa', 'bbb', 'ccc'
         gt_channel_order, gt_color_type = 'rgb', 'color'
+        prompt = 'prompt'
 
         data = dict(
             gt=gt,
@@ -74,7 +75,8 @@ class TestEditDataSample(TestCase):
             gt_path=gt_path,
             merged_path=merged_path,
             gt_channel_order=gt_channel_order,
-            gt_color_type=gt_color_type)
+            gt_color_type=gt_color_type,
+            prompt=prompt)
         data_sample = EditDataSample()
         data_sample.set_predefined_data(data)
 
@@ -91,6 +93,7 @@ class TestEditDataSample(TestCase):
                                 gt_channel_order, True)
         self._check_in_and_same(data_sample, 'gt_color_type', gt_color_type,
                                 True)
+        self._check_in_and_same(data_sample, 'prompt', prompt, False)
         # check gt label
         data_sample.gt_label.data = gt_label
 
@@ -175,6 +178,19 @@ class TestEditDataSample(TestCase):
         self.assertIn('gt_label', data_sample)
         del data_sample.gt_label
         self.assertNotIn('gt_label', data_sample)
+
+    def test_set_prompt(self):
+        data_sample = EditDataSample()
+        prompt = 'I\'m a prompt!'
+        data_sample.set_prompt(prompt)
+        self.assertEqual(data_sample.prompt, prompt)
+
+        del data_sample.prompt
+        self.assertNotIn('prompt', data_sample)
+
+        prompts = ['I\'m a prompt!', 'I\'m another prompt!']
+        data_sample.set_prompt(prompts)
+        self.assertEqual(data_sample.prompt, prompts)
 
     def test_stack_and_split(self):
         # test stack
