@@ -134,3 +134,14 @@ class DiffusersWrapper(BaseModule):
             prefix += f'From Config: {self._from_config}\n'
         s = prefix + s
         return s
+
+    def forward(self, *args, **kwargs) -> Any:
+        """Forward function of wrapped module.
+
+        Args:
+            *args, **kwargs: The arguments of the wrapped module.
+
+        Returns:
+            Any: The output of wrapped module's forward function.
+        """
+        return self.model(*args, **kwargs)
