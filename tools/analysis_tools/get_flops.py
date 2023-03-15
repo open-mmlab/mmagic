@@ -14,14 +14,24 @@ except ImportError:
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Get a editor complexity')
+    parser = argparse.ArgumentParser(
+        description='Get a editor complexity',
+        formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('config', help='train config file path')
     parser.add_argument(
         '--shape',
         type=int,
         nargs='+',
         default=[3, 250, 250],
-        help='input shape')
+        help='Input shape. Supported tasks:\n'
+        'Image Super-Resolution: --shape 3 h w\n'
+        'Video Super-Resolution: --shape t 3 h w\n'
+        'Video Interpolation: --shape t 3 h w\n'
+        'Image Restoration: --shape 3 h w\n'
+        'Inpainting: --shape 4 h w\n'
+        'Matting: --shape 4 h w\n'
+        'Unconditional GANs: --shape noisy_size\n'
+        'Image Translation: --shape 3 h w')
     parser.add_argument(
         '--activations',
         action='store_true',
