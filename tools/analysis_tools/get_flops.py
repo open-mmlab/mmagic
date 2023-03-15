@@ -49,6 +49,33 @@ def parse_args():
 
 
 def main():
+    """
+    Examples:
+
+    Image Super-Resolution:
+    `python tools/analysis_tools/get_flops.py configs/srcnn/srcnn_x4k915_1xb16-1000k_div2k.py --shape 3 250 250` # noqa
+
+    Video Super-Resolution:
+    `python tools/analysis_tools/get_flops.py configs/edvr/edvrm_8xb4-600k_reds.py --shape 5 3 256 256` # noqa
+
+    Video Interpolation:
+    `python tools/analysis_tools/get_flops.py configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py --shape 4 3 64 64` # noqa
+
+    Image Restoration:
+    `python tools/analysis_tools/get_flops.py configs/nafnet/nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro.py --shape 3 128 128` # noqa
+
+    Inpainting:
+    `python tools/analysis_tools/get_flops.py configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py --shape 4 64 64` # noqa
+
+    Matting:
+    `python tools/analysis_tools/get_flops.py configs/dim/dim_stage1-v16_1xb1-1000k_comp1k.py --shape 4 256 256` # noqa
+
+    Unconditional GANs:
+    `python tools/analysis_tools/get_flops.py configs/wgan-gp/wgangp_GN_1xb64-160kiters_celeba-cropped-128x128.py --shape 128` # noqa
+
+    Image Translation:
+    `python tools/analysis_tools/get_flops.py configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py --shape 3 250 250`
+    """
 
     args = parse_args()
 
