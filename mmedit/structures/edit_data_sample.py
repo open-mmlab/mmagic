@@ -3,7 +3,7 @@ from collections import abc
 from copy import deepcopy
 from itertools import chain
 from numbers import Number
-from typing import Any, List, Sequence, Union
+from typing import Any, Sequence, Union
 
 import mmengine
 import numpy as np
@@ -204,7 +204,7 @@ class EditDataSample(BaseDataElement):
             if k == 'gt_label':
                 self.set_gt_label(v)
             elif k == 'prompt':
-                self.set_prompt(v)
+                self.set_field(v, k, dtype=(str, list))
             else:
                 self.set_field(all_to_tensor(v), k, dtype=torch.Tensor)
 
@@ -241,32 +241,6 @@ class EditDataSample(BaseDataElement):
     def gt_label(self):
         """Delete gt label."""
         del self._gt_label
-
-    def set_prompt(self, value):
-        self.prompt = value
-
-    @property
-    def prompt(self):
-        """This is function to fetch prompt.
-
-        Returns:
-            Union[str, list]: A prompt or a list of prompts (if stacked).
-        """
-        return self._prompt
-
-    @prompt.setter
-    def prompt(self, value: Union[str, List[str]]):
-        """This is the function to set prompt.
-
-        Args:
-            value (Union[str, List[str]]): A prompt or a list of prompts.
-        """
-        self.set_field(value, '_prompt', dtype=(str, list))
-
-    @prompt.deleter
-    def prompt(self):
-        """This is the function to delete prompt."""
-        del self._prompt
 
     @classmethod
     def stack(cls,
