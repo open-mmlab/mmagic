@@ -83,7 +83,7 @@ class NoiseSampler:
         return self
 
     def __next__(self):
-        if self.idx > self.max_times:
+        if self.idx >= self.max_times:
             raise StopIteration
         self.idx += 1
 
@@ -116,7 +116,7 @@ class DataSampler:
         return self
 
     def __next__(self):
-        if self.idx > self.max_times:
+        if self.idx >= self.max_times:
             self._iterator = iter(self._dataloader)
             raise StopIteration
         self.idx += 1
@@ -152,7 +152,7 @@ class ValDataSampler:
         return self
 
     def __next__(self):
-        if self.idx > self.max_times:
+        if self.idx >= self.max_times:
             self._iterator = iter(self._dataloader)
             raise StopIteration
         self.idx += 1

@@ -19,3 +19,38 @@ The Vid4 dataset can be downloaded from [here](https://drive.google.com/file/d/1
 
 1. BIx4 contains images downsampled by bicubic interpolation
 2. BDx4 contains images blurred by Gaussian kernel with σ=1.6, followed by a subsampling every four pixels.
+
+Note that we should prepare a annotation file (such as meta_info_Vid4_GT.txt) for Vid4 dataset as follows.
+
+```text
+calendar 41 (576,720,3)
+city 34 (576,704,3)
+foliage 49 (480,720,3)
+walk 47 (480,720,3)
+```
+
+For ToFlow, we should prepare directly upsampling dataset. We provide such a script:
+
+```shell
+python tools/dataset_converters/vid4/preprocess_vid4_dataset.py --data-root ./data/Vid4/BIx4
+```
+
+The folder structure should look like:
+
+```text
+mmediting
+├── mmedit
+├── tools
+├── configs
+├── data
+│   ├── Vid4
+│   │   ├── GT
+│   │   │   ├── calendar
+│   │   │   ├── city
+│   │   │   ├── foliage
+│   │   │   ├── walk
+│   │   ├── BDx4
+│   │   ├── BIx4
+│   │   ├── BIx4up_direct
+│   │   ├── meta_info_Vid4_GT.txt
+```

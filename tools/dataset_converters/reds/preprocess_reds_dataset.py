@@ -10,6 +10,7 @@ import sys
 import cv2
 import lmdb
 import mmcv
+import mmengine
 
 
 def make_lmdb(mode, data_path, lmdb_path, batch=5000, compress_level=1):
@@ -69,7 +70,7 @@ def make_lmdb(mode, data_path, lmdb_path, batch=5000, compress_level=1):
 
     print('Reading image path list ...')
     img_path_list = sorted(
-        list(mmcv.scandir(data_path, suffix='png', recursive=True)))
+        list(mmengine.scandir(data_path, suffix='png', recursive=True)))
     keys = []
     for img_path in img_path_list:
         parts = re.split(r'[\\/]', img_path)
@@ -88,7 +89,7 @@ def make_lmdb(mode, data_path, lmdb_path, batch=5000, compress_level=1):
     env = lmdb.open(lmdb_path, map_size=data_size * 10)
 
     # write data to lmdb
-    pbar = mmcv.ProgressBar(len(img_path_list))
+    pbar = mmengine.ProgressBar(len(img_path_list))
     txn = env.begin(write=True)
     txt_file = open(osp.join(lmdb_path, 'meta_info.txt'), 'w')
     for idx, (path, key) in enumerate(zip(img_path_list, keys)):
@@ -145,7 +146,7 @@ def generate_anno_file(root_path, file_name='meta_info_REDS_GT.txt'):
 
     print(f'Generate annotation files {file_name}...')
     txt_file = osp.join(root_path, file_name)
-    mmcv.utils.mkdir_or_exist(osp.dirname(txt_file))
+    mmengine.utils.mkdir_or_exist(osp.dirname(txt_file))
     with open(txt_file, 'w') as f:
         for i in range(270):
             for j in range(100):
@@ -180,11 +181,11 @@ def split_anno_file(root_path, val_partition='REDS4'):
             else:
                 train_list.append(f'{i:03d}/{j:08d}.png (720, 1280, 3)')
 
-    mmcv.utils.mkdir_or_exist(osp.dirname(train_txt_file))
+    mmengine.utils.mkdir_or_exist(osp.dirname(train_txt_file))
     with open(train_txt_file, 'w') as f:
         f.write('\n'.join(train_list))
 
-    mmcv.utils.mkdir_or_exist(osp.dirname(val_txt_file))
+    mmengine.utils.mkdir_or_exist(osp.dirname(val_txt_file))
     with open(val_txt_file, 'w') as f:
         f.write('\n'.join(val_list))
 
@@ -199,7 +200,7 @@ def unzip(zip_path):
     Returns:
         list: unzip folder names.
     """
-    zip_files = mmcv.scandir(zip_path, suffix='zip', recursive=False)
+    zip_files = mmengine.scandir(zip_path, suffix='zip', recursive=False)
     import shutil
     import zipfile
     unzip_folders = []
