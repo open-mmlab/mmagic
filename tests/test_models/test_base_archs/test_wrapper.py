@@ -92,7 +92,14 @@ class TestWrapper(TestCase):
         # 7. test forward function
         forward_mock = MagicMock()
         model.model.forward = forward_mock
-        model(**dict(t='t', control='control'))
+        model(dict(t='t', control='control'))
         _, called_kwargs = forward_mock.call_args
         self.assertEqual(called_kwargs['t'], 't')
         self.assertEqual(called_kwargs['control'], 'control')
+
+        # 8. test other attribute share with BaseModule and model
+        register_buffer_mock = MagicMock()
+        model.model.registrer_buffer = register_buffer_mock
+        model.registrer_buffer('buffer', 123)
+        called_args, _ = register_buffer_mock.call_args
+        self.assertEqual(called_args, ('buffer', 123))
