@@ -92,7 +92,7 @@ class TestWrapper(TestCase):
         # 7. test forward function
         forward_mock = MagicMock()
         model.model.forward = forward_mock
-        model(dict(t='t', control='control'))
+        model(**dict(t='t', control='control'))
         _, called_kwargs = forward_mock.call_args
         self.assertEqual(called_kwargs['t'], 't')
         self.assertEqual(called_kwargs['control'], 'control')
