@@ -59,27 +59,39 @@ class ClipWrapper(nn.Module):
 
         super().__init__()
         self.clip_type = clip_type
-        assert clip_type in ['clip', 'open_clip']
+        assert clip_type in ['clip', 'open_clip', 'huggingface']
+
+        error_msg = ('{} need to be installed! Run `pip install -r '
+                     'requirements/optional.txt` and try again')
         if clip_type == 'clip':
             try:
                 import clip
             except ImportError:
-                raise ImportError(
-                    'clip need to be installed! Run `pip install -r requirements/optional.txt` and try again'  # noqa
-                )  # noqa
+                raise ImportError(error_msg % '\'clip\'')
             print_log(f'Creating {kwargs["name"]} by OpenAI', 'current')
             self.model, _ = clip.load(*args, **kwargs)
         elif clip_type == 'open_clip':
             try:
                 import open_clip
             except ImportError:
-                raise ImportError(
-                    'open_clip_torch need to be installed! Run `pip install -r requirements/optional.txt` and try again'  # noqa
-                )  # noqa
-            print_log(
-                f'Creating {kwargs["model_name"]} by mlfoundations',  # noqa
-                'current')
+                raise ImportError(error_msg % '\'open_clip_torch\'')
+            print_log(f'Creating {kwargs["model_name"]} by '
+                      'mlfoundations', 'current')
             self.model = open_clip.create_model(*args, **kwargs)
+
+        elif clip_type == 'huggingface':
+            try:
+                import transformers
+            except ImportError:
+                raise ImportError(error_msg % '\'transforms\'')
+            # NOTE: use CLIPTextModel to adopt stable diffusion pipeline
+            model_cls = transformers.CLIPTextModel
+            self.model = model_cls.from_pretrained(*args, **kwargs)
+            self.config = self.model.config
+            print_log(
+                f'Creating {self.model.name_or_path} '
+                'by \'HuggingFace\'', 'current')
+
         self.model.eval().requires_grad_(False)
 
     def forward(self, *args, **kwargs):
