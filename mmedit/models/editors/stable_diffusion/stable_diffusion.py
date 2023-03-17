@@ -40,8 +40,6 @@ class StableDiffusion(BaseModel):
             module for diffusion scheduler in test stage (`self.infer`). If not
             passed, will use the same scheduler as `schedule`. Defaults to
             None.
-        unet_sample_size (int, optional): The sample size for unet.
-            Defaults to None.
         data_preprocessor (dict, optional): The pre-process config of
             :class:`BaseDataPreprocessor`.
         init_cfg (dict, optional): The weight initialized config for
@@ -53,11 +51,11 @@ class StableDiffusion(BaseModel):
                  text_encoder: ModelType,
                  tokenizer: str,
                  unet: ModelType,
-                 scheduler,
-                 test_scheduler=None,
-                 unet_sample_size=None,
-                 data_preprocessor=dict(type='EditDataPreprocessor'),
-                 init_cfg=None):
+                 scheduler: ModelType,
+                 test_scheduler: Optional[ModelType] = None,
+                 data_preprocessor: Optional[ModelType] = dict(
+                     type='EditDataPreprocessor'),
+                 init_cfg: Optional[dict] = None):
 
         # TODO: support `from_pretrained` for this class
         super().__init__(data_preprocessor, init_cfg)
@@ -79,12 +77,7 @@ class StableDiffusion(BaseModel):
             self.tokenizer = CLIPTokenizer.from_pretrained(
                 tokenizer, subfolder='tokenizer')
 
-        # default sample size for unet
-        if hasattr(self.unet, 'sample_size'):
-            self.unet_sample_size = self.unet.sample_size
-        else:
-            self.unet_sample_size = unet_sample_size
-
+        self.unet_sample_size = self.unet.sample_size
         self.vae_scale_factor = 2**(len(self.vae.block_out_channels) - 1)
 
     @property
