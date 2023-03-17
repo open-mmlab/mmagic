@@ -1132,6 +1132,9 @@ class DenoisingUnet(BaseModule):
                 bias=True,
                 order=('norm', 'act', 'conv'))
 
+        if self.unet_type == 'stable':
+            self.sample_size = 64
+
         self.init_weights(pretrained)
 
     def forward(self,

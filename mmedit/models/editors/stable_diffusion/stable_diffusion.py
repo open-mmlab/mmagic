@@ -1,111 +1,95 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import inspect
-import os.path as osp
+from copy import deepcopy
 from typing import Dict, List, Optional, Union
 
 import torch
+import torch.nn as nn
 from mmengine.logging import MMLogger
 from mmengine.model import BaseModel
 from mmengine.runner import set_random_seed
-from mmengine.runner.checkpoint import _load_checkpoint
+from PIL import Image
 from tqdm.auto import tqdm
+from transformers import CLIPTokenizer
 
+from mmedit.models.utils import build_module
 from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
-from .clip_wrapper import load_clip_submodels
-from .vae import AutoencoderKL
 
 logger = MMLogger.get_current_instance()
+
+ModelType = Union[Dict, nn.Module]
 
 
 @MODELS.register_module('sd')
 @MODELS.register_module()
 class StableDiffusion(BaseModel):
-    """class to run stable diffsuion pipeline.
+    """Class for Stable Diffusion. Refers to https://github.com/Stability-
+    AI/stablediffusion and https://github.com/huggingface/diffusers/blob/main/s
+    rc/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion_attend_an
+    d_excite.py  # noqa.
 
     Args:
-        diffusion_scheduler(dict): Diffusion scheduler config.
-        unet_cfg(dict): Unet config.
-        vae_cfg(dict): Vae config.
-        pretrained_ckpt_path(dict):
-            Pretrained ckpt path for submodels in stable diffusion.
-        requires_safety_checker(bool):
-            whether to run safety checker after image generated.
-        unet_sample_size(int): sampel size for unet.
+        unet (Union[dict, nn.Module]): The config or module for Unet model.
+        text_encoder (Union[dict, nn.Module]): The config or module for text
+            encoder.
+        vae (Union[dict, nn.Module]): The config or module for VAE model.
+        tokenizer (str): The **name** for CLIP tokenizer.
+        schedule (Union[dict, nn.Module]): The config or module for diffusion
+            scheduler.
+        test_scheduler (Union[dict, nn.Module], optional): The config or
+            module for diffusion scheduler in test stage (`self.infer`). If not
+            passed, will use the same scheduler as `schedule`. Defaults to
+            None.
+        unet_sample_size (int, optional): The sample size for unet.
+            Defaults to None.
+        data_preprocessor (dict, optional): The pre-process config of
+            :class:`BaseDataPreprocessor`.
+        init_cfg (dict, optional): The weight initialized config for
+            :class:`BaseModule`.
     """
 
     def __init__(self,
-                 diffusion_scheduler,
-                 unet,
-                 vae,
-                 requires_safety_checker=True,
-                 unet_sample_size=64,
+                 vae: ModelType,
+                 text_encoder: ModelType,
+                 tokenizer: str,
+                 unet: ModelType,
+                 scheduler,
+                 test_scheduler=None,
+                 unet_sample_size=None,
+                 data_preprocessor=dict(type='EditDataPreprocessor'),
                  init_cfg=None):
-        super().__init__()
 
-        self.device = torch.device('cpu')
-        self.submodels = [
-            'tokenizer', 'vae', 'scheduler', 'unet', 'feature_extractor',
-            'text_encoder'
-        ]
-        self.requires_safety_checker = requires_safety_checker
+        # TODO: support `from_pretrained` for this class
+        super().__init__(data_preprocessor, init_cfg)
 
-        self.scheduler = DIFFUSION_SCHEDULERS.build(
-            diffusion_scheduler) if isinstance(diffusion_scheduler,
-                                               dict) else diffusion_scheduler
-        self.scheduler.order = 1
-        self.scheduler.init_noise_sigma = 1.0
+        self.vae = build_module(vae, MODELS)
+        self.unet = build_module(unet, MODELS)
+        self.scheduler = build_module(scheduler, DIFFUSION_SCHEDULERS)
+        if test_scheduler is None:
+            self.test_scheduler = deepcopy(self.scheduler)
+        else:
+            self.test_scheduler = build_module(test_scheduler,
+                                               DIFFUSION_SCHEDULERS)
+        self.text_encoder = build_module(text_encoder, MODELS)
+        if isinstance(tokenizer, nn.Module):
+            self.tokenizer = tokenizer
+        else:
+            # NOTE: here we assume tokenizer is an string
+            # TODO: maybe support a tokenizer wrapper later
+            self.tokenizer = CLIPTokenizer.from_pretrained(
+                tokenizer, subfolder='tokenizer')
 
-        self.unet_sample_size = unet_sample_size
-        self.unet = MODELS.build(unet) if isinstance(unet, dict) else unet
+        # default sample size for unet
+        if hasattr(self.unet, 'sample_size'):
+            self.unet_sample_size = self.unet.sample_size
+        else:
+            self.unet_sample_size = unet_sample_size
 
-        self.vae = AutoencoderKL(**vae) if isinstance(vae, dict) else vae
         self.vae_scale_factor = 2**(len(self.vae.block_out_channels) - 1)
 
-        self.init_cfg = init_cfg
-        self.init_weights()
-
-    def init_weights(self):
-        """load pretrained ckpt for each submodel."""
-        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
-            map_location = self.init_cfg.get('map_location', 'cpu')
-            pretrained_model_path = self.init_cfg.get('pretrained_model_path',
-                                                      None)
-            if pretrained_model_path:
-                unet_ckpt_path = osp.join(pretrained_model_path, 'unet',
-                                          'diffusion_pytorch_model.bin')
-                if unet_ckpt_path:
-                    state_dict = _load_checkpoint(unet_ckpt_path, map_location)
-                    self.unet.load_state_dict(state_dict, strict=True)
-
-                vae_ckpt_path = osp.join(pretrained_model_path, 'vae',
-                                         'diffusion_pytorch_model.bin')
-                if vae_ckpt_path:
-                    state_dict = _load_checkpoint(vae_ckpt_path, map_location)
-                    self.vae.load_state_dict(state_dict, strict=True)
-
-        self.tokenizer, self.feature_extractor, self.text_encoder, self.safety_checker = load_clip_submodels(  # noqa
-            self.init_cfg, self.submodels, self.requires_safety_checker)
-
-    def to(self, torch_device: Optional[Union[str, torch.device]] = None):
-        """put submodels to torch device.
-
-        Args:
-            torch_device(Optional[Union[str, torch.device]]):
-                device to put, default to None.
-
-        Returns:
-            self(StableDiffusion):
-                class instance itsself.
-        """
-        if torch_device is None:
-            return self
-
-        for name in self.submodels:
-            module = getattr(self, name)
-            if isinstance(module, torch.nn.Module):
-                module.to(torch_device)
-        self.device = torch.device(torch_device)
-        return self
+    @property
+    def device(self):
+        return next(self.parameters()).device
 
     @torch.no_grad()
     def infer(self,
@@ -120,7 +104,8 @@ class StableDiffusion(BaseModel):
               generator: Optional[torch.Generator] = None,
               latents: Optional[torch.FloatTensor] = None,
               show_progress=True,
-              seed=1):
+              seed=1,
+              return_type='image'):
         """Function invoked when calling the pipeline for generation.
 
         Args:
@@ -160,6 +145,13 @@ class StableDiffusion(BaseModel):
                 with different prompts.
                 If not provided, a latents tensor will be
                 generated by sampling using the supplied random `generator`.
+            return_type (str): The return type of the inference results.
+                Supported types are 'image', 'numpy', 'tensor'. If 'image'
+                is passed, a list of PIL images will be returned. If 'numpy'
+                is passed, a numpy array with shape [N, C, H, W] will be
+                returned, and the value range will be same as decoder's
+                output range. If 'tensor' is passed, the decoder's output
+                will be returned. Defaults to 'image'.
 
         Returns:
             dict:['samples', 'nsfw_content_detected']:
@@ -192,7 +184,6 @@ class StableDiffusion(BaseModel):
                                               negative_prompt)
 
         # 4. Prepare timesteps
-        # self.scheduler.set_timesteps(num_inference_steps, device=device)
         self.scheduler.set_timesteps(num_inference_steps)
         timesteps = self.scheduler.timesteps
 
@@ -220,8 +211,8 @@ class StableDiffusion(BaseModel):
             # expand the latents if we are doing classifier free guidance
             latent_model_input = torch.cat(
                 [latents] * 2) if do_classifier_free_guidance else latents
-            # latent_model_input = \
-            # self.scheduler.scale_model_input(latent_model_input, t)
+            latent_model_input = self.scheduler.scale_model_input(
+                latent_model_input, t)
 
             # predict the noise residual
             noise_pred = self.unet(
@@ -240,35 +231,51 @@ class StableDiffusion(BaseModel):
 
         # 8. Post-processing
         image = self.decode_latents(latents)
+        if return_type == 'image':
+            image = self.output_to_pil(image)
+        elif return_type == 'numpy':
+            image = image.cpu().numpy()
+        else:
+            assert return_type == 'tensor', (
+                'Only support \'image\', \'numpy\' and \'tensor\' for '
+                f'return_type, but receive {return_type}')
 
-        # 9. Run safety checker
-        image, has_nsfw_concept = self.run_safety_checker(
-            image, device, text_embeddings.dtype)
-        image = image[0].permute([2, 0, 1])
+        return {'samples': image}
 
-        return {'samples': image, 'nsfw_content_detected': has_nsfw_concept}
+    def output_to_pil(self, image) -> List[Image.Image]:
+        """Convert output tensor to PIL image. Output tensor will be de-normed
+        to [0, 255] by `EditDataPreprocessor.destruct`. Due to no
+        `data_samples` is passed, color order conversion will not be performed.
+
+        Args:
+            image (torch.Tensor): The output tensor of the decoder.
+
+        Returns:
+            List[Image.Image]: The list of processed PIL images.
+        """
+        image = self.data_preprocessor.destruct(image)
+        image = image.permute(0, 2, 3, 1).to(torch.uint8).cpu().numpy()
+        image = [Image.fromarray(img) for img in image]
+        return image
 
     def _encode_prompt(self, prompt, device, num_images_per_prompt,
                        do_classifier_free_guidance, negative_prompt):
         """Encodes the prompt into text encoder hidden states.
 
         Args:
-            prompt (str or list(int)):
-                prompt to be encoded.
-            device: (torch.device):
-                torch device.
-            num_images_per_prompt (int):
-                number of images that should be generated per prompt.
-            do_classifier_free_guidance (`bool`):
-                whether to use classifier free guidance or not.
-            negative_prompt (str or List[str]):
-                The prompt or prompts not to guide the image generation.
-                Ignored when not using guidance (i.e., ignored
-                if `guidance_scale` is less than `1`).
+            prompt (str or list(int)): prompt to be encoded.
+            device: (torch.device): torch device.
+            num_images_per_prompt (int): number of images that should be
+                generated per prompt.
+            do_classifier_free_guidance (`bool`): whether to use classifier
+                free guidance or not.
+            negative_prompt (str or List[str]): The prompt or prompts not
+                to guide the image generation. Ignored when not using
+                guidance (i.e., ignored if `guidance_scale` is less than `1`).
 
         Returns:
-            text_embeddings (torch.Tensor):
-                text embeddings generated by clip text encoder.
+            text_embeddings (torch.Tensor): text embeddings generated by
+                clip text encoder.
         """
         batch_size = len(prompt) if isinstance(prompt, list) else 1
 
@@ -368,33 +375,6 @@ class StableDiffusion(BaseModel):
 
         return text_embeddings
 
-    def run_safety_checker(self, image, device, dtype):
-        """run safety checker to check whether image has nsfw content.
-
-        Args:
-            image (numpy.ndarray):
-                image generated by stable diffusion.
-            device (torch.device):
-                device to run safety checker.
-            dtype (torch.dtype):
-                float type to run.
-
-        Returns:
-            image (numpy.ndarray):
-                black image if nsfw content detected else input image.
-            has_nsfw_concept (list[bool]):
-                flag list to indicate nsfw content detected.
-        """
-        if self.safety_checker is not None:
-            safety_checker_input = self.feature_extractor(
-                image[0], return_tensors='pt').to(device)
-            image, has_nsfw_concept = self.safety_checker(
-                images=image,
-                clip_input=safety_checker_input.pixel_values.to(dtype))
-        else:
-            has_nsfw_concept = None
-        return image, has_nsfw_concept
-
     def decode_latents(self, latents):
         """use vae to decode latents.
 
@@ -402,15 +382,13 @@ class StableDiffusion(BaseModel):
             latents (torch.Tensor): latents to decode.
 
         Returns:
-            image (numpy.ndarray): image result.
+            image (torch.Tensor): image result.
         """
         latents = 1 / 0.18215 * latents
-        image = self.vae.decode(latents).sample
-        image = (image / 2 + 0.5).clamp(0, 1)
+        image = self.vae.decode(latents)['sample']
         # we always cast to float32 as this does not cause
         # significant overhead and is compatible with bfloa16
-        image = image.cpu().permute(0, 2, 3, 1).float()
-        return image
+        return image.float()
 
     def prepare_extra_step_kwargs(self, generator, eta):
         """prepare extra kwargs for the scheduler step.

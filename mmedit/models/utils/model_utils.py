@@ -1,12 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import logging
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import torch
 import torch.nn as nn
 from mmengine import print_log
 from mmengine.model.weight_init import (constant_init, kaiming_init,
                                         normal_init, xavier_init)
+from mmengine.registry import Registry
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 from torch import Tensor
 from torch.nn import init
@@ -232,3 +233,22 @@ def get_valid_num_batches(batch_inputs: Optional[ForwardInputs] = None,
             ' Please check your input carefully.')
 
     return num_batches_inputs or num_batches_samples
+
+
+def build_module(module: Union[dict, nn.Module], builder: Registry) -> Any:
+    """Build module from config or return the module itself.
+
+    Args:
+        module (Union[dict, nn.Module]): The module to build.
+        builder (Registry): The registry to build module.
+
+    Returns:
+        Any: The built module.
+    """
+    if isinstance(module, dict):
+        return builder.build(module)
+    elif isinstance(module, nn.Module):
+        return module
+    else:
+        raise TypeError(
+            f'Only support dict and nn.Module, but got {type(module)}.')

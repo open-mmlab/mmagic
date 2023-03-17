@@ -11,6 +11,8 @@ from addict import Dict
 from mmengine.utils.dl_utils import TORCH_VERSION
 from mmengine.utils.version_utils import digit_version
 
+from mmedit.registry import MODELS
+
 
 class Downsample2D(nn.Module):
     """A downsampling layer with an optional convolution.
@@ -874,6 +876,7 @@ class DiagonalGaussianDistribution(object):
         return self.mean
 
 
+@MODELS.register_module('EditAutoencoderKL')
 class AutoencoderKL(nn.Module):
     r"""Variational Autoencoder (VAE) model with KL loss
     from the paper Auto-Encoding Variational Bayes by Diederik P. Kingma

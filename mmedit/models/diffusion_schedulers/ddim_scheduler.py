@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Union
+from typing import Optional, Union
 
 import numpy as np
 import torch
@@ -77,6 +77,9 @@ class EditDDIMScheduler:
         self.final_alpha_cumprod = np.array(
             1.0) if set_alpha_to_one else self.alphas_cumprod[0]
 
+        # standard deviation of the initial noise distribution
+        self.init_noise_sigma = 1.0
+
         # setable values
         self.num_inference_steps = None
         self.timesteps = np.arange(0, num_train_timesteps)[::-1].copy()
@@ -89,6 +92,22 @@ class EditDDIMScheduler:
             0, self.num_train_timesteps,
             self.num_train_timesteps // self.num_inference_steps)[::-1].copy()
         self.timesteps += offset
+
+    def scale_model_input(self,
+                          sample: torch.FloatTensor,
+                          timestep: Optional[int] = None) -> torch.FloatTensor:
+        """Ensures interchangeability with schedulers that need to scale the
+        denoising model input depending on the current timestep.
+
+        Args:
+            sample (`torch.FloatTensor`): input sample
+            timestep (`int`, optional): current timestep
+
+        Returns:
+            `torch.FloatTensor`: scaled input sample
+        """
+
+        return sample
 
     def _get_variance(self, timestep, prev_timestep):
         """get variance."""
