@@ -88,8 +88,7 @@ model = dict(
     vae=vae,
     init_cfg=init_cfg,
     text_encoder=dummy_text_encoder(),
-    tokenizer=dummy_text_encoder(),
-    unet_sample_size=64)
+    tokenizer=dummy_text_encoder())
 
 
 @pytest.mark.skipif(
