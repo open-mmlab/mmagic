@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import warnings
-from typing import List
+from typing import Any, List
 
 from mmedit.utils import try_import
 from .ddim_scheduler import EditDDIMScheduler
@@ -8,6 +8,37 @@ from .ddpm_scheduler import EditDDPMScheduler
 
 
 class SchedulerWrapper:
+    """Wrapper for schedulers from HuggingFace Diffusers. This wrapper will be
+    set a attribute called `_scheduler_cls` by wrapping function and will be
+    used to initialize the model structure.
+
+    Example:
+    >>> 1. Load pretrained model from HuggingFace Space.
+    >>> config = dict(
+    >>>     type='DDPMScheduler',
+    >>>     from_pretrained='lllyasviel/sd-controlnet-canny',
+    >>>     subfolder='scheduler')
+    >>> ddpm_scheduler = DIFFUSION_SCHEDULERS.build(config)
+
+    >>> 2. Initialize model with own defined arguments
+    >>> config = dict(
+    >>>     type='EulerDiscreteScheduler',
+    >>>     num_train_timesteps=2000,
+    >>>     beta_schedule='scaled_linear')
+    >>> euler_scheduler = DIFFUSION_SCHEDULERS.build(config)
+
+    Args:
+        from_pretrained (Union[str, os.PathLike], optional): The *model id*
+            of a pretrained model or a path to a *directory* containing
+            model weights and config. Please refers to
+            `diffusers.model.modeling_utils.ModelMixin.from_pretrained`
+            for more detail. Defaults to None.
+
+        *args, **kwargs: If `from_pretrained` is passed, *args and **kwargs
+            will be passed to `from_pretrained` function. Otherwise, *args
+            and **kwargs will be used to initialize the model by
+            `self._module_cls(*args, **kwargs)`.
+    """
 
     def __init__(self, from_pretrained=None, *args, **kwargs):
 
@@ -20,13 +51,33 @@ class SchedulerWrapper:
         else:
             self.scheduler = scheduler_cls(*args, **kwargs)
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
+        """This function provide a way to access the attributes of the wrapped
+        scheduler.
+
+        Args:
+            name (str): The name of the attribute.
+
+        Returns:
+            Any: The got attribute.
+        """
+
         try:
             return getattr(self.scheduler, name)
         except AttributeError:
             raise AttributeError('\'name\' cannot be found in both '
                                  f'\'{self.__class__.__name__}\' and '
                                  f'\'{self.__class__.__name__}.scheduler\'.')
+
+    def __repr__(self):
+        """The representation of the wrapper."""
+        s = super().__repr__()
+        prefix = f'Wrapped Scheduler Class: {self._scheduler_cls}\n'
+        prefix += f'Wrapped Scheduler Name: {self._scheduler_name}\n'
+        if self._from_pretrained:
+            prefix += f'From Pretrained: {self._from_pretrained}\n'
+        s = prefix + s
+        return s
 
 
 def register_diffusers_schedulers() -> List[str]:
