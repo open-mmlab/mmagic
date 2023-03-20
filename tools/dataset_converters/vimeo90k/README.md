@@ -15,7 +15,7 @@
 }
 ```
 
-The training and test datasets can be download from [here](http://toflow.csail.mit.edu/).
+The training and test datasets can be downloaded from [here](http://toflow.csail.mit.edu/).
 
 Then you can rename the directory `vimeo_septuplet/sequences` to  `vimeo90k/GT`. The Vimeo90K dataset has a `clip/sequence/img` folder structure:
 
