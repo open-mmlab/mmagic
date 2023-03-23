@@ -283,7 +283,7 @@ class DeepFillv1Inpaintor(TwoStageInpaintor):
         gt_img = data_samples.gt_img
         mask = data_samples.mask
         mask = mask.float()
-        bbox_tensor = torch.LongTensor(data_samples.mask_bbox)
+        bbox_tensor = torch.LongTensor(data_samples.metainfo['mask_bbox'])
 
         # get common output from encdec
         # input with ones
