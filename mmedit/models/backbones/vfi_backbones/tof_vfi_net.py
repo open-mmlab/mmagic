@@ -294,11 +294,11 @@ class TOFlowVFINet(nn.Module):
         flow_10 = self.spynet(inputs[:, 0], inputs[:, 1]).permute(0, 2, 3, 1)
         flow_01 = self.spynet(inputs[:, 1], inputs[:, 0]).permute(0, 2, 3, 1)
 
-        wrap_frame0 = flow_warp(inputs[:, 0], flow_01 / 2)
-        wrap_frame1 = flow_warp(inputs[:, 1], flow_10 / 2)
+        warp_frame0 = flow_warp(inputs[:, 0], flow_01 / 2)
+        warp_frame1 = flow_warp(inputs[:, 1], flow_10 / 2)
 
-        wrap_frames = torch.stack([wrap_frame0, wrap_frame1], dim=1)
-        output = self.resnet(wrap_frames)
+        warp_frames = torch.stack([warp_frame0, warp_frame1], dim=1)
+        output = self.resnet(warp_frames)
         output = self.denormalize(output)
 
         return output[..., :h_ori, :w_ori]
