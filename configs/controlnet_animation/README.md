@@ -16,18 +16,16 @@ We use controlnet to generate frames guided by input video and make animation.
 Here are some demos.
 
 <div align="center">
-  <video src="https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4" width=600/>
+  <video src="https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4" width=1024/>
 </div>
 
+<div align="center">
+  <video src="https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4" width=1024/>
+</div>
 
-<video id="Video2" width="800" height="400">
-    <source src = "https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4" type = "video/mp4">
-</video>
-
-<video id="Video3" width="800" height="400">
-    <source src = "https://user-images.githubusercontent.com/12782558/227152153-f1a68e27-18dd-424a-b49e-15680e4c7ae0.mp4" type = "video/mp4">
-</video>
-
+<div align="center">
+  <video src="https://user-images.githubusercontent.com/12782558/227152153-f1a68e27-18dd-424a-b49e-15680e4c7ae0.mp4" width=1024/>
+</div>
 
 ## Pretrained models
 
