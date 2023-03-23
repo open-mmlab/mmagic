@@ -3,7 +3,7 @@ import os.path as osp
 
 import pytest
 
-from mmedit.apis.inferencers.mmedit_inferencer import MMEditInferencer
+from mmedit.apis.mmedit_inferencer import MMEditInferencer
 from mmedit.utils import register_all_modules
 
 register_all_modules()

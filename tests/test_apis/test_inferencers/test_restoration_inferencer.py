@@ -5,7 +5,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.apis.inferencers.restoration_inferencer import \
+from mmedit.apis.mmedit_inferencers.restoration_inferencer import \
     RestorationInferencer
 from mmedit.utils import register_all_modules
 

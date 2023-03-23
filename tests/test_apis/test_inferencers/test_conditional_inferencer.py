@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
-from mmedit.apis.inferencers.conditional_inferencer import \
+from mmedit.apis.mmedit_inferencers.conditional_inferencer import \
     ConditionalInferencer
 from mmedit.utils import register_all_modules
 

@@ -8,8 +8,8 @@ import torch
 import yaml
 from mmengine.registry import init_default_scope
 
-from mmedit.apis.inferencers import MMEditInferencer
-from mmedit.apis.inferencers.base_mmedit_inferencer import InputsType
+from mmedit.apis import Inferencers
+from mmedit.apis.mmedit_inferencers.base_mmedit_inferencer import InputsType
 
 
 class MMEdit:
@@ -86,6 +86,9 @@ class MMEdit:
 
         # 3D-aware generation
         'eg3d',
+
+        # diffusers inferencer
+        'controlnet_animation'
     ]
 
     inference_supported_models_cfg = {}
@@ -107,7 +110,7 @@ class MMEdit:
             self._get_inferencer_kwargs(model_name, model_setting,
                                         model_config, model_ckpt,
                                         extra_parameters))
-        self.inferencer = MMEditInferencer(
+        self.inferencer = Inferencers(
             device=device, seed=seed, **inferencer_kwargs)
 
     def _get_inferencer_kwargs(self, model_name: Optional[str],
@@ -128,7 +131,8 @@ class MMEdit:
             config_dir = config_dir[config_dir.find('configs'):]
             kwargs['config'] = os.path.join(
                 osp.dirname(__file__), '..', config_dir)
-            kwargs['ckpt'] = cfgs['settings'][setting_to_use]['Weights']
+            if 'Weights' in cfgs['settings'][setting_to_use].keys():
+                kwargs['ckpt'] = cfgs['settings'][setting_to_use]['Weights']
 
         if model_config is not None:
             if kwargs.get('config', None) is not None:

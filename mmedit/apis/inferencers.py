@@ -4,20 +4,21 @@ from typing import Dict, List, Optional, Union
 import torch
 
 from mmedit.utils import ConfigType
-from .colorization_inferencer import ColorizationInferencer
-from .conditional_inferencer import ConditionalInferencer
-from .eg3d_inferencer import EG3DInferencer
-from .inpainting_inferencer import InpaintingInferencer
-from .matting_inferencer import MattingInferencer
-from .restoration_inferencer import RestorationInferencer
-from .text2image_inferencer import Text2ImageInferencer
-from .translation_inferencer import TranslationInferencer
-from .unconditional_inferencer import UnconditionalInferencer
-from .video_interpolation_inferencer import VideoInterpolationInferencer
-from .video_restoration_inferencer import VideoRestorationInferencer
+from .mmedit_inferencers import (ColorizationInferencer,
+                                 ConditionalInferencer,
+                                 EG3DInferencer,
+                                 InpaintingInferencer,
+                                 MattingInferencer,
+                                 RestorationInferencer,
+                                 Text2ImageInferencer,
+                                 TranslationInferencer,
+                                 UnconditionalInferencer,
+                                 VideoInterpolationInferencer,
+                                 VideoRestorationInferencer)
+from .diffusers_inferencers import ControlnetAnimationInferencer
 
 
-class MMEditInferencer:
+class Inferencers:
     """Class to assign task to different inferencers.
 
     Args:
@@ -72,6 +73,8 @@ class MMEditInferencer:
         elif self.task in ['3D_aware_generation', '3D-aware Generation']:
             self.inferencer = EG3DInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
+        elif self.task in ['controlnet_animation']:
+            self.inferencer = ControlnetAnimationInferencer(config)
         else:
             raise ValueError(f'Unknown inferencer task: {self.task}')
 
