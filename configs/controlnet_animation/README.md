@@ -1,6 +1,6 @@
 # Controlnet Animation (2022)
 
-> [Controlnet](https://github.com/lllyasviel/ControlNet)
+> [Controlnet](https://github.com/lllyasviel/ControlNet) Application
 
 > **Task**: controlnet_animation
 
@@ -13,9 +13,11 @@
 ControlNet is a neural network structure to control diffusion models by adding extra conditions.
 We use controlnet to generate frames guided by input video and make animation.
 
+https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4
+
 ## Pretrained models
 
-config here
+We use pretrained model from hugging face.
 
 |                Model                 | Dataset | Download |
 | :----------------------------------: | :-----: | :------: |
@@ -26,20 +28,24 @@ config here
 Running the following codes, you can get a text-generated image.
 
 ```python
-from mmengine import MODELS, Config
-from torchvision import utils
+from mmedit.edit import MMEdit
 
-from mmengine.registry import init_default_scope
+# Create a MMEdit instance and infer
+editor = MMEdit(model_name='controlnet_animation')
 
-init_default_scope('mmedit')
+prompt = 'a girl, black hair, T-shirt, ' + \
+         'smoking, best quality, extremely detailed'
+negative_prompt = 'longbody, lowres, bad anatomy, ' + \
+                  'bad hands, missing fingers, extra digit, ' + \
+                  'fewer digits, cropped, worst quality, low quality'
+video = '/nvme/liuwenran/datasets/zhou_zenmela_fps10_frames_resized/frames.txt'
+save_folder = '/nvme/liuwenran/branches/liuwenran/dev-sdi/mmediting/resources/demo_results/controlnet_hed'
 
-config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py'
-StableDiffuser = MODELS.build(Config.fromfile(config).model)
-prompt = 'A mecha robot in a favela in expressionist style'
-StableDiffuser = StableDiffuser.to('cuda')
-
-image = StableDiffuser.infer(prompt)['samples']
-utils.save_image(image, 'robot.png')
+editor.infer(
+    video=video,
+    prompt=prompt,
+    negative_prompt=negative_prompt,
+    save_folder=save_folder)
 ```
 
 ## Citation
