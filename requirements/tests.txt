@@ -12,3 +12,4 @@ interrogate
 mmdet >= 3.0.0rc2
 pytest
 transformers
+controlnet_aux
