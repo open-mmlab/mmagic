@@ -15,7 +15,7 @@ We use controlnet to generate frames guided by input video and make animation.
 
 Here are some demos.
 
-<video id="Video1" width="512" height="256" controls>
+<video id="Video1" width="800" height="400">
     <source src = "https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4" type = "video/mp4">
 </video>
 
