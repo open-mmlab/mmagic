@@ -1,4 +1,4 @@
-# Controlnet Animation (2022)
+# Controlnet Animation (2023)
 
 > [Controlnet](https://github.com/lllyasviel/ControlNet) Application
 
@@ -13,7 +13,13 @@
 ControlNet is a neural network structure to control diffusion models by adding extra conditions.
 We use controlnet to generate frames guided by input video and make animation.
 
+Here are some demos.
+
 https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4
+
+https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4
+
+https://user-images.githubusercontent.com/12782558/227152153-f1a68e27-18dd-424a-b49e-15680e4c7ae0.mp4
 
 ## Pretrained models
 

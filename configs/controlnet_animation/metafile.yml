@@ -6,7 +6,7 @@ Collections:
   README: configs/controlnet_animation/README.md
   Task:
   - controlnet_animation
-  Year: 2022
+  Year: 2023
 Models:
 - Config: configs/controlnet_animation/anythingv3_config.py
   In Collection: Controlnet Animation
