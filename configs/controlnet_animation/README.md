@@ -15,16 +15,24 @@ We use controlnet to generate frames guided by input video and make animation.
 
 Here are some demos.
 
+prompt key words: a handsome man, silver hair, smiling, play basketball
+
 <div align="center">
   <video src="https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4" width=1024/>
 </div>
+
+prompt key words: a handsome man
 
 <div align="center">
   <video src="https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4" width=1024/>
 </div>
 
+You can change the prompt to get different result video, for example:
+
+use prompt key words: a girl, black hair, white pants, smiling, play basketball
+
 <div align="center">
-  <video src="https://user-images.githubusercontent.com/12782558/227152153-f1a68e27-18dd-424a-b49e-15680e4c7ae0.mp4" width=1024/>
+  <video src="https://user-images.githubusercontent.com/12782558/227212723-1517e828-3041-43f0-98ac-55b5c73aa0c9.mp4" width=512/>
 </div>
 
 ## Pretrained models
@@ -50,14 +58,14 @@ prompt = 'a girl, black hair, T-shirt, ' + \
 negative_prompt = 'longbody, lowres, bad anatomy, ' + \
                   'bad hands, missing fingers, extra digit, ' + \
                   'fewer digits, cropped, worst quality, low quality'
-video = '/nvme/liuwenran/datasets/zhou_zenmela_fps10_frames_resized/frames.txt'
-save_folder = '/nvme/liuwenran/branches/liuwenran/dev-sdi/mmediting/resources/demo_results/controlnet_hed'
+video = '/path/to/your/input/video.mp4'
+save_path = '/path/to/your/output/video.mp4'
 
 editor.infer(
     video=video,
     prompt=prompt,
     negative_prompt=negative_prompt,
-    save_folder=save_folder)
+    save_path=save_path)
 ```
 
 ## Citation

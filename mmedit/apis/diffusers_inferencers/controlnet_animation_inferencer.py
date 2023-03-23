@@ -3,6 +3,8 @@ import inspect
 import os
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 
+import cv2
+import mmcv
 import numpy as np
 import PIL.Image
 import torch
@@ -16,15 +18,13 @@ from diffusers.pipelines.stable_diffusion import (
 from diffusers.schedulers import KarrasDiffusionSchedulers
 from diffusers.training_utils import set_seed
 from diffusers.utils import (PIL_INTERPOLATION, is_accelerate_available,
-                             is_accelerate_version, load_image, randn_tensor,
+                             is_accelerate_version, randn_tensor,
                              replace_example_docstring)
 from mmengine import mkdir_or_exist
 from mmengine.config import Config
 from mmengine.dataset import Compose
 from mmengine.infer import BaseInferencer
 from mmengine.structures import BaseDataElement
-# import cv2
-# import mmcv
 from PIL import Image
 from torchvision import utils
 from transformers import CLIPFeatureExtractor, CLIPTextModel, CLIPTokenizer
@@ -1123,7 +1123,7 @@ class ControlnetAnimationInferencer(BaseInferencer):
                  controlnet_conditioning_scale=0.7,
                  image_width=512,
                  image_height=512,
-                 save_folder=None,
+                 save_path=None,
                  **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
 
@@ -1133,11 +1133,7 @@ class ControlnetAnimationInferencer(BaseInferencer):
         Returns:
             Union[Dict, List[Dict]]: Results of inference pipeline.
         """
-        if not os.path.exists(save_folder):
-            os.makedirs(save_folder)
         set_seed(1)
-
-        lines = open(video, 'r').readlines()
 
         init_noise_shape = (1, 4, image_height // 8, image_width // 8)
         init_noise_all_frame = torch.randn(init_noise_shape).cuda()
@@ -1145,16 +1141,21 @@ class ControlnetAnimationInferencer(BaseInferencer):
         init_noise_shape_cat = (1, 4, image_height // 8, image_width // 8 * 3)
         init_noise_all_frame_cat = torch.randn(init_noise_shape_cat).cuda()
 
-        # video_reader = mmcv.VideoReader(video)
+        video_reader = mmcv.VideoReader(video)
+
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        video_writer = cv2.VideoWriter(save_path, fourcc, video_reader.fps,
+                                       (image_width, image_height))
+
         # load the images
-        # data = dict(img=[], img_path=None, key=video)
-        # for frame in video_reader:
-        #     data['img'].append(np.flip(frame, axis=2))
-        # import ipdb;ipdb.set_trace();
+        all_images = []
+        for frame in video_reader:
+            all_images.append(np.flip(frame, axis=2))
 
         # first result
-        img_dir = lines[0].strip()
-        image = load_image(img_dir)
+        # img_dir = lines[0].strip()
+        # image = load_image(img_dir)
+        image = Image.fromarray(all_images[0])
         image = image.resize((image_width, image_height))
         hed_image = self.hed(image, image_resolution=image_width)
         result = self.pipe(
@@ -1173,9 +1174,10 @@ class ControlnetAnimationInferencer(BaseInferencer):
         last_result = result
         last_hed = hed_image
 
-        for ind in range(len(lines)):
-            img_dir = lines[ind].strip()
-            image = load_image(img_dir)
+        for ind in range(len(all_images)):
+            # img_dir = lines[ind].strip()
+            # image = load_image(img_dir)
+            image = Image.fromarray(all_images[ind])
             image = image.resize((image_width, image_height))
             hed_image = self.hed(image, image_resolution=image_width)
 
@@ -1200,23 +1202,25 @@ class ControlnetAnimationInferencer(BaseInferencer):
                 controlnet_conditioning_scale=controlnet_conditioning_scale,
                 num_inference_steps=20,
                 latents=init_noise_all_frame_cat,
-                save_control_frame_ind=ind,
-                control_save_dir=save_folder.split('/')[-1]).images[0]
+                save_control_frame_ind=ind).images[0]
             result = result.crop(
                 (image_width, 0, image_width * 2, image_height))
 
             last_result = result
             last_hed = hed_image
 
-            save_name = os.path.join(save_folder, '{:0>4d}.jpg'.format(ind))
-            result.save(save_name)
+            video_writer.write(np.flip(np.asarray(result), axis=2))
+            # save_name = os.path.join(save_path, '{:0>4d}.jpg'.format(ind))
+            # result.save(save_name)
 
-        video_name = save_folder.split('/')[-1]
-        cmd = 'ffmpeg -r 10 -i ' + save_folder + \
-            '/%04d.jpg -b:v 30M -vf fps=10' + \
-            '\resources/demo_results/controlnet_hed/' + \
-            video_name + '.mp4'
-        os.system(cmd)
+        video_writer.release()
+
+        # video_name = save_path.split('/')[-1]
+        # cmd = 'ffmpeg -r 10 -i ' + save_path + \
+        #     '/%04d.jpg -b:v 30M -vf fps=10' + \
+        #     ' resources/demo_results/controlnet_hed/' + \
+        #     video_name + '.mp4'
+        # os.system(cmd)
 
     def _init_pipeline(self, cfg: ConfigType) -> Compose:
         """Initialize the test pipeline."""
