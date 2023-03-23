@@ -15,7 +15,14 @@ We use controlnet to generate frames guided by input video and make animation.
 
 Here are some demos.
 
-https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4
+<iframe src="https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4"
+        scrolling="no"
+        frameborder="no"
+        framespacing="0"
+        allowfullscreen="true"
+        height=256
+        width=512>
+</iframe>
 
 https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4
 
