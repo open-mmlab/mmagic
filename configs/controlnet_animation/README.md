@@ -13,7 +13,7 @@
 ControlNet is a neural network structure to control diffusion models by adding extra conditions.
 We use controlnet to generate frames guided by input video and make animation.
 
-Here are some demos.
+## Demos
 
 prompt key words: a handsome man, silver hair, smiling, play basketball
 
@@ -27,9 +27,9 @@ prompt key words: a handsome man
   <video src="https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4" width=1024/>
 </div>
 
-You can change the prompt to get different result video, for example:
+**Change prompt to get different result video**
 
-use prompt key words: a girl, black hair, white pants, smiling, play basketball
+prompt key words: a girl, black hair, white pants, smiling, play basketball
 
 <div align="center">
   <video src="https://user-images.githubusercontent.com/12782558/227216038-38599164-2384-4a79-b65e-f98785d466bf.mp4" width=512/>
