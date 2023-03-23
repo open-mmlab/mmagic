@@ -4,18 +4,14 @@ from typing import Dict, List, Optional, Union
 import torch
 
 from mmedit.utils import ConfigType
-from .mmedit_inferencers import (ColorizationInferencer,
-                                 ConditionalInferencer,
-                                 EG3DInferencer,
-                                 InpaintingInferencer,
-                                 MattingInferencer,
-                                 RestorationInferencer,
-                                 Text2ImageInferencer,
-                                 TranslationInferencer,
+from .diffusers_inferencers import ControlnetAnimationInferencer
+from .mmedit_inferencers import (ColorizationInferencer, ConditionalInferencer,
+                                 EG3DInferencer, InpaintingInferencer,
+                                 MattingInferencer, RestorationInferencer,
+                                 Text2ImageInferencer, TranslationInferencer,
                                  UnconditionalInferencer,
                                  VideoInterpolationInferencer,
                                  VideoRestorationInferencer)
-from .diffusers_inferencers import ControlnetAnimationInferencer
 
 
 class Inferencers:
