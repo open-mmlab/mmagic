@@ -32,7 +32,7 @@ You can change the prompt to get different result video, for example:
 use prompt key words: a girl, black hair, white pants, smiling, play basketball
 
 <div align="center">
-  <video src="https://user-images.githubusercontent.com/12782558/227212723-1517e828-3041-43f0-98ac-55b5c73aa0c9.mp4" width=512/>
+  <video src="https://user-images.githubusercontent.com/12782558/227216038-38599164-2384-4a79-b65e-f98785d466bf.mp4" width=512/>
 </div>
 
 ## Pretrained models
