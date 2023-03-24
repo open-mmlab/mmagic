@@ -140,11 +140,10 @@ class EditDataSample(BaseDataElement):
         'sample_idx': 'sample_idx',
         'num_input_frames': 'num_input_frames',
         'num_output_frames': 'num_output_frames',
+        'mask_bbox': 'mask_bbox',
         # for LIIF
         'coord': 'coord',
         'cell': 'cell',
-        # for Deepfillv1
-        'mask_bbox': 'mask_bbox'
     }
 
     # source_key_in_results: target_key_in_datafield
