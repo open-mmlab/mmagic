@@ -29,7 +29,7 @@ prompt key words: a handsome man
 
 &#8195;
 
-**Change prompt to get different result video**
+**Change prompt to get different result**
 
 prompt key words: a girl, black hair, white pants, smiling, play basketball
 
@@ -55,19 +55,14 @@ from mmedit.edit import MMEdit
 # Create a MMEdit instance and infer
 editor = MMEdit(model_name='controlnet_animation')
 
-prompt = 'a girl, black hair, T-shirt, ' + \
-         'smoking, best quality, extremely detailed'
-negative_prompt = 'longbody, lowres, bad anatomy, ' + \
-                  'bad hands, missing fingers, extra digit, ' + \
-                  'fewer digits, cropped, worst quality, low quality'
+prompt = 'a girl, black hair, T-shirt, smoking, best quality, extremely detailed'
+negative_prompt = 'longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality'
+
 video = '/path/to/your/input/video.mp4'
 save_path = '/path/to/your/output/video.mp4'
 
-editor.infer(
-    video=video,
-    prompt=prompt,
-    negative_prompt=negative_prompt,
-    save_path=save_path)
+# Do the inference to get result
+editor.infer(video=video, prompt=prompt, negative_prompt=negative_prompt, save_path=save_path)
 ```
 
 ## Citation
