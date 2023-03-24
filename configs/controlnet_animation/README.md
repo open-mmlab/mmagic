@@ -47,7 +47,7 @@ We use pretrained model from hugging face.
 
 ## Quick Start
 
-Running the following codes, you can get a text-generated image.
+Running the following codes, you can get an generated animation video.
 
 ```python
 from mmedit.edit import MMEdit
@@ -56,8 +56,11 @@ from mmedit.edit import MMEdit
 editor = MMEdit(model_name='controlnet_animation')
 
 prompt = 'a girl, black hair, T-shirt, smoking, best quality, extremely detailed'
-negative_prompt = 'longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality'
+negative_prompt = 'longbody, lowres, bad anatomy, bad hands, missing fingers, ' + \
+                  'extra digit, fewer digits, cropped, worst quality, low quality'
 
+# you can download the example video with this link
+# https://user-images.githubusercontent.com/12782558/227418400-80ad9123-7f8e-4c1a-8e19-0892ebad2a4f.mp4
 video = '/path/to/your/input/video.mp4'
 save_path = '/path/to/your/output/video.mp4'
 
