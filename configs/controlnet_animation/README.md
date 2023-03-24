@@ -41,9 +41,9 @@ prompt key words: a girl, black hair, white pants, smiling, play basketball
 
 We use pretrained model from hugging face.
 
-|                Model                 | Dataset |                                     Download                                      |
-| :----------------------------------: | :-----: | :-------------------------------------------------------------------------------: |
-| [anythingv3](./anythingv3_config.py) |    -    | [stable diffusion model](https://huggingface.co/Linaqruf/anything-v3.0/tree/main) |
+|                    Model                    | Dataset |                                     Download                                      |
+| :-----------------------------------------: | :-----: | :-------------------------------------------------------------------------------: |
+| [anythingv3 config](./anythingv3_config.py) |    -    | [stable diffusion model](https://huggingface.co/Linaqruf/anything-v3.0/tree/main) |
 
 ## Quick Start
 
