@@ -15,3 +15,4 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: controlnet_animation
+  Weights: https://huggingface.co/Linaqruf/anything-v3.0/tree/main
