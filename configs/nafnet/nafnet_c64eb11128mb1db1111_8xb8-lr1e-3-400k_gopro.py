@@ -4,9 +4,6 @@ experiment_name = 'nafnet_c64eb11128mb1db1111_lr1e-3_400k_gopro'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
-# DistributedDataParallel
-model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
-
 # model settings
 model = dict(
     type='BaseEditModel',
