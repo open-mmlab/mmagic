@@ -18,7 +18,7 @@ from diffusers.pipelines.stable_diffusion import (
 from diffusers.schedulers import KarrasDiffusionSchedulers
 from diffusers.training_utils import set_seed
 from diffusers.utils import (PIL_INTERPOLATION, is_accelerate_available,
-                             is_accelerate_version, randn_tensor,
+                             is_accelerate_version, load_image, randn_tensor,
                              replace_example_docstring)
 from mmengine import mkdir_or_exist
 from mmengine.config import Config
@@ -36,6 +36,9 @@ InputsType = Union[InputType, Sequence[InputType]]
 PredType = Union[BaseDataElement, SampleList]
 ImgType = Union[np.ndarray, Sequence[np.ndarray]]
 ResType = Union[Dict, List[Dict], BaseDataElement, List[BaseDataElement]]
+
+VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
+IMAGE_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG')
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
@@ -1141,21 +1144,38 @@ class ControlnetAnimationInferencer(BaseInferencer):
         init_noise_shape_cat = (1, 4, image_height // 8, image_width // 8 * 3)
         init_noise_all_frame_cat = torch.randn(init_noise_shape_cat).cuda()
 
-        video_reader = mmcv.VideoReader(video)
-
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        video_writer = cv2.VideoWriter(save_path, fourcc, video_reader.fps,
-                                       (image_width, image_height))
-
         # load the images
+        input_file_extension = os.path.splitext(video)[1]
+        from_video = True
         all_images = []
-        for frame in video_reader:
-            all_images.append(np.flip(frame, axis=2))
+        if input_file_extension in VIDEO_EXTENSIONS:
+            video_reader = mmcv.VideoReader(video)
+
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            video_writer = cv2.VideoWriter(save_path, fourcc, video_reader.fps,
+                                           (image_width, image_height))
+            for frame in video_reader:
+                all_images.append(np.flip(frame, axis=2))
+        else:
+            frame_files = os.listdir(video)
+            frame_files = [os.path.join(video, f) for f in frame_files]
+            frame_files.sort()
+            for frame in frame_files:
+                frame_extension = os.path.splitext(frame)[1]
+                if frame_extension in IMAGE_EXTENSIONS:
+                    all_images.append(frame)
+
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
+
+            from_video = False
 
         # first result
-        # img_dir = lines[0].strip()
-        # image = load_image(img_dir)
-        image = Image.fromarray(all_images[0])
+        image = None
+        if from_video:
+            image = Image.fromarray(all_images[0])
+        else:
+            image = load_image(all_images[0])
         image = image.resize((image_width, image_height))
         hed_image = self.hed(image, image_resolution=image_width)
         result = self.pipe(
@@ -1175,9 +1195,10 @@ class ControlnetAnimationInferencer(BaseInferencer):
         last_hed = hed_image
 
         for ind in range(len(all_images)):
-            # img_dir = lines[ind].strip()
-            # image = load_image(img_dir)
-            image = Image.fromarray(all_images[ind])
+            if from_video:
+                image = Image.fromarray(all_images[ind])
+            else:
+                image = load_image(all_images[ind])
             image = image.resize((image_width, image_height))
             hed_image = self.hed(image, image_resolution=image_width)
 
@@ -1209,18 +1230,15 @@ class ControlnetAnimationInferencer(BaseInferencer):
             last_result = result
             last_hed = hed_image
 
-            video_writer.write(np.flip(np.asarray(result), axis=2))
-            # save_name = os.path.join(save_path, '{:0>4d}.jpg'.format(ind))
-            # result.save(save_name)
+            if from_video:
+                video_writer.write(np.flip(np.asarray(result), axis=2))
+            else:
+                frame_name = frame_files[ind].split('/')[-1]
+                save_name = os.path.join(save_path, frame_name)
+                result.save(save_name)
 
-        video_writer.release()
-
-        # video_name = save_path.split('/')[-1]
-        # cmd = 'ffmpeg -r 10 -i ' + save_path + \
-        #     '/%04d.jpg -b:v 30M -vf fps=10' + \
-        #     ' resources/demo_results/controlnet_hed/' + \
-        #     video_name + '.mp4'
-        # os.system(cmd)
+        if from_video:
+            video_writer.release()
 
     def _init_pipeline(self, cfg: ConfigType) -> Compose:
         """Initialize the test pipeline."""
