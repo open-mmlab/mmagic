@@ -1,7 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import torch
-from mmcv.ops import filter2d, upsample2d
+
+try:
+    from mmcv.ops import filter2d, upsample2d
+except ImportError:
+    filter2d = None
+    upsample2d = None
+    print(
+        'Warning: mmcv.ops.filter2d and mmcv.ops.upsample2d are not available.'
+    )
 
 
 def apply_integer_translation(x, tx, ty):
