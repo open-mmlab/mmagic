@@ -21,6 +21,7 @@ from .smpatch_disc import SoftMaskPatchDiscriminator
 from .sr_backbone import ResidualBlockNoBN
 from .upsample import PixelShufflePack
 from .vgg import VGG16
+from .wrapper import DiffusersWrapper
 
 
 def register_diffusers_models() -> List[str]:
@@ -43,11 +44,20 @@ def register_diffusers_models() -> List[str]:
                       'please install diffusers>=0.12.0.')
         return None
 
+    def gen_wrapped_cls(module, module_name):
+        return type(
+            module_name, (DiffusersWrapper, ),
+            dict(
+                _module_cls=module,
+                _module_name=module_name,
+                __module__=__name__))
+
     DIFFUSERS_MODELS = []
     for module_name in dir(diffusers.models):
         module = getattr(diffusers.models, module_name)
         if inspect.isclass(module):
-            MODELS.register_module(name=module_name, module=module)
+            wrapped_module = gen_wrapped_cls(module, module_name)
+            MODELS.register_module(name=module_name, module=wrapped_module)
             DIFFUSERS_MODELS.append(module_name)
     return DIFFUSERS_MODELS
 

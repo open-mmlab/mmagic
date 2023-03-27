@@ -62,3 +62,10 @@ def test_val_data_sampler():
     assert len(val_sampler._dataloader.dataset) == 8
     for idx, out in enumerate(val_sampler):
         assert out == tar_out[idx]
+
+    # test iteration times
+    val_sampler = ValDataSampler(
+        sample_kwargs=dict(max_times=1), runner=runner)
+    tar_out = [[0, 1, 2, 3]]
+    for idx, out in enumerate(val_sampler):
+        assert out == tar_out[idx]

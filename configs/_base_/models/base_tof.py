@@ -35,7 +35,7 @@ train_dataloader = dict(
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
         type=train_dataset_type,
-        ann_file='tri_testlist.txt',
+        ann_file='tri_trainlist.txt',
         metainfo=dict(dataset_type='vimeo90k', task_name='vfi'),
         data_root=data_root,
         data_prefix=dict(img='sequences', gt='sequences'),
