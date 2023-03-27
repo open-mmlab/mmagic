@@ -37,7 +37,7 @@ mmediting
 为了更快的 IO，我们建议将图像裁剪为子图像。 我们提供了这样一个脚本：
 
 ```shell
-python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
+python tools/dataset_converters/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
 ```
 
 生成的数据存放在 `df2k_ost` 下，数据结构如下，其中 `_sub` 表示子图像。
@@ -51,13 +51,29 @@ mmediting
 │   ├── df2k_ost
 │   │   ├── GT
 │   │   ├── GT_sub
+│   │   ├── meta_info_df2k_ost.txt
 ...
 ```
+
+## 准备标注列表文件
+
+如果您想使用`标注模式`来处理数据集，需要先准备一个 `txt` 格式的标注文件。
+
+标注文件中的每一行包含了图片名以及图片尺寸（这些通常是 ground-truth 图片），这两个字段用空格间隔开。
+
+标注文件示例:
+
+```text
+0001_s001.png (480,480,3)
+0001_s002.png (480,480,3)
+```
+
+请注意，`preprocess_df2k_ost_dataset.py` 脚本默认生成一份标注文件。
 
 ## Prepare LMDB dataset for DF2K_OST
 
 如果你想使用 LMDB 数据集来获得更快的 IO 速度，你可以通过以下方式制作 LMDB 文件：
 
 ```shell
-python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
+python tools/dataset_converters/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
 ```

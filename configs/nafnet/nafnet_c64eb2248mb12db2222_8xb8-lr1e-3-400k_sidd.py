@@ -4,9 +4,6 @@ experiment_name = 'nafnet_c64eb2248mb12db2222_lr1e-3_400k_sidd'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
-# DistributedDataParallel
-model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
-
 # model settings
 model = dict(
     type='BaseEditModel',
@@ -94,11 +91,9 @@ test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(
-    constructor='MultiOptimWrapperConstructor',
-    generator=dict(
-        type='OptimWrapper',
-        optimizer=dict(
-            type='AdamW', lr=1e-3, weight_decay=1e-3, betas=(0.9, 0.9))))
+    constructor='DefaultOptimWrapperConstructor',
+    type='OptimWrapper',
+    optimizer=dict(type='AdamW', lr=1e-3, weight_decay=1e-3, betas=(0.9, 0.9)))
 
 # learning policy
 param_scheduler = dict(
