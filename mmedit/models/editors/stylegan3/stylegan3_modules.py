@@ -3,7 +3,16 @@ import numpy as np
 import scipy
 import torch
 import torch.nn as nn
-from mmcv.ops import bias_act, conv2d_gradfix, filtered_lrelu
+
+try:
+    from mmcv.ops import bias_act, conv2d_gradfix, filtered_lrelu
+except ImportError:
+    bias_act = None
+    conv2d_gradfix = None
+    filtered_lrelu = None
+    print('Warning: mmcv.ops.bias_act, mmcv.ops.conv2d_gradfix'
+          ' and mmcv.ops.filtered_lrelu are not available.')
+
 from mmengine.runner.amp import autocast
 
 from mmedit.registry import MODELS
