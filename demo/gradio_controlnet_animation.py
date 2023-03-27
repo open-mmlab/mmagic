@@ -7,12 +7,14 @@ editor = MMEdit(model_name='controlnet_animation')
 
 
 def process(video, prompt, a_prompt, negative_prompt,
-            controlnet_conditioning_scale):
+            controlnet_conditioning_scale, width, height):
     prompt = prompt + a_prompt
     save_path = editor.infer(
         video=video,
         prompt=prompt,
         negative_prompt=negative_prompt,
+        width=width,
+        height=height,
         controlnet_conditioning_scale=controlnet_conditioning_scale)
 
     return save_path
@@ -25,19 +27,13 @@ with block:
     with gr.Row():
         with gr.Column():
             video_inp = gr.Video(
-                label='Video source',
+                label='Video Source',
                 source='upload',
                 type='filepath',
                 elem_id='input-vid')
             prompt = gr.Textbox(label='Prompt')
             run_button = gr.Button(label='Run')
             with gr.Accordion('Advanced options', open=False):
-                image_resolution = gr.Slider(
-                    label='Image Resolution',
-                    minimum=256,
-                    maximum=768,
-                    value=512,
-                    step=64)
                 a_prompt = gr.Textbox(
                     label='Added Prompt',
                     value='best quality, extremely detailed')
@@ -52,13 +48,24 @@ with block:
                     maximum=2.0,
                     value=0.7,
                     step=0.01)
+                width = gr.Slider(
+                    label='Image Width',
+                    minimum=256,
+                    maximum=768,
+                    value=512,
+                    step=64)
+                height = gr.Slider(
+                    label='Image Width',
+                    minimum=256,
+                    maximum=768,
+                    value=512,
+                    step=64)
 
         with gr.Column():
-            video_out = gr.Video(
-                label='ControlNet video result', elem_id='video-output')
+            video_out = gr.Video(label='Video Result', elem_id='video-output')
     ips = [
-        video_inp, prompt, a_prompt, n_prompt, image_resolution,
-        controlnet_conditioning_scale
+        video_inp, prompt, a_prompt, n_prompt, controlnet_conditioning_scale,
+        width, height
     ]
     run_button.click(fn=process, inputs=ips, outputs=video_out)
 
