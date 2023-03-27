@@ -3,6 +3,7 @@ import os
 import os.path as osp
 import shutil
 from unittest import TestCase
+from unittest.mock import MagicMock
 
 import torch
 from mmengine.utils import digit_version
@@ -74,6 +75,8 @@ class TestWrapper(TestCase):
                 in_channels=3,
                 down_block_types=['DownBlock2D'],
                 block_out_channels=(32, ),
+                cross_attention_dim=16,
+                attention_head_dim=2,
                 conditioning_embedding_out_channels=(16, )), )
         model_str = repr(model)
         self.assertNotIn('From Config:', model_str)
@@ -85,3 +88,18 @@ class TestWrapper(TestCase):
 
         # 6. test init_weights
         model.init_weights()
+
+        # 7. test forward function
+        forward_mock = MagicMock()
+        model.model.forward = forward_mock
+        model(**dict(t='t', control='control'))
+        _, called_kwargs = forward_mock.call_args
+        self.assertEqual(called_kwargs['t'], 't')
+        self.assertEqual(called_kwargs['control'], 'control')
+
+        # 8. test other attribute share with BaseModule and model
+        register_buffer_mock = MagicMock()
+        model.model.registrer_buffer = register_buffer_mock
+        model.registrer_buffer('buffer', 123)
+        called_args, _ = register_buffer_mock.call_args
+        self.assertEqual(called_args, ('buffer', 123))
