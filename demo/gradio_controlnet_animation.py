@@ -3,19 +3,17 @@ import gradio as gr
 
 from mmedit.edit import MMEdit
 
+editor = MMEdit(model_name='controlnet_animation')
+
 
 def process(video, prompt, a_prompt, negative_prompt,
             controlnet_conditioning_scale):
-
-    editor = MMEdit(model_name='controlnet_animation')
-
     prompt = prompt + a_prompt
-
     save_path = editor.infer(
         video=video,
         prompt=prompt,
         negative_prompt=negative_prompt,
-        controlnet_conditioning_scale=0.7)
+        controlnet_conditioning_scale=controlnet_conditioning_scale)
 
     return save_path
 
@@ -48,10 +46,20 @@ with block:
                     value='longbody, lowres, bad anatomy, bad hands, ' +
                     'missing fingers, extra digit, fewer digits, '
                     'cropped, worst quality, low quality')
+                controlnet_conditioning_scale = gr.Slider(
+                    label='Control Weight',
+                    minimum=0.0,
+                    maximum=2.0,
+                    value=0.7,
+                    step=0.01)
+
         with gr.Column():
             video_out = gr.Video(
                 label='ControlNet video result', elem_id='video-output')
-    ips = [video_inp, prompt, a_prompt, n_prompt, image_resolution]
+    ips = [
+        video_inp, prompt, a_prompt, n_prompt, image_resolution,
+        controlnet_conditioning_scale
+    ]
     run_button.click(fn=process, inputs=ips, outputs=video_out)
 
 block.launch(server_name='0.0.0.0', share=True)
