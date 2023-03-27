@@ -3,16 +3,24 @@ import mmengine
 import numpy as np
 import torch
 import torch.nn as nn
-from mmcv.ops import conv2d, conv_transpose2d
 from mmcv.ops.fused_bias_leakyrelu import (FusedBiasLeakyReLU,
                                            fused_bias_leakyrelu)
-from mmcv.ops.upfirdn2d import upfirdn2d
 from mmengine.dist import get_dist_info
 from mmengine.runner.amp import autocast
 
 from mmedit.models.base_archs import AllGatherLayer
 from ..pggan import EqualizedLRConvModule, equalized_lr
 from ..stylegan1 import Blur, EqualLinearActModule, NoiseInjection, make_kernel
+
+try:
+    from mmcv.ops import conv2d, conv_transpose2d
+    from mmcv.ops.upfirdn2d import upfirdn2d
+except ImportError:
+    conv2d = None
+    conv_transpose2d = None
+    upfirdn2d = None
+    print('Warning: mmcv.ops.conv2d, mmcv.ops.conv_transpose2d'
+          ' and mmcv.ops.upfirdn2d are not available.')
 
 
 class _FusedBiasLeakyReLU(FusedBiasLeakyReLU):

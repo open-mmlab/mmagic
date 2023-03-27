@@ -9,7 +9,12 @@
 import numpy as np
 import scipy.signal
 import torch
-from mmcv.ops import conv2d
+
+try:
+    from mmcv.ops import conv2d
+except ImportError:
+    conv2d = None
+    print('Warning: mmcv.ops.conv2d are not available.')
 
 from . import grid_sample_gradfix, misc, upfirdn2d
 

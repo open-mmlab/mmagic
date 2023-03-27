@@ -1,7 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import torch
-from mmcv.ops import upfirdn2d
+
+try:
+    from mmcv.ops import upfirdn2d
+except ImportError:
+    upfirdn2d = None
+    print('Warning: mmcv.ops.upfirdn2d is not available.')
 
 
 def _parse_scaling(scaling):
