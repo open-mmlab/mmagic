@@ -52,8 +52,8 @@ class Inferencers:
         elif self.task in ['translation', 'Image2Image']:
             self.inferencer = TranslationInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
-        elif self.task in ['restoration', 'Image Super-Resolution']:
-            self.inferencer = RestorationInferencer(
+        elif self.task in ['Image super-resolution', 'Image Super-Resolution']:
+            self.inferencer = ImageSuperResolutionInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['video_restoration', 'Video Super-Resolution']:
             self.inferencer = VideoRestorationInferencer(

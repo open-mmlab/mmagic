@@ -39,7 +39,9 @@ class MMEdit:
         >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
     """
     # unsupported now
-    # singan
+    # singan, liif
+    # output should be checked
+    # dic, glean
 
     inference_supported_models = [
         # colorization models
@@ -71,8 +73,16 @@ class MMEdit:
         'pix2pix',
         'cyclegan',
 
-        # restoration models
+        # image super-resolution models
+        'srcnn',
+        'srgan_resnet',
+        'edsr',
         'esrgan',
+        'rdn',
+        'dic',
+        'ttsr',
+        'glean',
+        'real_esrgan',
 
         # video_interpolation models
         'flavr',
