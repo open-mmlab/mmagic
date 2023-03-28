@@ -470,7 +470,7 @@ class ControlnetAnimationInferencer(BaseInferencer):
         self.controlnet = ControlNetModel.from_pretrained(
             cfg.controlnet_model, torch_dtype=torch.float32)
         self.pipe = StableDiffusionControlNetPipelineImg2Img.from_pretrained(
-            cfg.stable_diffusion_controlnet,
+            cfg.stable_diffusion_model,
             controlnet=self.controlnet,
             safety_checker=None).to('cuda')
 
@@ -486,6 +486,7 @@ class ControlnetAnimationInferencer(BaseInferencer):
                  image_width=512,
                  image_height=512,
                  save_path=None,
+                 seed=1,
                  **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
 
@@ -500,7 +501,7 @@ class ControlnetAnimationInferencer(BaseInferencer):
             datestring = datetime.now().strftime('%y%m%d-%H%M%S')
             save_path = '/tmp/' + datestring + '.mp4'
 
-        set_seed(1)
+        set_seed(seed)
 
         init_noise_shape = (1, 4, image_height // 8, image_width // 8)
         init_noise_all_frame = torch.randn(init_noise_shape).cuda()
@@ -613,15 +614,6 @@ class ControlnetAnimationInferencer(BaseInferencer):
             pipeline_cfg = cfg.test_dataloader.dataset.pipeline
             return Compose(pipeline_cfg)
         return None
-
-    def get_extra_parameters(self) -> List[str]:
-        """Each inferencer may has its own parameters. Call this function to
-        get these parameters.
-
-        Returns:
-            List[str]: List of unique parameters.
-        """
-        return list(self.extra_parameters.keys())
 
     def postprocess(
         self,
