@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 from mmcv.ops.fused_bias_leakyrelu import (FusedBiasLeakyReLU,
                                            fused_bias_leakyrelu)
+from mmcv.ops.upfirdn2d import upfirdn2d
 from mmengine.dist import get_dist_info
 from mmengine.runner.amp import autocast
 
@@ -14,11 +15,10 @@ from ..stylegan1 import Blur, EqualLinearActModule, NoiseInjection, make_kernel
 
 try:
     from mmcv.ops import conv2d, conv_transpose2d
-    from mmcv.ops.upfirdn2d import upfirdn2d
 except ImportError:
-    conv2d = None
-    conv_transpose2d = None
-    upfirdn2d = None
+    import torch.nn.functional as F
+    conv2d = F.conv2d
+    conv_transpose2d = F.conv_transpose2d
     print('Warning: mmcv.ops.conv2d, mmcv.ops.conv_transpose2d'
           ' and mmcv.ops.upfirdn2d are not available.')
 
@@ -74,11 +74,7 @@ class UpsampleUpFIRDn(nn.Module):
             Tensor: Output feature map.
         """
         out = upfirdn2d(
-            x,
-            self.kernel.to(x.dtype),
-            up=self.factor,
-            down=1,
-            padding=self.pad)
+            x, self.kernel.to(x.dtype), up=self.factor, down=1, pad=self.pad)
 
         return out
 
@@ -121,7 +117,7 @@ class DownsampleUpFIRDn(nn.Module):
             self.kernel.to(input.dtype),
             up=1,
             down=self.factor,
-            padding=self.pad)
+            pad=self.pad)
 
         return out
 
