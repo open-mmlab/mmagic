@@ -2,6 +2,7 @@
 from .colorization_inferencer import ColorizationInferencer
 from .conditional_inferencer import ConditionalInferencer
 from .eg3d_inferencer import EG3DInferencer
+from .image_super_resolution_inferencer import ImageSuperResolutionInferencer
 # yapf: disable
 from .inference_functions import (calculate_grid_size, colorization_inference,
                                   delete_cfg, init_model, inpainting_inference,
@@ -16,7 +17,6 @@ from .inference_functions import (calculate_grid_size, colorization_inference,
 # yapf: enable
 from .inpainting_inferencer import InpaintingInferencer
 from .matting_inferencer import MattingInferencer
-from .restoration_inferencer import RestorationInferencer
 from .text2image_inferencer import Text2ImageInferencer
 from .translation_inferencer import TranslationInferencer
 from .unconditional_inferencer import UnconditionalInferencer
@@ -31,7 +31,7 @@ __all__ = [
     'sample_unconditional_model', 'sample_img2img_model',
     'colorization_inference', 'calculate_grid_size', 'ColorizationInferencer',
     'ConditionalInferencer', 'EG3DInferencer', 'InpaintingInferencer',
-    'MattingInferencer', 'RestorationInferencer', 'Text2ImageInferencer',
-    'TranslationInferencer', 'UnconditionalInferencer',
+    'MattingInferencer', 'ImageSuperResolutionInferencer',
+    'Text2ImageInferencer', 'TranslationInferencer', 'UnconditionalInferencer',
     'VideoInterpolationInferencer', 'VideoRestorationInferencer'
 ]

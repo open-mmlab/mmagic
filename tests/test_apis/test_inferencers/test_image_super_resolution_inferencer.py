@@ -5,7 +5,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.apis.inferencers.image_super_resolution_inferencer import \
+from mmedit.apis.mmedit_inferencers.image_super_resolution_inferencer import \
     ImageSuperResolutionInferencer
 from mmedit.utils import register_all_modules
 

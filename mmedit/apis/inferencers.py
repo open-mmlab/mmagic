@@ -6,8 +6,9 @@ import torch
 from mmedit.utils import ConfigType
 from .diffusers_inferencers import ControlnetAnimationInferencer
 from .mmedit_inferencers import (ColorizationInferencer, ConditionalInferencer,
-                                 EG3DInferencer, InpaintingInferencer,
-                                 MattingInferencer, RestorationInferencer,
+                                 EG3DInferencer,
+                                 ImageSuperResolutionInferencer,
+                                 InpaintingInferencer, MattingInferencer,
                                  Text2ImageInferencer, TranslationInferencer,
                                  UnconditionalInferencer,
                                  VideoInterpolationInferencer,
