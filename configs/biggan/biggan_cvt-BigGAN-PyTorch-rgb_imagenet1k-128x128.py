@@ -13,7 +13,7 @@ ema_config = dict(
 model = dict(
     type='BigGAN',
     num_classes=1000,
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='EditDataPreprocessor'),
     ema_config=ema_config,
     generator=dict(
         type='BigGANGenerator',
@@ -24,6 +24,7 @@ model = dict(
         shared_dim=128,
         with_shared_embedding=True,
         sn_eps=1e-6,
+        sn_style='torch',
         init_type='ortho',
         act_cfg=dict(type='ReLU', inplace=True),
         split_noise=True,
@@ -35,6 +36,7 @@ model = dict(
         num_classes=1000,
         base_channels=96,
         sn_eps=1e-6,
+        sn_style='torch',
         init_type='ortho',
         act_cfg=dict(type='ReLU', inplace=True),
         with_spectral_norm=True))

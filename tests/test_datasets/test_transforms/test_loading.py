@@ -39,6 +39,8 @@ def test_load_image_from_file():
     assert results['ori_gt_shape'] == (h, w, 3)
     np.testing.assert_almost_equal(results['gt'], img_baboon)
     assert results['gt_path'] == str(path_baboon)
+    assert results['gt_channel_order'] == 'bgr'
+    assert results['gt_color_type'] == 'color'
 
     # read input image
     # input path is Path object
@@ -72,6 +74,8 @@ def test_load_image_from_file():
     assert results['ori_img_shape'] == (h, w, 1)
     np.testing.assert_almost_equal(results['ori_img'], results['img'])
     assert id(results['ori_img']) != id(results['img'])
+    assert results['img_channel_order'] == 'bgr'
+    assert results['img_color_type'] == 'grayscale'
 
     # test: use_cache
     results = dict(gt_path=path_baboon)
@@ -91,6 +95,8 @@ def test_load_image_from_file():
     assert results['gt_path'] == path_baboon
     np.testing.assert_almost_equal(results['gt'], img_baboon)
     assert isinstance(image_loader.file_backend, LocalBackend)
+    assert results['gt_channel_order'] == 'bgr'
+    assert results['gt_color_type'] == 'color'
 
     # convert to y-channel (bgr2y)
     results = dict(gt_path=path_baboon)
@@ -102,6 +108,8 @@ def test_load_image_from_file():
     img_baboon_y = np.expand_dims(img_baboon_y, axis=2)
     np.testing.assert_almost_equal(results['gt'], img_baboon_y)
     assert results['gt_path'] == path_baboon
+    assert results['gt_channel_order'] == 'bgr'
+    assert results['gt_color_type'] == 'color'
 
     # convert to y-channel (rgb2y)
     results = dict(gt_path=path_baboon)

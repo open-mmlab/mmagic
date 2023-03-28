@@ -1,8 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Optional
 
-import torch
-
 from mmedit.models.base_models import BaseMattor
 from mmedit.models.utils import get_unknown_tensor
 from mmedit.registry import MODELS
@@ -80,7 +78,7 @@ class GCA(BaseMattor):
             dict: Contains the loss items and batch information.
         """
         trimap = inputs[:, 3:, :, :]
-        gt_alpha = torch.stack(tuple(ds.gt_alpha.data for ds in data_samples))
+        gt_alpha = data_samples.gt_alpha
         pred_alpha = self._forward(inputs)
 
         # FormatTrimap(to_onehot=False) will change unknown_value to 1

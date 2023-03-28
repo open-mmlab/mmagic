@@ -5,6 +5,9 @@ save_dir = './work_dirs'
 work_dir = f'./work_dirs/{experiment_name}'
 
 # model settings
+pretrain_generator_url = (
+    'https://download.openmmlab.com/mmediting/restorers/edvr/'
+    'edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth')
 model = dict(
     type='EDVR',
     generator=dict(
@@ -17,15 +20,17 @@ model = dict(
         num_blocks_extraction=5,
         num_blocks_reconstruction=10,
         center_frame_idx=2,
-        with_tsa=True),
+        with_tsa=True,
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint=pretrain_generator_url,
+            prefix='generator.')),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='sum'),
     train_cfg=dict(tsa_iter=5000),
     data_preprocessor=dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1),
     ))
 
 train_dataloader = dict(num_workers=6, batch_size=4)

@@ -24,8 +24,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1),
     ))
 
 train_dataloader = dict(num_workers=6, batch_size=8)
@@ -35,5 +33,5 @@ param_scheduler = dict(
     type='CosineRestartLR',
     by_epoch=False,
     periods=[150000, 150000, 150000, 150000],
-    restart_weights=[1, 1, 1, 1],
+    restart_weights=[1, 0.5, 0.5, 0.5],
     eta_min=1e-7)

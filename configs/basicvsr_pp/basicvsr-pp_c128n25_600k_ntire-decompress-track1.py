@@ -21,8 +21,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(1, -1, 1, 1),
     ))
 
 test_pipeline = [
@@ -54,9 +52,10 @@ test_dataloader = dict(
         data_prefix=dict(img='LQ', gt='GT'),
         pipeline=test_pipeline))
 
-test_evaluator = [
-    dict(type='PSNR'),
-    dict(type='SSIM'),
-]
+test_evaluator = dict(
+    type='EditEvaluator', metrics=[
+        dict(type='PSNR'),
+        dict(type='SSIM'),
+    ])
 
-test_cfg = dict(type='TestLoop')
+test_cfg = dict(type='EditTestLoop')

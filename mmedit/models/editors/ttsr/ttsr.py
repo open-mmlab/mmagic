@@ -90,14 +90,9 @@ class TTSR(SRGAN):
         ref_lq = []
         ref = []
 
-        for data_sample in data_samples:
-            img_lq.append(data_sample.img_lq.data / 255.)
-            ref_lq.append(data_sample.ref_lq.data / 255.)
-            ref.append(data_sample.ref_img.data / 255.)
-
-        img_lq = torch.stack(img_lq)
-        ref_lq = torch.stack(ref_lq)
-        ref = torch.stack(ref)
+        img_lq = data_samples.img_lq / 255.
+        ref_lq = data_samples.ref_lq / 255.
+        ref = data_samples.ref_img / 255.
 
         img_lq, _, _ = self.extractor(img_lq)
         ref_lq, _, _ = self.extractor(ref_lq)

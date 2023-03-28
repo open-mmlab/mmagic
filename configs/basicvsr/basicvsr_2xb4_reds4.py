@@ -24,8 +24,6 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(1, -1, 1, 1),
     ))
 
 train_pipeline = [
@@ -91,14 +89,15 @@ val_dataloader = dict(
         fixed_seq_len=100,
         pipeline=val_pipeline))
 
-val_evaluator = [
-    dict(type='PSNR'),
-    dict(type='SSIM'),
-]
+val_evaluator = dict(
+    type='EditEvaluator', metrics=[
+        dict(type='PSNR'),
+        dict(type='SSIM'),
+    ])
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=300_000, val_interval=5000)
-val_cfg = dict(type='ValLoop')
+val_cfg = dict(type='EditValLoop')
 
 # optimizer
 optim_wrapper = dict(

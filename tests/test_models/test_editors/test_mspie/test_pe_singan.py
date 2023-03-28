@@ -26,7 +26,7 @@ class TestPESinGAN:
             num_scales=3)  # noqa
 
         cls.data_preprocessor = dict(
-            type='GenDataPreprocessor', non_image_keys=['input_sample'])
+            type='EditDataPreprocessor', non_image_keys=['input_sample'])
 
         cls.noise_weight_init = 0.1
         cls.iters_per_scale = 2

@@ -83,7 +83,7 @@ evaluation = dict(
 
 ```python
 val_evaluator = dict(
-    type='GenEvaluator',
+    type='EditEvaluator',
     metrics=[
         dict(
             type='FID',
