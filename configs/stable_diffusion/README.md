@@ -49,7 +49,7 @@ We use stable diffusion v1.5 weights. This model has several weights including v
 
 You should download the weights from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and change the 'pretrained_model_path' in config to the weights dir.
 
-Download the weights repo with git:
+Download with git:
 
 ```shell
 git lfs install
