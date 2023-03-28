@@ -85,6 +85,21 @@ test_pipeline = [
     dict(type='PackEditInputs')
 ]
 
+inference_pipeline = [
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb'),
+    dict(
+        type='Resize',
+        scale=(32, 32),
+        keys=['img'],
+        interpolation='bicubic',
+        backend='pillow'),
+    dict(type='PackEditInputs')
+]
+
 # dataset settings
 dataset_type = 'BasicImageDataset'
 
