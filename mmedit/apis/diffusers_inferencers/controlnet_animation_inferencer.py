@@ -47,7 +47,7 @@ class StableDiffusionControlNetPipelineImg2Img(
         height: Optional[int] = None,
         width: Optional[int] = None,
         num_inference_steps: int = 50,
-        guidance_scale: float = 7.5,
+        guidance_scale: float = 7,
         negative_prompt: Optional[Union[str, List[str]]] = None,
         num_images_per_prompt: Optional[int] = 1,
         eta: float = 0.0,
@@ -225,7 +225,8 @@ class StableDiffusionControlNetPipelineImg2Img(
             self.controlnet.dtype,
         )
 
-        latent_image = self.prepare_latent_image(latent_image)
+        latent_image = self.prepare_latent_image(latent_image,
+                                                 self.controlnet.dtype)
 
         if do_classifier_free_guidance:
             image = torch.cat([image] * 2)
@@ -413,13 +414,13 @@ class StableDiffusionControlNetPipelineImg2Img(
 
         return latents
 
-    def prepare_latent_image(self, image):
+    def prepare_latent_image(self, image, dtype):
         if isinstance(image, torch.Tensor):
             # Batch single image
             if image.ndim == 3:
                 image = image.unsqueeze(0)
 
-            image = image.to(dtype=torch.float32)
+            image = image.to(dtype=dtype)
         else:
             # preprocess image
             if isinstance(image, (PIL.Image.Image, np.ndarray)):
@@ -433,8 +434,7 @@ class StableDiffusionControlNetPipelineImg2Img(
                 image = np.concatenate([i[None, :] for i in image], axis=0)
 
             image = image.transpose(0, 3, 1, 2)
-            image = torch.from_numpy(image).to(
-                dtype=torch.float32) / 127.5 - 1.0
+            image = torch.from_numpy(image).to(dtype=dtype) / 127.5 - 1.0
 
         return image
 
@@ -463,16 +463,17 @@ class ControlnetAnimationInferencer(BaseInferencer):
                  config: Union[ConfigType, str],
                  device: Optional[str] = None,
                  extra_parameters: Optional[Dict] = None,
-                 seed: int = 2022,
+                 dtype=torch.float16,
                  **kwargs) -> None:
         cfg = Config.fromfile(config)
         self.hed = HEDdetector.from_pretrained(cfg.control_detector)
         self.controlnet = ControlNetModel.from_pretrained(
-            cfg.controlnet_model, torch_dtype=torch.float32)
+            cfg.controlnet_model, torch_dtype=dtype)
         self.pipe = StableDiffusionControlNetPipelineImg2Img.from_pretrained(
             cfg.stable_diffusion_model,
             controlnet=self.controlnet,
-            safety_checker=None).to('cuda')
+            safety_checker=None,
+            torch_dtype=dtype).to('cuda')
 
         self.pipe.scheduler = UniPCMultistepScheduler.from_config(
             self.pipe.scheduler.config)
@@ -504,10 +505,12 @@ class ControlnetAnimationInferencer(BaseInferencer):
         set_seed(seed)
 
         init_noise_shape = (1, 4, image_height // 8, image_width // 8)
-        init_noise_all_frame = torch.randn(init_noise_shape).cuda()
+        init_noise_all_frame = torch.randn(
+            init_noise_shape, dtype=self.controlnet.dtype).cuda()
 
         init_noise_shape_cat = (1, 4, image_height // 8, image_width // 8 * 3)
-        init_noise_all_frame_cat = torch.randn(init_noise_shape_cat).cuda()
+        init_noise_all_frame_cat = torch.randn(
+            init_noise_shape_cat, dtype=self.controlnet.dtype).cuda()
 
         # load the images
         input_file_extension = os.path.splitext(video)[1]
