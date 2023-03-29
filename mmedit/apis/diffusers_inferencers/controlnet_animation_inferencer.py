@@ -487,6 +487,8 @@ class ControlnetAnimationInferencer(BaseInferencer):
                  image_width=512,
                  image_height=512,
                  save_path=None,
+                 strength=0.75,
+                 num_inference_steps=20,
                  seed=1,
                  **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
@@ -552,9 +554,9 @@ class ControlnetAnimationInferencer(BaseInferencer):
             latent_image=image,
             prompt=prompt,
             negative_prompt=negative_prompt,
-            strength=0.75,
+            strength=strength,
             controlnet_conditioning_scale=controlnet_conditioning_scale,
-            num_inference_steps=20,
+            num_inference_steps=num_inference_steps,
             latents=init_noise_all_frame).images[0]
 
         first_result = result
@@ -586,9 +588,9 @@ class ControlnetAnimationInferencer(BaseInferencer):
                 latent_image=concat_img,
                 prompt=prompt,
                 negative_prompt=negative_prompt,
-                strength=0.75,
+                strength=strength,
                 controlnet_conditioning_scale=controlnet_conditioning_scale,
-                num_inference_steps=20,
+                num_inference_steps=num_inference_steps,
                 latents=init_noise_all_frame_cat,
             ).images[0]
             result = result.crop(
