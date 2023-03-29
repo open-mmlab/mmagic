@@ -49,7 +49,7 @@ test_cfg = dict(metrics=['l1', 'psnr', 'ssim'])
 dataset_type = 'ImgInpaintingDataset'
 input_shape = (512, 512)
 
-mask_root = 'data/masks'
+mask_root = 'data/pconv_masks'
 
 train_pipeline = [
     dict(type='LoadImageFromFile', key='gt_img', channel_order='rgb'),

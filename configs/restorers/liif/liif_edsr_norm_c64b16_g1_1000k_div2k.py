@@ -110,7 +110,7 @@ data = dict(
             scale=scale_max)),
     val=dict(
         type=val_dataset_type,
-        gt_folder='data/val_set5/Set5',
+        gt_folder='data/Set5/GTmod12',
         pipeline=valid_pipeline,
         scale=scale_max),
     # test=dict(
@@ -122,7 +122,7 @@ data = dict(
     #     filename_tmpl='{}'),
     test=dict(
         type=val_dataset_type,
-        gt_folder='data/val_set5/Set5',
+        gt_folder='data/Set5/GTmod12',
         pipeline=valid_pipeline,
         scale=scale_max))
 
