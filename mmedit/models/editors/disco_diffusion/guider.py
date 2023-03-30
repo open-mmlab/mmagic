@@ -311,6 +311,11 @@ class ImageTextGuider(nn.Module):
 
     def __init__(self, clip_models):
         super().__init__()
+
+        assert clip is not None, (
+            "Cannot import 'clip'. Please install 'clip' via "
+            "\"pip install git+https://github.com/openai/CLIP.git\".")
+
         self.clip_models = clip_models
         self.lpips_model = lpips.LPIPS(net='vgg')
 
