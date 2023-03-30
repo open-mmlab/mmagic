@@ -64,9 +64,9 @@ Running the following codes, you can get a text-generated image.
 from mmengine import MODELS, Config
 from torchvision import utils
 
-from mmedit.utils import register_all_modules
+from mmengine.registry import init_default_scope
 
-register_all_modules()
+init_default_scope('mmedit')
 
 config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py'
 config = Config.fromfile(config).copy()
