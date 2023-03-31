@@ -147,10 +147,9 @@ class StableDiffusion(BaseModel):
                 will be returned. Defaults to 'image'.
 
         Returns:
-            dict:['samples', 'nsfw_content_detected']:
-                'samples': image result samples
-                'nsfw_content_detected': nsfw content flags for image samples.
+            dict: A dict containing the generated images.
         """
+        assert return_type in ['image', 'tensor', 'numpy']
         set_random_seed(seed=seed)
 
         # 0. Default height and width to unet
@@ -210,7 +209,7 @@ class StableDiffusion(BaseModel):
             # predict the noise residual
             noise_pred = self.unet(
                 latent_model_input, t,
-                encoder_hidden_states=text_embeddings)['outputs']
+                encoder_hidden_states=text_embeddings)['sample']
 
             # perform guidance
             if do_classifier_free_guidance:
@@ -223,7 +222,7 @@ class StableDiffusion(BaseModel):
                     noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
 
         # 8. Post-processing
-        image = self.decode_latents(latents)
+        image = self.decode_latents(latents.to(self.vae.dtype))
         if return_type == 'image':
             image = self.output_to_pil(image)
         elif return_type == 'numpy':
