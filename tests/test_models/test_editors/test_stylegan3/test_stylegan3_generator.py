@@ -40,7 +40,8 @@ class TestStyleGAN3Generator:
             synthesis_cfg=synthesis_r_cfg)
 
     @pytest.mark.skipif(
-        'win' in platform.system().lower() and 'cu' in torch.__version__,
+        ('win' in platform.system().lower() and 'cu' in torch.__version__)
+        or not torch.cuda.is_available(),
         reason='skip on windows-cuda due to limited RAM.')
     def test_cpu(self):
         generator = StyleGAN3Generator(**self.default_cfg)

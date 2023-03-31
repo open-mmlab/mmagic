@@ -1,7 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 from unittest import TestCase
 
+import pytest
 import torch
 
 from mmedit.models.editors.mspie.mspie_stylegan2_modules import (
@@ -15,6 +17,9 @@ class TestModulatedPEStyleConv(TestCase):
         cls.default_cfg = dict(
             in_channels=8, out_channels=8, kernel_size=3, style_channels=16)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_upsample(self):
         cfg = deepcopy(self.default_cfg)
         conv = ModulatedPEStyleConv(**cfg, upsample=True)
@@ -31,6 +36,9 @@ class TestModulatedPEStyleConv(TestCase):
         out, noise_return = conv(x, style, noise, return_noise=True)
         assert (noise_return == noise).all()
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_downsample(self):
 
         cfg = deepcopy(self.default_cfg)
@@ -56,6 +64,9 @@ class TestModulatedPEConv2d(TestCase):
         cls.default_cfg = dict(
             in_channels=8, out_channels=8, kernel_size=3, style_channels=16)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_equalized_lr_cfg(self):
         cfg = deepcopy(self.default_cfg)
         conv = ModulatedPEConv2d(**cfg, equalized_lr_cfg=None)
@@ -64,6 +75,9 @@ class TestModulatedPEConv2d(TestCase):
         out = conv(x, style)
         self.assertEqual(out.shape, (1, 8, 32, 32))
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_demodulate(self):
         cfg = deepcopy(self.default_cfg)
         conv = ModulatedPEConv2d(**cfg, demodulate=False)
@@ -72,6 +86,9 @@ class TestModulatedPEConv2d(TestCase):
         out = conv(x, style)
         self.assertEqual(out.shape, (1, 8, 32, 32))
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_up_after_conv(self):
         x = torch.randn(1, 8, 32, 32)
         style = torch.randn(1, 16)

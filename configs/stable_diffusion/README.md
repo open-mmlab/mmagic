@@ -41,11 +41,20 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 
 ## Pretrained models
 
-We use stable diffusion v1.5 weights. This model has several weights including vae, unet and clip. You should download the weights from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and change the 'pretrained_model_path' in config to the weights dir.
-
 |                               Model                               | Dataset |                            Download                            |
 | :---------------------------------------------------------------: | :-----: | :------------------------------------------------------------: |
 | [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py) |    -    | [model](https://huggingface.co/runwayml/stable-diffusion-v1-5) |
+
+We use stable diffusion v1.5 weights. This model has several weights including vae, unet and clip.
+
+You should download the weights from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and change the 'pretrained_model_path' in config to the weights dir.
+
+Download with git:
+
+```shell
+git lfs install
+git clone https://huggingface.co/runwayml/stable-diffusion-v1-5
+```
 
 ## Quick Start
 
@@ -60,7 +69,10 @@ from mmengine.registry import init_default_scope
 init_default_scope('mmedit')
 
 config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py'
-StableDiffuser = MODELS.build(Config.fromfile(config).model)
+config = Config.fromfile(config).copy()
+config.model.init_cfg.pretrained_model_path = '/path/to/your/stable-diffusion-v1-5'
+
+StableDiffuser = MODELS.build(config.model)
 prompt = 'A mecha robot in a favela in expressionist style'
 StableDiffuser = StableDiffuser.to('cuda')
 
