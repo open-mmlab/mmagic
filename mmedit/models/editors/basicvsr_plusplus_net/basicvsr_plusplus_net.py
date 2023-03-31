@@ -168,8 +168,8 @@ class BasicVSRPlusPlusNet(BaseModule):
 
         n, t, _, h, w = flows.size()
 
-        frame_idx = range(0, t + 1)
-        flow_idx = range(-1, t)
+        frame_idx = list(range(0, t + 1))
+        flow_idx = list(range(-1, t))
         mapping_idx = list(range(0, len(feats['spatial'])))
         mapping_idx += mapping_idx[::-1]
 

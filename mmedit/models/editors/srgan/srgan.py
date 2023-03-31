@@ -309,7 +309,7 @@ class SRGAN(BaseEditModel):
 
             for _ in range(self.disc_repeat):
                 log_vars_d = self.d_step_with_optim(
-                    batch_outputs=batch_outputs,
+                    batch_outputs=batch_outputs.detach(),
                     batch_gt_data=batch_gt_data,
                     optim_wrapper=optim_wrapper)
 

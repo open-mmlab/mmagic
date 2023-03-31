@@ -140,6 +140,7 @@ class EditDataSample(BaseDataElement):
         'sample_idx': 'sample_idx',
         'num_input_frames': 'num_input_frames',
         'num_output_frames': 'num_output_frames',
+        'mask_bbox': 'mask_bbox',
         # for LIIF
         'coord': 'coord',
         'cell': 'cell',

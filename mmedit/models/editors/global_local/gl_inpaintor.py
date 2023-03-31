@@ -180,7 +180,7 @@ class GLInpaintor(OneStageInpaintor):
         mask = data_samples.mask
         mask = mask.float()
 
-        bbox_tensor = torch.LongTensor(data_samples.mask_bbox)
+        bbox_tensor = torch.LongTensor(data_samples.metainfo['mask_bbox'])
 
         input_x = torch.cat([masked_img, mask], dim=1)
         fake_res = self.generator(input_x)
