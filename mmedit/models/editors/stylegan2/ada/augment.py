@@ -10,7 +10,12 @@ import numpy as np
 import scipy.signal
 import torch
 
-from ....base_archs import conv2d_gradfix
+try:
+    from mmcv.ops import conv2d
+except ImportError:
+    conv2d = None
+    print('Warning: mmcv.ops.conv2d are not available.')
+
 from . import grid_sample_gradfix, misc, upfirdn2d
 
 # ----------------------------------------------------------------------------
@@ -730,11 +735,11 @@ class AugmentPipe(torch.nn.Module):
                 [1, batch_size * num_channels, height, width])
             images = torch.nn.functional.pad(
                 input=images, pad=[p, p, p, p], mode='reflect')
-            images = conv2d_gradfix.conv2d(
+            images = conv2d(
                 input=images,
                 weight=Hz_prime.unsqueeze(2),
                 groups=batch_size * num_channels)
-            images = conv2d_gradfix.conv2d(
+            images = conv2d(
                 input=images,
                 weight=Hz_prime.unsqueeze(3),
                 groups=batch_size * num_channels)
