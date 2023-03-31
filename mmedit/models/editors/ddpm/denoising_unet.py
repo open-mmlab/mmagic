@@ -1133,7 +1133,7 @@ class DenoisingUnet(BaseModule):
                 order=('norm', 'act', 'conv'))
 
         if self.unet_type == 'stable':
-            self.sample_size = image_size
+            self.sample_size = image_size // 8  # NOTE: hard code here
 
         self.init_weights(pretrained)
 
@@ -1278,7 +1278,7 @@ class DenoisingUnet(BaseModule):
             h = h.type(x_t.dtype)
             outputs = self.out(h)
 
-        return {'outputs': outputs}
+        return {'sample': outputs}
 
     def init_weights(self, pretrained=None):
         """Init weights for models.
