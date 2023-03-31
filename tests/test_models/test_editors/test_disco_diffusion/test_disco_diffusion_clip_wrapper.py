@@ -32,15 +32,18 @@ class TestClipWrapper(TestCase):
         mock_clip_load.assert_called_once_with(name='test_model')
         self.assertEqual(model.model, mock_model)
 
-    @patch('open_clip.create_model')
-    def test_open_clip_load(self, mock_create_model):
+    def test_open_clip_load(self):
         mock_model = MagicMock()
-        mock_create_model.return_value = mock_model
+        create_model_mock = MagicMock()
+        create_model_mock.return_value = mock_model
 
-        model = ClipWrapper('open_clip', model_name='RN50')
+        open_clip_mock = MagicMock()
+        open_clip_mock.create_model = create_model_mock
 
-        mock_create_model.assert_called_once_with(model_name='RN50')
-        self.assertEqual(model.model, mock_model)
+        with patch.dict('sys.modules', {'open_clip': open_clip_mock}):
+            model = ClipWrapper('open_clip', model_name='RN50')
+            create_model_mock.assert_called_once_with(model_name='RN50')
+            self.assertEqual(model.model, mock_model)
 
     @patch('transformers.CLIPTextModel.from_pretrained')
     def test_huggingface_load(self, mock_from_pretrained):
