@@ -10,6 +10,5 @@ coverage < 7.0.0
 imageio-ffmpeg==0.4.4
 interrogate
 mmdet >= 3.0.0rc2
-open_clip_torch
 pytest
 transformers
