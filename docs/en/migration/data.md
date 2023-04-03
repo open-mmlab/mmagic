@@ -8,7 +8,7 @@ This section introduces the migration of data settings:
 
 ## Data pipelines
 
-We update data pipelines settings in MMEdit main. Important modifications are as following.
+We update data pipelines settings in MMEdit 1.x. Important modifications are as following.
 
 - Remove normalization and color space transforms operations. They are moved from datasets transforms pipelines to data_preprocessor.
 - The original formatting transforms pipelines `Collect` and `ToTensor` are combined as `PackEditInputs`.
@@ -139,7 +139,7 @@ test_pipeline = [  # Test pipeline
 
 ## Dataloader
 
-We update dataloader settings in MMEdit main. Important modifications are as following.
+We update dataloader settings in MMEdit 1.x. Important modifications are as following.
 
 - The original `data` field is split to `train_dataloader`, `val_dataloader` and `test_dataloader`. This allows us to configure them in fine-grained. For example, you can specify different sampler and batch size during training and test.
 - The `samples_per_gpu` is renamed to `batch_size`.
@@ -200,7 +200,7 @@ data_root = 'data'  # Root path of data
 train_dataloader = dict(
     batch_size=16,
     num_workers=4,  # The number of workers to pre-fetch data for each single GPU
-    persistent_workers=False,  # Whether maintain the workers Dataset instances alive
+    persistent_workers=False,  # Whether 1.xtain the workers Dataset instances alive
     sampler=dict(type='InfiniteSampler', shuffle=True),  # The type of data sampler
     dataset=dict(  # Train dataset config
         type=dataset_type,  # Type of dataset
@@ -214,7 +214,7 @@ train_dataloader = dict(
 val_dataloader = dict(
     batch_size=1,
     num_workers=4,  # The number of workers to pre-fetch data for each single GPU
-    persistent_workers=False,  # Whether maintain the workers Dataset instances alive
+    persistent_workers=False,  # Whether 1.xtain the workers Dataset instances alive
     drop_last=False,  # Whether drop the last incomplete batch
     sampler=dict(type='DefaultSampler', shuffle=False),  # The type of data sampler
     dataset=dict(  # Validation dataset config

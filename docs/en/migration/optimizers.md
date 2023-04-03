@@ -1,9 +1,9 @@
 # Migration of Optimizers
 
-We have merged [MMGeneration main](https://github.com/open-mmlab/mmgeneration/tree/main) into MMEditing. Here is migration of Optimizers about MMGeneration.
+We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMEditing. Here is migration of Optimizers about MMGeneration.
 
 In version 0.x, MMGeneration uses PyTorch's native Optimizer, which only provides general parameter optimization.
-In version main, we use `OptimizerWrapper` provided by MMEngine.
+In version 1.x, we use `OptimizerWrapper` provided by MMEngine.
 
 Compared to PyTorch's `Optimizer`, `OptimizerWrapper` supports the following features:
 
@@ -16,13 +16,13 @@ To ensure that the GAN model's function signature of `train_step` is consistent 
 To automate this process MMGeneration implement `GenOptimWrapperContructor`.
 And you should specify this constructor in your config is you want to train GAN model.
 
-The config for the 0.x and main versions are shown below:
+The config for the 0.x and 1.x versions are shown below:
 
 <table class="docutils">
 <thead>
   <tr>
     <th> 0.x Version </th>
-    <th> main Version </th>
+    <th> 1.x Version </th>
 <tbody>
 <tr>
 <td valign="top">
@@ -52,10 +52,10 @@ optim_wrapper = dict(
 </thead>
 </table>
 
-> Note that, in the main, MMGeneration uses `OptimWrapper` to realize gradient accumulation. This make the config of `discriminator_steps` (training trick for updating the generator once after multiple updates of the discriminator) and gradient accumulation different between 0.x and main version.
+> Note that, in the 1.x, MMGeneration uses `OptimWrapper` to realize gradient accumulation. This make the config of `discriminator_steps` (training trick for updating the generator once after multiple updates of the discriminator) and gradient accumulation different between 0.x and 1.x version.
 
 - In 0.x version,  we use `disc_steps`, `gen_steps` and `batch_accumulation_steps` in configs. `disc_steps` and `batch_accumulation_steps` are counted by the number of calls of `train_step` (is also the number of data reads from the dataloader). Therefore the number of consecutive updates of the discriminator is `disc_steps // batch_accumulation_steps`. And for generators, `gen_steps` is the number of times the generator actually updates continuously.
-- In main version, we use `discriminator_steps`, `generator_steps` and `accumulative_counts` in configs. `discriminator_steps` and `generator_steps` are the number of consecutive updates to itself before updating other modules.
+- In 1.x version, we use `discriminator_steps`, `generator_steps` and `accumulative_counts` in configs. `discriminator_steps` and `generator_steps` are the number of consecutive updates to itself before updating other modules.
 
 Take config of BigGAN-128 as example.
 
@@ -63,7 +63,7 @@ Take config of BigGAN-128 as example.
 <thead>
   <tr>
     <th> 0.x Version </th>
-    <th> main Version </th>
+    <th> 1.x Version </th>
 <tbody>
 <tr>
 <td valign="top">

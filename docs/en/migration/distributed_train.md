@@ -1,8 +1,8 @@
 # Migration of Distributed Training Settings
 
-We have merged [MMGeneration main](https://github.com/open-mmlab/mmgeneration/tree/main) into MMEditing. Here is migration of Distributed Training Settings about MMGeneration.
+We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMEditing. Here is migration of Distributed Training Settings about MMGeneration.
 
-In 0.x version, MMGeneration uses `DDPWrapper` and `DynamicRunner` to train static and dynamic model (e.g., PGGAN and StyleGANv2) respectively. In main version, we use `MMSeparateDistributedDataParallel` provided by MMEngine to implement distributed training.
+In 0.x version, MMGeneration uses `DDPWrapper` and `DynamicRunner` to train static and dynamic model (e.g., PGGAN and StyleGANv2) respectively. In 1.x version, we use `MMSeparateDistributedDataParallel` provided by MMEngine to implement distributed training.
 
 The configuration differences are shown below:
 
@@ -10,7 +10,7 @@ The configuration differences are shown below:
 <thead>
   <tr>
     <th> Static Model in 0.x Version </th>
-    <th> Static Model in main Version </th>
+    <th> Static Model in 1.x Version </th>
 <tbody>
 <tr>
 <td valign="top">
@@ -46,7 +46,7 @@ model_wrapper_cfg = dict(
 <thead>
   <tr>
     <th> Dynamic Model in 0.x Version </th>
-    <th> Dynamic Model in main Version </th>
+    <th> Dynamic Model in 1.x Version </th>
 <tbody>
 <tr>
 
