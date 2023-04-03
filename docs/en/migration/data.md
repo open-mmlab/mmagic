@@ -8,7 +8,7 @@ This section introduces the migration of data settings:
 
 ## Data pipelines
 
-We update data pipelines settings in MMEdit 1.x. Important modifications are as following.
+We update data pipelines settings in MMEdit main. Important modifications are as following.
 
 - Remove normalization and color space transforms operations. They are moved from datasets transforms pipelines to data_preprocessor.
 - The original formatting transforms pipelines `Collect` and `ToTensor` are combined as `PackEditInputs`.
@@ -139,7 +139,7 @@ test_pipeline = [  # Test pipeline
 
 ## Dataloader
 
-We update dataloader settings in MMEdit 1.x. Important modifications are as following.
+We update dataloader settings in MMEdit main. Important modifications are as following.
 
 - The original `data` field is split to `train_dataloader`, `val_dataloader` and `test_dataloader`. This allows us to configure them in fine-grained. For example, you can specify different sampler and batch size during training and test.
 - The `samples_per_gpu` is renamed to `batch_size`.

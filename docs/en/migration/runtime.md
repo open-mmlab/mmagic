@@ -1,6 +1,6 @@
 # Migration of Runtime Settings
 
-We update runtime settings in MMEdit 1.x. Important modifications are as following.
+We update runtime settings in MMEdit main. Important modifications are as following.
 
 - The `checkpoint_config` is moved to `default_hooks.checkpoint` and the `log_config` is moved to `default_hooks.logger`. And we move many hooks settings from the script code to the `default_hooks` field in the runtime configuration.
 - The `resume_from` is removed. And we use `resume` to replace it.

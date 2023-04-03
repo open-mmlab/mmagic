@@ -18,11 +18,11 @@ You can copy and create your own project from the [example project](./example_pr
 
 We also provide some documentation listed below for your reference:
 
-- [Contribution Guide](https://mmediting.readthedocs.io/en/dev-1.x/community/contributing.html)
+- [Contribution Guide](https://mmediting.readthedocs.io/en/main/community/contributing.html)
 
   The guides for new contributors about how to add your projects to MMEditing.
 
-- [New Model Guide](https://mmediting.readthedocs.io/en/dev-1.x/howto/models.html)
+- [New Model Guide](https://mmediting.readthedocs.io/en/main/howto/models.html)
 
   The documentation of adding new models.
 

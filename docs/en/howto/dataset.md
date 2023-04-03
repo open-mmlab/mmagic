@@ -16,7 +16,7 @@ In this document, we will introduce the design of each datasets in MMEditing and
 
 ## Supported Data Format
 
-In 1.x version of MMEditing, all datasets are inherited from `BaseDataset`.
+In main version of MMEditing, all datasets are inherited from `BaseDataset`.
 Each dataset load the list of data info (e.g., data path) by `load_data_list`.
 In `__getitem__`, `prepare_data` is called to get the preprocessed data.
 In `prepare_data`, data loading pipeline consists of the following steps:

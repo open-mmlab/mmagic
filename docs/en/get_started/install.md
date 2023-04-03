@@ -10,7 +10,7 @@ In this section, you will know about:
 
 ## Installation
 
-We recommend that users follow our [Best practices](#best-practices) to install MMEditing 1.x.
+We recommend that users follow our [Best practices](#best-practices) to install MMEditing main.
 However, the whole process is highly customizable. See [Customize installation](#customize-installation) section for more information.
 
 ### Prerequisites
@@ -69,11 +69,11 @@ mim install 'mmcv>=2.0.0rc1'
 pip install git+https://github.com/open-mmlab/mmengine.git
 ```
 
-**Step 2.** Install MMEditing 1.x .
+**Step 2.** Install MMEditing main .
 Install [MMEditing](https://github.com/open-mmlab/mmediting) from the source code.
 
 ```shell
-git clone -b 1.x https://github.com/open-mmlab/mmediting.git
+git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e . -v
 ```

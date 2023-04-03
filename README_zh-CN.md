@@ -19,17 +19,17 @@
   <div>&nbsp;</div>
 
 [![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/zh_CN/1.x/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/zh_CN/main/)
 [![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/1.x/LICENSE)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/main/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘使用文档](https://mmediting.readthedocs.io/en/1.x/) |
-[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/get_started/install.html) |
-[📊模型库](https://mmediting.readthedocs.io/zh_CN/1.x/model_zoo/overview.html) |
-[🆕更新记录](https://mmediting.readthedocs.io/zh_CN/1.x/changelog.html) |
+[📘使用文档](https://mmediting.readthedocs.io/en/main/) |
+[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/main/get_started/install.html) |
+[📊模型库](https://mmediting.readthedocs.io/zh_CN/main/model_zoo/overview.html) |
+[🆕更新记录](https://mmediting.readthedocs.io/zh_CN/main/changelog.html) |
 [🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
 [🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
 
@@ -60,7 +60,7 @@
 
 **MMEditing** 已经支持了[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
 
-如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmediting/tree/master) MMEditing 0.x 迁移到新版本 MMEditing 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
+如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmediting/tree/master) MMEditing 0.x 迁移到新版本 MMEditing main，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
 
 ## 📄 目录
 
@@ -139,7 +139,7 @@ mim install 'mmcv>=2.0.0rc1'
 从源码安装 MMEditing
 
 ```
-git clone -b 1.x https://github.com/open-mmlab/mmediting.git
+git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e .
 ```
@@ -318,7 +318,7 @@ pip3 install -e .
   </tbody>
 </table>
 
-请参考[模型库](https://mmediting.readthedocs.io/zh_CN/1.x/model_zoo/overview.html)了解详情。
+请参考[模型库](https://mmediting.readthedocs.io/zh_CN/main/model_zoo/overview.html)了解详情。
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 

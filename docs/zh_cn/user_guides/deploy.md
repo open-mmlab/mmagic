@@ -1,7 +1,7 @@
 # 教程 8：模型部署指南
 
 [MMDeploy](https://github.com/open-mmlab/mmdeploy) 是 OpenMMLab 的部署仓库，负责包括 MMClassification、MMDetection、MMEditing 等在内的各算法库的部署工作。
-你可以从[这里](https://mmdeploy.readthedocs.io/zh_CN/1.x/04-supported-codebases/mmedit.html)获取 MMDeploy 对 MMClassification 部署支持的最新文档。
+你可以从[这里](https://mmdeploy.readthedocs.io/zh_CN/main/04-supported-codebases/mmedit.html)获取 MMDeploy 对 MMClassification 部署支持的最新文档。
 
 本文的结构如下：
 
@@ -15,7 +15,7 @@
 
 ## 安装
 
-请参考[此处](../get_started/install.md)安装 mmedit。然后，按照[说明](https://mmdeploy.readthedocs.io/zh_CN/1.x/get_started.html#mmdeploy)安装 mmdeploy。
+请参考[此处](../get_started/install.md)安装 mmedit。然后，按照[说明](https://mmdeploy.readthedocs.io/zh_CN/main/get_started.html#mmdeploy)安装 mmdeploy。
 
 ```{note}
 如果安装的是 mmdeploy 预编译包，那么也请通过 'git clone https://github.com/open-mmlab/mmdeploy.git --depth=1' 下载 mmdeploy 源码。因为它包含了部署时要用到的配置文件
@@ -45,7 +45,7 @@ torch2onnx(img, work_dir, save_file, deploy_cfg, model_cfg,
 export2SDK(deploy_cfg, model_cfg, work_dir, pth=model_checkpoint, device=device)
 ```
 
-转换的关键之一是使用正确的配置文件。项目中已内置了各后端部署[配置文件](https://github.com/open-mmlab/mmdeploy/tree/1.x/configs/mmedit)。
+转换的关键之一是使用正确的配置文件。项目中已内置了各后端部署[配置文件](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmedit)。
 文件的命名模式是：
 
 ```
@@ -148,8 +148,8 @@ cv2.imwrite('output_restorer.bmp', result)
 ```
 
 除了python API，mmdeploy SDK 还提供了诸如 C、C++、C#、Java等多语言接口。
-你可以参考[样例](https://github.com/open-mmlab/mmdeploy/tree/1.x/demo)学习其他语言接口的使用方法。
+你可以参考[样例](https://github.com/open-mmlab/mmdeploy/tree/main/demo)学习其他语言接口的使用方法。
 
 ## 模型支持列表
 
-请参考[这里](https://mmdeploy.readthedocs.io/zh_CN/1.x/04-supported-codebases/mmedit.html#id7)
+请参考[这里](https://mmdeploy.readthedocs.io/zh_CN/main/04-supported-codebases/mmedit.html#id7)

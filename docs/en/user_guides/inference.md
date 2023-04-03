@@ -113,7 +113,7 @@ model = init_model(config_file, checkpoint_file, device=device)
 fake_imgs = sample_ddpm_model(model, 4)
 ```
 
-Indeed, we have already provided a more friendly demo script to users. You can use [demo/ddpm_demo.py](https://github.com/open-mmlab/mmediting/blob/1.x/demo/ddpm_demo.py) with the following commands:
+Indeed, we have already provided a more friendly demo script to users. You can use [demo/ddpm_demo.py](https://github.com/open-mmlab/mmediting/blob/main/demo/ddpm_demo.py) with the following commands:
 
 ```shell
 python demo/ddpm_demo.py \

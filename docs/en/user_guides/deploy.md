@@ -1,7 +1,7 @@
 # Tutorial 8: Deploy models in MMEditing
 
 The deployment of OpenMMLab codebases, including MMClassification, MMDetection, MMEditing and so on are supported by [MMDeploy](https://github.com/open-mmlab/mmdeploy).
-The latest deployment guide for MMEditing can be found from [here](https://mmdeploy.readthedocs.io/en/1.x/04-supported-codebases/mmedit.html).
+The latest deployment guide for MMEditing can be found from [here](https://mmdeploy.readthedocs.io/en/main/04-supported-codebases/mmedit.html).
 
 This tutorial is organized as follows:
 
@@ -15,7 +15,7 @@ This tutorial is organized as follows:
 
 ## Installation
 
-Please follow the [guide](../get_started/install.md) to install mmedit. And then install mmdeploy from source by following [this](https://mmdeploy.readthedocs.io/en/1.x/get_started.html#installation) guide.
+Please follow the [guide](../get_started/install.md) to install mmedit. And then install mmdeploy from source by following [this](https://mmdeploy.readthedocs.io/en/main/get_started.html#installation) guide.
 
 ```{note}
 If you install mmdeploy prebuilt package, please also clone its repository by 'git clone https://github.com/open-mmlab/mmdeploy.git --depth=1' to get the deployment config files.
@@ -48,7 +48,7 @@ torch2onnx(img, work_dir, save_file, deploy_cfg, model_cfg,
 export2SDK(deploy_cfg, model_cfg, work_dir, pth=model_checkpoint, device=device)
 ```
 
-It is crucial to specify the correct deployment config during model conversion.MMDeploy has already provided builtin deployment config [files](https://github.com/open-mmlab/mmdeploy/tree/1.x/configs/mmedit) of all supported backends for mmedit, under which the config file path follows the pattern:
+It is crucial to specify the correct deployment config during model conversion.MMDeploy has already provided builtin deployment config [files](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmedit) of all supported backends for mmedit, under which the config file path follows the pattern:
 
 ```
 {task}/{task}_{backend}-{precision}_{static | dynamic}_{shape}.py
@@ -151,8 +151,8 @@ result = restorer(img)
 cv2.imwrite('output_restorer.bmp', result)
 ```
 
-Besides python API, MMDeploy SDK also provides other FFI (Foreign Function Interface), such as C, C++, C#, Java and so on. You can learn their usage from [demos](https://github.com/open-mmlab/mmdeploy/tree/1.x/demo).
+Besides python API, MMDeploy SDK also provides other FFI (Foreign Function Interface), such as C, C++, C#, Java and so on. You can learn their usage from [demos](https://github.com/open-mmlab/mmdeploy/tree/main/demo).
 
 ## Supported models
 
-Please refer to [here](https://mmdeploy.readthedocs.io/en/1.x/04-supported-codebases/mmedit.html#supported-models) for the supported model list.
+Please refer to [here](https://mmdeploy.readthedocs.io/en/main/04-supported-codebases/mmedit.html#supported-models) for the supported model list.

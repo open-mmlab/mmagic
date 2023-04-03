@@ -1,6 +1,6 @@
 # Migration of Schedule Settings
 
-We update schedule settings in MMEdit 1.x. Important modifications are as following.
+We update schedule settings in MMEdit main. Important modifications are as following.
 
 - Now we use `optim_wrapper` field to specify all configuration about the optimization process. And the `optimizer` is a sub field of `optim_wrapper` now.
 - The `lr_config` field is removed and we use new `param_scheduler` to replace it.

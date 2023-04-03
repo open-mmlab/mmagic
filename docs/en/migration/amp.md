@@ -5,17 +5,17 @@ Instead, users must use `auto_fp16` decorator to warp the specific submodule and
 This allows for fine-grained control of the model parameters, but is more cumbersome to use.
 In addition, users need to handle operations such as scaling of the loss function during the training process by themselves.
 
-In 1.x version, MMEditing use `AmpOptimWrapper` provided by MMEngine.
+In main version, MMEditing use `AmpOptimWrapper` provided by MMEngine.
 In `AmpOptimWrapper.update_params`, gradient scaling and `GradScaler` updating is automatically performed.
 And in `optim_context` context manager, `auto_cast` is applied to the entire forward process.
 
-Specifically, the difference between the 0.x and 1.x is as follows:
+Specifically, the difference between the 0.x and main is as follows:
 
 <table class="docutils">
 <thead>
   <tr>
     <th> 0.x version </th>
-    <th> 1.x Version </th>
+    <th> main Version </th>
 <tbody>
 <tr>
 <td valign="top">

@@ -1,12 +1,12 @@
 # Migration of Visualization
 
-In 0.x, MMEditing use `VisualizationHook` to visualize results in training process. In 1.x version, we unify the function of those hooks into `BasicVisualizationHook` / `GenVisualizationHook`. Additionally, follow the design of MMEngine, we implement `ConcatImageVisualizer` / `GenVisualizer` and a group of `VisBackend` to draw and save the visualization results.
+In 0.x, MMEditing use `VisualizationHook` to visualize results in training process. In main version, we unify the function of those hooks into `BasicVisualizationHook` / `GenVisualizationHook`. Additionally, follow the design of MMEngine, we implement `ConcatImageVisualizer` / `GenVisualizer` and a group of `VisBackend` to draw and save the visualization results.
 
 <table class="docutils">
 <thead>
   <tr>
     <th> 0.x version </th>
-    <th> 1.x Version </th>
+    <th> main Version </th>
 <tbody>
 <tr>
 <td valign="top">
