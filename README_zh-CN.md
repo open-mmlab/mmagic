@@ -26,7 +26,7 @@
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘使用文档](https://mmediting.readthedocs.io/en/main/) |
+[📘使用文档](https://mmediting.readthedocs.io/zh_CN/main/) |
 [🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/main/get_started/install.html) |
 [📊模型库](https://mmediting.readthedocs.io/zh_CN/main/model_zoo/overview.html) |
 [🆕更新记录](https://mmediting.readthedocs.io/zh_CN/main/changelog.html) |
@@ -60,7 +60,7 @@
 
 **MMEditing** 已经支持了[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
 
-如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmediting/tree/master) MMEditing 0.x 迁移到新版本 MMEditing main，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
+如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmediting/tree/master) MMEditing 0.x 迁移到新版本 MMEditing 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
 
 ## 📄 目录
 
