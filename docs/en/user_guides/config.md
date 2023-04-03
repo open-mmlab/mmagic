@@ -58,7 +58,7 @@ then modify the necessary fields in the config files.
 If you are building an entirely new method that does not share the structure with any of the existing methods,
 you may create a folder `xxx` under `configs`,
 
-Please refer to [MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/config.md) for detailed documentation.
+Please refer to [MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/config.md) for detailed documentation.
 
 ## Config name style
 
@@ -79,7 +79,7 @@ Please refer to [MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs
 To help the users have a basic idea of a complete config,
 we make a brief comments on the [config of the EDSR model](https://github.com/open-mmlab/mmediting/blob/1.x/configs/edsr/edsr_x2c64b16_g1_300k_div2k.py) we implemented as the following.
 For more detailed usage and the corresponding alternative for each modules,
-please refer to the API documentation and the [tutorial in MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/config.md).
+please refer to the API documentation and the [tutorial in MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/config.md).
 
 ### Model config
 
@@ -190,7 +190,7 @@ test_dataloader = val_dataloader
 
 ### Evaluation config
 
-[Evaluators](https://mmengine.readthedocs.io/en/latest/tutorials/metric_and_evaluator.html) are used to compute the metrics of the trained model on the validation and testing datasets.
+[Evaluators](https://mmengine.readthedocs.io/en/latest/tutorials/evaluation.html) are used to compute the metrics of the trained model on the validation and testing datasets.
 The config of evaluators consists of one or a list of metric configs:
 
 ```python
@@ -220,7 +220,7 @@ test_cfg = dict(type='TestLoop')  # The name of test loop type
 ### Optimization config
 
 `optim_wrapper` is the field to configure optimization related settings.
-The optimizer wrapper not only provides the functions of the optimizer, but also supports functions such as gradient clipping, mixed precision training, etc. Find more in [optimizer wrapper tutorial](https://mmengine.readthedocs.io/en/latest/tutorials/optimizer.html).
+The optimizer wrapper not only provides the functions of the optimizer, but also supports functions such as gradient clipping, mixed precision training, etc. Find more in [optimizer wrapper tutorial](https://mmengine.readthedocs.io/en/latest/tutorials/optim_wrapper.html).
 
 ```python
 optim_wrapper = dict(
@@ -362,7 +362,7 @@ val_dataloader = dict(  # The config of validation dataloader
 test_dataloader = val_dataloader  # The config of the testing dataloader
 ```
 
-[Evaluators](https://mmengine.readthedocs.io/en/latest/tutorials/metric_and_evaluator.html) are used to compute the metrics of the trained model on the validation and testing datasets.
+[Evaluators](https://mmengine.readthedocs.io/en/latest/tutorials/evaluation.html) are used to compute the metrics of the trained model on the validation and testing datasets.
 The config of evaluators consists of one or a list of metric configs:
 
 ```python
@@ -399,7 +399,7 @@ test_cfg = dict(type='GenTestLoop')  # The testing loop type
 ### Optimization config
 
 `optim_wrapper` is the field to configure optimization related settings.
-The optimizer wrapper not only provides the functions of the optimizer, but also supports functions such as gradient clipping, mixed precision training, etc. Find more in [optimizer wrapper tutorial](https://mmengine.readthedocs.io/en/latest/tutorials/optimizer.html).
+The optimizer wrapper not only provides the functions of the optimizer, but also supports functions such as gradient clipping, mixed precision training, etc. Find more in [optimizer wrapper tutorial](https://mmengine.readthedocs.io/en/latest/tutorials/optim_wrapper.html).
 
 ```python
 optim_wrapper = dict(
