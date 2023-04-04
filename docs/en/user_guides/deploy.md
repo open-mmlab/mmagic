@@ -1,7 +1,7 @@
 # Tutorial 8: Deploy models in MMEditing
 
 The deployment of OpenMMLab codebases, including MMClassification, MMDetection, MMEditing and so on are supported by [MMDeploy](https://github.com/open-mmlab/mmdeploy).
-The latest deployment guide for MMEditing can be found from [here](https://mmdeploy.readthedocs.io/en/main/04-supported-codebases/mmedit.html).
+The latest deployment guide for MMEditing can be found from [here](https://mmdeploy.readthedocs.io/en/latest/04-supported-codebases/mmedit.html).
 
 This tutorial is organized as follows:
 
@@ -15,7 +15,7 @@ This tutorial is organized as follows:
 
 ## Installation
 
-Please follow the [guide](../get_started/install.md) to install mmedit. And then install mmdeploy from source by following [this](https://mmdeploy.readthedocs.io/en/main/get_started.html#installation) guide.
+Please follow the [guide](../get_started/install.md) to install mmedit. And then install mmdeploy from source by following [this](https://mmdeploy.readthedocs.io/en/latest/get_started.html#installation) guide.
 
 ```{note}
 If you install mmdeploy prebuilt package, please also clone its repository by 'git clone https://github.com/open-mmlab/mmdeploy.git --depth=1' to get the deployment config files.
@@ -155,4 +155,4 @@ Besides python API, MMDeploy SDK also provides other FFI (Foreign Function Inter
 
 ## Supported models
 
-Please refer to [here](https://mmdeploy.readthedocs.io/en/main/04-supported-codebases/mmedit.html#supported-models) for the supported model list.
+Please refer to [here](https://mmdeploy.readthedocs.io/en/latest/04-supported-codebases/mmedit.html#supported-models) for the supported model list.

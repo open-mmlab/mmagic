@@ -1,7 +1,7 @@
 # 教程 8：模型部署指南
 
 [MMDeploy](https://github.com/open-mmlab/mmdeploy) 是 OpenMMLab 的部署仓库，负责包括 MMClassification、MMDetection、MMEditing 等在内的各算法库的部署工作。
-你可以从[这里](https://mmdeploy.readthedocs.io/zh_CN/main/04-supported-codebases/mmedit.html)获取 MMDeploy 对 MMClassification 部署支持的最新文档。
+你可以从[这里](https://mmdeploy.readthedocs.io/zh_CN/latest/04-supported-codebases/mmedit.html)获取 MMDeploy 对 MMClassification 部署支持的最新文档。
 
 本文的结构如下：
 
@@ -15,7 +15,7 @@
 
 ## 安装
 
-请参考[此处](../get_started/install.md)安装 mmedit。然后，按照[说明](https://mmdeploy.readthedocs.io/zh_CN/main/get_started.html#mmdeploy)安装 mmdeploy。
+请参考[此处](../get_started/install.md)安装 mmedit。然后，按照[说明](https://mmdeploy.readthedocs.io/zh_CN/latest/get_started.html#mmdeploy)安装 mmdeploy。
 
 ```{note}
 如果安装的是 mmdeploy 预编译包，那么也请通过 'git clone https://github.com/open-mmlab/mmdeploy.git --depth=1' 下载 mmdeploy 源码。因为它包含了部署时要用到的配置文件
@@ -152,4 +152,4 @@ cv2.imwrite('output_restorer.bmp', result)
 
 ## 模型支持列表
 
-请参考[这里](https://mmdeploy.readthedocs.io/zh_CN/main/04-supported-codebases/mmedit.html#id7)
+请参考[这里](https://mmdeploy.readthedocs.io/zh_CN/latest/04-supported-codebases/mmedit.html#id7)

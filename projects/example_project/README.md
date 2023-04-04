@@ -18,7 +18,7 @@ This is an implementation of \[XXX\].
 
 ### Setup Environment \[required\]
 
-Please refer to [Get Started](https://mmediting.readthedocs.io/en/main/get_started/I.html) to install
+Please refer to [Get Started](https://mmediting.readthedocs.io/en/latest/get_started/I.html) to install
 MMEditing.
 
 At first, add the current folder to `PYTHONPATH`, so that Python can find your code. Run command in the current directory to add it.
@@ -31,7 +31,7 @@ export PYTHONPATH=`pwd`:$PYTHONPATH
 
 ### Data Preparation \[optional\]
 
-Prepare the ImageNet-2012 dataset according to the [instruction](https://mmediting.readthedocs.io/en/main/user_guides/dataset_prepare.html#imagenet).
+Prepare the ImageNet-2012 dataset according to the [instruction](https://mmediting.readthedocs.io/en/latest/user_guides/dataset_prepare.html#imagenet).
 
 ### Training commands \[optional\]
 

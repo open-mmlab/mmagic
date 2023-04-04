@@ -19,17 +19,17 @@
   <div>&nbsp;</div>
 
 [![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/zh_CN/main/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/zh_CN/latest/)
 [![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
 [![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/main/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘使用文档](https://mmediting.readthedocs.io/zh_CN/main/) |
-[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/main/get_started/install.html) |
-[📊模型库](https://mmediting.readthedocs.io/zh_CN/main/model_zoo/overview.html) |
-[🆕更新记录](https://mmediting.readthedocs.io/zh_CN/main/changelog.html) |
+[📘使用文档](https://mmediting.readthedocs.io/zh_CN/latest/) |
+[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/latest/get_started/install.html) |
+[📊模型库](https://mmediting.readthedocs.io/zh_CN/latest/model_zoo/overview.html) |
+[🆕更新记录](https://mmediting.readthedocs.io/zh_CN/latest/changelog.html) |
 [🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
 [🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
 
@@ -318,7 +318,7 @@ pip3 install -e .
   </tbody>
 </table>
 
-请参考[模型库](https://mmediting.readthedocs.io/zh_CN/main/model_zoo/overview.html)了解详情。
+请参考[模型库](https://mmediting.readthedocs.io/zh_CN/latest/model_zoo/overview.html)了解详情。
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 

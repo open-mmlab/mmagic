@@ -19,17 +19,17 @@
   <div>&nbsp;</div>
 
 [![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/main/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
 [![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
 [![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/main/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘Documentation](https://mmediting.readthedocs.io/en/main/) |
-[🛠️Installation](https://mmediting.readthedocs.io/en/main/get_started/install.html) |
-[📊Model Zoo](https://mmediting.readthedocs.io/en/main/model_zoo/overview.html) |
-[🆕Update News](https://mmediting.readthedocs.io/en/main/changelog.html) |
+[📘Documentation](https://mmediting.readthedocs.io/en/latest/) |
+[🛠️Installation](https://mmediting.readthedocs.io/en/latest/get_started/install.html) |
+[📊Model Zoo](https://mmediting.readthedocs.io/en/latest/model_zoo/overview.html) |
+[🆕Update News](https://mmediting.readthedocs.io/en/latest/changelog.html) |
 [🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
@@ -99,7 +99,7 @@ The best practice on our main branch works with **Python 3.8+** and **PyTorch 1.
 
 - **New Modular Design for Flexible Combination**
 
-  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](https://mmediting.readthedocs.io/en/main/howto/losses.html))
+  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](https://mmediting.readthedocs.io/en/latest/howto/losses.html))
 
 - **Efficient Distributed Training**
 
@@ -321,7 +321,7 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
   </tbody>
 </table>
 
-Please refer to [model_zoo](https://mmediting.readthedocs.io/en/main/model_zoo/overview.html) for more details.
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/model_zoo/overview.html) for more details.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 

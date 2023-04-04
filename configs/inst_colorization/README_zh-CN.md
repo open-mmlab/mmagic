@@ -35,7 +35,7 @@ Image colorization is inherently an ill-posed problem with multi-modal uncertain
 python demo/colorization_demo.py configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py https://download.openmmlab.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth input.jpg output.jpg
 ```
 
-更多细节可以参考 [Tutorial 3: inference with pre-trained models](https://mmediting.readthedocs.io/en/main/user_guides/3_inference.html)。
+更多细节可以参考 [Tutorial 3: inference with pre-trained models](https://mmediting.readthedocs.io/en/latest/user_guides/3_inference.html)。
 
 </details>
 
