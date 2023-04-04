@@ -99,7 +99,7 @@ jobs:
           pip install -r requirements/tests.txt
       - name: Build and install
         run: |
-          python setup.py check -m -s
+          python setup.py check -s
           TORCH_CUDA_ARCH_LIST=7.0 pip install -e .
       # - name: Setup tmate session
       #   if: ${{ failure() }}
