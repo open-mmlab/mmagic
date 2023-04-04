@@ -33,7 +33,7 @@ jobs:
       - name: Upgrade pip
         run: pip install pip --upgrade
       - name: Install PyTorch
-        run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+        run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install MMEngine
         run: pip install git+https://github.com/open-mmlab/mmengine.git@main
       - name: Install MMCV
