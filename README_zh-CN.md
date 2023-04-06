@@ -303,6 +303,7 @@ pip3 install -e .
       </td>
       <td>
         <ul>
+          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
           <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
           <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
           <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
@@ -328,7 +329,7 @@ pip3 install -e .
 MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
 
 <a href="https://github.com/open-mmlab/mmediting/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=liuwenran/mmediting" />
+  <img src="https://contrib.rocks/image?repo=open-mmlab/mmediting" />
 </a>
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>

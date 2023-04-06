@@ -306,6 +306,7 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
       </td>
       <td>
         <ul>
+          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
           <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
           <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
           <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
@@ -333,7 +334,7 @@ MMEditing is an open source project that is contributed by researchers and engin
 We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. Thank you all!
 
 <a href="https://github.com/open-mmlab/mmediting/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=liuwenran/mmediting" />
+  <img src="https://contrib.rocks/image?repo=open-mmlab/mmediting" />
 </a>
 
 <p align="right"><a href="#top">🔝Back to top</a></p>

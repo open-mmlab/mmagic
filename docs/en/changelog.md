@@ -4,7 +4,7 @@
 
 **Highlights**
 
-We are excited to announce the release of MMEditing 1.0.0rc7. This release supports 50+ models, 222+ configs and 209+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
+We are excited to announce the release of MMEditing 1.0.0rc7. This release supports 51+ models, 226+ configs and 212+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
 
 - Support DiffuserWrapper
 - Support ControlNet (training and inference).
