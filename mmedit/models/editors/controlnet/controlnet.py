@@ -518,10 +518,15 @@ class ControlStableDiffusion(StableDiffusion):
         # 8. Post-processing
         image = self.decode_latents(latents)
 
+        if do_classifier_free_guidance:
+            controls = torch.split(controls, controls.shape[0] // 2, dim=0)[0]
+
         if return_type == 'image':
             image = self.output_to_pil(image)
+            controls = self.output_to_pil(controls * 2 - 1)
         elif return_type == 'numpy':
             image = image.cpu().numpy()
+            controls = controls.cpu().numpy()
         else:
             assert return_type == 'tensor', (
                 'Only support \'image\', \'numpy\' and \'tensor\' for '
