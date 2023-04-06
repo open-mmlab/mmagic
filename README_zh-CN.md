@@ -132,7 +132,7 @@ MMEditing 依赖 [PyTorch](https://pytorch.org/)，[MMEngine](https://github.com
 ```
 pip3 install openmim
 # wait for more pre-compiled pkgs to release
-mim install 'mmcv>=2.0.0rc1'
+mim install 'mmcv>=2.0.0'
 ```
 
 **步骤 3.**
