@@ -61,6 +61,7 @@ class TestEditDataSample(TestCase):
         # METAINFO
         img_path, gt_path, merged_path = 'aaa', 'bbb', 'ccc'
         gt_channel_order, gt_color_type = 'rgb', 'color'
+        prompt = 'prompt'
 
         data = dict(
             gt=gt,
@@ -74,7 +75,8 @@ class TestEditDataSample(TestCase):
             gt_path=gt_path,
             merged_path=merged_path,
             gt_channel_order=gt_channel_order,
-            gt_color_type=gt_color_type)
+            gt_color_type=gt_color_type,
+            prompt=prompt)
         data_sample = EditDataSample()
         data_sample.set_predefined_data(data)
 
@@ -91,6 +93,7 @@ class TestEditDataSample(TestCase):
                                 gt_channel_order, True)
         self._check_in_and_same(data_sample, 'gt_color_type', gt_color_type,
                                 True)
+        self._check_in_and_same(data_sample, 'prompt', prompt, False)
         # check gt label
         data_sample.gt_label.data = gt_label
 
@@ -182,6 +185,7 @@ class TestEditDataSample(TestCase):
         data_sample1.set_gt_label(1)
         data_sample1.set_tensor_data({'img': torch.randn(3, 4, 5)})
         data_sample1.set_data({'mode': 'a'})
+        data_sample1.set_data({'prompt': 'I\'m a prompt!'})
         data_sample1.set_metainfo({
             'channel_order': 'rgb',
             'color_flag': 'color'
@@ -190,6 +194,7 @@ class TestEditDataSample(TestCase):
         data_sample2.set_gt_label(2)
         data_sample2.set_tensor_data({'img': torch.randn(3, 4, 5)})
         data_sample2.set_data({'mode': 'b'})
+        data_sample2.set_data({'prompt': 'I\'m an another prompt!'})
         data_sample2.set_metainfo({
             'channel_order': 'rgb',
             'color_flag': 'color'
@@ -204,6 +209,9 @@ class TestEditDataSample(TestCase):
         assert data_sample_merged.metainfo == dict(
             channel_order=['rgb', 'rgb'], color_flag=['color', 'color'])
         assert len(data_sample_merged) == 2
+        assert data_sample_merged.prompt == [
+            'I\'m a prompt!', 'I\'m an another prompt!'
+        ]
 
         # test split
         data_sample_merged.sample_model = 'ema'
@@ -225,6 +233,8 @@ class TestEditDataSample(TestCase):
         assert data_splited_2.sample_model == 'ema'
         assert data_splited_1.fake_img.img.shape == (3, 4, 4)
         assert data_splited_2.fake_img.img.shape == (3, 4, 4)
+        assert data_splited_1.prompt == 'I\'m a prompt!'
+        assert data_splited_2.prompt == 'I\'m an another prompt!'
 
         with self.assertRaises(TypeError):
             data_sample_merged.split()
@@ -234,6 +244,7 @@ class TestEditDataSample(TestCase):
         data_sample.set_gt_label(3)
         data_sample.set_tensor_data({'img': torch.randn(3, 4, 5)})
         data_sample.set_data({'mode': 'c'})
+        data_sample.set_data({'prompt': 'proooommmmpt'})
         data_sample.set_metainfo({
             'channel_order': 'rgb',
             'color_flag': 'color'
@@ -246,6 +257,7 @@ class TestEditDataSample(TestCase):
         assert data_sample_merged.mode == ['c']
         assert data_sample_merged.metainfo == dict(
             channel_order=['rgb'], color_flag=['color'])
+        data_sample_merged.prompt == ['proooommmmpt']
         assert len(data_sample_merged) == 1
 
         # test split
@@ -254,6 +266,7 @@ class TestEditDataSample(TestCase):
         data_splited = data_splited[0]
         assert (data_splited.gt_label.label == 3).all()
         assert (data_splited.img == data_sample.img).all()
+        assert data_splited.prompt == 'proooommmmpt'
         assert (data_splited.metainfo == dict(
             channel_order='rgb', color_flag='color'))
 

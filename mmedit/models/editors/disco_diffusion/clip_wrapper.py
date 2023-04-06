@@ -7,7 +7,7 @@ from mmedit.registry import MODELS
 
 @MODELS.register_module()
 class ClipWrapper(nn.Module):
-    """Clip Models wrapper for disco-diffusion.
+    r"""Clip Models wrapper.
 
     We provide wrappers for the clip models of ``openai`` and
     ``mlfoundations``, where the user can specify ``clip_type``
@@ -15,8 +15,7 @@ class ClipWrapper(nn.Module):
     using the same arguments as in the original codebase. The
     following clip models settings are provided in the official
     repo of disco diffusion:
-
-    |            Setting            | Source    | Arguments                                                    | # noqa
+|            Setting            | Source    | Arguments                                                    | # noqa
     |:-----------------------------:|-----------|--------------------------------------------------------------| # noqa
     | ViTB32                        | clip      | name='ViT-B/32',                  jit=False                  | # noqa
     | ViTB16                        | clip      | name='ViT-B/16',                  jit=False                  | # noqa
@@ -42,44 +41,74 @@ class ClipWrapper(nn.Module):
     | RN101_quickgelu_yfcc15m       | open_clip | model_name='RN101-quickgelu',     pretrained='yfcc15m'       | # noqa
 
     An example of a ``clip_modes_cfg`` is as follows:
-    .. code-block:: python
 
-        clip_models = [
-            dict(type='ClipWrapper', clip_type='clip', name='ViT-B/32', jit=False),
-            dict(type='ClipWrapper', clip_type='clip', name='ViT-B/16', jit=False),
-            dict(type='ClipWrapper', clip_type='clip', name='RN50', jit=False)
-        ]
+    Examples:
+
+    >>> # Use OpenAI's CLIP
+    >>> config = dict(
+    >>>     type='ClipWrapper',
+    >>>     clip_type='clip',
+    >>>     name='ViT-B/32',
+    >>>     jit=False)
+
+    >>> # Use OpenCLIP
+    >>> config = dict(
+    >>>     type='ClipWrapper',
+    >>>     clip_type='open_clip',
+    >>>     model_name='RN50',
+    >>>     pretrained='yfcc15m')
+
+    >>> # Use CLIP from Hugging Face Transformers
+    >>> config = dict(
+    >>>     type='ClipWrapper',
+    >>>     clip_type='huggingface',
+    >>>     pretrained_model_name_or_path='runwayml/stable-diffusion-v1-5',
+    >>>     subfolder='text_encoder')
 
     Args:
         clip_type (List[Dict]): The original source of the clip model. Whether be
-            ``clip`` or ``open_clip``.
+            ``clip``, ``open_clip`` or ``hugging_face``.
+
+        *args, **kwargs: Arguments to initialize corresponding clip model.
     """
 
     def __init__(self, clip_type, *args, **kwargs):
 
         super().__init__()
         self.clip_type = clip_type
-        assert clip_type in ['clip', 'open_clip']
+        assert clip_type in ['clip', 'open_clip', 'huggingface']
+
+        error_msg = ('{} need to be installed! Run `pip install -r '
+                     'requirements/optional.txt` and try again')
         if clip_type == 'clip':
             try:
                 import clip
             except ImportError:
-                raise ImportError(
-                    'clip need to be installed! Run `pip install -r requirements/optional.txt` and try again'  # noqa
-                )  # noqa
+                raise ImportError(error_msg.format('\'clip\''))
             print_log(f'Creating {kwargs["name"]} by OpenAI', 'current')
             self.model, _ = clip.load(*args, **kwargs)
         elif clip_type == 'open_clip':
             try:
                 import open_clip
             except ImportError:
-                raise ImportError(
-                    'open_clip_torch need to be installed! Run `pip install -r requirements/optional.txt` and try again'  # noqa
-                )  # noqa
-            print_log(
-                f'Creating {kwargs["model_name"]} by mlfoundations',  # noqa
-                'current')
+                raise ImportError(error_msg.format('\'open_clip_torch\''))
+            print_log(f'Creating {kwargs["model_name"]} by '
+                      'mlfoundations', 'current')
             self.model = open_clip.create_model(*args, **kwargs)
+
+        elif clip_type == 'huggingface':
+            try:
+                import transformers
+            except ImportError:
+                raise ImportError(error_msg.format('\'transforms\''))
+            # NOTE: use CLIPTextModel to adopt stable diffusion pipeline
+            model_cls = transformers.CLIPTextModel
+            self.model = model_cls.from_pretrained(*args, **kwargs)
+            self.config = self.model.config
+            print_log(
+                f'Creating {self.model.name_or_path} '
+                'by \'HuggingFace\'', 'current')
+
         self.model.eval().requires_grad_(False)
 
     def forward(self, *args, **kwargs):

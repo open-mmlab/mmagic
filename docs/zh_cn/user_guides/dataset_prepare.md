@@ -24,7 +24,7 @@
 ## 准备数据集
 
 一些数据集需要在训练或测试之前进行预处理。我们在
-[tools/dataset_converters](https://github.com/open-mmlab/mmediting/tree/1.x/tools/dataset_converters)中支持许多用来准备数据集的脚本。
+[tools/dataset_converters](https://github.com/open-mmlab/mmediting/tree/main/tools/dataset_converters)中支持许多用来准备数据集的脚本。
 您可以遵循每个数据集的教程来运行脚本。例如，我们建议将DIV2K图像裁剪为子图像。我们提供了一个脚本来准备裁剪的DIV2K数据集。可以运行以下命令：
 
 ```shell

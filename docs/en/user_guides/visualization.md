@@ -1,7 +1,7 @@
 # Tutorial 6: Visualization
 
 The visualization of images is an important way to measure the quality of image processing, editing and synthesis.
-Using `visualizer` in config file can save visual results when training or testing. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/visualization.md) to learn the usage of visualization. MMEditing provides a rich set of visualization functions.
+Using `visualizer` in config file can save visual results when training or testing. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/visualization.md) to learn the usage of visualization. MMEditing provides a rich set of visualization functions.
 In this tutorial, we introduce the usage of the visualization functions provided by MMEditing.
 
 - [Overview](#overview)
@@ -253,7 +253,7 @@ Then `show` or `add_image` will be called to directly show the results or pass t
 In general, users do not need to manipulate `VisBackend` objects, only when the current visualization storage can not meet the needs, users will want to manipulate the storage backend directly.
 MMEditing supports a variety of different visualization backends, including:
 
-- Basic VisBackend of MMEngine: including LocalVisBackend, TensorboardVisBackend and WandbVisBackend. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/visualization.md) to learn more about them
+- Basic VisBackend of MMEngine: including LocalVisBackend, TensorboardVisBackend and WandbVisBackend. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/visualization.md) to learn more about them
 - GenVisBackend: Backend for **File System**. Save the visualization results to the corresponding position.
 - TensorboardGenVisBackend: Backend for **Tensorboard**. Send the visualization results to Tensorboard.
 - PaviGenVisBackend: Backend for **Pavi**. Send the visualization results to Tensorboard.

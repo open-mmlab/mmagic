@@ -47,4 +47,4 @@ test_cfg = dict(type='TestLoop')  # The name of test loop type
 </thead>
 </table>
 
-> More details of schedule settings are shown in [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/migration/migrate_param_scheduler_from_mmcv.md).
+> More details of schedule settings are shown in [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/migration/param_scheduler.md).

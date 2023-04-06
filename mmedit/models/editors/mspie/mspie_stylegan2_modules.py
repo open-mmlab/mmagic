@@ -5,7 +5,14 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from ...base_archs import conv2d, conv_transpose2d
+try:
+    from mmcv.ops import conv2d, conv_transpose2d
+except ImportError:
+    conv2d = None
+    conv_transpose2d = None
+    print('Warning: mmcv.ops.conv2d, mmcv.ops.conv_transpose2d'
+          'are not available.')
+
 from ..pggan import equalized_lr
 from ..stylegan1 import Blur, EqualLinearActModule, NoiseInjection
 from ..stylegan2.stylegan2_modules import _FusedBiasLeakyReLU

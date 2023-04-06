@@ -1,7 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 from unittest import TestCase
 
+import pytest
 import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
@@ -50,6 +52,9 @@ class TestStyleGAN3(TestCase):
                 g_reg_weight=8.0,
                 pl_batch_shrink=2))
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_val_and_test_step(self):
         cfg = deepcopy(self.default_cfg)
         stylegan = StyleGAN3(**cfg)
@@ -70,6 +75,9 @@ class TestStyleGAN3(TestCase):
         outputs = stylegan.test_step(data)
         outputs = stylegan.val_step(data)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_train_step(self):
         message_hub = MessageHub.get_instance('test-s3-train-step')
         cfg = deepcopy(self.default_cfg)

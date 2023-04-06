@@ -75,5 +75,5 @@ Note that `preprocess_df2k_ost_dataset.py` will generate default annotation file
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
+python tools/dataset_converters/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
 ```

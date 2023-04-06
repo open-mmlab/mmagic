@@ -2,18 +2,18 @@
   "_class_name": "ControlNetModel",
   "_diffusers_version": "0.14.0",
   "act_fn": "silu",
-  "attention_head_dim": 8,
+  "attention_head_dim": 2,
   "block_out_channels": [
-    320
+    32
   ],
   "class_embed_type": null,
   "conditioning_embedding_out_channels": [
     16
   ],
   "controlnet_conditioning_channel_order": "rgb",
-  "cross_attention_dim": 32,
+  "cross_attention_dim": 16,
   "down_block_types": [
-    "CrossAttnDownBlock2D"
+    "DownBlock2D"
   ],
   "downsample_padding": 1,
   "flip_sin_to_cos": true,

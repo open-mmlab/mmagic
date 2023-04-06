@@ -113,11 +113,23 @@ class DiffusersWrapper(BaseModule):
         Returns:
             Any: The got attribute.
         """
+        # Q: why we need end of recursion for 'model'?
+        # A: In `nn.Module.__setattr__`, if value is instance of `nn.Module`,
+        #   it will be removed from `__dict__` and added to
+        #   `__dict__._modules`. Therefore, `model` cannot be found in
+        #   `self.__dict__`. When we call `self.model`, python cannot found
+        #   'model' in `self.__dict__` and then `self.__getattr__('model')`
+        #   will be called. If we call `self.model` in `self.__getattr__`
+        #   which does not have any exit about 'model',`RecursionError`
+        #   will be raised.
+        if name == 'model':
+            return super().__getattr__('model')
+
         try:
-            return super().__getattr__(name)
+            return getattr(self.model, name)
         except AttributeError:
             try:
-                return getattr(self.model, name)
+                return super().__getattr__(name)
             except AttributeError:
                 raise AttributeError('\'name\' cannot be found in both '
                                      f'\'{self.__class__.__name__}\' and '
@@ -134,3 +146,14 @@ class DiffusersWrapper(BaseModule):
             prefix += f'From Config: {self._from_config}\n'
         s = prefix + s
         return s
+
+    def forward(self, *args, **kwargs) -> Any:
+        """Forward function of wrapped module.
+
+        Args:
+            *args, **kwargs: The arguments of the wrapped module.
+
+        Returns:
+            Any: The output of wrapped module's forward function.
+        """
+        return self.model(*args, **kwargs)

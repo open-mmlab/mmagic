@@ -2,16 +2,16 @@
 from typing import List, Sequence
 
 import torch.nn as nn
-from mmengine.evaluator import BaseMetric
 from mmengine.model import is_model_wrapper
 from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
+from .base_sample_wise_metric import BaseSampleWiseMetric
 from .metrics_utils import _fetch_data_and_check, average
 
 
 @METRICS.register_module()
-class MattingMSE(BaseMetric):
+class MattingMSE(BaseSampleWiseMetric):
     """Mean Squared Error metric for image matting.
 
     This metric compute per-pixel squared error average across all
@@ -39,6 +39,7 @@ class MattingMSE(BaseMetric):
     """
 
     default_prefix = ''
+    metric = 'MattingMSE'
 
     def __init__(
         self,
