@@ -65,12 +65,14 @@ def test_deepfillv1_inpaintor():
     data_batch = {
         'inputs':
         masked_img,
-        'data_samples':
-        [EditDataSample(
-            mask=mask,
-            mask_bbox=mask_bbox,
-            gt_img=gt_img,
-        )]
+        'data_samples': [
+            EditDataSample(
+                mask=mask,
+                metainfo=dict(mask_bbox=mask_bbox),
+                mask_bbox=mask_bbox,
+                gt_img=gt_img,
+            )
+        ]
     }
 
     # prepare model and optimizer
