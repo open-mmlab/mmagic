@@ -196,26 +196,6 @@ class TTSR(SRGAN):
 
         return log_vars_g
 
-    def d_step_with_optim(self, batch_outputs, batch_gt_data, optim_wrapper):
-        """D step with optim of GAN: Calculate losses of discriminator and run
-        optim.
-
-        Args:
-            batch_outputs (Tuple[Tensor]): Batch output of generator.
-            batch_gt_data (Tensor): Batch GT data.
-            optim_wrapper (OptimWrapper): Optim wrapper of discriminator.
-
-        Returns:
-            dict: Dict of parsed losses.
-        """
-
-        pred, _, _ = batch_outputs
-
-        return super().d_step_with_optim(
-            batch_outputs=pred,
-            batch_gt_data=batch_gt_data,
-            optim_wrapper=optim_wrapper)
-
     def train_step(self, data: List[dict],
                    optim_wrapper: OptimWrapperDict) -> Dict[str, torch.Tensor]:
         """Train step of GAN-based method.
