@@ -4,6 +4,7 @@ Import:
 - configs/basicvsr_pp/metafile.yml
 - configs/biggan/metafile.yml
 - configs/cain/metafile.yml
+- configs/controlnet/metafile.yml
 - configs/cyclegan/metafile.yml
 - configs/dcgan/metafile.yml
 - configs/deepfillv1/metafile.yml
