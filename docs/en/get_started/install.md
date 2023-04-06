@@ -60,7 +60,7 @@ Install PyTorch following [official instructions](https://pytorch.org/get-starte
 
 ```shell
 pip install -U openmim
-mim install 'mmcv>=2.0.0rc1'
+mim install 'mmcv>=2.0.0'
 ```
 
 **Step 1.** Install [MMEngine](https://github.com/open-mmlab/mmengine).
@@ -133,7 +133,7 @@ This requires manually specifying a find-url based on PyTorch version and its CU
 For example, the following command install mmcv-full built for PyTorch 1.10.x and CUDA 11.3.
 
 ```shell
-pip install 'mmcv>=2.0.0rc1' -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10/index.html
+pip install 'mmcv>=2.0.0' -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10/index.html
 ```
 
 #### Using MMEditing with Docker
