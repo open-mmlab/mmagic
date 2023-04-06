@@ -74,7 +74,11 @@ class UpsampleUpFIRDn(nn.Module):
             Tensor: Output feature map.
         """
         out = upfirdn2d(
-            x, self.kernel.to(x.dtype), up=self.factor, down=1, pad=self.pad)
+            x,
+            self.kernel.to(x.dtype),
+            up=self.factor,
+            down=1,
+            padding=self.pad)
 
         return out
 
@@ -117,7 +121,7 @@ class DownsampleUpFIRDn(nn.Module):
             self.kernel.to(input.dtype),
             up=1,
             down=self.factor,
-            pad=self.pad)
+            padding=self.pad)
 
         return out
 
