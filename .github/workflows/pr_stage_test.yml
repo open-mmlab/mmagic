@@ -86,9 +86,8 @@ jobs:
         run: |
           apt-get update
           apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libxrender-dev
-          apt-get upgrade -y libc6
       - name: Install PyTorch
-        run: python -m pip install torch==1.8.1+cpu torchvision==0.9.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+        run: pip install torch==1.8.1+cpu torchvision==0.9.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install mmedit dependencies
         run: |
           pip install git+https://github.com/open-mmlab/mmengine.git@main
@@ -97,7 +96,6 @@ jobs:
           pip install -r requirements/tests.txt
       - name: Build and install
         run: |
-          python setup.py check -m -s
           pip install -e .
       # - name: Setup tmate session
       #   if: ${{ failure() }}
