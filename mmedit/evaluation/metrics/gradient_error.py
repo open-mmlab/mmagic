@@ -4,17 +4,17 @@ from typing import List, Sequence
 import cv2
 import numpy as np
 import torch.nn as nn
-from mmengine.evaluator import BaseMetric
 from mmengine.model import is_model_wrapper
 from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
 from ..functional import gauss_gradient
+from .base_sample_wise_metric import BaseSampleWiseMetric
 from .metrics_utils import _fetch_data_and_check, average
 
 
 @METRICS.register_module()
-class GradientError(BaseMetric):
+class GradientError(BaseSampleWiseMetric):
     """Gradient error for evaluating alpha matte prediction.
 
     .. note::
@@ -38,6 +38,8 @@ class GradientError(BaseMetric):
     Metrics:
         - GradientError (float): Gradient Error
     """
+
+    metric = 'GradientError'
 
     def __init__(
         self,

@@ -162,7 +162,7 @@ class AblatedDiffusionModel(BaseModel):
             timesteps = tqdm(timesteps)
         for t in timesteps:
             # 1. predicted model_output
-            model_output = self.unet(image, t, label=labels)['outputs']
+            model_output = self.unet(image, t, label=labels)['sample']
 
             # 2. compute previous image: x_t -> x_t-1
             if classifier_scale > 0 and self.classifier is not None:
