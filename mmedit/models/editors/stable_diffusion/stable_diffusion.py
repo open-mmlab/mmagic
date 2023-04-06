@@ -12,7 +12,7 @@ from PIL import Image
 from tqdm.auto import tqdm
 from transformers import CLIPTokenizer
 
-from mmedit.models.utils import build_module
+from mmedit.models.utils import build_module, set_xformers
 from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
 
 logger = MMLogger.get_current_instance()
@@ -40,6 +40,8 @@ class StableDiffusion(BaseModel):
             module for diffusion scheduler in test stage (`self.infer`). If not
             passed, will use the same scheduler as `schedule`. Defaults to
             None.
+        enable_xformers (bool, optional): Whether to use xformers.
+            Defaults to True.
         data_preprocessor (dict, optional): The pre-process config of
             :class:`BaseDataPreprocessor`.
         init_cfg (dict, optional): The weight initialized config for
@@ -53,6 +55,7 @@ class StableDiffusion(BaseModel):
                  unet: ModelType,
                  scheduler: ModelType,
                  test_scheduler: Optional[ModelType] = None,
+                 enable_xformers: bool = True,
                  data_preprocessor: Optional[ModelType] = dict(
                      type='EditDataPreprocessor'),
                  init_cfg: Optional[dict] = None):
@@ -79,6 +82,18 @@ class StableDiffusion(BaseModel):
 
         self.unet_sample_size = self.unet.sample_size
         self.vae_scale_factor = 2**(len(self.vae.block_out_channels) - 1)
+
+        self.enable_xformers = enable_xformers
+        self.set_xformers()
+
+    def set_xformers(self) -> nn.Module:
+        """Set xformers for the model.
+
+        Returns:
+            nn.Module: The model with xformers.
+        """
+        if self.enable_xformers:
+            set_xformers(self)
 
     @property
     def device(self):

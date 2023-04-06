@@ -235,20 +235,67 @@ def get_valid_num_batches(batch_inputs: Optional[ForwardInputs] = None,
     return num_batches_inputs or num_batches_samples
 
 
-def build_module(module: Union[dict, nn.Module], builder: Registry) -> Any:
+def build_module(module: Union[dict, nn.Module], builder: Registry, *args,
+                 **kwargs) -> Any:
     """Build module from config or return the module itself.
 
     Args:
         module (Union[dict, nn.Module]): The module to build.
         builder (Registry): The registry to build module.
+        *args, **kwargs: Arguments passed to build function.
 
     Returns:
         Any: The built module.
     """
     if isinstance(module, dict):
-        return builder.build(module)
+        return builder.build(module, *args, **kwargs)
     elif isinstance(module, nn.Module):
         return module
     else:
         raise TypeError(
             f'Only support dict and nn.Module, but got {type(module)}.')
+
+
+def xformers_is_enable(verbose: bool = False) -> bool:
+    """Check whether xformers is installed.
+    Args:
+        verbose (bool): Whether to print the log.
+
+    Returns:
+        bool: Whether xformers is installed.
+    """
+    from mmedit.utils import try_import
+    xformers = try_import('xformers')
+    if xformers is None and verbose:
+        print_log('Do not support Xformers.', 'current')
+    return xformers is not None
+
+
+def set_xformers(module: nn.Module, prefix: str = '') -> nn.Module:
+    """Set xformers' efficient Attention for attention modules.
+
+    Args:
+        module (nn.Module): The module to set xformers.
+        prefix (str): The prefix of the module name.
+
+    Returns:
+        nn.Module: The module with xformers' efficient Attention.
+    """
+
+    if not xformers_is_enable:
+        print_log('Do not support Xformers. Please install Xformers first. '
+                  'The program will run without Xformers.')
+        return
+
+    for n, m in module.named_children():
+        if hasattr(m, 'set_use_memory_efficient_attention_xformers'):
+            # set xformers for Diffusers' Cross Attention
+            m.set_use_memory_efficient_attention_xformers(True)
+            module_name = f'{prefix}.{n}' if prefix else n
+            print_log(
+                'Enable Xformers for HuggingFace Diffusers\' '
+                f'module \'{module_name}\'.', 'current')
+        else:
+            set_xformers(m, prefix=n)
+
+    return module

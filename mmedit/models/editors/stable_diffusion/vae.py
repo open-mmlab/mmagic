@@ -947,6 +947,11 @@ class AutoencoderKL(nn.Module):
         self.post_quant_conv = torch.nn.Conv2d(latent_channels,
                                                latent_channels, 1)
 
+    @property
+    def dtype(self):
+        """The data type of the parameters of VAE."""
+        return next(self.parameters()).dtype
+
     def encode(self, x: torch.FloatTensor, return_dict: bool = True) -> Dict:
         """encode input."""
         h = self.encoder(x)

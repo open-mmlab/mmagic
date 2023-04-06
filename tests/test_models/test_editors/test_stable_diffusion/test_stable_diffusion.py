@@ -57,6 +57,7 @@ init_cfg = dict(type='Pretrained', pretrained_model_path=None)
 class dummy_tokenizer(nn.Module):
 
     def __init__(self):
+        super().__init__()
         self.model_max_length = 0
 
     def __call__(self,
@@ -74,6 +75,7 @@ class dummy_tokenizer(nn.Module):
 class dummy_text_encoder(nn.Module):
 
     def __init__(self):
+        super().__init__()
         self.config = None
 
     def __call__(self, x, attention_mask):
