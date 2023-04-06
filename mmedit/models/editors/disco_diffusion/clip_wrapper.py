@@ -7,7 +7,7 @@ from mmedit.registry import MODELS
 
 @MODELS.register_module()
 class ClipWrapper(nn.Module):
-    r"""Clip Models wrapper for disco-diffusion.
+    r"""Clip Models wrapper.
 
     We provide wrappers for the clip models of ``openai`` and
     ``mlfoundations``, where the user can specify ``clip_type``
