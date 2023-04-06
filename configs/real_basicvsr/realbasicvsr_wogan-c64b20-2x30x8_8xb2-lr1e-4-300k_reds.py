@@ -214,6 +214,12 @@ test_pipeline = [
     dict(type='PackEditInputs')
 ]
 
+demo_pipeline = [
+    dict(type='GenerateSegmentIndices', interval_list=[1]),
+    dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
+    dict(type='PackEditInputs')
+]
+
 data_root = 'data'
 
 train_dataloader = dict(

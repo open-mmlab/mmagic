@@ -140,7 +140,7 @@ val_evaluator = [
 
 Fréchet初始距离是两个图像数据集之间相似度的度量。它被证明与人类对视觉质量的判断有很好的相关性，最常用于评估生成对抗网络样本的质量。FID是通过计算两个高斯函数之间的Fréchet距离来计算的，这些高斯函数适合于Inception网络的特征表示。
 
-在`MMEditing`中，我们提供了两个版本的FID计算。一个是常用的PyTorch版本，另一个用于StyleGAN。同时，我们在StyleGAN2-FFHQ1024模型中比较了这两种实现之间的差异(详细信息可以在这里找到\[https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv2/README.md\])。幸运的是，最终结果只是略有不同。因此，我们建议用户采用更方便的PyTorch版本。
+在`MMEditing`中，我们提供了两个版本的FID计算。一个是常用的PyTorch版本，另一个用于StyleGAN。同时，我们在StyleGAN2-FFHQ1024模型中比较了这两种实现之间的差异(详细信息可以在这里找到\[https://github.com/open-mmlab/mmediting/blob/main/configs/styleganv2/README.md\])。幸运的是，最终结果只是略有不同。因此，我们建议用户采用更方便的PyTorch版本。
 
 **关于PyTorch版本和Tero版本:** 常用的PyTorch版本采用修改后的InceptionV3网络提取真假图像特征。然而，Tero的FID需要Tensorflow InceptionV3的[脚本模块](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/inception-2015-12-05.pt)。注意，应用此脚本模块需要' PyTorch >= 1.6.0 '。
 
@@ -224,7 +224,7 @@ metrics = [
 
 ## Precision and Recall
 
-我们的'Precision and Recall'实现遵循StyleGAN2中使用的版本。在该度量中，采用VGG网络对图像进行特征提取。不幸的是，我们还没有发现PyTorch VGG实现与StyleGAN2中使用的Tero版本产生类似的结果。(关于差异，请参阅这个[文件](https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv2/README.md)。)因此，在我们的实现中，我们默认采用[Teor's VGG](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt)网络。需要注意的是，应用这个脚本模块需要'PyTorch >= 1.6.0'。如果使用较低的PyTorch版本，我们将使用PyTorch官方VGG网络进行特征提取。
+我们的'Precision and Recall'实现遵循StyleGAN2中使用的版本。在该度量中，采用VGG网络对图像进行特征提取。不幸的是，我们还没有发现PyTorch VGG实现与StyleGAN2中使用的Tero版本产生类似的结果。(关于差异，请参阅这个[文件](https://github.com/open-mmlab/mmediting/blob/main/configs/styleganv2/README.md)。)因此，在我们的实现中，我们默认采用[Teor's VGG](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt)网络。需要注意的是，应用这个脚本模块需要'PyTorch >= 1.6.0'。如果使用较低的PyTorch版本，我们将使用PyTorch官方VGG网络进行特征提取。
 要使用' P&R '进行评估，请在配置文件中添加以下配置:
 
 ```python

@@ -10,11 +10,14 @@ from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmedit.registry import MODELS
+from mmedit.utils import register_all_modules
 
 test_dir = osp.join(osp.dirname(__file__), '../../..', 'tests')
 config_path = osp.join(test_dir, 'configs', 'diffuser_wrapper_cfg')
 model_path = osp.join(test_dir, 'configs', 'tmp_weight')
 ckpt_path = osp.join(test_dir, 'configs', 'ckpt')
+
+register_all_modules()
 
 
 class TestWrapper(TestCase):

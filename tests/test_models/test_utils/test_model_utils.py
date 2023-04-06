@@ -5,8 +5,10 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models.utils import (generation_init_weights, get_module_device,
-                                 get_valid_num_batches, set_requires_grad)
+from mmedit.models.utils import (build_module, generation_init_weights,
+                                 get_module_device, get_valid_num_batches,
+                                 set_requires_grad)
+from mmedit.registry import MODELS
 
 
 def test_generation_init_weights():
@@ -79,3 +81,30 @@ def test_get_valid_num_batches():
     batch_inputs = dict(num_batches=2, img=torch.randn(2, 3, 5, 5))
     data_samples = [None, None]
     assert get_valid_num_batches(batch_inputs, data_samples) == 2
+
+
+def test_build_module():
+    module = nn.Conv2d(3, 3, 3)
+    assert build_module(module, MODELS) == module
+
+    @MODELS.register_module()
+    class MiniModule(nn.Module):
+
+        def __init__(self, *args, **kwargs):
+            super().__init__()
+            for k, v in kwargs.items():
+                setattr(self, k, v)
+
+        def forward(self, *args, **kwargs):
+            return
+
+    module_cfg = dict(type='MiniModule', attr1=1, attr2=2)
+    module = build_module(module_cfg, MODELS)
+    assert module.attr1 == 1
+    assert module.attr2 == 2
+
+    with pytest.raises(TypeError):
+        build_module('MiniModule', MODELS)
+
+    # remove the registered module
+    MODELS._module_dict.pop('MiniModule')

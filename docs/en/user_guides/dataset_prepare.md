@@ -23,7 +23,7 @@ For example, you can simply prepare Vimeo90K-triplet datasets by downloading dat
 
 ## Prepare datasets
 
-Some datasets need to be preprocessed before training or testing. We support many scripts to prepare datasets in [tools/dataset_converters](https://github.com/open-mmlab/mmediting/tree/1.x/tools/dataset_converters). And you can follow the tutorials of every dataset to run scripts.
+Some datasets need to be preprocessed before training or testing. We support many scripts to prepare datasets in [tools/dataset_converters](https://github.com/open-mmlab/mmediting/tree/main/tools/dataset_converters). And you can follow the tutorials of every dataset to run scripts.
 For example, we recommend cropping the DIV2K images to sub-images. We provide a script to prepare cropped DIV2K dataset. You can run the following command:
 
 ```shell

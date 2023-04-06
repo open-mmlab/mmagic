@@ -72,7 +72,7 @@ def main():
     # enable automatic-mixed-precision training
     if args.amp is True:
         if ('constructor' not in cfg.optim_wrapper) or \
-                cfg.optim_wrapper['constructor'] == 'DefaultOptimWrapperConstructor': # noqa
+                cfg.optim_wrapper['constructor'] == 'DefaultOptimWrapperConstructor':  # noqa
             optim_wrapper = cfg.optim_wrapper.type
             if optim_wrapper == 'AmpOptimWrapper':
                 print_colored_log(

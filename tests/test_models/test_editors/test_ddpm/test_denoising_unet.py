@@ -9,7 +9,7 @@ def test_DenoisingUnet():
     input = torch.rand((1, 3, 32, 32))
     unet = DenoisingUnet(32)
     output = unet.forward(input, 10)
-    assert output['outputs'].shape == (1, 6, 32, 32)
+    assert output['sample'].shape == (1, 6, 32, 32)
 
 
 def test_NormWithEmbedding():

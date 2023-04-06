@@ -90,6 +90,11 @@ class MMEdit:
 
         # video_restoration models
         'edvr',
+        'tdan',
+        'basicvsr',
+        'iconvsr',
+        'basicvsr_pp',
+        'real_basicvsr',
 
         # text2image models
         'disco_diffusion',
