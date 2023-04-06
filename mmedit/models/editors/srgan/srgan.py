@@ -308,6 +308,7 @@ class SRGAN(BaseEditModel):
             set_requires_grad(self.discriminator, True)
 
             for _ in range(self.disc_repeat):
+                # detach before function call to resolve PyTorch2.0 compile bug
                 log_vars_d = self.d_step_with_optim(
                     batch_outputs=batch_outputs.detach(),
                     batch_gt_data=batch_gt_data,

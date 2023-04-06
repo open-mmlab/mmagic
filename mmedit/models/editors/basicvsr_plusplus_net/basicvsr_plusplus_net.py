@@ -168,6 +168,9 @@ class BasicVSRPlusPlusNet(BaseModule):
 
         n, t, _, h, w = flows.size()
 
+        # PyTorch 2.0 could not compile data type of 'range'
+        # frame_idx = range(0, t + 1)
+        # flow_idx = range(-1, t)
         frame_idx = list(range(0, t + 1))
         flow_idx = list(range(-1, t))
         mapping_idx = list(range(0, len(feats['spatial'])))

@@ -175,10 +175,13 @@ class RealBasicVSR(RealESRGAN):
 
         if self.if_run_d():
             set_requires_grad(self.discriminator, True)
+
             gt_pixel, gt_percep, gt_gan, gt_clean = batch_gt_data
             fake_g_output, fake_g_lq = batch_outputs
             fake_g_output = fake_g_output.view(gt_pixel.shape)
+
             for _ in range(self.disc_repeat):
+                # detach before function call to resolve PyTorch2.0 compile bug
                 log_vars_d = self.d_step_with_optim(
                     batch_outputs=fake_g_output.detach(),
                     batch_gt_data=(gt_pixel, gt_percep, gt_gan),
