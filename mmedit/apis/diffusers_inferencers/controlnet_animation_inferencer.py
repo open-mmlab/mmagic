@@ -44,6 +44,7 @@ class StableDiffusionControlNetPipelineImg2Img(
         latent_image: Union[torch.FloatTensor, PIL.Image.Image,
                             List[torch.FloatTensor],
                             List[PIL.Image.Image]] = None,
+        latent_mask: torch.FloatTensor = None,
         height: Optional[int] = None,
         width: Optional[int] = None,
         num_inference_steps: int = 50,
@@ -239,7 +240,7 @@ class StableDiffusionControlNetPipelineImg2Img(
                                                num_images_per_prompt)
 
         # 6. Prepare latent variables
-        latents = self.prepare_latents(
+        latents, vae_encode_latents = self.prepare_latents(
             latent_image,
             latent_timestep,
             batch_size,
@@ -315,6 +316,10 @@ class StableDiffusionControlNetPipelineImg2Img(
             self.unet.to('cpu')
             self.controlnet.to('cpu')
             torch.cuda.empty_cache()
+
+        if latent_mask is not None:
+            latents = latents * latent_mask + \
+                vae_encode_latents * (1.0 - latent_mask)
 
         if output_type == 'latent':
             image = latents
@@ -395,6 +400,8 @@ class StableDiffusionControlNetPipelineImg2Img(
 
         init_latents = self.vae.config.scaling_factor * init_latents
 
+        vae_encode_latents = init_latents
+
         if batch_size > init_latents.shape[0] and \
                 batch_size % init_latents.shape[0] == 0:
             raise ValueError(
@@ -410,9 +417,8 @@ class StableDiffusionControlNetPipelineImg2Img(
 
         # get latents
         init_latents = self.scheduler.add_noise(init_latents, noise, timestep)
-        latents = init_latents
 
-        return latents
+        return init_latents, vae_encode_latents
 
     def prepare_latent_image(self, image, dtype):
         if isinstance(image, torch.Tensor):
@@ -463,7 +469,7 @@ class ControlnetAnimationInferencer(BaseInferencer):
                  config: Union[ConfigType, str],
                  device: Optional[str] = None,
                  extra_parameters: Optional[Dict] = None,
-                 dtype=torch.float16,
+                 dtype=torch.float32,
                  **kwargs) -> None:
         cfg = Config.fromfile(config)
         self.hed = HEDdetector.from_pretrained(cfg.control_detector)
@@ -506,13 +512,22 @@ class ControlnetAnimationInferencer(BaseInferencer):
 
         set_seed(seed)
 
-        init_noise_shape = (1, 4, image_height // 8, image_width // 8)
+        latent_width = image_width // 8
+        latent_height = image_height // 8
+
+        init_noise_shape = (1, 4, latent_height, latent_width)
         init_noise_all_frame = torch.randn(
             init_noise_shape, dtype=self.controlnet.dtype).cuda()
 
-        init_noise_shape_cat = (1, 4, image_height // 8, image_width // 8 * 3)
+        init_noise_shape_cat = (1, 4, latent_height, latent_width * 3)
         init_noise_all_frame_cat = torch.randn(
             init_noise_shape_cat, dtype=self.controlnet.dtype).cuda()
+
+        latent_mask = torch.zeros(
+            (1, 4, image_height // 8, image_width // 8 * 3))
+        latent_mask[:, :, :,
+                    image_width // 8 + 1:image_width // 8 * 2 - 1] = 1.0
+        latent_mask = latent_mask.type(self.controlnet.dtype).cuda()
 
         # load the images
         input_file_extension = os.path.splitext(video)[1]
@@ -592,6 +607,7 @@ class ControlnetAnimationInferencer(BaseInferencer):
                 controlnet_conditioning_scale=controlnet_conditioning_scale,
                 num_inference_steps=num_inference_steps,
                 latents=init_noise_all_frame_cat,
+                latent_mask=latent_mask,
             ).images[0]
             result = result.crop(
                 (image_width, 0, image_width * 2, image_height))
