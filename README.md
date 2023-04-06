@@ -29,7 +29,7 @@
 [📘Documentation](https://mmediting.readthedocs.io/en/1.x/) |
 [🛠️Installation](https://mmediting.readthedocs.io/en/1.x/get_started/install.html) |
 [📊Model Zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/overview.html) |
-[🆕Update News](docs/en/changelog.md) |
+[🆕Update News](https://mmediting.readthedocs.io/en/1.x/changelog.html) |
 [🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
@@ -53,30 +53,16 @@ English | [简体中文](README_zh-CN.md)
 
 ## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### New release [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) \[04/01/2023\]:
+### New release [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) \[02/03/2023\]:
 
-- Support well-known text-to-image method [Stable Diffusion](configs/stable_diffusion/README.md)!
-- Support an efficient image restoration algorithm [Restormer](configs/restormer/README.md)!
-- Support a new text-to-image algorithm [GLIDE](projects/glide/configs/README.md)!
-- Support swin based image restoration algorithm [SwinIR](configs/swinir/README.md)!
-- [Projects](projects/README.md) is opened for the community to add projects to MMEditing.
+- Support Gradio gui of Inpainting inference.
+- Support Colorization, Translationin and all GAN models inferencer.
 
-### New release [**MMEditing v1.0.0rc4**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc4) \[05/12/2022\]:
-
-- Support Text2Image Task! [Disco-Diffusion](configs/disco_diffusion/README.md)
-- Support 3D-aware Generation Task! [EG3D](configs/eg3d/README.md)
-- Support [Image Colorization](configs/inst_colorization/README.md).
-
-### New features:
-
-- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍.
-- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
-- Support patch-based and slider-based image and video comparison viewer.
-- **MMSR** has been merged into this repo, as a part of MMEditing.
+**MMEditing** has supported all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) and unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine) 😍.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
-Please refer to [migration documents](docs/en/migration/overview.md) to migrate from MMEditing 0.x to our brand new 1.x version.
+Please refer to [migration documents](docs/en/migration/overview.md) to migrate from [old version](https://github.com/open-mmlab/mmediting/tree/master) MMEditing 0.x to our brand new 1.x version.
 
 ## 📄 Table of Contents
 
@@ -149,7 +135,7 @@ Install MMCV with [MIM](https://github.com/open-mmlab/mim).
 ```shell
 pip3 install openmim
 # wait for more pre-compiled pkgs to release
-mim install 'mmcv>=2.0.0rc1'
+mim install 'mmcv>=2.0.0'
 ```
 
 **Step 3.**

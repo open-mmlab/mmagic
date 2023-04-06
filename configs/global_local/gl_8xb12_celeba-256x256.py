@@ -63,8 +63,8 @@ train_cfg = dict(
     max_iters=300002,
     val_interval=50000,
 )
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # runtime settings
 # inheritate from _base_

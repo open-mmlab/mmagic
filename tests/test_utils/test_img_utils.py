@@ -3,7 +3,34 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.utils import tensor2img, to_numpy
+from mmedit.utils import (all_to_tensor, can_convert_to_image, tensor2img,
+                          to_numpy)
+
+
+def test_all_to_tensor():
+
+    data = [np.random.rand(64, 64, 3), np.random.rand(64, 64, 3)]
+    tensor = all_to_tensor(data)
+    assert tensor.shape == torch.Size([2, 3, 64, 64])
+
+    data = np.random.rand(64, 64, 3)
+    tensor = all_to_tensor(data)
+    assert tensor.shape == torch.Size([3, 64, 64])
+
+    data = 1
+    tensor = all_to_tensor(data)
+    assert tensor == torch.tensor(1)
+
+
+def test_can_convert_to_image():
+    values = [
+        np.random.rand(64, 64, 3),
+        [np.random.rand(64, 61, 3),
+         np.random.rand(64, 61, 3)], (64, 64), 'b'
+    ]
+    targets = [True, True, False, False]
+    for val, tar in zip(values, targets):
+        assert can_convert_to_image(val) == tar
 
 
 def test_tensor2img():

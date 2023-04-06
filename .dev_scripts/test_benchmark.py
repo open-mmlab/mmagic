@@ -163,6 +163,7 @@ def create_test_job_batch(commands, model_info, args, port, script_name):
                   f'#SBATCH --ntasks=2\n'
                   f'#SBATCH --cpus-per-task=16\n\n'
                   f'export MASTER_PORT={port}\n'
+                  f'export CUBLAS_WORKSPACE_CONFIG=:4096:8\n'
                   f'{runner} -u {script_name} {config} {checkpoint} '
                   f'--work-dir={work_dir} '
                   f'--out={result_file} '

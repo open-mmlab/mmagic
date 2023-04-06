@@ -1,4 +1,3 @@
-# scale_test = 3
 scale_test_list = [2, 3, 4, 6, 18, 30]
 
 test_pipelines = [[
@@ -74,7 +73,7 @@ div2k_evaluators = [[
 ] for scale in scale_test_list]
 
 # test config
-test_cfg = dict(type='MultiTestLoop')
+test_cfg = dict(type='EditTestLoop')
 test_dataloader = [
     *set5_dataloaders,
     *set14_dataloaders,

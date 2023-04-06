@@ -21,8 +21,10 @@ model = dict(
     train_cfg=dict(),
     test_cfg=dict(metrics=['PSNR'], crop_border=scale),
     data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
-                                                             255.]))
+        type='EditDataPreprocessor',
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.],
+    ))
 
 train_pipeline = [
     dict(
@@ -96,15 +98,17 @@ val_dataloader = dict(
         data_prefix=dict(img='LRbicx3', gt='GTmod12'),
         pipeline=val_pipeline))
 
-val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR', crop_border=scale),
-    dict(type='SSIM', crop_border=scale),
-]
+val_evaluator = dict(
+    type='EditEvaluator',
+    metrics=[
+        dict(type='MAE'),
+        dict(type='PSNR', crop_border=scale),
+        dict(type='SSIM', crop_border=scale),
+    ])
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1000000, val_interval=5000)
-val_cfg = dict(type='ValLoop')
+val_cfg = dict(type='EditValLoop')
 
 # optimizer
 optim_wrapper = dict(

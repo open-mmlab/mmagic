@@ -15,7 +15,7 @@ class TestSinGANOptimWrapperConstructor(TestCase):
         type='SinGAN',
         num_scales=2,
         data_preprocessor=dict(
-            type='GenDataPreprocessor', non_image_keys=['input_sample']),
+            type='EditDataPreprocessor', non_image_keys=['input_sample']),
         generator=dict(
             type='SinGANMultiScaleGenerator',
             in_channels=3,

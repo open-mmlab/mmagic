@@ -3,7 +3,7 @@ _base_ = ['../_base_/gen_default_runtime.py']
 # define GAN model
 model = dict(
     type='ProgressiveGrowingGAN',
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='EditDataPreprocessor'),
     noise_size=512,
     generator=dict(type='PGGANGenerator', out_scale=1024, noise_size=512),
     discriminator=dict(type='PGGANDiscriminator', in_scale=1024),
@@ -50,8 +50,8 @@ optim_wrapper = dict(
 dataset_type = 'GrowScaleImgDataset'
 
 pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
-    dict(type='Flip', keys=['img'], direction='horizontal'),
+    dict(type='LoadImageFromFile', key='gt'),
+    dict(type='Flip', keys='gt', direction='horizontal'),
     dict(type='PackEditInputs')
 ]
 
@@ -85,6 +85,7 @@ test_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         pipeline=pipeline,
+        data_prefix=dict(gt=''),
         data_root='./data/celebahq/imgs_1024'),
     sampler=dict(type='DefaultSampler', shuffle=False))
 

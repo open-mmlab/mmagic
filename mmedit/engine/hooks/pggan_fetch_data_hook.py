@@ -78,7 +78,7 @@ class PGGANFetchDataHook(Hook):
                 sampler = InfiniteSampler(dataset, shuffle, seed)
             else:
                 raise ValueError(
-                    'MMGeneration only support \'DefaultSampler\' and '
+                    'MMEditing only support \'DefaultSampler\' and '
                     '\'InfiniteSampler\' as sampler. But receive '
                     f'\'{type(sampler_orig)}\'.')
 

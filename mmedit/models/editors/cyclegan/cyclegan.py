@@ -5,7 +5,7 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapperDict
 
 from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
+from mmedit.structures import EditDataSample
 from mmedit.utils.typing import SampleList
 from ...base_models import BaseTranslationModel
 from ...utils import set_requires_grad
@@ -50,7 +50,7 @@ class CycleGAN(BaseTranslationModel):
         # ref: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/e1bdf46198662b0f4d0b318e24568205ec4d7aee/test.py#L54 # noqa
         self.train()
         target = self.translation(img, target_domain=target_domain, **kwargs)
-        results = dict(source=img.cpu(), target=target.cpu())
+        results = dict(source=img, target=target)
         return results
 
     def _get_disc_loss(self, outputs):
@@ -236,6 +236,7 @@ class CycleGAN(BaseTranslationModel):
 
         batch_sample_list = []
         num_batches = next(iter(outputs.values())).shape[0]
+        data_samples = data_samples.split()
         for idx in range(num_batches):
             gen_sample = EditDataSample()
             if data_samples:
@@ -243,10 +244,10 @@ class CycleGAN(BaseTranslationModel):
 
             for src_domain in self._reachable_domains:
                 target_domain = self.get_other_domains(src_domain)[0]
-                setattr(gen_sample, f'gt_{src_domain}',
-                        PixelData(data=inputs_dict[f'img_{src_domain}'][idx]))
-                setattr(gen_sample, f'fake_{src_domain}',
-                        PixelData(data=outputs[f'img_{src_domain}'][idx]))
+                fake_img = outputs[f'img_{target_domain}'][idx]
+                fake_img = self.data_preprocessor.destruct(
+                    fake_img, data_samples[idx], f'img_{target_domain}')
+                setattr(gen_sample, f'fake_{target_domain}', fake_img)
 
             batch_sample_list.append(gen_sample)
         return batch_sample_list
@@ -275,6 +276,7 @@ class CycleGAN(BaseTranslationModel):
 
         batch_sample_list = []
         num_batches = next(iter(outputs.values())).shape[0]
+        data_samples = data_samples.split()
         for idx in range(num_batches):
             gen_sample = EditDataSample()
             if data_samples:
@@ -282,10 +284,10 @@ class CycleGAN(BaseTranslationModel):
 
             for src_domain in self._reachable_domains:
                 target_domain = self.get_other_domains(src_domain)[0]
-                setattr(gen_sample, f'gt_{src_domain}',
-                        PixelData(data=inputs_dict[f'img_{src_domain}'][idx]))
-                setattr(gen_sample, f'fake_{src_domain}',
-                        PixelData(data=outputs[f'img_{src_domain}'][idx]))
+                fake_img = outputs[f'img_{target_domain}'][idx]
+                fake_img = self.data_preprocessor.destruct(
+                    fake_img, data_samples[idx], f'img_{target_domain}')
+                gen_sample.set_tensor_data({f'fake_{target_domain}': fake_img})
 
             batch_sample_list.append(gen_sample)
         return batch_sample_list

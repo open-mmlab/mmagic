@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
-from typing import Dict, List, Union
+from typing import Dict, Union
 
 import numpy as np
 import torch
@@ -52,7 +52,7 @@ class MSPIEStyleGAN2(StyleGAN2):
     def train_step(self, data: dict,
                    optim_wrapper: OptimWrapperDict) -> Dict[str, Tensor]:
         """Train GAN model. In the training of GAN models, generator and
-        discriminator are updated alternatively. In MMGeneration's design,
+        discriminator are updated alternatively. In MMEditing's design,
         `self.train_step` is called with data input. Therefore we always update
         discriminator, whose updating is relay on real data, and then determine
         if the generator needs to be updated based on the current number of
@@ -125,13 +125,13 @@ class MSPIEStyleGAN2(StyleGAN2):
 
         return log_vars
 
-    def train_generator(self, inputs: dict, data_samples: List[EditDataSample],
+    def train_generator(self, inputs: dict, data_samples: EditDataSample,
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (TrainInput): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
@@ -139,8 +139,7 @@ class MSPIEStyleGAN2(StyleGAN2):
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        # num_batches = inputs['real_imgs'].shape[0]
-        num_batches = inputs['img'].shape[0]
+        num_batches = len(data_samples)
 
         noise = self.noise_fn(num_batches=num_batches)
         fake_imgs = self.generator(
@@ -152,21 +151,20 @@ class MSPIEStyleGAN2(StyleGAN2):
         optimizer_wrapper.update_params(parsed_loss)
         return log_vars
 
-    def train_discriminator(self, inputs: dict,
-                            data_samples: List[EditDataSample],
+    def train_discriminator(self, inputs: dict, data_samples: EditDataSample,
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (TrainInput): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (EditDataSample): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
             Dict[str, Tensor]: A ``dict`` of tensor for logging.
         """
-        real_imgs = inputs['img']
+        real_imgs = data_samples.gt_img
 
         if dist.is_initialized():
             # randomly sample a scale for current training iteration

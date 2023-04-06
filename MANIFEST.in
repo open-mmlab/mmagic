@@ -1,6 +1,7 @@
 include requirements/*.txt
 include mmedit/.mim/VERSION
 include mmedit/.mim/model-index.yml
+include mmedit/evaluation/metrics/niqe_pris_params.npz
 recursive-include mmedit/.mim/configs *.py *.yml
 recursive-include mmedit/.mim/tools *.sh *.py
 recursive-include mmedit/.mim/demo *.py

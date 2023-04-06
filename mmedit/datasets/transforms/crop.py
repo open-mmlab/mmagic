@@ -44,7 +44,14 @@ class Crop(BaseTransform):
         self.is_pad_zeros = is_pad_zeros
 
     def _crop(self, data):
+        """Crop the data.
 
+        Args:
+            data (Union[List, np.ndarray]): Input data to crop.
+
+        Returns:
+            tuple: cropped data and corresponding crop box.
+        """
         if not isinstance(data, list):
             data_list = [data]
         else:
@@ -204,7 +211,18 @@ class FixedCrop(BaseTransform):
         self.crop_pos = crop_pos
 
     def _crop(self, data, x_offset, y_offset, crop_w, crop_h):
+        """Crop the data.
 
+        Args:
+            data (Union[List, np.ndarray]): Input data to crop.
+            x_offset (int): The offset of x axis.
+            y_offset (int): The offset of y axis.
+            crop_w (int): The width of crop bbox.
+            crop_h (int): The height of crop bbox.
+
+        Returns:
+            tuple: cropped data and corresponding crop box.
+        """
         crop_bbox = [x_offset, y_offset, crop_w, crop_h]
         data_ = data[y_offset:y_offset + crop_h, x_offset:x_offset + crop_w,
                      ...]
@@ -946,7 +964,7 @@ class InstanceCrop(BaseTransform):
 
         assert mmdet_apis is not None, (
             "Cannot import 'mmdet'. Please install 'mmdet' via "
-            "\"mim install 'mmdet >= 3.0.0rc2'\".")
+            "\"mim install 'mmdet >= 3.0.0'\".")
 
         cfg = get_config(config_file, pretrained=True)
         with DefaultScope.overwrite_default_scope('mmdet'):

@@ -78,6 +78,30 @@ valid_pipeline = [
 ]
 test_pipeline = valid_pipeline
 
+inference_pipeline = [
+    dict(
+        type='LoadImageFromFile',
+        key='img',
+        color_type='color',
+        channel_order='rgb',
+        imdecode_backend='cv2'),
+    dict(
+        type='Resize',
+        scale=(128, 128),
+        keys=['img'],
+        interpolation='bicubic',
+        backend='pillow'),
+    dict(
+        type='Resize',
+        scale=1 / 8,
+        keep_ratio=True,
+        keys=['img'],
+        output_keys=['img'],
+        interpolation='bicubic',
+        backend='pillow'),
+    dict(type='PackEditInputs')
+]
+
 # dataset settings
 dataset_type = 'BasicImageDataset'
 data_root = 'data'
@@ -117,8 +141,8 @@ test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=150_000, val_interval=2000)
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='EditValLoop')
+test_cfg = dict(type='EditTestLoop')
 
 # optimizer
 optim_wrapper = dict(

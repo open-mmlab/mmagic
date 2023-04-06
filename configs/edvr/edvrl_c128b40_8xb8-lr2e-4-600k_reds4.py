@@ -26,16 +26,14 @@ model = dict(
         type='EditDataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1),
     ))
 
 # learning policy
 param_scheduler = dict(
     type='CosineRestartLR',
     by_epoch=False,
-    periods=[150000, 150000, 150000, 150000],
-    restart_weights=[1, 0.5, 0.5, 0.5],
+    periods=[50000, 100000, 150000, 150000, 150000],
+    restart_weights=[1, 0.5, 0.5, 0.5, 0.5],
     eta_min=1e-7)
 
 find_unused_parameters = True
