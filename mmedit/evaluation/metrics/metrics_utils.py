@@ -33,7 +33,7 @@ def _fetch_data_and_check(data_samples):
     """
     ori_trimap = data_samples['ori_trimap'][0, :, :].cpu().numpy()
     ori_alpha = data_samples['ori_alpha'][0, :, :].cpu().numpy()
-    pred_alpha = data_samples['output']['pred_alpha']['data']  # 2D tensor
+    pred_alpha = data_samples['output']['pred_alpha']  # 2D tensor
     pred_alpha = pred_alpha.cpu().numpy()
 
     _assert_ndim(ori_trimap, 'trimap', 2, 'HxW')

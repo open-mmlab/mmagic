@@ -1,7 +1,7 @@
 lmdb
 lpips
-mmcv>=2.0.0rc1
-mmdet >= 3.0.0rc2
+mmcv >= 2.0.0rc1
+mmdet >= 3.0.0
 mmengine
 prettytable
 Pygments

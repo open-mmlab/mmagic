@@ -19,17 +19,17 @@
   <div>&nbsp;</div>
 
 [![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/zh_CN/1.x/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/zh_CN/latest/)
 [![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/1.x/LICENSE)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/main/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘使用文档](https://mmediting.readthedocs.io/en/1.x/) |
-[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/get_started/install.html) |
-[📊模型库](https://mmediting.readthedocs.io/zh_CN/1.x/model_zoo/overview.html) |
-[🆕更新记录](https://mmediting.readthedocs.io/zh_CN/1.x/changelog.html) |
+[📘使用文档](https://mmediting.readthedocs.io/zh_CN/latest/) |
+[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/latest/get_started/install.html) |
+[📊模型库](https://mmediting.readthedocs.io/zh_CN/latest/model_zoo/overview.html) |
+[🆕更新记录](https://mmediting.readthedocs.io/zh_CN/latest/changelog.html) |
 [🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
 [🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
 
@@ -132,14 +132,14 @@ MMEditing 依赖 [PyTorch](https://pytorch.org/)，[MMEngine](https://github.com
 ```
 pip3 install openmim
 # wait for more pre-compiled pkgs to release
-mim install 'mmcv>=2.0.0rc1'
+mim install 'mmcv>=2.0.0'
 ```
 
 **步骤 3.**
 从源码安装 MMEditing
 
 ```
-git clone -b 1.x https://github.com/open-mmlab/mmediting.git
+git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e .
 ```
@@ -318,7 +318,7 @@ pip3 install -e .
   </tbody>
 </table>
 
-请参考[模型库](https://mmediting.readthedocs.io/zh_CN/1.x/model_zoo/overview.html)了解详情。
+请参考[模型库](https://mmediting.readthedocs.io/zh_CN/latest/model_zoo/overview.html)了解详情。
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 

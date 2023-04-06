@@ -212,4 +212,4 @@ MMEditing 1.0.0rc0 是 MMEditing 1.x 的第一个版本，是 OpenMMLab 2.0 项�
 
 基于新的[训练引擎](https://github.com/open-mmlab/mmengine), MMEditing 1.x 统一了数据、模型、评测和可视化的接口。
 
-该版本存在有一些 BC-breaking 的修改。 请在[迁移指南](https://mmediting.readthedocs.io/zh_CN/1.x/migration/overview.html)中查看更多细节。
+该版本存在有一些 BC-breaking 的修改。 请在[迁移指南](https://mmediting.readthedocs.io/zh_CN/latest/migration/overview.html)中查看更多细节。

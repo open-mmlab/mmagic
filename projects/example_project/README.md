@@ -18,7 +18,7 @@ This is an implementation of \[XXX\].
 
 ### Setup Environment \[required\]
 
-Please refer to [Get Started](https://mmediting.readthedocs.io/en/1.x/get_started/I.html) to install
+Please refer to [Get Started](https://mmediting.readthedocs.io/en/latest/get_started/I.html) to install
 MMEditing.
 
 At first, add the current folder to `PYTHONPATH`, so that Python can find your code. Run command in the current directory to add it.
@@ -31,7 +31,7 @@ export PYTHONPATH=`pwd`:$PYTHONPATH
 
 ### Data Preparation \[optional\]
 
-Prepare the ImageNet-2012 dataset according to the [instruction](https://mmediting.readthedocs.io/en/dev-1.x/user_guides/dataset_prepare.html#imagenet).
+Prepare the ImageNet-2012 dataset according to the [instruction](https://mmediting.readthedocs.io/en/latest/user_guides/dataset_prepare.html#imagenet).
 
 ### Training commands \[optional\]
 
@@ -129,7 +129,7 @@ to MMediting projects.
 
   - [ ] Unit tests
 
-    <!-- Unit tests for the major module are required. [Example](https://github.com/open-mmlab/mmediting/blob/1.x/tests/test_models/test_backbones/test_vision_transformer.py) -->
+    <!-- Unit tests for the major module are required. [Example](https://github.com/open-mmlab/mmediting/blob/main/tests/test_models/test_backbones/test_vision_transformer.py) -->
 
   - [ ] Code style
 
@@ -137,4 +137,4 @@ to MMediting projects.
 
   - [ ] `metafile.yml` and `README.md`
 
-    <!-- It will used for mmediting to acquire your models. [Example](https://github.com/open-mmlab/mmediting/blob/1.x/configs/mvit/metafile.yml). In particular, you may have to refactor this README into a standard one. [Example](https://github.com/open-mmlab/mmediting/blob/1.x/configs/swin_transformer/README.md) -->
+    <!-- It will used for mmediting to acquire your models. [Example](https://github.com/open-mmlab/mmediting/blob/main/configs/mvit/metafile.yml). In particular, you may have to refactor this README into a standard one. [Example](https://github.com/open-mmlab/mmediting/blob/main/configs/swin_transformer/README.md) -->

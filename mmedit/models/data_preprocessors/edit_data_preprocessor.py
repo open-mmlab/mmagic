@@ -758,8 +758,6 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         if data_samples is None:
             return batch_tensor
 
-        # import ipdb
-        # ipdb.set_trace()
         if isinstance(data_samples, list):
             is_batch_data = True
             if 'padding_size' in data_samples[0].metainfo_keys():
@@ -794,8 +792,6 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                     WARNING)
             return batch_tensor if is_batch_data else batch_tensor[0]
 
-        # import ipdb
-        # ipdb.set_trace()
         if same_padding:
             # un-pad with the padding info of the first sample
             padded_h, padded_w = pad_infos[0][-2:]
