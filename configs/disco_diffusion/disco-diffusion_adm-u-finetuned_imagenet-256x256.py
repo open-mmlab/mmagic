@@ -26,7 +26,7 @@ pretrained_cfgs = dict(
 secondary_model = dict(type='SecondaryDiffusionImageNet2')
 
 diffusion_scheduler = dict(
-    type='DDIMScheduler',
+    type='EditDDIMScheduler',
     variance_type='learned_range',
     beta_schedule='linear',
     clip_sample=False)

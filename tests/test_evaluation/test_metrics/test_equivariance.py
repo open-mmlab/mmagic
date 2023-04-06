@@ -67,20 +67,3 @@ class TestEquivariance:
         eq_res = eq.compute_metrics(eq.fake_results)
         isinstance(eq_res['eqt_int'], float) and isinstance(
             eq_res['eqt_frac'], float) and isinstance(eq_res['eqr'], float)
-
-    @torch.no_grad()
-    def test_eq_cpu(self):
-        eq = Equivariance(
-            2,
-            eq_cfg=dict(
-                compute_eqt_int=True, compute_eqt_frac=True, compute_eqr=True),
-            sample_mode='orig')
-        sampler = eq.get_metric_sampler(self.module, self.dataloader, [eq])
-        eq.prepare(self.module, self.dataloader)
-        for data_batch in sampler:
-            predictions = self.module.test_step(data_batch)
-            _data_batch, _predictions = process_fn(data_batch, predictions)
-            eq.process(_data_batch, _predictions)
-        eq_res = eq.compute_metrics(eq.fake_results)
-        isinstance(eq_res['eqt_int'], float) and isinstance(
-            eq_res['eqt_frac'], float) and isinstance(eq_res['eqr'], float)

@@ -2,7 +2,7 @@
 
 > [Disco Diffusion](https://github.com/alembics/disco-diffusion)
 
-> **Task**: Text2Image, Image2Image, diffusion
+> **Task**: Text2Image, Image2Image
 
 <!-- [ALGORITHM] -->
 
