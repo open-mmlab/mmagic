@@ -6,11 +6,15 @@
 
 我们很高兴发布 MMEditing 1.0.0rc7 版本。 此版本支持了 MMEditing 和 MMGeneration 的 50+ 模型，222+ configs 和 209+ checkpoints。以下是此次版本发布的重点新功能
 
-- 支持了 Inpainting 任务推理的 Gradio gui.
-- 支持了图像上色、图像翻译和 GAN 模型的 inferencer.
+- 支持了 DiffuserWrapper.
+- 支持了 ControlNet 的推理与训练.
+- 支持了 PyTorch 2.0.
 
 **新功能和改进**
 
+- 支持了 DiffuserWrapper. [#1692](https://github.com/open-mmlab/mmediting/pull/1692)
+- 支持了 ControlNet 的推理与训练. [#1744](https://github.com/open-mmlab/mmediting/pull/1744)
+- 支持了 PyTorch 2.0 (使用 'inductor' 后端成功编译 33+ 模型) [#1742](https://github.com/open-mmlab/mmediting/pull/1742).
 - 支持了图像超分和视频超分的 inferencer. [#1662](https://github.com/open-mmlab/mmediting/pull/1662), [#1720](https://github.com/open-mmlab/mmediting/pull/1720)
 - 重构 get_flops 脚本. [#1675](https://github.com/open-mmlab/mmediting/pull/1675)
 - 重构数据集的 dataset_converters 脚本和使用文档. [#1690](https://github.com/open-mmlab/mmediting/pull/1690)

@@ -53,10 +53,11 @@
 
 ## 🚀 最新进展 <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### 最新的 [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) 版本已经在 \[02/03/2023\] 发布:
+### 最新的 [**MMEditing v1.0.0rc7**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc7) 版本已经在 \[06/04/2023\] 发布:
 
-- 支持了 Inpainting 任务推理的 Gradio gui.
-- 支持了图像上色、图像翻译和 GAN 模型的 inferencer.
+- 支持了 DiffuserWrapper.
+- 支持了 ControlNet 的推理与训练.
+- 支持了 PyTorch 2.0 (使用 'inductor' 后端成功编译 33+ 模型).
 
 **MMEditing** 已经支持了[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
 

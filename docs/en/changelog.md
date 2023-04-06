@@ -6,32 +6,19 @@
 
 We are excited to announce the release of MMEditing 1.0.0rc7. This release supports 50+ models, 222+ configs and 209+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
 
-- Support Gradio gui of Inpainting inference.
-- Support Colorization, Translationin and GAN models inferencer.
+- Support DiffuserWrapper
+- Support ControlNet (training and inference).
+- Support PyTorch 2.0.
 
 **New Features & Improvements**
 
+- Support DiffuserWrapper. [#1692](https://github.com/open-mmlab/mmediting/pull/1692)
+- Support ControlNet (training and inference). [#1744](https://github.com/open-mmlab/mmediting/pull/1744)
+- Support PyTorch 2.0 (successfully compile 33+ models on 'inductor' backend). [#1742](https://github.com/open-mmlab/mmediting/pull/1742)
 - Support Image Super-Resolution and Video Super-Resolution models inferencer. [#1662](https://github.com/open-mmlab/mmediting/pull/1662), [#1720](https://github.com/open-mmlab/mmediting/pull/1720)
-
 - Refactor tools/get_flops script. [#1675](https://github.com/open-mmlab/mmediting/pull/1675)
-
 - Refactor dataset_converters and documents for datasets. [#1690](https://github.com/open-mmlab/mmediting/pull/1690)
-
 - Move stylegan ops to MMCV. [#1383](https://github.com/open-mmlab/mmediting/pull/1383)
-
-- \[Feature\] register models and scheduelrs from diffusers by @zengyh1900 in https://github.com/open-mmlab/mmediting/pull/1692
-
-- \[Enhancement\] Support diffuser wrapper by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1693
-
-- \[Fix\] Revise the `forward` function for `DiffusersWrapper`. by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1697
-
-- \[Enhancement\] Support string type (prompt) in EditDataSample by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1698
-
-- \[Feature\] Support convert base model for ControlNet by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1701
-
-- \[Feature\] Support demo dataset for ControlNet by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1702
-
-- \[Enhancement\] Revise `ClipWrapper` to support HuggingFace `Transformers` by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1704
 
 **Bug Fixes**
 
