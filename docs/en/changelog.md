@@ -41,8 +41,8 @@ We are excited to announce the release of MMEditing 1.0.0rc7. This release suppo
 
 **Contributors**
 
-A total of 7 developers contributed to this release.
-Thanks @LeoXing1996, @Z-Fran, @plyfager, @zengyh1900, @liuwenran, @ryanxingql, @HAOCHENYE
+A total of 8 developers contributed to this release.
+Thanks @LeoXing1996, @Z-Fran, @plyfager, @zengyh1900, @liuwenran, @ryanxingql, @HAOCHENYE, @VongolaWu
 
 **New Contributors**
 

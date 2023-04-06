@@ -24,7 +24,7 @@
 
 **贡献者**
 
-@LeoXing1996, @Z-Fran, @plyfager, @zengyh1900, @liuwenran, @ryanxingql, @HAOCHENYE
+@LeoXing1996, @Z-Fran, @plyfager, @zengyh1900, @liuwenran, @ryanxingql, @HAOCHENYE, @VongolaWu
 
 ## v1.0.0rc6 (02/03/2023)
 
