@@ -227,4 +227,4 @@ MMEditing 1.0.0rc0 is the first version of MMEditing 1.x, a part of the OpenMMLa
 
 Built upon the new [training engine](https://github.com/open-mmlab/mmengine), MMEditing 1.x unifies the interfaces of dataset, models, evaluation, and visualization.
 
-And there are some BC-breaking changes. Please check [the migration tutorial](https://mmediting.readthedocs.io/en/1.x/migration/overview.html) for more details.
+And there are some BC-breaking changes. Please check [the migration tutorial](https://mmediting.readthedocs.io/en/latest/migration/overview.html) for more details.

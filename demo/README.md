@@ -1,6 +1,6 @@
 # MMEditing Demo
 
-There are some mmediting demos in this folder. We provide python command line usage here to run these demos and more guidance could also be found in the [documentation](https://mmediting.readthedocs.io/en/dev-1.x/user_guides/3_inference.html)
+There are some mmediting demos in this folder. We provide python command line usage here to run these demos and more guidance could also be found in the [documentation](https://mmediting.readthedocs.io/en/latest/user_guides/3_inference.html)
 
 Table of contents:
 

@@ -27,7 +27,7 @@ A pipeline consists of a sequence of operations. Each operation takes a dict as 
 
 The operations are categorized into data loading, pre-processing, and formatting
 
-In 1.x version of MMEditing, all data transformations are inherited from `BaseTransform`.
+In MMEditing, all data transformations are inherited from `BaseTransform`.
 The input and output types of transformations are both dict.
 
 ### A simple example of data transform
