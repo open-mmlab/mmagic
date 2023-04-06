@@ -5,6 +5,7 @@ from .basicvsr import BasicVSR, BasicVSRNet
 from .basicvsr_plusplus_net import BasicVSRPlusPlusNet
 from .biggan import BigGAN
 from .cain import CAIN, CAINNet
+from .controlnet import ControlStableDiffusion
 from .cyclegan import CycleGAN
 from .dcgan import DCGAN
 from .ddpm import DenoisingUnet
@@ -85,5 +86,6 @@ __all__ = [
     'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DenoisingUnet',
-    'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion'
+    'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
+    'ControlStableDiffusion'
 ]
