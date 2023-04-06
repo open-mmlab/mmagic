@@ -144,7 +144,7 @@ jobs:
         run: |
           apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6
       - name: Install PyTorch
-        run: python -m pip install torch==1.8.1+cpu torchvision==0.9.1+cpu -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html
+        run: pip install torch==1.8.1+cpu torchvision==0.9.1+cpu -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html
       - name: Install mmediting dependencies
         run: |
           pip install -U openmim
@@ -152,8 +152,7 @@ jobs:
           pip install -r requirements/tests.txt
       - name: Build and install
         run: |
-          python setup.py check -m -s
-          TORCH_CUDA_ARCH_LIST=7.0 pip install -e .
+          pip install -e .
 
   build_cu116:
     runs-on: ubuntu-22.04
@@ -181,7 +180,7 @@ jobs:
         run: |
           apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6
       - name: Install PyTorch
-        run: python -m pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cpu
+        run: pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cpu
       - name: Install mmediting dependencies
         run: |
           pip install git+https://github.com/open-mmlab/mmengine.git@main
@@ -190,8 +189,7 @@ jobs:
           pip install -r requirements/tests.txt
       - name: Build and install
         run: |
-          python setup.py check -m -s
-          TORCH_CUDA_ARCH_LIST=7.0 pip install -e .
+          pip install -e .
       - name: Run unittests and generate coverage report
         run: |
           coverage run --branch --source mmedit -m pytest tests/
