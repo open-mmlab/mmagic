@@ -32,9 +32,8 @@ def test_gl_inpaintor():
         masked_img,
         'data_samples': [
             EditDataSample(
-                mask=mask,
                 metainfo=dict(mask_bbox=mask_bbox),
-                mask_bbox=mask_bbox,
+                mask=mask,
                 gt_img=gt_img,
             )
         ]
