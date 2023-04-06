@@ -6,7 +6,7 @@ Collections:
   README: configs/controlnet/README.md
   Task:
   - text2image
-  Year: 2022
+  Year: 2023
 Models:
 - Config: configs/controlnet/controlnet-canny.py
   In Collection: Control Net
