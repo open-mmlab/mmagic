@@ -1,5 +1,31 @@
 # 变更日志
 
+## v1.0.0rc7 (06/04/2023)
+
+**主要更新**
+
+我们很高兴发布 MMEditing 1.0.0rc7 版本。 此版本支持了 MMEditing 和 MMGeneration 的 50+ 模型，222+ configs 和 209+ checkpoints。以下是此次版本发布的重点新功能
+
+- 支持了 Inpainting 任务推理的 Gradio gui.
+- 支持了图像上色、图像翻译和 GAN 模型的 inferencer.
+
+**新功能和改进**
+
+- 支持了图像超分和视频超分的 inferencer. [#1662](https://github.com/open-mmlab/mmediting/pull/1662), [#1720](https://github.com/open-mmlab/mmediting/pull/1720)
+- 重构 get_flops 脚本. [#1675](https://github.com/open-mmlab/mmediting/pull/1675)
+- 重构数据集的 dataset_converters 脚本和使用文档. [#1690](https://github.com/open-mmlab/mmediting/pull/1690)
+- 迁移 stylegan 算子到 MMCV 中. [#1383](https://github.com/open-mmlab/mmediting/pull/1383)
+
+**Bug 修复**
+
+- 修复 disco inferencer. [#1673](https://github.com/open-mmlab/mmediting/pull/1673)
+- 修复 nafnet optimizer 配置. [#1716](https://github.com/open-mmlab/mmediting/pull/1716)
+- 修复 tof typo. [#1711](https://github.com/open-mmlab/mmediting/pull/1711)
+
+**贡献者**
+
+@LeoXing1996, @Z-Fran, @plyfager, @zengyh1900, @liuwenran, @ryanxingql, @HAOCHENYE
+
 ## v1.0.0rc6 (02/03/2023)
 
 **主要更新**

@@ -1,50 +1,48 @@
 # Changelog
 
-## What's Changed
-
-- \[Feature\] register models and scheduelrs from diffusers by @zengyh1900 in https://github.com/open-mmlab/mmediting/pull/1692
-- \[Enhancement\] Support diffuser wrapper by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1693
-- \[Fix\] Revise the `forward` function for `DiffusersWrapper`. by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1697
-- \[Enhancement\] Support string type (prompt) in EditDataSample by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1698
-- \[Feature\] Support convert base model for ControlNet by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1701
-- \[Feature\] Support demo dataset for ControlNet by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1702
-- \[Enhancement\] Revise `ClipWrapper` to support HuggingFace `Transformers` by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1704
-
-## New Contributors
-
-- @HAOCHENYE made their first contribution in https://github.com/open-mmlab/mmediting/pull/1712
-
-**Full Changelog**: https://github.com/open-mmlab/mmediting/compare/v1.0.0rc6...v1.0.0rc7
-
-## v1.0.0rc7 (02/03/2023)
+## v1.0.0rc7 (06/04/2023)
 
 **Highlights**
 
-We are excited to announce the release of MMEditing 1.0.0rc6. This release supports 50+ models, 222+ configs and 209+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
+We are excited to announce the release of MMEditing 1.0.0rc7. This release supports 50+ models, 222+ configs and 209+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
 
 - Support Gradio gui of Inpainting inference.
 - Support Colorization, Translationin and GAN models inferencer.
 
 **New Features & Improvements**
 
-- Refactor FileIO. [#1572](https://github.com/open-mmlab/mmediting/pull/1572)
 - Support Image Super-Resolution and Video Super-Resolution models inferencer. [#1662](https://github.com/open-mmlab/mmediting/pull/1662), [#1720](https://github.com/open-mmlab/mmediting/pull/1720)
-- Move stylegan ops to MMCV. [#1383](https://github.com/open-mmlab/mmediting/pull/1383)
-- Refactor tools/get_flops. [#1675](https://github.com/open-mmlab/mmediting/pull/1675)
+
+- Refactor tools/get_flops script. [#1675](https://github.com/open-mmlab/mmediting/pull/1675)
+
 - Refactor dataset_converters and documents for datasets. [#1690](https://github.com/open-mmlab/mmediting/pull/1690)
-  **Bug Fixes**
 
-* \[Fix\] Fix warp typo by @ryanxingql in https://github.com/open-mmlab/mmediting/pull/1711
-* \[Fix\] Fix  accepting an unexpected argument `local-rank`  in PyTorch 2.0 by @HAOCHENYE in https://github.com/open-mmlab/mmediting/pull/1712
-* \[Fix\] fix nafnet optimizer config by @Z-Fran in https://github.com/open-mmlab/mmediting/pull/1716
-* \[Fix\] Fix disco inference  by @liuwenran in https://github.com/open-mmlab/mmediting/pull/1673
+- Move stylegan ops to MMCV. [#1383](https://github.com/open-mmlab/mmediting/pull/1383)
 
-- Fix the meaning of `momentum` in EMA. [#1581](https://github.com/open-mmlab/mmediting/pull/1581)
+- \[Feature\] register models and scheduelrs from diffusers by @zengyh1900 in https://github.com/open-mmlab/mmediting/pull/1692
+
+- \[Enhancement\] Support diffuser wrapper by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1693
+
+- \[Fix\] Revise the `forward` function for `DiffusersWrapper`. by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1697
+
+- \[Enhancement\] Support string type (prompt) in EditDataSample by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1698
+
+- \[Feature\] Support convert base model for ControlNet by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1701
+
+- \[Feature\] Support demo dataset for ControlNet by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1702
+
+- \[Enhancement\] Revise `ClipWrapper` to support HuggingFace `Transformers` by @LeoXing1996 in https://github.com/open-mmlab/mmediting/pull/1704
+
+**Bug Fixes**
+
+- Fix disco inferencer. [#1673](https://github.com/open-mmlab/mmediting/pull/1673)
+- Fix nafnet optimizer config. [#1716](https://github.com/open-mmlab/mmediting/pull/1716)
+- Fix tof typo. [#1711](https://github.com/open-mmlab/mmediting/pull/1711)
 
 **Contributors**
 
-A total of 8 developers contributed to this release.
-Thanks @LeoXing1996, @Z-Fran, @plyfager, @zengyh1900, @VongolaWu, @liuwenran, @ryanxingql, @HAOCHENYE
+A total of 7 developers contributed to this release.
+Thanks @LeoXing1996, @Z-Fran, @plyfager, @zengyh1900, @liuwenran, @ryanxingql, @HAOCHENYE
 
 **New Contributors**
 
