@@ -9,6 +9,6 @@
 coverage < 7.0.0
 imageio-ffmpeg==0.4.4
 interrogate
-mmdet >= 3.0.0rc2
+mmdet >= 3.0.0
 pytest
 transformers

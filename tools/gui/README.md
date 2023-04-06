@@ -58,13 +58,7 @@ pip install opencv-python-headless
 Install MMEditing.
 
 ```shell
-git clone -b 1.x https://github.com/open-mmlab/mmediting.git
-```
-
-If you want to follow the newest features, you can clone `dev-1.x` branch.
-
-```shell
-git clone -b dev-1.x https://github.com/open-mmlab/mmediting.git
+git clone https://github.com/open-mmlab/mmediting.git
 ```
 
 **Step 3.**
