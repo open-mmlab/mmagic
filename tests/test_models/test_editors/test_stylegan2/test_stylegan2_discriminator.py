@@ -14,7 +14,8 @@ from mmedit.models.utils import get_module_device
 
 
 @pytest.mark.skipif(
-    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    ('win' in platform.system().lower() and 'cu' in torch.__version__)
+    or not torch.cuda.is_available(),
     reason='skip on windows-cuda due to limited RAM.')
 class TestStyleGANv2Disc:
 

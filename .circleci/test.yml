@@ -61,7 +61,7 @@ jobs:
           command: |
             pip install git+https://github.com/open-mmlab/mmengine.git@main
             pip install -U openmim
-            mim install 'mmcv >= 2.0.0rc1'
+            mim install 'mmcv >= 2.0.0'
             pip install -r requirements/tests.txt
       - run:
           name: Build and install
@@ -104,7 +104,7 @@ jobs:
           command: |
             docker exec mmedit pip install -e /mmengine
             docker exec mmedit pip install -U openmim
-            docker exec mmedit mim install 'mmcv >= 2.0.0rc1'
+            docker exec mmedit mim install 'mmcv >= 2.0.0'
             docker exec mmedit pip install -r requirements/tests.txt
       - run:
           name: Build and install
@@ -125,7 +125,7 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
-                - 1.x
+                - main
   pr_stage_test:
     when:
       not:
@@ -137,11 +137,11 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
-                - 1.x
+                - main
       - build_cpu:
           name: minimum_version_cpu
-          torch: 1.6.0
-          torchvision: 0.7.0
+          torch: 1.8.1
+          torchvision: 0.9.1
           python: 3.7.4
           requires:
             - lint
@@ -171,7 +171,7 @@ workflows:
     jobs:
       - build_cuda:
           name: minimum_version_gpu
-          torch: 1.6.0
+          torch: 1.8.1
           # Use double quotation mark to explicitly specify its type
           # as string instead of number
           cuda: "10.1"

@@ -6,16 +6,16 @@ from typing import List, Sequence
 import cv2
 import numpy as np
 import torch.nn as nn
-from mmengine.evaluator import BaseMetric
 from mmengine.model import is_model_wrapper
 from torch.utils.data.dataloader import DataLoader
 
 from mmedit.registry import METRICS
+from .base_sample_wise_metric import BaseSampleWiseMetric
 from .metrics_utils import _fetch_data_and_check, average
 
 
 @METRICS.register_module()
-class ConnectivityError(BaseMetric):
+class ConnectivityError(BaseSampleWiseMetric):
     """Connectivity error for evaluating alpha matte prediction.
 
     .. note::
@@ -39,6 +39,8 @@ class ConnectivityError(BaseMetric):
     Metrics:
         - ConnectivityError (float): Connectivity Error
     """
+
+    metric = 'ConnectivityError'
 
     def __init__(
         self,

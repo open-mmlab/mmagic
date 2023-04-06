@@ -964,7 +964,7 @@ class InstanceCrop(BaseTransform):
 
         assert mmdet_apis is not None, (
             "Cannot import 'mmdet'. Please install 'mmdet' via "
-            "\"mim install 'mmdet >= 3.0.0rc2'\".")
+            "\"mim install 'mmdet >= 3.0.0'\".")
 
         cfg = get_config(config_file, pretrained=True)
         with DefaultScope.overwrite_default_scope('mmdet'):

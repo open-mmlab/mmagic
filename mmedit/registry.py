@@ -155,7 +155,7 @@ TASK_UTILS = Registry(
 # modules for diffusion models that support adding noise and denoising
 DIFFUSION_SCHEDULERS = Registry(
     'diffusion scheduler',
-    locations=['mmedit.models'],
+    locations=['mmedit.models.diffusion_schedulers'],
 )
 
 #######################################################################

@@ -19,17 +19,17 @@
   <div>&nbsp;</div>
 
 [![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/1.x/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
 [![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/1.x/LICENSE)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/main/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘Documentation](https://mmediting.readthedocs.io/en/1.x/) |
-[🛠️Installation](https://mmediting.readthedocs.io/en/1.x/get_started/install.html) |
-[📊Model Zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/overview.html) |
-[🆕Update News](https://mmediting.readthedocs.io/en/1.x/changelog.html) |
+[📘Documentation](https://mmediting.readthedocs.io/en/latest/) |
+[🛠️Installation](https://mmediting.readthedocs.io/en/latest/get_started/install.html) |
+[📊Model Zoo](https://mmediting.readthedocs.io/en/latest/model_zoo/overview.html) |
+[🆕Update News](https://mmediting.readthedocs.io/en/latest/changelog.html) |
 [🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
 [🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
 
@@ -85,7 +85,7 @@ Currently, MMEditing support multiple image and video generation/editing tasks.
 
 https://user-images.githubusercontent.com/12782558/217152698-49169038-9872-4200-80f7-1d5f7613afd7.mp4
 
-The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorch 1.9+**.
+The best practice on our main branch works with **Python 3.8+** and **PyTorch 1.9+**.
 
 ### ✨ Major features
 
@@ -99,7 +99,7 @@ The best practice on our main 1.x branch works with **Python 3.8+** and **PyTorc
 
 - **New Modular Design for Flexible Combination**
 
-  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](https://mmediting.readthedocs.io/en/dev-1.x/howto/losses.html))
+  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](https://mmediting.readthedocs.io/en/latest/howto/losses.html))
 
 - **Efficient Distributed Training**
 
@@ -135,14 +135,14 @@ Install MMCV with [MIM](https://github.com/open-mmlab/mim).
 ```shell
 pip3 install openmim
 # wait for more pre-compiled pkgs to release
-mim install 'mmcv>=2.0.0rc1'
+mim install 'mmcv>=2.0.0'
 ```
 
 **Step 3.**
 Install MMEditing from source.
 
 ```shell
-git clone -b 1.x https://github.com/open-mmlab/mmediting.git
+git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e .
 ```
@@ -321,7 +321,7 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
   </tbody>
 </table>
 
-Please refer to [model_zoo](https://mmediting.readthedocs.io/en/1.x/model_zoo/overview.html) for more details.
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/model_zoo/overview.html) for more details.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -362,24 +362,24 @@ Please refer to [LICENSES](LICENSE) for the careful check, if you are using our 
 ## 🏗️ ️OpenMMLab Family
 
 - [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab foundational library for training deep learning models.
-- [MMCV](https://github.com/open-mmlab/mmcv/tree/2.x): OpenMMLab foundational library for computer vision.
+- [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab foundational library for computer vision.
 - [MIM](https://github.com/open-mmlab/mim): MIM installs OpenMMLab packages.
-- [MMClassification](https://github.com/open-mmlab/mmclassification/tree/1.x): OpenMMLab image classification toolbox and benchmark.
-- [MMDetection](https://github.com/open-mmlab/mmdetection/tree/3.x): OpenMMLab detection toolbox and benchmark.
-- [MMDetection3D](https://github.com/open-mmlab/mmdetection3d/tree/1.x): OpenMMLab's next-generation platform for general 3D object detection.
-- [MMRotate](https://github.com/open-mmlab/mmrotate/tree/1.x): OpenMMLab rotated object detection toolbox and benchmark.
-- [MMSegmentation](https://github.com/open-mmlab/mmsegmentation/tree/1.x): OpenMMLab semantic segmentation toolbox and benchmark.
-- [MMOCR](https://github.com/open-mmlab/mmocr/tree/1.x): OpenMMLab text detection, recognition, and understanding toolbox.
-- [MMPose](https://github.com/open-mmlab/mmpose/tree/1.x): OpenMMLab pose estimation toolbox and benchmark.
-- [MMHuman3D](https://github.com/open-mmlab/mmhuman3d/tree/1.x): OpenMMLab 3D human parametric model toolbox and benchmark.
-- [MMSelfSup](https://github.com/open-mmlab/mmselfsup/tree/1.x): OpenMMLab self-supervised learning toolbox and benchmark.
-- [MMRazor](https://github.com/open-mmlab/mmrazor/tree/1.x): OpenMMLab model compression toolbox and benchmark.
-- [MMFewShot](https://github.com/open-mmlab/mmfewshot/tree/1.x): OpenMMLab fewshot learning toolbox and benchmark.
-- [MMAction2](https://github.com/open-mmlab/mmaction2/tree/1.x): OpenMMLab's next-generation action understanding toolbox and benchmark.
-- [MMTracking](https://github.com/open-mmlab/mmtracking/tree/1.x): OpenMMLab video perception toolbox and benchmark.
-- [MMFlow](https://github.com/open-mmlab/mmflow/tree/1.x): OpenMMLab optical flow toolbox and benchmark.
-- [MMEditing](https://github.com/open-mmlab/mmediting/tree/1.x): OpenMMLab image and video editing toolbox.
-- [MMGeneration](https://github.com/open-mmlab/mmgeneration/tree/1.x): OpenMMLab image and video generative models toolbox.
+- [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab image classification toolbox and benchmark.
+- [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab detection toolbox and benchmark.
+- [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab's next-generation platform for general 3D object detection.
+- [MMRotate](https://github.com/open-mmlab/mmrotate): OpenMMLab rotated object detection toolbox and benchmark.
+- [MMSegmentation](https://github.com/open-mmlab/mmsegmentation): OpenMMLab semantic segmentation toolbox and benchmark.
+- [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab text detection, recognition, and understanding toolbox.
+- [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab pose estimation toolbox and benchmark.
+- [MMHuman3D](https://github.com/open-mmlab/mmhuman3d): OpenMMLab 3D human parametric model toolbox and benchmark.
+- [MMSelfSup](https://github.com/open-mmlab/mmselfsup): OpenMMLab self-supervised learning toolbox and benchmark.
+- [MMRazor](https://github.com/open-mmlab/mmrazor): OpenMMLab model compression toolbox and benchmark.
+- [MMFewShot](https://github.com/open-mmlab/mmfewshot): OpenMMLab fewshot learning toolbox and benchmark.
+- [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab's next-generation action understanding toolbox and benchmark.
+- [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab video perception toolbox and benchmark.
+- [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab optical flow toolbox and benchmark.
+- [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab image and video editing toolbox.
+- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab image and video generative models toolbox.
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab model deployment framework.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>

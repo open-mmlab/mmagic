@@ -1,10 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 
 from mmedit.models.editors.stylegan3.stylegan3_modules import MappingNetwork
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() or not torch.cuda.is_available(),
+    reason='skip on windows due to uncompiled ops.')
 def test_MappingNetwork():
     mapping_network = MappingNetwork(16, 4, 5, cond_size=8)
     z = torch.randn(1, 16)
