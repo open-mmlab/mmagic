@@ -14,7 +14,7 @@ on:
     branches:
       - dev-1.x
       - test-1.x
-      - 1.x
+      - main
       - test-branch
 
 concurrency:
