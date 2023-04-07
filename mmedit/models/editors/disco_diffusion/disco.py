@@ -203,7 +203,7 @@ class DiscoDiffusion(nn.Module):
             timesteps = tqdm(timesteps)
         for t in timesteps:
             # 1. predicted model_output
-            model_output = self.unet(image, t)['outputs']
+            model_output = self.unet(image, t)['sample']
 
             # 2. compute previous image: x_t -> x_t-1
             cond_kwargs = dict(

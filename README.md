@@ -53,10 +53,11 @@ English | [简体中文](README_zh-CN.md)
 
 ## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### New release [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) \[02/03/2023\]:
+### New release [**MMEditing v1.0.0rc7**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc7) \[07/04/2023\]:
 
-- Support Gradio gui of Inpainting inference.
-- Support Colorization, Translationin and all GAN models inferencer.
+- Support DiffuserWrapper
+- Support ControlNet (training and inference).
+- Support PyTorch 2.0 (successfully compile 33+ models on 'inductor' backend).
 
 **MMEditing** has supported all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) and unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine) 😍.
 
@@ -305,6 +306,7 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
       </td>
       <td>
         <ul>
+          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
           <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
           <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
           <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
@@ -332,7 +334,7 @@ MMEditing is an open source project that is contributed by researchers and engin
 We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. Thank you all!
 
 <a href="https://github.com/open-mmlab/mmediting/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=liuwenran/mmediting" />
+  <img src="https://contrib.rocks/image?repo=open-mmlab/mmediting" />
 </a>
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
