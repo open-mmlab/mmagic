@@ -28,7 +28,6 @@ def format_label(value: Union[torch.Tensor, np.ndarray, Sequence, int],
     Returns:
         :obj:`mmengine.LabelData`: The foramtted label data.
     """
-
     # Handle single number
     if isinstance(value, (torch.Tensor, np.ndarray)) and value.ndim == 0:
         value = int(value.item())
@@ -140,6 +139,7 @@ class EditDataSample(BaseDataElement):
         'sample_idx': 'sample_idx',
         'num_input_frames': 'num_input_frames',
         'num_output_frames': 'num_output_frames',
+        'mask_bbox': 'mask_bbox',
         # for LIIF
         'coord': 'coord',
         'cell': 'cell',
@@ -165,7 +165,9 @@ class EditDataSample(BaseDataElement):
         'gray': 'gray',
         'cropped_img': 'cropped_img',
         'pred_img': 'pred_img',
-        'ori_trimap': 'ori_trimap'
+        'ori_trimap': 'ori_trimap',
+        # For text to images
+        'prompt': 'prompt'
     }
 
     def set_predefined_data(self, data: dict) -> None:
@@ -202,6 +204,8 @@ class EditDataSample(BaseDataElement):
         for k, v in data.items():
             if k == 'gt_label':
                 self.set_gt_label(v)
+            elif k == 'prompt':
+                self.set_field(v, k, dtype=(str, list))
             else:
                 self.set_field(all_to_tensor(v), k, dtype=torch.Tensor)
 

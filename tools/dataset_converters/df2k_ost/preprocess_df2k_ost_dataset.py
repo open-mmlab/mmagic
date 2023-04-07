@@ -8,7 +8,21 @@ from multiprocessing import Pool
 import cv2
 import lmdb
 import mmcv
+import mmengine
 import numpy as np
+
+
+def generate_anno_file(args):
+    """Generate annotation file for DF2K_OST datasets from the ground-truth
+    folder."""
+
+    print('Generate annotation files ...')
+    txt_file = osp.join(args.data_root, args.anno_path)
+    mmengine.utils.mkdir_or_exist(osp.dirname(txt_file))
+    img_list = sorted(os.listdir(osp.join(args.data_root, 'GT_sub')))
+    with open(txt_file, 'w') as f:
+        for img in img_list:
+            f.write(f'{img} ({args.crop_size}, {args.crop_size}, 3)\n')
 
 
 def main_extract_subimages(args):
@@ -34,8 +48,8 @@ def main_extract_subimages(args):
     opt['compression_level'] = args.compression_level
 
     # HR images
-    opt['input_folder'] = osp.join(args.data_root, 'df2k_ost/GT')
-    opt['save_folder'] = osp.join(args.data_root, 'df2k_ost/GT_sub')
+    opt['input_folder'] = osp.join(args.data_root, 'GT')
+    opt['save_folder'] = osp.join(args.data_root, 'GT_sub')
     opt['crop_size'] = args.crop_size
     opt['step'] = args.step
     opt['thresh_size'] = args.thresh_size
@@ -60,10 +74,10 @@ def extract_subimages(opt):
         print(f'Folder {save_folder} already exists. Exit.')
         sys.exit(1)
 
-    img_list = list(mmcv.scandir(input_folder, suffix='png'))
+    img_list = list(mmengine.scandir(input_folder, suffix='png'))
     img_list = [osp.join(input_folder, v) for v in img_list]
 
-    prog_bar = mmcv.ProgressBar(len(img_list))
+    prog_bar = mmengine.ProgressBar(len(img_list))
     pool = Pool(opt['n_thread'])
     for path in img_list:
         pool.apply_async(
@@ -306,6 +320,12 @@ def parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--data-root', help='dataset root')
     parser.add_argument(
+        '--anno-path',
+        nargs='?',
+        default='meta_info_df2k_ost.txt',
+        type=str,
+        help='annotation file path')
+    parser.add_argument(
         '--crop-size',
         type=int,
         nargs='?',
@@ -348,6 +368,9 @@ if __name__ == '__main__':
 
     # extract subimages
     main_extract_subimages(args)
+
+    # generate annotation files
+    generate_anno_file(args)
 
     # prepare lmdb files if necessary
     if args.make_lmdb:

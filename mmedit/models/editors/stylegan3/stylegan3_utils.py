@@ -2,7 +2,14 @@
 import numpy as np
 import torch
 
-from .stylegan3_ops.ops import upfirdn2d
+try:
+    from mmcv.ops import filter2d, upsample2d
+except ImportError:
+    filter2d = None
+    upsample2d = None
+    print(
+        'Warning: mmcv.ops.filter2d and mmcv.ops.upsample2d are not available.'
+    )
 
 
 def apply_integer_translation(x, tx, ty):
@@ -47,10 +54,8 @@ def apply_fractional_translation(x, tx, ty, a=3):
         filter_x = (sinc(taps - fx) * sinc((taps - fx) / a)).unsqueeze(0)
         filter_y = (sinc(taps - fy) * sinc((taps - fy) / a)).unsqueeze(1)
         y = x
-        y = upfirdn2d.filter2d(
-            y, filter_x / filter_x.sum(), padding=[b, a, 0, 0])
-        y = upfirdn2d.filter2d(
-            y, filter_y / filter_y.sum(), padding=[0, 0, b, a])
+        y = filter2d(y, filter_x / filter_x.sum(), padding=[b, a, 0, 0])
+        y = filter2d(y, filter_y / filter_y.sum(), padding=[0, 0, b, a])
         y = y[:, :,
               max(b - iy, 0):H + b + a + min(-iy - a, 0),
               max(b - ix, 0):W + b + a + min(-ix - a, 0)]
@@ -141,7 +146,7 @@ def apply_affine_transformation(x, mat, up=4, **filter_kwargs):
     g = torch.nn.functional.affine_grid(theta, x.shape, align_corners=False)
 
     # Resample image.
-    y = upfirdn2d.upsample2d(x=x, f=f, up=up, padding=p)
+    y = upsample2d(input=x, filter=f, up=up, padding=p)
     z = torch.nn.functional.grid_sample(
         y, g, mode='bilinear', padding_mode='zeros', align_corners=False)
 
@@ -166,7 +171,7 @@ def apply_fractional_pseudo_rotation(x, angle, a=3, **filter_kwargs):
     mat = rotation_matrix(-angle)
     f = construct_affine_bandlimit_filter(
         mat, a=a, amax=a * 2, up=1, **filter_kwargs)
-    y = upfirdn2d.filter2d(x=x, f=f)
+    y = filter2d(input=x, filter=f)
     m = torch.zeros_like(y)
     c = f.shape[0] // 2
     m[:, :, c:-c, c:-c] = 1

@@ -1,5 +1,35 @@
 # 变更日志
 
+## v1.0.0rc7 (07/04/2023)
+
+**主要更新**
+
+我们很高兴发布 MMEditing 1.0.0rc7 版本。 此版本支持了 MMEditing 和 MMGeneration 的 51+ 模型，226+ configs 和 212+ checkpoints。以下是此次版本发布的重点新功能
+
+- 支持了 DiffuserWrapper.
+- 支持了 ControlNet 的推理与训练.
+- 支持了 PyTorch 2.0.
+
+**新功能和改进**
+
+- 支持了 DiffuserWrapper. [#1692](https://github.com/open-mmlab/mmediting/pull/1692)
+- 支持了 ControlNet 的推理与训练. [#1744](https://github.com/open-mmlab/mmediting/pull/1744)
+- 支持了 PyTorch 2.0 (使用 'inductor' 后端成功编译 33+ 模型) [#1742](https://github.com/open-mmlab/mmediting/pull/1742).
+- 支持了图像超分和视频超分的 inferencer. [#1662](https://github.com/open-mmlab/mmediting/pull/1662), [#1720](https://github.com/open-mmlab/mmediting/pull/1720)
+- 重构 get_flops 脚本. [#1675](https://github.com/open-mmlab/mmediting/pull/1675)
+- 重构数据集的 dataset_converters 脚本和使用文档. [#1690](https://github.com/open-mmlab/mmediting/pull/1690)
+- 迁移 stylegan 算子到 MMCV 中. [#1383](https://github.com/open-mmlab/mmediting/pull/1383)
+
+**Bug 修复**
+
+- 修复 disco inferencer. [#1673](https://github.com/open-mmlab/mmediting/pull/1673)
+- 修复 nafnet optimizer 配置. [#1716](https://github.com/open-mmlab/mmediting/pull/1716)
+- 修复 tof typo. [#1711](https://github.com/open-mmlab/mmediting/pull/1711)
+
+**贡献者**
+
+@LeoXing1996, @Z-Fran, @plyfager, @zengyh1900, @liuwenran, @ryanxingql, @HAOCHENYE, @VongolaWu
+
 ## v1.0.0rc6 (02/03/2023)
 
 **主要更新**
@@ -186,4 +216,4 @@ MMEditing 1.0.0rc0 是 MMEditing 1.x 的第一个版本，是 OpenMMLab 2.0 项�
 
 基于新的[训练引擎](https://github.com/open-mmlab/mmengine), MMEditing 1.x 统一了数据、模型、评测和可视化的接口。
 
-该版本存在有一些 BC-breaking 的修改。 请在[迁移指南](https://mmediting.readthedocs.io/zh_CN/1.x/migration/overview.html)中查看更多细节。
+该版本存在有一些 BC-breaking 的修改。 请在[迁移指南](https://mmediting.readthedocs.io/zh_CN/latest/migration/overview.html)中查看更多细节。

@@ -7,9 +7,9 @@ from mmedit.utils import ConfigType
 from .colorization_inferencer import ColorizationInferencer
 from .conditional_inferencer import ConditionalInferencer
 from .eg3d_inferencer import EG3DInferencer
+from .image_super_resolution_inferencer import ImageSuperResolutionInferencer
 from .inpainting_inferencer import InpaintingInferencer
 from .matting_inferencer import MattingInferencer
-from .restoration_inferencer import RestorationInferencer
 from .text2image_inferencer import Text2ImageInferencer
 from .translation_inferencer import TranslationInferencer
 from .unconditional_inferencer import UnconditionalInferencer
@@ -55,8 +55,8 @@ class MMEditInferencer:
         elif self.task in ['translation', 'Image2Image']:
             self.inferencer = TranslationInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
-        elif self.task in ['restoration', 'Image Super-Resolution']:
-            self.inferencer = RestorationInferencer(
+        elif self.task in ['Image super-resolution', 'Image Super-Resolution']:
+            self.inferencer = ImageSuperResolutionInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['video_restoration', 'Video Super-Resolution']:
             self.inferencer = VideoRestorationInferencer(
@@ -64,7 +64,9 @@ class MMEditInferencer:
         elif self.task in ['video_interpolation', 'Video Interpolation']:
             self.inferencer = VideoInterpolationInferencer(
                 config, ckpt, device, extra_parameters)
-        elif self.task in ['text2image', 'Text2Image']:
+        elif self.task in [
+                'text2image', 'Text2Image', 'Text2Image, Image2Image'
+        ]:
             self.inferencer = Text2ImageInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['3D_aware_generation', '3D-aware Generation']:

@@ -19,17 +19,17 @@
   <div>&nbsp;</div>
 
 [![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/zh_CN/1.x/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/zh_CN/latest/)
 [![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
 [![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/1.x/LICENSE)
+[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/main/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
 
-[📘使用文档](https://mmediting.readthedocs.io/en/1.x/) |
-[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/get_started/install.html) |
-[📊模型库](https://mmediting.readthedocs.io/zh_CN/1.x/model_zoo/overview.html) |
-[🆕更新记录](https://mmediting.readthedocs.io/zh_CN/1.x/changelog.html) |
+[📘使用文档](https://mmediting.readthedocs.io/zh_CN/latest/) |
+[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/latest/get_started/install.html) |
+[📊模型库](https://mmediting.readthedocs.io/zh_CN/latest/model_zoo/overview.html) |
+[🆕更新记录](https://mmediting.readthedocs.io/zh_CN/latest/changelog.html) |
 [🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
 [🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
 
@@ -53,10 +53,11 @@
 
 ## 🚀 最新进展 <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### 最新的 [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) 版本已经在 \[02/03/2023\] 发布:
+### 最新的 [**MMEditing v1.0.0rc7**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc7) 版本已经在 \[07/04/2023\] 发布:
 
-- 支持了 Inpainting 任务推理的 Gradio gui.
-- 支持了图像上色、图像翻译和 GAN 模型的 inferencer.
+- 支持了 DiffuserWrapper.
+- 支持了 ControlNet 的推理与训练.
+- 支持了 PyTorch 2.0 (使用 'inductor' 后端成功编译 33+ 模型).
 
 **MMEditing** 已经支持了[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
 
@@ -132,14 +133,14 @@ MMEditing 依赖 [PyTorch](https://pytorch.org/)，[MMEngine](https://github.com
 ```
 pip3 install openmim
 # wait for more pre-compiled pkgs to release
-mim install 'mmcv>=2.0.0rc1'
+mim install 'mmcv>=2.0.0'
 ```
 
 **步骤 3.**
 从源码安装 MMEditing
 
 ```
-git clone -b 1.x https://github.com/open-mmlab/mmediting.git
+git clone https://github.com/open-mmlab/mmediting.git
 cd mmediting
 pip3 install -e .
 ```
@@ -302,6 +303,7 @@ pip3 install -e .
       </td>
       <td>
         <ul>
+          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
           <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
           <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
           <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
@@ -318,7 +320,7 @@ pip3 install -e .
   </tbody>
 </table>
 
-请参考[模型库](https://mmediting.readthedocs.io/zh_CN/1.x/model_zoo/overview.html)了解详情。
+请参考[模型库](https://mmediting.readthedocs.io/zh_CN/latest/model_zoo/overview.html)了解详情。
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 
@@ -327,7 +329,7 @@ pip3 install -e .
 MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
 
 <a href="https://github.com/open-mmlab/mmediting/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=liuwenran/mmediting" />
+  <img src="https://contrib.rocks/image?repo=open-mmlab/mmediting" />
 </a>
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>

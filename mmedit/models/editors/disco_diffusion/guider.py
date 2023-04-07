@@ -1,7 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
 
-import clip
 import lpips
 import numpy as np
 import pandas as pd
@@ -15,7 +14,10 @@ from resize_right import resize
 from torchvision import __version__ as TORCHVISION_VERSION
 
 from mmedit.models.losses import tv_loss
+from mmedit.utils import try_import
 from .secondary_model import alpha_sigma_to_t
+
+clip = try_import('clip')
 
 normalize = T.Normalize(
     mean=[0.48145466, 0.4578275, 0.40821073],
@@ -309,6 +311,11 @@ class ImageTextGuider(nn.Module):
 
     def __init__(self, clip_models):
         super().__init__()
+
+        assert clip is not None, (
+            "Cannot import 'clip'. Please install 'clip' via "
+            "\"pip install git+https://github.com/openai/CLIP.git\".")
+
         self.clip_models = clip_models
         self.lpips_model = lpips.LPIPS(net='vgg')
 
@@ -433,7 +440,7 @@ class ImageTextGuider(nn.Module):
                     x, cosine_t[None].repeat([x.shape[0]]))
                 pred_original_sample = model_output['pred']
             else:
-                model_output = model(x, t)['outputs']
+                model_output = model(x, t)['sample']
                 model_output, predicted_variance = torch.split(
                     model_output, x.shape[1], dim=1)
                 alpha_prod_t = 1 - beta_prod_t

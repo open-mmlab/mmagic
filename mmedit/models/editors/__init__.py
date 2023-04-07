@@ -5,10 +5,10 @@ from .basicvsr import BasicVSR, BasicVSRNet
 from .basicvsr_plusplus_net import BasicVSRPlusPlusNet
 from .biggan import BigGAN
 from .cain import CAIN, CAINNet
+from .controlnet import ControlStableDiffusion
 from .cyclegan import CycleGAN
 from .dcgan import DCGAN
-from .ddim import DDIMScheduler
-from .ddpm import DDPMScheduler, DenoisingUnet
+from .ddpm import DenoisingUnet
 from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
                          DeepFillDecoder, DeepFillEncoder, DeepFillRefiner,
                          DeepFillv1Discriminators, DeepFillv1Inpaintor)
@@ -85,7 +85,7 @@ __all__ = [
     'ProgressiveGrowingGAN', 'SinGAN', 'AblatedDiffusionModel',
     'DiscoDiffusion', 'IDLossModel', 'PESinGAN', 'MSPIEStyleGAN2',
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
-    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DDIMScheduler',
-    'DDPMScheduler', 'DenoisingUnet', 'ClipWrapper', 'EG3D', 'Restormer',
-    'SwinIRNet', 'StableDiffusion'
+    'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DenoisingUnet',
+    'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
+    'ControlStableDiffusion'
 ]

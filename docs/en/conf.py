@@ -113,14 +113,14 @@ html_theme_options = {
             'Version',
             'children': [
                 {
-                    'name': 'MMEditing 0.x',
+                    'name': 'MMEditing 1.x',
                     'url': 'https://mmediting.readthedocs.io/en/latest/',
                     'description': 'Main branch'
                 },
                 {
-                    'name': 'MMEditing 1.x',
-                    'url': 'https://mmediting.readthedocs.io/en/1.x/',
-                    'description': '1.x branch',
+                    'name': 'MMEditing 0.x',
+                    'url': 'https://mmediting.readthedocs.io/en/0.x/',
+                    'description': '0.x branch',
                 },
             ],
             'active':
