@@ -1,8 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+
 import os.path as osp
+import platform
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+import pytest
 import torch
 import torch.nn as nn
 from mmengine.utils import digit_version
@@ -55,6 +58,9 @@ config = dict(
     init_cfg=dict(type='init_from_unet'))
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 class TestControlStableDiffusion(TestCase):
 
     def setUp(self):
