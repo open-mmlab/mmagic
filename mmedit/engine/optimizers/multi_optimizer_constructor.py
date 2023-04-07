@@ -101,7 +101,7 @@ class MultiOptimWrapperConstructor:
         >>> diffusion_model = MODELS.build(model)
         >>> # build constructor
         >>> optim_wrapper = dict(
-        >>>     modules=['base_model.unet', 'base_model.text_encoder']
+        >>>     modules=['unet', 'text_encoder']
         >>>     optimizer=dict(type='Adam', lr=0.0002),
         >>>     accumulative_counts=1)
         >>> optim_dict_builder = MultiOptimWrapperConstructor(optim_wrapper)
