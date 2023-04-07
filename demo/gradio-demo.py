@@ -14,8 +14,7 @@ import torch
 import yaml
 from mmengine.registry import init_default_scope
 
-from mmedit.apis.mmedit_inferencers.inpainting_inferencer import \
-    InpaintingInferencer
+from mmedit.apis.inferencers.inpainting_inferencer import InpaintingInferencer
 
 
 class InpaintingGradio:

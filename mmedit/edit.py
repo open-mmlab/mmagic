@@ -9,7 +9,7 @@ import yaml
 from mmengine.registry import init_default_scope
 
 from mmedit.apis import Inferencers
-from mmedit.apis.mmedit_inferencers.base_mmedit_inferencer import InputsType
+from mmedit.apis.inferencers.base_mmedit_inferencer import InputsType
 
 
 class MMEdit:

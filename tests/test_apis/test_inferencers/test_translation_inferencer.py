@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
-from mmedit.apis.mmedit_inferencers.translation_inferencer import \
+from mmedit.apis.inferencers.translation_inferencer import \
     TranslationInferencer
 from mmedit.utils import register_all_modules
 

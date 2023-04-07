@@ -9,8 +9,7 @@ import torch.nn as nn
 from mmengine.utils import digit_version
 from torchvision.version import __version__ as TV_VERSION
 
-from mmedit.apis.mmedit_inferencers.text2image_inferencer import \
-    Text2ImageInferencer
+from mmedit.apis.inferencers.text2image_inferencer import Text2ImageInferencer
 from mmedit.models import DenoisingUnet, DiscoDiffusion
 from mmedit.models.diffusion_schedulers import EditDDIMScheduler
 from mmedit.utils import register_all_modules

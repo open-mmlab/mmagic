@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 from mmengine import Config
 
-from mmedit.apis.mmedit_inferencers.eg3d_inferencer import EG3DInferencer
+from mmedit.apis.inferencers.eg3d_inferencer import EG3DInferencer
 from mmedit.utils import register_all_modules
 
 register_all_modules()
