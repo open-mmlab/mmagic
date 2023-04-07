@@ -8,7 +8,6 @@ from .inferencers import (Inferencers, calculate_grid_size,
                           sample_unconditional_model, set_random_seed,
                           video_interpolation_inference)
 
-
 __all__ = [
     'init_model', 'delete_cfg', 'set_random_seed', 'matting_inference',
     'inpainting_inference', 'restoration_inference',

@@ -4,9 +4,9 @@ from typing import Dict, List, Optional, Union
 import torch
 
 from mmedit.utils import ConfigType
-
 from .colorization_inferencer import ColorizationInferencer
 from .conditional_inferencer import ConditionalInferencer
+from .controlnet_animation_inferencer import ControlnetAnimationInferencer
 from .eg3d_inferencer import EG3DInferencer
 from .image_super_resolution_inferencer import ImageSuperResolutionInferencer
 # yapf: disable
@@ -28,7 +28,6 @@ from .translation_inferencer import TranslationInferencer
 from .unconditional_inferencer import UnconditionalInferencer
 from .video_interpolation_inferencer import VideoInterpolationInferencer
 from .video_restoration_inferencer import VideoRestorationInferencer
-from .controlnet_animation_inferencer import ControlnetAnimationInferencer
 
 __all__ = [
     'init_model', 'delete_cfg', 'set_random_seed', 'matting_inference',
