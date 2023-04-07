@@ -54,6 +54,31 @@ def test_optimizer_constructor():
         ['generator', 'discriminator'])
 
     # test optimizer wrapper is dict of **modules**
+    optim_wrapper = {
+        '.*embedding': {
+            'type': 'OptimWrapper',
+            'optimizer': {
+                'type': 'Adam',
+                'lr': 1e-4,
+                'betas': (0.9, 0.99)
+            }
+        },
+        'm1.generator': {
+            'type': 'OptimWrapper',
+            'optimizer': {
+                'type': 'Adam',
+                'lr': 1e-5,
+                'betas': (0.9, 0.99)
+            }
+        },
+        'm2': {
+            'type': 'OptimWrapper',
+            'optimizer': {
+                'type': 'Adam',
+                'lr': 1e-5,
+            }
+        }
+    }
     optim_wrapper_constructor = MultiOptimWrapperConstructor(
         optim_wrapper_cfg=dict(
             generator=dict(
@@ -103,8 +128,6 @@ def test_optimizer_constructor():
     optim_wrapper_constructor = MultiOptimWrapperConstructor(
         optim_wrapper_cfg=dict(
             modules=['.*text_encoder', '.*generator', 'm2'],
-            # modules=['.*text_encoder', '.*generator'],
-            # modules=['.*text_encoder', ],
             optimizer=dict(
                 type='Adam',
                 lr=1e-4,

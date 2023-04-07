@@ -28,7 +28,6 @@ class MultiOptimWrapperConstructor:
         >>> gan_model = MODELS.build(model)
         >>> # build constructor
         >>> optim_wrapper = dict(
-        >>>     constructor='MultiOptimWrapperConstructor',
         >>>     generator=dict(
         >>>         type='OptimWrapper',
         >>>         accumulative_counts=1,
@@ -43,7 +42,56 @@ class MultiOptimWrapperConstructor:
         >>> # build optim wrapper dict
         >>> optim_wrapper_dict = optim_dict_builder(gan_model)
 
-    # Example 2: Build a single optimizer for multi modules (e.g., DreamBooth):
+    Example 2: Build multi optimizers for specific submodules:
+        >>> # build model
+        >>> class GAN(nn.Module):
+        >>>     def __init__(self) -> None:
+        >>>         super().__init__()
+        >>>         self.generator = nn.Conv2d(3, 3, 1)
+        >>>         self.discriminator = nn.Conv2d(3, 3, 1)
+        >>> class TextEncoder(nn.Module):
+        >>>     def __init__(self):
+        >>>         super().__init__()
+        >>>         self.embedding = nn.Embedding(100, 100)
+        >>> class ToyModel(nn.Module):
+        >>>     def __init__(self) -> None:
+        >>>         super().__init__()
+        >>>         self.m1 = GAN()
+        >>>         self.m2 = nn.Conv2d(3, 3, 1)
+        >>>         self.m3 = nn.Linear(2, 2)
+        >>>         self.text_encoder = TextEncoder()
+        >>> model = ToyModel()
+        >>> # build constructor
+        >>> optim_wrapper = {
+        >>>     '.*embedding': {
+        >>>         'type': 'OptimWrapper',
+        >>>         'optimizer': {
+        >>>             'type': 'Adam',
+        >>>             'lr': 1e-4,
+        >>>             'betas': (0.9, 0.99)
+        >>>         }
+        >>>     },
+        >>>     'm1.generator': {
+        >>>         'type': 'OptimWrapper',
+        >>>         'optimizer': {
+        >>>             'type': 'Adam',
+        >>>             'lr': 1e-5,
+        >>>             'betas': (0.9, 0.99)
+        >>>         }
+        >>>     },
+        >>>     'm2': {
+        >>>         'type': 'OptimWrapper',
+        >>>         'optimizer': {
+        >>>             'type': 'Adam',
+        >>>             'lr': 1e-5,
+        >>>         }
+        >>>     }
+        >>> }
+        >>> optim_dict_builder = MultiOptimWrapperConstructor(optim_wrapper)
+        >>> # build optim wrapper dict
+        >>> optim_wrapper_dict = optim_dict_builder(model)
+
+    Example 3: Build a single optimizer for multi modules (e.g., DreamBooth):
         >>> # build StableDiffusion model
         >>> model = dict(
         >>>     type='StableDiffusion',
@@ -53,7 +101,6 @@ class MultiOptimWrapperConstructor:
         >>> diffusion_model = MODELS.build(model)
         >>> # build constructor
         >>> optim_wrapper = dict(
-        >>>     constructor='MultiOptimWrapperConstructor',
         >>>     modules=['base_model.unet', 'base_model.text_encoder']
         >>>     optimizer=dict(type='Adam', lr=0.0002),
         >>>     accumulative_counts=1)
