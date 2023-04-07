@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Dict, List
+
 import torch
 from mmengine.optim import OptimWrapperDict
 
@@ -194,22 +196,58 @@ class TTSR(SRGAN):
 
         return log_vars_g
 
-    def d_step_with_optim(self, batch_outputs, batch_gt_data, optim_wrapper):
-        """D step with optim of GAN: Calculate losses of discriminator and run
-        optim.
+    def train_step(self, data: List[dict],
+                   optim_wrapper: OptimWrapperDict) -> Dict[str, torch.Tensor]:
+        """Train step of GAN-based method.
 
         Args:
-            batch_outputs (Tuple[Tensor]): Batch output of generator.
-            batch_gt_data (Tensor): Batch GT data.
-            optim_wrapper (OptimWrapper): Optim wrapper of discriminator.
+            data (List[dict]): Data sampled from dataloader.
+            optim_wrapper (OptimWrapper): OptimWrapper instance
+                used to update model parameters.
 
         Returns:
-            dict: Dict of parsed losses.
+            Dict[str, torch.Tensor]: A ``dict`` of tensor for logging.
         """
 
-        pred, _, _ = batch_outputs
+        g_optim_wrapper = optim_wrapper['generator']
 
-        return super().d_step_with_optim(
-            batch_outputs=pred,
-            batch_gt_data=batch_gt_data,
-            optim_wrapper=optim_wrapper)
+        data = self.data_preprocessor(data, True)
+        batch_inputs = data['inputs']
+        data_samples = data['data_samples']
+        batch_gt_data = self.extract_gt_data(data_samples)
+
+        log_vars = dict()
+
+        with g_optim_wrapper.optim_context(self):
+            batch_outputs = self.forward_train(batch_inputs, data_samples)
+
+        if self.if_run_g():
+            set_requires_grad(self.discriminator, False)
+
+            log_vars_d = self.g_step_with_optim(
+                batch_outputs=batch_outputs,
+                batch_gt_data=batch_gt_data,
+                optim_wrapper=optim_wrapper)
+
+            log_vars.update(log_vars_d)
+
+        if self.if_run_d():
+            set_requires_grad(self.discriminator, True)
+
+            pred, _, _ = batch_outputs
+
+            for _ in range(self.disc_repeat):
+                # detach before function call to resolve PyTorch2.0 compile bug
+                log_vars_d = self.d_step_with_optim(
+                    batch_outputs=pred.detach(),
+                    batch_gt_data=batch_gt_data,
+                    optim_wrapper=optim_wrapper)
+
+            log_vars.update(log_vars_d)
+
+        if 'loss' in log_vars:
+            log_vars.pop('loss')
+
+        self.step_counter += 1
+
+        return log_vars

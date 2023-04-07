@@ -15,9 +15,9 @@ from .data_utils import expanduser, find_folders, get_samples
 class BasicConditionalDataset(BaseDataset):
     """Custom dataset for conditional GAN. This class is based on the
     combination of `BaseDataset` (https://github.com/open-
-    mmlab/mmclassification/blob/1.x/mmcls/datasets/base_dataset.py)  # noqa and
-    `CustomDataset` (https://github.com/open-
-    mmlab/mmclassification/blob/1.x/mmcls/datasets/custom.py).  # noqa.
+    mmlab/mmclassification/blob/main/mmcls/datasets/base_dataset.py)  # noqa
+    and `CustomDataset` (https://github.com/open-
+    mmlab/mmclassification/blob/main/mmcls/datasets/custom.py).  # noqa.
 
     The dataset supports two kinds of annotation format.
 

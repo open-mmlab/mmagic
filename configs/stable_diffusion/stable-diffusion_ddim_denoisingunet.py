@@ -20,6 +20,7 @@ unet = dict(
     output_cfg=dict(var='fixed'))
 
 vae = dict(
+    type='EditAutoencoderKL',
     act_fn='silu',
     block_out_channels=[128, 256, 512, 512],
     down_block_types=[
@@ -47,12 +48,15 @@ diffusion_scheduler = dict(
     set_alpha_to_one=False,
     clip_sample=False)
 
-init_cfg = dict(type='Pretrained', pretrained_model_path='')
-
 model = dict(
     type='StableDiffusion',
-    diffusion_scheduler=diffusion_scheduler,
     unet=unet,
     vae=vae,
-    init_cfg=init_cfg,
-)
+    text_encoder=dict(
+        type='ClipWrapper',
+        clip_type='huggingface',
+        pretrained_model_name_or_path='runwayml/stable-diffusion-v1-5',
+        subfolder='text_encoder'),
+    tokenizer='runwayml/stable-diffusion-v1-5',
+    scheduler=diffusion_scheduler,
+    test_scheduler=diffusion_scheduler)

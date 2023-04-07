@@ -72,7 +72,7 @@ You can check [slurm_test.sh](../../../tools/slurm_test.sh) for full arguments a
 ### Test with specific metrics
 
 MMEditing provides various **evaluation metrics**, i.e., MS-SSIM, SWD, IS, FID, Precision&Recall, PPL, Equivarience, TransFID, TransIS, etc.
-We have provided unified evaluation scripts in [tools/test.py](https://github.com/open-mmlab/mmediting/tree/1.x/tools/test.py) for all models.
+We have provided unified evaluation scripts in [tools/test.py](https://github.com/open-mmlab/mmediting/tree/main/tools/test.py) for all models.
 If users want to evaluate their models with some metrics, you can add the `metrics` into your config file like this:
 
 ```python
@@ -102,7 +102,7 @@ Then users can test models with the command below:
 bash tools/dist_test.sh ${CONFIG_FILE} ${CKPT_FILE}
 ```
 
-If you are in slurm environment, please switch to the [tools/slurm_test.sh](https://github.com/open-mmlab/mmediting/tree/1.x/tools/slurm_test.sh) by using the following commands:
+If you are in slurm environment, please switch to the [tools/slurm_test.sh](https://github.com/open-mmlab/mmediting/tree/main/tools/slurm_test.sh) by using the following commands:
 
 ```shell
 sh slurm_test.sh ${PLATFORM} ${JOBNAME} ${CONFIG_FILE} ${CKPT_FILE}

@@ -30,12 +30,13 @@ def test_gl_inpaintor():
     data_batch = {
         'inputs':
         masked_img,
-        'data_samples':
-        [EditDataSample(
-            mask=mask,
-            mask_bbox=mask_bbox,
-            gt_img=gt_img,
-        )]
+        'data_samples': [
+            EditDataSample(
+                metainfo=dict(mask_bbox=mask_bbox),
+                mask=mask,
+                gt_img=gt_img,
+            )
+        ]
     }
 
     optim_g = torch.optim.SGD(gl.generator.parameters(), lr=0.1)
