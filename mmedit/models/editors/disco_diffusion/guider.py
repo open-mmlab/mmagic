@@ -440,7 +440,7 @@ class ImageTextGuider(nn.Module):
                     x, cosine_t[None].repeat([x.shape[0]]))
                 pred_original_sample = model_output['pred']
             else:
-                model_output = model(x, t)['outputs']
+                model_output = model(x, t)['sample']
                 model_output, predicted_variance = torch.split(
                     model_output, x.shape[1], dim=1)
                 alpha_prod_t = 1 - beta_prod_t
