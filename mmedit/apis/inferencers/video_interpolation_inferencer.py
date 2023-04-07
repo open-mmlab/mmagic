@@ -135,7 +135,6 @@ class VideoInterpolationInferencer(BaseMMEditInferencer):
         output_index = self.extra_parameters['start_idx']
         for start_index in range(self.extra_parameters['start_idx'],
                                  self.extra_parameters['end_idx'], step_size):
-
             images = read_frames(
                 source,
                 start_index,
