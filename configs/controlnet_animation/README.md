@@ -50,6 +50,10 @@ We use pretrained model from hugging face.
 
 ## Quick Start
 
+There are two ways to try controlnet animation.
+
+### 1. Use MMedit inference API.
+
 Running the following codes, you can get an generated animation video.
 
 ```python
@@ -69,6 +73,12 @@ save_path = '/path/to/your/output/video.mp4'
 
 # Do the inference to get result
 editor.infer(video=video, prompt=prompt, negative_prompt=negative_prompt, save_path=save_path)
+```
+
+### 2. Use controlnet animation gradio demo.
+
+```python
+python demo/gradio_controlnet_animation.py
 ```
 
 ## Citation
