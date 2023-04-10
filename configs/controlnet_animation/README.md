@@ -10,8 +10,11 @@
 
 <!-- [ABSTRACT] -->
 
-ControlNet is a neural network structure to control diffusion models by adding extra conditions.
-We use controlnet to generate frames guided by input video and make animation.
+It is difficult to avoid video frame flickering when using stable diffusion to generate video frame by frame.
+Here we reproduce a method that effectively avoids video flickering, that is, using controlnet and multi-frame rendering.
+[ControlNet](https://github.com/lllyasviel/ControlNet) is a neural network structure to control diffusion models by adding extra conditions.
+[Multi-frame rendering](https://xanthius.itch.io/multi-frame-rendering-for-stablediffusion) is a community method to reduce flickering.
+We use controlnet with hed condition and stable diffusion img2img for multi-frame rendering.
 
 ## Demos
 
