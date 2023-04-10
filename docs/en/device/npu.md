@@ -20,7 +20,7 @@ python tools/train.py configs/edsr/edsr_x2c64b16_1xb16-300k_div2k.py
 
 |                                           Model                                            | Dataset | PSNR  | SSIM | Download                                                                                       |
 | :----------------------------------------------------------------------------------------: | ------- | :---: | :--- | :--------------------------------------------------------------------------------------------- |
-| [edsr_x2c64b16_1x16_300k_div2k](https://github.com/open-mmlab/mmediting/blob/main/configs/edsr/edsr_x2c64b16_1xb16-300k_div2k.py) | DIV2K   | 35.83 | 0.94 | [log](https://download.openmmlab.com/mmediting/restorers/device/npu/edsr_x2c64b16_1xb16-300k_div2k.log) |
+| [edsr_x2c64b16_1x16_300k_div2k](https://github.com/open-mmlab/mmediting/blob/main/configs/edsr/edsr_x2c64b16_1xb16-300k_div2k.py) | DIV2K   | 35.83 | 0.94 | [log](https://download.openmmlab.com/mmediting/device/npu/edsr/edsr_x2c64b16_1xb16-300k_div2k.log) |
 
 **Notes:**
 
