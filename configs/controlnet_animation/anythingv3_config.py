@@ -2,6 +2,7 @@
 stable_diffusion_v15_url = 'Linaqruf/anything-v3.0'
 controlnet_hed_url = 'lllyasviel/sd-controlnet-hed'
 control_detector = 'lllyasviel/ControlNet'
+control_scheduler = 'UniPCMultistepScheduler'
 
 model = dict(
     type='ControlStableDiffusionImg2Img',

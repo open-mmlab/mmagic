@@ -6,19 +6,47 @@ import cv2
 import mmcv
 import numpy as np
 import PIL.Image
+import requests
 import torch
 from controlnet_aux import HEDdetector
-from diffusers import UniPCMultistepScheduler
-from diffusers.training_utils import set_seed
-from diffusers.utils import load_image
 from mmengine.config import Config
+from mmengine.runner import set_random_seed
 
-from mmedit.registry import MODELS
+from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
 from mmedit.utils import ConfigType
 from .base_mmedit_inferencer import BaseMMEditInferencer
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 IMAGE_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG')
+
+
+def load_image(image: Union[str, PIL.Image.Image]) -> PIL.Image.Image:
+    """
+    Args:
+    Loads `image` to a PIL Image.
+        image (`str` or `PIL.Image.Image`):
+            The image to convert to the PIL Image format.
+    Returns:
+        `PIL.Image.Image`: A PIL Image.
+    """
+    if isinstance(image, str):
+        if image.startswith('http://') or image.startswith('https://'):
+            image = PIL.Image.open(requests.get(image, stream=True).raw)
+        elif os.path.isfile(image):
+            image = PIL.Image.open(image)
+        else:
+            raise ValueError(
+                f'Incorrect path or url, URLs must start with `http://` '
+                f'or `https://`, and {image} is not a valid path')
+    elif isinstance(image, PIL.Image.Image):
+        image = image
+    else:
+        raise ValueError(
+            'Incorrect format used for image. Should be an url linking'
+            ' to an image, a local path, or a PIL image.')
+    image = PIL.ImageOps.exif_transpose(image)
+    image = image.convert('RGB')
+    return image
 
 
 class ControlnetAnimationInferencer(BaseMMEditInferencer):
@@ -50,8 +78,13 @@ class ControlnetAnimationInferencer(BaseMMEditInferencer):
         cfg = Config.fromfile(config)
         self.hed = HEDdetector.from_pretrained(cfg.control_detector)
         self.pipe = MODELS.build(cfg.model).cuda()
-        self.pipe.test_scheduler = UniPCMultistepScheduler.from_config(
-            self.pipe.scheduler.config)
+
+        control_scheduler_cfg = dict(
+            type=cfg.control_scheduler,
+            from_config=self.pipe.scheduler.config,
+        )
+        control_scheduler = DIFFUSION_SCHEDULERS.build(control_scheduler_cfg)
+        self.pipe.test_scheduler = control_scheduler
 
     @torch.no_grad()
     def __call__(self,
@@ -79,7 +112,7 @@ class ControlnetAnimationInferencer(BaseMMEditInferencer):
             datestring = datetime.now().strftime('%y%m%d-%H%M%S')
             save_path = '/tmp/' + datestring + '.mp4'
 
-        set_seed(seed)
+        set_random_seed(seed)
 
         latent_width = image_width // 8
         latent_height = image_height // 8

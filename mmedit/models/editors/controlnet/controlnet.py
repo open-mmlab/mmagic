@@ -6,7 +6,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from diffusers.utils import randn_tensor
 from mmengine import print_log
 from mmengine.model import is_model_wrapper
 from mmengine.optim import OptimWrapperDict
@@ -624,7 +623,7 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
 
         shape = init_latents.shape
         if noise is None:
-            noise = randn_tensor(
+            noise = torch.randn(
                 shape, generator=generator, device=device, dtype=dtype)
 
         # get latents
