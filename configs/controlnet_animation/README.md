@@ -52,7 +52,7 @@ We use pretrained model from hugging face.
 
 There are two ways to try controlnet animation.
 
-### 1. Use MMedit inference API.
+### 1. Use MMEdit inference API.
 
 Running the following codes, you can get an generated animation video.
 
