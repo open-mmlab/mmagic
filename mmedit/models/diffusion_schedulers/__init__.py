@@ -85,7 +85,7 @@ class SchedulerWrapper:
         if self._from_pretrained:
             prefix += f'From Pretrained: {self._from_pretrained}\n'
         if self._from_config:
-            prefix += f'From Pretrained: {self._from_config}\n'
+            prefix += f'From Config: {self._from_config}\n'
         s = prefix + s
         return s
 
