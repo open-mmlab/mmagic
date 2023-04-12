@@ -73,17 +73,21 @@ class Glide(BaseModel):
                  pretrained_cfgs: Optional[dict] = None):
 
         super().__init__(data_preprocessor=data_preprocessor)
-        self.unet = MODELS.build(unet)
+        self.unet = unet if isinstance(unet, nn.Module) else MODELS.build(unet)
         self.diffusion_scheduler = DIFFUSION_SCHEDULERS.build(
-            diffusion_scheduler)
+            diffusion_scheduler) if isinstance(diffusion_scheduler,
+                                               dict) else diffusion_scheduler
 
         self.unet_up = None
         self.diffusion_scheduler_up = None
         if unet_up:
-            self.unet_up = MODELS.build(unet_up)
+            self.unet_up = unet_up if isinstance(
+                unet_up, nn.Module) else MODELS.build(unet_up)
             if diffusion_scheduler_up:
                 self.diffusion_scheduler_up = DIFFUSION_SCHEDULERS.build(
-                    diffusion_scheduler_up)
+                    diffusion_scheduler_up) if isinstance(
+                        diffusion_scheduler_up,
+                        dict) else diffusion_scheduler_up
             else:
                 self.diffusion_scheduler_up = deepcopy(
                     self.diffusion_scheduler)
