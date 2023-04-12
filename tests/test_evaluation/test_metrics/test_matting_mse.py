@@ -52,19 +52,19 @@ class TestMattingMetrics:
 
         cls.data_samples = [d_['data_samples'] for d_ in cls.data_batch]
 
-        cls.bad_preds1_ = [{'pred_alpha': dict(data=pred_alpha)}]
+        cls.bad_preds1_ = [{'pred_alpha': pred_alpha}]
         # pred_alpha should be masked by trimap before evaluation
         cls.bad_preds1 = copy.deepcopy(cls.data_samples)
         for d, p in zip(cls.bad_preds1, cls.bad_preds1_):
             d['output'] = p
 
-        cls.bad_preds2_ = [{'pred_alpha': dict(data=pred_alpha[0])}]
+        cls.bad_preds2_ = [{'pred_alpha': pred_alpha[0]}]
         # pred_alpha should be 3 dimensional
         cls.bad_preds2 = copy.deepcopy(cls.data_samples)
         for d, p in zip(cls.bad_preds2, cls.bad_preds2_):
             d['output'] = p
 
-        cls.good_preds_ = [{'pred_alpha': dict(data=masked_pred_alpha)}]
+        cls.good_preds_ = [{'pred_alpha': masked_pred_alpha}]
         cls.good_preds = copy.deepcopy((cls.data_samples))
         for d, p in zip(cls.good_preds, cls.good_preds_):
             d['output'] = p

@@ -1,5 +1,40 @@
 # Changelog
 
+## v1.0.0rc7 (07/04/2023)
+
+**Highlights**
+
+We are excited to announce the release of MMEditing 1.0.0rc7. This release supports 51+ models, 226+ configs and 212+ checkpoints in MMGeneration and MMEditing. We highlight the following new features
+
+- Support DiffuserWrapper
+- Support ControlNet (training and inference).
+- Support PyTorch 2.0.
+
+**New Features & Improvements**
+
+- Support DiffuserWrapper. [#1692](https://github.com/open-mmlab/mmediting/pull/1692)
+- Support ControlNet (training and inference). [#1744](https://github.com/open-mmlab/mmediting/pull/1744)
+- Support PyTorch 2.0 (successfully compile 33+ models on 'inductor' backend). [#1742](https://github.com/open-mmlab/mmediting/pull/1742)
+- Support Image Super-Resolution and Video Super-Resolution models inferencer. [#1662](https://github.com/open-mmlab/mmediting/pull/1662), [#1720](https://github.com/open-mmlab/mmediting/pull/1720)
+- Refactor tools/get_flops script. [#1675](https://github.com/open-mmlab/mmediting/pull/1675)
+- Refactor dataset_converters and documents for datasets. [#1690](https://github.com/open-mmlab/mmediting/pull/1690)
+- Move stylegan ops to MMCV. [#1383](https://github.com/open-mmlab/mmediting/pull/1383)
+
+**Bug Fixes**
+
+- Fix disco inferencer. [#1673](https://github.com/open-mmlab/mmediting/pull/1673)
+- Fix nafnet optimizer config. [#1716](https://github.com/open-mmlab/mmediting/pull/1716)
+- Fix tof typo. [#1711](https://github.com/open-mmlab/mmediting/pull/1711)
+
+**Contributors**
+
+A total of 8 developers contributed to this release.
+Thanks @LeoXing1996, @Z-Fran, @plyfager, @zengyh1900, @liuwenran, @ryanxingql, @HAOCHENYE, @VongolaWu
+
+**New Contributors**
+
+- @HAOCHENYE made their first contribution in https://github.com/open-mmlab/mmediting/pull/1712
+
 ## v1.0.0rc6 (02/03/2023)
 
 **Highlights**
@@ -227,4 +262,4 @@ MMEditing 1.0.0rc0 is the first version of MMEditing 1.x, a part of the OpenMMLa
 
 Built upon the new [training engine](https://github.com/open-mmlab/mmengine), MMEditing 1.x unifies the interfaces of dataset, models, evaluation, and visualization.
 
-And there are some BC-breaking changes. Please check [the migration tutorial](https://mmediting.readthedocs.io/en/1.x/migration/overview.html) for more details.
+And there are some BC-breaking changes. Please check [the migration tutorial](https://mmediting.readthedocs.io/en/latest/migration/overview.html) for more details.

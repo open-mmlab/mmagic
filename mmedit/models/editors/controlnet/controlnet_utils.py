@@ -29,18 +29,19 @@ def change_base_model(controlnet: nn.Module,
 
         *args, **kwargs: Arguments for `save_checkpoint`.
     """
+    dtype = next(controlnet.parameters()).dtype
     base_state_dict = base_model.state_dict()
     curr_state_dict = curr_model.state_dict()
 
     print_log('Start convert ControlNet to new Unet.', 'current')
     for k, v in controlnet.state_dict().items():
         if k in base_state_dict:
-            base_v = base_state_dict[k]
-            curr_v = curr_state_dict[k]
+            base_v = base_state_dict[k].cpu()
+            curr_v = curr_state_dict[k].cpu()
             try:
-                offset = v - base_v
+                offset = v.cpu() - base_v
                 new_v = offset + curr_v
-                controlnet.state_dict()[k].data.copy_(new_v)
+                controlnet.state_dict()[k].data.copy_(new_v.to(dtype))
                 print_log(f'Convert success: \'{k}\'.', 'current')
             except Exception as exception:
                 print_log(

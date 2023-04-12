@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y git ninja-build libglib2.0-0 libsm6 lib
 
 # Install mmediting
 RUN conda clean --all
-RUN git clone -b 1.x https://github.com/open-mmlab/mmediting.git /mmediting
+RUN git clone https://github.com/open-mmlab/mmediting.git /mmediting
 WORKDIR /mmediting
 ENV FORCE_CUDA="1"
 RUN pip install openmim
