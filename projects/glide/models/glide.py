@@ -132,6 +132,7 @@ class Glide(BaseModel):
               batch_size: Optional[int] = 1,
               guidance_scale: float = 3.,
               num_inference_steps: int = 50,
+              num_inference_steps_up: Optional[int] = 27,
               labels: Optional[torch.Tensor] = None,
               classifier_scale: float = 0.0,
               show_progress: Optional[bool] = False):
@@ -145,6 +146,8 @@ class Glide(BaseModel):
                 Defaults to 1.
             num_inference_steps (int, optional): The number of denoising steps.
                 Defaults to 50.
+            num_inference_steps_up (int, optional): The number of upsampling
+                denoising steps. Defaults to 27.
             labels (torch.Tensor, optional): Labels for the classifier.
                 Defaults to None.
             show_progress (bool, optional): Whether to show the progress bar.
@@ -224,7 +227,10 @@ class Glide(BaseModel):
 
         if self.unet_up:
             image = self.infer_up(
-                low_res_img=image, batch_size=batch_size, prompt=prompt)
+                low_res_img=image,
+                batch_size=batch_size,
+                prompt=prompt,
+                num_inference_steps=num_inference_steps_up)
 
         return {'samples': image}
 

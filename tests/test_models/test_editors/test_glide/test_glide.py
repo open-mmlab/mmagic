@@ -1,4 +1,13 @@
-unet_cfg = dict(
+# Copyright (c) OpenMMLab. All rights reserved.
+import pytest
+import torch
+from mmengine import MODELS, Config
+
+from mmedit.utils import register_all_modules
+
+register_all_modules()
+
+unet = dict(
     type='Text2ImUNet',
     image_size=64,
     base_channels=192,
@@ -24,7 +33,13 @@ unet_cfg = dict(
     xf_final_ln=True,
     xf_padding=True,
 )
-unet_up_cfg = dict(
+
+diffusion_scheduler = dict(
+    type='EditDDIMScheduler',
+    variance_type='learned_range',
+    beta_schedule='squaredcos_cap_v2')
+
+unet_up = dict(
     type='SuperResText2ImUNet',
     image_size=256,
     base_channels=192,
@@ -52,18 +67,38 @@ unet_up_cfg = dict(
     xf_padding=True,
 )
 
+diffusion_scheduler_up = dict(
+    type='EditDDIMScheduler',
+    variance_type='learned_range',
+    beta_schedule='linear')
+
 model = dict(
     type='Glide',
     data_preprocessor=dict(
         type='EditDataPreprocessor', mean=[127.5], std=[127.5]),
-    unet=unet_cfg,
-    diffusion_scheduler=dict(
-        type='EditDDIMScheduler',
-        variance_type='learned_range',
-        beta_schedule='squaredcos_cap_v2'),
-    unet_up=unet_up_cfg,
-    diffusion_scheduler_up=dict(
-        type='EditDDIMScheduler',
-        variance_type='learned_range',
-        beta_schedule='linear'),
+    unet=unet,
+    diffusion_scheduler=diffusion_scheduler,
+    unet_up=unet_up,
+    diffusion_scheduler_up=diffusion_scheduler_up,
     use_fp16=False)
+
+
+def test_glide():
+    glide = MODELS.build(Config(model))
+    prompt = 'an oil painting of a corgi'
+
+    with pytest.raises(Exception):
+        glide.infer(
+            prompt=prompt,
+            batch_size=1,
+            num_inference_steps=1,
+            num_inference_steps_up=1)
+
+    result = glide.infer(
+        init_image=torch.randn(1, 3, 64, 64),
+        prompt=prompt,
+        batch_size=1,
+        guidance_scale=3.0,
+        num_inference_steps=1,
+        num_inference_steps_up=1)
+    assert result['samples'].shape == (1, 3, 256, 256)
