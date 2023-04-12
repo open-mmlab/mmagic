@@ -12,10 +12,8 @@ from mmengine.optim import OptimWrapperDict
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
-
-from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
+from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
 from mmedit.structures import EditDataSample
-
 from mmedit.utils.typing import ForwardInputs, SampleList
 
 ModelType = Union[Dict, nn.Module]
@@ -32,33 +30,47 @@ def classifier_grad(classifier, x, t, y=None, classifier_scale=1.0):
         return torch.autograd.grad(selected.sum(), x_in)[0] * classifier_scale
 
 
+@MODELS.register_module('GLIDE')
 @MODELS.register_module()
 class Glide(BaseModel):
-    """Guided diffusion Model.
+    """GLIDE: Guided language to image diffusion for generation and editing.
+        Refer to: https://github.com/openai/glide-text2im.
+
 
     Args:
-        data_preprocessor (dict, optional): The pre-process config of
+        data_preprocessor (dict, optional): The pre-process configuration for
             :class:`BaseDataPreprocessor`.
-        unet (ModelType): Config of denoising Unet.
-        diffusion_scheduler (ModelType): Config of diffusion_scheduler
+        unet (ModelType): Configuration for the denoising Unet.
+        diffusion_scheduler (ModelType): Configuration for the diffusion
             scheduler.
-        use_fp16 (bool): Whether to use fp16 for unet model. Defaults to False.
-        classifier (ModelType): Config of classifier. Defaults to None.
-        pretrained_cfgs (dict): Path Config for pretrained weights. Usually
-            this is a dict contains module name and the corresponding ckpt
-            path.Defaults to None.
+        unet_up (ModelType, optional): Configuration for the upsampling
+            denoising UNet. Defaults to None.
+        diffusion_scheduler_up (ModelType, optional): Configuration for
+            the upsampling diffusion scheduler. Defaults to None.
+        use_fp16 (bool, optional): Whether to use fp16 for the unet model.
+            Defaults to False.
+        classifier (ModelType, optional): Configuration for the classifier.
+            Defaults to None.
+        classifier_scale (float): Classifier scale for classifier guidance.
+            Defaults to 1.0.
+        data_preprocessor (Optional[ModelType]): Configuration for the data
+            preprocessor.
+        pretrained_cfgs (dict, optional): Path configuration for pretrained
+            weights. Usually, this is a dict containing the module name and
+            the corresponding ckpt path. Defaults to None.
     """
 
     def __init__(self,
-                 data_preprocessor,
-                 unet,
-                 diffusion_scheduler,
-                 unet_up=None,
-                 diffusion_scheduler_up=None,
-                 use_fp16=False,
-                 classifier=None,
-                 classifier_scale=1.0,
-                 pretrained_cfgs=None):
+                 unet: ModelType,
+                 diffusion_scheduler: ModelType,
+                 unet_up: Optional[ModelType] = None,
+                 diffusion_scheduler_up: Optional[ModelType] = None,
+                 use_fp16: Optional[bool] = False,
+                 classifier: Optional[dict] = None,
+                 classifier_scale: float = 1.0,
+                 data_preprocessor: Optional[ModelType] = dict(
+                     type='EditDataPreprocessor'),
+                 pretrained_cfgs: Optional[dict] = None):
 
         super().__init__(data_preprocessor=data_preprocessor)
         self.unet = MODELS.build(unet)
@@ -115,26 +127,31 @@ class Glide(BaseModel):
 
     @torch.no_grad()
     def infer(self,
-              init_image=None,
-              prompt=None,
-              batch_size=1,
-              guidance_scale=3.,
-              num_inference_steps=50,
-              labels=None,
-              classifier_scale=0.0,
-              show_progress=False):
-        """_summary_
+              init_image: Optional[torch.Tensor] = None,
+              prompt: str = None,
+              batch_size: Optional[int] = 1,
+              guidance_scale: float = 3.,
+              num_inference_steps: int = 50,
+              labels: Optional[torch.Tensor] = None,
+              classifier_scale: float = 0.0,
+              show_progress: Optional[bool] = False):
+        """Inference function for guided diffusion.
 
         Args:
-            init_image (_type_, optional): _description_. Defaults to None.
-            batch_size (int, optional): _description_. Defaults to 1.
-            num_inference_steps (int, optional): _description_.
-                Defaults to 1000.
-            labels (_type_, optional): _description_. Defaults to None.
-            show_progress (bool, optional): _description_. Defaults to False.
+            init_image (torch.Tensor, optional): Starting noise for diffusion.
+                Defaults to None.
+            prompt (str): The prompt to guide the image generation.
+            batch_size (int, optional): Batch size for generation.
+                Defaults to 1.
+            num_inference_steps (int, optional): The number of denoising steps.
+                Defaults to 50.
+            labels (torch.Tensor, optional): Labels for the classifier.
+                Defaults to None.
+            show_progress (bool, optional): Whether to show the progress bar.
+                Defaults to False.
 
         Returns:
-            _type_: _description_
+            torch.Tensor: Generated images.
         """
         # Sample gaussian noise to begin loop
         if init_image is None:
@@ -213,24 +230,30 @@ class Glide(BaseModel):
 
     @torch.no_grad()
     def infer_up(self,
-                 low_res_img,
-                 batch_size=1,
-                 init_image=None,
-                 prompt=None,
-                 num_inference_steps=27,
-                 show_progress=False):
-        """_summary_
+                 low_res_img: torch.Tensor,
+                 batch_size: int = 1,
+                 init_image: Optional[torch.Tensor] = None,
+                 prompt: Optional[str] = None,
+                 num_inference_steps: int = 27,
+                 show_progress: bool = False):
+        """Inference function for upsampling guided diffusion.
 
         Args:
-            init_image (_type_, optional): _description_. Defaults to None.
-            batch_size (int, optional): _description_. Defaults to 1.
-            num_inference_steps (int, optional): _description_.
-                Defaults to 1000.
-            labels (_type_, optional): _description_. Defaults to None.
-            show_progress (bool, optional): _description_. Defaults to False.
+            low_res_img (torch.Tensor): Low resolution image
+                (shape: [B, C, H, W]) for upsampling.
+            batch_size (int, optional): Batch size for generation.
+                Defaults to 1.
+            init_image (torch.Tensor, optional): Starting noise
+                (shape: [B, C, H, W]) for diffusion. Defaults to None.
+            prompt (str, optional): The text prompt to guide the image
+                generation. Defaults to None.
+            num_inference_steps (int, optional): The number of denoising
+                steps. Defaults to 27.
+            show_progress (bool, optional): Whether to show the progress bar.
+                Defaults to False.
 
         Returns:
-            _type_: _description_
+            torch.Tensor: Generated upsampled images (shape: [B, C, H, W]).
         """
         if init_image is None:
             image = torch.randn(
