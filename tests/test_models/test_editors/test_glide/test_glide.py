@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 import unittest
 from copy import deepcopy
 from unittest import TestCase
@@ -12,7 +13,7 @@ from projects.glide.models import Glide, SuperResText2ImUNet, Text2ImUNet
 register_all_modules()
 
 
-class TestDiscoDiffusion(TestCase):
+class TestGLIDE(TestCase):
 
     def setUp(self):
         # low resolution cfg
@@ -101,6 +102,9 @@ class TestDiscoDiffusion(TestCase):
             diffusion_scheduler_up=diffusion_scheduler_up)
 
     @unittest.skipIf(not torch.cuda.is_available(), reason='requires cuda')
+    @unittest.skipIf(
+        'win' in platform.system().lower(),
+        reason='skip on windows due to limited RAM.')
     def test_infer(self):
         # test low resolution
         unet = deepcopy(self.unet)
