@@ -427,6 +427,36 @@ class StableDiffusion(BaseModel):
             extra_step_kwargs['generator'] = generator
         return extra_step_kwargs
 
+    def prepare_test_scheduler_extra_step_kwargs(self, generator, eta):
+        """prepare extra kwargs for the scheduler step.
+
+        Args:
+            generator (torch.Generator):
+                generator for random functions.
+            eta (float):
+                eta (η) is only used with the DDIMScheduler,
+                it will be ignored for other schedulers.
+                eta corresponds to η in DDIM paper:
+                https://arxiv.org/abs/2010.02502
+                and should be between [0, 1]
+
+        Return:
+            extra_step_kwargs (dict):
+                dict contains 'generator' and 'eta'
+        """
+        accepts_eta = 'eta' in set(
+            inspect.signature(self.test_scheduler.step).parameters.keys())
+        extra_step_kwargs = {}
+        if accepts_eta:
+            extra_step_kwargs['eta'] = eta
+
+        # check if the scheduler accepts generator
+        accepts_generator = 'generator' in set(
+            inspect.signature(self.test_scheduler.step).parameters.keys())
+        if accepts_generator:
+            extra_step_kwargs['generator'] = generator
+        return extra_step_kwargs
+
     def check_inputs(self, prompt, height, width):
         """check whether inputs are in suitable format or not."""
 

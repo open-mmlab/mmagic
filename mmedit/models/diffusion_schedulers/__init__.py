@@ -40,14 +40,22 @@ class SchedulerWrapper:
             `self._module_cls(*args, **kwargs)`.
     """
 
-    def __init__(self, from_pretrained=None, *args, **kwargs):
+    def __init__(self,
+                 from_pretrained=None,
+                 from_config=None,
+                 *args,
+                 **kwargs):
 
         scheduler_cls = self._scheduler_cls
 
         self._from_pretrained = from_pretrained
+        self._from_config = from_config
         if self._from_pretrained:
             self.scheduler = scheduler_cls.from_pretrained(
                 from_pretrained, *args, **kwargs)
+        elif self._from_config:
+            self.scheduler = scheduler_cls.from_config(from_config, *args,
+                                                       **kwargs)
         else:
             self.scheduler = scheduler_cls(*args, **kwargs)
 
@@ -76,6 +84,8 @@ class SchedulerWrapper:
         prefix += f'Wrapped Scheduler Name: {self._scheduler_name}\n'
         if self._from_pretrained:
             prefix += f'From Pretrained: {self._from_pretrained}\n'
+        if self._from_config:
+            prefix += f'From Config: {self._from_config}\n'
         s = prefix + s
         return s
 
