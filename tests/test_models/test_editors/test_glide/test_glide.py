@@ -85,6 +85,9 @@ class TestGLIDE(TestCase):
         self.diffusion_scheduler_up = EditDDIMScheduler(
             **diffusion_scheduler_up_cfg)
 
+    @unittest.skipIf(
+        'win' in platform.system().lower(),
+        reason='skip on windows due to limited RAM.')
     def test_init(self):
         # low resolution
         unet = deepcopy(self.unet)
