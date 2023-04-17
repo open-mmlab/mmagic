@@ -31,9 +31,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Upgrade pip
-        run: pip install pip --upgrade && pip list
+        run: pip install pip --upgrade && pip list && python -V
       - name: Install PyTorch
-        run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html && pip list
+        run: python pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html && pip list
       - name: Install MMEngine
         run: pip install git+https://github.com/open-mmlab/mmengine.git@main
       - name: Install MMCV
