@@ -44,7 +44,7 @@ jobs:
         run: |
           pip install -r requirements/tests.txt
       - name: Build and install
-        run: rm -rf .eggs && pip install -e .
+        run: pip install -e .
       - name: Run unittests and generate coverage report
         run: |
           coverage run --branch --source mmedit -m pytest tests/
