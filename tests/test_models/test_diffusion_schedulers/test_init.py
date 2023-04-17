@@ -18,7 +18,7 @@ class TestWrapper(TestCase):
             num_train_timesteps=2000,
             beta_schedule='scaled_linear')
         scheduler = DIFFUSION_SCHEDULERS.build(config)
-        self.assertEqual(scheduler.num_train_timesteps, 2000)
+        self.assertEqual(scheduler.num_timesteps, 2000)
         self.assertEqual(scheduler.beta_schedule, 'scaled_linear')
         scheduler_str = repr(scheduler)
         self.assertIn(
