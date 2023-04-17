@@ -26,7 +26,7 @@ def test_is_evaluator():
     assert not is_evaluator(evaluator)
 
     evaluator = dict(type='PSNR')
-    assert not is_evaluator(evaluator)
+    assert is_evaluator(evaluator)
 
 
 def test_update_and_check_evaluator():
@@ -58,3 +58,7 @@ def test_update_and_check_evaluator():
     evaluator = dict(type='EditEvaluator', metrics=[dict(type='PSNR')])
     evaluator = update_and_check_evaluator(evaluator)
     assert evaluator['type'] == 'EditEvaluator'
+
+    evaluator = dict(type='EditEvaluator')
+    evaluator = update_and_check_evaluator(evaluator)
+    assert evaluator['metrics'] is None
