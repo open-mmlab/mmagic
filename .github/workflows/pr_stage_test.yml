@@ -30,8 +30,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      # - name: Upgrade pip
-        # run: python -V && python -m pip install pip --upgrade && pip list && python -V
+      - name: Upgrade pip
+        run: pip install pip --upgrade && pip install wheel
       - name: Install PyTorch
         run: pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html && pip list
       - name: Install MMEngine
