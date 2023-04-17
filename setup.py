@@ -6,6 +6,7 @@ import sys
 import warnings
 from setuptools import find_packages, setup
 
+import mmengine
 import torch
 from torch.utils.cpp_extension import (BuildExtension, CppExtension,
                                        CUDAExtension)
@@ -230,6 +231,7 @@ def add_mim_extention():
 
 
 if __name__ == '__main__':
+    print(mmengine.__version__)
     add_mim_extention()
     setup(
         name='mmedit',
