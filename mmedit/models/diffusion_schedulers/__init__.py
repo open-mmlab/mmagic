@@ -73,7 +73,7 @@ class SchedulerWrapper:
         try:
             return getattr(self.scheduler, name)
         except AttributeError:
-            raise AttributeError('\'name\' cannot be found in both '
+            raise AttributeError(f'{name} cannot be found in both '
                                  f'\'{self.__class__.__name__}\' and '
                                  f'\'{self.__class__.__name__}.scheduler\'.')
 
