@@ -92,7 +92,7 @@ class GenVisualizer(Visualizer):
 
         n_samples = sample_shape[0]
         if n_row is None:
-            n_row = int(math.sqrt(n_samples))
+            n_row = math.ceil(math.sqrt(n_samples))
         if n_samples % n_row == 0:
             n_padding = 0
         else:
@@ -267,7 +267,7 @@ class GenVisualizer(Visualizer):
                        gen_samples: Sequence[EditDataSample],
                        target_keys: Optional[Tuple[str, List[str]]] = None,
                        vis_mode: Optional[str] = None,
-                       n_row: Optional[int] = 1,
+                       n_row: Optional[int] = None,
                        show: bool = False,
                        wait_time: int = 0,
                        step: int = 0,
@@ -286,7 +286,8 @@ class GenVisualizer(Visualizer):
             gen_samples (List[EditDataSample]): Data samples to visualize.
             vis_mode (str, optional): Visualization mode. If not passed, will
                 visualize results as image. Defaults to None.
-            n_rows (int, optional): Number of images in one row. Defaults to 1.
+            n_rows (int, optional): Number of images in one row.
+                Defaults to None.
             color_order (str): The color order of the passed images. Defaults
                 to 'bgr'.
             target_mean (Sequence[Union[float, int]]): The target mean of the
