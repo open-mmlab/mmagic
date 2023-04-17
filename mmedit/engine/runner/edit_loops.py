@@ -148,8 +148,9 @@ class EditValLoop(BaseLoop):
         # Input type checking and packing
         # 1. Single evaluator without type: [dict(), dict(), ...]
         # 2. Single evaluator with type: dict(type=xx, metrics=xx)
-        # 3. Multi evaluator without type: [[dict, ...], [dict, ...]]
-        # 4. Multi evaluator with type: [dict(type=xx, metrics=xx), dict(...)]
+        # 3. Single evaluator (metric): dict(type=METRIC)
+        # 4. Multi evaluator without type: [[dict, ...], [dict, ...]]
+        # 5. Multi evaluator with type: [dict(type=xx, metrics=xx), dict(...)]
         if is_evaluator(evaluator):
             evaluator = [update_and_check_evaluator(evaluator)]
         else:
@@ -398,8 +399,9 @@ class EditTestLoop(BaseLoop):
         # Input type checking and packing
         # 1. Single evaluator without type: [dict(), dict(), ...]
         # 2. Single evaluator with type: dict(type=xx, metrics=xx)
-        # 3. Multi evaluator without type: [[dict, ...], [dict, ...]]
-        # 4. Multi evaluator with type: [dict(type=xx, metrics=xx), dict(...)]
+        # 3. Single evaluator (metric): dict(type=METRIC)
+        # 4. Multi evaluator without type: [[dict, ...], [dict, ...]]
+        # 5. Multi evaluator with type: [dict(type=xx, metrics=xx), dict(...)]
         if is_evaluator(evaluator):
             evaluator = [update_and_check_evaluator(evaluator)]
         else:
