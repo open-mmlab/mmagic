@@ -459,6 +459,6 @@ class GenVisualizationHook(Hook):
                 gen_samples=gen_samples,
                 target_keys=key,
                 vis_mode=vis_mode,
-                n_row=min(self.n_row, num_batches),
+                n_row=min(self.n_row, num_batches) if self.n_row else None,
                 show=self.show,
                 step=batch_idx)
