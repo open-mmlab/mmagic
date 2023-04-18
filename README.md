@@ -190,7 +190,7 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
           <li><a href="configs/dcgan/README.md">DCGAN (ICLR'2016)</a></li>
           <li><a href="configs/wgan-gp/README.md">WGAN-GP (NeurIPS'2017)</a></li>
           <li><a href="configs/lsgan/README.md">LSGAN (ICCV'2017)</a></li>
-          <li><a href="configs/ggan/README.md">PGGAN (ArXiv'2017)</a></li>
+          <li><a href="configs/ggan/README.md">GGAN (ArXiv'2017)</a></li>
           <li><a href="configs/pggan/README.md">PGGAN (ICLR'2018)</a></li>
           <li><a href="configs/singan/README.md">SinGAN (ICCV'2019)</a></li>
           <li><a href="configs/styleganv1/README.md">StyleGANV1 (CVPR'2019)</a></li>

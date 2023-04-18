@@ -287,7 +287,7 @@ def make_lmdb(data_path,
         dataset = {}  # use dict to keep the order for multiprocessing
         shapes = {}
         print(f'Read images with multiprocessing, #thread: {n_thread} ...')
-        prog_bar = mmcv.ProgressBar(len(img_path_list))
+        prog_bar = mmengine.ProgressBar(len(img_path_list))
 
         def callback(arg):
             """get the image data and update prog_bar."""
@@ -315,7 +315,7 @@ def make_lmdb(data_path,
     env = lmdb.open(lmdb_path, map_size=data_size * 10)
 
     # write data to lmdb
-    prog_bar = mmcv.ProgressBar(len(img_path_list))
+    prog_bar = mmengine.ProgressBar(len(img_path_list))
     txn = env.begin(write=True)
     txt_file = open(osp.join(lmdb_path, 'meta_info.txt'), 'w')
     for idx, (path, key) in enumerate(zip(img_path_list, keys)):

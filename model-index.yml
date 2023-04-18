@@ -5,6 +5,7 @@ Import:
 - configs/biggan/metafile.yml
 - configs/cain/metafile.yml
 - configs/controlnet/metafile.yml
+- configs/controlnet_animation/metafile.yml
 - configs/cyclegan/metafile.yml
 - configs/dcgan/metafile.yml
 - configs/deepfillv1/metafile.yml
