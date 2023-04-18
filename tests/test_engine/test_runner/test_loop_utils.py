@@ -26,7 +26,7 @@ def test_is_evaluator():
     assert not is_evaluator(evaluator)
 
     evaluator = dict(type='PSNR')
-    assert is_evaluator(evaluator)
+    assert not is_evaluator(evaluator)
 
 
 def test_update_and_check_evaluator():

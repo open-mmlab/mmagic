@@ -58,7 +58,7 @@ def is_evaluator(evaluator: Any) -> bool:
             object.
     """
     # Single evaluator with type
-    if isinstance(evaluator, dict) and 'type' in evaluator:
+    if isinstance(evaluator, dict) and 'metrics' in evaluator:
         return True
     # Single evaluator without type
     elif (is_list_of(evaluator, dict)
