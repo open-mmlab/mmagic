@@ -19,15 +19,43 @@ ModelType = Union[Dict, nn.Module]
 
 @MODELS.register_module()
 class DreamBooth(StableDiffusion):
-    """
-    model = dict(
-        type='DreamBooth',
-        base_model=dict(
-            type='StableDiffusion',
-            unet=xxx,
-            text_encoder=xxx)
-        )
-    )
+    """Implementation of `DreamBooth with Stable Diffusion.
+
+    <https://arxiv.org/abs/2208.12242>`_ (DreamBooth).
+
+    Args:
+        vae (Union[dict, nn.Module]): The config or module for VAE model.
+        text_encoder (Union[dict, nn.Module]): The config or module for text
+            encoder.
+        tokenizer (str): The **name** for CLIP tokenizer.
+        unet (Union[dict, nn.Module]): The config or module for Unet model.
+        controlnet (Union[dict, nn.Module]): The config or module for
+            ControlNet.
+        schedule (Union[dict, nn.Module]): The config or module for diffusion
+            scheduler.
+        test_scheduler (Union[dict, nn.Module], optional): The config or
+            module for diffusion scheduler in test stage (`self.infer`). If not
+            passed, will use the same scheduler as `schedule`. Defaults to
+            None.
+        lora_config (dict, optional): The config for LoRA finetuning. Defaults
+            to None.
+        val_prompts (Union[str, List[str]], optional): The prompts for
+            validation. Defaults to None.
+        class_prior_prompt (str, optional): The prompt for class prior loss.
+        num_class_images (int, optional): The number of images for class prior.
+            Defaults to 3.
+        prior_loss_weight (float, optional): The weight for class prior loss.
+            Defaults to 0.
+        fine_tune_text_encoder (bool, optional): Whether to fine-tune text
+            encoder. Defaults to False.
+        dtype (str, optional): The dtype for the model. Defaults to 'fp16'.
+        enable_xformers (bool, optional): Whether to use xformers.
+            Defaults to True.
+        data_preprocessor (dict, optional): The pre-process config of
+            :class:`BaseDataPreprocessor`. Defaults to
+                dict(type='EditDataPreprocessor').
+        init_cfg (dict, optional): The weight initialized config for
+            :class:`BaseModule`. Defaults to None/
     """
 
     def __init__(self,
@@ -37,7 +65,7 @@ class DreamBooth(StableDiffusion):
                  unet: ModelType,
                  scheduler: ModelType,
                  test_scheduler: Optional[ModelType] = None,
-                 lora_config: dict = None,
+                 lora_config: Optional[dict] = None,
                  val_prompts: Union[str, List[str]] = None,
                  class_prior_prompt: Optional[str] = None,
                  num_class_images: Optional[int] = 3,
