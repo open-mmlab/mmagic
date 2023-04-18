@@ -164,7 +164,12 @@ class ControlnetAnimationInferencer(BaseMMEditInferencer):
         else:
             image = load_image(all_images[0])
         image = image.resize((image_width, image_height))
-        hed_image = self.hed(image, image_resolution=image_width)
+        detect_resolution = min(image_width, image_height)
+        hed_image = self.hed(
+            image,
+            detect_resolution=detect_resolution,
+            image_resolution=detect_resolution)
+        hed_image = hed_image.resize((image_width, image_height))
 
         result = self.pipe.infer(
             control=hed_image,
