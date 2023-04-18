@@ -27,7 +27,11 @@ class ControlNetDataset(BaseDataset):
     def __init__(self,
                  ann_file: str = 'prompt.json',
                  data_root: str = './data/fill50k',
+                 control_key='source',
+                 image_key='target',
                  pipeline: List[Union[dict, Callable]] = []):
+        self.control_key = control_key
+        self.image_key = image_key
         super().__init__(
             ann_file=ann_file, data_root=data_root, pipeline=pipeline)
 
@@ -43,8 +47,10 @@ class ControlNetDataset(BaseDataset):
 
         for anno in anno_list:
             anno = json.loads(anno)
-            source = anno['source']
-            target = anno['target']
+            # source = anno['source']
+            # target = anno['target']
+            source = anno[self.control_key]
+            target = anno[self.image_key]
             prompt = anno['prompt']
 
             source = os.path.join(self.data_root, source)
