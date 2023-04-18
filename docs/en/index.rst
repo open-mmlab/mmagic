@@ -152,6 +152,14 @@ Documentation
    migration/visualization.md
    migration/amp.md
 
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Device Support
+
+   device/npu.md
+
+
 .. toctree::
    :caption: Switch Language
 
