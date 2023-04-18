@@ -1,6 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import pytest
 import torch
 import torch.nn as nn
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmedit.models.base_archs import (LoRAWrapper, set_lora, set_lora_disable,
                                       set_lora_enable, set_only_lora_trainable)
@@ -55,6 +58,9 @@ class ToyModel(nn.Module):
         return out
 
 
+@pytest.mark.skipif(
+    digit_version(TORCH_VERSION) <= digit_version('1.8.1'),
+    reason='get_submodule requires torch >= 1.9.0')
 def test_set_lora():
     model = ToyModel()
 
