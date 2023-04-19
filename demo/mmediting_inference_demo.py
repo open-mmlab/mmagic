@@ -37,17 +37,17 @@ def parse_args():
         '--model-name',
         type=str,
         default=None,
-        help='Pretrained editing algorithm')
+        help='Pretrained mmagic algorithm')
     parser.add_argument(
         '--model-setting',
         type=int,
         default=None,
-        help='Pretrained editing algorithm setting')
+        help='Pretrained mmagic algorithm setting')
     parser.add_argument(
         '--model-config',
         type=str,
         default=None,
-        help='Path to the custom config file of the selected editing model.')
+        help='Path to the custom config file of the selected mmagic model.')
     parser.add_argument(
         '--model-ckpt',
         type=str,
