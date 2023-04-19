@@ -102,7 +102,7 @@ def main():
     parser.add_argument(
         'in-anno', type=str, help='Path to the official annotation file.')
     parser.add_argument(
-        'out-anno', type=str, help='Path to MMEditing\'s annotation file.')
+        'out-anno', type=str, help='Path to MMagicing\'s annotation file.')
     args = parser.parse_args()
 
     anno = load(args.in_anno)

@@ -81,7 +81,7 @@ from mmengine import Config, MODELS
 from mmengine.registry import init_default_scope
 from torchvision.utils import save_image
 
-init_default_scope('mmedit')
+init_default_scope('mmagic')
 
 disco = MODELS.build(
     Config.fromfile('configs/disco_diffusion/disco-baseline.py').model).cuda().eval()
