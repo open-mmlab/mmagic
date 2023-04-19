@@ -10,7 +10,7 @@ from torchvision import utils
 # yapf: disable
 sys.path.append(os.path.abspath(os.path.join(__file__, '../..')))  # isort:skip  # noqa
 
-from  mmagic.apis import init_model, sample_conditional_model  # isort:skip  # noqa
+from mmagic.apis import init_model, sample_conditional_model  # isort:skip  # noqa
 # yapf: enable
 
 
