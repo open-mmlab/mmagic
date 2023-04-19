@@ -13,8 +13,8 @@ from pathlib import Path
 
 from modelindex import load
 
-MMEditing_ROOT = Path(__file__).absolute().parent.parent
-DOWNLOAD_DIR = osp.join(MMEditing_ROOT, 'work_dirs', 'download')
+MMagic_ROOT = Path(__file__).absolute().parent.parent
+DOWNLOAD_DIR = osp.join(MMagic_ROOT, 'work_dirs', 'download')
 IS_WINDOWS = (platform.system() == 'Windows')
 
 
@@ -69,7 +69,7 @@ def parse_args():
 
 
 def download(args):
-    model_index_file = MMEditing_ROOT / 'model-index.yml'
+    model_index_file = MMagic_ROOT / 'model-index.yml'
     model_index = load(str(model_index_file))
     model_index.build_models_with_collections()
     models = OrderedDict({model.name: model for model in model_index.models})
