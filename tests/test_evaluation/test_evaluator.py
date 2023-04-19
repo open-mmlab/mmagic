@@ -182,3 +182,29 @@ class TestEditEvaluator(TestCase):
         evaluator.metrics = [metric_mock3, metric_mock4]
         with self.assertRaises(ValueError):
             evaluator.evaluate()
+
+
+class TestNonMetricEvaluator(TestCase):
+
+    def test_init(self):
+        evaluator = EditEvaluator(None)
+        self.assertIsNone(evaluator.metrics)
+
+    def test_prepare_metrics(self):
+        evaluator = EditEvaluator(None)
+        evaluator.prepare_metrics(None, None)
+        self.assertTrue(evaluator.is_ready)
+
+    def test_prepare_samplers(self):
+        evaluator = EditEvaluator(None)
+        metric_sampler_list = evaluator.prepare_samplers(None, None)
+        self.assertEqual(metric_sampler_list, [[[None], []]])
+
+    def test_process(self):
+        evaluator = EditEvaluator(None)
+        evaluator.process(None, None, None)
+
+    def test_evalute(self):
+        evaluator = EditEvaluator(None)
+        output = evaluator.evaluate()
+        self.assertEqual(output, {'No Metric': 'Nan'})
