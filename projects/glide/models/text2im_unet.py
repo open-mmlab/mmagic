@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 
-from mmedit.models import DenoisingUnet
-from mmedit.registry import MODELS
+from mmagic.models import DenoisingUnet
+from mmagic.registry import MODELS
 from .glide_modules import Transformer
 from .glide_tokenizer import get_encoder
 
