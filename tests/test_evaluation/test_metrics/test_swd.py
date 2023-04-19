@@ -5,9 +5,9 @@ from unittest.mock import MagicMock
 import numpy as np
 import torch
 
-from mmedit.evaluation import SlicedWassersteinDistance
-from mmedit.models import EditDataPreprocessor
-from mmedit.structures import EditDataSample
+from mmagic.evaluation import SlicedWassersteinDistance
+from mmagic.models import EditDataPreprocessor
+from mmagic.structures import EditDataSample
 
 
 class TestSWD(TestCase):

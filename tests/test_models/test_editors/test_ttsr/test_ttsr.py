@@ -7,12 +7,12 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import (LTE, TTSR, EditDataPreprocessor, SearchTransformer,
+from mmagic.models import (LTE, TTSR, EditDataPreprocessor, SearchTransformer,
                            TTSRDiscriminator, TTSRNet)
-from mmedit.models.losses import (GANLoss, L1Loss, PerceptualVGG,
+from mmagic.models.losses import (GANLoss, L1Loss, PerceptualVGG,
                                   TransferalPerceptualLoss)
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
+from mmagic.registry import MODELS
+from mmagic.structures import EditDataSample
 
 
 @pytest.mark.skipif(

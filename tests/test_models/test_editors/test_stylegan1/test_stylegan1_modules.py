@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors.stylegan1.stylegan1_modules import (
+from mmagic.models.editors.stylegan1.stylegan1_modules import (
     AdaptiveInstanceNorm, StyleConv)
 
 

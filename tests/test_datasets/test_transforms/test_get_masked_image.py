@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 
-from mmedit.datasets.transforms import GetMaskedImage
+from mmagic.datasets.transforms import GetMaskedImage
 
 
 def test_masked_img():

@@ -3,8 +3,8 @@ import mmcv
 import numpy as np
 import torch
 
-from mmedit.structures import EditDataSample
-from mmedit.visualization import ConcatImageVisualizer
+from mmagic.structures import EditDataSample
+from mmagic.visualization import ConcatImageVisualizer
 
 
 def test_concatimagevisualizer():

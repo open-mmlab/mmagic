@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.ddpm.res_blocks import (Downsample2D, ResnetBlock2D,
+from mmagic.models.editors.ddpm.res_blocks import (Downsample2D, ResnetBlock2D,
                                                    Upsample2D)
 
 

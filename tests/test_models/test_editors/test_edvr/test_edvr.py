@@ -4,10 +4,10 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import EDVR, EDVRNet
-from mmedit.models.losses import CharbonnierLoss
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.models import EDVR, EDVRNet
+from mmagic.models.losses import CharbonnierLoss
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

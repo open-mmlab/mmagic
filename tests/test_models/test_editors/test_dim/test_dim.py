@@ -6,11 +6,11 @@ import pytest
 import torch
 from mmengine.config import ConfigDict
 
-from mmedit.datasets.transforms import PackEditInputs
-from mmedit.models.editors import DIM
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.datasets.transforms import PackEditInputs
+from mmagic.models.editors import DIM
+from mmagic.registry import MODELS
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

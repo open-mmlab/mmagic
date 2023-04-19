@@ -5,12 +5,12 @@ from mmengine.runner import Runner
 from mmengine.utils.dl_utils import TORCH_VERSION
 from mmengine.utils.version_utils import digit_version
 
-from mmedit.datasets import BasicImageDataset
-from mmedit.datasets.transforms import PackEditInputs
-from mmedit.evaluation import Equivariance
-from mmedit.models import EditDataPreprocessor, StyleGAN3
-from mmedit.models.editors.stylegan3 import StyleGAN3Generator
-from mmedit.utils import register_all_modules
+from mmagic.datasets import BasicImageDataset
+from mmagic.datasets.transforms import PackEditInputs
+from mmagic.evaluation import Equivariance
+from mmagic.models import EditDataPreprocessor, StyleGAN3
+from mmagic.models.editors.stylegan3 import StyleGAN3Generator
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

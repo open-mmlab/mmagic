@@ -5,9 +5,9 @@ from unittest import TestCase
 
 import torch
 
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
-from mmedit.visualization import GenVisualizer
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
+from mmagic.visualization import GenVisualizer
 
 register_all_modules()
 

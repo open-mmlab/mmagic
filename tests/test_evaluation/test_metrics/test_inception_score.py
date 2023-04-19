@@ -8,11 +8,11 @@ import torch
 import torch.nn as nn
 from mmengine.runner import Runner
 
-from mmedit.datasets import PairedImageDataset
-from mmedit.evaluation import InceptionScore, TransIS
-from mmedit.models import EditDataPreprocessor, Pix2Pix
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.datasets import PairedImageDataset
+from mmagic.evaluation import InceptionScore, TransIS
+from mmagic.models import EditDataPreprocessor, Pix2Pix
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

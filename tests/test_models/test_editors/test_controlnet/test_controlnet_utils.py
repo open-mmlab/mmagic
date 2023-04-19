@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 import pytest
 import torch
 
-from mmedit.models.editors.controlnet.controlnet_utils import change_base_model
+from mmagic.models.editors.controlnet.controlnet_utils import change_base_model
 
 
 def make_state_dict(d):

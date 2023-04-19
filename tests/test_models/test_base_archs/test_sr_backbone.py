@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.base_archs import ResidualBlockNoBN
-from mmedit.models.utils import make_layer
+from mmagic.models.base_archs import ResidualBlockNoBN
+from mmagic.models.utils import make_layer
 
 
 def test_sr_backbone_utils():

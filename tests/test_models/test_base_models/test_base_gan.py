@@ -10,12 +10,12 @@ from mmengine.testing import assert_allclose
 from torch.nn import ModuleList
 from torch.optim import SGD
 
-from mmedit.models import BaseGAN, EditDataPreprocessor
-from mmedit.models.losses import (DiscShiftLossComps, GANLossComps,
+from mmagic.models import BaseGAN, EditDataPreprocessor
+from mmagic.models.losses import (DiscShiftLossComps, GANLossComps,
                                   GeneratorPathRegularizerComps,
                                   GradientPenaltyLossComps)
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
+from mmagic.registry import MODELS
+from mmagic.structures import EditDataSample
 
 generator = dict(type='DCGANGenerator', output_scale=8, base_channels=8)
 discriminator = dict(

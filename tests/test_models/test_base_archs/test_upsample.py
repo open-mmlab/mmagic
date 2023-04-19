@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.base_archs import PixelShufflePack
+from mmagic.models.base_archs import PixelShufflePack
 
 
 def test_pixel_shuffle():

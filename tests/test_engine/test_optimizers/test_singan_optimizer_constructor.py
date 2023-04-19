@@ -2,9 +2,9 @@
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from mmedit.engine import SinGANOptimWrapperConstructor
-from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
+from mmagic.engine import SinGANOptimWrapperConstructor
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

@@ -5,9 +5,9 @@ from unittest.mock import MagicMock
 
 from mmengine.model import MMSeparateDistributedDataParallel
 
-from mmedit.engine import PGGANOptimWrapperConstructor
-from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
+from mmagic.engine import PGGANOptimWrapperConstructor
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

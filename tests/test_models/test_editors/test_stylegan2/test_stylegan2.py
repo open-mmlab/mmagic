@@ -7,8 +7,8 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import EditDataPreprocessor, StyleGAN2
-from mmedit.structures import EditDataSample
+from mmagic.models import EditDataPreprocessor, StyleGAN2
+from mmagic.structures import EditDataSample
 
 
 class TestStyleGAN2(TestCase):

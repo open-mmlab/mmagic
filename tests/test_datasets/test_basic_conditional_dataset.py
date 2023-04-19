@@ -5,8 +5,8 @@ from unittest import TestCase
 
 import numpy as np
 
-from mmedit.datasets import BasicConditionalDataset
-from mmedit.utils import register_all_modules
+from mmagic.datasets import BasicConditionalDataset
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

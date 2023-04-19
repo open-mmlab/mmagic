@@ -3,8 +3,8 @@ import pytest
 import torch
 from mmengine.testing import assert_allclose
 
-from mmedit.models.data_preprocessors import MattorPreprocessor
-from mmedit.structures import EditDataSample
+from mmagic.models.data_preprocessors import MattorPreprocessor
+from mmagic.structures import EditDataSample
 
 
 def test_mattor_preprocessor():

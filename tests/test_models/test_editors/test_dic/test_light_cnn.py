@@ -4,8 +4,8 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors import MaxFeature
-from mmedit.registry import MODELS
+from mmagic.models.editors import MaxFeature
+from mmagic.registry import MODELS
 
 
 @pytest.mark.skipif(

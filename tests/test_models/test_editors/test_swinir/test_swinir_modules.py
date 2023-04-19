@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors.swinir.swinir_modules import (PatchEmbed,
+from mmagic.models.editors.swinir.swinir_modules import (PatchEmbed,
                                                          PatchUnEmbed,
                                                          Upsample,
                                                          UpsampleOneStep)

@@ -7,7 +7,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from mmengine import MessageHub
 
-from mmedit.engine.schedulers import ReduceLR
+from mmagic.engine.schedulers import ReduceLR
 
 
 class ToyModel(torch.nn.Module):

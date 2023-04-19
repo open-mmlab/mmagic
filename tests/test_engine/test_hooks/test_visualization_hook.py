@@ -11,13 +11,13 @@ from mmengine.testing import assert_allclose
 from mmengine.visualization import Visualizer
 from torch.utils.data.dataset import Dataset
 
-from mmedit.engine import GenVisualizationHook
-from mmedit.engine.hooks import BasicVisualizationHook
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
-from mmedit.visualization import ConcatImageVisualizer
+from mmagic.engine import GenVisualizationHook
+from mmagic.engine.hooks import BasicVisualizationHook
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
+from mmagic.visualization import ConcatImageVisualizer
 
-from mmedit.registry import MODELS  # isort:skip  # noqa
+from mmagic.registry import MODELS  # isort:skip  # noqa
 
 register_all_modules()
 

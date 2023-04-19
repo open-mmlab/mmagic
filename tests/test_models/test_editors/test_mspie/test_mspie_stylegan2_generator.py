@@ -6,9 +6,9 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models.editors.mspie import MSStyleGANv2Generator
-from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
+from mmagic.models.editors.mspie import MSStyleGANv2Generator
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

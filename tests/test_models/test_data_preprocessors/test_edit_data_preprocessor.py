@@ -5,8 +5,8 @@ import torch
 import torch.nn.functional as F
 from mmengine.testing import assert_allclose
 
-from mmedit.models.data_preprocessors import EditDataPreprocessor
-from mmedit.structures import EditDataSample
+from mmagic.models.data_preprocessors import EditDataPreprocessor
+from mmagic.structures import EditDataSample
 
 
 class TestBaseDataPreprocessor(TestCase):

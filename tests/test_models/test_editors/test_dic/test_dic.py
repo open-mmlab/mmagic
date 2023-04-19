@@ -5,10 +5,10 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import DIC, DICNet, EditDataPreprocessor, LightCNN
-from mmedit.models.losses import (GANLoss, L1Loss, LightCNNFeatureLoss,
+from mmagic.models import DIC, DICNet, EditDataPreprocessor, LightCNN
+from mmagic.models.losses import (GANLoss, L1Loss, LightCNNFeatureLoss,
                                   PerceptualVGG)
-from mmedit.structures import EditDataSample
+from mmagic.structures import EditDataSample
 
 
 @patch.object(PerceptualVGG, 'init_weights')

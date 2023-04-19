@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, Mock, patch
 
 from mmengine.logging import MessageHub
 
-from mmedit.engine import EditIterTimerHook
+from mmagic.engine import EditIterTimerHook
 
 
 def time_patch():

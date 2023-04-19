@@ -4,9 +4,9 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors.ttsr.ttsr_net import (CSFI2, CSFI3, SFE,
+from mmagic.models.editors.ttsr.ttsr_net import (CSFI2, CSFI3, SFE,
                                                  MergeFeatures)
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 @pytest.mark.skipif(

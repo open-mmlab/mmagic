@@ -3,8 +3,8 @@ import os.path as osp
 
 import pytest
 
-from mmedit.apis.inferencers import Inferencers
-from mmedit.utils import register_all_modules
+from mmagic.apis.inferencers import Inferencers
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

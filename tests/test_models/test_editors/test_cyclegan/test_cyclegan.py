@@ -6,10 +6,10 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import CycleGAN, EditDataPreprocessor
-from mmedit.models.base_archs import PatchDiscriminator
-from mmedit.models.editors.cyclegan import ResnetGenerator
-from mmedit.structures import EditDataSample
+from mmagic.models import CycleGAN, EditDataPreprocessor
+from mmagic.models.base_archs import PatchDiscriminator
+from mmagic.models.editors.cyclegan import ResnetGenerator
+from mmagic.structures import EditDataSample
 
 
 def obj_from_dict(info: dict, parent=None, default_args=None):

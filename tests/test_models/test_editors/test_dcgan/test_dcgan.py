@@ -7,9 +7,9 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch.optim import SGD
 
-from mmedit.models import DCGAN, EditDataPreprocessor
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
+from mmagic.models import DCGAN, EditDataPreprocessor
+from mmagic.registry import MODELS
+from mmagic.structures import EditDataSample
 
 generator = dict(
     type='DCGANGenerator', noise_size=10, output_scale=16, base_channels=16)

@@ -8,14 +8,14 @@ import torch
 from mmengine import Config
 from mmengine.runner import load_checkpoint
 
-from mmedit.apis import (calculate_grid_size, colorization_inference,
+from mmagic.apis import (calculate_grid_size, colorization_inference,
                          init_model, inpainting_inference, matting_inference,
                          restoration_face_inference, restoration_inference,
                          restoration_video_inference, sample_conditional_model,
                          sample_img2img_model, sample_unconditional_model,
                          set_random_seed, video_interpolation_inference)
-from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules, tensor2img
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules, tensor2img
 
 register_all_modules()
 

@@ -3,15 +3,15 @@ from copy import deepcopy
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from mmedit.evaluation import (EditEvaluator, FrechetInceptionDistance,
+from mmagic.evaluation import (EditEvaluator, FrechetInceptionDistance,
                                InceptionScore)
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
-fid_loading_str = 'mmedit.evaluation.metrics.fid.FrechetInceptionDistance._load_inception'  # noqa
-is_loading_str = 'mmedit.evaluation.metrics.inception_score.InceptionScore._load_inception'  # noqa
+fid_loading_str = 'mmagic.evaluation.metrics.fid.FrechetInceptionDistance._load_inception'  # noqa
+is_loading_str = 'mmagic.evaluation.metrics.inception_score.InceptionScore._load_inception'  # noqa
 
 loading_mock = MagicMock(return_value=(MagicMock(), 'StyleGAN'))
 
@@ -47,7 +47,7 @@ class TestEditEvaluator(TestCase):
         model = MagicMock()
         model.data_preprocessor.device = 'cpu'
         dataloader = MagicMock()
-        with patch('mmedit.evaluation.metrics.fid.prepare_inception_feat'):
+        with patch('mmagic.evaluation.metrics.fid.prepare_inception_feat'):
             evaluator.prepare_metrics(model, dataloader)
             self.assertTrue(evaluator.is_ready)
 

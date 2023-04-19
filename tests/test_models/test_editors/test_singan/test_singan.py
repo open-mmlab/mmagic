@@ -2,9 +2,9 @@
 import torch
 from mmengine import MessageHub
 
-from mmedit.engine import SinGANOptimWrapperConstructor
-from mmedit.models import SinGAN
-from mmedit.utils import register_all_modules
+from mmagic.engine import SinGANOptimWrapperConstructor
+from mmagic.models import SinGAN
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

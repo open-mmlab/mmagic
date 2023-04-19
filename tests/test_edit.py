@@ -3,8 +3,8 @@ import os.path as osp
 
 import pytest
 
-from mmedit.edit import MMEdit
-from mmedit.utils import register_all_modules
+from mmagic.edit import MMEdit
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors import IconVSRNet
+from mmagic.models.editors import IconVSRNet
 
 
 def test_iconvsr():

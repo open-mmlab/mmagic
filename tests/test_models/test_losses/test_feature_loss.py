@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.losses import LightCNNFeatureLoss
+from mmagic.models.losses import LightCNNFeatureLoss
 
 
 @pytest.mark.skipif(

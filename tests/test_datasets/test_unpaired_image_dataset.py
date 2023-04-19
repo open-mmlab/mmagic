@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
-from mmedit.datasets import UnpairedImageDataset
-from mmedit.utils import register_all_modules
+from mmagic.datasets import UnpairedImageDataset
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

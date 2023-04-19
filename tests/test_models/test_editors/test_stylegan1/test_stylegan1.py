@@ -7,10 +7,10 @@ import pytest
 import torch
 from mmengine import MessageHub
 
-from mmedit.engine import PGGANOptimWrapperConstructor
-from mmedit.models import StyleGAN1
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.engine import PGGANOptimWrapperConstructor
+from mmagic.models import StyleGAN1
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

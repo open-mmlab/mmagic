@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import ContextualAttentionModule
+from mmagic.models.editors import ContextualAttentionModule
 
 
 def test_deepfill_contextual_attention_module():
