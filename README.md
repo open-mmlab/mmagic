@@ -1,5 +1,5 @@
 <div id="top" align="center">
-  <img src="docs/en/_static/image/mmediting-logo.png" width="500px"/>
+  <img src="docs/en/_static/image/mmagic-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab website</font></b>
@@ -18,20 +18,20 @@
   </div>
   <div>&nbsp;</div>
 
-[![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/latest/)
-[![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
-[![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/main/LICENSE)
-[![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
-[![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+[![PyPI](https://badge.fury.io/py/mmagic.svg)](https://pypi.org/project/mmagic/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmagic.readthedocs.io/en/latest/)
+[![badge](https://github.com/open-mmlab/mmagic/workflows/build/badge.svg)](https://github.com/open-mmlab/mmagic/actions)
+[![codecov](https://codecov.io/gh/open-mmlab/mmagic/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmagic)
+[![license](https://img.shields.io/github/license/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/blob/main/LICENSE)
+[![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/issues)
+[![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/issues)
 
-[📘Documentation](https://mmediting.readthedocs.io/en/latest/) |
-[🛠️Installation](https://mmediting.readthedocs.io/en/latest/get_started/install.html) |
-[📊Model Zoo](https://mmediting.readthedocs.io/en/latest/model_zoo/overview.html) |
-[🆕Update News](https://mmediting.readthedocs.io/en/latest/changelog.html) |
-[🚀Ongoing Projects](https://github.com/open-mmlab/mmediting/projects) |
-[🤔Reporting Issues](https://github.com/open-mmlab/mmediting/issues)
+[📘Documentation](https://mmagic.readthedocs.io/en/latest/) |
+[🛠️Installation](https://mmagic.readthedocs.io/en/latest/get_started/install.html) |
+[📊Model Zoo](https://mmagic.readthedocs.io/en/latest/model_zoo/overview.html) |
+[🆕Update News](https://mmagic.readthedocs.io/en/latest/changelog.html) |
+[🚀Ongoing Projects](https://github.com/open-mmlab/mmagic/projects) |
+[🤔Reporting Issues](https://github.com/open-mmlab/mmagic/issues)
 
 English | [简体中文](README_zh-CN.md)
 
@@ -53,17 +53,17 @@ English | [简体中文](README_zh-CN.md)
 
 ## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### New release [**MMEditing v1.0.0rc7**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc7) \[07/04/2023\]:
+### New release [**MMagic v1.0.0rc7**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.0rc7) \[07/04/2023\]:
 
 - Support DiffuserWrapper
 - Support ControlNet (training and inference).
 - Support PyTorch 2.0 (successfully compile 33+ models on 'inductor' backend).
 
-**MMEditing** has supported all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) and unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine) 😍.
+**MMagic** has supported all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) and unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine) 😍.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
-Please refer to [migration documents](docs/en/migration/overview.md) to migrate from [old version](https://github.com/open-mmlab/mmediting/tree/master) MMEditing 0.x to our brand new 1.x version.
+Please refer to [migration documents](docs/en/migration/overview.md) to migrate from [old version](https://github.com/open-mmlab/mmagic/tree/master) MMagic 0.x to our brand new 1.x version.
 
 ## 📄 Table of Contents
 
@@ -80,9 +80,9 @@ Please refer to [migration documents](docs/en/migration/overview.md) to migrate 
 
 ## 📖 Introduction
 
-MMEditing is an open-source image and video editing&generating toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+MMagic is an open-source image and video editing&generating toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
-Currently, MMEditing support multiple image and video generation/editing tasks.
+Currently, MMagic support multiple image and video generation/editing tasks.
 
 https://user-images.githubusercontent.com/12782558/217152698-49169038-9872-4200-80f7-1d5f7613afd7.mp4
 
@@ -92,15 +92,15 @@ The best practice on our main branch works with **Python 3.8+** and **PyTorch 1.
 
 - **State of the Art**
 
-  MMEditing provides state-of-the-art generative models to process, edit and synthesize images and videos.
+  MMagic provides state-of-the-art generative models to process, edit and synthesize images and videos.
 
 - **Powerful and Popular Applications**
 
-  MMEditing supports popular and contemporary image restoration, text-to-image, 3D-aware generation, inpainting, matting, super-resolution and generation applications. Specifically, MMEditing supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN’s applications. It’s time to play with your GANs!
+  MMagic supports popular and contemporary image restoration, text-to-image, 3D-aware generation, inpainting, matting, super-resolution and generation applications. Specifically, MMagic supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN’s applications. It’s time to play with your GANs!
 
 - **New Modular Design for Flexible Combination**
 
-  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](https://mmediting.readthedocs.io/en/latest/howto/losses.html))
+  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](https://mmagic.readthedocs.io/en/latest/howto/losses.html))
 
 - **Efficient Distributed Training**
 
@@ -116,15 +116,15 @@ More and more community contributors are joining us to make our repo better. Som
 - [Restormer](configs/restormer/README.md) is contributed by @AlexZou14.
 - [SwinIR](configs/swinir/README.md) is contributed by @Zdafeng.
 
-[Projects](projects/README.md) is opened to make it easier for everyone to add projects to MMEditing.
+[Projects](projects/README.md) is opened to make it easier for everyone to add projects to MMagic.
 
-We appreciate all contributions to improve MMEditing. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
+We appreciate all contributions to improve MMagic. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 🛠️ Installation
 
-MMEditing depends on [PyTorch](https://pytorch.org/), [MMEngine](https://github.com/open-mmlab/mmengine) and [MMCV](https://github.com/open-mmlab/mmcv).
+MMagic depends on [PyTorch](https://pytorch.org/), [MMEngine](https://github.com/open-mmlab/mmengine) and [MMCV](https://github.com/open-mmlab/mmcv).
 Below are quick steps for installation.
 
 **Step 1.**
@@ -140,11 +140,11 @@ mim install 'mmcv>=2.0.0'
 ```
 
 **Step 3.**
-Install MMEditing from source.
+Install MMagic from source.
 
 ```shell
-git clone https://github.com/open-mmlab/mmediting.git
-cd mmediting
+git clone https://github.com/open-mmlab/mmagic.git
+cd mmagic
 pip3 install -e .
 ```
 
@@ -152,7 +152,7 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
 
 **Getting Started**
 
-Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMEditing.
+Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMagic.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -323,31 +323,31 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
   </tbody>
 </table>
 
-Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/model_zoo/overview.html) for more details.
+Please refer to [model_zoo](https://mmagic.readthedocs.io/en/latest/model_zoo/overview.html) for more details.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 🤝 Acknowledgement
 
-MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
+MMagic is an open source project that is contributed by researchers and engineers from various colleges and companies. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
 
 We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. Thank you all!
 
-<a href="https://github.com/open-mmlab/mmediting/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=open-mmlab/mmediting" />
+<a href="https://github.com/open-mmlab/mmagic/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=open-mmlab/mmagic" />
 </a>
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
 ## 🖊️ Citation
 
-If MMEditing is helpful to your research, please cite it as below.
+If MMagic is helpful to your research, please cite it as below.
 
 ```bibtex
-@misc{mmediting2022,
-    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
-    author = {{MMEditing Contributors}},
-    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
+@misc{mmagic2022,
+    title = {{MMagic}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {{MMagic Contributors}},
+    howpublished = {\url{https://github.com/open-mmlab/mmagic}},
     year = {2022}
 }
 ```
@@ -380,7 +380,7 @@ Please refer to [LICENSES](LICENSE) for the careful check, if you are using our 
 - [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab's next-generation action understanding toolbox and benchmark.
 - [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab video perception toolbox and benchmark.
 - [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab optical flow toolbox and benchmark.
-- [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab image and video editing toolbox.
+- [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab image and video editing toolbox.
 - [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab image and video generative models toolbox.
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab model deployment framework.
 

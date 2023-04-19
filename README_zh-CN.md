@@ -1,5 +1,5 @@
 <div id="top" align="center">
-  <img src="docs/zh_cn/_static/image/mmediting-logo.png" width="500px"/>
+  <img src="docs/zh_cn/_static/image/mmagic-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab 官网</font></b>
@@ -18,20 +18,20 @@
   </div>
   <div>&nbsp;</div>
 
-[![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/zh_CN/latest/)
-[![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
-[![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/main/LICENSE)
-[![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
-[![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+[![PyPI](https://badge.fury.io/py/mmagic.svg)](https://pypi.org/project/mmagic/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmagic.readthedocs.io/zh_CN/latest/)
+[![badge](https://github.com/open-mmlab/mmagic/workflows/build/badge.svg)](https://github.com/open-mmlab/mmagic/actions)
+[![codecov](https://codecov.io/gh/open-mmlab/mmagic/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmagic)
+[![license](https://img.shields.io/github/license/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/blob/main/LICENSE)
+[![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/issues)
+[![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/issues)
 
-[📘使用文档](https://mmediting.readthedocs.io/zh_CN/latest/) |
-[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/latest/get_started/install.html) |
-[📊模型库](https://mmediting.readthedocs.io/zh_CN/latest/model_zoo/overview.html) |
-[🆕更新记录](https://mmediting.readthedocs.io/zh_CN/latest/changelog.html) |
-[🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
-[🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
+[📘使用文档](https://mmagic.readthedocs.io/zh_CN/latest/) |
+[🛠️安装教程](https://mmagic.readthedocs.io/zh_CN/latest/get_started/install.html) |
+[📊模型库](https://mmagic.readthedocs.io/zh_CN/latest/model_zoo/overview.html) |
+[🆕更新记录](https://mmagic.readthedocs.io/zh_CN/latest/changelog.html) |
+[🚀进行中的项目](https://github.com/open-mmlab/mmagic/projects) |
+[🤔提出问题](https://github.com/open-mmlab/mmagic/issues)
 
 [English](README.md) | 简体中文
 
@@ -53,15 +53,15 @@
 
 ## 🚀 最新进展 <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### 最新的 [**MMEditing v1.0.0rc7**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc7) 版本已经在 \[07/04/2023\] 发布:
+### 最新的 [**MMagic v1.0.0rc7**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.0rc7) 版本已经在 \[07/04/2023\] 发布:
 
 - 支持了 DiffuserWrapper.
 - 支持了 ControlNet 的推理与训练.
 - 支持了 PyTorch 2.0 (使用 'inductor' 后端成功编译 33+ 模型).
 
-**MMEditing** 已经支持了[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
+**MMagic** 已经支持了[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
 
-如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmediting/tree/master) MMEditing 0.x 迁移到新版本 MMEditing 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
+如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmagic/tree/master) MMagic 0.x 迁移到新版本 MMagic 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
 
 ## 📄 目录
 
@@ -78,9 +78,9 @@
 
 ## 📖 介绍
 
-MMEditing 是基于 PyTorch 的图像&视频编辑和生成开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
+MMagic 是基于 PyTorch 的图像&视频编辑和生成开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
 
-目前 MMEditing 支持多种图像和视频的生成/编辑任务。
+目前 MMagic 支持多种图像和视频的生成/编辑任务。
 
 https://user-images.githubusercontent.com/12782558/217152698-49169038-9872-4200-80f7-1d5f7613afd7.mp4
 
@@ -90,15 +90,15 @@ https://user-images.githubusercontent.com/12782558/217152698-49169038-9872-4200-
 
 - **SOTA**
 
-  MMEditing 提供了处理、编辑、生成图像和视频的SOTA算法。
+  MMagic 提供了处理、编辑、生成图像和视频的SOTA算法。
 
 - **强有力且流行的应用**
 
-  MMEditing 支持了流行的图像修复、图文生成、3D生成、图像修补、抠图、超分辨率和生成等任务的应用。特别是 MMEditing 支持了 GANs 的插值，投影和编辑和其他流行的应用。请用你的 GANs 尽情尝试！
+  MMagic 支持了流行的图像修复、图文生成、3D生成、图像修补、抠图、超分辨率和生成等任务的应用。特别是 MMagic 支持了 GANs 的插值，投影和编辑和其他流行的应用。请用你的 GANs 尽情尝试！
 
 - **灵活组合的模块化设计**
 
-  MMEditing 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。
+  MMagic 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。
 
 - **高效的分布式训练**
 
@@ -114,15 +114,15 @@ https://user-images.githubusercontent.com/12782558/217152698-49169038-9872-4200-
 - [Restormer](configs/restormer/README.md) 来自 @AlexZou14.
 - [SwinIR](configs/swinir/README.md) 来自 @Zdafeng.
 
-为使向 MMEditing 中添加项目更加容易，我们开启了 [Projects](projects/README.md) 。
+为使向 MMagic 中添加项目更加容易，我们开启了 [Projects](projects/README.md) 。
 
-感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) 和 MMEngine 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING_zh-CN.md) 以获取贡献指南。
+感谢您为改善 MMagic 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) 和 MMEngine 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING_zh-CN.md) 以获取贡献指南。
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 
 ## 🛠️ 安装
 
-MMEditing 依赖 [PyTorch](https://pytorch.org/)，[MMEngine](https://github.com/open-mmlab/mmengine) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
+MMagic 依赖 [PyTorch](https://pytorch.org/)，[MMEngine](https://github.com/open-mmlab/mmengine) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
 
 **步骤 1.**
 依照[官方教程](https://pytorch.org/get-started/locally/)安装 PyTorch 。
@@ -137,11 +137,11 @@ mim install 'mmcv>=2.0.0'
 ```
 
 **步骤 3.**
-从源码安装 MMEditing
+从源码安装 MMagic
 
 ```
-git clone https://github.com/open-mmlab/mmediting.git
-cd mmediting
+git clone https://github.com/open-mmlab/mmagic.git
+cd mmagic
 pip3 install -e .
 ```
 
@@ -149,7 +149,7 @@ pip3 install -e .
 
 **开始使用**
 
-请参考[快速运行](docs/zh_cn/get_started/quick_run.md)和[推理演示](docs/zh_cn/user_guides/inference.md)获取MMEditing的基本用法。
+请参考[快速运行](docs/zh_cn/get_started/quick_run.md)和[推理演示](docs/zh_cn/user_guides/inference.md)获取MMagic的基本用法。
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -320,29 +320,29 @@ pip3 install -e .
   </tbody>
 </table>
 
-请参考[模型库](https://mmediting.readthedocs.io/zh_CN/latest/model_zoo/overview.html)了解详情。
+请参考[模型库](https://mmagic.readthedocs.io/zh_CN/latest/model_zoo/overview.html)了解详情。
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 
 ## 🤝 致谢
 
-MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
+MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
 
-<a href="https://github.com/open-mmlab/mmediting/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=open-mmlab/mmediting" />
+<a href="https://github.com/open-mmlab/mmagic/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=open-mmlab/mmagic" />
 </a>
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 
 ## 🖊️ 引用
 
-如果 MMEditing 对您的研究有所帮助，请按照如下 bibtex 引用它。
+如果 MMagic 对您的研究有所帮助，请按照如下 bibtex 引用它。
 
 ```bibtex
-@misc{mmediting2022,
-    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
-    author = {{MMEditing Contributors}},
-    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
+@misc{mmagic2022,
+    title = {{MMagic}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {{MMagic Contributors}},
+    howpublished = {\url{https://github.com/open-mmlab/mmagic}},
     year = {2022}
 }
 ```
@@ -374,7 +374,7 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 - [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab 新一代视频理解工具箱
 - [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab 一体化视频目标感知平台
 - [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab 光流估计工具箱与测试基准
-- [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab 图像视频编辑工具箱
+- [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab 图像视频编辑工具箱
 - [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab 图片视频生成模型工具箱
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab 模型部署框架
 
