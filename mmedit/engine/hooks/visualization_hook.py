@@ -90,7 +90,7 @@ class GenVisualizationHook(Hook):
         - 'type': Value must be string. Denotes what kind of sampler is used to
             generate image. Refers to :meth:`~mmedit.utils.get_sampler`.
     - Optional key words (If not passed, will use the default value):
-        - 'n_rows': Value must be int. The number of images in one row.
+        - 'n_row': Value must be int. The number of images in one row.
         - 'num_samples': Value must be int. The number of samples to visualize.
         - 'vis_mode': Value must be string. How to visualize the generated
             samples (e.g. image, gif).
@@ -123,11 +123,11 @@ class GenVisualizationHook(Hook):
         >>>         vis_kwargs_list=[dict(type='Translation',
         >>>                                  name='translation_train',
         >>>                                  n_samples=6, draw_gt=True,
-        >>>                                  n_rows=3),
+        >>>                                  n_row=3),
         >>>                             dict(type='TranslationVal',
         >>>                                  name='translation_val',
         >>>                                  n_samples=16, draw_gt=True,
-        >>>                                  n_rows=4)])]
+        >>>                                  n_row=4)])]
 
     # NOTE: user-defined vis_kwargs > vis_kwargs_mapping > hook init args
 
@@ -140,7 +140,7 @@ class GenVisualizationHook(Hook):
         n_samples (Optional[int]): The default value of number of samples to
             visualize. Defaults to 64.
         n_row (Optional[int]): The default value of number of images in each
-            row in the visualization results. Defaults to 8.
+            row in the visualization results. Defaults to None.
         message_hub_vis_kwargs (Optional[Tuple[str, dict, List[str],
             List[Dict]]]): Key arguments visualize images in message hub.
             Defaults to None.
@@ -175,7 +175,7 @@ class GenVisualizationHook(Hook):
                  vis_kwargs_list: Tuple[List[dict], dict] = None,
                  fixed_input: bool = True,
                  n_samples: Optional[int] = 64,
-                 n_row: Optional[int] = 8,
+                 n_row: Optional[int] = None,
                  message_hub_vis_kwargs: Optional[Tuple[str, dict, List[str],
                                                         List[Dict]]] = None,
                  save_at_test: bool = True,
@@ -336,7 +336,6 @@ class GenVisualizationHook(Hook):
 
             n_samples = vis_kwargs_.pop('n_samples', self.n_samples)
             n_row = vis_kwargs_.pop('n_row', self.n_row)
-            n_row = min(n_row, n_samples)
 
             num_iters = math.ceil(n_samples / num_batches)
             vis_kwargs_['max_times'] = num_iters
@@ -353,15 +352,31 @@ class GenVisualizationHook(Hook):
             need_save = fixed_input and not self.inputs_buffer[sampler_type]
 
             for inputs in sampler:
-                output_list += [out for out in forward_func(inputs)]
+                output = forward_func(inputs)
+                if len(output) != num_batches:
+                    # one sample contains multiple elements
+                    output_list.append(output)
+                    contain_mul_elements = True
+                else:
+                    output_list += [out for out in forward_func(inputs)]
+                    contain_mul_elements = False
 
                 # save inputs
                 if need_save:
                     self.inputs_buffer[sampler_type].append(inputs)
 
+            output_list = output_list[:n_samples]
+            if contain_mul_elements:
+                output_to_vis = []
+                for output in output_list:
+                    output_to_vis += output
+            else:
+                output_to_vis = output_list
+            n_row = min(n_row, len(output_to_vis)) if n_row else None
+
             self._visualizer.add_datasample(
                 name=name,
-                gen_samples=output_list[:n_samples],
+                gen_samples=output_to_vis,
                 target_keys=target_keys,
                 vis_mode=vis_mode,
                 n_row=n_row,
@@ -444,6 +459,6 @@ class GenVisualizationHook(Hook):
                 gen_samples=gen_samples,
                 target_keys=key,
                 vis_mode=vis_mode,
-                n_row=min(self.n_row, num_batches),
+                n_row=min(self.n_row, num_batches) if self.n_row else None,
                 show=self.show,
                 step=batch_idx)
