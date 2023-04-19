@@ -4,8 +4,8 @@ import argparse
 import mmcv
 import torch
 
-from mmedit.apis import colorization_inference, init_model
-from mmedit.utils import modify_args, tensor2img
+from mmagic.apis import colorization_inference, init_model
+from mmagic.utils import modify_args, tensor2img
 
 
 def parse_args():

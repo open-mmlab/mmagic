@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import gradio as gr
 
-from mmedit.edit import MMEdit
+from mmagic.edit import MMEdit
 
 editor = MMEdit(model_name='controlnet_animation')
 

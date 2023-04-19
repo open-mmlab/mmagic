@@ -3,8 +3,8 @@ import argparse
 
 import torch
 
-from mmedit.apis import init_model, video_interpolation_inference
-from mmedit.utils import modify_args
+from mmagic.apis import init_model, video_interpolation_inference
+from mmagic.utils import modify_args
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 

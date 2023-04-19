@@ -14,7 +14,7 @@ import torch
 import yaml
 from mmengine.registry import init_default_scope
 
-from mmedit.apis.inferencers.inpainting_inferencer import InpaintingInferencer
+from mmagic.apis.inferencers.inpainting_inferencer import InpaintingInferencer
 
 
 class InpaintingGradio:
@@ -43,7 +43,7 @@ class InpaintingGradio:
                  extra_parameters: Dict = None,
                  seed: int = 2022,
                  **kwargs) -> None:
-        init_default_scope('mmedit')
+        init_default_scope('mmagic')
         InpaintingGradio.init_inference_supported_models_cfg()
         self.model_name = model_name
         self.model_setting = model_setting
@@ -119,14 +119,14 @@ class InpaintingGradio:
     @staticmethod
     def get_package_path() -> str:
         p = subprocess.Popen(
-            'pip show mmedit', shell=True, stdout=subprocess.PIPE)
+            'pip show mmagic', shell=True, stdout=subprocess.PIPE)
         out, err = p.communicate()
         out = out.decode()
         if 'Location' not in out:
-            InpaintingGradio.send_notification('module mmedit not found',
+            InpaintingGradio.send_notification('module mmagic not found',
                                                InpaintingGradio.error_color,
                                                'error')
-            raise Exception('module mmedit not found')
+            raise Exception('module mmagic not found')
         package_path = out[out.find('Location') +
                            len('Location: '):].split('\r\n')[0] + os.sep
         return package_path
