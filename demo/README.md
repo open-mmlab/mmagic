@@ -1,12 +1,12 @@
-# MMEditing Demo
+# MMagic Demo
 
-There are some mmediting demos in this folder. We provide python command line usage here to run these demos and more guidance could also be found in the [documentation](https://mmediting.readthedocs.io/en/latest/user_guides/3_inference.html)
+There are some mmagic demos in this folder. We provide python command line usage here to run these demos and more guidance could also be found in the [documentation](https://mmagic.readthedocs.io/en/latest/user_guides/3_inference.html)
 
 Table of contents:
 
 [1. Download sample images or videos](#1-download-sample-images-or-videos)
 
-[2. MMEditing inference demo](#2-mmediting-inference-demo)
+[2. MMagic inference demo](#2-mmagic-inference-demo)
 
 &#8195;    [2.1. Check supported tasks and models](#21-check-supported-tasks-and-models)
 
@@ -34,12 +34,12 @@ Table of contents:
 
 ## 1. Download sample images or videos
 
-We prepared some images and videos for you to run demo with. After MMEdit is well installed, you could use demos in this folder to infer these data.
+We prepared some images and videos for you to run demo with. After MMagic is well installed, you could use demos in this folder to infer these data.
 Download with python script [download_inference_resources.py](./download_inference_resources.py).
 
 ```shell
-# cd mmediting demo path
-cd mmediting/demo
+# cd mmagic demo path
+cd mmagic/demo
 
 # see all resources
 python download_inference_resources.py --print-all
@@ -55,7 +55,7 @@ python download_inference_resources.py --task 'Inpainting'
 python download_inference_resources.py --root-dir '../resources'
 ```
 
-## 2. MMEditing inference demo
+## 2. MMagic inference demo
 
 ### 2.1 Check supported tasks and models
 
@@ -79,7 +79,7 @@ python mmediting_inference_demo.py --print-task-supported-models 'Image2Image'
 
 ### 2.2 Perform inference with command line
 
-You can use the following commands to perform inference with a MMEdit model.
+You can use the following commands to perform inference with a MMagic model.
 
 Usage of python API can also be found in this [tutotial](./mmediting_inference_tutorial.ipynb).
 

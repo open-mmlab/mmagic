@@ -10,8 +10,8 @@ body:
     label: Branch
     description: This issue is related to the
     options:
-      - main branch  https://mmediting.readthedocs.io/en/latest/
-      - 0.x branch https://mmediting.readthedocs.io/en/0.x/
+      - main branch  https://mmagic.readthedocs.io/en/latest/
+      - 0.x branch https://mmagic.readthedocs.io/en/0.x/
   validations:
     required: true
 
