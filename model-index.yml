@@ -13,6 +13,7 @@ Import:
 - configs/dic/metafile.yml
 - configs/dim/metafile.yml
 - configs/disco_diffusion/metafile.yml
+- configs/dreambooth/metafile.yml
 - configs/edsr/metafile.yml
 - configs/edvr/metafile.yml
 - configs/eg3d/metafile.yml
