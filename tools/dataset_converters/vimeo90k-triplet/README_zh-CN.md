@@ -20,8 +20,8 @@
 Vimeo90K-triplet 数据集包含了如下所示的 `clip/sequence/img` 目录结构：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

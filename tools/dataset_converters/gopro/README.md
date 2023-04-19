@@ -16,8 +16,8 @@ The train datasets can be download from [here](https://drive.google.com/file/d/1
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
