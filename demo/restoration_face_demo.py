@@ -5,8 +5,8 @@ import os
 import mmcv
 import torch
 
-from mmedit.apis import init_model, restoration_face_inference
-from mmedit.utils import modify_args
+from mmagic.apis import init_model, restoration_face_inference
+from mmagic.utils import modify_args
 
 
 def parse_args():

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 # isort: off
 from argparse import ArgumentParser
-from mmedit.edit import MMEdit
+from mmagic.edit import MMEdit
 from mmengine import DictAction
 
 
