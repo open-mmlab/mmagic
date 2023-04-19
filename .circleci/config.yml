@@ -26,7 +26,7 @@ workflows:
             .github/.* lint_only true
             demo/.* lint_only true
             projects/.* lint_only true
-            mmedit/.* lint_only false
+            mmagic/.* lint_only false
             requirements/.* lint_only false
             tests/.* lint_only false
             .circleci/.* lint_only false
