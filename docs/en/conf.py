@@ -45,7 +45,7 @@ extensions.append('notfound.extension')  # enable customizing not-found page
 
 extensions.append('autoapi.extension')
 autoapi_type = 'python'
-autoapi_dirs = ['../../mmedit']
+autoapi_dirs = ['../../mmagic']
 autoapi_add_toctree_entry = False
 autoapi_template_dir = '_templates'
 # autoapi_options = ['members', 'undoc-members', 'show-module-summary']
@@ -67,7 +67,7 @@ autoapi_template_dir = '_templates'
 # autodoc_inherit_docstrings = True
 
 autodoc_mock_imports = [
-    'mmedit.version', 'mmcv._ext', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmagic.version', 'mmcv._ext', 'mmcv.ops.ModulatedDeformConv2d',
     'mmcv.ops.modulated_deform_conv2d', 'clip', 'resize_right', 'pandas'
 ]
 
