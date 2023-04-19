@@ -1,4 +1,4 @@
-default_scope = 'mmedit'
+default_scope = 'mmagic'
 
 randomness = dict(seed=2022, diff_rank_seed=True)
 # env settings

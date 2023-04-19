@@ -4,7 +4,7 @@ import copy
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import (CenterCropLongEdge, Flip, NumpyPad,
+from mmagic.datasets.transforms import (CenterCropLongEdge, Flip, NumpyPad,
                                         RandomCropLongEdge, RandomRotation,
                                         RandomTransposeHW, Resize)
 

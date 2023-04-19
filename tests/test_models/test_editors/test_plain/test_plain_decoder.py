@@ -5,8 +5,8 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.models.base_archs import VGG16
-from mmedit.models.editors import PlainDecoder
+from mmagic.models.base_archs import VGG16
+from mmagic.models.editors import PlainDecoder
 
 
 def assert_tensor_with_shape(tensor, shape):

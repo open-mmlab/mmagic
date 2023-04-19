@@ -4,7 +4,7 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 class TestSNGANGenResBlock(object):

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
 
-from mmedit.datasets import ControlNetDataset
+from mmagic.datasets import ControlNetDataset
 
 data_dir = os.path.join(__file__, '../', '../', 'data', 'controlnet')
 data_dir = os.path.abspath(data_dir)

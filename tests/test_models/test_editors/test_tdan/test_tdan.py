@@ -3,10 +3,10 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models.data_preprocessors import EditDataPreprocessor
-from mmedit.models.editors import TDAN, TDANNet
-from mmedit.models.losses import MSELoss
-from mmedit.structures import EditDataSample
+from mmagic.models.data_preprocessors import EditDataPreprocessor
+from mmagic.models.editors import TDAN, TDANNet
+from mmagic.models.losses import MSELoss
+from mmagic.structures import EditDataSample
 
 
 def test_tdan():

@@ -12,9 +12,9 @@ from mmengine.optim import OptimWrapperDict
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
-from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
-from mmedit.structures import EditDataSample
-from mmedit.utils.typing import ForwardInputs, SampleList
+from mmagic.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
+from mmagic.structures import EditDataSample
+from mmagic.utils.typing import ForwardInputs, SampleList
 
 # from .guider import ImageTextGuider
 

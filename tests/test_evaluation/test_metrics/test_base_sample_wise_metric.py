@@ -6,8 +6,8 @@ import numpy as np
 import torch
 from torch.utils.data.dataloader import DataLoader
 
-from mmedit.datasets import BasicImageDataset
-from mmedit.evaluation.metrics.base_sample_wise_metric import \
+from mmagic.datasets import BasicImageDataset
+from mmagic.evaluation.metrics.base_sample_wise_metric import \
     BaseSampleWiseMetric
 
 

@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.evaluation.functional.fid_inception import (InceptionV3,
+from mmagic.evaluation.functional.fid_inception import (InceptionV3,
                                                         fid_inception_v3)
 
 

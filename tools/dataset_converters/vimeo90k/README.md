@@ -45,8 +45,8 @@ python tools/dataset_converters/vimeo90k/preprocess_vimeo90k_dataset.py --data-r
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

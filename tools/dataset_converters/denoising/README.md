@@ -16,8 +16,8 @@ The test datasets (Set12, BSD68, CBSD68, Kodak, McMaster, Urban100) can be downl
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

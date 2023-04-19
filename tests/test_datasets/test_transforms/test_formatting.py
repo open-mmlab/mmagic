@@ -3,8 +3,8 @@ import numpy as np
 import torch
 from mmcv.transforms import to_tensor
 
-from mmedit.datasets.transforms import PackEditInputs
-from mmedit.structures.edit_data_sample import EditDataSample
+from mmagic.datasets.transforms import PackEditInputs
+from mmagic.structures.edit_data_sample import EditDataSample
 
 
 def assert_tensor_equal(img, ref_img, ratio_thr=0.999):

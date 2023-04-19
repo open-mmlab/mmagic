@@ -6,11 +6,11 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import EditDataPreprocessor
-from mmedit.models.editors import CAIN, CAINNet
-from mmedit.models.losses import L1Loss
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
+from mmagic.models import EditDataPreprocessor
+from mmagic.models.editors import CAIN, CAINNet
+from mmagic.models.losses import L1Loss
+from mmagic.registry import MODELS
+from mmagic.structures import EditDataSample
 
 
 @pytest.mark.skipif(

@@ -9,11 +9,11 @@ from mmengine.structures import LabelData
 from mmengine.testing import assert_allclose
 from torch.nn import ModuleList
 
-from mmedit.models import BaseConditionalGAN, EditDataPreprocessor
-from mmedit.models.losses import (DiscShiftLossComps, GANLossComps,
+from mmagic.models import BaseConditionalGAN, EditDataPreprocessor
+from mmagic.models.losses import (DiscShiftLossComps, GANLossComps,
                                   GeneratorPathRegularizerComps,
                                   GradientPenaltyLossComps)
-from mmedit.structures import EditDataSample
+from mmagic.structures import EditDataSample
 
 generator = dict(
     type='SAGANGenerator',

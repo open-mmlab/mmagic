@@ -1,4 +1,4 @@
-default_scope = 'mmedit'
+default_scope = 'mmagic'
 save_dir = './work_dirs'
 
 default_hooks = dict(

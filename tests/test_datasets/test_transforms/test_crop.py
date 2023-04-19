@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.datasets.transforms import (Crop, CropLike, FixedCrop,
+from mmagic.datasets.transforms import (Crop, CropLike, FixedCrop,
                                         InstanceCrop, ModCrop,
                                         PairedRandomCrop, RandomResizedCrop)
 

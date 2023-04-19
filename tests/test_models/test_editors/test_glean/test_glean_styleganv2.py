@@ -7,11 +7,11 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import SRGAN, EditDataPreprocessor, GLEANStyleGANv2
-from mmedit.models.editors.stylegan2 import StyleGAN2Discriminator
-from mmedit.models.losses import (GANLoss, MSELoss, PerceptualLoss,
+from mmagic.models import SRGAN, EditDataPreprocessor, GLEANStyleGANv2
+from mmagic.models.editors.stylegan2 import StyleGAN2Discriminator
+from mmagic.models.losses import (GANLoss, MSELoss, PerceptualLoss,
                                   PerceptualVGG)
-from mmedit.structures import EditDataSample
+from mmagic.structures import EditDataSample
 
 
 @pytest.mark.skipif(

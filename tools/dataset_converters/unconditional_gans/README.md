@@ -23,7 +23,7 @@ train_dataloader = dict(
         pipeline=train_pipeline))
 ```
 
-Here, we adopt `InfinitySampler` to avoid frequent dataloader reloading, which will accelerate the training procedure. As shown in the example, `pipeline` provides important data pipeline to process images, including loading from file system, resizing, cropping, transferring to `torch.Tensor` and packing to `EditDataSample`. All of supported data pipelines can be found in `mmedit/datasets/transforms`.
+Here, we adopt `InfinitySampler` to avoid frequent dataloader reloading, which will accelerate the training procedure. As shown in the example, `pipeline` provides important data pipeline to process images, including loading from file system, resizing, cropping, transferring to `torch.Tensor` and packing to `EditDataSample`. All of supported data pipelines can be found in `mmagic/datasets/transforms`.
 
 For unconditional GANs with dynamic architectures like PGGAN and StyleGANv1, `GrowScaleImgDataset` is recommended to use for training. Since such dynamic architectures need real images in different scales, directly adopting `UnconditionalImageDataset` will bring heavy I/O cost for loading multiple high-resolution images. Here is an example we use for training PGGAN in CelebA-HQ dataset:
 
@@ -66,7 +66,7 @@ train_dataloader = dict(
 ```
 
 In this dataset, you should provide a dictionary of image paths to the `data_roots`. Thus, you should resize the images in the dataset in advance.
-For the resizing methods in the data pre-processing, we adopt bilinear interpolation methods in all of the experiments studied in MMEditing.
+For the resizing methods in the data pre-processing, we adopt bilinear interpolation methods in all of the experiments studied in MMagic.
 
 Note that this dataset should be used with `PGGANFetchDataHook`. In this config file, this hook should be added in the customized hooks, as shown below.
 

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.ddpm.denoising_unet import (DenoisingUnet,
+from mmagic.models.editors.ddpm.denoising_unet import (DenoisingUnet,
                                                        NormWithEmbedding)
 
 

@@ -9,8 +9,8 @@ import torch
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
-from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
 
 test_dir = osp.join(osp.dirname(__file__), '../../..', 'tests')
 config_path = osp.join(test_dir, 'configs', 'diffuser_wrapper_cfg')
@@ -25,7 +25,7 @@ class TestWrapper(TestCase):
     def test_build(self):
         # mock SiLU
         if digit_version(TORCH_VERSION) <= digit_version('1.6.0'):
-            from mmedit.models.editors.ddpm.denoising_unet import SiLU
+            from mmagic.models.editors.ddpm.denoising_unet import SiLU
             torch.nn.SiLU = SiLU
 
         # 1. test from config

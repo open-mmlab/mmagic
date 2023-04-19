@@ -6,8 +6,8 @@ import torch
 from mmengine.structures import LabelData
 from mmengine.testing import assert_allclose
 
-from mmedit.structures import EditDataSample
-from mmedit.structures.edit_data_sample import is_splitable_var
+from mmagic.structures import EditDataSample
+from mmagic.structures.edit_data_sample import is_splitable_var
 
 
 def test_is_stacked_var():

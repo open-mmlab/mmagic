@@ -4,9 +4,9 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import BasicVSR, BasicVSRNet, EditDataPreprocessor
-from mmedit.models.losses import CharbonnierLoss
-from mmedit.structures import EditDataSample
+from mmagic.models import BasicVSR, BasicVSRNet, EditDataPreprocessor
+from mmagic.models.losses import CharbonnierLoss
+from mmagic.structures import EditDataSample
 
 
 def test_basicvsr():

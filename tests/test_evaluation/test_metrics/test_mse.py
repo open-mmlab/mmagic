@@ -4,7 +4,7 @@ from copy import deepcopy
 import numpy as np
 import torch
 
-from mmedit.evaluation.metrics import MSE
+from mmagic.evaluation.metrics import MSE
 
 
 class TestPixelMetrics:

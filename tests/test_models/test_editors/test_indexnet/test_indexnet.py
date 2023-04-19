@@ -3,11 +3,11 @@ import numpy as np
 import torch
 from mmengine.config import ConfigDict
 
-from mmedit.datasets.transforms import PackEditInputs
-from mmedit.models.editors import IndexedUpsample
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.datasets.transforms import PackEditInputs
+from mmagic.models.editors import IndexedUpsample
+from mmagic.registry import MODELS
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 
 def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):

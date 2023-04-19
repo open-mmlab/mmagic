@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.datasets.categories import CIFAR10_CATEGORIES, IMAGENET_CATEGORIES
+from mmagic.datasets.categories import CIFAR10_CATEGORIES, IMAGENET_CATEGORIES
 
 
 def test_cifar10_categories():

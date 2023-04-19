@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.base_archs import MultiLayerDiscriminator
-from mmedit.models.editors import DeepFillv1Discriminators
+from mmagic.models.base_archs import MultiLayerDiscriminator
+from mmagic.models.editors import DeepFillv1Discriminators
 
 
 def test_deepfillv1_disc():

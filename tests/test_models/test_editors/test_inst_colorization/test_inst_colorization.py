@@ -5,9 +5,9 @@ import unittest
 import pytest
 import torch
 
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.registry import MODELS
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 
 @pytest.mark.skipif(

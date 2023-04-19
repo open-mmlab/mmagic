@@ -45,8 +45,8 @@ python tools/dataset_converters/vimeo90k/preprocess_vimeo90k_dataset.py --data-r
 文件目录结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from unittest.mock import MagicMock
 
-from mmedit.engine import EditLogProcessor as LogProcessor
+from mmagic.engine import EditLogProcessor as LogProcessor
 
 
 class TestLogProcessor:

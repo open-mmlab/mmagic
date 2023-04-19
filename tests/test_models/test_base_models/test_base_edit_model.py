@@ -4,11 +4,11 @@ from mmengine.optim import OptimWrapper
 from torch import nn
 from torch.optim import Adam
 
-from mmedit.models import BaseEditModel, EditDataPreprocessor
-from mmedit.models.losses import L1Loss
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.models import BaseEditModel, EditDataPreprocessor
+from mmagic.models.losses import L1Loss
+from mmagic.registry import MODELS
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

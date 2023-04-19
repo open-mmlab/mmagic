@@ -16,8 +16,8 @@ You can download the dataset using [Dropbox](https://www.dropbox.com/sh/hc06f1li
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

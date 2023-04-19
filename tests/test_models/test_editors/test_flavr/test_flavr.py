@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import FLAVR, FLAVRNet
+from mmagic.models.editors import FLAVR, FLAVRNet
 
 
 def test_flavr():

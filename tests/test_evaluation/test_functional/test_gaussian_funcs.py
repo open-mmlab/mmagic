@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 
-from mmedit.evaluation.functional import gauss_gradient
+from mmagic.evaluation.functional import gauss_gradient
 
 
 def test_gauss_gradient():

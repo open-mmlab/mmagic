@@ -8,10 +8,10 @@ import torch
 from mmengine.logging import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import EditDataPreprocessor, Pix2Pix
-from mmedit.models.base_archs import PatchDiscriminator
-from mmedit.models.editors.pix2pix import UnetGenerator
-from mmedit.utils import register_all_modules
+from mmagic.models import EditDataPreprocessor, Pix2Pix
+from mmagic.models.base_archs import PatchDiscriminator
+from mmagic.models.editors.pix2pix import UnetGenerator
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

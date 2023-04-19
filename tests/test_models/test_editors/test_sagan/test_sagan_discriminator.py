@@ -5,8 +5,8 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.models.editors.sagan import ProjDiscriminator
-from mmedit.registry import MODELS
+from mmagic.models.editors.sagan import ProjDiscriminator
+from mmagic.registry import MODELS
 
 
 class TestSNGANPROJDiscriminator(object):

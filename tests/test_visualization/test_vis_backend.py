@@ -10,7 +10,7 @@ import numpy as np
 import torch
 from mmengine import Config, MessageHub
 
-from mmedit.visualization import (GenVisBackend, PaviGenVisBackend,
+from mmagic.visualization import (GenVisBackend, PaviGenVisBackend,
                                   TensorboardGenVisBackend, WandbGenVisBackend)
 
 
@@ -18,7 +18,7 @@ class TestGenVisBackend(TestCase):
 
     def test_vis_backend(self):
         message_hub = MessageHub.get_instance('test-visbackend')
-        config = Config(dict(work_dir='./mmedit/test/vis_backend_test/'))
+        config = Config(dict(work_dir='./mmagic/test/vis_backend_test/'))
         message_hub.update_info('cfg', config.pretty_text)
 
         data_root = 'tmp_dir'
@@ -28,7 +28,7 @@ class TestGenVisBackend(TestCase):
         self.assertEqual(vis_backend.experiment, vis_backend)
         # test path mapping
         src_path = osp.abspath(
-            './mmedit/test/vis_backend_test/test_vis_data/test.png')
+            './mmagic/test/vis_backend_test/test_vis_data/test.png')
         tar_path = 's3://xxx/vis_backend_test/test_vis_data/test.png'
         file_client = vis_backend._file_client
         mapped_path = file_client._map_path(src_path)

@@ -5,8 +5,8 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import LIIF, EditDataPreprocessor
-from mmedit.structures import EditDataSample
+from mmagic.models import LIIF, EditDataPreprocessor
+from mmagic.structures import EditDataSample
 
 
 def test_liif():

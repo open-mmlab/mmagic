@@ -5,7 +5,7 @@ import torch.nn as nn
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
-from mmedit.models.base_archs import (LoRAWrapper, set_lora, set_lora_disable,
+from mmagic.models.base_archs import (LoRAWrapper, set_lora, set_lora_disable,
                                       set_lora_enable, set_only_lora_trainable)
 
 

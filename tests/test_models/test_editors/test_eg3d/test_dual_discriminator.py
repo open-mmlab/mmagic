@@ -6,7 +6,7 @@ from unittest import TestCase
 import pytest
 import torch
 
-from mmedit.models.editors.eg3d.dual_discriminator import DualDiscriminator
+from mmagic.models.editors.eg3d.dual_discriminator import DualDiscriminator
 
 
 class TestEG3DDiscriminator(TestCase):

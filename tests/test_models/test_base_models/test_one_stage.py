@@ -7,10 +7,10 @@ import pytest
 import torch
 from mmengine import Config
 
-from mmedit.models import GLEncoderDecoder
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.models import GLEncoderDecoder
+from mmagic.registry import MODELS
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 
 def test_one_stage_inpaintor():

@@ -6,12 +6,12 @@ import torch
 import torch.nn as nn
 from mmengine.runner import Runner
 
-from mmedit.datasets import BasicImageDataset
-from mmedit.datasets.transforms import PackEditInputs
-from mmedit.evaluation import PrecisionAndRecall
-from mmedit.models import LSGAN, EditDataPreprocessor
-from mmedit.models.editors.dcgan import DCGANGenerator
-from mmedit.utils import register_all_modules
+from mmagic.datasets import BasicImageDataset
+from mmagic.datasets.transforms import PackEditInputs
+from mmagic.evaluation import PrecisionAndRecall
+from mmagic.models import LSGAN, EditDataPreprocessor
+from mmagic.models.editors.dcgan import DCGANGenerator
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

@@ -4,8 +4,8 @@ from unittest.mock import MagicMock
 
 from mmengine.evaluator import Evaluator
 
-from mmedit.engine import EditTestLoop, EditValLoop
-from mmedit.evaluation import EditEvaluator
+from mmagic.engine import EditTestLoop, EditValLoop
+from mmagic.evaluation import EditEvaluator
 
 
 def build_dataloader(loader, **kwargs):

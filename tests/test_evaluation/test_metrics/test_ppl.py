@@ -6,12 +6,12 @@ import pytest
 import torch
 from mmengine.runner import Runner
 
-from mmedit.datasets import BasicImageDataset
-from mmedit.datasets.transforms import PackEditInputs
-from mmedit.evaluation import PerceptualPathLength
-from mmedit.models import LSGAN, EditDataPreprocessor
-from mmedit.models.editors.stylegan2 import StyleGAN2Generator
-from mmedit.utils import register_all_modules
+from mmagic.datasets import BasicImageDataset
+from mmagic.datasets.transforms import PackEditInputs
+from mmagic.evaluation import PerceptualPathLength
+from mmagic.models import LSGAN, EditDataPreprocessor
+from mmagic.models.editors.stylegan2 import StyleGAN2Generator
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

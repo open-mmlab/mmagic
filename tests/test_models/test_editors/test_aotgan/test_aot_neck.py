@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import AOTBlockNeck
+from mmagic.models.editors import AOTBlockNeck
 
 
 def test_aot_dilation_neck():

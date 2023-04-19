@@ -6,9 +6,9 @@ from unittest.mock import MagicMock
 import torch
 import torch.nn as nn
 
-from mmedit.models.editors.eg3d.eg3d import EG3D
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.models.editors.eg3d.eg3d import EG3D
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

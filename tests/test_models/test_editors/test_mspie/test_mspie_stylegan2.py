@@ -7,9 +7,9 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import EditDataPreprocessor, MSPIEStyleGAN2
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.models import EditDataPreprocessor, MSPIEStyleGAN2
+from mmagic.structures import EditDataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
