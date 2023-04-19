@@ -71,7 +71,7 @@
    model_zoo/index.rst
 
 
-.. toctree::接口文档（英文）
+.. toctree::
    :maxdepth: 1
    :caption: 数据集库
 
