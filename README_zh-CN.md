@@ -82,7 +82,7 @@ MMagic 是基于 PyTorch 的图像&视频编辑和生成开源工具箱。是 [O
 
 目前 MMagic 支持多种图像和视频的生成/编辑任务。
 
-https://user-images.githubusercontent.com/12782558/217152698-49169038-9872-4200-80f7-1d5f7613afd7.mp4
+https://user-images.githubusercontent.com/49083766/233324087-04542ec1-97cb-45d9-a096-c5337c3e5c75.mp4
 
 主分支代码的最佳实践基于 **Python 3.8+** 和 **PyTorch 1.9+** 。
 

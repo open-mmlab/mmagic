@@ -84,7 +84,7 @@ MMagic is an open-source image and video editing&generating toolbox based on PyT
 
 Currently, MMagic support multiple image and video generation/editing tasks.
 
-https://user-images.githubusercontent.com/12782558/217152698-49169038-9872-4200-80f7-1d5f7613afd7.mp4
+https://user-images.githubusercontent.com/49083766/233324087-04542ec1-97cb-45d9-a096-c5337c3e5c75.mp4
 
 The best practice on our main branch works with **Python 3.8+** and **PyTorch 1.9+**.
 
