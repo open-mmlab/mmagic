@@ -95,7 +95,7 @@ python tools/test.py configs/guided_diffusion/adm-u_ddim250_8xb32_imagenet-64x64
 ./tools/dist_test.sh configs/guided_diffusion/adm-u_ddim250_8xb32_imagenet-64x64.py https://download.openmmlab.com/mmgen/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth 8
 ```
 
-For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).
 
 </details>
 

@@ -1,4 +1,4 @@
-# MMEditing's implementation of Stable Diffusion
+# MMagic's implementation of Stable Diffusion
 # unet = dict(
 #     type='DenoisingUnet',
 #     image_size=512,
