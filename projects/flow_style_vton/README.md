@@ -1,22 +1,15 @@
-# Example Project
+# Style-Based Global Appearance Flow for Virtual Try-On (CVPR 2022)
 
-This is an example README for community `projects/`. You can write your README in your own project. Here are
-some recommended parts of a README for others to understand and use your project, you can copy or modify them
-according to your project.
-
-## Description \[required\]
-
-You can share any information you would like others to know. For example:
-
+## Description 
 ```
-Author: @xxx.
+Author: @FerryHuang.
 
-This is an implementation of \[XXX\].
+This is an implementation of https://github.com/SenHe/Flow-Style-VTON adapting to mmediting. Only inference is supported so far.
 ```
 
-## Usage \[required\]
+## Usage 
 
-### Setup Environment \[required\]
+### Setup Environment 
 
 Please refer to [Get Started](https://mmediting.readthedocs.io/en/latest/get_started/I.html) to install
 MMEditing.
@@ -29,74 +22,31 @@ At first, add the current folder to `PYTHONPATH`, so that Python can find your c
 export PYTHONPATH=`pwd`:$PYTHONPATH
 ```
 
-### Data Preparation \[optional\]
+### Data Preparation
 
-Prepare the ImageNet-2012 dataset according to the [instruction](https://mmediting.readthedocs.io/en/latest/user_guides/dataset_prepare.html#imagenet).
+Please check the [official repo](https://github.com/SenHe/Flow-Style-VTON) and download test-set and pretrained checkpoints and put them in https://github.com/FerryHuang/mmediting/tree/main/projects/flow_style_vton
 
-### Training commands \[optional\]
-
-**To train with single GPU:**
-
-```bash
-mim train mmedit configs/examplenet_8xb32_in1k.py
-```
-
-**To train with multiple GPUs:**
-
-```bash
-mim train mmedit configs/examplenet_8xb32_in1k.py --launcher pytorch --gpus 8
-```
-
-**To train with multiple GPUs by slurm:**
-
-```bash
-mim train mmedit configs/examplenet_8xb32_in1k.py --launcher slurm \
-    --gpus 16 --gpus-per-node 8 --partition $PARTITION
-```
-
-### Testing commands \[required\]
+### Testing commands 
 
 **To test with single GPU:**
 
 ```bash
-mim test mmedit configs/examplenet_8xb32_in1k.py $CHECKPOINT
+cd projects/flow_style_vton
+python inference.py
 ```
+Expectedly, two folders will be made im_gar_flow_wg and our_t_results, containing the
+try-on procedures and the final results, respectively.
 
-**To test with multiple GPUs:**
-
-```bash
-mim test mmedit configs/examplenet_8xb32_in1k.py $CHECKPOINT --launcher pytorch --gpus 8
-```
-
-**To test with multiple GPUs by slurm:**
-
-```bash
-mim test mmedit configs/examplenet_8xb32_in1k.py $CHECKPOINT --launcher slurm \
-    --gpus 16 --gpus-per-node 8 --partition $PARTITION
-```
-
-## Results \[required\]
-
-|       Model        |   Pretrain   | Top-1 (%) | Top-5 (%) |                   Config                   |                Download                |
-| :----------------: | :----------: | :-------: | :-------: | :----------------------------------------: | :------------------------------------: |
-|  ExampleNet-tiny   | From scratch |   82.33   |   96.15   | [config](configs/examplenet_8xb32_in1k.py) | [model](MODEL-LINK) \| [log](LOG-LINK) |
-| ExampleNet-small\* | From scratch |   83.63   |   96.51   | [config](configs/examplenet_8xb32_in1k.py) |          [model](MODEL-LINK)           |
-| ExampleNet-base\*  | From scratch |   84.34   |   96.86   | [config](configs/examplenet_8xb32_in1k.py) |          [model](MODEL-LINK)           |
-
-*Models with * are converted from the [official repo](REPO-LINK). The config files of these models are only for inference. We don't ensure these config files' training accuracy and welcome you to contribute your reproduction results.*
-
-You can also paste some visual results here if the model doesn't have quantitative results.
-
-## Citation \[required\]
+## Citation
 
 <!-- Replace to the citation of the paper your project refers to. -->
 
 ```bibtex
-@misc{mmediting2022,
-    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
-    author = {{MMEditing Contributors}},
-    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year = {2022}
+@inproceedings{he2022fs_vton,
+  title={Style-Based Global Appearance Flow for Virtual Try-On},
+  author={He, Sen and Song, Yi-Zhe and Xiang, Tao},
+  booktitle={CVPR},
+  year={2022}
 }
 ```
 
