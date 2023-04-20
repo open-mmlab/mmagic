@@ -12,10 +12,10 @@ model = dict(
     ),
     pretrained_cfgs=dict(
         warp_model=dict(
-            ckpt_path='projects/flow_style_vton/ckp/aug/PFAFN_warp_epoch_101.pth'
+            ckpt_path='ckp/aug/PFAFN_warp_epoch_101.pth'
         ),
         gen_model=dict(
-            ckpt_path='projects/flow_style_vton/ckp/aug/PFAFN_gen_epoch_101.pth'
+            ckpt_path='ckp/aug/PFAFN_gen_epoch_101.pth'
         )
     )
     )

@@ -1,12 +1,10 @@
-from typing import Dict, Union
-
 import numpy as np
 import torch
 import torch.nn.functional as F
 
 import mmengine
 from mmengine.model import BaseModel
-from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
+from mmengine.runner.checkpoint import _load_checkpoint
 
 from mmedit.registry import MODELS
 from mmedit.utils.typing import ForwardInputs
@@ -32,12 +30,10 @@ class FlowStyleVTON(BaseModel):
             pretrained_cfgs (_type_): _description_
         """
         for key, ckpt_cfg in pretrained_cfgs.items():
-            prefix = ckpt_cfg.get('prefix', '')
             map_location = ckpt_cfg.get('map_location', 'cpu')
-            strict = ckpt_cfg.get('strict', True)
+            strict = ckpt_cfg.get('strict', False)
             ckpt_path = ckpt_cfg.get('ckpt_path')
-            state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
-                                                      map_location)
+            state_dict = _load_checkpoint(ckpt_path, map_location)
             getattr(self, key).load_state_dict(state_dict, strict=strict)
             mmengine.print_log(f'Load pretrained {key} from {ckpt_path}')
     
@@ -58,7 +54,7 @@ class FlowStyleVTON(BaseModel):
         clothes = inputs["clothes"]
         edge = inputs["edge"]
         edge = torch.FloatTensor((edge.detach().numpy() > 0.5).astype(np.int64))
-        clothes = clothes * edge   
+        clothes = clothes * edge
         
         device = self.device
         real_image, clothes, edge = real_image.to(device), clothes.to(device), edge.to(device)
@@ -76,7 +72,8 @@ class FlowStyleVTON(BaseModel):
 
         flow_offset = de_offset(last_flow)
         flow_color = flow2color()(flow_offset)
-        combine = torch.cat(real_image[0], clothes[0], flow_color, warped_cloth[0], p_tryon[0], 2).squeeze()
+        combine = torch.cat([real_image[0], clothes[0], flow_color.to(device), 
+                             warped_cloth.to(device)[0], p_tryon[0]], 2).squeeze()
         return p_tryon, combine
     
     def forward(self, inputs: ForwardInputs):
