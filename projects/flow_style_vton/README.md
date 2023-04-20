@@ -24,7 +24,7 @@ export PYTHONPATH=`pwd`:$PYTHONPATH
 
 ### Data Preparation
 
-Please check the [official repo](https://github.com/SenHe/Flow-Style-VTON) and download test-set and pretrained checkpoints and put them in https://github.com/FerryHuang/mmediting/tree/main/projects/flow_style_vton
+Please check the [official repo](https://github.com/SenHe/Flow-Style-VTON) and download test-set and pretrained checkpoints and put them under the folder projects/flow_style_vton
 
 ### Testing commands 
 
