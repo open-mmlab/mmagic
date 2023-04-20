@@ -47,8 +47,8 @@ We show that diffusion models can achieve image sample quality superior to the c
 You can run adm as follows:
 
 ```python
-from mmedit.utils import register_all_modules
-from mmedit.apis import init_model
+from mmagic.utils import register_all_modules
+from mmagic.apis import init_model
 
 register_all_modules()
 
