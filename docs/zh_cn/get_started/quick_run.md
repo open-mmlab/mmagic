@@ -6,7 +6,7 @@
 
 ### 测试一个预训练模型
 
-MMEditing 使用 `MMDistributedDataParallel` 实现 **分布式**测试。
+MMagic 使用 `MMDistributedDataParallel` 实现 **分布式**测试。
 
 #### 在单/多个 GPU 上进行测试
 
@@ -32,7 +32,7 @@ python tools/test.py configs/example_config.py work_dirs/example_exp/example_mod
 
 #### 在 slurm 上测试
 
-如果您在使用 [slurm](https://slurm.schedmd.com/) 管理的集群上运行 MMEditing，则可以使用脚本 `slurm_test.sh`。（此脚本也支持单机测试。）
+如果您在使用 [slurm](https://slurm.schedmd.com/) 管理的集群上运行 MMagic，则可以使用脚本 `slurm_test.sh`。（此脚本也支持单机测试。）
 
 ```shell
 [GPUS=${GPUS}] ./tools/slurm_test.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${CHECKPOINT_FILE}
@@ -44,7 +44,7 @@ python tools/test.py configs/example_config.py work_dirs/example_exp/example_mod
 GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/example_exp/example_model_20200202.pth
 ```
 
-您可以查看 [slurm_test.sh](https://github.com/open-mmlab/mmediting/blob/master/tools/slurm_test.sh) 以获取完整的参数和环境变量。
+您可以查看 [slurm_test.sh](https://github.com/open-mmlab/mmagic/blob/main/tools/slurm_test.sh) 以获取完整的参数和环境变量。
 
 #### 可选参数
 
@@ -58,7 +58,7 @@ GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/exampl
 
 ## 训练一个模型
 
-MMEditing 使用 `MMDistributedDataParallel` 实现 **分布式**测试。
+MMagic 使用 `MMDistributedDataParallel` 实现 **分布式**测试。
 
 所有输出（日志文件和模型权重文件）都将保存到工作目录中，工作目录由配置文件中的 `work_dir` 指定。
 
@@ -106,7 +106,7 @@ NNODES=2 NODE_RANK=1 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train
 
 ### 在 slurm 上训练
 
-如果您在使用 [slurm](https://slurm.schedmd.com/) 管理的集群上运行 MMEditing，则可以使用脚本 `slurm_train.sh`。（此脚本也支持单机训练。）
+如果您在使用 [slurm](https://slurm.schedmd.com/) 管理的集群上运行 MMagic，则可以使用脚本 `slurm_train.sh`。（此脚本也支持单机训练。）
 
 ```shell
 [GPUS=${GPUS}] ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${WORK_DIR}
@@ -118,7 +118,7 @@ NNODES=2 NODE_RANK=1 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train
 GPUS=8 ./tools/slurm_train.sh dev configs/inpainting/gl_places.py /nfs/xxxx/gl_places_256
 ```
 
-您可以查看 [slurm_train.sh](https://github.com/open-mmlab/mmediting/blob/master/tools/slurm_train.sh) 以获取完整的参数和环境变量。
+您可以查看 [slurm_train.sh](https://github.com/open-mmlab/mmagic/blob/main/tools/slurm_train.sh) 以获取完整的参数和环境变量。
 
 ### 在一台机器上启动多个作业
 

@@ -1,8 +1,8 @@
 # Tutorial 6: Visualization
 
 The visualization of images is an important way to measure the quality of image processing, editing and synthesis.
-Using `visualizer` in config file can save visual results when training or testing. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/visualization.md) to learn the usage of visualization. MMEditing provides a rich set of visualization functions.
-In this tutorial, we introduce the usage of the visualization functions provided by MMEditing.
+Using `visualizer` in config file can save visual results when training or testing. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/visualization.md) to learn the usage of visualization. MMagic provides a rich set of visualization functions.
+In this tutorial, we introduce the usage of the visualization functions provided by MMagic.
 
 - [Overview](#overview)
 - [Visualization hook](#visualization-hook)
@@ -11,7 +11,7 @@ In this tutorial, we introduce the usage of the visualization functions provided
 
 ## Overview
 
-In MMEditing, the visualization of the training or testing process requires the configuration of three components: VisualizationHook, Visualizer, and VisBackend.
+In MMagic, the visualization of the training or testing process requires the configuration of three components: VisualizationHook, Visualizer, and VisBackend.
 
 **VisualizationHook** fetches the visualization results of the model output in fixed intervals during training and passes them to Visualizer.
 **Visualizer** is responsible for converting the original visualization results into the desired type (png, gif, etc.) and then transferring them to **VisBackend** for storage or display.
@@ -35,7 +35,7 @@ vis_backends = [
     dict(type='GenVisBackend'),  # vis_backend for saving images to file system
     dict(type='WandbGenVisBackend',  # vis_backend for uploading images to Wandb
         init_kwargs=dict(
-            project='MMEditing',   # project name for Wandb
+            project='MMagic',   # project name for Wandb
             name='GAN-Visualization-Demo'  # name of the experiment for Wandb
         ))
 ]
@@ -86,7 +86,7 @@ vis_backends = [
     dict(type='GenVisBackend'),  # vis_backend for saving images to file system
     dict(type='WandbGenVisBackend',  # vis_backend for uploading images to Wandb
         init_kwargs=dict(
-            project='MMEditing',   # project name for Wandb
+            project='MMagic',   # project name for Wandb
             name='Translation-Visualization-Demo'  # name of the experiment for Wandb
         ))
 ]
@@ -112,7 +112,7 @@ vis_backends = [
     dict(type='GenVisBackend'),  # vis_backend for saving images to file system
     dict(type='WandbGenVisBackend',  # vis_backend for uploading images to Wandb
         init_kwargs=dict(
-            project='MMEditing',   # project name for Wandb
+            project='MMagic',   # project name for Wandb
             name='Diffusion-Visualization-Demo'  # name of the experiment for Wandb
         ))
 ]
@@ -178,7 +178,7 @@ The specific configuration of the `VisualizationHook`, `Visualizer` and `VisBack
 
 ## Visualization Hook
 
-In MMEditing, we use `BasicVisualizationHook` and `GenVisualizationHook` as `VisualizationHook`.
+In MMagic, we use `BasicVisualizationHook` and `GenVisualizationHook` as `VisualizationHook`.
 `GenVisualizationHook` supports three following cases.
 
 (1) Modify `vis_kwargs_list` to visualize the output of the model under specific inputs , which is suitable for visualization of the generated results of GAN and translation results of Image-to-Image-Translation models under specific data input, etc. Below are two typical examples:
@@ -211,7 +211,7 @@ vis_kwargs_list = [
 In addition, the other fields are generic fields (e.g. `n_samples`, `n_row`, `name`, `fixed_input`, etc.).
 If not passed in, the default values from the GenVisHook initialization will be used.
 
-For the convenience of users, MMEditing has pre-defined visualization parameters for **GAN**, **Translation models**, **SinGAN** and **Diffusion models**, and users can directly use the predefined visualization methods by using the following configuration:
+For the convenience of users, MMagic has pre-defined visualization parameters for **GAN**, **Translation models**, **SinGAN** and **Diffusion models**, and users can directly use the predefined visualization methods by using the following configuration:
 
 ```python
 vis_kwargs_list = dict(type='GAN')
@@ -224,7 +224,7 @@ vis_kwargs_list = dict(type='DDPMDenoising')
 
 ## Visualizer
 
-In MMEditing, we implement `ConcatImageVisualizer` and `GenVisualizer`, which inherit from `mmengine.Visualizer`.
+In MMagic, we implement `ConcatImageVisualizer` and `GenVisualizer`, which inherit from `mmengine.Visualizer`.
 The base class of `Visualizer` is `ManagerMixin` and this makes `Visualizer` a globally unique object.
 After being instantiated, `Visualizer` can be called at anywhere of the code by `Visualizer.get_current_instance()`, as shown below:
 
@@ -251,7 +251,7 @@ Then `show` or `add_image` will be called to directly show the results or pass t
 ## VisBackend
 
 In general, users do not need to manipulate `VisBackend` objects, only when the current visualization storage can not meet the needs, users will want to manipulate the storage backend directly.
-MMEditing supports a variety of different visualization backends, including:
+MMagic supports a variety of different visualization backends, including:
 
 - Basic VisBackend of MMEngine: including LocalVisBackend, TensorboardVisBackend and WandbVisBackend. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/visualization.md) to learn more about them
 - GenVisBackend: Backend for **File System**. Save the visualization results to the corresponding position.

@@ -1,4 +1,4 @@
-# Tutorial 1: Learn about Configs in MMEditing
+# Tutorial 1: Learn about Configs in MMagic
 
 We incorporate modular and inheritance design into our config system, which is convenient to conduct various experiments.
 If you wish to inspect the config file, you may run `python tools/misc/print_config.py /PATH/TO/CONFIG` to see the complete config.
@@ -77,13 +77,13 @@ Please refer to [MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs
 ## An example of EDSR
 
 To help the users have a basic idea of a complete config,
-we make a brief comments on the [config of the EDSR model](https://github.com/open-mmlab/mmediting/blob/main/configs/edsr/edsr_x2c64b16_g1_300k_div2k.py) we implemented as the following.
+we make a brief comments on the [config of the EDSR model](https://github.com/open-mmlab/mmagic/blob/main/configs/edsr/edsr_x2c64b16_g1_300k_div2k.py) we implemented as the following.
 For more detailed usage and the corresponding alternative for each modules,
 please refer to the API documentation and the [tutorial in MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/config.md).
 
 ### Model config
 
-In MMEditing's config, we use model fields to set up a model.
+In MMagic's config, we use model fields to set up a model.
 
 ```python
 model = dict(
@@ -271,7 +271,7 @@ custom_hooks = [dict(type='BasicVisualizationHook', interval=1)] # Config of vis
 ### Runtime config
 
 ```python
-default_scope = 'mmedit' # Used to set registries location
+default_scope = 'mmagic' # Used to set registries location
 env_cfg = dict(  # Parameters to setup distributed training, the port can also be set
     cudnn_benchmark=False,
     mp_cfg=dict(mp_start_method='fork', opencv_num_threads=4),
@@ -285,7 +285,7 @@ resume = False  # Resume checkpoints from a given path, the training will be res
 
 ## An example of StyleGAN2
 
-Taking [Stylegan2 at 1024x1024 scale](https://github.com/open-mmlab/mmediting/blob/main/configs//styleganv2/stylegan2_c2_8xb4-fp16-global-800kiters_quicktest-ffhq-256x256.py) as an example,
+Taking [Stylegan2 at 1024x1024 scale](https://github.com/open-mmlab/mmagic/blob/main/configs//styleganv2/stylegan2_c2_8xb4-fp16-global-800kiters_quicktest-ffhq-256x256.py) as an example,
 we introduce each field in the config according to different function modules.
 
 ### Model config
@@ -416,7 +416,7 @@ optim_wrapper = dict(
 `param_scheduler` is a field that configures methods of adjusting optimization hyperparameters such as learning rate and momentum.
 Users can combine multiple schedulers to create a desired parameter adjustment strategy.
 Find more in [parameter scheduler tutorial](https://mmengine.readthedocs.io/en/latest/tutorials/param_scheduler.html).
-Since StyleGAN2 do not use parameter scheduler, we use config in [CycleGAN](https://github.com/open-mmlab/mmediting/blob/main/configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py) as an example:
+Since StyleGAN2 do not use parameter scheduler, we use config in [CycleGAN](https://github.com/open-mmlab/mmagic/blob/main/configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py) as an example:
 
 ```python
 # parameter scheduler in CycleGAN config
@@ -465,7 +465,7 @@ custom_hooks = [
 ### Runtime config
 
 ```python
-default_scope = 'mmedit'  # The default registry scope to find modules. Refer to https://mmengine.readthedocs.io/en/latest/tutorials/registry.html
+default_scope = 'mmagic'  # The default registry scope to find modules. Refer to https://mmengine.readthedocs.io/en/latest/tutorials/registry.html
 
 # config for environment
 env_cfg = dict(
@@ -626,7 +626,7 @@ optim_wrapper = dict( # Config used to build optimizer, support all the optimize
         type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0004)),
     disc=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0004)))
 
-default_scope = 'mmedit' # Used to set registries location
+default_scope = 'mmagic' # Used to set registries location
 save_dir = './work_dirs' # Directory to save the model checkpoints and logs for the current experiments
 exp_name = 'gl_places'  # The experiment name
 
@@ -812,7 +812,7 @@ optim_wrapper = dict(
     )
 )  # Config used to build optimizer, support all the optimizers in PyTorch whose arguments are also the same as those in PyTorch.
 
-default_scope = 'mmedit'  # Used to set registries location
+default_scope = 'mmagic'  # Used to set registries location
 save_dir = './work_dirs'  # Directory to save the model checkpoints and logs for the current experiments.
 
 default_hooks = dict(  # Used to build default hooks
@@ -982,7 +982,7 @@ default_hooks = dict(  # Used to build default hooks
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 
-default_scope = 'mmedit'  # Used to set registries location
+default_scope = 'mmagic'  # Used to set registries location
 save_dir = './work_dirs'  # Directory to save the model checkpoints and logs for the current experiments.
 
 env_cfg = dict(  # Parameters to setup distributed training, the port can also be set

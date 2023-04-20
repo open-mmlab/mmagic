@@ -1,6 +1,6 @@
 # 贡献代码
 
-欢迎加入 MMEditing 社区，我们致力于打造最前沿的计算机视觉基础库，我们欢迎任何类型的贡献，包括但不限于
+欢迎加入 MMagic 社区，我们致力于打造最前沿的计算机视觉基础库，我们欢迎任何类型的贡献，包括但不限于
 
 **修复错误**
 
@@ -36,22 +36,22 @@
 将代码克隆到本地
 
 ```shell
-git clone git@github.com:{username}/mmediting.git
+git clone git@github.com:{username}/mmagic.git
 ```
 
 添加原代码库为上游代码库
 
 ```bash
-git remote add upstream git@github.com:open-mmlab/mmediting
+git remote add upstream git@github.com:open-mmlab/mmagic
 ```
 
 检查 remote 是否添加成功，在终端输入 `git remote -v`
 
 ```bash
-origin	git@github.com:{username}/mmediting.git (fetch)
-origin	git@github.com:{username}/mmediting.git (push)
-upstream	git@github.com:open-mmlab/mmediting (fetch)
-upstream	git@github.com:open-mmlab/mmediting (push)
+origin	git@github.com:{username}/mmagic.git (fetch)
+origin	git@github.com:{username}/mmagic.git (push)
+upstream	git@github.com:open-mmlab/mmagic (fetch)
+upstream	git@github.com:open-mmlab/mmagic (push)
 ```
 
 ```{note}
@@ -60,7 +60,7 @@ upstream	git@github.com:open-mmlab/mmediting (push)
 
 #### 2. 配置 pre-commit
 
-在本地开发环境中，我们使用 [pre-commit](https://pre-commit.com/#intro) 来检查代码风格，以确保代码风格的统一。在提交代码，需要先安装 pre-commit（需要在 mmediting 目录下执行）:
+在本地开发环境中，我们使用 [pre-commit](https://pre-commit.com/#intro) 来检查代码风格，以确保代码风格的统一。在提交代码，需要先安装 pre-commit（需要在 mmagic 目录下执行）:
 
 ```shell
 pip install -U pre-commit
@@ -113,7 +113,7 @@ git pull upstream master
 
 #### 4. 提交代码并在本地通过单元测试
 
-- mmediting 引入了 mypy 来做静态类型检查，以增加代码的鲁棒性。因此我们在提交代码时，需要补充 Type Hints。具体规则可以参考[教程](https://zhuanlan.zhihu.com/p/519335398)。
+- mmagic 引入了 mypy 来做静态类型检查，以增加代码的鲁棒性。因此我们在提交代码时，需要补充 Type Hints。具体规则可以参考[教程](https://zhuanlan.zhihu.com/p/519335398)。
 
 - 提交的代码同样需要通过单元测试
 
@@ -164,7 +164,7 @@ git push -u origin {branch_name}
 
 <img src="https://user-images.githubusercontent.com/57566630/167307490-f9ebf9fa-63c0-4d83-8ba1-081ea169eb3a.png" width="1200">
 
-mmediting 会在不同的平台（Linux、Window、Mac），基于不同版本的 Python、PyTorch、CUDA 对提交的代码进行单元测试，以保证代码的正确性，如果有任何一个没有通过，我们可点击上图中的 `Details` 来查看具体的测试信息，以便于我们修改代码。
+mmagic 会在不同的平台（Linux、Window、Mac），基于不同版本的 Python、PyTorch、CUDA 对提交的代码进行单元测试，以保证代码的正确性，如果有任何一个没有通过，我们可点击上图中的 `Details` 来查看具体的测试信息，以便于我们修改代码。
 
 (3) 如果 PR 通过了 CI，那么就可以等待其他开发者的 review，并根据 reviewer 的意见，修改代码，并重复 [4](#4-提交代码并本地通过单元测试)-[5](#5-推送代码到远程) 步骤，直到 reviewer 同意合入 PR。
 
@@ -262,7 +262,7 @@ C++ 和 CUDA 的代码规范遵从 [Google C++ Style Guide](https://google.githu
    - 描述里介绍`拉取请求`的主要修改内容，结果，以及对其他部分的影响, 参考`拉取请求`模板
    - 关联相关的`议题` (issue) 和其他`拉取请求`
 
-6. 如果引入了其他三方库，或借鉴了三方库的代码，请确认他们的许可证和 mmediting 兼容，并在借鉴的代码上补充 `This code is inspired from http://`
+6. 如果引入了其他三方库，或借鉴了三方库的代码，请确认他们的许可证和 mmagic 兼容，并在借鉴的代码上补充 `This code is inspired from http://`
 
 ## 代码规范
 
@@ -326,12 +326,12 @@ hypot2 = x * x + y * y
 
 ```python
 # Correct
-from mmedit.cnn.bricks import (Conv2d, build_norm_layer, DropPath, MaxPool2d,
+from mmagic.cnn.bricks import (Conv2d, build_norm_layer, DropPath, MaxPool2d,
                              Linear)
 from ..utils import ext_loader
 
 # Wrong
-from mmedit.cnn.bricks import Conv2d, build_norm_layer, DropPath, MaxPool2d, \
+from mmagic.cnn.bricks import Conv2d, build_norm_layer, DropPath, MaxPool2d, \
                             Linear  # 使用括号进行连接，而不是反斜杠
 from ...utils import is_str  # 最多向上回溯一层，过多的回溯容易导致结构混乱
 ```
@@ -591,7 +591,7 @@ docstring 是对一个类、一个函数功能与 API 接口的详细描述，�
                ``out_dir`` and the last level directory of ``runner.work_dir``.
                Defaults to None. `Changed in version 1.3.15.`
            file_client_args (dict, optional): Arguments to instantiate a
-               FileClient. See :class:`mmedit.fileio.FileClient` for details.
+               FileClient. See :class:`mmagic.fileio.FileClient` for details.
                Defaults to None. `New in version 1.3.15.`
 
        Warning:

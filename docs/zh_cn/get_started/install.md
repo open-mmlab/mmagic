@@ -20,8 +20,8 @@
 a. 创建并激活 conda 虚拟环境，如 `python 3.8`：
 
 ```shell
-conda create -n mmedit python=3.8 -y
-conda activate mmedit
+conda create -n mmagic python=3.8 -y
+conda activate mmagic
 ```
 
 b. 按照 [PyTorch 官方文档](https://pytorch.org/) 安装 PyTorch 和 torchvision，然后安装对应路径下的 `mmcv-full`
@@ -49,14 +49,14 @@ conda install pytorch cudatoolkit=10.1 torchvision -c pytorch
 conda install pytorch=1.3.1 cudatoolkit=9.2 torchvision=0.4.2 -c pytorch
 ```
 
-c. 克隆 MMEditing 仓库
+c. 克隆 MMagic 仓库
 
 ```shell
-git clone https://github.com/open-mmlab/mmediting.git
-cd mmediting
+git clone https://github.com/open-mmlab/mmagic.git
+cd mmagic
 ```
 
-d. 安装相关依赖和 MMEditing
+d. 安装相关依赖和 MMagic
 
 ```shell
 pip install -r requirements.txt
@@ -71,14 +71,14 @@ CC=clang CXX=clang++ CFLAGS='-stdlib=libc++' pip install -e .
 
 e. 验证安装
 
-安装完成后，可以切换到其他目录（例如 `/home` 目录），并尝试在 python 中导入 mmedit，导入成功则证明安装成功
+安装完成后，可以切换到其他目录（例如 `/home` 目录），并尝试在 python 中导入 mmagic，导入成功则证明安装成功
 
 ```shell
 $ cd ~
 $ python
 
->>> import mmedit
->>> mmedit.__version__
+>>> import mmagic
+>>> mmagic.__version__
 '0.12.0'
 ```
 
@@ -86,15 +86,15 @@ $ python
 
 1. git commit 的 id 将会被写到版本号中，如 0.6.0+2e7045c。这个版本号也会被保存到训练好的模型中。 推荐用户每次在对本地代码和 github 上的源码进行同步后，执行一次步骤 b。如果 C++/CUDA 代码被修改，就必须进行这一步骤。
 
-   > 重要：如果你在一个新的 CUDA/PyTorch 版本下重新安装了 mmedit ，请确保删除了`./build`文件夹
+   > 重要：如果你在一个新的 CUDA/PyTorch 版本下重新安装了 mmagic ，请确保删除了`./build`文件夹
 
    ```shell
-   pip uninstall mmedit
+   pip uninstall mmagic
    rm -rf ./build
    find . -name "*.so" | xargs rm
    ```
 
-2. 根据上述步骤， MMEditing 就会以 `dev` 模式被安装，任何本地的代码修改都会立刻生效，不需要再重新安装一遍（除非用户提交了 commits，并且想更新版本号）。
+2. 根据上述步骤， MMagic 就会以 `dev` 模式被安装，任何本地的代码修改都会立刻生效，不需要再重新安装一遍（除非用户提交了 commits，并且想更新版本号）。
 
 3. 如果用户想使用 `opencv-python-headless` 而不是 `opencv-python`，可在安装 `MMCV` 前安装 `opencv-python-headless`。
 
@@ -105,7 +105,7 @@ $ python
 
 ### CPU 环境下的安装步骤
 
-MMEditing 也可以在只有 CPU 的环境下安装（即无法使用 GPU 的环境）。
+MMagic 也可以在只有 CPU 的环境下安装（即无法使用 GPU 的环境）。
 
 相应的，安装 CPU 版本的 PyTorch 和 MMCV
 
@@ -120,19 +120,19 @@ pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7
 
 因此，如果您尝试使用一些包含可变形卷积的模型进行推理，则会出现错误。
 
-### 利用 Docker 镜像安装 MMEditing
+### 利用 Docker 镜像安装 MMagic
 
-MMEditing 提供了一个 [Dockerfile](https://github.com/open-mmlab/mmediting/blob/master/docker/Dockerfile) 来创建 docker 镜像
+MMagic 提供了一个 [Dockerfile](https://github.com/open-mmlab/mmagic/blob/master/docker/Dockerfile) 来创建 docker 镜像
 
 ```shell
 # build an image with PyTorch 1.5, CUDA 10.1
-docker build -t mmediting docker/
+docker build -t mmagic docker/
 ```
 
 运行以下命令：
 
 ```shell
-docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
+docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmagic/data mmagic
 ```
 
 ### 完整的安装脚本
@@ -143,8 +143,8 @@ conda activate open-mmlab
 
 # install latest pytorch prebuilt with the default prebuilt CUDA version (usually the latest)
 conda install -c pytorch pytorch torchvision -y
-git clone https://github.com/open-mmlab/mmediting.git
-cd mmediting
+git clone https://github.com/open-mmlab/mmagic.git
+cd mmagic
 pip install -r requirements.txt
 pip install -v -e .
 ```
