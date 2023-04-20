@@ -47,7 +47,7 @@ python tools/train.py configs/global_local/gl_8xb12_places-256x256.py
 ./tools/dist_train.sh configs/global_local/gl_8xb12_places-256x256.py 8
 ```
 
-For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMagic).
 
 </details>
 
@@ -69,7 +69,7 @@ python tools/test.py configs/global_local/gl_8xb12_places-256x256.py https://dow
 ./tools/dist_test.sh configs/global_local/gl_8xb12_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth 8
 ```
 
-For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).
 
 </details>
 
