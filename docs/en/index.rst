@@ -1,14 +1,14 @@
-Welcome to MMEditing's documentation!
+Welcome to MMagic's documentation!
 =====================================
 
 Languages:
-`English <https://mmediting.readthedocs.io/en/latest/>`_
+`English <https://mmagic.readthedocs.io/en/latest/>`_
 |
-`简体中文 <https://mmediting.readthedocs.io/zh_CN/latest/>`_
+`简体中文 <https://mmagic.readthedocs.io/zh_CN/latest/>`_
 
-MMEditing is an open-source toolbox for image and video processing, editing and synthesis.
+MMagic is an open-source toolbox for image and video processing, editing and synthesis.
 
-MMEditing supports various foundamental generative models, including:
+MMagic supports various foundamental generative models, including:
 
 * Unconditional Generative Adversarial Networks (GANs)
 * Conditional Generative Adversarial Networks (GANs)
@@ -17,7 +17,7 @@ MMEditing supports various foundamental generative models, including:
 * And many other generative models are coming soon!
 
 
-MMEditing supports various applications, including:
+MMagic supports various applications, including:
 
 * Image super-resolution
 * Video super-resolution
@@ -27,8 +27,8 @@ MMEditing supports various applications, including:
 * Image-to-image translation
 * And many other applications are coming soon!
 
-MMEditing is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
-Codes are available on `GitHub <https://github.com/open-mmlab/mmediting>`_.
+MMagic is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
+Codes are available on `GitHub <https://github.com/open-mmlab/mmagic>`_.
 
 
 Documentation

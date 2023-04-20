@@ -1,20 +1,20 @@
 # Overview
 
-Welcome to MMEditing! In this section, you will know about
+Welcome to MMagic! In this section, you will know about
 
-- [What is MMEditing?](#what-is-mmediting)
-- [Why should I use MMEditing?](#why-should-i-use-mmediting)
+- [What is MMagic?](#what-is-mmagic)
+- [Why should I use MMagic?](#why-should-i-use-mmagic)
 - [Get started](#get-started)
 - [User guides](#user-guides)
 - [Advanced guides](#advanced-guides)
 
-## What is MMEditing?
+## What is MMagic?
 
-MMEditing is an open-source toolbox for professional AI researchers and machine learning engineers to explore image and video processing, editing and synthesis.
+MMagic is an open-source toolbox for professional AI researchers and machine learning engineers to explore image and video processing, editing and synthesis.
 
-MMEditing allows researchers and engineers to use pre-trained state-of-the-art models, train and develop new customized models easily.
+MMagic allows researchers and engineers to use pre-trained state-of-the-art models, train and develop new customized models easily.
 
-MMEditing supports various foundamental generative models, including:
+MMagic supports various foundamental generative models, including:
 
 - Unconditional Generative Adversarial Networks (GANs)
 - Conditional Generative Adversarial Networks (GANs)
@@ -22,7 +22,7 @@ MMEditing supports various foundamental generative models, including:
 - Diffusion Models
 - And many other generative models are coming soon!
 
-MMEditing supports various applications, including:
+MMagic supports various applications, including:
 
 - Image super-resolution
 - Video super-resolution
@@ -66,15 +66,15 @@ MMEditing supports various applications, including:
   <img src="https://user-images.githubusercontent.com/22982797/127615534-6278ce1b-5cff-4189-83c6-9ecc8de08dfc.png" width="800"/>
 </div>
 
-## Why should I use MMEditing?
+## Why should I use MMagic?
 
 - **State of the Art**
 
-  MMEditing provides state-of-the-art generative models to process, edit and synthesize images and videos.
+  MMagic provides state-of-the-art generative models to process, edit and synthesize images and videos.
 
 - **Powerful and Popular Applications**
 
-  MMEditing supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* applications. Specifically, MMEditing supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN's applications. It's time to play with your GANs!
+  MMagic supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* applications. Specifically, MMagic supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN's applications. It's time to play with your GANs!
 
 - **New Modular Design for Flexible Combination:**
 
@@ -90,12 +90,12 @@ For installation instructions, please see [Installation](install.md).
 
 ## User guides
 
-For beginners, we suggest learning the basic usage of MMEditing from [user_guides](../user_guides/config.md).
+For beginners, we suggest learning the basic usage of MMagic from [user_guides](../user_guides/config.md).
 
 ### Advanced guides
 
-For users who are familiar with MMEditing, you may want to learn the design of MMEditing, as well as how to extend the repo, how to use multiple repos and other advanced usages, please refer to [advanced_guides](../advanced_guides/evaluator.md).
+For users who are familiar with MMagic, you may want to learn the design of MMagic, as well as how to extend the repo, how to use multiple repos and other advanced usages, please refer to [advanced_guides](../advanced_guides/evaluator.md).
 
 ### How to
 
-For users who want to use MMEditing to do something, please refer to [How to](../howto/models.md).
+For users who want to use MMagic to do something, please refer to [How to](../howto/models.md).

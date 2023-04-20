@@ -1,6 +1,6 @@
 # Contributing guidance
 
-Welcome to the MMEditing community, we are committed to building a toolbox for cutting-edge image, video and 3D content generation, editing and processing techniques.
+Welcome to the mmagic community, we are committed to building a toolbox for cutting-edge image, video and 3D content generation, editing and processing techniques.
 
 This section introduces following contents:
 
@@ -54,22 +54,22 @@ If you are posting a pull request for the first time, you should fork the OpenMM
 Then, you can clone the repositories to local:
 
 ```shell
-git clone git@github.com:{username}/mmediting.git
+git clone git@github.com:{username}/mmagic.git
 ```
 
 After that, you should ddd official repository as the upstream repository
 
 ```bash
-git remote add upstream git@github.com:open-mmlab/mmediting
+git remote add upstream git@github.com:open-mmlab/mmagic
 ```
 
 Check whether remote repository has been added successfully by `git remote -v`
 
 ```bash
-origin	git@github.com:{username}/mmediting.git (fetch)
-origin	git@github.com:{username}/mmediting.git (push)
-upstream	git@github.com:open-mmlab/mmediting (fetch)
-upstream	git@github.com:open-mmlab/mmediting (push)
+origin	git@github.com:{username}/mmagic.git (fetch)
+origin	git@github.com:{username}/mmagic.git (push)
+upstream	git@github.com:open-mmlab/mmagic (fetch)
+upstream	git@github.com:open-mmlab/mmagic (push)
 ```
 
 ```{note}
@@ -78,7 +78,7 @@ Here's a brief introduction to origin and upstream. When we use "git clone", we 
 
 #### 2. Configure pre-commit
 
-You should configure [pre-commit](https://pre-commit.com/#intro) in the local development environment to make sure the code style matches that of OpenMMLab. **Note**: The following code should be executed under the mmediting directory.
+You should configure [pre-commit](https://pre-commit.com/#intro) in the local development environment to make sure the code style matches that of OpenMMLab. **Note**: The following code should be executed under the mmagic directory.
 
 ```shell
 pip install -U pre-commit
@@ -130,7 +130,7 @@ git pull upstream master
 
 #### 4. Commit the code and pass the unit test
 
-- MMEditing introduces mypy to do static type checking to increase the robustness of the code. Therefore, we need to add Type Hints to our code and pass the mypy check. If you are not familiar with Type Hints, you can refer to [this tutorial](https://docs.python.org/3/library/typing.html).
+- mmagic introduces mypy to do static type checking to increase the robustness of the code. Therefore, we need to add Type Hints to our code and pass the mypy check. If you are not familiar with Type Hints, you can refer to [this tutorial](https://docs.python.org/3/library/typing.html).
 
 - The committed code should pass through the unit test
 
@@ -180,7 +180,7 @@ Find more details about Pull Request description in [pull request guidelines](#p
 
 <img src="https://user-images.githubusercontent.com/57566630/167307490-f9ebf9fa-63c0-4d83-8ba1-081ea169eb3a.png" width="1200">
 
-MMEditing will run unit test for the posted Pull Request on different platforms (Linux, Window, Mac), based on different versions of Python, PyTorch, CUDA to make sure the code is correct. We can see the specific test information by clicking `Details` in the above image so that we can modify the code.
+mmagic will run unit test for the posted Pull Request on different platforms (Linux, Window, Mac), based on different versions of Python, PyTorch, CUDA to make sure the code is correct. We can see the specific test information by clicking `Details` in the above image so that we can modify the code.
 
 (3) If the Pull Request passes the CI, then you can wait for the review from other developers. You'll modify the code based on the reviewer's comments, and repeat the steps [4](#4-commit-the-code-and-pass-the-unit-test)-[5](#5-push-the-code-to-remote) until all reviewers approve it. Then, we will merge it ASAP.
 

@@ -1,16 +1,16 @@
-# Tutorial 4: Train and test in MMEditing
+# Tutorial 4: Train and test in MMagic
 
-In this section, we introduce how to test and train models in MMEditing.
+In this section, we introduce how to test and train models in MMagic.
 
 In this section, we provide the following guides:
 
 - [Prerequisite](#prerequisite)
-- [Test a model in MMEditing](#test-a-model-in-mmediting)
+- [Test a model in MMagic](#test-a-model-in-mmagic)
   - [Test with a single GPUs](#test-with-a-single-gpus)
   - [Test with multiple GPUs](#test-with-multiple-gpus)
   - [Test with Slurm](#test-with-slurm)
   - [Test with specific metrics](#test-with-specific-metrics)
-- [Train a model in MMEditing](#train-a-model-in-mmediting)
+- [Train a model in MMagic](#train-a-model-in-mmagic)
   - [Train with a single GPU](#train-with-a-single-gpu)
   - [Train with multiple GPUs](#train-with-multiple-gpus)
   - [Train with multiple nodes](#train-with-multiple-nodes)
@@ -19,9 +19,9 @@ In this section, we provide the following guides:
 
 ## Prerequisite
 
-Users need to [prepare dataset](../user_guides/dataset_prepare.md) first to enable training and testing models in MMEditing.
+Users need to [prepare dataset](../user_guides/dataset_prepare.md) first to enable training and testing models in MMagic.
 
-## Test a model in MMEditing
+## Test a model in MMagic
 
 ### Test with a single GPUs
 
@@ -39,7 +39,7 @@ python tools/test.py configs/example_config.py work_dirs/example_exp/example_mod
 
 ### Test with multiple GPUs
 
-MMEditing supports testing with multiple GPUs,
+MMagic supports testing with multiple GPUs,
 which can largely save your time in testing models.
 You can use the following commands to test a pre-trained model with multiple GPUs.
 
@@ -55,7 +55,7 @@ For example,
 
 ### Test with Slurm
 
-If you run MMEditing on a cluster managed with [slurm](https://slurm.schedmd.com/), you can use the script `slurm_test.sh`. (This script also supports single machine testing.)
+If you run MMagic on a cluster managed with [slurm](https://slurm.schedmd.com/), you can use the script `slurm_test.sh`. (This script also supports single machine testing.)
 
 ```shell
 [GPUS=${GPUS}] ./tools/slurm_test.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${CHECKPOINT_FILE}
@@ -71,8 +71,8 @@ You can check [slurm_test.sh](../../../tools/slurm_test.sh) for full arguments a
 
 ### Test with specific metrics
 
-MMEditing provides various **evaluation metrics**, i.e., MS-SSIM, SWD, IS, FID, Precision&Recall, PPL, Equivarience, TransFID, TransIS, etc.
-We have provided unified evaluation scripts in [tools/test.py](https://github.com/open-mmlab/mmediting/tree/main/tools/test.py) for all models.
+MMagic provides various **evaluation metrics**, i.e., MS-SSIM, SWD, IS, FID, Precision&Recall, PPL, Equivarience, TransFID, TransIS, etc.
+We have provided unified evaluation scripts in [tools/test.py](https://github.com/open-mmlab/mmagic/tree/main/tools/test.py) for all models.
 If users want to evaluate their models with some metrics, you can add the `metrics` into your config file like this:
 
 ```python
@@ -102,15 +102,15 @@ Then users can test models with the command below:
 bash tools/dist_test.sh ${CONFIG_FILE} ${CKPT_FILE}
 ```
 
-If you are in slurm environment, please switch to the [tools/slurm_test.sh](https://github.com/open-mmlab/mmediting/tree/main/tools/slurm_test.sh) by using the following commands:
+If you are in slurm environment, please switch to the [tools/slurm_test.sh](https://github.com/open-mmlab/mmagic/tree/main/tools/slurm_test.sh) by using the following commands:
 
 ```shell
 sh slurm_test.sh ${PLATFORM} ${JOBNAME} ${CONFIG_FILE} ${CKPT_FILE}
 ```
 
-## Train a model in MMEditing
+## Train a model in MMagic
 
-MMEditing supports multiple ways of training:
+MMagic supports multiple ways of training:
 
 1. [Train with a single GPU](#train-with-a-single-gpu)
 2. [Train with multiple GPUs](#train-with-multiple-gpus)
@@ -153,7 +153,7 @@ Please refer to [PyTorch docs](https://pytorch.org/docs/1.11/distributed.html#la
 
 ### Train with Slurm
 
-If you run MMEditing on a cluster managed with [slurm](https://slurm.schedmd.com/), you can use the script `slurm_train.sh`. (This script also supports single machine training.)
+If you run MMagic on a cluster managed with [slurm](https://slurm.schedmd.com/), you can use the script `slurm_train.sh`. (This script also supports single machine training.)
 
 ```shell
 [GPUS=${GPUS}] ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${WORK_DIR}
@@ -165,7 +165,7 @@ Here is an example of using 8 GPUs to train an inpainting model on the dev parti
 GPUS=8 ./tools/slurm_train.sh dev configs/inpainting/gl_places.py /nfs/xxxx/gl_places_256
 ```
 
-You can check [slurm_train.sh](https://github.com/open-mmlab/mmediting/blob/master/tools/slurm_train.sh) for full arguments and environment variables.
+You can check [slurm_train.sh](https://github.com/open-mmlab/mmagic/blob/master/tools/slurm_train.sh) for full arguments and environment variables.
 
 ### Optional arguments
 

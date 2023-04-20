@@ -1,4 +1,4 @@
-欢迎来到 MMEditing 的中文文档！
+欢迎来到 MMagic 的中文文档！
 =====================================
 
 您可以在页面左下角切换中英文文档。
@@ -10,7 +10,7 @@
 
 .. toctree::
    :maxdepth: 1
-   :caption: MMEditing 社区
+   :caption: MMagic 社区
 
    community/contributing.md
    community/projects.md
