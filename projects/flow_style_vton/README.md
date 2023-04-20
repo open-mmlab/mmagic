@@ -1,15 +1,16 @@
 # Style-Based Global Appearance Flow for Virtual Try-On (CVPR 2022)
 
-## Description 
+## Description
+
 ```
 Author: @FerryHuang.
 
 This is an implementation of https://github.com/SenHe/Flow-Style-VTON adapting to mmediting. Only inference is supported so far.
 ```
 
-## Usage 
+## Usage
 
-### Setup Environment 
+### Setup Environment
 
 Please refer to [Get Started](https://mmediting.readthedocs.io/en/latest/get_started/I.html) to install
 MMEditing.
@@ -26,7 +27,7 @@ export PYTHONPATH=`pwd`:$PYTHONPATH
 
 Please check the [official repo](https://github.com/SenHe/Flow-Style-VTON) and download test-set and pretrained checkpoints and put them in https://github.com/FerryHuang/mmediting/tree/main/projects/flow_style_vton
 
-### Testing commands 
+### Testing commands
 
 **To test with single GPU:**
 
@@ -34,6 +35,7 @@ Please check the [official repo](https://github.com/SenHe/Flow-Style-VTON) and d
 cd projects/flow_style_vton
 python inference.py
 ```
+
 Expectedly, two folders will be made im_gar_flow_wg and our_t_results, containing the
 try-on procedures and the final results, respectively.
 
