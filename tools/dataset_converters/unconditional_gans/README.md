@@ -73,7 +73,7 @@ Note that this dataset should be used with `PGGANFetchDataHook`. In this config 
 ```python
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         # vis ema and orig at the same time

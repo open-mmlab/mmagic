@@ -49,5 +49,5 @@ test_evaluator = dict(metrics=metrics)
 
 # VIS_HOOK
 custom_hooks = [
-    dict(type='GenVisualizationHook', interval=5000, fixed_input=True)
+    dict(type='VisualizationHook', interval=5000, fixed_input=True)
 ]

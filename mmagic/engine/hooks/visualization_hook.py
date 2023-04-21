@@ -79,9 +79,9 @@ class BasicVisualizationHook(Hook):
 
 
 @HOOKS.register_module()
-class GenVisualizationHook(Hook):
-    """Generation Visualization Hook. Used to visual output samples in
-    training, validation and testing. In this hook, we use a list called
+class VisualizationHook(Hook):
+    """MMagic Visualization Hook. Used to visual output samples in training,
+    validation and testing. In this hook, we use a list called
     `sample_kwargs_list` to control how to generate samples and how to
     visualize them. Each element in `sample_kwargs_list`, called
     `sample_kwargs`, may contains the following keywords:
@@ -110,14 +110,14 @@ class GenVisualizationHook(Hook):
         >>> # for GAN models
         >>> custom_hooks = [
         >>>     dict(
-        >>>         type='GenVisualizationHook',
+        >>>         type='VisualizationHook',
         >>>         interval=1000,
         >>>         fixed_input=True,
         >>>         vis_kwargs_list=dict(type='GAN', name='fake_img'))]
         >>> # for Translation models
         >>> custom_hooks = [
         >>>     dict(
-        >>>         type='GenVisualizationHook',
+        >>>         type='VisualizationHook',
         >>>         interval=10,
         >>>         fixed_input=False,
         >>>         vis_kwargs_list=[dict(type='Translation',
@@ -215,7 +215,7 @@ class GenVisualizationHook(Hook):
     @master_only
     def after_val_iter(self, runner: Runner, batch_idx: int, data_batch: dict,
                        outputs) -> None:
-        """:class:`GenVisualizationHook` do not support visualize during
+        """:class:`VisualizationHook` do not support visualize during
         validation.
 
         Args:

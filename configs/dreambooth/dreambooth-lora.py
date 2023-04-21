@@ -73,7 +73,7 @@ test_cfg = test_evaluator = test_dataloader = None
 default_hooks = dict(logger=dict(interval=10))
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=50,
         fixed_input=True,
         # visualize train dataset

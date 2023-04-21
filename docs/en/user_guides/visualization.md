@@ -24,7 +24,7 @@ For GAN models, such as StyleGAN and SAGAN, a usual configuration is shown below
 # VisualizationHook
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,  # visualization interval
         fixed_input=True,  # whether use fixed noise input to generate images
         vis_kwargs_list=dict(type='GAN', name='fake_img')  # pre-defined visualization arguments for GAN models
@@ -48,7 +48,7 @@ If you apply Exponential Moving Average (EMA) to a generator and want to visuali
 ```python
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         # vis ema and orig in `fake_img` at the same time
@@ -69,7 +69,7 @@ For Translation models, such as CycleGAN and Pix2Pix, visualization configs can 
 # VisualizationHook
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=[
@@ -102,7 +102,7 @@ For Diffusion models, such as Improved-DDPM, we can use the following configurat
 # VisualizationHook
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='DDPMDenoising'))  # pre-defined visualization argument for DDPM models
@@ -178,8 +178,8 @@ The specific configuration of the `VisualizationHook`, `Visualizer` and `VisBack
 
 ## Visualization Hook
 
-In MMagic, we use `BasicVisualizationHook` and `GenVisualizationHook` as `VisualizationHook`.
-`GenVisualizationHook` supports three following cases.
+In MMagic, we use `BasicVisualizationHook` and `VisualizationHook` as `VisualizationHook`.
+`VisualizationHook` supports three following cases.
 
 (1) Modify `vis_kwargs_list` to visualize the output of the model under specific inputs , which is suitable for visualization of the generated results of GAN and translation results of Image-to-Image-Translation models under specific data input, etc. Below are two typical examples:
 

@@ -11,7 +11,7 @@ from mmengine.testing import assert_allclose
 from mmengine.visualization import Visualizer
 from torch.utils.data.dataset import Dataset
 
-from mmagic.engine import GenVisualizationHook
+from mmagic.engine import VisualizationHook
 from mmagic.engine.hooks import BasicVisualizationHook
 from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
@@ -22,7 +22,7 @@ from mmagic.registry import MODELS  # isort:skip  # noqa
 register_all_modules()
 
 
-class TestVisualizationHook(TestCase):
+class TestBasicVisualizationHook(TestCase):
 
     def setUp(self) -> None:
         input = torch.rand(2, 3, 32, 32)
@@ -83,26 +83,26 @@ class TestVisualizationHook(TestCase):
         assert runner.visualizer.assert_not_called
 
 
-class TestGenVisualizationHook(TestCase):
+class TestVisualizationHook(TestCase):
 
     Visualizer.get_instance('test-gen-visualizer')
     MessageHub.get_instance('test-gen-visualizer')
 
     def test_init(self):
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10, vis_kwargs_list=dict(type='Noise'))
         self.assertEqual(hook.interval, 10)
         self.assertEqual(hook.vis_kwargs_list, [dict(type='Noise')])
         self.assertEqual(hook.n_samples, 64)
         self.assertFalse(hook.show)
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10,
             vis_kwargs_list=[dict(type='Noise'),
                              dict(type='Translation')])
         self.assertEqual(len(hook.vis_kwargs_list), 2)
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10, vis_kwargs_list=dict(type='GAN'), show=True)
         self.assertEqual(hook._visualizer._vis_backends, {})
 
@@ -119,7 +119,7 @@ class TestGenVisualizationHook(TestCase):
         runner.train_dataloader = MagicMock()
         runner.train_dataloader.batch_size = 10
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10, vis_kwargs_list=dict(type='GAN'), n_samples=9)
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
@@ -210,7 +210,7 @@ class TestGenVisualizationHook(TestCase):
         runner.val_loop = MagicMock()
         runner.val_loop.dataloader = val_dataloader
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10,
             vis_kwargs_list=[
                 dict(type='Translation'),
@@ -290,7 +290,7 @@ class TestGenVisualizationHook(TestCase):
     #     runner.train_dataloader = MagicMock()
     #     runner.train_dataloader.batch_size = 10
 
-    #     hook = GenVisualizationHook(
+    #     hook = VisualizationHook(
     #         interval=10,
     #         n_samples=2,
     #         vis_kwargs_list=dict(
@@ -342,7 +342,7 @@ class TestGenVisualizationHook(TestCase):
 
     def test_after_val_iter(self):
         model = MagicMock()
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10, n_samples=2, vis_kwargs_list=dict(type='GAN'))
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
@@ -367,7 +367,7 @@ class TestGenVisualizationHook(TestCase):
         runner.train_dataloader = MagicMock()
         runner.train_dataloader.batch_size = 10
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=2, vis_kwargs_list=dict(type='GAN'), n_samples=9)
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
@@ -497,7 +497,7 @@ class TestGenVisualizationHook(TestCase):
         runner.train_dataloader = MagicMock()
         runner.train_dataloader.batch_size = 2
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=2, vis_kwargs_list=dict(type='GAN'), n_samples=3, n_row=8)
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
@@ -516,7 +516,7 @@ class TestGenVisualizationHook(TestCase):
 
     def test_after_test_iter(self):
         model = MagicMock()
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10,
             n_samples=2,
             max_save_at_test=None,
@@ -594,7 +594,7 @@ class TestGenVisualizationHook(TestCase):
             hook.after_test_iter(runner, 42, [], outputs)
 
         # test max save time
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10,
             n_samples=2,
             test_vis_keys='ema',
