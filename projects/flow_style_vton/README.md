@@ -4,7 +4,7 @@
 
 Awesome try-on desplays are like this:
 
-![image1](projects/flow_style_vton/examples/000001_1.png)![image2](projects/flow_style_vton/examples/000010_0.png)![image3](projects/flow_style_vton/examples/000020_1.png)![image4](projects/flow_style_vton/examples/000057_1.png)
+![image1](examples/000010_0.png)
 
 ```
 Author: @FerryHuang.
