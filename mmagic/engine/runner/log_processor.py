@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmengine.registry import LOG_PROCESSORS
 from mmengine.runner import LogProcessor as BaseLogProcessor
+
+from mmagic.registry import LOG_PROCESSORS
 
 
 @LOG_PROCESSORS.register_module()  # type: ignore
