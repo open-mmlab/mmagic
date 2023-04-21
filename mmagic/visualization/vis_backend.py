@@ -10,24 +10,26 @@ import torch
 from mmengine import MessageHub
 from mmengine.config import Config
 from mmengine.fileio import dump, get_file_backend
-from mmengine.visualization import (BaseVisBackend, TensorboardVisBackend,
-                                    WandbVisBackend)
+from mmengine.visualization import BaseVisBackend
+from mmengine.visualization import \
+    TensorboardVisBackend as BaseTensorboardVisBackend
+from mmengine.visualization import WandbVisBackend as BaseWandbVisBackend
 from mmengine.visualization.vis_backend import force_init_env
 
 from mmagic.registry import VISBACKENDS
 
 
 @VISBACKENDS.register_module()
-class GenVisBackend(BaseVisBackend):
-    """Generation visualization backend class. It can write image, config,
-    scalars, etc. to the local hard disk and ceph path. You can get the drawing
-    backend through the experiment property for custom drawing.
+class VisBackend(BaseVisBackend):
+    """MMagic visualization backend class. It can write image, config, scalars,
+    etc. to the local hard disk and ceph path. You can get the drawing backend
+    through the experiment property for custom drawing.
 
     Examples:
-        >>> from mmagic.visualization import GenVisBackend
+        >>> from mmagic.visualization import VisBackend
         >>> import numpy as np
-        >>> vis_backend = GenVisBackend(save_dir='temp_dir',
-        >>>                             ceph_path='s3://temp-bucket')
+        >>> vis_backend = VisBackend(save_dir='temp_dir',
+        >>>                          ceph_path='s3://temp-bucket')
         >>> img = np.random.randint(0, 256, size=(10, 10, 3))
         >>> vis_backend.add_image('img', img)
         >>> vis_backend.add_scalar('mAP', 0.6)
@@ -113,7 +115,7 @@ class GenVisBackend(BaseVisBackend):
 
     @property  # type: ignore
     @force_init_env
-    def experiment(self) -> 'GenVisBackend':
+    def experiment(self) -> 'VisBackend':
         """Return the experiment object associated with this visualization
         backend."""
         return self
@@ -258,7 +260,7 @@ class GenVisBackend(BaseVisBackend):
 
 
 @VISBACKENDS.register_module()
-class TensorboardGenVisBackend(TensorboardVisBackend):
+class TensorboardVisBackend(BaseTensorboardVisBackend):
 
     @force_init_env
     def add_image(self, name: str, image: np.array, step: int = 0, **kwargs):
@@ -294,7 +296,7 @@ class TensorboardGenVisBackend(TensorboardVisBackend):
 
 
 @VISBACKENDS.register_module()
-class PaviGenVisBackend(BaseVisBackend):
+class PaviVisBackend(BaseVisBackend):
     """Visualization backend for Pavi."""
 
     def __init__(self,
@@ -318,7 +320,7 @@ class PaviGenVisBackend(BaseVisBackend):
             import pavi
         except ImportError:
             raise ImportError(
-                'To use \'PaviGenVisBackend\' Pavi must be installed.')
+                'To use \'PaviVisBackend\' Pavi must be installed.')
         self._pavi = pavi.SummaryWriter(
             name=self._name,
             labels=self._labels,
@@ -329,7 +331,7 @@ class PaviGenVisBackend(BaseVisBackend):
 
     @property  # type: ignore
     @force_init_env
-    def experiment(self) -> 'GenVisBackend':
+    def experiment(self) -> 'VisBackend':
         """Return the experiment object associated with this visualization
         backend."""
         return self._pavi
@@ -396,7 +398,7 @@ class PaviGenVisBackend(BaseVisBackend):
 
 
 @VISBACKENDS.register_module()
-class WandbGenVisBackend(WandbVisBackend):
+class WandbVisBackend(BaseWandbVisBackend):
     """Wandb visualization backend for MMagic."""
 
     def _init_env(self):

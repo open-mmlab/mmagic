@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Sequence, Tuple, Union
 import numpy as np
 import torch
 from mmengine.dist import master_only
-from mmengine.visualization import Visualizer
+from mmengine.visualization import Visualizer as BaseVisualizer
 from torch import Tensor
 from torchvision.utils import make_grid
 
@@ -17,7 +17,7 @@ mean_std_type = Optional[Sequence[Union[float, int]]]
 
 
 @VISUALIZERS.register_module()
-class GenVisualizer(Visualizer):
+class Visualizer(BaseVisualizer):
     """MMagic Visualizer.
 
     Args:
@@ -30,7 +30,7 @@ class GenVisualizer(Visualizer):
     Examples::
 
         >>> # Draw image
-        >>> vis = GenVisualizer()
+        >>> vis = Visualizer()
         >>> vis.add_datasample(
         >>>     'random_noise',
         >>>     gen_samples=torch.rand(2, 3, 10, 10),

@@ -7,7 +7,7 @@ import torch
 
 from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
-from mmagic.visualization import GenVisualizer
+from mmagic.visualization import Visualizer
 
 register_all_modules()
 
@@ -15,8 +15,8 @@ register_all_modules()
 class TestGenVisualer(TestCase):
 
     def test_add_datasample(self):
-        visualizer = GenVisualizer(
-            save_dir='tmp_dir', vis_backends=[dict(type='GenVisBackend')])
+        visualizer = Visualizer(
+            save_dir='tmp_dir', vis_backends=[dict(type='VisBackend')])
 
         img_root = osp.join('tmp_dir', 'vis_data', 'vis_image')
         # construct gen sample to vis

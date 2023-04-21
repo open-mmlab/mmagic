@@ -32,15 +32,15 @@ custom_hooks = [
 ]
 # VisBackend
 vis_backends = [
-    dict(type='GenVisBackend'),  # vis_backend for saving images to file system
-    dict(type='WandbGenVisBackend',  # vis_backend for uploading images to Wandb
+    dict(type='VisBackend'),  # vis_backend for saving images to file system
+    dict(type='WandbVisBackend',  # vis_backend for uploading images to Wandb
         init_kwargs=dict(
             project='MMagic',   # project name for Wandb
             name='GAN-Visualization-Demo'  # name of the experiment for Wandb
         ))
 ]
 # Visualizer
-visualizer = dict(type='GenVisualizer', vis_backends=vis_backends)
+visualizer = dict(type='Visualizer', vis_backends=vis_backends)
 ```
 
 If you apply Exponential Moving Average (EMA) to a generator and want to visualize the EMA model, you can modify config of `VisualizationHook` as below:
@@ -83,15 +83,15 @@ custom_hooks = [
 ]
 # VisBackend
 vis_backends = [
-    dict(type='GenVisBackend'),  # vis_backend for saving images to file system
-    dict(type='WandbGenVisBackend',  # vis_backend for uploading images to Wandb
+    dict(type='VisBackend'),  # vis_backend for saving images to file system
+    dict(type='WandbVisBackend',  # vis_backend for uploading images to Wandb
         init_kwargs=dict(
             project='MMagic',   # project name for Wandb
             name='Translation-Visualization-Demo'  # name of the experiment for Wandb
         ))
 ]
 # Visualizer
-visualizer = dict(type='GenVisualizer', vis_backends=vis_backends)
+visualizer = dict(type='Visualizer', vis_backends=vis_backends)
 ```
 
 ### Visualization configuration of diffusion models
@@ -109,15 +109,15 @@ custom_hooks = [
 ]
 # VisBackend
 vis_backends = [
-    dict(type='GenVisBackend'),  # vis_backend for saving images to file system
-    dict(type='WandbGenVisBackend',  # vis_backend for uploading images to Wandb
+    dict(type='VisBackend'),  # vis_backend for saving images to file system
+    dict(type='WandbVisBackend',  # vis_backend for uploading images to Wandb
         init_kwargs=dict(
             project='MMagic',   # project name for Wandb
             name='Diffusion-Visualization-Demo'  # name of the experiment for Wandb
         ))
 ]
 # Visualizer
-visualizer = dict(type='GenVisualizer', vis_backends=vis_backends)
+visualizer = dict(type='Visualizer', vis_backends=vis_backends)
 ```
 
 ### Visualization configuration of inpainting models
@@ -224,15 +224,15 @@ vis_kwargs_list = dict(type='DDPMDenoising')
 
 ## Visualizer
 
-In MMagic, we implement `ConcatImageVisualizer` and `GenVisualizer`, which inherit from `mmengine.Visualizer`.
+In MMagic, we implement `ConcatImageVisualizer` and `Visualizer`, which inherit from `mmengine.Visualizer`.
 The base class of `Visualizer` is `ManagerMixin` and this makes `Visualizer` a globally unique object.
 After being instantiated, `Visualizer` can be called at anywhere of the code by `Visualizer.get_current_instance()`, as shown below:
 
 ```python
 # configs
-vis_backends = [dict(type='GenVisBackend')]
+vis_backends = [dict(type='VisBackend')]
 visualizer = dict(
-    type='GenVisualizer', vis_backends=vis_backends, name='visualizer')
+    type='Visualizer', vis_backends=vis_backends, name='visualizer')
 ```
 
 ```python
@@ -254,18 +254,18 @@ In general, users do not need to manipulate `VisBackend` objects, only when the 
 MMagic supports a variety of different visualization backends, including:
 
 - Basic VisBackend of MMEngine: including LocalVisBackend, TensorboardVisBackend and WandbVisBackend. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/visualization.md) to learn more about them
-- GenVisBackend: Backend for **File System**. Save the visualization results to the corresponding position.
-- TensorboardGenVisBackend: Backend for **Tensorboard**. Send the visualization results to Tensorboard.
-- PaviGenVisBackend: Backend for **Pavi**. Send the visualization results to Tensorboard.
-- WandbGenVisBackend: Backend for **Wandb**. Send the visualization results to Tensorboard.
+- VisBackend: Backend for **File System**. Save the visualization results to the corresponding position.
+- TensorboardVisBackend: Backend for **Tensorboard**. Send the visualization results to Tensorboard.
+- PaviVisBackend: Backend for **Pavi**. Send the visualization results to Tensorboard.
+- WandbVisBackend: Backend for **Wandb**. Send the visualization results to Tensorboard.
 
 One `Visualizer` object can have access to any number of VisBackends and users can access to the backend by their class name in their code.
 
 ```python
 # configs
-vis_backends = [dict(type='GenVisualizer'), dict(type='WandbVisBackend')]
+vis_backends = [dict(type='Visualizer'), dict(type='WandbVisBackend')]
 visualizer = dict(
-    type='GenVisualizer', vis_backends=vis_backends, name='visualizer')
+    type='Visualizer', vis_backends=vis_backends, name='visualizer')
 ```
 
 ```python
@@ -274,7 +274,7 @@ VISUALIZERS.build(cfg.visualizer)
 visualizer = Visualizer.get_current_instance()
 
 # access to the backend by class name
-gen_vis_backend = visualizer.get_backend('GenVisBackend')
+gen_vis_backend = visualizer.get_backend('VisBackend')
 gen_wandb_vis_backend = visualizer.get_backend('GenWandbVisBackend')
 ```
 
@@ -283,11 +283,11 @@ When there are multiply VisBackend with the same class name, user must specific 
 ```python
 # configs
 vis_backends = [
-    dict(type='GenVisBackend', name='gen_vis_backend_1'),
-    dict(type='GenVisBackend', name='gen_vis_backend_2')
+    dict(type='VisBackend', name='gen_vis_backend_1'),
+    dict(type='VisBackend', name='gen_vis_backend_2')
 ]
 visualizer = dict(
-    type='GenVisualizer', vis_backends=vis_backends, name='visualizer')
+    type='Visualizer', vis_backends=vis_backends, name='visualizer')
 ```
 
 ```python
