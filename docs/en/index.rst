@@ -128,7 +128,7 @@ Documentation
    mmagic.engine.optimizers <autoapi/mmagic/engine/optimizers/index.rst>
    mmagic.engine.runner <autoapi/mmagic/engine/runner/index.rst>
    mmagic.engine.schedulers <autoapi/mmagic/engine/schedulers/index.rst>
-   mmagic.models.base_archs <autoapi/mmagic/models/base_archs/index.rst>
+   mmagic.models.archs <autoapi/mmagic/models/archs/index.rst>
    mmagic.models.base_models <autoapi/mmagic/models/base_models/index.rst>
    mmagic.models.losses <autoapi/mmagic/models/losses/index.rst>
    mmagic.models.data_preprocessors <autoapi/mmagic/models/data_preprocessors/index.rst>
