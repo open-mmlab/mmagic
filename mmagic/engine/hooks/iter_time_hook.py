@@ -3,8 +3,9 @@ import time
 from typing import Optional, Sequence, Union
 
 from mmengine.hooks import IterTimerHook as BaseIterTimerHook
-from mmengine.registry import HOOKS
 from mmengine.structures import BaseDataElement
+
+from mmagic.registry import HOOKS
 
 DATA_BATCH = Optional[Sequence[dict]]
 
