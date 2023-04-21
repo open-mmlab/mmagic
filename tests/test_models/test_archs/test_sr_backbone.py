@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmagic.models.base_archs import ResidualBlockNoBN
+from mmagic.models.archs import ResidualBlockNoBN
 from mmagic.models.utils import make_layer
 
 

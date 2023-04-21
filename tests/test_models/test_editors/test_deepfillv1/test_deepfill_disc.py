@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmagic.models.base_archs import MultiLayerDiscriminator
+from mmagic.models.archs import MultiLayerDiscriminator
 from mmagic.models.editors import DeepFillv1Discriminators
 
 

@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 
-from mmagic.models.base_archs import LinearModule
+from mmagic.models.archs import LinearModule
 
 
 def test_linear_module():

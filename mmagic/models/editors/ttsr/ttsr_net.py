@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from mmcv.cnn import build_conv_layer
 from mmengine.model import BaseModule
 
-from mmagic.models.base_archs import PixelShufflePack, ResidualBlockNoBN
+from mmagic.models.archs import PixelShufflePack, ResidualBlockNoBN
 from mmagic.models.utils import make_layer
 from mmagic.registry import MODELS
 

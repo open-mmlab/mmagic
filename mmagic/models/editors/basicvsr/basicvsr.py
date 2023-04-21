@@ -55,7 +55,7 @@ class BasicVSR(BaseEditModel):
         self.forward_ensemble = None
         if ensemble is not None:
             if ensemble['type'] == 'SpatialTemporalEnsemble':
-                from mmagic.models.base_archs import SpatialTemporalEnsemble
+                from mmagic.models.archs import SpatialTemporalEnsemble
                 is_temporal = ensemble.get('is_temporal_ensemble', False)
                 self.forward_ensemble = SpatialTemporalEnsemble(is_temporal)
             else:

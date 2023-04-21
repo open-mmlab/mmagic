@@ -9,7 +9,7 @@ from mmengine.logging import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
 from mmagic.models import EditDataPreprocessor, Pix2Pix
-from mmagic.models.base_archs import PatchDiscriminator
+from mmagic.models.archs import PatchDiscriminator
 from mmagic.models.editors.pix2pix import UnetGenerator
 from mmagic.utils import register_all_modules
 

@@ -4,7 +4,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmagic.models.base_archs import SpatialTemporalEnsemble
+from mmagic.models.archs import SpatialTemporalEnsemble
 
 
 def test_ensemble_cpu():

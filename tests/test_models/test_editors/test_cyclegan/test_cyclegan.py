@@ -7,7 +7,7 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
 from mmagic.models import CycleGAN, EditDataPreprocessor
-from mmagic.models.base_archs import PatchDiscriminator
+from mmagic.models.archs import PatchDiscriminator
 from mmagic.models.editors.cyclegan import ResnetGenerator
 from mmagic.structures import DataSample
 

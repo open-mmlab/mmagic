@@ -2,7 +2,7 @@
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmagic.models.base_archs import PixelShufflePack, ResidualBlockNoBN
+from mmagic.models.archs import PixelShufflePack, ResidualBlockNoBN
 from mmagic.models.utils import default_init_weights, make_layer
 from mmagic.registry import MODELS
 
