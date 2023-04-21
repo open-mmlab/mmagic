@@ -476,7 +476,7 @@ env_cfg = dict(
 
 log_level = 'INFO'  # The level of logging
 log_processor = dict(
-    type='EditLogProcessor',  # log processor to process runtime logs
+    type='LogProcessor',  # log processor to process runtime logs
     by_epoch=False)  # print log by iteration
 load_from = None  # load model checkpoint as a pre-trained model for a given path
 resume = False  # Whether to resume from the checkpoint define in `load_from`. If `load_from` is `None`, it will resume the latest checkpoint in `work_dir`

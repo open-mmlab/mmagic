@@ -24,7 +24,7 @@ env_cfg = dict(
 )
 
 log_level = 'INFO'
-log_processor = dict(type='EditLogProcessor', window_size=100, by_epoch=False)
+log_processor = dict(type='LogProcessor', window_size=100, by_epoch=False)
 
 load_from = None
 resume = False

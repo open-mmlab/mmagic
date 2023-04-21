@@ -35,7 +35,7 @@ env_cfg = dict(
 
 # set log level
 log_level = 'INFO'
-log_processor = dict(type='EditLogProcessor', by_epoch=False)
+log_processor = dict(type='LogProcessor', by_epoch=False)
 
 # load from which checkpoint
 load_from = None
