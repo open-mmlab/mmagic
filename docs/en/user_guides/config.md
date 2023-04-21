@@ -438,7 +438,7 @@ Users can attach hooks to training, validation, and testing loops to insert some
 
 ```python
 default_hooks = dict(
-    timer=dict(type='EditIterTimerHook'),
+    timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100, log_metric_by_epoch=False),
     checkpoint=dict(
         type='CheckpointHook',

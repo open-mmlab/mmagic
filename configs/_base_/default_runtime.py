@@ -2,7 +2,7 @@ default_scope = 'mmagic'
 save_dir = './work_dirs'
 
 default_hooks = dict(
-    timer=dict(type='EditIterTimerHook'),
+    timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
     checkpoint=dict(

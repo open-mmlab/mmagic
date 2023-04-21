@@ -11,7 +11,7 @@ mp_start_method = 'fork'
 # configure for default hooks
 default_hooks = dict(
     # record time of every iteration.
-    timer=dict(type='EditIterTimerHook'),
+    timer=dict(type='IterTimerHook'),
     # print log every 100 iterations.
     logger=dict(type='LoggerHook', interval=100, log_metric_by_epoch=False),
     # save checkpoint per 10000 iterations

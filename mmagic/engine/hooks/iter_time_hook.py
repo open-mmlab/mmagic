@@ -2,7 +2,7 @@
 import time
 from typing import Optional, Sequence, Union
 
-from mmengine.hooks import IterTimerHook
+from mmengine.hooks import IterTimerHook as BaseIterTimerHook
 from mmengine.registry import HOOKS
 from mmengine.structures import BaseDataElement
 
@@ -10,13 +10,13 @@ DATA_BATCH = Optional[Sequence[dict]]
 
 
 @HOOKS.register_module()
-class EditIterTimerHook(IterTimerHook):
-    """EditIterTimerHooks inherits from :class:`mmengine.hooks.IterTimerHook`
-    and overwrites :meth:`self._after_iter`.
+class IterTimerHook(BaseIterTimerHook):
+    """IterTimerHooks inherits from :class:`mmengine.hooks.IterTimerHook` and
+    overwrites :meth:`self._after_iter`.
 
     This hooks should be used along with
-    :class:`mmagic.engine.runner.GenValLoop` and
-    :class:`mmagic.engine.runner.GenTestLoop`.
+    :class:`mmagic.engine.runner.MultiValLoop` and
+    :class:`mmagic.engine.runner.MultiTestLoop`.
     """
 
     def _after_iter(self,
@@ -33,8 +33,8 @@ class EditIterTimerHook(IterTimerHook):
         `runner.val_loop.total_length` or `runner.test_loop.total_length` as
         total number of iterations. If you want to know how `total_length` is
         calculated, please refers to
-        :meth:`mmagic.engine.runner.GenValLoop.run` and
-        :meth:`mmagic.engine.runner.GenTestLoop.run`.
+        :meth:`mmagic.engine.runner.MultiValLoop.run` and
+        :meth:`mmagic.engine.runner.MultiTestLoop.run`.
 
         Args:
             runner (Runner): The runner of the training validation and
