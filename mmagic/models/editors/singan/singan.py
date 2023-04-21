@@ -15,7 +15,7 @@ from torch import Tensor
 
 from mmagic.models.utils import get_module_device
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import ForwardInputs, SampleList
 from ...base_models import BaseGAN
 from ...utils import set_requires_grad
@@ -173,7 +173,7 @@ class SinGAN(BaseGAN):
     def forward(self,
                 inputs: ForwardInputs,
                 data_samples: Optional[list] = None,
-                mode=None) -> List[EditDataSample]:
+                mode=None) -> List[DataSample]:
         """Forward function for SinGAN. For SinGAN, `inputs` should be a dict
         contains 'num_batches', 'mode' and other input arguments for the
         generator.
@@ -222,7 +222,7 @@ class SinGAN(BaseGAN):
                 curr_scale=curr_scale,
                 **gen_kwargs)
 
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             # destruct
             if isinstance(outputs, dict):
                 outputs['fake_img'] = self.data_preprocessor.destruct(
@@ -241,7 +241,7 @@ class SinGAN(BaseGAN):
 
             # save to data sample
             for idx in range(num_batches):
-                gen_sample = EditDataSample()
+                gen_sample = DataSample()
                 # save inputs to data sample
                 if data_samples:
                     gen_sample.update(data_samples[idx])
@@ -297,9 +297,9 @@ class SinGAN(BaseGAN):
 
             # save to data sample
             for idx in range(num_batches):
-                gen_sample = EditDataSample()
-                gen_sample.ema = EditDataSample()
-                gen_sample.orig = EditDataSample()
+                gen_sample = DataSample()
+                gen_sample.ema = DataSample()
+                gen_sample.orig = DataSample()
                 # save inputs to data sample
                 if data_samples:
                     gen_sample.update(data_samples[idx])
@@ -399,13 +399,13 @@ class SinGAN(BaseGAN):
         parsed_loss, log_vars = self.parse_losses(losses_dict)
         return parsed_loss, log_vars
 
-    def train_generator(self, inputs: dict, data_samples: List[EditDataSample],
+    def train_generator(self, inputs: dict, data_samples: List[DataSample],
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (List[DataSample]): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
@@ -433,15 +433,14 @@ class SinGAN(BaseGAN):
         optimizer_wrapper.update_params(parsed_loss)
         return log_vars
 
-    def train_discriminator(self, inputs: dict,
-                            data_samples: List[EditDataSample],
+    def train_discriminator(self, inputs: dict, data_samples: List[DataSample],
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (List[DataSample]): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
@@ -465,7 +464,7 @@ class SinGAN(BaseGAN):
         optimizer_wrapper.update_params(parsed_loss)
         return log_vars
 
-    def train_gan(self, inputs_dict: dict, data_sample: List[EditDataSample],
+    def train_gan(self, inputs_dict: dict, data_sample: List[DataSample],
                   optim_wrapper: OptimWrapperDict) -> Dict[str, torch.Tensor]:
         """Train GAN model. In the training of GAN models, generator and
         discriminator are updated alternatively. In MMagic's design,
@@ -477,7 +476,7 @@ class SinGAN(BaseGAN):
 
         Args:
             data (dict): Data sampled from dataloader.
-            data_sample (List[EditDataSample]): List of data sample contains GT
+            data_sample (List[DataSample]): List of data sample contains GT
                 and meta information.
             optim_wrapper (OptimWrapperDict): OptimWrapperDict instance
                 contains OptimWrapper of generator and discriminator.
@@ -648,7 +647,7 @@ class SinGAN(BaseGAN):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            SampleList: A list of ``EditDataSample`` contain generated results.
+            SampleList: A list of ``DataSample`` contain generated results.
         """
         if not self.loaded_test_pkl:
             self.load_test_pkl()

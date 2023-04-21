@@ -9,7 +9,7 @@ from torch.optim import SGD
 
 from mmagic.models import LSGAN, EditDataPreprocessor
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 generator = dict(
     type='DCGANGenerator', noise_size=10, output_scale=16, base_channels=16)
@@ -77,7 +77,7 @@ class TestLSGAN(TestCase):
                 disc_optim, accumulative_counts=accu_iter))
         # prepare inputs
         img = torch.randn(3, 16, 16)
-        data = dict(inputs=dict(), data_samples=[EditDataSample(gt_img=img)])
+        data = dict(inputs=dict(), data_samples=[DataSample(gt_img=img)])
 
         # simulate train_loop here
         for idx in range(n_disc * accu_iter):

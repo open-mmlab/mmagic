@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 
 from mmagic.models.editors.eg3d.eg3d import EG3D
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 register_all_modules()
@@ -116,10 +116,10 @@ class TestEG3D(TestCase):
         # test label is passed
         data_samples = []
         for _ in range(4):
-            data_sample = EditDataSample()
+            data_sample = DataSample()
             data_sample.set_gt_label(torch.randn(25))
             data_samples.append(data_sample)
-        data_samples = EditDataSample.stack(data_samples)
+        data_samples = DataSample.stack(data_samples)
         outputs = model(dict(num_batches=4), data_samples)
         self.assertEqual(len(outputs), 4)
         self._check_datasample_output(outputs, 32, 5)

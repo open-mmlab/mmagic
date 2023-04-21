@@ -5,7 +5,7 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapperDict
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 from ...base_models import BaseTranslationModel
 from ...utils import set_requires_grad
@@ -220,7 +220,7 @@ class CycleGAN(BaseTranslationModel):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            SampleList: A list of ``EditDataSample`` contain generated results.
+            SampleList: A list of ``DataSample`` contain generated results.
         """
         data = self.data_preprocessor(data)
         inputs_dict, data_samples = data['inputs'], data['data_samples']
@@ -238,7 +238,7 @@ class CycleGAN(BaseTranslationModel):
         num_batches = next(iter(outputs.values())).shape[0]
         data_samples = data_samples.split()
         for idx in range(num_batches):
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
 
@@ -260,7 +260,7 @@ class CycleGAN(BaseTranslationModel):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            SampleList: A list of ``EditDataSample`` contain generated results.
+            SampleList: A list of ``DataSample`` contain generated results.
         """
         data = self.data_preprocessor(data)
         inputs_dict, data_samples = data['inputs'], data['data_samples']
@@ -278,7 +278,7 @@ class CycleGAN(BaseTranslationModel):
         num_batches = next(iter(outputs.values())).shape[0]
         data_samples = data_samples.split()
         for idx in range(num_batches):
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
 

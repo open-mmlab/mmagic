@@ -8,7 +8,7 @@ from mmengine import MessageHub
 
 from mmagic.engine import PGGANOptimWrapperConstructor
 from mmagic.models import ProgressiveGrowingGAN
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 register_all_modules()
@@ -56,7 +56,7 @@ class TestPGGAN(TestCase):
         data_batch = dict(
             inputs=dict(),
             data_samples=[
-                EditDataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
+                DataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
             ])
 
         for iter_num in range(6):
@@ -120,8 +120,7 @@ class TestPGGAN(TestCase):
             data_batch = dict(
                 inputs=dict(),
                 data_samples=[
-                    EditDataSample(gt_img=torch.randn(3, 4, 32))
-                    for _ in range(3)
+                    DataSample(gt_img=torch.randn(3, 4, 32)) for _ in range(3)
                 ])
             _ = pggan.train_step(data_batch, optim_wrapper_dict)
 
@@ -135,7 +134,7 @@ class TestPGGAN(TestCase):
         data_batch = dict(
             inputs=dict(),
             data_samples=[
-                EditDataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
+                DataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
             ])
         pggan.train_step(data_batch, optim_wrapper_dict)
 
@@ -167,7 +166,7 @@ class TestPGGAN(TestCase):
         data_batch = dict(
             inputs=dict(),
             data_samples=[
-                EditDataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
+                DataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
             ])
 
         for iter_num in range(6):

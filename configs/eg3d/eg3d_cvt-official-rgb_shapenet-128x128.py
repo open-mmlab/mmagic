@@ -77,7 +77,7 @@ test_evaluator = dict(metrics=metrics)
 
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         # save_at_test=False,

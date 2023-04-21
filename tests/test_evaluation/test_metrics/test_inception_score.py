@@ -11,7 +11,7 @@ from mmengine.runner import Runner
 from mmagic.datasets import PairedImageDataset
 from mmagic.evaluation import InceptionScore, TransIS
 from mmagic.models import EditDataPreprocessor, Pix2Pix
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 register_all_modules()
@@ -80,7 +80,7 @@ class TestIS(TestCase):
             IS = InceptionScore(fake_nums=2, fake_key='fake')
         gen_images = torch.randn(4, 3, 2, 2)
         gen_samples = [
-            EditDataSample(fake_img=img).to_dict() for img in gen_images
+            DataSample(fake_img=img).to_dict() for img in gen_images
         ]
         IS.process(None, gen_samples)
         IS.process(None, gen_samples)
@@ -91,7 +91,7 @@ class TestIS(TestCase):
                 fake_nums=2, fake_key='fake', inception_style='PyTorch')
         gen_images = torch.randn(4, 3, 2, 2)
         gen_samples = [
-            EditDataSample(fake_img=img).to_dict() for img in gen_images
+            DataSample(fake_img=img).to_dict() for img in gen_images
         ]
         IS.process(None, gen_samples)
 
@@ -100,14 +100,13 @@ class TestIS(TestCase):
             IS = InceptionScore(
                 fake_nums=2, fake_key='fake', sample_model='orig')
         gen_samples = [
-            EditDataSample(
-                ema=EditDataSample(fake_img=torch.randn(3, 2, 2)),
-                orig=EditDataSample(fake_img=torch.randn(3, 2, 2))).to_dict()
+            DataSample(
+                ema=DataSample(fake_img=torch.randn(3, 2, 2)),
+                orig=DataSample(fake_img=torch.randn(3, 2, 2))).to_dict()
         ]
         IS.process(None, gen_samples)
         gen_samples = [
-            EditDataSample(orig=EditDataSample(
-                fake=torch.randn(3, 2, 2))).to_dict()
+            DataSample(orig=DataSample(fake=torch.randn(3, 2, 2))).to_dict()
         ]
         IS.process(None, gen_samples)
 
@@ -116,7 +115,7 @@ class TestIS(TestCase):
             IS = InceptionScore(
                 fake_nums=2, fake_key='fake', sample_model='orig')
         gen_samples = [
-            EditDataSample(fake_img=torch.randn(3, 2, 2)).to_dict()
+            DataSample(fake_img=torch.randn(3, 2, 2)).to_dict()
             for _ in range(4)
         ]
         IS.process(None, gen_samples)

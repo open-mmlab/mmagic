@@ -10,7 +10,7 @@ from mmengine import print_log
 
 from mmagic.models.base_archs import set_lora
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 from ..stable_diffusion.stable_diffusion import StableDiffusion
 
@@ -183,8 +183,7 @@ class DreamBooth(StableDiffusion):
             prompt = self.val_prompts
             # construct a fake data_sample for destruct
             data_samples.split() * len(prompt)
-            data_samples = EditDataSample.stack(data_samples.split() *
-                                                len(prompt))
+            data_samples = DataSample.stack(data_samples.split() * len(prompt))
 
         unet_dtype = next(self.unet.parameters()).dtype
         self.unet.to(self.dtype)
@@ -196,7 +195,7 @@ class DreamBooth(StableDiffusion):
 
         samples = self.data_preprocessor.destruct(samples, data_samples)
 
-        out_data_sample = EditDataSample(fake_img=samples, prompt=prompt)
+        out_data_sample = DataSample(fake_img=samples, prompt=prompt)
         data_sample_list = out_data_sample.split()
         return data_sample_list
 
@@ -219,8 +218,7 @@ class DreamBooth(StableDiffusion):
         else:
             prompt = self.val_prompts
             # construct a fake data_sample for destruct
-            data_samples = EditDataSample.stack(data['data_samples'] *
-                                                len(prompt))
+            data_samples = DataSample.stack(data['data_samples'] * len(prompt))
 
         unet_dtype = next(self.unet.parameters()).dtype
         self.unet.to(self.dtype)
@@ -232,7 +230,7 @@ class DreamBooth(StableDiffusion):
 
         samples = self.data_preprocessor.destruct(samples, data_samples)
 
-        out_data_sample = EditDataSample(fake_img=samples, prompt=prompt)
+        out_data_sample = DataSample(fake_img=samples, prompt=prompt)
         data_sample_list = out_data_sample.split()
         return data_sample_list
 

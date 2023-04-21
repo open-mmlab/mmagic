@@ -48,7 +48,7 @@ dict_keys(['pair_path', 'pair', 'pair_ori_shape', 'img_mask', 'img_photo', 'img_
 Generally, the last step of the transforms pipeline must be `PackEditInputs`.
 `PackEditInputs` will pack the processed data into a dict containing two fields: `inputs` and `data_samples`.
 `inputs` is the variable you want to use as the model's input, which can be the type of `torch.Tensor`, dict of `torch.Tensor`, or any type you want.
-`data_samples` is a list of `EditDataSample`. Each `EditDataSample` contains groundtruth and necessary information for corresponding input.
+`data_samples` is a list of `DataSample`. Each `DataSample` contains groundtruth and necessary information for corresponding input.
 
 ### An example of BasicVSR
 

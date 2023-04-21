@@ -92,7 +92,7 @@ test_dataloader = dict(
 # VIS_HOOK + DATAFETCH
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         # vis ema and orig at the same time

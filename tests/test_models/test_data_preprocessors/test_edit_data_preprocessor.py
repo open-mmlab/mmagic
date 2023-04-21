@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from mmengine.testing import assert_allclose
 
 from mmagic.models.data_preprocessors import EditDataPreprocessor
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 class TestBaseDataPreprocessor(TestCase):
@@ -64,7 +64,7 @@ class TestBaseDataPreprocessor(TestCase):
         self.assertEqual(parse_fn('img', torch.rand(1, 1, 3, 4)), 'single')
 
         # test data sample is not None
-        data_sample = EditDataSample()
+        data_sample = DataSample()
 
         # test gt_img key
         # - RGB in channel order --> RGB
@@ -122,7 +122,7 @@ class TestBaseDataPreprocessor(TestCase):
             parse_fn('dk', torch.rand(3, 5, 5), data_sample), 'BGR')
 
         # test parse channel order for a stacked data sample
-        stacked_data_sample = EditDataSample.stack([data_sample, data_sample])
+        stacked_data_sample = DataSample.stack([data_sample, data_sample])
         self.assertEqual(
             parse_fn('mm_img', torch.rand(1, 5, 5), stacked_data_sample),
             'single')
@@ -134,18 +134,18 @@ class TestBaseDataPreprocessor(TestCase):
         parse_fn = data_preprocessor._parse_batch_channel_order
 
         with self.assertRaises(AssertionError):
-            parse_fn('img', torch.rand(1, 3, 5, 5), [EditDataSample()] * 2)
+            parse_fn('img', torch.rand(1, 3, 5, 5), [DataSample()] * 2)
 
         inputs_batch = torch.randn(2, 3, 5, 5)
         data_sample_batch = [
-            EditDataSample(metainfo=dict(gt_channel_order='RGB')),
-            EditDataSample(metainfo=dict(gt_channel_order='RGB'))
+            DataSample(metainfo=dict(gt_channel_order='RGB')),
+            DataSample(metainfo=dict(gt_channel_order='RGB'))
         ]
         self.assertTrue(parse_fn('gt', inputs_batch, data_sample_batch))
 
         data_sample_batch = [
-            EditDataSample(metainfo=dict(mm_img_channel_order='RGB')),
-            EditDataSample(metainfo=dict(mm_img_channel_order='BGR'))
+            DataSample(metainfo=dict(mm_img_channel_order='RGB')),
+            DataSample(metainfo=dict(mm_img_channel_order='BGR'))
         ]
         with self.assertRaises(AssertionError):
             parse_fn(parse_fn('mm_img', inputs_batch, data_sample_batch))
@@ -216,7 +216,7 @@ class TestBaseDataPreprocessor(TestCase):
 
         with self.assertRaises(AssertionError):
             padding_info = torch.randint(0, 10, (3, 2))
-            data_samples = [EditDataSample() for _ in range(2)]
+            data_samples = [DataSample() for _ in range(2)]
             update_fn(padding_info, None, data_samples)
 
         padding_info = torch.randint(0, 10, (3, 2))
@@ -264,7 +264,7 @@ class TestBaseDataPreprocessor(TestCase):
         inputs = torch.randint(0, 255, (4, 3, 5, 5))
         targets = (inputs - 127.5) / 127.5
         data_samples = [
-            EditDataSample(metainfo=dict(mm_img_channel_order='RGB'))
+            DataSample(metainfo=dict(mm_img_channel_order='RGB'))
             for _ in range(4)
         ]
         outputs, data_samples = process_fn(inputs, data_samples)
@@ -280,7 +280,7 @@ class TestBaseDataPreprocessor(TestCase):
         process_fn = data_preprocessor._preprocess_image_tensor
         inputs = torch.randint(0, 255, (4, 3, 5, 5))
         targets = ((inputs - 127.5) / 127.5)[:, [2, 1, 0]]
-        data_samples = [EditDataSample() for _ in range(4)]
+        data_samples = [DataSample() for _ in range(4)]
         outputs, data_samples = process_fn(inputs, data_samples)
         assert_allclose(outputs, targets)
         for data in data_samples:
@@ -295,8 +295,7 @@ class TestBaseDataPreprocessor(TestCase):
         inputs = torch.randint(0, 255, (4, 3, 5, 5))
         targets = ((inputs - 127.5) / 127.5)[:, [2, 1, 0]]
         data_samples = [
-            EditDataSample(metainfo=dict(gt_channel_order='BGR'))
-            for _ in range(4)
+            DataSample(metainfo=dict(gt_channel_order='BGR')) for _ in range(4)
         ]
         outputs, data_samples = process_fn(inputs, data_samples, 'gt_img')
         assert_allclose(outputs, targets)
@@ -313,7 +312,7 @@ class TestBaseDataPreprocessor(TestCase):
         inputs = torch.randint(0, 255, (4, 1, 5, 5))
         targets = ((inputs - 127.5) / 127.5)
         data_samples = [
-            EditDataSample(metainfo=dict(sin_channel_order='single'))
+            DataSample(metainfo=dict(sin_channel_order='single'))
             for _ in range(4)
         ]
         outputs, data_samples = process_fn(inputs, data_samples, 'sin')
@@ -352,7 +351,7 @@ class TestBaseDataPreprocessor(TestCase):
         input1 = torch.randint(0, 255, (3, 3, 5))
         input2 = torch.randint(0, 255, (3, 3, 5))
         inputs = [input1, input2]
-        data_samples = [EditDataSample() for _ in range(2)]
+        data_samples = [DataSample() for _ in range(2)]
         target = torch.stack([(input1 - 127.5) / 127.5,
                               (input2 - 127.5) / 127.5],
                              dim=0)
@@ -371,7 +370,7 @@ class TestBaseDataPreprocessor(TestCase):
         input1 = torch.randint(0, 255, (3, 3, 5))
         input2 = torch.randint(0, 255, (3, 5, 5))
         inputs = [input1, input2]
-        data_samples = [EditDataSample() for _ in range(2)]
+        data_samples = [DataSample() for _ in range(2)]
         target1 = F.pad(input1.clone(), (0, 0, 0, 2), value=42)  # pad H
         target2 = input2.clone()
         target = torch.stack([target1, target2], dim=0)[:, [2, 1, 0]]
@@ -394,8 +393,7 @@ class TestBaseDataPreprocessor(TestCase):
         input2 = torch.randint(0, 255, (3, 5, 3))
         inputs = [input1, input2]
         data_samples = [
-            EditDataSample(metainfo=dict(gt_channel_order='RGB'))
-            for _ in range(2)
+            DataSample(metainfo=dict(gt_channel_order='RGB')) for _ in range(2)
         ]
         target1 = F.pad(input1.clone(), (0, 0, 0, 2), value=42)  # pad H
         target2 = F.pad(input2.clone(), (0, 2, 0, 0), value=42)  # pad W
@@ -420,7 +418,7 @@ class TestBaseDataPreprocessor(TestCase):
         input2 = torch.randint(0, 255, (1, 5, 3))
         inputs = [input1, input2]
         data_samples = [
-            EditDataSample(metainfo=dict(AA_channel_order='single'))
+            DataSample(metainfo=dict(AA_channel_order='single'))
             for _ in range(2)
         ]
         target1 = F.pad(input1.clone(), (0, 0, 0, 2), value=42)  # pad H
@@ -476,7 +474,7 @@ class TestBaseDataPreprocessor(TestCase):
             mode=['ema', 'ema', 'ema'],
         )
         data_samples = [
-            EditDataSample(
+            DataSample(
                 metainfo=dict(
                     img_A_channel_order='RGB', img_B_channel_order='BGR'))
             for _ in range(3)
@@ -503,7 +501,7 @@ class TestBaseDataPreprocessor(TestCase):
         self.assertEqual(outputs['num_batches'], 3)
 
         # test error in padding checking
-        data_samples = [EditDataSample() for _ in range(2)]
+        data_samples = [DataSample() for _ in range(2)]
         inputs = dict(
             img_A=[
                 torch.randint(0, 255, (3, 3, 5)),
@@ -526,7 +524,7 @@ class TestBaseDataPreprocessor(TestCase):
         # test training is True
         metainfo = dict(gt_channel_order='RGB', tar_channel_order='BGR')
         data_samples = [
-            EditDataSample(
+            DataSample(
                 gt_img=torch.randint(0, 255, (3, 5, 5)),
                 AA=torch.randint(0, 255, (3, 5, 5)),
                 metainfo=metainfo,
@@ -542,7 +540,7 @@ class TestBaseDataPreprocessor(TestCase):
 
         # test training is False
         data_samples = [
-            EditDataSample(
+            DataSample(
                 gt_img=torch.randint(0, 255, (3, 5, 5)),
                 AA=torch.randint(0, 255, (3, 5, 5)),
                 metainfo=metainfo,
@@ -559,7 +557,7 @@ class TestBaseDataPreprocessor(TestCase):
         # test no stack
         data_preprocessor.stack_data_sample = False
         data_samples = [
-            EditDataSample(
+            DataSample(
                 gt_img=torch.randint(0, 255, (3, 5, 5)),
                 AA=torch.randint(0, 255, (3, 5, 5)),
                 metainfo=metainfo,
@@ -591,7 +589,7 @@ class TestBaseDataPreprocessor(TestCase):
         aaa = torch.randn([3, 1, 5, 5])
         bbb = torch.randn([3, 3, 5, 5])
         ccc = torch.randn([3, 3, 5, 5])
-        data_samples = [EditDataSample(metainfo=metainfo) for _ in range(3)]
+        data_samples = [DataSample(metainfo=metainfo) for _ in range(3)]
         tar_img = ((img * 127.5) + 127.5)[:, [2, 1, 0]]
         tar_aaa = (aaa * 127.5) + 127.5
         tar_bbb = (bbb * 127.5) + 127.5
@@ -606,7 +604,7 @@ class TestBaseDataPreprocessor(TestCase):
         aaa = torch.randn([1, 5, 5])
         bbb = torch.randn([3, 5, 5])
         ccc = torch.randn([3, 5, 5])
-        data_samples = EditDataSample(metainfo=metainfo)
+        data_samples = DataSample(metainfo=metainfo)
         tar_img = ((img * 127.5) + 127.5)[[2, 1, 0], ...]
         tar_aaa = (aaa * 127.5) + 127.5
         tar_bbb = (bbb * 127.5) + 127.5
@@ -620,7 +618,7 @@ class TestBaseDataPreprocessor(TestCase):
         data_preprocessor._enable_normalize = False
         metainfo = dict(img_output_channel_order='RGB', )
         img = torch.randn([3, 3, 5, 5])
-        data_samples = [EditDataSample(metainfo=metainfo) for _ in range(3)]
+        data_samples = [DataSample(metainfo=metainfo) for _ in range(3)]
         tar_img = img[:, [2, 1, 0]]
         assert_allclose(cov_fn(img, data_samples, 'img'), tar_img)
 
@@ -652,8 +650,8 @@ class TestBaseDataPreprocessor(TestCase):
         metainfo_1 = dict(padding_size=torch.FloatTensor([2, 0]))
         metainfo_2 = dict(padding_size=torch.FloatTensor([0, 2]))
         data_samples = [
-            EditDataSample(metainfo=metainfo_1),
-            EditDataSample(metainfo=metainfo_2)
+            DataSample(metainfo=metainfo_1),
+            DataSample(metainfo=metainfo_2)
         ]
         output = cov_fn(batch_tensor, data_samples)
         self.assertEqual(output.shape, (2, 3, 3, 5))
@@ -663,8 +661,8 @@ class TestBaseDataPreprocessor(TestCase):
         metainfo_1 = dict(padding_size=torch.FloatTensor([2, 0]))
         metainfo_2 = dict(padding_size=torch.FloatTensor([0, 2]))
         data_samples = [
-            EditDataSample(metainfo=metainfo_1),
-            EditDataSample(metainfo=metainfo_2)
+            DataSample(metainfo=metainfo_1),
+            DataSample(metainfo=metainfo_2)
         ]
         output = cov_fn(batch_tensor, data_samples, False)
         self.assertIsInstance(output, list)
@@ -673,31 +671,31 @@ class TestBaseDataPreprocessor(TestCase):
 
         # single inputs
         batch_tensor = torch.randint(0, 255, (3, 5, 5))
-        data_samples = EditDataSample(metainfo=metainfo_1)
+        data_samples = DataSample(metainfo=metainfo_1)
         output = cov_fn(batch_tensor, data_samples, False)
         self.assertEqual(output.shape, (3, 3, 5))
 
         # single data sample + test metainfo not found
         batch_tensor = torch.randint(0, 255, (3, 5, 5))
         data_preprocessor._done_padding = False
-        output = cov_fn(batch_tensor, EditDataSample(), False)
+        output = cov_fn(batch_tensor, DataSample(), False)
         assert_allclose(output, batch_tensor)
 
         # list of data sample + test metainfo not found
         batch_tensor = torch.randint(0, 255, (2, 3, 5, 5))
-        output = cov_fn(batch_tensor, [EditDataSample()] * 2, False)
+        output = cov_fn(batch_tensor, [DataSample()] * 2, False)
         assert_allclose(output, batch_tensor)
 
         data_preprocessor._done_padding = True
-        output = cov_fn(batch_tensor, EditDataSample(), False)
+        output = cov_fn(batch_tensor, DataSample(), False)
         assert_allclose(output, batch_tensor)
 
         # test stacked data sample
         data_samples = [
-            EditDataSample(metainfo=metainfo_1),
-            EditDataSample(metainfo=metainfo_2)
+            DataSample(metainfo=metainfo_1),
+            DataSample(metainfo=metainfo_2)
         ]
-        stacked_data_sample = EditDataSample.stack(data_samples)
+        stacked_data_sample = DataSample.stack(data_samples)
         batch_tensor = torch.randint(0, 255, (2, 3, 5, 5))
         output = cov_fn(batch_tensor, stacked_data_sample, False)
         self.assertIsInstance(output, list)
@@ -705,7 +703,7 @@ class TestBaseDataPreprocessor(TestCase):
         self.assertEqual(output[1].shape, (3, 5, 3))
 
         # test stacked data sample + metainfo is None
-        stacked_data_sample = EditDataSample()
+        stacked_data_sample = DataSample()
         batch_tensor = torch.randint(0, 255, (2, 3, 5, 5))
         output = cov_fn(batch_tensor, stacked_data_sample, True)
         self.assertEqual(output.shape, (2, 3, 5, 5))
@@ -809,10 +807,7 @@ class TestBaseDataPreprocessor(TestCase):
         gt_inp1 = torch.randint(0, 255, (3, 5, 5))
         gt_inp2 = torch.randint(0, 255, (3, 5, 5))
 
-        data_samples = [
-            EditDataSample(gt_img=gt_inp1),
-            EditDataSample(gt_img=gt_inp2)
-        ]
+        data_samples = [DataSample(gt_img=gt_inp1), DataSample(gt_img=gt_inp2)]
         data = dict(inputs=[input1, input2], data_samples=data_samples)
         data = data_preprocessor(data, training=False)
         assert_allclose(data['data_samples'].gt_img,

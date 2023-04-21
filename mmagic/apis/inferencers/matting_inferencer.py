@@ -10,7 +10,7 @@ from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter
 
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 
 
@@ -56,7 +56,7 @@ class MattingInferencer(BaseMMEditInferencer):
         preprocess_res['inputs'] = torch.cat([_data['inputs'], trimap],
                                              dim=0).float()
         preprocess_res = collate([preprocess_res])
-        preprocess_res['data_samples'] = EditDataSample.stack(
+        preprocess_res['data_samples'] = DataSample.stack(
             [_data['data_samples']])
         preprocess_res['mode'] = 'predict'
         if 'cuda' in str(self.device):
@@ -94,13 +94,13 @@ class MattingInferencer(BaseMMEditInferencer):
 
         return result
 
-    def _pred2dict(self, data_sample: EditDataSample) -> Dict:
+    def _pred2dict(self, data_sample: DataSample) -> Dict:
         """Extract elements necessary to represent a prediction into a
         dictionary. It's better to contain only basic data elements such as
         strings and numbers in order to guarantee it's json-serializable.
 
         Args:
-            data_sample (EditDataSample): The data sample to be converted.
+            data_sample (DataSample): The data sample to be converted.
 
         Returns:
             dict: The output dictionary.

@@ -74,7 +74,7 @@ optim_wrapper = dict(
 
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=[

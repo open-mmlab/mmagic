@@ -14,7 +14,7 @@ from mmengine.runner import Runner
 from mmagic.datasets import PairedImageDataset
 from mmagic.evaluation import FrechetInceptionDistance, TransFID
 from mmagic.models import EditDataPreprocessor, Pix2Pix
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 register_all_modules()
@@ -128,19 +128,18 @@ class TestFID(TestCase):
                 inception_pkl=self.inception_pkl)
         gen_images = torch.randn(4, 3, 2, 2)
         gen_samples = [
-            EditDataSample(fake=(gen_images[i])).to_dict() for i in range(4)
+            DataSample(fake=(gen_images[i])).to_dict() for i in range(4)
         ]
         fid.process(None, gen_samples)
         fid.process(None, gen_samples)
 
         fid.fake_results.clear()
         gen_sample = [
-            EditDataSample(orig=EditDataSample(
-                fake=torch.randn(3, 2, 2))).to_dict()
+            DataSample(orig=DataSample(fake=torch.randn(3, 2, 2))).to_dict()
         ]
         fid.process(None, gen_sample)
         gen_sample = [
-            EditDataSample(orig=EditDataSample(
+            DataSample(orig=DataSample(
                 fake_img=torch.randn(3, 2, 2))).to_dict()
         ]
         fid.process(None, gen_sample)
@@ -160,7 +159,7 @@ class TestFID(TestCase):
         dataloader = MagicMock()
         fid.prepare(module, dataloader)
         gen_samples = [
-            EditDataSample(fake_img=torch.randn(3, 2, 2)).to_dict()
+            DataSample(fake_img=torch.randn(3, 2, 2)).to_dict()
             for _ in range(4)
         ]
         fid.process(None, gen_samples)

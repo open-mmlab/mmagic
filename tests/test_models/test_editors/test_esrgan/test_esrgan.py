@@ -7,7 +7,7 @@ from torch.optim import Adam
 
 from mmagic.models import ESRGAN, EditDataPreprocessor, ModifiedVGG, RRDBNet
 from mmagic.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 @patch.object(PerceptualVGG, 'init_weights')
@@ -59,7 +59,7 @@ def test_esrgan(init_weights):
     # prepare data
     inputs = torch.rand(1, 3, 32, 32)
     target = torch.rand(3, 128, 128)
-    data_sample = EditDataSample(gt_img=target)
+    data_sample = DataSample(gt_img=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train

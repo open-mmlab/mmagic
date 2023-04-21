@@ -6,7 +6,7 @@ from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
 from mmagic.models import LIIF, EditDataPreprocessor
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 def test_liif():
@@ -42,7 +42,7 @@ def test_liif():
 
     # prepare data
     inputs = torch.rand(1, 3, 8, 8)
-    data_sample = EditDataSample(
+    data_sample = DataSample(
         metainfo=dict(coord=torch.rand(256, 2), cell=torch.rand(256, 2)))
     data_sample.gt_img = torch.rand(256, 3)
     data = dict(inputs=inputs, data_samples=[data_sample])
@@ -63,13 +63,11 @@ def test_liif():
     # predictions = predictions.split()
     assert isinstance(predictions, List)
     assert len(predictions) == 1
-    assert isinstance(predictions[0], EditDataSample)
+    assert isinstance(predictions[0], DataSample)
     assert isinstance(predictions[0].output.pred_img.data, torch.Tensor)
     assert predictions[0].output.pred_img.shape == (3, 16, 16)
 
     # feat
     output = model(
-        torch.rand(1, 3, 8, 8),
-        EditDataSample.stack([data_sample]),
-        mode='tensor')
+        torch.rand(1, 3, 8, 8), DataSample.stack([data_sample]), mode='tensor')
     assert output.shape == (1, 256, 3)

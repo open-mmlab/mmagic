@@ -8,7 +8,7 @@ import torch
 from mmengine.visualization import Visualizer
 
 from mmagic.registry import VISUALIZERS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import print_colored_log
 
 
@@ -53,13 +53,13 @@ class ConcatImageVisualizer(Visualizer):
         self.pixel_range = pixel_range
         self.bgr2rgb = bgr2rgb
 
-    def add_datasample(self, data_sample: EditDataSample, step=0) -> None:
+    def add_datasample(self, data_sample: DataSample, step=0) -> None:
         """Concatenate image and draw.
 
         Args:
             input (torch.Tensor): Single input tensor from data_batch.
-            data_sample (EditDataSample): Single data_sample from data_batch.
-            output (EditDataSample): Single prediction output by model.
+            data_sample (DataSample): Single data_sample from data_batch.
+            output (DataSample): Single prediction output by model.
             step (int): Global step value to record. Default: 0.
         """
         # Note:

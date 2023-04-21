@@ -15,7 +15,7 @@ from mmengine.model import is_model_wrapper
 from torch import Tensor
 from torch.utils.data.dataloader import DataLoader
 
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 class GenMetric(BaseMetric):
@@ -291,11 +291,11 @@ class GenerativeMetric(GenMetric):
             def __len__(self) -> int:
                 return math.ceil(self.max_length / self.batch_size)
 
-            def get_cond(self) -> List[EditDataSample]:
+            def get_cond(self) -> List[DataSample]:
 
                 data_sample_list = []
                 for _ in range(self.batch_size):
-                    data_sample = EditDataSample()
+                    data_sample = DataSample()
                     cond = self.dataset.get_data_info(
                         np.random.randint(len(self.dataset)))['gt_label']
                     data_sample.set_gt_label(torch.Tensor(cond))
