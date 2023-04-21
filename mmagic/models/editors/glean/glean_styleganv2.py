@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmagic.models.base_archs import PixelShufflePack
+from mmagic.models.archs import PixelShufflePack
 from mmagic.models.utils import make_layer
 from mmagic.registry import MODELS
 from ..esrgan.rrdb_net import RRDB

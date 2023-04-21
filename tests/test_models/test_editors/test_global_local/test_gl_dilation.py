@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmagic.models.base_archs import SimpleGatedConvModule
+from mmagic.models.archs import SimpleGatedConvModule
 from mmagic.models.editors.global_local import GLDilationNeck
 from mmagic.registry import MODELS
 from mmagic.utils import register_all_modules

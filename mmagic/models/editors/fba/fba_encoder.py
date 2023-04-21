@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmagic.models.base_archs import ResNet
+from mmagic.models.archs import ResNet
 from mmagic.registry import MODELS
 
 

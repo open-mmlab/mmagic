@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from mmengine.model import BaseModule
 
-from mmagic.models.base_archs import pixel_unshuffle
+from mmagic.models.archs import pixel_unshuffle
 from mmagic.models.utils import default_init_weights, make_layer
 from mmagic.registry import MODELS
 

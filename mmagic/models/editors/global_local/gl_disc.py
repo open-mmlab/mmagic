@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from mmengine.model import BaseModule
 
-from mmagic.models.base_archs import MultiLayerDiscriminator
+from mmagic.models.archs import MultiLayerDiscriminator
 from mmagic.registry import MODELS
 
 

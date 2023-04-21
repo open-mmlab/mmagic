@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from mmengine import print_log
 
-from mmagic.models.base_archs import set_lora
+from mmagic.models.archs import set_lora
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
