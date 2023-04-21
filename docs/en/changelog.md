@@ -1,5 +1,82 @@
 # Changelog
 
+## v1.0.0 (25/04/2023)
+
+We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration).
+
+![mmagic-log](https://user-images.githubusercontent.com/49083766/233557648-9034f5a0-c85d-4092-b700-3a28072251b6.png)
+
+Since its inception, MMEditing has been the preferred algorithm library for many super-resolution, editing, and generation tasks, helping research teams win more than 10 top international competitions and supporting over 100 GitHub ecosystem projects. After iterative updates with OpenMMLab 2.0 framework and merged with MMGeneration, MMEditing has become a powerful tool that supports low-level algorithms based on both GAN and CNN.
+
+Today, MMEditing embraces the Diffusion Model and transforms into a more advanced and comprehensive AIGC toolkit: **MMagic** (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation).
+
+In MMagic, we have supports 53+ models in multiple tasks such as fine-tuning for stable diffusion, text-to-image, image and video restoration, super-resolution, editing and generation. With excellent training and experiment management support from [MMEngine](https://github.com/open-mmlab/mmengine), MMagic will provide more agile and flexible experimental support for researchers and AIGC enthusiasts, and help you on your AIGC exploration journey.
+
+**Highlights**
+
+**1. New Models**
+We support 11 new models in 4 new tasks.
+
+- Text2Image / Diffusion
+  - ControlNet
+  - DreamBooth
+  - Stable Diffusion
+  - Disco Diffusion
+  - GLIDE
+  - Guided Diffusion
+- 3D-aware Generation
+  - EG3D
+- Image Restoration
+  - NAFNet
+  - Restormer
+  - SwinIR
+- Image Colorization
+  - InstColorization
+
+**2. Magic Diffusion Model**
+For the Diffusion Model, we provide the following "magic" :
+
+- Support image generation based on Stable Diffusion and Disco Diffusion
+
+- Support Finetune methods such as Dreambooth and DreamBooth LoRA
+
+- Support controllability in text-to-image generation using ControlNet
+  ![de87f16f-bf6d-4a61-8406-5ecdbb9167b6](https://user-images.githubusercontent.com/49083766/233558077-2005e603-c5a8-49af-930f-e7a465ca818b.png)
+
+- Support acceleration and optimization strategies based on xFormers to improve training and inference efficiency
+
+- Support video generation based on MultiFrame Render
+  MMagic supports the generation of long videos in various styles through ControlNet and MultiFrame Render.
+  prompt key words: a handsome man, silver hair, smiling, play basketball
+  https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4
+  prompt key words: a girl, black hair, white pants, smiling, play basketball
+  https://user-images.githubusercontent.com/49083766/233559964-bd5127bd-52f6-44b6-a089-9d7adfbc2430.mp4
+  prompt key words: a handsome man
+  https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4
+
+- Support calling basic models and sampling strategies through DiffuserWrapper
+
+**3. Upgraded Framework**
+To improve your "spellcasting" efficiency, we have made the following adjustments to the "magic circuit":
+
+- By using MMengine and MMCV of OpenMMLab 2.0 framework, We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different module. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs.
+- Support for 33+ algorithms accelerated by Pytorch 2.0
+- Refactor EditDataSample to support the combination and splitting of batch dimensions
+- Refactor EditDataPreprocessor and unify the data format for various tasks during training and inference
+- Refactor EditValLoop and EditTestLoop, supporting the evaluation of both generation-type metrics (e.g. FID) and reconstruction-type metrics (e.g. SSIM), and supporting the evaluation of multiple datasets at once
+
+**New Features & Improvements**
+
+- Support 53+ algorithms, 232+ configs, 213+ checkpoints, 26+ loss functions, and 20+ metrics.
+- Support Inferencer and Demo using High-level Inference APIs. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/demo)
+- Support Gradio gui of Inpainting inference. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/demo/gradio-demo.py)
+- Support qualitative comparison tools. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/tools/gui)
+- Support visualization on local files or using tensorboard and wandb.
+- Enable projects. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/projects)
+- Improve converters scripts and documents for datasets. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/tools/dataset_converters)
+
+* \[Feature\] controlnet animation inferencer by @liuwenran in https://github.com/open-mmlab/mmediting/pull/1713
+
 ## v1.0.0rc7 (07/04/2023)
 
 **Highlights**
