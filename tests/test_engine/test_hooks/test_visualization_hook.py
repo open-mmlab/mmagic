@@ -13,7 +13,7 @@ from torch.utils.data.dataset import Dataset
 
 from mmagic.engine import GenVisualizationHook
 from mmagic.engine.hooks import BasicVisualizationHook
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 from mmagic.visualization import ConcatImageVisualizer
 
@@ -26,7 +26,7 @@ class TestVisualizationHook(TestCase):
 
     def setUp(self) -> None:
         input = torch.rand(2, 3, 32, 32)
-        data_sample = EditDataSample(
+        data_sample = DataSample(
             path_rgb='rgb.png',
             tensor3d=torch.ones(3, 32, 32) *
             torch.tensor([[[0.1]], [[0.2]], [[0.3]]]),
@@ -127,8 +127,7 @@ class TestGenVisualizationHook(TestCase):
 
         # build a empty data sample
         data_batch = [
-            dict(inputs=None, data_samples=EditDataSample())
-            for idx in range(10)
+            dict(inputs=None, data_samples=DataSample()) for idx in range(10)
         ]
         hook.vis_sample(runner, 0, data_batch, None)
         _, called_kwargs = mock_visualuzer.add_datasample.call_args
@@ -195,7 +194,7 @@ class TestGenVisualizationHook(TestCase):
                 img_mask = torch.ones(3, 32, 32) * (weight + 1)
                 return dict(
                     inputs=dict(img_photo=img_photo, img_mask=img_mask),
-                    data_samples=EditDataSample(
+                    data_samples=DataSample(
                         img_photo=img_photo, img_mask=img_mask))
 
         train_dataloader = MagicMock()
@@ -224,8 +223,7 @@ class TestGenVisualizationHook(TestCase):
 
         # build a empty data sample
         data_batch = [
-            dict(inputs=None, data_samples=EditDataSample())
-            for idx in range(4)
+            dict(inputs=None, data_samples=DataSample()) for idx in range(4)
         ]
         hook.vis_sample(runner, 0, data_batch, None)
         called_kwargs_list = mock_visualuzer.add_datasample.call_args_list
@@ -304,7 +302,7 @@ class TestGenVisualizationHook(TestCase):
 
     #     # build a empty data sample
     #     data_batch = [
-    #         dict(inputs=None, data_sample=EditDataSample())
+    #         dict(inputs=None, data_sample=DataSample())
     #         for idx in range(10)
     #     ]
     #     hook.vis_sample(runner, 0, data_batch, None)
@@ -333,7 +331,7 @@ class TestGenVisualizationHook(TestCase):
 
     #     # build a empty data sample
     #     data_batch = [
-    #         dict(inputs=None, data_sample=EditDataSample())
+    #         dict(inputs=None, data_sample=DataSample())
     #         for idx in range(10)
     #     ]
     #     hook.vis_sample(runner, 0, data_batch, None)
@@ -353,7 +351,7 @@ class TestGenVisualizationHook(TestCase):
         runner = MagicMock()
         runner.model = model
 
-        hook.after_val_iter(runner, 0, [dict()], [EditDataSample()])
+        hook.after_val_iter(runner, 0, [dict()], [DataSample()])
         mock_visualuzer.assert_not_called()
 
     def test_after_train_iter(self):
@@ -377,8 +375,7 @@ class TestGenVisualizationHook(TestCase):
 
         # build a empty data sample
         data_batch = [
-            dict(inputs=None, data_samples=EditDataSample())
-            for idx in range(10)
+            dict(inputs=None, data_samples=DataSample()) for idx in range(10)
         ]
         for idx in range(3):
             hook.after_train_iter(runner, idx, data_batch, None)
@@ -435,7 +432,7 @@ class TestGenVisualizationHook(TestCase):
         mock_visualuzer.add_datasample.reset_mock()
 
         feat_map = torch.randn(4, 16, 4, 4)
-        x_t = [EditDataSample(info='x_t')]
+        x_t = [DataSample(info='x_t')]
         vis_results = dict(feat_map=feat_map, x_t=x_t)
         message_hub.update_info('vis_results', vis_results)
 
@@ -487,7 +484,7 @@ class TestGenVisualizationHook(TestCase):
                 return torch.randn(2, 2)
 
             def val_step(self, *args, **kwargs):
-                return [EditDataSample() for _ in range(self.n_samples)]
+                return [DataSample() for _ in range(self.n_samples)]
 
             def eval(self):
                 return self
@@ -508,8 +505,7 @@ class TestGenVisualizationHook(TestCase):
 
         # build a empty data sample
         data_batch = [
-            dict(inputs=None, data_samples=EditDataSample())
-            for idx in range(10)
+            dict(inputs=None, data_samples=DataSample()) for idx in range(10)
         ]
 
         for idx in range(3):
@@ -540,11 +536,11 @@ class TestGenVisualizationHook(TestCase):
 
         outputs = []
         for gt, ema, orig, x_t in zip(gt_list, ema_list, orig_list, x_t_list):
-            gen_sample = EditDataSample(
+            gen_sample = DataSample(
                 gt_img=gt,
-                ema=EditDataSample(fake_img=ema),
-                orig=EditDataSample(fake_img=orig),
-                new_model=EditDataSample(x_t=x_t))
+                ema=DataSample(fake_img=ema),
+                orig=DataSample(fake_img=orig),
+                new_model=DataSample(x_t=x_t))
             outputs.append(gen_sample)
 
         hook.after_test_iter(runner, 42, [], outputs)
@@ -593,9 +589,7 @@ class TestGenVisualizationHook(TestCase):
         self.assertTrue(all([kwargs['target_keys'] for kwargs in kwargs_list]))
 
         # test get target key automatically with error
-        outputs = [
-            EditDataSample(ema=EditDataSample(fake_img=torch.randn(3, 6, 6)))
-        ]
+        outputs = [DataSample(ema=DataSample(fake_img=torch.randn(3, 6, 6)))]
         with self.assertRaises(AssertionError):
             hook.after_test_iter(runner, 42, [], outputs)
 
@@ -616,8 +610,7 @@ class TestGenVisualizationHook(TestCase):
 
         ema_list = [torch.randn(3, 6, 6) for _ in range(4)]
         outputs = [
-            EditDataSample(ema=EditDataSample(fake_img=ema))
-            for ema in ema_list
+            DataSample(ema=DataSample(fake_img=ema)) for ema in ema_list
         ]
         hook.after_test_iter(runner, 42, [], outputs)
         mock_visualuzer.add_datasample.assert_not_called()

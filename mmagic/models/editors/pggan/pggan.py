@@ -15,7 +15,7 @@ from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import ForwardInputs, SampleList
 from ...base_models import BaseGAN
 from ...utils import get_valid_num_batches, set_requires_grad
@@ -125,7 +125,7 @@ class ProgressiveGrowingGAN(BaseGAN):
                 :class:`ProgressiveGrowingGAN`. Defaults to None.
 
         Returns:
-            SampleList: A list of ``EditDataSample`` contain generated results.
+            SampleList: A list of ``DataSample`` contain generated results.
         """
         if isinstance(inputs, Tensor):
             noise = inputs
@@ -165,7 +165,7 @@ class ProgressiveGrowingGAN(BaseGAN):
                 transition_weight=transition_weight)
             outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             if data_samples:
                 gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
@@ -189,13 +189,13 @@ class ProgressiveGrowingGAN(BaseGAN):
             outputs_ema = self.data_preprocessor.destruct(
                 outputs_ema, data_samples)
 
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             if data_samples:
                 gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
                 gen_sample.gt_img = inputs['img']
-            gen_sample.ema = EditDataSample(fake_img=outputs_ema)
-            gen_sample.orig = EditDataSample(fake_img=outputs_orig)
+            gen_sample.ema = DataSample(fake_img=outputs_ema)
+            gen_sample.orig = DataSample(fake_img=outputs_orig)
             gen_sample.noise = noise
             gen_sample.sample_model = 'ema/orig'
             batch_sample_list = gen_sample.split(allow_nonseq_value=True)
@@ -203,14 +203,14 @@ class ProgressiveGrowingGAN(BaseGAN):
         return batch_sample_list
 
     def train_discriminator(self, inputs: Tensor,
-                            data_samples: List[EditDataSample],
+                            data_samples: List[DataSample],
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (Tensor): Inputs from current resolution training.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (List[DataSample]): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
@@ -303,14 +303,13 @@ class ProgressiveGrowingGAN(BaseGAN):
         parsed_loss, log_vars = self.parse_losses(losses_dict)
         return parsed_loss, log_vars
 
-    def train_generator(self, inputs: Tensor,
-                        data_samples: List[EditDataSample],
+    def train_generator(self, inputs: Tensor, data_samples: List[DataSample],
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (Tensor): Inputs from current resolution training.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (List[DataSample]): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.

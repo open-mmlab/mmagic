@@ -11,7 +11,7 @@ from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import ForwardInputs, NoiseVar, SampleList
 from ..utils import (get_valid_noise_size, get_valid_num_batches,
                      noise_sample_fn, set_requires_grad)
@@ -330,7 +330,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 Defaults to None.
 
         Returns:
-            SampleList: A list of ``EditDataSample`` contain generated results.
+            SampleList: A list of ``DataSample`` contain generated results.
         """
         if isinstance(inputs, Tensor):
             noise = inputs
@@ -352,7 +352,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             outputs = generator(noise, return_noise=False, **sample_kwargs)
             outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             if data_samples:
                 gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
@@ -373,13 +373,13 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             outputs_ema = self.data_preprocessor.destruct(
                 outputs_ema, data_samples)
 
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             if data_samples:
                 gen_sample.update(data_samples)
             if isinstance(inputs, dict) and 'img' in inputs:
                 gen_sample.gt_img = inputs['img']
-            gen_sample.ema = EditDataSample(fake_img=outputs_ema)
-            gen_sample.orig = EditDataSample(fake_img=outputs_orig)
+            gen_sample.ema = DataSample(fake_img=outputs_ema)
+            gen_sample.orig = DataSample(fake_img=outputs_orig)
             gen_sample.noise = noise
             gen_sample.sample_kwargs = deepcopy(sample_kwargs)
             gen_sample.sample_model = 'ema/orig'
@@ -413,7 +413,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            List[EditDataSample]: Generated image or image dict.
+            List[DataSample]: Generated image or image dict.
         """
         data = self.data_preprocessor(data)
         outputs = self(**data)
@@ -547,14 +547,14 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         return loss, log_var
 
-    def train_generator(self, inputs: dict, data_samples: List[EditDataSample],
+    def train_generator(self, inputs: dict, data_samples: List[DataSample],
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Training function for discriminator. All GANs should implement this
         function by themselves.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (List[DataSample]): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
 
@@ -580,8 +580,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
         optimizer_wrapper.update_params(loss)
         return log_vars
 
-    def train_discriminator(self, inputs: dict,
-                            data_samples: List[EditDataSample],
+    def train_discriminator(self, inputs: dict, data_samples: List[DataSample],
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Training function for discriminator. All GANs should implement this
@@ -589,7 +588,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (List[EditDataSample]): Data samples from dataloader.
+            data_samples (List[DataSample]): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
 

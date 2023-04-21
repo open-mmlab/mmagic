@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 from mmagic.evaluation import (EditEvaluator, FrechetInceptionDistance,
                                InceptionScore)
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 register_all_modules()
@@ -146,7 +146,7 @@ class TestEditEvaluator(TestCase):
         evaluator = EditEvaluator(self.metrics)
         metrics_mock = [MagicMock(), MagicMock()]
 
-        data_samples = [EditDataSample(a=1, b=2), dict(c=3, d=4)]
+        data_samples = [DataSample(a=1, b=2), dict(c=3, d=4)]
 
         # NOTE: data_batch is not used in evaluation
         evaluator.process(

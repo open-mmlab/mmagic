@@ -3,7 +3,7 @@ import torch
 
 from mmagic.models import BaseEditModel
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 @MODELS.register_module()
@@ -124,7 +124,7 @@ class BasicVSR(BaseEditModel):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            EditDataSample: predictions.
+            DataSample: predictions.
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
@@ -144,7 +144,7 @@ class BasicVSR(BaseEditModel):
                 feats = feats[:, t // 2]
 
         # create a stacked data sample
-        predictions = EditDataSample(
+        predictions = DataSample(
             pred_img=feats.cpu(), metainfo=data_samples.metainfo)
 
         return predictions

@@ -40,7 +40,7 @@ class CAIN(BasicInterpolator):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            List[EditDataSample]: predictions.
+            List[DataSample]: predictions.
         """
 
         predictions = super().forward_inference(

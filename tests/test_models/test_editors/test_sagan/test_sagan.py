@@ -9,7 +9,7 @@ from torch.optim import SGD
 
 from mmagic.models import SAGAN, EditDataPreprocessor
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 generator = dict(
     type='SAGANGenerator',
@@ -109,7 +109,7 @@ class TestSAGAN(TestCase):
         img = torch.randn(3, 16, 16)
         label = torch.randint(0, 10, (1, ))
 
-        data_sample = EditDataSample(gt_img=img)
+        data_sample = DataSample(gt_img=img)
         data_sample.set_gt_label(label)
 
         data = dict(inputs=dict(), data_samples=[data_sample])

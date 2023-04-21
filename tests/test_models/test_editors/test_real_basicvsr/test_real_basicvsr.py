@@ -11,7 +11,7 @@ from mmagic.models.data_preprocessors import EditDataPreprocessor
 from mmagic.models.editors import (RealBasicVSR, RealBasicVSRNet,
                                    UNetDiscriminatorWithSpectralNorm)
 from mmagic.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 @patch.object(PerceptualVGG, 'init_weights')
@@ -80,7 +80,7 @@ def test_real_basicvsr(init_weights):
     # prepare data
     inputs = torch.rand(5, 3, 64, 64)
     target = torch.rand(5, 3, 256, 256)
-    data_sample = EditDataSample(gt_img=target, gt_unsharp=target)
+    data_sample = DataSample(gt_img=target, gt_unsharp=target)
     data = dict(inputs=[inputs], data_samples=[data_sample])
 
     # train

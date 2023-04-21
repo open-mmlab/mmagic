@@ -10,7 +10,7 @@ from torch import Tensor
 from torchvision.utils import make_grid
 
 from mmagic.registry import VISUALIZERS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 
 mean_std_type = Optional[Sequence[Union[float, int]]]
@@ -223,11 +223,11 @@ class GenVisualizer(Visualizer):
         vis_results = vis_results.numpy().astype(np.uint8)
         return vis_results
 
-    def _get_vis_data_by_key(self, sample: EditDataSample, key: str) -> Tensor:
-        """Get tensor in ``EditDataSample`` by the given key.
+    def _get_vis_data_by_key(self, sample: DataSample, key: str) -> Tensor:
+        """Get tensor in ``DataSample`` by the given key.
 
         Args:
-            sample (EditDataSample): Input data sample.
+            sample (DataSample): Input data sample.
             key (str): Name of the target tensor.
 
         Returns:
@@ -264,7 +264,7 @@ class GenVisualizer(Visualizer):
     def add_datasample(self,
                        name: str,
                        *,
-                       gen_samples: Sequence[EditDataSample],
+                       gen_samples: Sequence[DataSample],
                        target_keys: Optional[Tuple[str, List[str]]] = None,
                        vis_mode: Optional[str] = None,
                        n_row: Optional[int] = None,
@@ -283,7 +283,7 @@ class GenVisualizer(Visualizer):
 
         Args:
             name (str): The image identifier.
-            gen_samples (List[EditDataSample]): Data samples to visualize.
+            gen_samples (List[DataSample]): Data samples to visualize.
             vis_mode (str, optional): Visualization mode. If not passed, will
                 visualize results as image. Defaults to None.
             n_rows (int, optional): Number of images in one row.

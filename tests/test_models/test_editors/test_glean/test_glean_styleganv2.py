@@ -11,7 +11,7 @@ from mmagic.models import SRGAN, EditDataPreprocessor, GLEANStyleGANv2
 from mmagic.models.editors.stylegan2 import StyleGAN2Discriminator
 from mmagic.models.losses import (GANLoss, MSELoss, PerceptualLoss,
                                   PerceptualVGG)
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 @pytest.mark.skipif(
@@ -62,7 +62,7 @@ def test_glean(init_weights):
     # prepare data
     inputs = torch.rand(1, 3, 16, 16)
     target = torch.rand(3, 64, 64)
-    data_sample = EditDataSample(gt_img=target)
+    data_sample = DataSample(gt_img=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train

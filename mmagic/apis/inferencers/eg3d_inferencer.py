@@ -13,7 +13,7 @@ from PIL import Image
 from torch.nn import functional as F
 from torchvision.utils import make_grid
 
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import ForwardInputs, try_import
 from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
 from .inference_functions import calculate_grid_size
@@ -60,7 +60,7 @@ class EG3DInferencer(BaseMMEditInferencer):
 
             data_sample_list = []
             for lab in inputs:
-                data_sample = EditDataSample()
+                data_sample = DataSample()
                 data_sample.set_gt_label(lab)
                 data_sample_list.append(data_sample.to(self.device))
             self.extra_parameters['num_batches'] = len(inputs)
@@ -78,7 +78,7 @@ class EG3DInferencer(BaseMMEditInferencer):
         if data_sample_list is None:
             data_samples = None
         else:
-            data_samples = EditDataSample.stack(data_sample_list)
+            data_samples = DataSample.stack(data_sample_list)
 
         return inputs, data_samples
 

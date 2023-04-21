@@ -15,7 +15,7 @@ from mmengine.structures import BaseDataElement
 from mmengine.utils import is_list_of
 from mmengine.visualization import Visualizer
 
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import get_sampler
 
 
@@ -437,12 +437,12 @@ class GenVisualizationHook(Hook):
                     'message_hub.runtime_info[\'vis_results\'].')
 
             value = vis_results[key]
-            # pack to list of EditDataSample
+            # pack to list of DataSample
             if isinstance(value, torch.Tensor):
                 gen_samples = []
                 num_batches = value.shape[0]
                 for idx in range(num_batches):
-                    gen_sample = EditDataSample()
+                    gen_sample = DataSample()
                     setattr(gen_sample, key, value[idx])
                     gen_samples.append(gen_sample)
             elif is_list_of(value, BaseDataElement):

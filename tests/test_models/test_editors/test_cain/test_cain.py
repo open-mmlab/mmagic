@@ -10,7 +10,7 @@ from mmagic.models import EditDataPreprocessor
 from mmagic.models.editors import CAIN, CAINNet
 from mmagic.models.losses import L1Loss
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 @pytest.mark.skipif(
@@ -112,7 +112,7 @@ def test_cain():
     # prepare data
     inputs = torch.rand(2, 3, 32, 32)
     target = torch.rand(3, 32, 32)
-    data_sample = EditDataSample(gt_img=target)
+    data_sample = DataSample(gt_img=target)
     data = dict(inputs=[inputs], data_samples=[data_sample])
 
     # train

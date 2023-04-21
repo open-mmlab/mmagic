@@ -13,7 +13,7 @@ from mmagic.models import BaseConditionalGAN, EditDataPreprocessor
 from mmagic.models.losses import (DiscShiftLossComps, GANLossComps,
                                   GeneratorPathRegularizerComps,
                                   GradientPenaltyLossComps)
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 generator = dict(
     type='SAGANGenerator',
@@ -85,7 +85,7 @@ class TestBaseGAN(TestCase):
         gt_label = torch.randint(0, 10, (1, ))
         inputs = dict(
             inputs=dict(noise=torch.randn(1, 10)),
-            data_samples=[EditDataSample(gt_label=LabelData(label=gt_label))])
+            data_samples=[DataSample(gt_label=LabelData(label=gt_label))])
         outputs_val = gan.val_step(inputs)
         outputs_test = gan.test_step(inputs)
         self.assertEqual(len(outputs_val), 1)
@@ -159,11 +159,11 @@ class TestBaseGAN(TestCase):
         # inputs = dict(inputs=dict(noise=torch.randn(3, 10)))
         inputs = dict(noise=torch.randn(3, 10))
         label = [torch.randint(0, 10, (1, )) for _ in range(3)]
-        data_sample = [EditDataSample() for _ in range(3)]
+        data_sample = [DataSample() for _ in range(3)]
         for idx, sample in enumerate(data_sample):
             sample.set_gt_label(label[idx])
-        print(EditDataSample.stack(data_sample))
-        outputs = gan(inputs, EditDataSample.stack(data_sample))
+        print(DataSample.stack(data_sample))
+        outputs = gan(inputs, DataSample.stack(data_sample))
         self.assertEqual(len(outputs), 3)
         for idx, output in enumerate(outputs):
             self.assertEqual(output.gt_label.label, label[idx])
@@ -258,7 +258,7 @@ class TestBaseGAN(TestCase):
 
         inputs = dict(img=torch.randn(3, 3, 32, 32))
         label = [torch.randint(0, 10, (1, )) for _ in range(3)]
-        data_sample = [EditDataSample() for _ in range(3)]
+        data_sample = [DataSample() for _ in range(3)]
         for idx, sample in enumerate(data_sample):
             sample.set_gt_label(label[idx])
         data = dict(inputs=inputs, data_samples=data_sample)

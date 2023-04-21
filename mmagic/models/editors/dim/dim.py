@@ -160,7 +160,7 @@ class DIM(BaseMattor):
         Args:
             inputs (torch.Tensor): Concatenation of normalized image and trimap
                 shape (N, 4, H, W)
-            data_samples (list[EditDataSample]): Data samples containing:
+            data_samples (list[DataSample]): Data samples containing:
                 - gt_alpha (Tensor): Ground-truth of alpha
                     shape (N, 1, H, W), normalized to 0 to 1.
                 - gt_fg (Tensor): Ground-truth of foreground

@@ -190,7 +190,7 @@ class RealESRGAN(SRGAN):
         """extract gt data from data samples.
 
         Args:
-            data_samples (list): List of EditDataSample.
+            data_samples (list): List of DataSample.
 
         Returns:
             Tensor: Extract gt data.

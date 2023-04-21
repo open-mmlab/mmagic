@@ -4,7 +4,7 @@ import torch
 from mmengine.testing import assert_allclose
 
 from mmagic.models.data_preprocessors import MattorPreprocessor
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 def test_mattor_preprocessor():
@@ -15,27 +15,27 @@ def test_mattor_preprocessor():
     target = torch.rand(3, 20, 20)
     gt_fg = torch.rand(3, 20, 20)
     gt_bg = torch.rand(3, 20, 20)
-    data_sample = EditDataSample(trimap=target, gt_fg=gt_fg, gt_bg=gt_bg)
+    data_sample = DataSample(trimap=target, gt_fg=gt_fg, gt_bg=gt_bg)
     data = dict(inputs=inputs, data_samples=[data_sample])
     # process
     data = processor(data, True)
     batch_inputs, batch_data_samples = data['inputs'], data['data_samples']
     assert isinstance(batch_inputs, torch.Tensor)
     assert batch_inputs.shape == (1, 6, 20, 20)
-    assert isinstance(batch_data_samples, EditDataSample)
+    assert isinstance(batch_data_samples, DataSample)
     assert batch_data_samples.trimap.shape == (1, 3, 20, 20)
 
     # test proc_batch_trimap
     processor = MattorPreprocessor(proc_trimap='as_is')
     inputs = torch.rand(1, 3, 20, 20)
     target = torch.rand(3, 20, 20)
-    data_sample = EditDataSample(trimap=target)
+    data_sample = DataSample(trimap=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
     data = processor(data, True)
     batch_inputs, batch_data_samples = data['inputs'], data['data_samples']
     assert isinstance(batch_inputs, torch.Tensor)
     assert batch_inputs.shape == (1, 6, 20, 20)
-    assert isinstance(batch_data_samples, EditDataSample)
+    assert isinstance(batch_data_samples, DataSample)
     assert batch_data_samples.trimap.shape == (1, 3, 20, 20)
     assert_allclose(batch_data_samples.trimap[0], target)
 
@@ -50,7 +50,7 @@ def test_mattor_preprocessor():
     target = torch.rand(3, 20, 20)
     gt_fg = torch.rand(3, 20, 20)
     gt_bg = torch.rand(3, 20, 20)
-    data_sample = EditDataSample(trimap=target)
+    data_sample = DataSample(trimap=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     data = processor(data, training=False)

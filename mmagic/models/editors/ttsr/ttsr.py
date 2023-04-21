@@ -6,7 +6,7 @@ from mmengine.optim import OptimWrapperDict
 
 from mmagic.models.utils import set_requires_grad
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from ..srgan import SRGAN
 
 
@@ -119,7 +119,7 @@ class TTSR(SRGAN):
 
         return self.step_counter >= self.pixel_init and super().if_run_d()
 
-    def g_step(self, batch_outputs, batch_gt_data: EditDataSample):
+    def g_step(self, batch_outputs, batch_gt_data: DataSample):
         """G step of GAN: Calculate losses of generator.
 
         Args:

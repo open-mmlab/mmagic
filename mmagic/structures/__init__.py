@@ -1,4 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .edit_data_sample import EditDataSample
+from .data_sample import DataSample
 
-__all__ = ['EditDataSample']
+__all__ = ['DataSample']

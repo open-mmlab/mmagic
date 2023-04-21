@@ -14,7 +14,7 @@ from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from ...utils import set_requires_grad
 from ..stylegan2 import StyleGAN2
 
@@ -125,13 +125,13 @@ class MSPIEStyleGAN2(StyleGAN2):
 
         return log_vars
 
-    def train_generator(self, inputs: dict, data_samples: EditDataSample,
+    def train_generator(self, inputs: dict, data_samples: DataSample,
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (TrainInput): Inputs from dataloader.
-            data_samples (EditDataSample): Data samples from dataloader.
+            data_samples (DataSample): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
@@ -151,14 +151,14 @@ class MSPIEStyleGAN2(StyleGAN2):
         optimizer_wrapper.update_params(parsed_loss)
         return log_vars
 
-    def train_discriminator(self, inputs: dict, data_samples: EditDataSample,
+    def train_discriminator(self, inputs: dict, data_samples: DataSample,
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (TrainInput): Inputs from dataloader.
-            data_samples (EditDataSample): Data samples from dataloader.
+            data_samples (DataSample): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:

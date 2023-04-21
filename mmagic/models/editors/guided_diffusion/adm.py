@@ -13,7 +13,7 @@ from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
 from mmagic.registry import DIFFUSION_SCHEDULERS, MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import ForwardInputs, SampleList
 
 
@@ -190,7 +190,7 @@ class AblatedDiffusionModel(BaseModel):
     def forward(self,
                 inputs: ForwardInputs,
                 data_samples: Optional[list] = None,
-                mode: Optional[str] = None) -> List[EditDataSample]:
+                mode: Optional[str] = None) -> List[DataSample]:
         """_summary_
 
         Args:
@@ -200,7 +200,7 @@ class AblatedDiffusionModel(BaseModel):
             mode (Optional[str], optional): _description_. Defaults to None.
 
         Returns:
-            List[EditDataSample]: _description_
+            List[DataSample]: _description_
         """
         init_image = inputs.get('init_image', None)
         batch_size = inputs.get('num_batches', 1)
@@ -223,7 +223,7 @@ class AblatedDiffusionModel(BaseModel):
 
         batch_sample_list = []
         for idx in range(batch_size):
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
             if isinstance(outputs, dict):
@@ -264,7 +264,7 @@ class AblatedDiffusionModel(BaseModel):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            List[EditDataSample]: Generated image or image dict.
+            List[DataSample]: Generated image or image dict.
         """
         data = self.data_preprocessor(data)
         outputs = self(**data)

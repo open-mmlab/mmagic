@@ -9,7 +9,7 @@ from mmengine.optim import OptimWrapper
 from torch import Tensor
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 from ...utils import get_module_device, get_valid_num_batches
 from ..stylegan2 import StyleGAN2
@@ -63,7 +63,7 @@ class StyleGAN3(StyleGAN2):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            SampleList: A list of ``EditDataSample`` contain generated results.
+            SampleList: A list of ``DataSample`` contain generated results.
         """
         data = self.data_preprocessor(data)
         inputs_dict, data_samples = data['inputs'], data['data_samples']
@@ -87,7 +87,7 @@ class StyleGAN3(StyleGAN2):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            SampleList: A list of ``EditDataSample`` contain generated results.
+            SampleList: A list of ``DataSample`` contain generated results.
         """
         data = self.data_preprocessor(data)
         inputs_dict, data_samples = data['inputs'], data['data_samples']
@@ -103,14 +103,14 @@ class StyleGAN3(StyleGAN2):
             outputs = self(inputs_dict, data_samples)
         return outputs
 
-    def train_discriminator(self, inputs: dict, data_samples: EditDataSample,
+    def train_discriminator(self, inputs: dict, data_samples: DataSample,
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (EditDataSample): Data samples from dataloader.
+            data_samples (DataSample): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
@@ -136,13 +136,13 @@ class StyleGAN3(StyleGAN2):
         message_hub.update_info('disc_pred_real', disc_pred_real)
         return log_vars
 
-    def train_generator(self, inputs: dict, data_samples: EditDataSample,
+    def train_generator(self, inputs: dict, data_samples: DataSample,
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (EditDataSample): Data samples from dataloader.
+            data_samples (DataSample): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
@@ -191,7 +191,7 @@ class StyleGAN3(StyleGAN2):
         transform_matrix[:] = identity_matrix
         orig = generator.synthesis(ws=ws, **sample_kwargs)
 
-        batch_sample = [EditDataSample() for _ in range(batch_size)]
+        batch_sample = [DataSample() for _ in range(batch_size)]
         # Integer translation (EQ-T).
         if eq_cfg['compute_eqt_int']:
             t = (torch.rand(2, device=device) * 2 -
@@ -206,7 +206,7 @@ class StyleGAN3(StyleGAN2):
             for idx in range(batch_size):
                 data_sample = batch_sample[idx]
                 setattr(data_sample, 'eqt_int',
-                        EditDataSample(diff=diff, mask=mask))
+                        DataSample(diff=diff, mask=mask))
 
         # Fractional translation (EQ-T_frac).
         if eq_cfg['compute_eqt_frac']:
@@ -221,7 +221,7 @@ class StyleGAN3(StyleGAN2):
             for idx in range(batch_size):
                 data_sample = batch_sample[idx]
                 setattr(data_sample, 'eqt_frac',
-                        EditDataSample(diff=diff, mask=mask))
+                        DataSample(diff=diff, mask=mask))
 
         # Rotation (EQ-R).
         if eq_cfg['compute_eqr']:
@@ -236,7 +236,6 @@ class StyleGAN3(StyleGAN2):
             diff = (ref - pseudo).square() * mask
             for idx in range(batch_size):
                 data_sample = batch_sample[idx]
-                setattr(data_sample, 'eqr',
-                        EditDataSample(diff=diff, mask=mask))
+                setattr(data_sample, 'eqr', DataSample(diff=diff, mask=mask))
 
         return batch_sample

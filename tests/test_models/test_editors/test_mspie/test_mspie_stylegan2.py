@@ -8,7 +8,7 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
 from mmagic.models import EditDataPreprocessor, MSPIEStyleGAN2
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 register_all_modules()
@@ -65,7 +65,7 @@ class TestMSPIEStyleGAN2(TestCase):
 
         # prepare inputs
         img = torch.randn(3, 32, 32)
-        data = dict(inputs=dict(), data_samples=[EditDataSample(gt_img=img)])
+        data = dict(inputs=dict(), data_samples=[DataSample(gt_img=img)])
 
         # simulate train_loop here
         message_hub.update_info('iter', 0)

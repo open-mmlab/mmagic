@@ -60,7 +60,7 @@ def is_splitable_var(var: Any) -> bool:
     Returns:
         bool: Whether input variable is a splitable variable.
     """
-    if isinstance(var, EditDataSample):
+    if isinstance(var, DataSample):
         return True
     if isinstance(var, torch.Tensor):
         return True
@@ -71,20 +71,20 @@ def is_splitable_var(var: Any) -> bool:
     return False
 
 
-class EditDataSample(BaseDataElement):
+class DataSample(BaseDataElement):
     """A data structure interface of MMagic. They are used as interfaces
     between different components, e.g., model, visualizer, evaluator, etc.
-    Typically, EditDataSample contains all the information and data from
-    ground-truth and predictions.
+    Typically, DataSample contains all the information and data from ground-
+    truth and predictions.
 
-    `EditDataSample` inherits from `BaseDataElement`. See more details in:
+    `DataSample` inherits from `BaseDataElement`. See more details in:
       https://mmengine.readthedocs.io/en/latest/advanced_tutorials/data_element.html
       Specifically, an instance of BaseDataElement consists of two components,
       - ``metainfo``, which contains some meta information,
-        e.g., `img_shape`, `img_id`, etc.
+        e.g., `img_shape`, `img_id`, `color_order`, etc.
       - ``data``, which contains the data used in the loop.
 
-    The attributes in ``EditDataSample`` are divided into several parts:
+    The attributes in ``DataSample`` are divided into several parts:
 
     - ``gt_img``: Ground truth image(s).
     - ``pred_img``: Image(s) of model predictions.
@@ -103,12 +103,13 @@ class EditDataSample(BaseDataElement):
 
          >>> import torch
          >>> import numpy as np
-         >>> from mmagic.structures import EditDataSample
+         >>> from mmagic.structures import DataSample
          >>> img_meta = dict(img_shape=(800, 1196, 3))
          >>> img = torch.rand((3, 800, 1196))
-         >>> data_sample = EditDataSample(gt_img=img, metainfo=img_meta)
+         >>> data_sample = DataSample(gt_img=img, metainfo=img_meta)
          >>> assert 'img_shape' in data_sample.metainfo_keys()
-        <EditDataSample(
+         >>> data_sample
+        <DataSample(
 
             META INFORMATION
             img_shape: (800, 1196, 3)
@@ -116,6 +117,29 @@ class EditDataSample(BaseDataElement):
             DATA FIELDS
             gt_img: tensor(...)
         ) at 0x1f6a5a99a00>
+
+    We also support `stack` and `split` operation to handle a batch of data
+    samples:
+        >>> import torch
+        >>> import numpy as np
+        >>> from mmagic.structures import DataSample
+        >>> img_meta1 = img_meta2 = dict(img_shape=(800, 1196, 3))
+        >>> img1 = torch.rand((3, 800, 1196))
+        >>> img2 = torch.rand((3, 800, 1196))
+        >>> data_sample1 = DataSample(gt_img=img1, metainfo=img_meta1)
+        >>> data_sample2 = DataSample(gt_img=img2, metainfo=img_meta1)
+
+        >>> # stack them and then use as batched-tensor!
+        >>> data_sample = DataSample.stack([data_sample1, data_sample2])
+        >>> print(data_sample.gt_img.shape)
+        torch.Size([2, 3, 800, 1196])
+        >>> print(data_sample.metainfo)
+        {'img_shape': [(800, 1196, 3), (800, 1196, 3)]}
+
+        >>> # split them if you want
+        >>> data_sample1_, data_sample2_ = data_sample.split()
+        >>> assert (data_sample1_.gt_img == img1).all()
+        >>> assert (data_sample2_.gt_img == img2).all()
     """
 
     # source_key_in_results: target_key_in_metainfo
@@ -211,7 +235,7 @@ class EditDataSample(BaseDataElement):
 
     def set_gt_label(
         self, value: Union[np.ndarray, torch.Tensor, Sequence[Number], Number]
-    ) -> 'EditDataSample':
+    ) -> 'DataSample':
         """Set label of ``gt_label``."""
         label = format_label(value, self.get('num_classes'))
         if 'gt_label' in self:
@@ -244,18 +268,17 @@ class EditDataSample(BaseDataElement):
         del self._gt_label
 
     @classmethod
-    def stack(cls,
-              data_samples: Sequence['EditDataSample']) -> 'EditDataSample':
+    def stack(cls, data_samples: Sequence['DataSample']) -> 'DataSample':
         """Stack a list of data samples to one. All tensor fields will be
         stacked at first dimension. Otherwise the values will be saved in a
         list.
 
         Args:
-            data_samples (Sequence['EditDataSample']): A sequence of
-                `EditDataSample` to stack.
+            data_samples (Sequence['DataSample']): A sequence of
+                `DataSample` to stack.
 
         Returns:
-            EditDataSample: The stacked data sample.
+            DataSample: The stacked data sample.
         """
         # 1. check key consistency
         keys = data_samples[0].keys()
@@ -266,7 +289,7 @@ class EditDataSample(BaseDataElement):
             [data.metainfo_keys() == meta_keys for data in data_samples])
 
         # 2. stack data
-        stacked_data_sample = EditDataSample()
+        stacked_data_sample = DataSample()
         for k in keys:
             values = [getattr(data, k) for data in data_samples]
             # 3. check type consistent
@@ -292,7 +315,7 @@ class EditDataSample(BaseDataElement):
         return stacked_data_sample
 
     def split(self,
-              allow_nonseq_value: bool = False) -> Sequence['EditDataSample']:
+              allow_nonseq_value: bool = False) -> Sequence['DataSample']:
         """Split a sequence of data sample in the first dimension.
 
         Args:
@@ -302,10 +325,10 @@ class EditDataSample(BaseDataElement):
                 raised. Defaults to False.
 
         Returns:
-            Sequence[EditDataSample]: The list of data samples after splitting.
+            Sequence[DataSample]: The list of data samples after splitting.
         """
         # 1. split
-        data_sample_list = [EditDataSample() for _ in range(len(self))]
+        data_sample_list = [DataSample() for _ in range(len(self))]
         for k in self.all_keys():
             stacked_value = self.get(k)
             if isinstance(stacked_value, torch.Tensor):
@@ -315,7 +338,7 @@ class EditDataSample(BaseDataElement):
                 # split tensor shape like (N, *shape) to N (*shape) tensors
                 labels = [l_ for l_ in stacked_value.label]
                 values = [LabelData(label=l_) for l_ in labels]
-            elif isinstance(stacked_value, EditDataSample):
+            elif isinstance(stacked_value, DataSample):
                 values = stacked_value.split()
             else:
                 if is_splitable_var(stacked_value):

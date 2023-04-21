@@ -6,7 +6,7 @@ import pytest
 import torch
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 
@@ -72,7 +72,7 @@ class TestInstColorization:
         inputs = torch.rand(1, 3, 256, 256)
         target_shape = (1, 3, 256, 256)
 
-        data_sample = EditDataSample(gt_img=inputs)
+        data_sample = DataSample(gt_img=inputs)
         metainfo = dict(
             cropped_img=torch.rand(9, 3, 256, 256),
             box_info=torch.tensor([[175, 29, 96, 54, 52, 106],
@@ -115,7 +115,7 @@ class TestInstColorization:
         data_sample.set_metainfo(metainfo=metainfo)
 
         data = dict(
-            inputs=inputs, data_samples=EditDataSample.stack([data_sample]))
+            inputs=inputs, data_samples=DataSample.stack([data_sample]))
 
         res = model(mode='tensor', **data)
 

@@ -12,7 +12,7 @@ from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 from torch import Tensor
 from torch.nn import init
 
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import ForwardInputs
 
 
@@ -166,7 +166,7 @@ def get_valid_noise_size(noise_size: Optional[int],
 
 
 def get_valid_num_batches(batch_inputs: Optional[ForwardInputs] = None,
-                          data_samples: List[EditDataSample] = None) -> int:
+                          data_samples: List[DataSample] = None) -> int:
     """Try get the valid batch size from inputs.
 
     - If some values in `batch_inputs` are `Tensor` and 'num_batches' is in

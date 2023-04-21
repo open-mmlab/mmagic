@@ -5,7 +5,7 @@ from unittest import TestCase
 
 import torch
 
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 from mmagic.visualization import GenVisualizer
 
@@ -21,13 +21,13 @@ class TestGenVisualer(TestCase):
         img_root = osp.join('tmp_dir', 'vis_data', 'vis_image')
         # construct gen sample to vis
         gen_sample = [
-            EditDataSample(
+            DataSample(
                 fake_img=torch.randn(3, 16, 16),
                 gt_img=torch.randn(1, 16, 16),
-                ema=EditDataSample(fake_img=torch.randn(10, 3, 16, 16)),
+                ema=DataSample(fake_img=torch.randn(10, 3, 16, 16)),
                 gif=torch.randn(10, 3, 16, 16),
-                something=EditDataSample(
-                    new=EditDataSample(img=torch.randn(3, 16, 16))))
+                something=DataSample(
+                    new=DataSample(img=torch.randn(3, 16, 16))))
             for _ in range(3)
         ]
         visualizer.add_datasample(

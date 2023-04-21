@@ -8,7 +8,7 @@ from mmengine.model import BaseModel
 from torch.utils.data.dataloader import DataLoader
 
 from mmagic.registry import EVALUATORS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from .metrics.base_gen_metric import GenMetric
 
 
@@ -134,14 +134,14 @@ class EditEvaluator(Evaluator):
 
         return metrics_sampler_list
 
-    def process(self, data_samples: Sequence[EditDataSample],
+    def process(self, data_samples: Sequence[DataSample],
                 data_batch: Optional[Any],
                 metrics: Sequence[BaseMetric]) -> None:
         """Pass `data_batch` from dataloader and `predictions` (generated
         results) to corresponding `metrics`.
 
         Args:
-            data_samples (Sequence[EditDataSample]): A batch of generated
+            data_samples (Sequence[DataSample]): A batch of generated
                 results from model.
             data_batch (Optional[Any]): A batch of data from the
                 metrics specific sampler or the dataloader.
@@ -152,7 +152,7 @@ class EditEvaluator(Evaluator):
 
         _data_samples = []
         for data_sample in data_samples:
-            if isinstance(data_sample, EditDataSample):
+            if isinstance(data_sample, DataSample):
                 _data_samples.append(data_sample.to_dict())
             else:
                 _data_samples.append(data_sample)

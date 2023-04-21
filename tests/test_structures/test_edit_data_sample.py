@@ -6,12 +6,12 @@ import torch
 from mmengine.structures import LabelData
 from mmengine.testing import assert_allclose
 
-from mmagic.structures import EditDataSample
-from mmagic.structures.edit_data_sample import is_splitable_var
+from mmagic.structures import DataSample
+from mmagic.structures.data_sample import is_splitable_var
 
 
 def test_is_stacked_var():
-    assert is_splitable_var(EditDataSample())
+    assert is_splitable_var(DataSample())
     assert is_splitable_var(torch.randn(10, 10))
     assert is_splitable_var(np.ndarray((10, 10)))
     assert is_splitable_var([1, 2])
@@ -20,7 +20,7 @@ def test_is_stacked_var():
     assert not is_splitable_var('a')
 
 
-class TestEditDataSample(TestCase):
+class TestDataSample(TestCase):
 
     def test_init(self):
         meta_info = dict(
@@ -28,7 +28,7 @@ class TestEditDataSample(TestCase):
             scale_factor=np.array([1.5, 1.5]),
             img_shape=torch.rand(4))
 
-        edit_data_sample = EditDataSample(metainfo=meta_info)
+        edit_data_sample = DataSample(metainfo=meta_info)
         assert 'target_size' in edit_data_sample
         assert edit_data_sample.target_size == [256, 256]
         assert edit_data_sample.get('target_size') == [256, 256]
@@ -77,7 +77,7 @@ class TestEditDataSample(TestCase):
             gt_channel_order=gt_channel_order,
             gt_color_type=gt_color_type,
             prompt=prompt)
-        data_sample = EditDataSample()
+        data_sample = DataSample()
         data_sample.set_predefined_data(data)
 
         self._check_in_and_same(data_sample, 'gt_img', gt)
@@ -98,7 +98,7 @@ class TestEditDataSample(TestCase):
         data_sample.gt_label.data = gt_label
 
     def _test_set_label(self, key):
-        data_sample = EditDataSample()
+        data_sample = DataSample()
         method = getattr(data_sample, 'set_' + key)
         # Test number
         method(1)
@@ -155,7 +155,7 @@ class TestEditDataSample(TestCase):
             method('hi')
 
         # Test set num_classes
-        data_sample = EditDataSample(metainfo={'num_classes': 10})
+        data_sample = DataSample(metainfo={'num_classes': 10})
         method = getattr(data_sample, 'set_' + key)
         method(5)
         self.assertIn(key, data_sample)
@@ -172,7 +172,7 @@ class TestEditDataSample(TestCase):
         self._test_set_label('gt_label')
 
     def test_del_gt_label(self):
-        data_sample = EditDataSample()
+        data_sample = DataSample()
         self.assertNotIn('gt_label', data_sample)
         data_sample.set_gt_label(1)
         self.assertIn('gt_label', data_sample)
@@ -181,7 +181,7 @@ class TestEditDataSample(TestCase):
 
     def test_stack_and_split(self):
         # test stack
-        data_sample1 = EditDataSample()
+        data_sample1 = DataSample()
         data_sample1.set_gt_label(1)
         data_sample1.set_tensor_data({'img': torch.randn(3, 4, 5)})
         data_sample1.set_data({'mode': 'a'})
@@ -190,7 +190,7 @@ class TestEditDataSample(TestCase):
             'channel_order': 'rgb',
             'color_flag': 'color'
         })
-        data_sample2 = EditDataSample()
+        data_sample2 = DataSample()
         data_sample2.set_gt_label(2)
         data_sample2.set_tensor_data({'img': torch.randn(3, 4, 5)})
         data_sample2.set_data({'mode': 'b'})
@@ -200,7 +200,7 @@ class TestEditDataSample(TestCase):
             'color_flag': 'color'
         })
 
-        data_sample_merged = EditDataSample.stack([data_sample1, data_sample2])
+        data_sample_merged = DataSample.stack([data_sample1, data_sample2])
         assert (data_sample_merged.img == torch.stack(
             [data_sample1.img, data_sample2.img])).all()
         assert (data_sample_merged.gt_label.label == torch.LongTensor(
@@ -215,8 +215,7 @@ class TestEditDataSample(TestCase):
 
         # test split
         data_sample_merged.sample_model = 'ema'
-        data_sample_merged.fake_img = EditDataSample(
-            img=torch.randn(2, 3, 4, 4))
+        data_sample_merged.fake_img = DataSample(img=torch.randn(2, 3, 4, 4))
 
         data_splited_1, data_splited_2 = data_sample_merged.split(True)
         assert (data_splited_1.gt_label.label == 1).all()
@@ -240,7 +239,7 @@ class TestEditDataSample(TestCase):
             data_sample_merged.split()
 
         # test stack and split when batch size is 1
-        data_sample = EditDataSample()
+        data_sample = DataSample()
         data_sample.set_gt_label(3)
         data_sample.set_tensor_data({'img': torch.randn(3, 4, 5)})
         data_sample.set_data({'mode': 'c'})
@@ -250,7 +249,7 @@ class TestEditDataSample(TestCase):
             'color_flag': 'color'
         })
 
-        data_sample_merged = EditDataSample.stack([data_sample])
+        data_sample_merged = DataSample.stack([data_sample])
         assert (data_sample_merged.img == torch.stack([data_sample.img])).all()
         assert (data_sample_merged.gt_label.label == torch.LongTensor(
             [[3]])).all()
@@ -271,12 +270,12 @@ class TestEditDataSample(TestCase):
             channel_order='rgb', color_flag='color'))
 
     def test_len(self):
-        empty_data = EditDataSample(sample_kwargs={'a': 'a'})
+        empty_data = DataSample(sample_kwargs={'a': 'a'})
         assert len(empty_data) == 1
 
-        empty_data = EditDataSample()
+        empty_data = DataSample()
         assert len(empty_data) == 1
 
-        empty_data = EditDataSample(
+        empty_data = DataSample(
             img=torch.randn(3, 3), metainfo=dict(img_shape=[3, 3]))
         assert len(empty_data) == 1

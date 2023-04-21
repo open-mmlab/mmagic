@@ -7,7 +7,7 @@ import torch
 
 from mmagic.evaluation import SlicedWassersteinDistance
 from mmagic.models import EditDataPreprocessor
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 class TestSWD(TestCase):
@@ -27,7 +27,7 @@ class TestSWD(TestCase):
             dict(inputs=torch.rand(3, 32, 32) * 255.) for _ in range(100)
         ]
         fake_samples = [
-            EditDataSample(
+            DataSample(
                 fake_img=(torch.rand(3, 32, 32) * 255),
                 gt_img=(torch.rand(3, 32, 32) * 255)).to_dict()
             for _ in range(100)
@@ -61,7 +61,7 @@ class TestSWD(TestCase):
             dict(inputs=torch.rand(1, 32, 32) * 255.) for _ in range(100)
         ]
         fake_samples = [
-            EditDataSample(
+            DataSample(
                 fake_img=torch.rand(1, 32, 32) * 255,
                 gt_img=torch.rand(1, 32, 32) * 255).to_dict()
             for _ in range(100)
@@ -76,7 +76,7 @@ class TestSWD(TestCase):
             sample_model='orig',
             image_shape=(3, 32, 32))
         fake_samples = [
-            EditDataSample(
+            DataSample(
                 fake_img=torch.rand(3, 32, 32) * 255,
                 gt_img=torch.rand(3, 32, 32) * 255).to_dict()
             for _ in range(10)

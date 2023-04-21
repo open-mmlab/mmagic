@@ -8,7 +8,7 @@ from torch.optim import Adam
 from mmagic.models import DIC, DICNet, EditDataPreprocessor, LightCNN
 from mmagic.models.losses import (GANLoss, L1Loss, LightCNNFeatureLoss,
                                   PerceptualVGG)
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 @patch.object(PerceptualVGG, 'init_weights')
@@ -56,8 +56,7 @@ def test_dic(init_weights):
     # prepare data
     inputs = torch.rand(1, 3, 16, 16)
     target = torch.rand(3, 128, 128)
-    data_sample = EditDataSample(
-        gt_img=target, gt_heatmap=torch.rand(68, 32, 32))
+    data_sample = DataSample(gt_img=target, gt_heatmap=torch.rand(68, 32, 32))
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train

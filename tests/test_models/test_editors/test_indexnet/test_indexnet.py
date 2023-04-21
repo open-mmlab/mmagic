@@ -6,7 +6,7 @@ from mmengine.config import ConfigDict
 from mmagic.datasets.transforms import PackEditInputs
 from mmagic.models.editors import IndexedUpsample
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 
@@ -47,7 +47,7 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
             ds = ds.cuda()
         data_samples.append(ds)
 
-    data_samples = EditDataSample.stack(data_samples)
+    data_samples = DataSample.stack(data_samples)
     return inputs, data_samples
 
 
@@ -84,13 +84,13 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
             ds = ds.cuda()
         data_samples.append(ds)
 
-    data_samples = EditDataSample.stack(data_samples)
+    data_samples = DataSample.stack(data_samples)
     return inputs, data_samples
 
 
 def assert_pred_alpha(predictions, batch_size):
     assert isinstance(predictions, list)
-    assert isinstance(predictions[0], EditDataSample)
+    assert isinstance(predictions[0], DataSample)
     pred_alpha = predictions[0].output.pred_alpha.data
     assert isinstance(pred_alpha, torch.Tensor)
     assert pred_alpha.dtype == torch.uint8

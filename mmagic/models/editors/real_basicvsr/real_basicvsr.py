@@ -89,7 +89,7 @@ class RealBasicVSR(RealESRGAN):
         """extract gt data from data samples.
 
         Args:
-            data_samples (list): List of EditDataSample.
+            data_samples (list): List of DataSample.
 
         Returns:
             Tensor: Extract gt data.
@@ -203,7 +203,7 @@ class RealBasicVSR(RealESRGAN):
 
         Args:
             batch_inputs (Tensor): Batch inputs.
-            data_samples (List[EditDataSample]): Data samples of Editing.
+            data_samples (List[DataSample]): Data samples of Editing.
                 Default:None
 
         Returns:
