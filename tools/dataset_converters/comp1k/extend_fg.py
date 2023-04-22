@@ -5,7 +5,7 @@ import os.path as osp
 import re
 import subprocess
 
-import mmcv
+import mmengine
 import numpy as np
 from PIL import Image
 from pymatting import estimate_foreground_ml, load_image
@@ -118,9 +118,9 @@ def main():
     fg_iter = iter(fg_names)
 
     extend_fg = ExtendFg(data_root, fg_dirs, alpha_dirs)
-    data_infos = mmcv.track_parallel_progress(extend_fg.extend, list(fg_iter),
-                                              args.nproc)
-    mmcv.dump(data_infos, osp.join(data_root, save_json_path))
+    data_infos = mmengine.track_parallel_progress(extend_fg.extend,
+                                                  list(fg_iter), args.nproc)
+    mmengine.dump(data_infos, osp.join(data_root, save_json_path))
 
     print('train done')
 

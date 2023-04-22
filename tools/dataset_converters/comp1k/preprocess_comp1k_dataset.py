@@ -5,7 +5,7 @@ import os.path as osp
 import subprocess
 from itertools import chain, repeat
 
-import mmcv
+import mmengine
 import numpy as np
 from PIL import Image
 
@@ -114,13 +114,14 @@ def get_data_info(args):
     bg = bg.crop((0, 0, w, h))
 
     # save cropped bg and merged
-    mmcv.utils.mkdir_or_exist(osp.join(data_root, dir_prefix, 'bg'))
+    mmengine.utils.mkdir_or_exist(osp.join(data_root, dir_prefix, 'bg'))
     bgfilename = osp.join(data_root, bg_path)
     bg.save(bgfilename, 'PNG')
     fix_png_file(osp.basename(bgfilename), osp.dirname(bgfilename))
     if composite:
         merged = (fg * alpha + bg * (1. - alpha)).astype(np.uint8)
-        mmcv.utils.mkdir_or_exist(osp.join(data_root, dir_prefix, 'merged'))
+        mmengine.utils.mkdir_or_exist(
+            osp.join(data_root, dir_prefix, 'merged'))
         mergedfilename = osp.join(data_root, merged_path)
         Image.fromarray(merged).save(mergedfilename, 'PNG')
         fix_png_file(osp.basename(mergedfilename), osp.dirname(mergedfilename))
@@ -215,12 +216,12 @@ def generate_json(data_root, source_bg_dir, composite, nproc, mode):
         source_bg_paths.append(osp.join(source_bg_dir, bg_name))
     constants = repeat((data_root, composite, mode), len(bg_names))
 
-    data_infos = mmcv.track_parallel_progress(
+    data_infos = mmengine.track_parallel_progress(
         get_data_info,
         list(zip(name_with_postfix, source_bg_paths, repeat_infos, constants)),
         nproc)
 
-    mmcv.dump(data_infos, osp.join(data_root, save_json_path))
+    mmengine.dump(data_infos, osp.join(data_root, save_json_path))
 
 
 def parse_args():
