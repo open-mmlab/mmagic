@@ -943,7 +943,7 @@ class GenerateFrameIndiceswithPadding:
 @PIPELINES.register_module()
 class GenerateFrameIndices:
     """Generate frame index for REDS datasets. It also performs temporal
-    augmention with random interval.
+    augmentation with random interval.
 
     Required keys: lq_path, gt_path, key, num_input_frames
     Added or modified keys:  lq_path, gt_path, interval, reverse
@@ -1057,7 +1057,7 @@ class TemporalReverse:
 @PIPELINES.register_module()
 class GenerateSegmentIndices:
     """Generate frame indices for a segment. It also performs temporal
-    augmention with random interval.
+    augmentation with random interval.
 
     Required keys: lq_path, gt_path, key, num_input_frames, sequence_length
     Added or modified keys:  lq_path, gt_path, interval, reverse
