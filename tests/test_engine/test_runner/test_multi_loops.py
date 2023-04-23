@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from mmengine.evaluator import Evaluator
 
-from mmagic.engine import EditTestLoop, EditValLoop
+from mmagic.engine import MultiTestLoop, MultiValLoop
 from mmagic.evaluation import EditEvaluator
 
 
@@ -71,7 +71,7 @@ def build_mock_runner():
 class TestLoop(TestCase):
 
     def _test_init(self, is_val):
-        LOOP_CLS = EditValLoop if is_val else EditTestLoop
+        LOOP_CLS = MultiValLoop if is_val else MultiTestLoop
 
         # test init with single evaluator
         runner = build_mock_runner()
@@ -123,7 +123,7 @@ class TestLoop(TestCase):
     def _test_run(self, is_val):
         # since we have tested init, we direct use predefined mock object to
         # test run function
-        LOOP_CLS = EditValLoop if is_val else EditTestLoop
+        LOOP_CLS = MultiValLoop if is_val else MultiTestLoop
 
         # test single evaluator
         runner = build_mock_runner()

@@ -77,7 +77,7 @@ div2k_evaluator = dict(
     ])
 
 # test config
-test_cfg = dict(type='EditTestLoop')
+test_cfg = dict(type='MultiTestLoop')
 test_dataloader = [
     set5_dataloader,
     set14_dataloader,

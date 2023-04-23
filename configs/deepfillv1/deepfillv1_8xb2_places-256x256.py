@@ -55,8 +55,8 @@ train_cfg = dict(
     max_iters=5000003,
     val_interval=250000,
 )
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 checkpoint = dict(
     type='CheckpointHook', interval=250000, by_epoch=False, out_dir=save_dir)

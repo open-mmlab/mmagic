@@ -21,7 +21,7 @@ def update_and_check_evaluator(evaluator: EVALUATOR_TYPE
     """
     # check Evaluator instance
     warning_template = ('Evaluator type for current config is \'{}\'. '
-                        'If you want to use EditValLoop, we strongly '
+                        'If you want to use MultiValLoop, we strongly '
                         'recommand you to use \'EditEvaluator\'. Otherwise, '
                         'there maybe some potential bugs.')
     if isinstance(evaluator, Evaluator):

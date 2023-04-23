@@ -58,4 +58,4 @@ test_evaluator = dict(
         dict(type='SSIM'),
     ])
 
-test_cfg = dict(type='EditTestLoop')
+test_cfg = dict(type='MultiTestLoop')

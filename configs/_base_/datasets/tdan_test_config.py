@@ -109,7 +109,7 @@ vid4_bi_evaluator = dict(
     ])
 
 # config for test
-test_cfg = dict(type='EditTestLoop')
+test_cfg = dict(type='MultiTestLoop')
 test_dataloader = [
     SPMC_bd_dataloader,
     SPMC_bi_dataloader,

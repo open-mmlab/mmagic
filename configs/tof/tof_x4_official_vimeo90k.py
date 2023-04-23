@@ -70,5 +70,5 @@ val_evaluator = dict(
     ])
 # test_evaluator = val_evaluator
 
-val_cfg = dict(type='EditValLoop')
-# test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+# test_cfg = dict(type='MultiTestLoop')
