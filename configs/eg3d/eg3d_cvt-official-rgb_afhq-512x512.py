@@ -2,7 +2,7 @@ _base_ = '../_base_/gen_default_runtime.py'
 
 model = dict(
     type='EG3D',
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     generator=dict(
         type='TriplaneGenerator',
         out_size=512,

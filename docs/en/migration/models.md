@@ -53,7 +53,7 @@ model = dict(
     train_cfg=dict(),  # Config of training model.
     test_cfg=dict(),  # Config of testing model.
     data_preprocessor=dict(  # The Config to build data preprocessor
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
+        type='DataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
                                                              255.]))
 ```
 

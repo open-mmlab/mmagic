@@ -15,7 +15,7 @@ model = dict(
     step_frames=1,
     init_cfg=None,
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         pad_mode='reflect',
     ))
 

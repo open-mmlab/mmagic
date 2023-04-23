@@ -5,14 +5,14 @@ import torch
 import torch.nn.functional as F
 from mmengine.testing import assert_allclose
 
-from mmagic.models.data_preprocessors import EditDataPreprocessor
+from mmagic.models.data_preprocessors import DataPreprocessor
 from mmagic.structures import DataSample
 
 
 class TestBaseDataPreprocessor(TestCase):
 
     def test_init(self):
-        data_preprocessor = EditDataPreprocessor(
+        data_preprocessor = DataPreprocessor(
             mean=[0, 0, 0],
             std=[255, 255, 255],
             pad_size_divisor=16,
@@ -28,20 +28,19 @@ class TestBaseDataPreprocessor(TestCase):
         self.assertEqual(data_preprocessor.pad_mode, 'constant')
 
         # test non-image-keys
-        data_preprocessor = EditDataPreprocessor(non_image_keys='feature')
+        data_preprocessor = DataPreprocessor(non_image_keys='feature')
         self.assertIn('feature', data_preprocessor._NON_IMAGE_KEYS)
-        data_preprocessor = EditDataPreprocessor(non_image_keys=['feature'])
+        data_preprocessor = DataPreprocessor(non_image_keys=['feature'])
         self.assertIn('feature', data_preprocessor._NON_IMAGE_KEYS)
 
         # test non-concentate-keys
-        data_preprocessor = EditDataPreprocessor(non_concentate_keys='n_imgs')
+        data_preprocessor = DataPreprocessor(non_concentate_keys='n_imgs')
         self.assertIn('n_imgs', data_preprocessor._NON_CONCATENATE_KEYS)
-        data_preprocessor = EditDataPreprocessor(
-            non_concentate_keys=['n_imgs'])
+        data_preprocessor = DataPreprocessor(non_concentate_keys=['n_imgs'])
         self.assertIn('n_imgs', data_preprocessor._NON_CONCATENATE_KEYS)
 
     def test_parse_channel_index(self):
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         self.assertEqual(
             data_preprocessor._parse_channel_index(torch.rand(3, 5, 5)), 0)
         self.assertEqual(
@@ -56,7 +55,7 @@ class TestBaseDataPreprocessor(TestCase):
                 torch.rand(1, 2, 10, 3, 5, 5, 5))
 
     def test_parse_channel_order(self):
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         parse_fn = data_preprocessor._parse_channel_order
         # test no data sample
         self.assertEqual(parse_fn('img', torch.rand(3, 5, 5)), 'BGR')
@@ -130,7 +129,7 @@ class TestBaseDataPreprocessor(TestCase):
             parse_fn('AAA', torch.rand(3, 5, 5), data_sample), 'RGB')
 
     def test_parse_batch_channel_order(self):
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         parse_fn = data_preprocessor._parse_batch_channel_order
 
         with self.assertRaises(AssertionError):
@@ -151,7 +150,7 @@ class TestBaseDataPreprocessor(TestCase):
             parse_fn(parse_fn('mm_img', inputs_batch, data_sample_batch))
 
     def test_do_conversion(self):
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         cov_fn = data_preprocessor._do_conversion
 
         # RGB -> BGR
@@ -211,7 +210,7 @@ class TestBaseDataPreprocessor(TestCase):
         self.assertEqual(order, 'BGR')
 
     def test_update_metainfo(self):
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         update_fn = data_preprocessor._update_metainfo
 
         with self.assertRaises(AssertionError):
@@ -252,7 +251,7 @@ class TestBaseDataPreprocessor(TestCase):
         5. metainfo (single) + output channel order is RGB: no conversion
         6. datasample is None: return new data sample with metainfo
         """
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         process_fn = data_preprocessor._preprocess_image_tensor
         # 1. raise error
         with self.assertRaises(AssertionError):
@@ -276,7 +275,7 @@ class TestBaseDataPreprocessor(TestCase):
             self.assertTrue((padding_size == target_padding_info).all())
 
         # 3. no metainfo + output channel order is RGB -> do conversion
-        data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')
+        data_preprocessor = DataPreprocessor(output_channel_order='RGB')
         process_fn = data_preprocessor._preprocess_image_tensor
         inputs = torch.randint(0, 255, (4, 3, 5, 5))
         targets = ((inputs - 127.5) / 127.5)[:, [2, 1, 0]]
@@ -290,7 +289,7 @@ class TestBaseDataPreprocessor(TestCase):
             self.assertTrue((padding_size == target_padding_info).all())
 
         # 4. metainfo (BGR) + output channel order is RGB -> do conversion
-        data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')
+        data_preprocessor = DataPreprocessor(output_channel_order='RGB')
         process_fn = data_preprocessor._preprocess_image_tensor
         inputs = torch.randint(0, 255, (4, 3, 5, 5))
         targets = ((inputs - 127.5) / 127.5)[:, [2, 1, 0]]
@@ -307,7 +306,7 @@ class TestBaseDataPreprocessor(TestCase):
             self.assertTrue((padding_size == target_padding_info).all())
 
         # 5. metainfo (single) + output channel order is RGB -> no conversion
-        data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')
+        data_preprocessor = DataPreprocessor(output_channel_order='RGB')
         process_fn = data_preprocessor._preprocess_image_tensor
         inputs = torch.randint(0, 255, (4, 1, 5, 5))
         targets = ((inputs - 127.5) / 127.5)
@@ -325,7 +324,7 @@ class TestBaseDataPreprocessor(TestCase):
             self.assertTrue((padding_size == target_padding_info).all())
 
         # 6. data sample is None + video inputs
-        data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')
+        data_preprocessor = DataPreprocessor(output_channel_order='RGB')
         inputs = torch.randint(0, 255, (4, 5, 3, 5, 5))
         targets = ((inputs - 127.5) / 127.5)[:, :, [2, 1, 0]]
         outputs, data_samples = process_fn(inputs, None, 'sin')
@@ -346,7 +345,7 @@ class TestBaseDataPreprocessor(TestCase):
         5. data_sample is None
         """
         # no metainfo + output channel order is None
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         process_fn = data_preprocessor._preprocess_image_list
         input1 = torch.randint(0, 255, (3, 3, 5))
         input2 = torch.randint(0, 255, (3, 3, 5))
@@ -364,7 +363,7 @@ class TestBaseDataPreprocessor(TestCase):
                 (data.metainfo['padding_size'] == target_padding_info).all())
 
         # no metainfo + output channel order is RGB
-        data_preprocessor = EditDataPreprocessor(
+        data_preprocessor = DataPreprocessor(
             output_channel_order='RGB', pad_value=42)
         process_fn = data_preprocessor._preprocess_image_list
         input1 = torch.randint(0, 255, (3, 3, 5))
@@ -386,7 +385,7 @@ class TestBaseDataPreprocessor(TestCase):
             self.assertTrue((data.metainfo['padding_size'] == pad).all())
 
         # meta info + output channel order is RGB
-        data_preprocessor = EditDataPreprocessor(
+        data_preprocessor = DataPreprocessor(
             output_channel_order='RGB', pad_value=42)
         process_fn = data_preprocessor._preprocess_image_list
         input1 = torch.randint(0, 255, (3, 3, 5))
@@ -411,7 +410,7 @@ class TestBaseDataPreprocessor(TestCase):
             self.assertTrue((data.metainfo['padding_size'] == pad).all())
 
         # meta info (single) + output channel order is RGB
-        data_preprocessor = EditDataPreprocessor(
+        data_preprocessor = DataPreprocessor(
             output_channel_order='RGB', pad_value=42)
         process_fn = data_preprocessor._preprocess_image_list
         input1 = torch.randint(0, 255, (1, 3, 5))
@@ -437,7 +436,7 @@ class TestBaseDataPreprocessor(TestCase):
             self.assertTrue((data.metainfo['padding_size'] == pad).all())
 
         # test data sample is None
-        data_preprocessor = EditDataPreprocessor(
+        data_preprocessor = DataPreprocessor(
             output_channel_order='RGB', pad_value=42)
         process_fn = data_preprocessor._preprocess_image_list
         input1 = torch.randint(0, 255, (1, 3, 5))
@@ -462,7 +461,7 @@ class TestBaseDataPreprocessor(TestCase):
         """Since preprocess of dict inputs are based on
         `_preprocess_image_list` and `_preprocess_image_tensor`, we just test a
         simple case for translation model and padding behavior."""
-        data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')
+        data_preprocessor = DataPreprocessor(output_channel_order='RGB')
         process_fn = data_preprocessor._preprocess_dict_inputs
 
         inputs = dict(
@@ -517,7 +516,7 @@ class TestBaseDataPreprocessor(TestCase):
 
     def test_prerprocess_data_sample(self):
         """Only test training and testint mode in this test case."""
-        data_preprocessor = EditDataPreprocessor(
+        data_preprocessor = DataPreprocessor(
             data_keys=['gt_img', 'AA', 'dk'], output_channel_order='RGB')
         cov_fn = data_preprocessor._preprocess_data_sample
 
@@ -576,7 +575,7 @@ class TestBaseDataPreprocessor(TestCase):
     def test_destruct_tensor_norm_and_conversion(self):
         """Test batch inputs, single input and batch inputs + no norm in this
         unit test."""
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         cov_fn = data_preprocessor._destruct_norm_and_conversion
 
         # test batch
@@ -636,7 +635,7 @@ class TestBaseDataPreprocessor(TestCase):
         8. data sample is stacked
         9. data sample is stacked + padding size not found in metainfo
         """
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         cov_fn = data_preprocessor._destruct_padding
 
         # data sample is None, no un-padding
@@ -721,13 +720,13 @@ class TestBaseDataPreprocessor(TestCase):
         6. data samples behavior in training = False / True
         7. Input is wrong type.
         """
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
 
         # 1. input is tensor
         inputs = torch.randint(0, 255, (2, 3, 5, 5))
         data = dict(inputs=inputs)
         tar_output = (inputs.clone() - 127.5) / 127.5
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         data = data_preprocessor(data)
         assert_allclose(data['inputs'], tar_output)
 
@@ -769,7 +768,7 @@ class TestBaseDataPreprocessor(TestCase):
             dict(noise=noise1, img=img1, num_batches=2, mode='ema'),
             dict(noise=noise2, img=img2, num_batches=2, mode='ema'),
         ])
-        data_preprocessor = EditDataPreprocessor(output_channel_order='RGB')
+        data_preprocessor = DataPreprocessor(output_channel_order='RGB')
         data = data_preprocessor(data)
 
         self.assertEqual(
@@ -793,7 +792,7 @@ class TestBaseDataPreprocessor(TestCase):
         data = data_preprocessor(sampler_results)
 
         # # 5. input is tensor + no norm
-        data_preprocessor = EditDataPreprocessor(mean=None, std=None)
+        data_preprocessor = DataPreprocessor(mean=None, std=None)
         input1 = torch.randn(3, 3, 5)
         input2 = torch.randn(3, 3, 5)
         data = dict(inputs=torch.stack([input1, input2], dim=0))
@@ -803,7 +802,7 @@ class TestBaseDataPreprocessor(TestCase):
                                                        dim=0)).all())
 
         # 6. data samples behavior in training = False / True
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         gt_inp1 = torch.randint(0, 255, (3, 5, 5))
         gt_inp2 = torch.randint(0, 255, (3, 5, 5))
 
@@ -830,7 +829,7 @@ class TestBaseDataPreprocessor(TestCase):
         3. test no un-norm + no un-padding
         """
         # 1. test un-padding
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         input1 = torch.randn(3, 3, 5)
         input2 = torch.randn(3, 5, 3)
         data = dict(inputs=[input1, input2])
@@ -845,7 +844,7 @@ class TestBaseDataPreprocessor(TestCase):
         self.assertEqual(destruct_batch.shape, (2, 3, 3, 5))
 
         # 2. test no un-padding + un-norm
-        data_preprocessor = EditDataPreprocessor()
+        data_preprocessor = DataPreprocessor()
         input1 = torch.randint(0, 255, (3, 5, 5))
         input2 = torch.randint(0, 255, (3, 5, 5))
         data = dict(inputs=[input1, input2])
@@ -862,7 +861,7 @@ class TestBaseDataPreprocessor(TestCase):
                         torch.stack([input1, input2], dim=0).float())
 
         # 3. test no un-norm
-        data_preprocessor = EditDataPreprocessor(std=None, mean=None)
+        data_preprocessor = DataPreprocessor(std=None, mean=None)
         input1 = torch.randint(0, 255, (1, 5, 5))
         input2 = torch.randint(0, 255, (1, 5, 5))
         inputs = torch.stack([input1, input2], dim=0)

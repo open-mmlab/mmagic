@@ -20,7 +20,7 @@ model = dict(
     pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean'),
     lq_pixel_loss=dict(type='MSELoss', loss_weight=0.01, reduction='mean'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0.5 * 255, 0.5 * 255, 0.5 * 255],
         std=[255, 255, 255],
     ))

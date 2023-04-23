@@ -102,7 +102,7 @@ model = dict(
     train_cfg=dict(),  # Config of training model.
     test_cfg=dict(),  # Config of testing model.
     data_preprocessor=dict(  # The Config to build data preprocessor
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
+        type='DataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
                                                              255.]))
 ```
 
@@ -494,7 +494,7 @@ For more detailed usage and the corresponding alternative for each modules, plea
 model = dict(
     type='GLInpaintor', # The name of inpaintor
     data_preprocessor=dict(
-        type='EditDataPreprocessor', # The name of data preprocessor
+        type='DataPreprocessor', # The name of data preprocessor
         mean=[127.5], # Mean value used in data normalization
         std=[127.5], # Std value used in data normalization
     ),
@@ -869,7 +869,7 @@ model = dict(
     train_cfg=dict(),  # Config of training model.
     test_cfg=dict(),  # Config of testing model.
     data_preprocessor=dict(  # The Config to build data preprocessor
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
+        type='DataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
                                                              255.]))
 
 train_pipeline = [  # Training data processing pipeline

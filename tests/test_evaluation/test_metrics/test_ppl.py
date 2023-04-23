@@ -9,7 +9,7 @@ from mmengine.runner import Runner
 from mmagic.datasets import BasicImageDataset
 from mmagic.datasets.transforms import PackEditInputs
 from mmagic.evaluation import PerceptualPathLength
-from mmagic.models import LSGAN, EditDataPreprocessor
+from mmagic.models import LSGAN, DataPreprocessor
 from mmagic.models.editors.stylegan2 import StyleGAN2Generator
 from mmagic.utils import register_all_modules
 
@@ -55,7 +55,7 @@ class TestPPL:
                 batch_size=2,
                 dataset=dataset,
                 sampler=dict(type='DefaultSampler')))
-        gan_data_preprocessor = EditDataPreprocessor()
+        gan_data_preprocessor = DataPreprocessor()
         generator = StyleGAN2Generator(64, 8)
         cls.module = LSGAN(generator, data_preprocessor=gan_data_preprocessor)
 

@@ -7,7 +7,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmagic.models import (LTE, TTSR, EditDataPreprocessor, SearchTransformer,
+from mmagic.models import (LTE, TTSR, DataPreprocessor, SearchTransformer,
                            TTSRDiscriminator, TTSRNet)
 from mmagic.models.losses import (GANLoss, L1Loss, PerceptualVGG,
                                   TransferalPerceptualLoss)
@@ -50,7 +50,7 @@ def test_ttsr(init_weights):
             loss_weight=1e-3,
             real_label_val=1.0,
             fake_label_val=0),
-        data_preprocessor=EditDataPreprocessor(
+        data_preprocessor=DataPreprocessor(
             mean=[127.5, 127.5, 127.5],
             std=[127.5, 127.5, 127.5],
         ))

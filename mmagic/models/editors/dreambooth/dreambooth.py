@@ -53,7 +53,7 @@ class DreamBooth(StableDiffusion):
             Defaults to True.
         data_preprocessor (dict, optional): The pre-process config of
             :class:`BaseDataPreprocessor`. Defaults to
-                dict(type='EditDataPreprocessor').
+                dict(type='DataPreprocessor').
         init_cfg (dict, optional): The weight initialized config for
             :class:`BaseModule`. Defaults to None/
     """
@@ -74,7 +74,7 @@ class DreamBooth(StableDiffusion):
                  dtype: str = 'fp16',
                  enable_xformers: bool = True,
                  data_preprocessor: Optional[ModelType] = dict(
-                     type='EditDataPreprocessor'),
+                     type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None):
 
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,

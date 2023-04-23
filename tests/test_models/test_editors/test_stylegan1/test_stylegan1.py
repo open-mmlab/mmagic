@@ -23,7 +23,7 @@ class TestStyleGAN1(TestCase):
 
     nkimgs_per_scale = {'16': 0.004, '32': 0.008, '64': 0.016}
 
-    data_preprocessor = dict(type='EditDataPreprocessor')
+    data_preprocessor = dict(type='DataPreprocessor')
 
     lr_schedule = dict(generator={'32': 0.0015}, discriminator={'32': 0.0015})
     optim_wrapper_cfg = dict(

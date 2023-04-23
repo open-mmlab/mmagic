@@ -7,7 +7,7 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch.optim import SGD
 
-from mmagic.models import BigGAN, EditDataPreprocessor
+from mmagic.models import BigGAN, DataPreprocessor
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 
@@ -39,14 +39,14 @@ class TestBigGAN(TestCase):
     def test_init(self):
         gan = BigGAN(
             num_classes=10,
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             generator=generator,
             discriminator=discriminator,
             generator_steps=1,
             discriminator_steps=4)
 
         self.assertIsInstance(gan, BigGAN)
-        self.assertIsInstance(gan.data_preprocessor, EditDataPreprocessor)
+        self.assertIsInstance(gan.data_preprocessor, DataPreprocessor)
 
         # test only generator have noise size
         gen_cfg = deepcopy(generator)
@@ -55,7 +55,7 @@ class TestBigGAN(TestCase):
             noise_size=10,
             generator=gen_cfg,
             discriminator=discriminator,
-            data_preprocessor=EditDataPreprocessor())
+            data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.noise_size, 10)
 
         # test init with nn.Module
@@ -67,18 +67,18 @@ class TestBigGAN(TestCase):
         gan = BigGAN(
             generator=gen,
             discriminator=disc,
-            data_preprocessor=EditDataPreprocessor())
+            data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.generator, gen)
         self.assertEqual(gan.discriminator, disc)
 
         # test init without discriminator
-        gan = BigGAN(generator=gen, data_preprocessor=EditDataPreprocessor())
+        gan = BigGAN(generator=gen, data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.discriminator, None)
 
         # test init with different num_classes
         gan = BigGAN(
             num_classes=10,
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             generator=generator,
             discriminator=discriminator,
             generator_steps=1,
@@ -92,7 +92,7 @@ class TestBigGAN(TestCase):
         gan = BigGAN(
             generator=generator,
             discriminator=discriminator,
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             discriminator_steps=n_disc)
         # prepare messageHub
         message_hub.update_info('iter', 0)

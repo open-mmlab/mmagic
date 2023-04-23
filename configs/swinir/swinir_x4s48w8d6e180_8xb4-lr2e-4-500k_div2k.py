@@ -33,8 +33,7 @@ model = dict(
         resi_connection='1conv'),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
-                                                             255.]))
+        type='DataPreprocessor', mean=[0., 0., 0.], std=[255., 255., 255.]))
 
 train_pipeline = [
     dict(

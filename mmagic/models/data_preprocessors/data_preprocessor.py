@@ -18,7 +18,7 @@ CastData = Union[tuple, dict, DataSample, Tensor, list]
 
 
 @MODELS.register_module()
-class EditDataPreprocessor(ImgDataPreprocessor):
+class DataPreprocessor(ImgDataPreprocessor):
     """Image pre-processor for generative models. This class provide
     normalization and bgr to rgb conversion for image tensor inputs. The input
     of this classes should be dict which keys are `inputs` and `data_samples`.

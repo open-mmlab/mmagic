@@ -24,7 +24,7 @@ model = dict(
     is_use_sharpened_gt_in_pixel=True,
     is_use_ema=True,
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
     ))

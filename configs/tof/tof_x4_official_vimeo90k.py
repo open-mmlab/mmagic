@@ -11,7 +11,7 @@ model = dict(
     generator=dict(type='TOFlowVSRNet', adapt_official_weights=True),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='sum'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0.485 * 255, 0.456 * 255, 0.406 * 255],
         std=[0.229 * 255, 0.224 * 255, 0.225 * 255],
     ))

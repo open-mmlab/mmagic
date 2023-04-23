@@ -5,7 +5,7 @@ _base_ = [
 
 model = dict(
     type='AblatedDiffusionModel',
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     unet=dict(
         type='DenoisingUnet',
         image_size=64,

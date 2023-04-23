@@ -5,7 +5,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmagic.models import LIIF, EditDataPreprocessor
+from mmagic.models import LIIF, DataPreprocessor
 from mmagic.structures import DataSample
 
 
@@ -30,7 +30,7 @@ def test_liif():
             cell_decode=True,
             eval_bsize=64),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-        data_preprocessor=EditDataPreprocessor(
+        data_preprocessor=DataPreprocessor(
             mean=[0.4488 * 255, 0.4371 * 255, 0.4040 * 255],
             std=[255., 255., 255.],
             # input_view=(-1, 1, 1),
