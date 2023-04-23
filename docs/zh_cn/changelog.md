@@ -93,19 +93,19 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 **新功能和改进**
 
-- 支持了 DiffuserWrapper. [#1692](https://github.com/open-mmlab/mmediting/pull/1692)
-- 支持了 ControlNet 的推理与训练. [#1744](https://github.com/open-mmlab/mmediting/pull/1744)
-- 支持了 PyTorch 2.0 (使用 'inductor' 后端成功编译 33+ 模型) [#1742](https://github.com/open-mmlab/mmediting/pull/1742).
-- 支持了图像超分和视频超分的 inferencer. [#1662](https://github.com/open-mmlab/mmediting/pull/1662), [#1720](https://github.com/open-mmlab/mmediting/pull/1720)
-- 重构 get_flops 脚本. [#1675](https://github.com/open-mmlab/mmediting/pull/1675)
-- 重构数据集的 dataset_converters 脚本和使用文档. [#1690](https://github.com/open-mmlab/mmediting/pull/1690)
-- 迁移 stylegan 算子到 MMCV 中. [#1383](https://github.com/open-mmlab/mmediting/pull/1383)
+- 支持了 DiffuserWrapper. [#1692](https://github.com/open-mmlab/mmagic/pull/1692)
+- 支持了 ControlNet 的推理与训练. [#1744](https://github.com/open-mmlab/mmagic/pull/1744)
+- 支持了 PyTorch 2.0 (使用 'inductor' 后端成功编译 33+ 模型) [#1742](https://github.com/open-mmlab/mmagic/pull/1742).
+- 支持了图像超分和视频超分的 inferencer. [#1662](https://github.com/open-mmlab/mmagic/pull/1662), [#1720](https://github.com/open-mmlab/mmagic/pull/1720)
+- 重构 get_flops 脚本. [#1675](https://github.com/open-mmlab/mmagic/pull/1675)
+- 重构数据集的 dataset_converters 脚本和使用文档. [#1690](https://github.com/open-mmlab/mmagic/pull/1690)
+- 迁移 stylegan 算子到 MMCV 中. [#1383](https://github.com/open-mmlab/mmagic/pull/1383)
 
 **Bug 修复**
 
-- 修复 disco inferencer. [#1673](https://github.com/open-mmlab/mmediting/pull/1673)
-- 修复 nafnet optimizer 配置. [#1716](https://github.com/open-mmlab/mmediting/pull/1716)
-- 修复 tof typo. [#1711](https://github.com/open-mmlab/mmediting/pull/1711)
+- 修复 disco inferencer. [#1673](https://github.com/open-mmlab/mmagic/pull/1673)
+- 修复 nafnet optimizer 配置. [#1716](https://github.com/open-mmlab/mmagic/pull/1716)
+- 修复 tof typo. [#1711](https://github.com/open-mmlab/mmagic/pull/1711)
 
 **贡献者**
 
@@ -122,30 +122,30 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 **新功能和改进**
 
-- 重构了 FileIO. [#1572](https://github.com/open-mmlab/mmediting/pull/1572)
-- 重构了 registry. [#1621](https://github.com/open-mmlab/mmediting/pull/1621)
-- 重构了 Random degradations. [#1583](https://github.com/open-mmlab/mmediting/pull/1583)
-- 重构了 DataSample, DataPreprocessor, Metric 和 Loop. [#1656](https://github.com/open-mmlab/mmediting/pull/1656)
-- 使用 mmengine.basemodule 替换 nn.module. [#1491](https://github.com/open-mmlab/mmediting/pull/1491)
-- 重构了算法库主页. [#1609](https://github.com/open-mmlab/mmediting/pull/1609)
-- 支持了 Inpainting 任务推理的 Gradio gui. [#1601](https://github.com/open-mmlab/mmediting/pull/1601)
-- 支持了图像上色的 inferencer. [#1588](https://github.com/open-mmlab/mmediting/pull/1588)
-- 支持了图像翻译和所有 GAN 模型的 inferencer. [#1650](https://github.com/open-mmlab/mmediting/pull/1650)
-- 支持了 GAN 模型的 inferencer. [#1653](https://github.com/open-mmlab/mmediting/pull/1653), [#1659](https://github.com/open-mmlab/mmediting/pull/1659)
-- 新增 Print config 工具. [#1590](https://github.com/open-mmlab/mmediting/pull/1590)
-- 改进 type hints. [#1604](https://github.com/open-mmlab/mmediting/pull/1604)
-- 更新 metrics 和 datasets 的中文文档. [#1568](https://github.com/open-mmlab/mmediting/pull/1568), [#1638](https://github.com/open-mmlab/mmediting/pull/1638)
-- 更新 BigGAN 和 Disco-Diffusion 的中文文档. [#1620](https://github.com/open-mmlab/mmediting/pull/1620)
-- 更新 Guided-Diffusion 的 Evaluation 和 README. [#1547](https://github.com/open-mmlab/mmediting/pull/1547)
+- 重构了 FileIO. [#1572](https://github.com/open-mmlab/mmagic/pull/1572)
+- 重构了 registry. [#1621](https://github.com/open-mmlab/mmagic/pull/1621)
+- 重构了 Random degradations. [#1583](https://github.com/open-mmlab/mmagic/pull/1583)
+- 重构了 DataSample, DataPreprocessor, Metric 和 Loop. [#1656](https://github.com/open-mmlab/mmagic/pull/1656)
+- 使用 mmengine.basemodule 替换 nn.module. [#1491](https://github.com/open-mmlab/mmagic/pull/1491)
+- 重构了算法库主页. [#1609](https://github.com/open-mmlab/mmagic/pull/1609)
+- 支持了 Inpainting 任务推理的 Gradio gui. [#1601](https://github.com/open-mmlab/mmagic/pull/1601)
+- 支持了图像上色的 inferencer. [#1588](https://github.com/open-mmlab/mmagic/pull/1588)
+- 支持了图像翻译和所有 GAN 模型的 inferencer. [#1650](https://github.com/open-mmlab/mmagic/pull/1650)
+- 支持了 GAN 模型的 inferencer. [#1653](https://github.com/open-mmlab/mmagic/pull/1653), [#1659](https://github.com/open-mmlab/mmagic/pull/1659)
+- 新增 Print config 工具. [#1590](https://github.com/open-mmlab/mmagic/pull/1590)
+- 改进 type hints. [#1604](https://github.com/open-mmlab/mmagic/pull/1604)
+- 更新 metrics 和 datasets 的中文文档. [#1568](https://github.com/open-mmlab/mmagic/pull/1568), [#1638](https://github.com/open-mmlab/mmagic/pull/1638)
+- 更新 BigGAN 和 Disco-Diffusion 的中文文档. [#1620](https://github.com/open-mmlab/mmagic/pull/1620)
+- 更新 Guided-Diffusion 的 Evaluation 和 README. [#1547](https://github.com/open-mmlab/mmagic/pull/1547)
 
 **Bug 修复**
 
-- 修复 EMA `momentum`. [#1581](https://github.com/open-mmlab/mmediting/pull/1581)
-- 修复 RandomNoise 的输出类型. [#1585](https://github.com/open-mmlab/mmediting/pull/1585)
-- 修复 pytorch2onnx 工具. [#1629](https://github.com/open-mmlab/mmediting/pull/1629)
-- 修复 API 文档. [#1641](https://github.com/open-mmlab/mmediting/pull/1641), [#1642](https://github.com/open-mmlab/mmediting/pull/1642)
-- 修复 RealESRGAN 加载 EMA 参数. [#1647](https://github.com/open-mmlab/mmediting/pull/1647)
-- 修复 dataset_converters 脚本的 arg passing bug. [#1648](https://github.com/open-mmlab/mmediting/pull/1648)
+- 修复 EMA `momentum`. [#1581](https://github.com/open-mmlab/mmagic/pull/1581)
+- 修复 RandomNoise 的输出类型. [#1585](https://github.com/open-mmlab/mmagic/pull/1585)
+- 修复 pytorch2onnx 工具. [#1629](https://github.com/open-mmlab/mmagic/pull/1629)
+- 修复 API 文档. [#1641](https://github.com/open-mmlab/mmagic/pull/1641), [#1642](https://github.com/open-mmlab/mmagic/pull/1642)
+- 修复 RealESRGAN 加载 EMA 参数. [#1647](https://github.com/open-mmlab/mmagic/pull/1647)
+- 修复 dataset_converters 脚本的 arg passing bug. [#1648](https://github.com/open-mmlab/mmagic/pull/1648)
 
 **贡献者**
 
@@ -297,4 +297,4 @@ MMEditing 1.0.0rc0 是 MMEditing 1.x 的第一个版本，是 OpenMMLab 2.0 项�
 
 基于新的[训练引擎](https://github.com/open-mmlab/mmengine), MMEditing 1.x 统一了数据、模型、评测和可视化的接口。
 
-该版本存在有一些 BC-breaking 的修改。 请在[迁移指南](https://mmediting.readthedocs.io/zh_CN/latest/migration/overview.html)中查看更多细节。
+该版本存在有一些 BC-breaking 的修改。 请在[迁移指南](https://mmagic.readthedocs.io/zh_CN/latest/migration/overview.html)中查看更多细节。

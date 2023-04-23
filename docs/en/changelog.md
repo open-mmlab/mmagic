@@ -103,19 +103,19 @@ We are excited to announce the release of MMEditing 1.0.0rc7. This release suppo
 
 **New Features & Improvements**
 
-- Support DiffuserWrapper. [#1692](https://github.com/open-mmlab/mmediting/pull/1692)
-- Support ControlNet (training and inference). [#1744](https://github.com/open-mmlab/mmediting/pull/1744)
-- Support PyTorch 2.0 (successfully compile 33+ models on 'inductor' backend). [#1742](https://github.com/open-mmlab/mmediting/pull/1742)
-- Support Image Super-Resolution and Video Super-Resolution models inferencer. [#1662](https://github.com/open-mmlab/mmediting/pull/1662), [#1720](https://github.com/open-mmlab/mmediting/pull/1720)
-- Refactor tools/get_flops script. [#1675](https://github.com/open-mmlab/mmediting/pull/1675)
-- Refactor dataset_converters and documents for datasets. [#1690](https://github.com/open-mmlab/mmediting/pull/1690)
-- Move stylegan ops to MMCV. [#1383](https://github.com/open-mmlab/mmediting/pull/1383)
+- Support DiffuserWrapper. [#1692](https://github.com/open-mmlab/mmagic/pull/1692)
+- Support ControlNet (training and inference). [#1744](https://github.com/open-mmlab/mmagic/pull/1744)
+- Support PyTorch 2.0 (successfully compile 33+ models on 'inductor' backend). [#1742](https://github.com/open-mmlab/mmagic/pull/1742)
+- Support Image Super-Resolution and Video Super-Resolution models inferencer. [#1662](https://github.com/open-mmlab/mmagic/pull/1662), [#1720](https://github.com/open-mmlab/mmagic/pull/1720)
+- Refactor tools/get_flops script. [#1675](https://github.com/open-mmlab/mmagic/pull/1675)
+- Refactor dataset_converters and documents for datasets. [#1690](https://github.com/open-mmlab/mmagic/pull/1690)
+- Move stylegan ops to MMCV. [#1383](https://github.com/open-mmlab/mmagic/pull/1383)
 
 **Bug Fixes**
 
-- Fix disco inferencer. [#1673](https://github.com/open-mmlab/mmediting/pull/1673)
-- Fix nafnet optimizer config. [#1716](https://github.com/open-mmlab/mmediting/pull/1716)
-- Fix tof typo. [#1711](https://github.com/open-mmlab/mmediting/pull/1711)
+- Fix disco inferencer. [#1673](https://github.com/open-mmlab/mmagic/pull/1673)
+- Fix nafnet optimizer config. [#1716](https://github.com/open-mmlab/mmagic/pull/1716)
+- Fix tof typo. [#1711](https://github.com/open-mmlab/mmagic/pull/1711)
 
 **Contributors**
 
@@ -124,7 +124,7 @@ Thanks @LeoXing1996, @Z-Fran, @plyfager, @zengyh1900, @liuwenran, @ryanxingql, @
 
 **New Contributors**
 
-- @HAOCHENYE made their first contribution in https://github.com/open-mmlab/mmediting/pull/1712
+- @HAOCHENYE made their first contribution in https://github.com/open-mmlab/mmagic/pull/1712
 
 ## v1.0.0rc6 (02/03/2023)
 
@@ -137,30 +137,30 @@ We are excited to announce the release of MMEditing 1.0.0rc6. This release suppo
 
 **New Features & Improvements**
 
-- Refactor FileIO. [#1572](https://github.com/open-mmlab/mmediting/pull/1572)
-- Refactor registry. [#1621](https://github.com/open-mmlab/mmediting/pull/1621)
-- Refactor Random degradations. [#1583](https://github.com/open-mmlab/mmediting/pull/1583)
-- Refactor DataSample, DataPreprocessor, Metric and Loop. [#1656](https://github.com/open-mmlab/mmediting/pull/1656)
-- Use mmengine.basemodule instead of nn.module. [#1491](https://github.com/open-mmlab/mmediting/pull/1491)
-- Refactor Main Page. [#1609](https://github.com/open-mmlab/mmediting/pull/1609)
-- Support Gradio gui of Inpainting inference. [#1601](https://github.com/open-mmlab/mmediting/pull/1601)
-- Support Colorization inferencer. [#1588](https://github.com/open-mmlab/mmediting/pull/1588)
-- Support Translation models inferencer. [#1650](https://github.com/open-mmlab/mmediting/pull/1650)
-- Support GAN models inferencer. [#1653](https://github.com/open-mmlab/mmediting/pull/1653), [#1659](https://github.com/open-mmlab/mmediting/pull/1659)
-- Print config tool. [#1590](https://github.com/open-mmlab/mmediting/pull/1590)
-- Improve type hints. [#1604](https://github.com/open-mmlab/mmediting/pull/1604)
-- Update Chinese documents of metrics and datasets. [#1568](https://github.com/open-mmlab/mmediting/pull/1568), [#1638](https://github.com/open-mmlab/mmediting/pull/1638)
-- Update Chinese documents of BigGAN and Disco-Diffusion. [#1620](https://github.com/open-mmlab/mmediting/pull/1620)
-- Update Evaluation and README of Guided-Diffusion. [#1547](https://github.com/open-mmlab/mmediting/pull/1547)
+- Refactor FileIO. [#1572](https://github.com/open-mmlab/mmagic/pull/1572)
+- Refactor registry. [#1621](https://github.com/open-mmlab/mmagic/pull/1621)
+- Refactor Random degradations. [#1583](https://github.com/open-mmlab/mmagic/pull/1583)
+- Refactor DataSample, DataPreprocessor, Metric and Loop. [#1656](https://github.com/open-mmlab/mmagic/pull/1656)
+- Use mmengine.basemodule instead of nn.module. [#1491](https://github.com/open-mmlab/mmagic/pull/1491)
+- Refactor Main Page. [#1609](https://github.com/open-mmlab/mmagic/pull/1609)
+- Support Gradio gui of Inpainting inference. [#1601](https://github.com/open-mmlab/mmagic/pull/1601)
+- Support Colorization inferencer. [#1588](https://github.com/open-mmlab/mmagic/pull/1588)
+- Support Translation models inferencer. [#1650](https://github.com/open-mmlab/mmagic/pull/1650)
+- Support GAN models inferencer. [#1653](https://github.com/open-mmlab/mmagic/pull/1653), [#1659](https://github.com/open-mmlab/mmagic/pull/1659)
+- Print config tool. [#1590](https://github.com/open-mmlab/mmagic/pull/1590)
+- Improve type hints. [#1604](https://github.com/open-mmlab/mmagic/pull/1604)
+- Update Chinese documents of metrics and datasets. [#1568](https://github.com/open-mmlab/mmagic/pull/1568), [#1638](https://github.com/open-mmlab/mmagic/pull/1638)
+- Update Chinese documents of BigGAN and Disco-Diffusion. [#1620](https://github.com/open-mmlab/mmagic/pull/1620)
+- Update Evaluation and README of Guided-Diffusion. [#1547](https://github.com/open-mmlab/mmagic/pull/1547)
 
 **Bug Fixes**
 
-- Fix the meaning of `momentum` in EMA. [#1581](https://github.com/open-mmlab/mmediting/pull/1581)
-- Fix output dtype of RandomNoise. [#1585](https://github.com/open-mmlab/mmediting/pull/1585)
-- Fix pytorch2onnx tool. [#1629](https://github.com/open-mmlab/mmediting/pull/1629)
-- Fix API documents. [#1641](https://github.com/open-mmlab/mmediting/pull/1641), [#1642](https://github.com/open-mmlab/mmediting/pull/1642)
-- Fix loading RealESRGAN EMA weights. [#1647](https://github.com/open-mmlab/mmediting/pull/1647)
-- Fix arg passing bug of dataset_converters scripts. [#1648](https://github.com/open-mmlab/mmediting/pull/1648)
+- Fix the meaning of `momentum` in EMA. [#1581](https://github.com/open-mmlab/mmagic/pull/1581)
+- Fix output dtype of RandomNoise. [#1585](https://github.com/open-mmlab/mmagic/pull/1585)
+- Fix pytorch2onnx tool. [#1629](https://github.com/open-mmlab/mmagic/pull/1629)
+- Fix API documents. [#1641](https://github.com/open-mmlab/mmagic/pull/1641), [#1642](https://github.com/open-mmlab/mmagic/pull/1642)
+- Fix loading RealESRGAN EMA weights. [#1647](https://github.com/open-mmlab/mmagic/pull/1647)
+- Fix arg passing bug of dataset_converters scripts. [#1648](https://github.com/open-mmlab/mmagic/pull/1648)
 
 **Contributors**
 
@@ -169,12 +169,12 @@ Thanks @plyfager, @LeoXing1996, @Z-Fran, @zengyh1900, @VongolaWu, @liuwenran, @a
 
 **New Contributors**
 
-- @dienachtderwelt made their first contribution in https://github.com/open-mmlab/mmediting/pull/1578
-- @i-aki-y made their first contribution in https://github.com/open-mmlab/mmediting/pull/1590
-- @triple-Mu made their first contribution in https://github.com/open-mmlab/mmediting/pull/1618
-- @Li-Qingyun made their first contribution in https://github.com/open-mmlab/mmediting/pull/1640
-- @Luo-Yihang made their first contribution in https://github.com/open-mmlab/mmediting/pull/1648
-- @ydengbi made their first contribution in https://github.com/open-mmlab/mmediting/pull/1557
+- @dienachtderwelt made their first contribution in https://github.com/open-mmlab/mmagic/pull/1578
+- @i-aki-y made their first contribution in https://github.com/open-mmlab/mmagic/pull/1590
+- @triple-Mu made their first contribution in https://github.com/open-mmlab/mmagic/pull/1618
+- @Li-Qingyun made their first contribution in https://github.com/open-mmlab/mmagic/pull/1640
+- @Luo-Yihang made their first contribution in https://github.com/open-mmlab/mmagic/pull/1648
+- @ydengbi made their first contribution in https://github.com/open-mmlab/mmagic/pull/1557
 
 ## v1.0.0rc5 (04/01/2023)
 
@@ -215,14 +215,14 @@ Thanks @plyfager, @LeoXing1996, @Z-Fran, @zengyh1900, @VongolaWu, @liuwenran, @A
 
 **New Contributors**
 
-- @xiaomile made their first contribution in https://github.com/open-mmlab/mmediting/pull/1481
-- @ldr426 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1542
-- @austin273 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1553
-- @whu-lee made their first contribution in https://github.com/open-mmlab/mmediting/pull/1539
-- @willaty made their first contribution in https://github.com/open-mmlab/mmediting/pull/1541
-- @curiosity654 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1556
-- @Zdafeng made their first contribution in https://github.com/open-mmlab/mmediting/pull/1476
-- @Taited made their first contribution in https://github.com/open-mmlab/mmediting/pull/1534
+- @xiaomile made their first contribution in https://github.com/open-mmlab/mmagic/pull/1481
+- @ldr426 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1542
+- @austin273 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1553
+- @whu-lee made their first contribution in https://github.com/open-mmlab/mmagic/pull/1539
+- @willaty made their first contribution in https://github.com/open-mmlab/mmagic/pull/1541
+- @curiosity654 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1556
+- @Zdafeng made their first contribution in https://github.com/open-mmlab/mmagic/pull/1476
+- @Taited made their first contribution in https://github.com/open-mmlab/mmagic/pull/1534
 
 ## v1.0.0rc4 (05/12/2022)
 
@@ -255,15 +255,15 @@ Thanks @plyfager, @LeoXing1996, @Z-Fran, @zengyh1900, @VongolaWu, @gaoyang07, @C
 
 **New Contributors**
 
-- @gaoyang07 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1372
-- @ChangjianZhao made their first contribution in https://github.com/open-mmlab/mmediting/pull/1461
-- @zxczrx123 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1462
-- @jackghosts made their first contribution in https://github.com/open-mmlab/mmediting/pull/1463
-- @liuwenran made their first contribution in https://github.com/open-mmlab/mmediting/pull/1410
-- @CCODING04 made their first contribution in https://github.com/open-mmlab/mmediting/pull/783
-- @RoseZhao929 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1474
-- @shaocongliu made their first contribution in https://github.com/open-mmlab/mmediting/pull/1470
-- @liangzelong made their first contribution in https://github.com/open-mmlab/mmediting/pull/1488
+- @gaoyang07 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1372
+- @ChangjianZhao made their first contribution in https://github.com/open-mmlab/mmagic/pull/1461
+- @zxczrx123 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1462
+- @jackghosts made their first contribution in https://github.com/open-mmlab/mmagic/pull/1463
+- @liuwenran made their first contribution in https://github.com/open-mmlab/mmagic/pull/1410
+- @CCODING04 made their first contribution in https://github.com/open-mmlab/mmagic/pull/783
+- @RoseZhao929 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1474
+- @shaocongliu made their first contribution in https://github.com/open-mmlab/mmagic/pull/1470
+- @liangzelong made their first contribution in https://github.com/open-mmlab/mmagic/pull/1488
 
 ## v1.0.0rc3 (10/11/2022)
 
@@ -331,7 +331,7 @@ We are excited to announce the release of MMEditing 1.0.0rc2. This release suppo
 
 **New Contributors**
 
-- @gaoyang07 made their first contribution in https://github.com/open-mmlab/mmediting/pull/1372
+- @gaoyang07 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1372
 
 **Contributors**
 
@@ -353,4 +353,4 @@ MMEditing 1.0.0rc0 is the first version of MMEditing 1.x, a part of the OpenMMLa
 
 Built upon the new [training engine](https://github.com/open-mmlab/mmengine), MMEditing 1.x unifies the interfaces of dataset, models, evaluation, and visualization.
 
-And there are some BC-breaking changes. Please check [the migration tutorial](https://mmediting.readthedocs.io/en/latest/migration/overview.html) for more details.
+And there are some BC-breaking changes. Please check [the migration tutorial](https://mmagic.readthedocs.io/en/latest/migration/overview.html) for more details.
