@@ -7,7 +7,7 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmagic.models import EditDataPreprocessor, MSPIEStyleGAN2
+from mmagic.models import DataPreprocessor, MSPIEStyleGAN2
 from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
@@ -50,7 +50,7 @@ class TestMSPIEStyleGAN2(TestCase):
         gan = MSPIEStyleGAN2(
             self.generator_cfg,
             self.disc_cfg,
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             ema_config=self.ema_config,
             loss_config=self.loss_config,
             train_settings=dict(num_upblocks=3))

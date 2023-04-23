@@ -13,7 +13,7 @@ from .metrics.base_gen_metric import GenMetric
 
 
 @EVALUATORS.register_module()
-class EditEvaluator(Evaluator):
+class Evaluator(Evaluator):
     """Evaluator for generative models. Unlike high-level vision tasks, metrics
     for generative models have various input types. For example, Inception
     Score (IS, :class:`~mmagic.evaluation.InceptionScore`) only needs to
@@ -36,8 +36,8 @@ class EditEvaluator(Evaluator):
       same sample mode can share the sampler.
 
     The whole evaluation process can be found in
-    :meth:`mmagic.engine.runner.GenValLoop.run` and
-    :meth:`mmagic.engine.runner.GenTestLoop.run`.
+    :meth:`mmagic.engine.runner.MultiValLoop.run` and
+    :meth:`mmagic.engine.runner.MultiTestLoop.run`.
 
     Args:
         metrics (dict or BaseMetric or Sequence): The config of metrics.

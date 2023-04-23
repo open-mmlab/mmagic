@@ -36,7 +36,7 @@ class StyleGAN1(ProgressiveGrowingGAN):
         discriminator (Optional[ModelType]): The config or model of the
             discriminator. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmagic.models.EditDataPreprocessor`.
+            config or :class:`~mmagic.models.DataPreprocessor`.
         style_channels (int): The number of channels for style code. Defaults
             to 128.
         nkimgs_per_scale (dict): The number of images need for each

@@ -163,7 +163,7 @@ vid4_bi_evaluator = [
 ]
 
 # config for test
-test_cfg = dict(type='EditTestLoop')
+test_cfg = dict(type='MultiTestLoop')
 test_dataloader = [
     reds_dataloader,
     vimeo_90k_bd_dataloader,

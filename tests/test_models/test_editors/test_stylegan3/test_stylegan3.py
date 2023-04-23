@@ -20,7 +20,7 @@ class TestStyleGAN3(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.default_cfg = dict(
-            data_preprocessor=dict(type='EditDataPreprocessor'),
+            data_preprocessor=dict(type='DataPreprocessor'),
             generator=dict(
                 type='StyleGANv3Generator',
                 noise_size=6,

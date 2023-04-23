@@ -37,7 +37,7 @@ class EG3D(BaseConditionalGAN):
             camera position. If you want to generate images or videos via
             high-level API, you must set this argument. Defaults to None.
         data_preprocessor (Optional[Union[dict, Config]]): The pre-process
-            config or :class:`~mmagic.models.EditDataPreprocessor`.
+            config or :class:`~mmagic.models.DataPreprocessor`.
         generator_steps (int): Number of times the generator was completely
             updated before the discriminator is updated. Defaults to 1.
         discriminator_steps (int): Number of times the discriminator was

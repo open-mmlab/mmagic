@@ -2,7 +2,7 @@
 model = dict(
     type='DCGAN',
     noise_size=100,
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     generator=dict(
         type='DCGANGenerator', output_scale=128, base_channels=1024),
     discriminator=dict(

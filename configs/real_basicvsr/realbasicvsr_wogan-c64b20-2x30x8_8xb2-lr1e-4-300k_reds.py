@@ -24,7 +24,7 @@ model = dict(
     is_use_sharpened_gt_in_pixel=True,
     is_use_ema=True,
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
     ))
@@ -261,19 +261,19 @@ test_dataloader = dict(
         pipeline=test_pipeline))
 
 val_evaluator = dict(
-    type='EditEvaluator', metrics=[
+    type='Evaluator', metrics=[
         dict(type='PSNR'),
         dict(type='SSIM'),
     ])
 
 test_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[dict(type='NIQE', input_order='CHW', convert_to='Y')])
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=300_000, val_interval=5000)
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(

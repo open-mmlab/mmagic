@@ -6,7 +6,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmagic.models import EditDataPreprocessor
+from mmagic.models import DataPreprocessor
 from mmagic.models.editors import CAIN, CAINNet
 from mmagic.models.losses import L1Loss
 from mmagic.registry import MODELS
@@ -98,11 +98,11 @@ def test_cain():
     model = CAIN(
         generator=dict(type='CAINNet'),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-        data_preprocessor=EditDataPreprocessor(pad_mode='reflect'))
+        data_preprocessor=DataPreprocessor(pad_mode='reflect'))
 
     # test attributes
     assert isinstance(model, CAIN)
-    assert isinstance(model.data_preprocessor, EditDataPreprocessor)
+    assert isinstance(model.data_preprocessor, DataPreprocessor)
     assert isinstance(model.generator, CAINNet)
     assert isinstance(model.pixel_loss, L1Loss)
 

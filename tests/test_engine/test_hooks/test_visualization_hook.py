@@ -110,7 +110,7 @@ class TestVisualizationHook(TestCase):
         gan_model_cfg = dict(
             type='DCGAN',
             noise_size=10,
-            data_preprocessor=dict(type='EditDataPreprocessor'),
+            data_preprocessor=dict(type='DataPreprocessor'),
             generator=dict(
                 type='DCGANGenerator', output_scale=32, base_channels=32))
         model = MODELS.build(gan_model_cfg)
@@ -155,8 +155,7 @@ class TestVisualizationHook(TestCase):
         translation_cfg = dict(
             type='CycleGAN',
             data_preprocessor=dict(
-                type='EditDataPreprocessor',
-                data_keys=['img_photo', 'img_mask']),
+                type='DataPreprocessor', data_keys=['img_photo', 'img_mask']),
             generator=dict(
                 type='ResnetGenerator',
                 in_channels=3,
@@ -269,7 +268,7 @@ class TestVisualizationHook(TestCase):
     #     ddpm_cfg = dict(
     #         type='BasicGaussianDiffusion',
     #         num_timesteps=4,
-    #         data_preprocessor=dict(type='EditDataPreprocessor'),
+    #         data_preprocessor=dict(type='DataPreprocessor'),
     #         betas_cfg=dict(type='cosine'),
     #         denoising=dict(
     #             type='DenoisingUnet',
@@ -358,7 +357,7 @@ class TestVisualizationHook(TestCase):
         gan_model_cfg = dict(
             type='DCGAN',
             noise_size=10,
-            data_preprocessor=dict(type='EditDataPreprocessor'),
+            data_preprocessor=dict(type='DataPreprocessor'),
             generator=dict(
                 type='DCGANGenerator', output_scale=32, base_channels=32))
         model = MODELS.build(gan_model_cfg)

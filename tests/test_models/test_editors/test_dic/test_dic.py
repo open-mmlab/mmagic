@@ -5,7 +5,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmagic.models import DIC, DICNet, EditDataPreprocessor, LightCNN
+from mmagic.models import DIC, DataPreprocessor, DICNet, LightCNN
 from mmagic.models.losses import (GANLoss, L1Loss, LightCNNFeatureLoss,
                                   PerceptualVGG)
 from mmagic.structures import DataSample
@@ -33,7 +33,7 @@ def test_dic(init_weights):
             fake_label_val=0),
         train_cfg=dict(),
         test_cfg=dict(),
-        data_preprocessor=EditDataPreprocessor(
+        data_preprocessor=DataPreprocessor(
             mean=[129.795, 108.12, 96.39],
             std=[255, 255, 255],
         ))

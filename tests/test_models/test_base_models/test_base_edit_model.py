@@ -4,7 +4,7 @@ from mmengine.optim import OptimWrapper
 from torch import nn
 from torch.optim import Adam
 
-from mmagic.models import BaseEditModel, EditDataPreprocessor
+from mmagic.models import BaseEditModel, DataPreprocessor
 from mmagic.models.losses import L1Loss
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
@@ -33,7 +33,7 @@ def test_base_edit_model():
     model = BaseEditModel(
         generator=dict(type='ToyBaseModel'),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-        data_preprocessor=EditDataPreprocessor())
+        data_preprocessor=DataPreprocessor())
 
     assert model.__class__.__name__ == 'BaseEditModel'
     assert isinstance(model.generator, ToyBaseModel)

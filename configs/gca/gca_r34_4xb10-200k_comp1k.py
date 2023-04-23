@@ -104,8 +104,8 @@ train_cfg = dict(
     max_iters=200_000,
     val_interval=10_000,
 )
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(

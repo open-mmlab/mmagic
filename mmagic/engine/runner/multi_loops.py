@@ -16,8 +16,9 @@ EVALUATOR_TYPE = Union[Evaluator, Dict, List]
 
 
 @LOOPS.register_module()
-class EditValLoop(BaseLoop):
-    """Validation loop for MMagic models. This class support evaluate:
+class MultiValLoop(BaseLoop):
+    """Validation loop for MMagic models which support evaluate multiply
+    dataset at the same time. This class support evaluate:
 
     1. Metrics (metric) on a single dataset (e.g. PSNR and SSIM on DIV2K
        dataset)
@@ -29,11 +30,11 @@ class EditValLoop(BaseLoop):
     Case 1: metrics on a single dataset
 
     >>> # add the following lines in your config
-    >>> # 1. use `EditValLoop` instead of `ValLoop` in MMEngine
-    >>> val_cfg = dict(type='EditValLoop')
-    >>> # 2. specific EditEvaluator instead of Evaluator in MMEngine
+    >>> # 1. use `MultiValLoop` instead of `ValLoop` in MMEngine
+    >>> val_cfg = dict(type='MultiValLoop')
+    >>> # 2. specific MultiEvaluator instead of Evaluator in MMEngine
     >>> val_evaluator = dict(
-    >>>     type='EditEvaluator',
+    >>>     type='MultiEvaluator',
     >>>     metrics=[
     >>>         dict(type='PSNR', crop_border=2, prefix='Set5'),
     >>>         dict(type='SSIM', crop_border=2, prefix='Set5'),
@@ -44,15 +45,15 @@ class EditValLoop(BaseLoop):
     Case 2: different metrics on different datasets
 
     >>> # add the following lines in your config
-    >>> # 1. use `EditValLoop` instead of `ValLoop` in MMEngine
-    >>> val_cfg = dict(type='EditValLoop')
-    >>> # 2. specific a list EditEvaluator
+    >>> # 1. use `MultiValLoop` instead of `ValLoop` in MMEngine
+    >>> val_cfg = dict(type='MultiValLoop')
+    >>> # 2. specific a list MultiEvaluator
     >>> # do not forget to add prefix for each metric group
     >>> div2k_evaluator = dict(
-    >>>     type='EditEvaluator',
+    >>>     type='MultiEvaluator',
     >>>     metrics=dict(type='SSIM', crop_border=2, prefix='DIV2K'))
     >>> set5_evaluator = dict(
-    >>>     type='EditEvaluator',
+    >>>     type='MultiEvaluator',
     >>>     metrics=[
     >>>         dict(type='PSNR', crop_border=2, prefix='Set5'),
     >>>         dict(type='SSIM', crop_border=2, prefix='Set5'),
@@ -270,8 +271,9 @@ class EditValLoop(BaseLoop):
 
 
 @LOOPS.register_module()
-class EditTestLoop(BaseLoop):
-    """Test loop for MMagic models. This class support evaluate:
+class MultiTestLoop(BaseLoop):
+    """Test loop for MMagic models which support evaluate multiply dataset at
+    the same time. This class support evaluate:
 
     1. Metrics (metric) on a single dataset (e.g. PSNR and SSIM on DIV2K
        dataset)
@@ -283,11 +285,11 @@ class EditTestLoop(BaseLoop):
     Case 1: metrics on a single dataset
 
     >>> # add the following lines in your config
-    >>> # 1. use `EditTestLoop` instead of `TestLoop` in MMEngine
-    >>> val_cfg = dict(type='EditTestLoop')
-    >>> # 2. specific EditEvaluator instead of Evaluator in MMEngine
+    >>> # 1. use `MultiTestLoop` instead of `TestLoop` in MMEngine
+    >>> val_cfg = dict(type='MultiTestLoop')
+    >>> # 2. specific MultiEvaluator instead of Evaluator in MMEngine
     >>> test_evaluator = dict(
-    >>>     type='EditEvaluator',
+    >>>     type='MultiEvaluator',
     >>>     metrics=[
     >>>         dict(type='PSNR', crop_border=2, prefix='Set5'),
     >>>         dict(type='SSIM', crop_border=2, prefix='Set5'),
@@ -298,15 +300,15 @@ class EditTestLoop(BaseLoop):
     Case 2: different metrics on different datasets
 
     >>> # add the following lines in your config
-    >>> # 1. use `EditTestLoop` instead of `TestLoop` in MMEngine
-    >>> Test_cfg = dict(type='EditTestLoop')
-    >>> # 2. specific a list EditEvaluator
+    >>> # 1. use `MultiTestLoop` instead of `TestLoop` in MMEngine
+    >>> Test_cfg = dict(type='MultiTestLoop')
+    >>> # 2. specific a list MultiEvaluator
     >>> # do not forget to add prefix for each metric group
     >>> div2k_evaluator = dict(
-    >>>     type='EditEvaluator',
+    >>>     type='MultiEvaluator',
     >>>     metrics=dict(type='SSIM', crop_border=2, prefix='DIV2K'))
     >>> set5_evaluator = dict(
-    >>>     type='EditEvaluator',
+    >>>     type='MultiEvaluator',
     >>>     metrics=[
     >>>         dict(type='PSNR', crop_border=2, prefix='Set5'),
     >>>         dict(type='SSIM', crop_border=2, prefix='Set5'),

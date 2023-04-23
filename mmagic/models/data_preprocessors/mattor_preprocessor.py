@@ -9,7 +9,7 @@ from mmengine import print_log
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
-from .edit_data_preprocessor import EditDataPreprocessor
+from .data_preprocessor import DataPreprocessor
 
 DataSamples = Optional[Union[list, torch.Tensor]]
 ForwardResults = Union[Dict[str, torch.Tensor], List[DataSample],
@@ -18,10 +18,10 @@ MEAN_STD_TYPE = Union[Sequence[Union[float, int]], float, int]
 
 
 @MODELS.register_module()
-class MattorPreprocessor(EditDataPreprocessor):
+class MattorPreprocessor(DataPreprocessor):
     """DataPreprocessor for matting models.
 
-    See base class ``EditDataPreprocessor`` for detailed information.
+    See base class ``DataPreprocessor`` for detailed information.
 
     Workflow as follow :
 

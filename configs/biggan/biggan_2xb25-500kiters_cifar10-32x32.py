@@ -14,7 +14,7 @@ model = dict(
     type='BigGAN',
     num_classes=10,
     data_preprocessor=dict(
-        type='EditDataPreprocessor', output_channel_order='BGR'),
+        type='DataPreprocessor', output_channel_order='BGR'),
     generator=dict(
         type='BigGANGenerator',
         output_scale=32,

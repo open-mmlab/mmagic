@@ -6,7 +6,7 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmagic.models import CycleGAN, EditDataPreprocessor
+from mmagic.models import CycleGAN, DataPreprocessor
 from mmagic.models.archs import PatchDiscriminator
 from mmagic.models.editors.cyclegan import ResnetGenerator
 from mmagic.structures import DataSample
@@ -75,8 +75,7 @@ def test_cyclegan():
     train_settings = None
 
     # build synthesizer
-    synthesizer = CycleGAN(
-        **model_cfg, data_preprocessor=EditDataPreprocessor())
+    synthesizer = CycleGAN(**model_cfg, data_preprocessor=DataPreprocessor())
 
     # test attributes
     assert synthesizer.__class__.__name__ == 'CycleGAN'
@@ -227,9 +226,7 @@ def test_cyclegan():
     # test disc_steps and disc_init_steps
     train_settings = dict(discriminator_steps=2, disc_init_steps=2)
     synthesizer = CycleGAN(
-        **model_cfg,
-        **train_settings,
-        data_preprocessor=EditDataPreprocessor())
+        **model_cfg, **train_settings, data_preprocessor=DataPreprocessor())
     optimizer = OptimWrapperDict(
         generators=OptimWrapper(
             obj_from_dict(
@@ -283,9 +280,7 @@ def test_cyclegan():
     data_batch = dict(inputs={'img_mask': inputs, 'img_photo': targets})
     train_settings = dict(buffer_size=0)
     synthesizer = CycleGAN(
-        **model_cfg,
-        **train_settings,
-        data_preprocessor=EditDataPreprocessor())
+        **model_cfg, **train_settings, data_preprocessor=DataPreprocessor())
     optimizer = OptimWrapperDict(
         generators=OptimWrapper(
             obj_from_dict(

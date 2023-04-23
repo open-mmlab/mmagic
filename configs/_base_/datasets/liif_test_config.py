@@ -73,7 +73,7 @@ div2k_evaluators = [[
 ] for scale in scale_test_list]
 
 # test config
-test_cfg = dict(type='EditTestLoop')
+test_cfg = dict(type='MultiTestLoop')
 test_dataloader = [
     *set5_dataloaders,
     *set14_dataloaders,
