@@ -79,6 +79,7 @@ To improve your "spellcasting" efficiency, we have made the following adjustment
 - Refactor DataSample to support the combination and splitting of batch dimensions.
 - Refactor DataPreprocessor and unify the data format for various tasks during training and inference.
 - Refactor MultiValLoop and MultiTestLoop, supporting the evaluation of both generation-type metrics (e.g. FID) and reconstruction-type metrics (e.g. SSIM), and supporting the evaluation of multiple datasets at once.
+- Support visualization on local files or using tensorboard and wandb.
 
 **New Features & Improvements**
 
@@ -87,7 +88,6 @@ To improve your "spellcasting" efficiency, we have made the following adjustment
 - Support Inferencer and Demo using High-level Inference APIs. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/demo)
 - Support Gradio gui of Inpainting inference. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/demo/gradio-demo.py)
 - Support qualitative comparison tools. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/tools/gui)
-- Support visualization on local files or using tensorboard and wandb.
 - Enable projects. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/projects)
 - Improve converters scripts and documents for datasets. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/tools/dataset_converters)
 

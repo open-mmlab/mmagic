@@ -79,6 +79,7 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 - 重构 DataSample，支持 batch 维度的组合与拆分.
 - 重构 DataPreprocessor，并统一各种任务在训练与推理时的数据格式.
 - 重构 MultiValLoop 与 MultiTestLoop，同时支持生成类型指标（e.g. FID）与重建类型指标（e.g. SSIM） 的评测，同时支持一次性评测多个数据集
+- 支持本地可视化以及使用 tensorboard 或 wandb的可视化.
 
 **新功能和改进**
 
@@ -87,7 +88,6 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 - 支持 Inferencer 和 Demo，使用High-level Inference APIs. [点击查看.](https://github.com/open-mmlab/mmagic/tree/main/demo)
 - 支持 Inpainting 推理的 Gradio gui. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/demo/gradio-demo.py)
 - 支持可视化图像/视频质量比较工具. [点击查看.](https://github.com/open-mmlab/mmagic/tree/main/tools/gui)
-- 支持本地可视化以及使用 tensorboard 或 wandb的可视化.
 - 开启 projects，助力社区更快向算法库中添加新算法. [点击查看.](https://github.com/open-mmlab/mmagic/tree/main/projects)
 - 完善数据集的预处理脚本和使用说明文档. [点击查看.](https://github.com/open-mmlab/mmagic/tree/main/tools/dataset_converters)
 
