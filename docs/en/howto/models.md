@@ -195,7 +195,7 @@ import torch
 from mmengine.model import BaseModel
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 @MODELS.register_module()
@@ -253,7 +253,7 @@ Specifically, the implemented `forward` function of `class BaseEditModel` takes 
 ```python
     def forward(self,
                 batch_inputs: torch.Tensor,
-                data_samples: Optional[List[EditDataSample]] = None,
+                data_samples: Optional[List[DataSample]] = None,
                 mode: str = 'tensor',
                 **kwargs):
         """Returns losses or predictions of training, validation, testing, and
@@ -350,7 +350,7 @@ In `forward_inference` function, `class BaseEditModel` first converts the forwar
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            List[EditDataSample]: predictions.
+            List[DataSample]: predictions.
         """
 
         feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
@@ -358,7 +358,7 @@ In `forward_inference` function, `class BaseEditModel` first converts the forwar
         predictions = []
         for idx in range(feats.shape[0]):
             predictions.append(
-                EditDataSample(
+                DataSample(
                     pred_img=feats[idx].to('cpu'),
                     metainfo=data_samples[idx].metainfo))
 

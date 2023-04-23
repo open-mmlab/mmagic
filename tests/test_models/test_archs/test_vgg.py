@@ -6,7 +6,7 @@ import pytest
 import torch
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
-from mmagic.models.base_archs import VGG16
+from mmagic.models.archs import VGG16
 
 
 def check_norm_state(modules, train_state):

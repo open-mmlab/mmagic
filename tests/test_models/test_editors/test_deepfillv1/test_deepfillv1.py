@@ -8,7 +8,7 @@ from mmengine.optim import OptimWrapper
 from mmagic.models.editors import (DeepFillEncoderDecoder, DeepFillRefiner,
                                    GLEncoderDecoder)
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 
@@ -66,7 +66,7 @@ def test_deepfillv1_inpaintor():
         'inputs':
         masked_img,
         'data_samples': [
-            EditDataSample(
+            DataSample(
                 metainfo=dict(mask_bbox=mask_bbox),
                 mask=mask,
                 gt_img=gt_img,

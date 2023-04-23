@@ -8,7 +8,7 @@ from mmcv.cnn import ConvModule, build_activation_layer
 from mmengine.model import BaseModule
 
 # from ...modules import SimpleGatedConvModule
-from mmagic.models.base_archs import SimpleGatedConvModule
+from mmagic.models.archs import SimpleGatedConvModule
 from mmagic.registry import MODELS
 
 

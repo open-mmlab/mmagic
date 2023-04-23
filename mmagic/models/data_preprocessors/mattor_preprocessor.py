@@ -7,12 +7,12 @@ import torch
 from mmengine import print_log
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 from .edit_data_preprocessor import EditDataPreprocessor
 
 DataSamples = Optional[Union[list, torch.Tensor]]
-ForwardResults = Union[Dict[str, torch.Tensor], List[EditDataSample],
+ForwardResults = Union[Dict[str, torch.Tensor], List[DataSample],
                        Tuple[torch.Tensor], torch.Tensor]
 MEAN_STD_TYPE = Union[Sequence[Union[float, int]], float, int]
 
@@ -44,7 +44,7 @@ class MattorPreprocessor(EditDataPreprocessor):
             Available options are ``rescale_to_zero_one`` and ``as-is``.
         stack_data_sample (bool): Whether stack a list of data samples to one
             data sample. Only support with input data samples are
-            `EditDataSamples`. Defaults to True.
+            `DataSamples`. Defaults to True.
     """
 
     def __init__(self,
@@ -88,7 +88,7 @@ class MattorPreprocessor(EditDataPreprocessor):
         data sample as well.
 
         Args:
-            data_samples (List[EditDataSample]): A list of data samples to
+            data_samples (List[DataSample]): A list of data samples to
                 preprocess.
             training (bool): Whether in training mode.
 
@@ -130,7 +130,7 @@ class MattorPreprocessor(EditDataPreprocessor):
                 data_sample.set_metainfo(data_process_meta)
 
         if self.stack_data_sample:
-            return EditDataSample.stack(data_samples)
+            return DataSample.stack(data_samples)
 
         return data_samples
 

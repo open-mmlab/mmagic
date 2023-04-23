@@ -6,7 +6,7 @@ from torch.optim import Adam
 
 from mmagic.models import EDVR, EDVRNet
 from mmagic.models.losses import CharbonnierLoss
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 register_all_modules()
@@ -41,7 +41,7 @@ def test_edvr():
     # prepare data
     inputs = torch.rand(1, 5, 3, 20, 20)
     target = torch.rand(5, 3, 80, 80)
-    data_sample = EditDataSample(gt_img=target)
+    data_sample = DataSample(gt_img=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     log_vars = model.train_step(data, optim_wrapper)

@@ -12,7 +12,7 @@ from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 test_dir = osp.join(osp.dirname(__file__), '../../../..', 'tests')
@@ -120,8 +120,7 @@ class TestControlStableDiffusion(TestCase):
                     source=torch.ones([3, 64, 64]))
             ],
             data_samples=[
-                EditDataSample(
-                    prompt='an insect robot preparing a delicious meal')
+                DataSample(prompt='an insect robot preparing a delicious meal')
             ])
 
         def mock_encode_prompt(*args, **kwargs):
@@ -144,8 +143,7 @@ class TestControlStableDiffusion(TestCase):
                     source=torch.ones([3, 64, 64]))
             ],
             data_samples=[
-                EditDataSample(
-                    prompt='an insect robot preparing a delicious meal')
+                DataSample(prompt='an insect robot preparing a delicious meal')
             ])
 
         def mock_encode_prompt(*args, **kwargs):
@@ -168,8 +166,7 @@ class TestControlStableDiffusion(TestCase):
                     source=torch.ones([3, 64, 64]))
             ],
             data_samples=[
-                EditDataSample(
-                    prompt='an insect robot preparing a delicious meal')
+                DataSample(prompt='an insect robot preparing a delicious meal')
             ])
 
         optimizer = MagicMock()

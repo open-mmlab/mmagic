@@ -8,10 +8,10 @@ from mmengine.config import Config, ConfigDict
 from mmengine.model import BaseModel
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 DataSamples = Optional[Union[list, torch.Tensor]]
-ForwardResults = Union[Dict[str, torch.Tensor], List[EditDataSample],
+ForwardResults = Union[Dict[str, torch.Tensor], List[DataSample],
                        Tuple[torch.Tensor], torch.Tensor]
 
 
@@ -127,7 +127,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         return torch.cat((batch_images, batch_trimaps), dim=1)
 
     def restore_size(self, pred_alpha: torch.Tensor,
-                     data_sample: EditDataSample) -> torch.Tensor:
+                     data_sample: DataSample) -> torch.Tensor:
         """Restore the predicted alpha to the original shape.
 
         The shape of the predicted alpha may not be the same as the shape of
@@ -137,7 +137,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         Args:
             pred_alpha (torch.Tensor): A single predicted alpha of
                 shape (1, H, W).
-            data_sample (EditDataSample): Data sample containing
+            data_sample (DataSample): Data sample containing
                 original shape as meta data.
 
         Returns:
@@ -159,8 +159,8 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
     def postprocess(
         self,
         batch_pred_alpha: torch.Tensor,  # N, 1, H, W, float32
-        data_samples: EditDataSample,
-    ) -> List[EditDataSample]:
+        data_samples: DataSample,
+    ) -> List[DataSample]:
         """Post-process alpha predictions.
 
         This function contains the following steps:
@@ -168,17 +168,17 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
             2. Mask alpha prediction with trimap
             3. Clamp alpha prediction to 0-1
             4. Convert alpha prediction to uint8
-            5. Pack alpha prediction into EditDataSample
+            5. Pack alpha prediction into DataSample
 
         Currently only batch_size 1 is actually supported.
 
         Args:
             batch_pred_alpha (torch.Tensor): A batch of predicted alpha
                 of shape (N, 1, H, W).
-            data_samples (List[EditDataSample]): List of data samples.
+            data_samples (List[DataSample]): List of data samples.
 
         Returns:
-            List[EditDataSample]: A list of predictions.
+            List[DataSample]: A list of predictions.
                 Each data sample contains a pred_alpha,
                 which is a torch.Tensor with dtype=uint8, device=cuda:0
         """
@@ -204,7 +204,7 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
             pa.round_()
             pa = pa.to(dtype=torch.uint8)
             # pa = pa.cpu().numpy()
-            pa_sample = EditDataSample(pred_alpha=pa)
+            pa_sample = DataSample(pred_alpha=pa)
             predictions.append(pa_sample)
 
         return predictions
@@ -212,13 +212,13 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
     def forward(self,
                 inputs: torch.Tensor,
                 data_samples: DataSamples = None,
-                mode: str = 'tensor') -> List[EditDataSample]:
+                mode: str = 'tensor') -> List[DataSample]:
         """General forward function.
 
         Args:
             inputs (torch.Tensor): A batch of inputs.
                 with image and trimap concatenated alone channel dimension.
-            data_samples (List[EditDataSample], optional):
+            data_samples (List[DataSample], optional):
                 A list of data samples, containing:
                 - Ground-truth alpha / foreground / background to compute loss
                 - other meta information
@@ -253,18 +253,17 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
         else:
             raise ValueError('Invalid forward mode.')
 
-    def convert_to_datasample(self, predictions: List[EditDataSample],
-                              data_samples: EditDataSample
-                              ) -> List[EditDataSample]:
+    def convert_to_datasample(self, predictions: List[DataSample],
+                              data_samples: DataSample) -> List[DataSample]:
         """Add predictions to data samples.
 
         Args:
-            predictions (List[EditDataSample]): The predictions of the model.
-            data_samples (EditDataSample): The data samples loaded from
+            predictions (List[DataSample]): The predictions of the model.
+            data_samples (DataSample): The data samples loaded from
                 dataloader.
 
         Returns:
-            List[EditDataSample]: Modified data samples.
+            List[DataSample]: Modified data samples.
         """
         data_samples = data_samples.split()
         for data_sample, pred in zip(data_samples, predictions):

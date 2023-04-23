@@ -11,10 +11,10 @@ from mmengine.utils import is_seq_of
 from torch import Tensor
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 
-CastData = Union[tuple, dict, EditDataSample, Tensor, list]
+CastData = Union[tuple, dict, DataSample, Tensor, list]
 
 
 @MODELS.register_module()
@@ -66,7 +66,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             argument maybe deleted in the future. Defaults to None.
         stack_data_sample (bool): Whether stack a list of data samples to one
             data sample. Only support with input data samples are
-            `EditDataSamples`. Defaults to True.
+            `DataSamples`. Defaults to True.
     """
     _NON_IMAGE_KEYS = ['noise']
     _NON_CONCATENATE_KEYS = ['num_batches', 'mode', 'sample_kwargs', 'eq_cfg']
@@ -153,8 +153,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
     def _parse_channel_order(self,
                              key: str,
                              inputs: Tensor,
-                             data_sample: Optional[EditDataSample] = None
-                             ) -> str:
+                             data_sample: Optional[DataSample] = None) -> str:
         channel_index = self._parse_channel_index(inputs)
         num_color_channels = inputs.shape[channel_index]
 
@@ -177,7 +176,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         color_flag = data_sample.metainfo.get(color_type_key, None)
         channel_order = data_sample.metainfo.get(channel_order_key, None)
 
-        # handle stacked data sample, refers to `EditDataSample.stack`
+        # handle stacked data sample, refers to `DataSample.stack`
         if isinstance(color_flag, list):
             assert all([c == color_flag[0] for c in color_flag])
             color_flag = color_flag[0]
@@ -200,9 +199,9 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                 # no channel order, infer from num channels
                 return 'single' if num_color_channels == 1 else 'BGR'
 
-    def _parse_batch_channel_order(
-            self, key: str, inputs: Sequence,
-            data_samples: Optional[Sequence[EditDataSample]]) -> str:
+    def _parse_batch_channel_order(self, key: str, inputs: Sequence,
+                                   data_samples: Optional[Sequence[DataSample]]
+                                   ) -> str:
         """Parse channel order of inputs in batch."""
 
         assert len(inputs) == len(data_samples)
@@ -241,16 +240,16 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             channel_order (dict, Optional): The channel order of target field.
                 Key and value are field name and corresponding channel order
                 respectively.
-            data_samples (List[EditDataSample], optional): The data samples to
+            data_samples (List[DataSample], optional): The data samples to
                 be updated. If not passed, will initialize a list of empty data
                 samples. Defaults to None.
 
         Returns:
-            List[EditDataSample]: The updated data samples.
+            List[DataSample]: The updated data samples.
         """
         n_samples = padding_info.shape[0]
         if data_samples is None:
-            data_samples = [EditDataSample() for _ in range(n_samples)]
+            data_samples = [DataSample() for _ in range(n_samples)]
         else:
             assert len(data_samples) == n_samples, (
                 f'The length of \'data_samples\'({len(data_samples)}) and '
@@ -356,18 +355,18 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         Args:
             inputs (Tensor): Image tensor with shape (C, H, W), (N, C, H, W) or
                 (N, t, C, H, W) to preprocess.
-            data_samples (List[EditDataSample], optional): The data samples
+            data_samples (List[DataSample], optional): The data samples
                 of corresponding inputs. If not passed, a list of empty data
                 samples will be initialized to save metainfo. Defaults to None.
             key (str): The key of image tensor in data samples.
                 Defaults to 'img'.
 
         Returns:
-            Tuple[Tensor, List[EditDataSample]]: The preprocessed image tensor
+            Tuple[Tensor, List[DataSample]]: The preprocessed image tensor
                 and updated data samples.
         """
         if not data_samples:  # none or empty list
-            data_samples = [EditDataSample() for _ in range(inputs.shape[0])]
+            data_samples = [DataSample() for _ in range(inputs.shape[0])]
 
         assert inputs.dim() in [
             3, 4, 5
@@ -403,18 +402,18 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         Args:
             tensor_list (List[Tensor]): Image tensor list to be preprocess.
-            data_samples (List[EditDataSample], optional): The data samples
+            data_samples (List[DataSample], optional): The data samples
                 of corresponding inputs. If not passed, a list of empty data
                 samples will be initialized to save metainfo. Defaults to None.
             key (str): The key of tensor list in data samples.
                 Defaults to 'img'.
 
         Returns:
-            Tuple[Tensor, List[EditDataSample]]: The preprocessed image tensor
+            Tuple[Tensor, List[DataSample]]: The preprocessed image tensor
                 and updated data samples.
         """
         if not data_samples:  # none or empty list
-            data_samples = [EditDataSample() for _ in range(len(tensor_list))]
+            data_samples = [DataSample() for _ in range(len(tensor_list))]
 
         channel_order = self._parse_batch_channel_order(
             key, tensor_list, data_samples)
@@ -474,12 +473,12 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         Args:
             batch_inputs (dict): Input dict.
-            data_samples (List[EditDataSample], optional): The data samples
+            data_samples (List[DataSample], optional): The data samples
                 of corresponding inputs. If not passed, a list of empty data
                 samples will be initialized to save metainfo. Defaults to None.
 
         Returns:
-            Tuple[dict, List[EditDataSample]]: The preprocessed dict and
+            Tuple[dict, List[DataSample]]: The preprocessed dict and
                 updated data samples.
         """
         pad_size_dict = dict()
@@ -537,7 +536,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         return batch_inputs, data_samples
 
     def _preprocess_data_sample(self, data_samples: SampleList,
-                                training: bool) -> EditDataSample:
+                                training: bool) -> DataSample:
         """Preprocess data samples. When `training` is True, fields belong to
         :attr:`self.data_keys` will be converted to
         :attr:`self.output_channel_order` and then normalized by `self.mean`
@@ -547,7 +546,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
         channel order conversion will be updated to data sample as well.
 
         Args:
-            data_samples (List[EditDataSample]): A list of data samples to
+            data_samples (List[DataSample]): A list of data samples to
                 preprocess.
             training (bool): Whether in training mode.
 
@@ -587,10 +586,10 @@ class EditDataPreprocessor(ImgDataPreprocessor):
                 data_sample.set_metainfo(data_process_meta)
 
         if self.stack_data_sample:
-            assert is_seq_of(data_samples, EditDataSample), (
-                'Only support \'stack_data_sample\' for EditDataSample '
-                'object. Please refer to \'EditDataSample.stack\'.')
-            return EditDataSample.stack(data_samples)
+            assert is_seq_of(data_samples, DataSample), (
+                'Only support \'stack_data_sample\' for DataSample '
+                'object. Please refer to \'DataSample.stack\'.')
+            return DataSample.stack(data_samples)
         return data_samples
 
     def forward(self, data: dict, training: bool = False) -> dict:
@@ -645,12 +644,12 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
     def destruct(self,
                  outputs: Tensor,
-                 data_samples: Union[SampleList, EditDataSample, None] = None,
+                 data_samples: Union[SampleList, DataSample, None] = None,
                  key: str = 'img') -> Union[list, Tensor]:
         """Destruct padding, normalization and convert channel order to BGR if
         could. If `data_samples` is a list, outputs will be destructed as a
-        batch of tensor. If `data_samples` is a `EditDataSample`, `outputs`
-        will be destructed as a single tensor.
+        batch of tensor. If `data_samples` is a `DataSample`, `outputs` will be
+        destructed as a single tensor.
 
         Before feed model outputs to visualizer and evaluator, users should
         call this function for model outputs and inputs.
@@ -671,7 +670,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         Args:
             outputs (Tensor): Tensor to destruct.
-            data_samples (Union[SampleList, EditDataSample], optional): Data
+            data_samples (Union[SampleList, DataSample], optional): Data
                 samples (or data sample) corresponding to `outputs`.
                 Defaults to None
             key (str): The key of field in data sample. Defaults to 'img'.
@@ -690,8 +689,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
     def _destruct_norm_and_conversion(self, batch_tensor: Tensor,
                                       data_samples: Union[SampleList,
-                                                          EditDataSample,
-                                                          None],
+                                                          DataSample, None],
                                       key: str) -> Tensor:
         """De-norm and de-convert channel order. Noted that, we de-norm first,
         and then de-conversion, since mean and std used in normalization is
@@ -699,7 +697,7 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         Args:
             batch_tensor (Tensor): Tensor to destruct.
-            data_samples (Union[SampleList, EditDataSample], optional): Data
+            data_samples (Union[SampleList, DataSample], optional): Data
                 samples (or data sample) corresponding to `outputs`.
             key (str): The key of field in data sample.
 
@@ -736,14 +734,13 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
     def _destruct_padding(self,
                           batch_tensor: Tensor,
-                          data_samples: Union[SampleList, EditDataSample,
-                                              None],
+                          data_samples: Union[SampleList, DataSample, None],
                           same_padding: bool = True) -> Union[list, Tensor]:
         """Destruct padding of the input tensor.
 
         Args:
             batch_tensor (Tensor): Tensor to destruct.
-            data_samples (Union[SampleList, EditDataSample], optional): Data
+            data_samples (Union[SampleList, DataSample], optional): Data
                 samples (or data sample) corresponding to `outputs`. If
             same_padding (bool): Whether all samples will un-padded with the
                 padding info of the first sample, and return a stacked

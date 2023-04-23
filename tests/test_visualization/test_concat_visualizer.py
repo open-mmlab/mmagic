@@ -3,12 +3,12 @@ import mmcv
 import numpy as np
 import torch
 
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.visualization import ConcatImageVisualizer
 
 
 def test_concatimagevisualizer():
-    data_sample = EditDataSample(
+    data_sample = DataSample(
         path_rgb='fake_dir/rgb.png',
         path_bgr='fake_dir/bgr.png',
         tensor3d=torch.ones(3, 32, 32) *

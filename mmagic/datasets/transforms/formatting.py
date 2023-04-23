@@ -4,16 +4,16 @@ from typing import List, Tuple
 from mmcv.transforms.base import BaseTransform
 
 from mmagic.registry import TRANSFORMS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import all_to_tensor
 
 
 @TRANSFORMS.register_module()
 class PackEditInputs(BaseTransform):
-    """Pack data into EditDataSample for training, evaluation and testing.
+    """Pack data into DataSample for training, evaluation and testing.
 
     MMagic follows the design of data structure from MMEngine.
-        Data from the loader will be packed into data field of EditDataSample.
+        Data from the loader will be packed into data field of DataSample.
         More details of DataSample refer to the documentation of MMEngine:
         https://mmengine.readthedocs.io/en/latest/advanced_tutorials/data_element.html
 
@@ -61,7 +61,7 @@ class PackEditInputs(BaseTransform):
               According to different tasks, the `inputs` may contain images,
               videos, labels, text, etc.
 
-            - 'data_samples' (obj:`EditDataSample`): The annotation info of the
+            - 'data_samples' (obj:`DataSample`): The annotation info of the
                 sample.
         """
 
@@ -76,7 +76,7 @@ class PackEditInputs(BaseTransform):
         if len(inputs.values()) == 1:
             inputs = list(inputs.values())[0]
 
-        data_sample = EditDataSample()
+        data_sample = DataSample()
         # prepare metainfo and data in DataSample according to predefined keys
         predefined_data = {
             k: v

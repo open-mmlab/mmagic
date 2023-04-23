@@ -3,7 +3,7 @@ import torch
 from mmengine.model import BaseModule
 from torchvision import models
 
-from mmagic.models.base_archs import ImgNormalize
+from mmagic.models.archs import ImgNormalize
 from mmagic.registry import MODELS
 
 

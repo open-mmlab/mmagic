@@ -15,7 +15,7 @@ from tqdm import tqdm
 
 from mmagic.models.utils import build_module
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 from ..stable_diffusion import StableDiffusion
 from .controlnet_utils import change_base_model
@@ -259,7 +259,7 @@ class ControlStableDiffusion(StableDiffusion):
         control = self.data_preprocessor.destruct(
             control, data['data_samples'], key='source')
 
-        data_sample = EditDataSample(
+        data_sample = DataSample(
             fake_img=samples,
             control=control,
             prompt=data['data_samples'].prompt)
@@ -289,7 +289,7 @@ class ControlStableDiffusion(StableDiffusion):
         control = self.data_preprocessor.destruct(
             control, data['data_samples'], key='source')
 
-        data_sample = EditDataSample(
+        data_sample = DataSample(
             fake_img=samples,
             control=control,
             prompt=data['data_samples'].prompt)

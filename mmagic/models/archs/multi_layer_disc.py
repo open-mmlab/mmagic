@@ -7,7 +7,7 @@ from mmengine import MMLogger
 from mmengine.runner import load_checkpoint
 from torch import Tensor
 
-from mmagic.models.base_archs import LinearModule
+from mmagic.models.archs import LinearModule
 from mmagic.registry import MODELS
 
 

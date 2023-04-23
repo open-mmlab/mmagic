@@ -7,7 +7,7 @@ from torch.optim import Adam
 from mmagic.models import BaseEditModel, EditDataPreprocessor
 from mmagic.models.losses import L1Loss
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 register_all_modules()
@@ -45,7 +45,7 @@ def test_base_edit_model():
     # prepare data
     inputs = torch.rand(1, 3, 20, 20)
     target = torch.rand(3, 20, 20)
-    data_sample = EditDataSample(gt_img=target)
+    data_sample = DataSample(gt_img=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train

@@ -7,7 +7,7 @@ from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from .color_utils import get_colorization_data, lab2rgb
 
 
@@ -69,7 +69,7 @@ class InstColorization(BaseModel):
 
     def forward(self,
                 inputs: torch.Tensor,
-                data_samples: Optional[List[EditDataSample]] = None,
+                data_samples: Optional[List[DataSample]] = None,
                 mode: str = 'tensor',
                 **kwargs):
         """Returns losses or predictions of training, validation, testing, and
@@ -138,11 +138,11 @@ class InstColorization(BaseModel):
         Args:
             inputs (Optional[torch.Tensor]): The input of model. Defaults to
                 None.
-            data_samples (List[EditDataSample]): The data samples loaded from
+            data_samples (List[DataSample]): The data samples loaded from
                 dataloader.
 
         Returns:
-            List[EditDataSample]: Modified data samples.
+            List[DataSample]: Modified data samples.
         """
 
         for data_sample, output in zip(inputs, data_samples):
@@ -179,7 +179,7 @@ class InstColorization(BaseModel):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            List[EditDataSample]: predictions.
+            List[DataSample]: predictions.
         """
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
         feats = self.data_preprocessor.destruct(feats, data_samples)
@@ -187,7 +187,7 @@ class InstColorization(BaseModel):
         for idx in range(feats.shape[0]):
             pred_img = feats[idx].to('cpu')
             predictions.append(
-                EditDataSample(
+                DataSample(
                     pred_img=pred_img, metainfo=data_samples[idx].metainfo))
 
         return predictions

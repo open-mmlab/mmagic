@@ -7,7 +7,7 @@ from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import SampleList
 from ..utils import set_requires_grad
 
@@ -383,7 +383,7 @@ class OneStageInpaintor(BaseModel):
         return fake_reses, fake_imgs
 
     def forward_test(self, inputs: torch.Tensor,
-                     data_samples: SampleList) -> EditDataSample:
+                     data_samples: SampleList) -> DataSample:
         """Forward function for testing.
 
         Args:
@@ -401,26 +401,26 @@ class OneStageInpaintor(BaseModel):
         fake_imgs = self.data_preprocessor.destruct(fake_imgs, data_samples)
 
         # create a stacked data sample here
-        predictions = EditDataSample(
+        predictions = DataSample(
             fake_res=fake_reses, fake_img=fake_imgs, pred_img=fake_imgs)
 
         return predictions
 
-    def convert_to_datasample(self, predictions: EditDataSample,
-                              data_samples: EditDataSample,
+    def convert_to_datasample(self, predictions: DataSample,
+                              data_samples: DataSample,
                               inputs: Optional[torch.Tensor]
-                              ) -> List[EditDataSample]:
+                              ) -> List[DataSample]:
         """Add predictions and destructed inputs (if passed) to data samples.
 
         Args:
-            predictions (EditDataSample): The predictions of the model.
-            data_samples (EditDataSample): The data samples loaded from
+            predictions (DataSample): The predictions of the model.
+            data_samples (DataSample): The data samples loaded from
                 dataloader.
             inputs (Optional[torch.Tensor]): The input of model. Defaults to
                 None.
 
         Returns:
-            List[EditDataSample]: Modified data samples.
+            List[DataSample]: Modified data samples.
         """
         if inputs is not None:
             destructed_input = self.data_preprocessor.destruct(

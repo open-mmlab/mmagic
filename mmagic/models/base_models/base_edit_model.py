@@ -5,7 +5,7 @@ import torch
 from mmengine.model import BaseModel
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 @MODELS.register_module()
@@ -53,9 +53,9 @@ class BaseEditModel(BaseModel):
 
     def forward(self,
                 inputs: torch.Tensor,
-                data_samples: Optional[List[EditDataSample]] = None,
+                data_samples: Optional[List[DataSample]] = None,
                 mode: str = 'tensor',
-                **kwargs) -> Union[torch.Tensor, List[EditDataSample], dict]:
+                **kwargs) -> Union[torch.Tensor, List[DataSample], dict]:
         """Returns losses or predictions of training, validation, testing, and
         simple inference process.
 
@@ -118,21 +118,21 @@ class BaseEditModel(BaseModel):
         elif mode == 'loss':
             return self.forward_train(inputs, data_samples, **kwargs)
 
-    def convert_to_datasample(self, predictions: EditDataSample,
-                              data_samples: EditDataSample,
+    def convert_to_datasample(self, predictions: DataSample,
+                              data_samples: DataSample,
                               inputs: Optional[torch.Tensor]
-                              ) -> List[EditDataSample]:
+                              ) -> List[DataSample]:
         """Add predictions and destructed inputs (if passed) to data samples.
 
         Args:
-            predictions (EditDataSample): The predictions of the model.
-            data_samples (EditDataSample): The data samples loaded from
+            predictions (DataSample): The predictions of the model.
+            data_samples (DataSample): The data samples loaded from
                 dataloader.
             inputs (Optional[torch.Tensor]): The input of model. Defaults to
                 None.
 
         Returns:
-            List[EditDataSample]: Modified data samples.
+            List[DataSample]: Modified data samples.
         """
 
         if inputs is not None:
@@ -150,7 +150,7 @@ class BaseEditModel(BaseModel):
 
     def forward_tensor(self,
                        inputs: torch.Tensor,
-                       data_samples: Optional[List[EditDataSample]] = None,
+                       data_samples: Optional[List[DataSample]] = None,
                        **kwargs) -> torch.Tensor:
         """Forward tensor. Returns result of simple forward.
 
@@ -170,8 +170,8 @@ class BaseEditModel(BaseModel):
 
     def forward_inference(self,
                           inputs: torch.Tensor,
-                          data_samples: Optional[List[EditDataSample]] = None,
-                          **kwargs) -> EditDataSample:
+                          data_samples: Optional[List[DataSample]] = None,
+                          **kwargs) -> DataSample:
         """Forward inference. Returns predictions of validation, testing, and
         simple inference.
 
@@ -182,20 +182,20 @@ class BaseEditModel(BaseModel):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            EditDataSample: predictions.
+            DataSample: predictions.
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
         feats = self.data_preprocessor.destruct(feats, data_samples)
 
         # create a stacked data sample here
-        predictions = EditDataSample(pred_img=feats.cpu())
+        predictions = DataSample(pred_img=feats.cpu())
 
         return predictions
 
     def forward_train(self,
                       inputs: torch.Tensor,
-                      data_samples: Optional[List[EditDataSample]] = None,
+                      data_samples: Optional[List[DataSample]] = None,
                       **kwargs) -> Dict[str, torch.Tensor]:
         """Forward training. Returns dict of losses of training.
 

@@ -48,7 +48,7 @@ test_dataloader = dict(batch_size=25, num_workers=8)
 # VIS_HOOK
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         # vis ema and orig at the same time

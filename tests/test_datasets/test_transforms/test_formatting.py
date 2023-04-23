@@ -4,7 +4,7 @@ import torch
 from mmcv.transforms import to_tensor
 
 from mmagic.datasets.transforms import PackEditInputs
-from mmagic.structures.edit_data_sample import EditDataSample
+from mmagic.structures.data_sample import DataSample
 
 
 def assert_tensor_equal(img, ref_img, ratio_thr=0.999):
@@ -48,7 +48,7 @@ def test_pack_edit_inputs():
     assert set(target_keys).issubset(set(packed_results.keys()))
 
     data_sample = packed_results['data_samples']
-    assert isinstance(data_sample, EditDataSample)
+    assert isinstance(data_sample, DataSample)
 
     assert data_sample.img_shape == (64, 64)
     assert data_sample.a == 'b'

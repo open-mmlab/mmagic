@@ -7,9 +7,9 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
 from mmagic.models import CycleGAN, EditDataPreprocessor
-from mmagic.models.base_archs import PatchDiscriminator
+from mmagic.models.archs import PatchDiscriminator
 from mmagic.models.editors.cyclegan import ResnetGenerator
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 def obj_from_dict(info: dict, parent=None, default_args=None):
@@ -313,7 +313,7 @@ def test_cyclegan():
         inputs=dict(
             img_photo=torch.randn(1, 3, 64, 64),
             img_mask=torch.randn(1, 3, 64, 64)),
-        data_samples=[EditDataSample(mode='test')])
+        data_samples=[DataSample(mode='test')])
     out = synthesizer.test_step(data)
     assert len(out) == 1
     assert out[0].fake_photo.data.shape == (3, 64, 64)

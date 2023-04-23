@@ -1,10 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .concat_visualizer import ConcatImageVisualizer
-from .gen_visualizer import GenVisualizer
-from .vis_backend import (GenVisBackend, PaviGenVisBackend,
-                          TensorboardGenVisBackend, WandbGenVisBackend)
+from .vis_backend import (PaviVisBackend, TensorboardVisBackend, VisBackend,
+                          WandbVisBackend)
+from .visualizer import Visualizer
 
 __all__ = [
-    'ConcatImageVisualizer', 'GenVisualizer', 'GenVisBackend',
-    'PaviGenVisBackend', 'TensorboardGenVisBackend', 'WandbGenVisBackend'
+    'ConcatImageVisualizer', 'Visualizer', 'VisBackend', 'PaviVisBackend',
+    'TensorboardVisBackend', 'WandbVisBackend'
 ]

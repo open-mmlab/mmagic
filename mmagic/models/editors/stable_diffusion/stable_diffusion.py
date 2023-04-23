@@ -15,7 +15,7 @@ from transformers import CLIPTokenizer
 
 from mmagic.models.utils import build_module, set_xformers
 from mmagic.registry import DIFFUSION_SCHEDULERS, MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 
 logger = MMLogger.get_current_instance()
@@ -538,10 +538,10 @@ class StableDiffusion(BaseModel):
         samples = self.data_preprocessor.destruct(samples, data_samples)
         gt_img = self.data_preprocessor.destruct(data['inputs'], data_samples)
 
-        out_data_sample = EditDataSample(
+        out_data_sample = DataSample(
             fake_img=samples, gt_img=gt_img, prompt=prompt)
 
-        # out_data_sample = EditDataSample(fake_img=samples, prompt=prompt)
+        # out_data_sample = DataSample(fake_img=samples, prompt=prompt)
         data_sample_list = out_data_sample.split()
         return data_sample_list
 
@@ -557,7 +557,7 @@ class StableDiffusion(BaseModel):
         samples = self.data_preprocessor.destruct(samples, data_samples)
         gt_img = self.data_preprocessor.destruct(data['inputs'], data_samples)
 
-        out_data_sample = EditDataSample(
+        out_data_sample = DataSample(
             fake_img=samples, gt_img=gt_img, prompt=prompt)
         data_sample_list = out_data_sample.split()
         return data_sample_list

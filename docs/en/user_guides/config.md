@@ -438,7 +438,7 @@ Users can attach hooks to training, validation, and testing loops to insert some
 
 ```python
 default_hooks = dict(
-    timer=dict(type='EditIterTimerHook'),
+    timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100, log_metric_by_epoch=False),
     checkpoint=dict(
         type='CheckpointHook',
@@ -455,7 +455,7 @@ default_hooks = dict(
 ```python
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))
@@ -476,7 +476,7 @@ env_cfg = dict(
 
 log_level = 'INFO'  # The level of logging
 log_processor = dict(
-    type='EditLogProcessor',  # log processor to process runtime logs
+    type='LogProcessor',  # log processor to process runtime logs
     by_epoch=False)  # print log by iteration
 load_from = None  # load model checkpoint as a pre-trained model for a given path
 resume = False  # Whether to resume from the checkpoint define in `load_from`. If `load_from` is `None`, it will resume the latest checkpoint in `work_dir`

@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from mmengine import MessageHub
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 from ...base_models import BaseTranslationModel
 from ...utils import set_requires_grad
@@ -173,7 +173,7 @@ class Pix2Pix(BaseTranslationModel):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            List[EditDataSample]: Generated image or image dict.
+            List[DataSample]: Generated image or image dict.
         """
         data = self.data_preprocessor(data)
         inputs_dict, data_samples = data['inputs'], data['data_samples']
@@ -185,7 +185,7 @@ class Pix2Pix(BaseTranslationModel):
         batch_sample_list = []
         num_batches = next(iter(outputs.values())).shape[0]
         for idx in range(num_batches):
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
             target = outputs['target'][idx]
@@ -203,7 +203,7 @@ class Pix2Pix(BaseTranslationModel):
                 sampler. More detials in `Metrics` and `Evaluator`.
 
         Returns:
-            List[EditDataSample]: Generated image or image dict.
+            List[DataSampleenerated image or image dict.
         """
         data = self.data_preprocessor(data)
         inputs_dict, data_samples = data['inputs'], data['data_samples']
@@ -217,7 +217,7 @@ class Pix2Pix(BaseTranslationModel):
             data_samples = data_samples.split()
         num_batches = next(iter(outputs.values())).shape[0]
         for idx in range(num_batches):
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
             target = outputs['target'][idx]

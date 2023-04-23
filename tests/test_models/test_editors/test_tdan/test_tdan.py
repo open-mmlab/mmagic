@@ -6,7 +6,7 @@ from torch.optim import Adam
 from mmagic.models.data_preprocessors import EditDataPreprocessor
 from mmagic.models.editors import TDAN, TDANNet
 from mmagic.models.losses import MSELoss
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 def test_tdan():
@@ -28,7 +28,7 @@ def test_tdan():
     # prepare data
     inputs = torch.rand(5, 3, 16, 16)
     target = torch.rand(3, 64, 64)
-    data_sample = EditDataSample(gt_img=target)
+    data_sample = DataSample(gt_img=target)
     data = dict(inputs=[inputs], data_samples=[data_sample])
 
     # train

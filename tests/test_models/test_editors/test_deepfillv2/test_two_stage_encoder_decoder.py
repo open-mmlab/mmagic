@@ -9,7 +9,7 @@ from mmengine import Config
 from mmengine.optim import OptimWrapper
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 
@@ -51,7 +51,7 @@ def test_two_stage_inpaintor():
         'inputs':
         masked_img,
         'data_samples':
-        [EditDataSample(
+        [DataSample(
             mask=mask,
             mask_bbox=mask_bbox,
             gt_img=gt_img,

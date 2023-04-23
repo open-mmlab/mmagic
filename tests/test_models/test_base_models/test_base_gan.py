@@ -15,7 +15,7 @@ from mmagic.models.losses import (DiscShiftLossComps, GANLossComps,
                                   GeneratorPathRegularizerComps,
                                   GradientPenaltyLossComps)
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 generator = dict(type='DCGANGenerator', output_scale=8, base_channels=8)
 discriminator = dict(
@@ -280,12 +280,8 @@ class TestBaseGAN(TestCase):
 
         # test when data samples is not None
         inputs = dict(num_batches=3, sample_model='ema/orig')
-        data_samples = [
-            EditDataSample(id=1),
-            EditDataSample(id=2),
-            EditDataSample(id=3)
-        ]
-        outputs = gan(inputs, EditDataSample.stack(data_samples))
+        data_samples = [DataSample(id=1), DataSample(id=2), DataSample(id=3)]
+        outputs = gan(inputs, DataSample.stack(data_samples))
         self.assertEqual(len(outputs), 3)
         for idx, output in enumerate(outputs):
             self.assertEqual(output.id, idx + 1)

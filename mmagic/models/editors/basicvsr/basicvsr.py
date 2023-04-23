@@ -3,7 +3,7 @@ import torch
 
 from mmagic.models import BaseEditModel
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 @MODELS.register_module()
@@ -55,7 +55,7 @@ class BasicVSR(BaseEditModel):
         self.forward_ensemble = None
         if ensemble is not None:
             if ensemble['type'] == 'SpatialTemporalEnsemble':
-                from mmagic.models.base_archs import SpatialTemporalEnsemble
+                from mmagic.models.archs import SpatialTemporalEnsemble
                 is_temporal = ensemble.get('is_temporal_ensemble', False)
                 self.forward_ensemble = SpatialTemporalEnsemble(is_temporal)
             else:
@@ -124,7 +124,7 @@ class BasicVSR(BaseEditModel):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            EditDataSample: predictions.
+            DataSample: predictions.
         """
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
@@ -144,7 +144,7 @@ class BasicVSR(BaseEditModel):
                 feats = feats[:, t // 2]
 
         # create a stacked data sample
-        predictions = EditDataSample(
+        predictions = DataSample(
             pred_img=feats.cpu(), metainfo=data_samples.metainfo)
 
         return predictions

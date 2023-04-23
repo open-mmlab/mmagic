@@ -2,7 +2,7 @@
 from mmcv.cnn import ConvModule
 from mmengine.model import BaseModule
 
-from mmagic.models.base_archs import SimpleGatedConvModule
+from mmagic.models.archs import SimpleGatedConvModule
 from mmagic.models.editors.deepfillv1.contextual_attention import \
     ContextualAttentionModule
 from mmagic.registry import MODELS

@@ -5,8 +5,8 @@ import torch.nn as nn
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
-from mmagic.models.base_archs import (LoRAWrapper, set_lora, set_lora_disable,
-                                      set_lora_enable, set_only_lora_trainable)
+from mmagic.models.archs import (LoRAWrapper, set_lora, set_lora_disable,
+                                 set_lora_enable, set_only_lora_trainable)
 
 
 class ToyAttn(nn.Module):

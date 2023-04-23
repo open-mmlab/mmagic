@@ -5,7 +5,7 @@ import torch
 
 from mmagic.models.base_models import BaseEditModel
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 
 
 @MODELS.register_module()
@@ -54,7 +54,7 @@ class LIIF(BaseEditModel):
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            List[EditDataSample]: predictions.
+            List[DataSample]: predictions.
         """
         # NOTE: feats: shape [bz, N, 3]
         feats = self.forward_tensor(inputs, data_samples, test_mode=True)
@@ -69,6 +69,6 @@ class LIIF(BaseEditModel):
 
         feats = self.data_preprocessor.destruct(feats, data_samples)
 
-        predictions = EditDataSample(pred_img=feats.cpu())
+        predictions = DataSample(pred_img=feats.cpu())
 
         return predictions

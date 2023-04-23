@@ -7,7 +7,7 @@ from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init, kaiming_init
 from torch.nn.modules.utils import _pair
 
-from mmagic.models.base_archs import PixelShufflePack, ResidualBlockNoBN
+from mmagic.models.archs import PixelShufflePack, ResidualBlockNoBN
 from mmagic.models.utils import make_layer
 from mmagic.registry import MODELS
 

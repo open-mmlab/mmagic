@@ -11,7 +11,7 @@ from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch import Tensor
 
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample
+from mmagic.structures import DataSample
 from ...base_models import BaseGAN
 from ...losses import gen_path_regularizer, r1_gradient_penalty_loss
 from ...utils import set_requires_grad
@@ -166,14 +166,14 @@ class StyleGAN2(BaseGAN):
         loss, log_var = self.parse_losses(losses_dict)
         return loss, log_var
 
-    def train_discriminator(self, inputs: dict, data_samples: EditDataSample,
+    def train_discriminator(self, inputs: dict, data_samples: DataSample,
                             optimizer_wrapper: OptimWrapper
                             ) -> Dict[str, Tensor]:
         """Train discriminator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (EditDataSample): Data samples from dataloader.
+            data_samples (DataSample): Data samples from dataloader.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
         Returns:
@@ -198,13 +198,13 @@ class StyleGAN2(BaseGAN):
         message_hub.update_info('disc_pred_real', disc_pred_real)
         return log_vars
 
-    def train_generator(self, inputs: dict, data_samples: EditDataSample,
+    def train_generator(self, inputs: dict, data_samples: DataSample,
                         optimizer_wrapper: OptimWrapper) -> Dict[str, Tensor]:
         """Train generator.
 
         Args:
             inputs (dict): Inputs from dataloader.
-            data_samples (EditDataSample): Data samples from dataloader.
+            data_samples (DataSample): Data samples from dataloader.
                 Do not used in generator's training.
             optim_wrapper (OptimWrapper): OptimWrapper instance used to update
                 model parameters.
