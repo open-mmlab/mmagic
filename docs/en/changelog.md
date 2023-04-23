@@ -10,7 +10,7 @@ Since its inception, MMEditing has been the preferred algorithm library for many
 
 Today, MMEditing embraces the Diffusion Model and transforms into a more advanced and comprehensive AIGC toolkit: **MMagic** (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation).
 
-In MMagic, we have supports 53+ models in multiple tasks such as fine-tuning for stable diffusion, text-to-image, image and video restoration, super-resolution, editing and generation. With excellent training and experiment management support from [MMEngine](https://github.com/open-mmlab/mmengine), MMagic will provide more agile and flexible experimental support for researchers and AIGC enthusiasts, and help you on your AIGC exploration journey.
+In MMagic, we have supports 53+ models in multiple tasks such as fine-tuning for stable diffusion, text-to-image, image and video restoration, super-resolution, editing and generation. With excellent training and experiment management support from [MMEngine](https://github.com/open-mmlab/mmengine), MMagic will provide more agile and flexible experimental support for researchers and AIGC enthusiasts, and help you on your AIGC exploration journey. With MMagic, experience more magic in generation! Let's open a new era beyond editing together. More than Editing, Unlock the Magic!
 
 **Highlights**
 
@@ -33,6 +33,8 @@ We support 11 new models in 4 new tasks.
 - Image Colorization
   - InstColorization
 
+https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4
+
 **2. Magic Diffusion Model**
 For the Diffusion Model, we provide the following "magic" :
 
@@ -48,13 +50,23 @@ For the Diffusion Model, we provide the following "magic" :
 - Support video generation based on MultiFrame Render
   MMagic supports the generation of long videos in various styles through ControlNet and MultiFrame Render.
   prompt key words: a handsome man, silver hair, smiling, play basketball
+
   https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4
+
   prompt key words: a girl, black hair, white pants, smiling, play basketball
+
   https://user-images.githubusercontent.com/49083766/233559964-bd5127bd-52f6-44b6-a089-9d7adfbc2430.mp4
+
   prompt key words: a handsome man
+
   https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4
 
 - Support calling basic models and sampling strategies through DiffuserWrapper
+
+- SAM + MMagic = Generate Anything！
+  SAM (Segment Anything Model) is a popular model these days and can also provide more support for MMagic! If you want to create your own animation, you can go to [OpenMMLab PlayGround](https://github.com/open-mmlab/playground/blob/main/mmediting_sam/README.md).
+
+  https://user-images.githubusercontent.com/49083766/233562228-f39fc675-326c-4ae8-986a-c942059effd0.mp4
 
 **3. Upgraded Framework**
 To improve your "spellcasting" efficiency, we have made the following adjustments to the "magic circuit":
@@ -68,6 +80,7 @@ To improve your "spellcasting" efficiency, we have made the following adjustment
 **New Features & Improvements**
 
 - Support 53+ algorithms, 232+ configs, 213+ checkpoints, 26+ loss functions, and 20+ metrics.
+- Support controlnet animation and Gradio gui. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/configs/controlnet_animation)
 - Support Inferencer and Demo using High-level Inference APIs. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/demo)
 - Support Gradio gui of Inpainting inference. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/demo/gradio-demo.py)
 - Support qualitative comparison tools. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/tools/gui)
@@ -75,7 +88,45 @@ To improve your "spellcasting" efficiency, we have made the following adjustment
 - Enable projects. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/projects)
 - Improve converters scripts and documents for datasets. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/tools/dataset_converters)
 
-* \[Feature\] controlnet animation inferencer by @liuwenran in https://github.com/open-mmlab/mmediting/pull/1713
+**Contributors**
+A total of 17 developers contributed to this release.
+Thanks
+@LeoXing1996, @zengyh1900, @plyfager, @Z-Fran, @VongolaWu, @liuwenran,
+
+NK-CS-ZZL
+Yshuo-Li
+wangruohui
+
+- @jayagami
+- @yangrisheng
+- @VongolaWu
+- @lvhan028
+- @gaoyang07
+- @ChangjianZhao
+- @zxczrx123
+- @jackghosts
+- @liuwenran
+- @CCODING04
+- @RoseZhao929
+- @shaocongliu
+- @LigZhong
+- @liangzelong
+- @xiaomile
+- @ldr426
+- @austin273
+- @whu-lee
+- @willaty
+- @curiosity654
+- @Zdafeng
+- @Taited
+- @dienachtderwelt
+- @i-aki-y
+- @triple-Mu
+- @Li-Qingyun
+- @Luo-Yihang
+- @ydengbi
+- @HAOCHENYE
+- @SheffieldCao
 
 ## v1.0.0rc7 (07/04/2023)
 

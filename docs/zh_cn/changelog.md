@@ -1,5 +1,84 @@
 # 变更日志
 
+## v1.0.0 (25/04/2023)
+
+我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
+
+![mmagic-log](https://user-images.githubusercontent.com/49083766/233557648-9034f5a0-c85d-4092-b700-3a28072251b6.png)
+
+自从 MMEditing 诞生以来，它一直是许多图像超分辨率、编辑和生成任务的首选算法库，帮助多个研究团队取得 10 余 项国际顶级赛事的胜利，支撑了 100 多个 GitHub 生态项目。经过 OpenMMLab 2.0 框架的迭代更新以及与 MMGeneration 的合并，MMEditing 已经成为了一个支持基于 GAN 和 CNN 的底层视觉算法的强大工具。
+
+而今天，MMEditing 将拥抱 Diffusion Model（扩散模型），正式更名为 **MMagic**（**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation），转化为更为先进、全面的 AIGC 开源算法库。
+
+在 MMagic 中，我们已经支持了 53+ 模型，分布于 Stable Diffusion 的微调、图文生成、图像及视频修复、超分辨率、编辑和生成等多种任务。配合 [MMEngine](https://github.com/open-mmlab/mmengine) 出色的训练与实验管理支持，MMagic 将为广大研究者与 AIGC 爱好者们提供更加快捷灵活的实验支持，助力你的 AIGC 探索之旅。使用 MMagic，体验更多生成的魔力！让我们一起开启超越编辑的新纪元！ More than Editing, Unlock the Magic!
+
+**主要更新**
+
+**1. 新算法**
+我们支持了4个新任务以及11个新算法。
+
+- Text2Image / Diffusion
+  - ControlNet
+  - DreamBooth
+  - Stable Diffusion
+  - Disco Diffusion
+  - GLIDE
+  - Guided Diffusion
+- 3D-aware Generation
+  - EG3D
+- Image Restoration
+  - NAFNet
+  - Restormer
+  - SwinIR
+- Image Colorization
+  - InstColorization
+
+https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4
+
+**2. Magic Diffusion Model**
+针对 Diffusion Model，我们提供了以下“魔法”
+
+- 支持基于 Stable Diffusion 与 Disco Diffusion 的图像生成
+
+- 支持 Dreambooth 以及 DreamBooth LoRA 等 Finetune 方法
+
+- 支持 ControlNet 进行可控性的文本到图像生成
+  ![de87f16f-bf6d-4a61-8406-5ecdbb9167b6](https://user-images.githubusercontent.com/49083766/233558077-2005e603-c5a8-49af-930f-e7a465ca818b.png)
+
+- 支持 xFormers 加速和优化策略，提高训练与推理效率
+
+- 支持基于 MultiFrame Render 的视频生成
+  MMagic 支持通过 ControlNet 与多帧渲染法实现长视频的生成。
+  prompt key words: a handsome man, silver hair, smiling, play basketball
+
+  https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4
+
+  prompt key words: a girl, black hair, white pants, smiling, play basketball
+
+  https://user-images.githubusercontent.com/49083766/233559964-bd5127bd-52f6-44b6-a089-9d7adfbc2430.mp4
+
+  prompt key words: a handsome man
+
+  https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4
+
+- 支持通过 Wrapper 调用 Diffusers 的基础模型以及采样策略
+
+- SAM + MMagic = Generate Anything！
+  当下流行的 SAM（Segment Anything Model）也可以为 MMagic 提供更多加持！想制作自己的动画，可以移步至 [OpenMMLab PlayGround](https://github.com/open-mmlab/playground/blob/main/mmediting_sam/README.md)！
+
+  https://user-images.githubusercontent.com/49083766/233562228-f39fc675-326c-4ae8-986a-c942059effd0.mp4
+
+**新功能和改进**
+
+- 支持 53+ 算法，232+ 配置，213+ 模型权重，26+ 损失函数，and 20+ 评价指标.
+- 支持 controlnet 动画生成以及 Gradio gui. [点击查看.](https://github.com/open-mmlab/mmagic/tree/main/configs/controlnet_animation)
+- 支持 Inferencer 和 Demo，使用High-level Inference APIs. [点击查看.](https://github.com/open-mmlab/mmagic/tree/main/demo)
+- 支持 Inpainting 推理的 Gradio gui. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/demo/gradio-demo.py)
+- 支持可视化图像/视频质量比较工具. [点击查看.](https://github.com/open-mmlab/mmagic/tree/main/tools/gui)
+- 支持本地可视化以及使用 tensorboard 或 wandb的可视化.
+- 开启 projects，助力社区更快向算法库中添加新算法. [点击查看.](https://github.com/open-mmlab/mmagic/tree/main/projects)
+- 完善数据集的预处理脚本和使用说明文档. [点击查看.](https://github.com/open-mmlab/mmagic/tree/main/tools/dataset_converters)
+
 ## v1.0.0rc7 (07/04/2023)
 
 **主要更新**
