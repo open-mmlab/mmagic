@@ -70,6 +70,16 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
   https://user-images.githubusercontent.com/49083766/233562228-f39fc675-326c-4ae8-986a-c942059effd0.mp4
 
+**3. 框架升级**
+
+为了提升你的“施法”效率，我们对“魔术回路”做了以下升级:
+
+- 通过 OpenMMLab 2.0 框架的 MMEngine 和 MMCV， MMagic 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。我们可以像搭建“乐高”一样定义训练流程，提供丰富的组件和策略。在 MMagic 中，你可以使用不同的 APIs 完全控制训练流程。
+- 支持 33+ 算法 Pytorch 2.0 加速
+- 重构 DataSample，支持 batch 维度的组合与拆分
+- DataPreprocessor，并统一各种任务在训练与推理时的数据格式
+- MultiValLoop 与 MultiTestLoop，同时支持生成类型指标（e.g. FID）与重建类型指标（e.g. SSIM） 的评测，同时支持一次性评测多个数据集
+
 **新功能和改进**
 
 - 支持 53+ 算法，232+ 配置，213+ 模型权重，26+ 损失函数，and 20+ 评价指标.

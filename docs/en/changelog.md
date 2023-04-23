@@ -74,11 +74,11 @@ For the Diffusion Model, we provide the following "magic" :
 
 To improve your "spellcasting" efficiency, we have made the following adjustments to the "magic circuit":
 
-- By using MMengine and MMCV of OpenMMLab 2.0 framework, We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different module. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs.
+- By using MMEngine and MMCV of OpenMMLab 2.0 framework, We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different module. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs.
 - Support for 33+ algorithms accelerated by Pytorch 2.0
-- Refactor EditDataSample to support the combination and splitting of batch dimensions
-- Refactor EditDataPreprocessor and unify the data format for various tasks during training and inference
-- Refactor EditValLoop and EditTestLoop, supporting the evaluation of both generation-type metrics (e.g. FID) and reconstruction-type metrics (e.g. SSIM), and supporting the evaluation of multiple datasets at once
+- Refactor DataSample to support the combination and splitting of batch dimensions
+- Refactor DataPreprocessor and unify the data format for various tasks during training and inference
+- Refactor MultiValLoop and MultiTestLoop, supporting the evaluation of both generation-type metrics (e.g. FID) and reconstruction-type metrics (e.g. SSIM), and supporting the evaluation of multiple datasets at once
 
 **New Features & Improvements**
 
