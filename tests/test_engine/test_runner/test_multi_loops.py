@@ -2,10 +2,10 @@
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from mmengine.evaluator import Evaluator
+from mmengine.evaluator import Evaluator as BaseEvaluator
 
 from mmagic.engine import MultiTestLoop, MultiValLoop
-from mmagic.evaluation import EditEvaluator
+from mmagic.evaluation import Evaluator
 
 
 def build_dataloader(loader, **kwargs):
@@ -28,16 +28,16 @@ def build_metrics(metrics):
 
 
 def build_evaluator(evaluator):
-    if isinstance(evaluator, Evaluator):
+    if isinstance(evaluator, BaseEvaluator):
         return evaluator
 
     if isinstance(evaluator, dict):
 
         # a dirty way to check Evaluator type
-        if 'type' in evaluator and evaluator['type'] == 'EditEvaluator':
-            spec = EditEvaluator
-        else:
+        if 'type' in evaluator and evaluator['type'] == 'Evaluator':
             spec = Evaluator
+        else:
+            spec = BaseEvaluator
 
         # if `metrics` in dict keys, it means to build customized evalutor
         if 'metrics' in evaluator:
@@ -79,7 +79,7 @@ class TestLoop(TestCase):
         evaluators = [dict(prefix='m1'), dict(prefix='m2')]
         loop = LOOP_CLS(runner, dataloaders, evaluators)
         self.assertEqual(len(loop.evaluators), 1)
-        self.assertIsInstance(loop.evaluators[0], EditEvaluator)
+        self.assertIsInstance(loop.evaluators[0], Evaluator)
         self.assertEqual(loop.evaluators[0].metrics[0].prefix, 'm1')
         self.assertEqual(loop.evaluators[0].metrics[1].prefix, 'm2')
 
@@ -91,7 +91,7 @@ class TestLoop(TestCase):
                                        dict(prefix='m2')])
         loop = LOOP_CLS(runner, dataloaders, evaluators)
         self.assertEqual(len(loop.evaluators), 1)
-        self.assertIsInstance(loop.evaluators[0], Evaluator)
+        self.assertIsInstance(loop.evaluators[0], BaseEvaluator)
         self.assertEqual(loop.evaluators[0].metrics[0].prefix, 'm1')
         self.assertEqual(loop.evaluators[0].metrics[1].prefix, 'm2')
 
@@ -107,8 +107,8 @@ class TestLoop(TestCase):
         ]
         loop = LOOP_CLS(runner, dataloaders, evaluators)
         self.assertEqual(len(loop.evaluators), 2)
-        self.assertIsInstance(loop.evaluators[0], Evaluator)
-        self.assertIsInstance(loop.evaluators[1], EditEvaluator)
+        self.assertIsInstance(loop.evaluators[0], BaseEvaluator)
+        self.assertIsInstance(loop.evaluators[1], Evaluator)
         self.assertEqual(loop.evaluators[0].metrics[0].prefix, 'm1')
         self.assertEqual(loop.evaluators[0].metrics[1].prefix, 'm2')
         self.assertEqual(loop.evaluators[1].metrics[0].prefix, 'm3')
@@ -133,7 +133,7 @@ class TestLoop(TestCase):
 
         metric1, metric2, metric3 = MagicMock(), MagicMock(), MagicMock()
 
-        evaluator = MagicMock(spec=EditEvaluator)
+        evaluator = MagicMock(spec=Evaluator)
         evaluator.prepare_metrics = MagicMock()
         evaluator.prepare_samplers = MagicMock(
             return_value=[[[metric1, metric2],
@@ -166,13 +166,13 @@ class TestLoop(TestCase):
 
         metric11, metric12, metric13 = MagicMock(), MagicMock(), MagicMock()
         metric21 = MagicMock()
-        evaluator1 = MagicMock(spec=EditEvaluator)
+        evaluator1 = MagicMock(spec=Evaluator)
         evaluator1.prepare_metrics = MagicMock()
         evaluator1.prepare_samplers = MagicMock(
             return_value=[[[metric11, metric12],
                            [dict(inputs=1), dict(
                                inputs=2)]], [[metric13], [dict(inputs=4)]]])
-        evaluator2 = MagicMock(spec=EditEvaluator)
+        evaluator2 = MagicMock(spec=Evaluator)
         evaluator2.prepare_metrics = MagicMock()
         evaluator2.prepare_samplers = MagicMock(
             return_value=[[[metric21], [dict(inputs=3)]]])

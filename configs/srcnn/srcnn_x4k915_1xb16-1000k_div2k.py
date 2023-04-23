@@ -97,7 +97,7 @@ val_dataloader = dict(
         pipeline=val_pipeline))
 
 val_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(type='MAE'),
         dict(type='PSNR', crop_border=scale),

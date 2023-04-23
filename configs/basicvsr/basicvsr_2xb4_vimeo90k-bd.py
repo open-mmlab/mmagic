@@ -73,7 +73,7 @@ val_dataloader = dict(
         pipeline=val_pipeline))
 
 val_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(type='PSNR', convert_to='Y'),
         dict(type='SSIM', convert_to='Y'),

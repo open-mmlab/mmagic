@@ -261,13 +261,13 @@ test_dataloader = dict(
         pipeline=test_pipeline))
 
 val_evaluator = dict(
-    type='EditEvaluator', metrics=[
+    type='Evaluator', metrics=[
         dict(type='PSNR'),
         dict(type='SSIM'),
     ])
 
 test_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[dict(type='NIQE', input_order='CHW', convert_to='Y')])
 
 train_cfg = dict(

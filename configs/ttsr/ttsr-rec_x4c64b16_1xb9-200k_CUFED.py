@@ -189,7 +189,7 @@ val_dataloader = dict(
 test_dataloader = val_dataloader
 
 val_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(type='MAE'),
         dict(type='PSNR', crop_border=scale),

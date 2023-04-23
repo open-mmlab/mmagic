@@ -26,7 +26,7 @@ model = dict(
     ))
 
 val_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(type='PSNR', crop_border=8, convert_to='Y'),
         dict(type='SSIM', crop_border=8, convert_to='Y'),

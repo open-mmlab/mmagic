@@ -367,7 +367,7 @@ The config of evaluators consists of one or a list of metric configs:
 
 ```python
 val_evaluator = dict(  # The config for validation evaluator
-    type='EditEvaluator',  # The type of evaluation
+    type='Evaluator',  # The type of evaluation
     metrics=[  # The config for metrics
         dict(
             type='FrechetInceptionDistance',

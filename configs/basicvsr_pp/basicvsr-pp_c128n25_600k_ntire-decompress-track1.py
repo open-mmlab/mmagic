@@ -53,7 +53,7 @@ test_dataloader = dict(
         pipeline=test_pipeline))
 
 test_evaluator = dict(
-    type='EditEvaluator', metrics=[
+    type='Evaluator', metrics=[
         dict(type='PSNR'),
         dict(type='SSIM'),
     ])
