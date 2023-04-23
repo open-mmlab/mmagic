@@ -40,16 +40,16 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 针对 Diffusion Model，我们提供了以下“魔法”
 
-- 支持基于 Stable Diffusion 与 Disco Diffusion 的图像生成
+- 支持基于 Stable Diffusion 与 Disco Diffusion 的图像生成.
 
-- 支持 Dreambooth 以及 DreamBooth LoRA 等 Finetune 方法
+- 支持 Dreambooth 以及 DreamBooth LoRA 等 Finetune 方法.
 
-- 支持 ControlNet 进行可控性的文本到图像生成
+- 支持 ControlNet 进行可控性的文本到图像生成.
   ![de87f16f-bf6d-4a61-8406-5ecdbb9167b6](https://user-images.githubusercontent.com/49083766/233558077-2005e603-c5a8-49af-930f-e7a465ca818b.png)
 
-- 支持 xFormers 加速和优化策略，提高训练与推理效率
+- 支持 xFormers 加速和优化策略，提高训练与推理效率.
 
-- 支持基于 MultiFrame Render 的视频生成
+- 支持基于 MultiFrame Render 的视频生成.
   MMagic 支持通过 ControlNet 与多帧渲染法实现长视频的生成。
   prompt key words: a handsome man, silver hair, smiling, play basketball
 
@@ -63,7 +63,7 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
   https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4
 
-- 支持通过 Wrapper 调用 Diffusers 的基础模型以及采样策略
+- 支持通过 Wrapper 调用 Diffusers 的基础模型以及采样策略.
 
 - SAM + MMagic = Generate Anything！
   当下流行的 SAM（Segment Anything Model）也可以为 MMagic 提供更多加持！想制作自己的动画，可以移步至 [OpenMMLab PlayGround](https://github.com/open-mmlab/playground/blob/main/mmediting_sam/README.md)！
@@ -74,11 +74,11 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 为了提升你的“施法”效率，我们对“魔术回路”做了以下升级:
 
-- 通过 OpenMMLab 2.0 框架的 MMEngine 和 MMCV， MMagic 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。我们可以像搭建“乐高”一样定义训练流程，提供丰富的组件和策略。在 MMagic 中，你可以使用不同的 APIs 完全控制训练流程。
-- 支持 33+ 算法 Pytorch 2.0 加速
-- 重构 DataSample，支持 batch 维度的组合与拆分
-- DataPreprocessor，并统一各种任务在训练与推理时的数据格式
-- MultiValLoop 与 MultiTestLoop，同时支持生成类型指标（e.g. FID）与重建类型指标（e.g. SSIM） 的评测，同时支持一次性评测多个数据集
+- 通过 OpenMMLab 2.0 框架的 MMEngine 和 MMCV， MMagic 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。我们可以像搭建“乐高”一样定义训练流程，提供丰富的组件和策略。在 MMagic 中，你可以使用不同的 APIs 完全控制训练流程.
+- 支持 33+ 算法 Pytorch 2.0 加速.
+- 重构 DataSample，支持 batch 维度的组合与拆分.
+- 重构 DataPreprocessor，并统一各种任务在训练与推理时的数据格式.
+- 重构 MultiValLoop 与 MultiTestLoop，同时支持生成类型指标（e.g. FID）与重建类型指标（e.g. SSIM） 的评测，同时支持一次性评测多个数据集
 
 **新功能和改进**
 

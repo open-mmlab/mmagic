@@ -40,16 +40,16 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 For the Diffusion Model, we provide the following "magic" :
 
-- Support image generation based on Stable Diffusion and Disco Diffusion
+- Support image generation based on Stable Diffusion and Disco Diffusion.
 
-- Support Finetune methods such as Dreambooth and DreamBooth LoRA
+- Support Finetune methods such as Dreambooth and DreamBooth LoRA.
 
-- Support controllability in text-to-image generation using ControlNet
+- Support controllability in text-to-image generation using ControlNet.
   ![de87f16f-bf6d-4a61-8406-5ecdbb9167b6](https://user-images.githubusercontent.com/49083766/233558077-2005e603-c5a8-49af-930f-e7a465ca818b.png)
 
-- Support acceleration and optimization strategies based on xFormers to improve training and inference efficiency
+- Support acceleration and optimization strategies based on xFormers to improve training and inference efficiency.
 
-- Support video generation based on MultiFrame Render
+- Support video generation based on MultiFrame Render.
   MMagic supports the generation of long videos in various styles through ControlNet and MultiFrame Render.
   prompt key words: a handsome man, silver hair, smiling, play basketball
 
@@ -63,7 +63,7 @@ For the Diffusion Model, we provide the following "magic" :
 
   https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4
 
-- Support calling basic models and sampling strategies through DiffuserWrapper
+- Support calling basic models and sampling strategies through DiffuserWrapper.
 
 - SAM + MMagic = Generate Anything！
   SAM (Segment Anything Model) is a popular model these days and can also provide more support for MMagic! If you want to create your own animation, you can go to [OpenMMLab PlayGround](https://github.com/open-mmlab/playground/blob/main/mmediting_sam/README.md).
@@ -75,10 +75,10 @@ For the Diffusion Model, we provide the following "magic" :
 To improve your "spellcasting" efficiency, we have made the following adjustments to the "magic circuit":
 
 - By using MMEngine and MMCV of OpenMMLab 2.0 framework, We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different module. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs.
-- Support for 33+ algorithms accelerated by Pytorch 2.0
-- Refactor DataSample to support the combination and splitting of batch dimensions
-- Refactor DataPreprocessor and unify the data format for various tasks during training and inference
-- Refactor MultiValLoop and MultiTestLoop, supporting the evaluation of both generation-type metrics (e.g. FID) and reconstruction-type metrics (e.g. SSIM), and supporting the evaluation of multiple datasets at once
+- Support for 33+ algorithms accelerated by Pytorch 2.0.
+- Refactor DataSample to support the combination and splitting of batch dimensions.
+- Refactor DataPreprocessor and unify the data format for various tasks during training and inference.
+- Refactor MultiValLoop and MultiTestLoop, supporting the evaluation of both generation-type metrics (e.g. FID) and reconstruction-type metrics (e.g. SSIM), and supporting the evaluation of multiple datasets at once.
 
 **New Features & Improvements**
 
