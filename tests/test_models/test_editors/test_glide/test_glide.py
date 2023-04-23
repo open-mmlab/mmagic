@@ -104,10 +104,10 @@ class TestGLIDE(TestCase):
             unet_up=unet_up,
             diffusion_scheduler_up=diffusion_scheduler_up)
 
-    @unittest.skipIf(not torch.cuda.is_available(), reason='requires cuda')
     @unittest.skipIf(
-        'win' in platform.system().lower(),
-        reason='skip on windows due to limited RAM.')
+        ('win' in platform.system().lower())
+        or (not torch.cuda.is_available()),
+        reason='skip on windows and cpu due to limited RAM.')
     def test_infer(self):
         # test low resolution
         unet = deepcopy(self.unet)
