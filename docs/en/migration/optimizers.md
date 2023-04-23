@@ -1,6 +1,6 @@
 # Migration of Optimizers
 
-We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMEditing. Here is migration of Optimizers about MMGeneration.
+We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMagic. Here is migration of Optimizers about MMGeneration.
 
 In version 0.x, MMGeneration uses PyTorch's native Optimizer, which only provides general parameter optimization.
 In version 1.x, we use `OptimizerWrapper` provided by MMEngine.
