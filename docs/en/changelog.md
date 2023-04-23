@@ -15,6 +15,7 @@ In MMagic, we have supports 53+ models in multiple tasks such as fine-tuning for
 **Highlights**
 
 **1. New Models**
+
 We support 11 new models in 4 new tasks.
 
 - Text2Image / Diffusion
@@ -36,6 +37,7 @@ We support 11 new models in 4 new tasks.
 https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4
 
 **2. Magic Diffusion Model**
+
 For the Diffusion Model, we provide the following "magic" :
 
 - Support image generation based on Stable Diffusion and Disco Diffusion
@@ -69,6 +71,7 @@ For the Diffusion Model, we provide the following "magic" :
   https://user-images.githubusercontent.com/49083766/233562228-f39fc675-326c-4ae8-986a-c942059effd0.mp4
 
 **3. Upgraded Framework**
+
 To improve your "spellcasting" efficiency, we have made the following adjustments to the "magic circuit":
 
 - By using MMengine and MMCV of OpenMMLab 2.0 framework, We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different module. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs.

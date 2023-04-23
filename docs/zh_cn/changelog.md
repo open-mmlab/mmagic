@@ -15,6 +15,7 @@
 **主要更新**
 
 **1. 新算法**
+
 我们支持了4个新任务以及11个新算法。
 
 - Text2Image / Diffusion
@@ -36,6 +37,7 @@
 https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4
 
 **2. Magic Diffusion Model**
+
 针对 Diffusion Model，我们提供了以下“魔法”
 
 - 支持基于 Stable Diffusion 与 Disco Diffusion 的图像生成
