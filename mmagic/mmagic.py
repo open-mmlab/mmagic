@@ -9,11 +9,11 @@ import yaml
 from mmengine.registry import init_default_scope
 
 from mmagic.apis import Inferencers
-from mmagic.apis.inferencers.base_mmedit_inferencer import InputsType
+from mmagic.apis.inferencers.base_mmagic_inferencer import InputsType
 
 
-class MMEdit:
-    """MMEdit API for mmagic models inference.
+class MMagic:
+    """MMagic API for mmagic models inference.
 
     Args:
         model_name (str): Name of the editing model.
@@ -29,11 +29,11 @@ class MMEdit:
 
     Examples:
         >>> # inference of a conditional model, biggan for example
-        >>> editor = MMEdit(model_name='biggan')
+        >>> editor = MMagic(model_name='biggan')
         >>> editor.infer(label=1, result_out_dir='./biggan_res.jpg')
 
         >>> # inference of a translation model, pix2pix for example
-        >>> editor = MMEdit(model_name='pix2pix')
+        >>> editor = MMagic(model_name='pix2pix')
         >>> editor.infer(img='./test.jpg', result_out_dir='./pix2pix_res.jpg')
 
         >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
@@ -119,7 +119,7 @@ class MMEdit:
                  seed: int = 2022,
                  **kwargs) -> None:
         init_default_scope('mmagic')
-        MMEdit.init_inference_supported_models_cfg()
+        MMagic.init_inference_supported_models_cfg()
         inferencer_kwargs = {}
         inferencer_kwargs.update(
             self._get_inferencer_kwargs(model_name, model_setting,
@@ -221,50 +221,50 @@ class MMEdit:
 
     @staticmethod
     def init_inference_supported_models_cfg() -> None:
-        if not MMEdit.inference_supported_models_cfg_inited:
+        if not MMagic.inference_supported_models_cfg_inited:
             all_cfgs_dir = osp.join(osp.dirname(__file__), '..', 'configs')
 
-            for model_name in MMEdit.inference_supported_models:
+            for model_name in MMagic.inference_supported_models:
                 meta_file_dir = osp.join(all_cfgs_dir, model_name,
                                          'metafile.yml')
                 with open(meta_file_dir, 'r') as stream:
                     parsed_yaml = yaml.safe_load(stream)
                 task = parsed_yaml['Models'][0]['Results'][0]['Task']
-                MMEdit.inference_supported_models_cfg[model_name] = {}
-                MMEdit.inference_supported_models_cfg[model_name][
+                MMagic.inference_supported_models_cfg[model_name] = {}
+                MMagic.inference_supported_models_cfg[model_name][
                     'task'] = task  # noqa
-                MMEdit.inference_supported_models_cfg[model_name][
+                MMagic.inference_supported_models_cfg[model_name][
                     'settings'] = parsed_yaml['Models']  # noqa
 
-            MMEdit.inference_supported_models_cfg_inited = True
+            MMagic.inference_supported_models_cfg_inited = True
 
     @staticmethod
     def get_inference_supported_models() -> List:
         """static function for getting inference supported modes."""
-        return MMEdit.inference_supported_models
+        return MMagic.inference_supported_models
 
     @staticmethod
     def get_inference_supported_tasks() -> List:
         """static function for getting inference supported tasks."""
-        if not MMEdit.inference_supported_models_cfg_inited:
-            MMEdit.init_inference_supported_models_cfg()
+        if not MMagic.inference_supported_models_cfg_inited:
+            MMagic.init_inference_supported_models_cfg()
 
         supported_task = set()
-        for key in MMEdit.inference_supported_models_cfg.keys():
-            if MMEdit.inference_supported_models_cfg[key]['task'] \
+        for key in MMagic.inference_supported_models_cfg.keys():
+            if MMagic.inference_supported_models_cfg[key]['task'] \
                not in supported_task:
                 supported_task.add(
-                    MMEdit.inference_supported_models_cfg[key]['task'])
+                    MMagic.inference_supported_models_cfg[key]['task'])
         return list(supported_task)
 
     @staticmethod
     def get_task_supported_models(task: str) -> List:
         """static function for getting task supported models."""
-        if not MMEdit.inference_supported_models_cfg_inited:
-            MMEdit.init_inference_supported_models_cfg()
+        if not MMagic.inference_supported_models_cfg_inited:
+            MMagic.init_inference_supported_models_cfg()
 
         supported_models = []
-        for key in MMEdit.inference_supported_models_cfg.keys():
-            if MMEdit.inference_supported_models_cfg[key]['task'] == task:
+        for key in MMagic.inference_supported_models_cfg.keys():
+            if MMagic.inference_supported_models_cfg[key]['task'] == task:
                 supported_models.append(key)
         return supported_models

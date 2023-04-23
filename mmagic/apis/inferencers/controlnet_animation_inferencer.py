@@ -14,7 +14,7 @@ from mmengine.runner import set_random_seed
 
 from mmagic.registry import DIFFUSION_SCHEDULERS, MODELS
 from mmagic.utils import ConfigType
-from .base_mmedit_inferencer import BaseMMEditInferencer
+from .base_mmagic_inferencer import BaseMMagicInferencer
 
 VIDEO_EXTENSIONS = ('.mp4', '.mov', '.avi')
 IMAGE_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG')
@@ -49,7 +49,7 @@ def load_image(image: Union[str, PIL.Image.Image]) -> PIL.Image.Image:
     return image
 
 
-class ControlnetAnimationInferencer(BaseMMEditInferencer):
+class ControlnetAnimationInferencer(BaseMMagicInferencer):
     """Base inferencer.
 
     Args:

@@ -12,12 +12,12 @@ from mmengine.dataset import Compose
 from mmengine.logging import MMLogger
 
 from mmagic.utils import tensor2img
-from .base_mmedit_inferencer import (BaseMMEditInferencer, InputsType,
+from .base_mmagic_inferencer import (BaseMMagicInferencer, InputsType,
                                      PredType, ResType)
 from .inference_functions import VIDEO_EXTENSIONS, pad_sequence
 
 
-class VideoRestorationInferencer(BaseMMEditInferencer):
+class VideoRestorationInferencer(BaseMMagicInferencer):
     """inferencer that predicts with video restoration models."""
 
     func_kwargs = dict(

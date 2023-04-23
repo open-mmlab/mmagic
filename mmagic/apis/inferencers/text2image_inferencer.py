@@ -6,10 +6,10 @@ import numpy as np
 from mmengine import mkdir_or_exist
 from torchvision.utils import save_image
 
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 
 
-class Text2ImageInferencer(BaseMMEditInferencer):
+class Text2ImageInferencer(BaseMMagicInferencer):
     """inferencer that predicts with text2image models."""
 
     func_kwargs = dict(

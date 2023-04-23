@@ -11,10 +11,10 @@ from mmengine.dataset.utils import default_collate as collate
 from torch.nn.parallel import scatter
 
 from mmagic.structures import DataSample
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 
 
-class MattingInferencer(BaseMMEditInferencer):
+class MattingInferencer(BaseMMagicInferencer):
     """inferencer that predicts with matting models."""
 
     func_kwargs = dict(

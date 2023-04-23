@@ -22,7 +22,7 @@ ImgType = Union[np.ndarray, Sequence[np.ndarray]]
 ResType = Union[Dict, List[Dict], BaseDataElement, List[BaseDataElement]]
 
 
-class BaseMMEditInferencer(BaseInferencer):
+class BaseMMagicInferencer(BaseInferencer):
     """Base inferencer.
 
     Args:

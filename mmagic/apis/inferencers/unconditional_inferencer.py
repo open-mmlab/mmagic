@@ -8,10 +8,10 @@ from mmengine import mkdir_or_exist
 from torchvision import utils
 
 from mmagic.structures import DataSample
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 
 
-class UnconditionalInferencer(BaseMMEditInferencer):
+class UnconditionalInferencer(BaseMMagicInferencer):
     """inferencer that predicts with unconditional models."""
 
     func_kwargs = dict(
