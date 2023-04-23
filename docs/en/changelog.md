@@ -88,46 +88,6 @@ To improve your "spellcasting" efficiency, we have made the following adjustment
 - Enable projects. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/projects)
 - Improve converters scripts and documents for datasets. [Click to view.](https://github.com/open-mmlab/mmagic/tree/main/tools/dataset_converters)
 
-**Contributors**
-A total of 17 developers contributed to this release.
-Thanks
-@LeoXing1996, @zengyh1900, @plyfager, @Z-Fran, @VongolaWu, @liuwenran,
-
-NK-CS-ZZL
-Yshuo-Li
-wangruohui
-
-- @jayagami
-- @yangrisheng
-- @VongolaWu
-- @lvhan028
-- @gaoyang07
-- @ChangjianZhao
-- @zxczrx123
-- @jackghosts
-- @liuwenran
-- @CCODING04
-- @RoseZhao929
-- @shaocongliu
-- @LigZhong
-- @liangzelong
-- @xiaomile
-- @ldr426
-- @austin273
-- @whu-lee
-- @willaty
-- @curiosity654
-- @Zdafeng
-- @Taited
-- @dienachtderwelt
-- @i-aki-y
-- @triple-Mu
-- @Li-Qingyun
-- @Luo-Yihang
-- @ydengbi
-- @HAOCHENYE
-- @SheffieldCao
-
 ## v1.0.0rc7 (07/04/2023)
 
 **Highlights**
