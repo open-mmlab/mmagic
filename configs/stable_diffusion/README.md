@@ -137,13 +137,13 @@ for ratio in ratios:
         image = sd_model.infer(prompt, height=size, width=size, num_images_per_prompt=samples_perprompt)['samples']
 
     print(f"Generating 100 images with {samples_perprompt} images per prompt, merging ratio {ratio}, time used : {time.time() - t}s")
-```
 
-| `ratio`  | size | num_images_per_prompt |           time (s)           |
-| :------: | :--: | :-------------------: | :--------------------------: |
-| w/o tome | 512  |           5           |            578.86            |
-|   0.5    | 512  |           5           | 436.45 ($\downarrow$ 24.6%) |
-|   0.75   | 512  |           5           | 389.77 ($\downarrow$ 32.7%) |
+# # Results
+# | `ratio`  | size | num_images_per_prompt |       time (s)   |
+# | w/o tome | 512  |           5           |       578.86     |
+# |   0.5    | 512  |           5           |  436.45 (↓24.6%) |
+# |   0.75   | 512  |           5           |  389.77 (↓32.7%) |
+```
 
 The detailed settings for **tomesd_cfg** are as follows:
 
