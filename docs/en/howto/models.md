@@ -561,8 +561,8 @@ After the implementation of the network **Module**, we need to define our **Mode
 Your **Model** should inherit from [`BaseModel`](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/base_model/base_model.py#L16) provided by MMEngine and implement three functions, `train_step`, `val_step` and `test_step`.
 
 - `train_step`: This function is responsible to update the parameters of the network and called by MMEngine's Loop ([`IterBasedTrainLoop`](https://github.com/open-mmlab/mmengine/blob/main/mmengine/runner/loops.py#L183) or [`EpochBasedTrainLoop`](https://github.com/open-mmlab/mmengine/blob/main/mmengine/runner/loops.py#L18)). `train_step` take data batch and [`OptimWrapper`](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/optim_wrapper.md) as input and return a dict of log.
-- `val_step`: This function is responsible for getting output for validation during the training process. and is called by [`GenValLoop`](https://github.com/open-mmlab/mmagic/blob/main/mmagic/engine/runner/loops.py#L12).
-- `test_step`: This function is responsible for getting output in test process and is called by [`GenTestLoop`](https://github.com/open-mmlab/mmagic/blob/main/mmagic/engine/runner/loops.py#L95).
+- `val_step`: This function is responsible for getting output for validation during the training process. and is called by [`MultiValLoop`](https://github.com/open-mmlab/mmagic/blob/main/mmagic/engine/runner/multi_loops.py#L19).
+- `test_step`: This function is responsible for getting output in test process and is called by [`MultiTestLoop`](https://github.com/open-mmlab/mmagic/blob/main/mmagic/engine/runner/multi_loops.py#L274).
 
 > Note that, in `train_step`, `val_step` and `test_step`, `DataPreprocessor` is called to preprocess the input data batch before feed them to the neural network. To know more about `DataPreprocessor` please refer to this [file](https://github.com/open-mmlab/mmagic/blob/main/mmagic/models/data_preprocessors/gen_preprocessor.py) and this [tutorial](https://github.com/open-mmlab/mmengine/blob/main/docs/zh_cn/tutorials/model.md#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%99%A8datapreprocessor).
 
