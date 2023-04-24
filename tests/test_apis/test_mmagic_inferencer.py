@@ -38,7 +38,7 @@ def test_edit():
     print(task_supported_models)
 
     cfg = osp.join(
-        osp.dirname(__file__), '..', 'configs', 'biggan',
+        osp.dirname(__file__), '..', '..', 'configs', 'biggan',
         'biggan_2xb25-500kiters_cifar10-32x32.py')
 
     mmedit_instance = MMagicInferencer(
