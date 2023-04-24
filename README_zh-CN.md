@@ -190,6 +190,7 @@ python -c "import mmagic; print(mmagic.__version__)"
 请参考[快速运行](docs/zh_cn/get_started/quick_run.md)和[推理演示](docs/zh_cn/user_guides/inference.md)获取 MMagic 的基本用法。
 
 **从源码安装 MMagic**
+
 使用以下命令从源码安装 MMagic，你可以选择不使用已发布的稳定版本，而在最新开发的版本上进行实验。
 
 ```
