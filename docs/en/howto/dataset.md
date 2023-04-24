@@ -312,7 +312,7 @@ pipeline = [
     dict(type='RandomCropLongEdge', keys=['img']),
     dict(type='Resize', scale=(128, 128), keys=['img'], backend='pillow'),
     dict(type='Flip', keys=['img'], flip_ratio=0.5, direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 dataset=dict(
@@ -326,7 +326,7 @@ dataset=dict(
 Config example for CIFAR10:
 
 ```python
-pipeline = [dict(type='PackEditInputs')]
+pipeline = [dict(type='PackInputs')]
 
 dataset = dict(
     type='CIFAR10',
