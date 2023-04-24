@@ -146,7 +146,7 @@ class MMagicInferencer:
             config_dir = cfgs['settings'][setting_to_use]['Config']
             config_dir = config_dir[config_dir.find('configs'):]
             kwargs['config'] = os.path.join(
-                osp.dirname(__file__), '..', config_dir)
+                osp.dirname(__file__), '..', '..', config_dir)
             if 'Weights' in cfgs['settings'][setting_to_use].keys():
                 kwargs['ckpt'] = cfgs['settings'][setting_to_use]['Weights']
 
@@ -223,7 +223,8 @@ class MMagicInferencer:
     @staticmethod
     def init_inference_supported_models_cfg() -> None:
         if not MMagicInferencer.inference_supported_models_cfg_inited:
-            all_cfgs_dir = osp.join(osp.dirname(__file__), '..', 'configs')
+            all_cfgs_dir = osp.join(
+                osp.dirname(__file__), '..', '..', 'configs')
 
             for model_name in MMagicInferencer.inference_supported_models:
                 meta_file_dir = osp.join(all_cfgs_dir, model_name,
