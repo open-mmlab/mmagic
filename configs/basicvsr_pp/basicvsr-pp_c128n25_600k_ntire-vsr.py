@@ -25,14 +25,14 @@ test_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='MirrorSequence', keys=['img', 'gt']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='MirrorSequence', keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 test_dataloader = dict(

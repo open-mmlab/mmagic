@@ -8,7 +8,7 @@ dataset_type = 'BasicImageDataset'
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='Flip', keys=['img'], direction='horizontal'),
-    dict(type='PackEditInputs', keys=['img'], meta_keys=['img_path'])
+    dict(type='PackInputs', keys=['img'], meta_keys=['img_path'])
 ]
 
 # `batch_size` and `data_root` need to be set.
@@ -33,7 +33,7 @@ dataset_type = 'GrowScaleImgDataset'
 pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='Flip', keys=['img'], direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # `samples_per_gpu` and `imgs_root` need to be set.

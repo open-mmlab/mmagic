@@ -6,7 +6,7 @@ import pytest
 import torch
 from mmengine.config import ConfigDict
 
-from mmagic.datasets.transforms import PackEditInputs
+from mmagic.datasets.transforms import PackInputs
 from mmagic.models.editors import DIM
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
@@ -89,7 +89,7 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
                                         size=ori_shape).astype(np.float32),
         'ori_merged_shape': img_shape,
     }
-    packinputs = PackEditInputs()
+    packinputs = PackInputs()
 
     data_samples = []
     for _ in range(batch_size):

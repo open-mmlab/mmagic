@@ -27,7 +27,7 @@ Some datasets need to be preprocessed before training or testing. We support man
 For example, we recommend cropping the DIV2K images to sub-images. We provide a script to prepare cropped DIV2K dataset. You can run the following command:
 
 ```shell
-python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
+python tools/dataset_converters/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
 
 ## The overview of the datasets in MMagic

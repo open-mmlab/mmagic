@@ -1,6 +1,4 @@
-# 概述（待更新）
-
-＃ 概述
+# 概述
 
 欢迎来到 MMagic！ 在本节中，您将了解
 
@@ -12,7 +10,7 @@
 
 ## MMagic 是什么？
 
-MMagic 是一个供专业人工智能研究人员和机器学习工程师去处理、编辑和合成图像与视频的开源工具箱。
+MMagic (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation) 是一个供专业人工智能研究人员和机器学习工程师去处理、编辑和生成图像与视频的开源 AIGC 工具箱。
 
 MMagic 允许研究人员和工程师使用最先进的预训练模型，并且可以轻松训练和开发新的定制模型。
 
@@ -26,65 +24,41 @@ MMagic 支持各种基础生成模型，包括：
 
 MMagic 支持各种应用程序，包括：
 
+- 图文生成
+- 图像翻译
+- 3D 生成
 - 图像超分辨率
 - 视频超分辨率
-- 视频帧插值
-- 图像修复
+- 视频插帧
+- 图像补全
 - 图像抠图
-- 图像到图像的翻译
+- 图像修复
+- 图像上色
+- 图像生成
 - 还有许多其他应用程序即将推出！
 
 <div align=center>
-   <img src="https://user-images.githubusercontent.com/12756472/158984079-c4754015-c1f6-48c5-ac46-62e79448c372.jpg"/>
+    <video width="100%" controls>
+        <source src="https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4" type="video/mp4">
+        <object data="https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4" width="100%">
+        </object>
+    </video>
 </div>
 </br>
-
-<div align=center>
-     <video width="100%" controls>
-         <source src="https://user-images.githubusercontent.com/12756472/175944645-cabe8c2b-9f25-440b-91cc-cdac4e752c5a.mp4" type="video/mp4">
-         <object data="https://user-images.githubusercontent.com/12756472/175944645-cabe8c2b-9f25-440b-91cc-cdac4e752c5a.mp4" width="100%">
-         </object>
-     </video>
-</div>
-</br>
-
-<div  align=center>
-<video width="100%" 控件>
-     <source src="https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4" type="video/mp4">
-     <object src="https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4" width="100%">
-     </object>
-</video>
-</div>
-
-<div align="center">
-   <b>StyleGAN3 Images</b>
-   <br/>
-   <img src="https://user-images.githubusercontent.com/22982797/150450502-c182834f-796f-4397-bd38-df1efe4a8a47.png" width="800"/>
-</div>
-
-<div align="center">
-   <b>BigGAN Images</b>
-   <br/>
-   <img src="https://user-images.githubusercontent.com/22982797/127615534-6278ce1b-5cff-4189-83c6-9ecc8de08dfc.png" width="800"/>
-</div>
 
 ## 为什么要使用 MMagic？
 
-- **最先进的性能**
+- **SOTA 算法**
 
-  MMagic 提供最先进的生成模型来处理、编辑和合成图像和视频。
+  MMagic 提供了处理、编辑、生成图像和视频的 SOTA 算法。
 
-- **强大而流行的应用**
+- **强有力且流行的应用**
 
-  MMagic 支持流行的*修复*、*抠图*、*超分辨率* 和*生成* 等应用。 具体来说，MMagic 支持 GAN 插值、GAN 投影、GAN 编辑和许多其他流行的 GAN 的应用。 是时候玩转你的 GAN 了！
+  MMagic 支持了流行的图像修复、图文生成、3D生成、图像修补、抠图、超分辨率和生成等任务的应用。特别是 MMagic 支持了 Stable Diffusion 的微调和许多激动人心的 diffusion 应用，例如 ControlNet 动画生成。MMagic 也支持了 GANs 的插值，投影，编辑和其他流行的应用。请立即开始你的 AIGC 探索之旅！
 
-- **全新模块化设计，灵活组合：**
+- **高效的框架**
 
-  我们将 MMagic 分解为不同的模块，通过组合不同的模块可以轻松构建定制的模型。 具体来说，提出了一种新的复杂损失模块设计，用于自定义模块之间的链接，可以实现不同模块之间的灵活组合。([损失函数](../howto/losses.md))
-
-- **高效的分布式训练：**
-
-  在[MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py)的支持下，可以轻松实现动态架构的分布式训练。
+  通过 OpenMMLab 2.0 框架的 MMEngine 和 MMCV， MMagic 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。我们可以像搭建“乐高”一样定义训练流程，提供丰富的组件和策略。在 MMagic 中，你可以使用不同的 APIs 完全控制训练流程。得益于 [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), 动态模型结构的分布式训练可以轻松实现。
 
 ## 新手入门
 

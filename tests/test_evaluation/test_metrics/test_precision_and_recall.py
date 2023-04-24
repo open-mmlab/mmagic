@@ -7,7 +7,7 @@ import torch.nn as nn
 from mmengine.runner import Runner
 
 from mmagic.datasets import BasicImageDataset
-from mmagic.datasets.transforms import PackEditInputs
+from mmagic.datasets.transforms import PackInputs
 from mmagic.evaluation import PrecisionAndRecall
 from mmagic.models import LSGAN, DataPreprocessor
 from mmagic.models.editors.dcgan import DCGANGenerator
@@ -48,7 +48,7 @@ class TestPR:
         pipeline = [
             dict(type='LoadImageFromFile', key='gt'),
             dict(type='Resize', keys='gt', scale=(128, 128)),
-            PackEditInputs()
+            PackInputs()
         ]
         dataset = BasicImageDataset(
             data_root='tests/data/image/img_root',

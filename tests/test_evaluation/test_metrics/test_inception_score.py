@@ -157,7 +157,7 @@ class TestTransIS:
                         interpolation='bicubic'),
                     dict(type='FixedCrop', keys=['img'], crop_size=(256, 256))
                 ]),
-            dict(type='PackEditInputs', keys=['img_edge', 'img_shoe', 'pair'])
+            dict(type='PackInputs', keys=['img_edge', 'img_shoe', 'pair'])
         ]
         dataset = PairedImageDataset(
             data_root='tests/data/paired', pipeline=pipeline, test_mode=True)

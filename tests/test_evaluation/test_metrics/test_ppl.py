@@ -7,7 +7,7 @@ import torch
 from mmengine.runner import Runner
 
 from mmagic.datasets import BasicImageDataset
-from mmagic.datasets.transforms import PackEditInputs
+from mmagic.datasets.transforms import PackInputs
 from mmagic.evaluation import PerceptualPathLength
 from mmagic.models import LSGAN, DataPreprocessor
 from mmagic.models.editors.stylegan2 import StyleGAN2Generator
@@ -44,7 +44,7 @@ class TestPPL:
         pipeline = [
             dict(type='LoadImageFromFile', key='img'),
             dict(type='Resize', scale=(64, 64)),
-            PackEditInputs()
+            PackInputs()
         ]
         dataset = BasicImageDataset(
             data_root='tests/data/image/img_root',

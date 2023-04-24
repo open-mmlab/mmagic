@@ -97,7 +97,7 @@ train_pipeline = [
         saturation=0.5,
         hue=0.5),
     dict(type='GetMaskedImage'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 test_pipeline = [
@@ -118,7 +118,7 @@ test_pipeline = [
         crop_size=(512, 512),
     ),
     dict(type='GetMaskedImage'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 train_dataloader = dict(

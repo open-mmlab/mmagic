@@ -6,7 +6,7 @@ Languages:
 |
 `简体中文 <https://mmagic.readthedocs.io/zh_CN/latest/>`_
 
-MMagic is an open-source toolbox for image and video processing, editing and synthesis.
+MMagic (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation) is an open-source AIGC toolbox for professional AI researchers and machine learning engineers to explore image and video processing, editing and generation.
 
 MMagic supports various foundamental generative models, including:
 
@@ -16,16 +16,20 @@ MMagic supports various foundamental generative models, including:
 * Diffusion Models
 * And many other generative models are coming soon!
 
-
 MMagic supports various applications, including:
 
-* Image super-resolution
-* Video super-resolution
-* Video frame interpolation
-* Image inpainting
-* Image matting
-* Image-to-image translation
-* And many other applications are coming soon!
+- Text-to-Image
+- Image-to-image translation
+- 3D-aware generation
+- Image super-resolution
+- Video super-resolution
+- Video frame interpolation
+- Image inpainting
+- Image matting
+- Image restoration
+- Image colorization
+- Image generation
+- And many other applications are coming soon!
 
 MMagic is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
 Codes are available on `GitHub <https://github.com/open-mmlab/mmagic>`_.

@@ -139,7 +139,7 @@ train_pipeline = [  # Training data processing pipeline
         keys=['lq', 'gt'],  # Images to be transposed
         transpose_ratio=0.5  # Transpose ratio
         ),
-    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
+    dict(type='PackInputs')  # The config of collecting data from the current pipeline
 ]
 test_pipeline = [  # Test pipeline
     dict(type='LoadImageFromFile',  # Load images from files
@@ -152,7 +152,7 @@ test_pipeline = [  # Test pipeline
         color_type='color',  # Color type of image
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
-    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
+    dict(type='PackInputs')  # The config of collecting data from the current pipeline
 ]
 ```
 
@@ -298,7 +298,7 @@ In addition to neural network components such as generator, discriminator etc, i
 ```python
 model = dict(
     type='StyleGAN2',  # The name of the model
-    data_preprocessor=dict(type='GANDataPreprocessor'),  # The config of data preprocessor, usually includs image normalization and padding
+    data_preprocessor=dict(type='DataPreprocessor'),  # The config of data preprocessor, usually includs image normalization and padding
     generator=dict(  # The config for generator
         type='StyleGANv2Generator',  # The name of the generator
         out_size=1024,  # The output resolution of the generator
@@ -331,11 +331,11 @@ data_root = './data/ffhq/'  # Root path of data
 train_pipeline = [  # Training data process pipeline
     dict(type='LoadImageFromFile', key='img'),  # First pipeline to load images from file path
     dict(type='Flip', keys=['img'], direction='horizontal'),  # Argumentation pipeline that flip the images
-    dict(type='PackEditInputs', keys=['img'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
+    dict(type='PackInputs', keys=['img'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
 ]
 val_pipeline = [
     dict(type='LoadImageFromFile', key='img'),  # First pipeline to load images from file path
-    dict(type='PackEditInputs', keys=['img'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
+    dict(type='PackInputs', keys=['img'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
 ]
 train_dataloader = dict(  # The config of train dataloader
     batch_size=4,  # Batch size of a single GPU
@@ -392,8 +392,8 @@ train_cfg = dict(  # The config for training
     val_begin=1,  # Which iteration to start the validation
     val_interval=10000,  # Validation intervals
     max_iters=800002)  # Maximum training iterations
-val_cfg = dict(type='GenValLoop')  # The validation loop type
-test_cfg = dict(type='GenTestLoop')  # The testing loop type
+val_cfg = dict(type='MultiValLoop')  # The validation loop type
+test_cfg = dict(type='MultiTestLoop')  # The testing loop type
 ```
 
 ### Optimization config
@@ -403,7 +403,7 @@ The optimizer wrapper not only provides the functions of the optimizer, but also
 
 ```python
 optim_wrapper = dict(
-    constructor='GenOptimWrapperConstructor',
+    constructor='MultiOptimWrapperConstructor',
     generator=dict(
         optimizer=dict(type='Adam', lr=0.0016, betas=(0, 0.9919919678228657))),
     discriminator=dict(
@@ -579,7 +579,7 @@ train_pipeline = [
         std=[127.5] * 3,  # Std value used in normalization
         to_rgb=False),  # Whether to transfer image channels to rgb
     dict(type='GetMaskedImage'), # The config of getting masked image pipeline
-    dict(type='PackEditInputs'), # The config of collecting data from the current pipeline
+    dict(type='PackInputs'), # The config of collecting data from the current pipeline
 ]
 
 test_pipeline = train_pipeline  # Constructing testing/validation pipeline
@@ -675,7 +675,7 @@ To help the users have a basic idea of a complete config, we make a brief commen
 model = dict(
     type='DIM',  # The name of model (we call mattor).
     data_preprocessor=dict(  # The Config to build data preprocessor
-        type='MattorPreprocessor',
+        type='DataPreprocessor',
         mean=[123.675, 116.28, 103.53],
         std=[58.395, 57.12, 57.375],
         bgr_to_rgb=True,
@@ -740,7 +740,7 @@ train_pipeline = [  # Training data processing pipeline.
     dict(
         type='GenerateTrimap',  # Generate trimap from alpha matte.
         kernel_size=(1, 30)),  # Kernel size range of the erode/dilate kernel.
-    dict(type='PackEditInputs'),  # The config of collecting data from the current pipeline
+    dict(type='PackInputs'),  # The config of collecting data from the current pipeline
 ]
 test_pipeline = [
     dict(
@@ -756,7 +756,7 @@ test_pipeline = [
     dict(
         type='LoadImageFromFile',  # Load image from file
         key='merged'),  # Key of image to load. The pipeline will read merged from path `merged_path`.
-    dict(type='PackEditInputs'),  # The config of collecting data from the current pipeline
+    dict(type='PackInputs'),  # The config of collecting data from the current pipeline
 ]
 
 train_dataloader = dict(
@@ -897,8 +897,7 @@ train_pipeline = [  # Training data processing pipeline
         keys=['lq', 'gt'],  # Images to be transposed
         transpose_ratio=0.5  # Transpose ratio
         ),
-    dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
-    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
+    dict(type='PackInputs')  # The config of collecting data from the current pipeline
 ]
 test_pipeline = [  # Test pipeline
     dict(type='LoadImageFromFile',  # Load images from files
@@ -912,7 +911,7 @@ test_pipeline = [  # Test pipeline
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
     dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
-    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
+    dict(type='PackInputs')  # The config of collecting data from the current pipeline
 ]
 
 # dataset settings

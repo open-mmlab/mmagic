@@ -115,7 +115,7 @@ train_pipeline = [
         keys=['img', 'gt'],
         flip_ratio=0.5,
         direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 test_pipeline = [
@@ -129,7 +129,7 @@ test_pipeline = [
         key='gt',
         color_type='color',
         channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
@@ -144,7 +144,7 @@ demo_pipeline = [
             target_size=(128, 128), resize_opt=['area'], resize_prob=[1]),
         keys=['img'],
     ),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings

@@ -28,7 +28,7 @@
 您可以遵循每个数据集的教程来运行脚本。例如，我们建议将DIV2K图像裁剪为子图像。我们提供了一个脚本来准备裁剪的DIV2K数据集。可以运行以下命令：
 
 ```shell
-python tools/dataset_converters/super-resolution/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
+python tools/dataset_converters/div2k/preprocess_div2k_dataset.py --data-root ./data/DIV2K
 ```
 
 ## MMagic中的数据集概述

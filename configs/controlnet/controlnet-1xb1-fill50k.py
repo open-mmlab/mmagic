@@ -45,7 +45,7 @@ pipeline = [
     dict(type='LoadImageFromFile', key='source', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='target', channel_order='rgb'),
     dict(
-        type='PackEditInputs',
+        type='PackInputs',
         keys=['source', 'target'],
         data_keys='prompt',
         meta_keys=[

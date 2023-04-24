@@ -19,7 +19,7 @@ model = dict(
 # DATA
 pipeline = [
     dict(
-        type='PackEditInputs',
+        type='PackInputs',
         keys=[f'real_scale{i}' for i in range(num_scales)] + ['input_sample'])
 ]
 data_root = './data/singan/balloons.png'

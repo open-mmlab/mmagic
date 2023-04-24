@@ -104,7 +104,7 @@ optim_wrapper = dict(
 ```python
 # code
 import torch.nn as nn
-from mmedit.registry import MODULES
+from mmagic.registry import MODULES
 from mmengine.model import BaseModel
 
 
@@ -141,7 +141,7 @@ class DemoModel(BaseModel):
 </thead>
 </table>
 
-To avoid user modifications to the configuration file, MMEditing provides the `--amp` option in `train.py`, which allows the user to start AMP training without modifying the configuration file.
+To avoid user modifications to the configuration file, MMagic provides the `--amp` option in `train.py`, which allows the user to start AMP training without modifying the configuration file.
 Users can start AMP training by following command:
 
 ```bash

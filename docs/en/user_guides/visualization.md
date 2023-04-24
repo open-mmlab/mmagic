@@ -206,10 +206,10 @@ vis_kwargs_list = [
 
 `vis_kwargs_list` takes dict or list of dict as input. Each of dict must contain a `type` field indicating the **type of sampler** used to generate the model input, and each of the dict must also contain the keyword fields necessary for the sampler (e.g. `ArgumentSampler` requires that the argument dictionary contain `forward_kwargs`).
 
-> To be noted that, this content is checked by the corresponding sampler and is not restricted by `GenVisHook`.
+> To be noted that, this content is checked by the corresponding sampler and is not restricted by `BasicVisualizationHook`.
 
 In addition, the other fields are generic fields (e.g. `n_samples`, `n_row`, `name`, `fixed_input`, etc.).
-If not passed in, the default values from the GenVisHook initialization will be used.
+If not passed in, the default values from the BasicVisualizationHook initialization will be used.
 
 For the convenience of users, MMagic has pre-defined visualization parameters for **GAN**, **Translation models**, **SinGAN** and **Diffusion models**, and users can directly use the predefined visualization methods by using the following configuration:
 

@@ -102,7 +102,7 @@
 - 支持本地可视化以及使用 tensorboard 或 wandb的可视化.
 - 支持 33+ 算法 Pytorch 2.0 加速.
 
-**MMagic** 已经支持了[MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration)和[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
+**MMagic** 已经支持了[MMEditing](https://github.com/open-mmlab/mmediting)和[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
 
 如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmagic/tree/master) MMEditing 0.x 迁移到新版本 MMagic 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
 
@@ -190,6 +190,7 @@ python -c "import mmagic; print(mmagic.__version__)"
 请参考[快速运行](docs/zh_cn/get_started/quick_run.md)和[推理演示](docs/zh_cn/user_guides/inference.md)获取 MMagic 的基本用法。
 
 **从源码安装 MMagic**
+
 使用以下命令从源码安装 MMagic，你可以选择不使用已发布的稳定版本，而在最新开发的版本上进行实验。
 
 ```
@@ -391,7 +392,7 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
 
 ```bibtex
 @misc{mmagic2023,
-    title = {{MMagic}: {OpenMMLab} Image and Video Editing Toolbox},
+    title = {{MMagic}: {OpenMMLab} Multimodal Advanced, Generative, and Intelligent Creation Toolbox},
     author = {{MMagic Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmagic}},
     year = {2023}

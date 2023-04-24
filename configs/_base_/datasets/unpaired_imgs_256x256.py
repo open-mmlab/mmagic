@@ -31,7 +31,7 @@ train_pipeline = [
     #         f'img_{domain_b}': f'img_{domain_b}'
     #     }),
     # dict(
-    #     type='PackEditInputs',
+    #     type='PackInputs',
     #     keys=[f'img_{domain_a}', f'img_{domain_b}'],
     #     data_keys=[f'img_{domain_a}', f'img_{domain_b}'])
 ]
@@ -59,7 +59,7 @@ test_pipeline = [
     #         f'img_{domain_b}': f'img_{domain_b}'
     #     }),
     # dict(
-    #     type='PackEditInputs',
+    #     type='PackInputs',
     #     keys=[f'img_{domain_a}', f'img_{domain_b}'],
     #     data_keys=[f'img_{domain_a}', f'img_{domain_b}'])
 ]

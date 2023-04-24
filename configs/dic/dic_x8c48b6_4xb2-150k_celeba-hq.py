@@ -51,7 +51,7 @@ train_pipeline = [
         ori_size=128,
         target_size=32,
         sigma=1.0),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 valid_pipeline = [
     dict(
@@ -74,7 +74,7 @@ valid_pipeline = [
         output_keys=['img'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 test_pipeline = valid_pipeline
 
@@ -99,7 +99,7 @@ inference_pipeline = [
         output_keys=['img'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings

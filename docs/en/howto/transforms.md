@@ -45,8 +45,8 @@ The input and output types of transformations are both dict.
 dict_keys(['pair_path', 'pair', 'pair_ori_shape', 'img_mask', 'img_photo', 'img_mask_path', 'img_photo_path', 'img_mask_ori_shape', 'img_photo_ori_shape'])
 ```
 
-Generally, the last step of the transforms pipeline must be `PackEditInputs`.
-`PackEditInputs` will pack the processed data into a dict containing two fields: `inputs` and `data_samples`.
+Generally, the last step of the transforms pipeline must be `PackInputs`.
+`PackInputs` will pack the processed data into a dict containing two fields: `inputs` and `data_samples`.
 `inputs` is the variable you want to use as the model's input, which can be the type of `torch.Tensor`, dict of `torch.Tensor`, or any type you want.
 `data_samples` is a list of `DataSample`. Each `DataSample` contains groundtruth and necessary information for corresponding input.
 
@@ -69,21 +69,21 @@ train_pipeline = [
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type='MirrorSequence', keys=['img', 'gt']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='MirrorSequence', keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 ```
 
@@ -121,7 +121,7 @@ pipeline = [
         keys=[f'img_{domain_a}', f'img_{domain_b}'],
         direction='horizontal'),
     dict(
-        type='PackEditInputs',
+        type='PackInputs',
         keys=[f'img_{domain_a}', f'img_{domain_b}', 'pair'])
 ```
 
@@ -530,7 +530,7 @@ pipeline = [
       </tr>
       <tr>
          <td>
-            <code>PackEditInputs</code>
+            <code>PackInputs</code>
          </td>
          <td>
             - add: inputs, data_sample

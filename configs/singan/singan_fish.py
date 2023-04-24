@@ -43,7 +43,7 @@ data_root = './data/singan/fish-crop.jpg'
 
 pipeline = [
     dict(
-        type='PackEditInputs',
+        type='PackInputs',
         keys=[f'real_scale{i}' for i in range(num_scales)] + ['input_sample'])
 ]
 dataset = dict(

@@ -145,8 +145,8 @@ train_cfg = dict(
     max_iters=1000000,  # max training iteration
     val_begin=1,
     val_interval=10000)  # evaluation interval
-val_cfg = dict(type='EditValLoop')  # specific loop in validation
-test_cfg = dict(type='EditTestLoop')  # specific loop in testing
+val_cfg = dict(type='MultiValLoop')  # specific loop in validation
+test_cfg = dict(type='MultiTestLoop')  # specific loop in testing
 ```
 
 </td>

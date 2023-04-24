@@ -234,7 +234,8 @@ if __name__ == '__main__':
     setup(
         name='mmagic',
         version=get_version(),
-        description='OpenMMLab Image and Video Editing Toolbox and Benchmark',
+        description='OpenMMLab Multimodal Advanced, Generative, and '
+        'Intelligent Creation Toolbox',
         long_description=readme(),
         long_description_content_type='text/markdown',
         maintainer='MMagic Contributors',
