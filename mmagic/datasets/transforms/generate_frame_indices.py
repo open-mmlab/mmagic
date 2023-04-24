@@ -11,7 +11,7 @@ from mmagic.registry import TRANSFORMS
 @TRANSFORMS.register_module()
 class GenerateFrameIndices(BaseTransform):
     """Generate frame index for REDS datasets. It also performs temporal
-    augmention with random interval.
+    augmentation with random interval.
 
     Required Keys:
 
@@ -207,7 +207,7 @@ class GenerateFrameIndiceswithPadding(BaseTransform):
 @TRANSFORMS.register_module()
 class GenerateSegmentIndices(BaseTransform):
     """Generate frame indices for a segment. It also performs temporal
-    augmention with random interval.
+    augmentation with random interval.
 
     Required Keys:
 
