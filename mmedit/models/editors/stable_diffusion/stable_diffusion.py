@@ -12,7 +12,7 @@ from PIL import Image
 from tqdm.auto import tqdm
 from transformers import CLIPTokenizer
 
-from mmedit.models.utils import build_module, set_xformers
+from mmedit.models.utils import build_module, set_tomesd, set_xformers
 from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
 
 logger = MMLogger.get_current_instance()
@@ -56,6 +56,7 @@ class StableDiffusion(BaseModel):
                  scheduler: ModelType,
                  test_scheduler: Optional[ModelType] = None,
                  enable_xformers: bool = True,
+                 tomesd_cfg: Optional[dict] = None,
                  data_preprocessor: Optional[ModelType] = dict(
                      type='EditDataPreprocessor'),
                  init_cfg: Optional[dict] = None):
@@ -86,6 +87,9 @@ class StableDiffusion(BaseModel):
         self.enable_xformers = enable_xformers
         self.set_xformers()
 
+        self.tomesd_cfg = tomesd_cfg
+        self.set_tomesd()
+
     def set_xformers(self) -> nn.Module:
         """Set xformers for the model.
 
@@ -94,6 +98,15 @@ class StableDiffusion(BaseModel):
         """
         if self.enable_xformers:
             set_xformers(self)
+
+    def set_tomesd(self) -> nn.Module:
+        """Set ToMe for the stable diffusion model.
+
+        Returns:
+            nn.Module: The model with ToMe.
+        """
+        if self.tomesd_cfg is not None:
+            set_tomesd(self, **self.tomesd_cfg)
 
     @property
     def device(self):

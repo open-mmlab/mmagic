@@ -60,4 +60,5 @@ model = dict(
     tokenizer='runwayml/stable-diffusion-v1-5',
     scheduler=diffusion_scheduler,
     test_scheduler=diffusion_scheduler,
+    tomesd_cfg=dict(ratio=0.5),
     init_cfg=dict())
