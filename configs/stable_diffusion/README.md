@@ -33,7 +33,7 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 <div align="center">
   <img src="https://user-images.githubusercontent.com/12782558/210952108-df82e5ad-6eb6-4948-8d22-3802299d1131.png" width="400"/>
   <br/>
-  <b>A panda is having dinner in KFC</b>
+  <b>A panda is having dinner at KFC</b>
 </div></td>
   </tr>
 </thead>
