@@ -162,7 +162,8 @@ class GenVisBackend(BaseVisBackend):
                 frames_list.append(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
             if not (image.shape[0] % n_skip == 0):
                 frames_list.append(image[-1])
-            imageio.mimsave(save_file_path, frames_list, 'GIF', duration=1000 / fps)
+            imageio.mimsave(
+                save_file_path, frames_list, 'GIF', duration=1000 / fps)
         else:
             raise ValueError(
                 'Only support visualize image with dimension of 3 or 4. But '
