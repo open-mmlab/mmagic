@@ -111,8 +111,10 @@ class EditDataPreprocessor(ImgDataPreprocessor):
 
         self.pad_mode = pad_mode
         self.pad_size_dict = dict()
-        self.data_keys = data_keys if isinstance(data_keys,
-                                                 list) else [data_keys]
+        if data_keys is not None and not isinstance(data_keys, list):
+            self.data_keys = [data_keys]
+        else:
+            self.data_keys = data_keys
 
         # TODO: can be removed since only be used in LIIF
         self.input_view = input_view
@@ -560,6 +562,8 @@ class EditDataPreprocessor(ImgDataPreprocessor):
             target_order, do_norm = self.output_channel_order, True
 
         for data_sample in data_samples:
+            if not self.data_keys:
+                break
             for key in self.data_keys:
                 if not hasattr(data_sample, key):
                     # do not raise error here
