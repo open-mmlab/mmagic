@@ -1,6 +1,6 @@
 # Contributing guidance
 
-Welcome to the mmagic community, we are committed to building a toolbox for cutting-edge image, video and 3D content generation, editing and processing techniques.
+Welcome to the MMagic community, we are committed to building a Multimodal Advanced, Generative, and Intelligent Creation Toolbox.
 
 This section introduces following contents:
 
@@ -29,7 +29,6 @@ You can directly post a Pull Request to fix typo in code or documents
 The steps to fix the bug of code implementation are as follows.
 
 1. If the modification involve significant changes, you should create an issue first and describe the error information and how to trigger the bug. Other developers will discuss with you and propose an proper solution.
-
 2. Posting a pull request after fixing the bug and adding corresponding unit test.
 
 **New Feature or Enhancement**
@@ -116,16 +115,16 @@ git commit -m "xxx" --no-verify
 
 #### 3. Create a development branch
 
-After configuring the pre-commit, we should create a branch based on the master branch to develop the new feature or fix the bug. The proposed branch name is `username/pr_name`
+After configuring the pre-commit, we should create a branch based on the main branch to develop the new feature or fix the bug. The proposed branch name is `username/pr_name`
 
 ```shell
 git checkout -b yhc/refactor_contributing_doc
 ```
 
-In subsequent development, if the master branch of the local repository is behind the master branch of "upstream", we need to pull the upstream for synchronization, and then execute the above command:
+In subsequent development, if the main branch of the local repository is behind the main branch of "upstream", we need to pull the upstream for synchronization, and then execute the above command:
 
 ```shell
-git pull upstream master
+git pull upstream main
 ```
 
 #### 4. Commit the code and pass the unit test
@@ -188,18 +187,18 @@ mmagic will run unit test for the posted Pull Request on different platforms (Li
 
 #### 7. Resolve conflicts
 
-If your local branch conflicts with the latest master branch of "upstream", you'll need to resolove them. There are two ways to do this:
+If your local branch conflicts with the latest main branch of "upstream", you'll need to resolove them. There are two ways to do this:
 
 ```shell
 git fetch --all --prune
-git rebase upstream/master
+git rebase upstream/main
 ```
 
 or
 
 ```shell
 git fetch --all --prune
-git merge upstream/master
+git merge upstream/main
 ```
 
 If you are very good at handling conflicts, then you can use rebase to resolve conflicts, as this will keep your commit logs tidy. If you are not familiar with `rebase`, then you can use `merge` to resolve conflicts.

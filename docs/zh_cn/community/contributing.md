@@ -1,6 +1,6 @@
 # 贡献代码
 
-欢迎加入 MMagic 社区，我们致力于打造最前沿的计算机视觉基础库，我们欢迎任何类型的贡献，包括但不限于
+欢迎加入 MMagic 社区，我们致力于打造新一代人工智能内容生成（AIGC）工具箱，我们欢迎任何类型的贡献，包括但不限于
 
 **修复错误**
 
@@ -99,16 +99,16 @@ git commit -m "xxx" --no-verify
 
 #### 3. 创建开发分支
 
-安装完 pre-commit 之后，我们需要基于 master 创建开发分支，建议的分支命名规则为 `username/pr_name`。
+安装完 pre-commit 之后，我们需要基于 main 创建开发分支，建议的分支命名规则为 `username/pr_name`。
 
 ```shell
 git checkout -b yhc/refactor_contributing_doc
 ```
 
-在后续的开发中，如果本地仓库的 master 分支落后于 upstream 的 master 分支，我们需要先拉取 upstream 的代码进行同步，再执行上面的命令
+在后续的开发中，如果本地仓库的 main 分支落后于 upstream 的 main 分支，我们需要先拉取 upstream 的代码进行同步，再执行上面的命令
 
 ```shell
-git pull upstream master
+git pull upstream main
 ```
 
 #### 4. 提交代码并在本地通过单元测试
@@ -178,14 +178,14 @@ mmagic 会在不同的平台（Linux、Window、Mac），基于不同版本的 P
 
 ```shell
 git fetch --all --prune
-git rebase upstream/master
+git rebase upstream/main
 ```
 
 或者
 
 ```shell
 git fetch --all --prune
-git merge upstream/master
+git merge upstream/main
 ```
 
 如果你非常善于处理冲突，那么可以使用 rebase 的方式来解决冲突，因为这能够保证你的 commit log 的整洁。如果你不太熟悉 `rebase` 的使用，那么可以使用 `merge` 的方式来解决冲突。
