@@ -191,17 +191,3 @@ python demo/mmediting_inference_demo.py \
     --model-name eg3d \
     --result-out-dir ../resources/output/eg3d-output
 ```
-
-## 3. Other demos
-
-These demos are duplicated with mmedting_inference_demo.py and may be removed in the future.
-
-- [colorization_demo.py](./colorization_demo.py)
-- [conditional_demo.py](./conditional_demo.py)
-- [inpainting_demo.py](./inpainting_demo.py)
-- [matting_demo.py](./matting_demo.py)
-- [restoration_demo.py](./restoration_demo.py)
-- [restoration_video_demo.py](./restoration_video_demo.py)
-- [translation_demo.py](./translation_demo.py)
-- [unconditional_demo.py](./unconditional_demo.py)
-- [video_interpolation_demo.py](./video_interpolation_demo.py)
