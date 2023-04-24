@@ -26,7 +26,7 @@ train_pipeline = [
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type='GenerateCoordinateAndCell', sample_quantity=2304),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 val_pipeline = [
     dict(
@@ -37,7 +37,7 @@ val_pipeline = [
         imdecode_backend='cv2'),
     dict(type='RandomDownSampling', scale_min=scale_max, scale_max=scale_max),
     dict(type='GenerateCoordinateAndCell', reshape_gt=False),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 # test_pipeline = [
 #     dict(
@@ -54,7 +54,7 @@ val_pipeline = [
 #         imdecode_backend='cv2'),
 #     dict(type='GenerateCoordinateAndCell', scale=scale_test,
 #          reshape_gt=False),
-#     dict(type='PackEditInputs')
+#     dict(type='PackInputs')
 # ]
 
 # dataset settings

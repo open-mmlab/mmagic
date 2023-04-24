@@ -5,7 +5,7 @@ train_pipeline = [
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='Resize', keys='gt', scale=(512, 512)),
     dict(type='Flip', keys=['gt'], direction='horizontal'),  # TODO:
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # `batch_size` and `data_root` need to be set.

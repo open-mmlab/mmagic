@@ -56,7 +56,7 @@ train_pipeline = [
         type='RandomJPEGCompression',
         params=dict(quality=[quality, quality], color_type='color'),
         keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = [
@@ -76,7 +76,7 @@ val_pipeline = [
         type='RandomJPEGCompression',
         params=dict(quality=[quality, quality], color_type='color'),
         keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings

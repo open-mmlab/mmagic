@@ -7,7 +7,7 @@ import numpy as np
 import torch
 from mmengine.config import ConfigDict
 
-from mmagic.datasets.transforms import PackEditInputs
+from mmagic.datasets.transforms import PackInputs
 from mmagic.models.base_models import BaseMattor
 from mmagic.models.editors import DIM
 from mmagic.registry import MODELS
@@ -59,7 +59,7 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
             (img_shape[0], img_shape[1], 3)).astype(np.float32))
 
     data_samples = []
-    packinputs = PackEditInputs()
+    packinputs = PackInputs()
     for _ in range(batch_size):
         ds = packinputs(results)['data_samples']
         if cuda:
@@ -96,7 +96,7 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
         ori_merged_shape=img_shape)
 
     data_samples = []
-    packinputs = PackEditInputs()
+    packinputs = PackInputs()
     for _ in range(batch_size):
         ds = packinputs(results)['data_samples']
         if cuda:

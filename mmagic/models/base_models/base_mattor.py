@@ -234,8 +234,8 @@ class BaseMattor(BaseModel, metaclass=ABCMeta):
                   results.
 
         Returns:
-            List[EditDataElement]:
-                Sequence of predictions packed into EditDataElement
+            List[DataElement]:
+                Sequence of predictions packed into DataElement
         """
         if mode == 'tensor':
             raw = self._forward(inputs)

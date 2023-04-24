@@ -40,7 +40,7 @@ train_dataloader = dict(
 pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='Resize', scale=(256, 256)),
-    dict(type='PackEditInputs', keys=['img'])
+    dict(type='PackInputs', keys=['img'])
 ]
 
 val_dataloader = dict(

@@ -2,7 +2,7 @@
 
 Welcome to the MMagic community!
 The MMagic ecosystem consists of tutorials, libraries, and projects from a broad set of researchers in academia and industry, ML and application engineers.
-The goal of this ecosystem is to support, accelerate, and aid in your exploration with MMagic for image, video, 3D content generation, editing and processing.
+The goal of this ecosystem is to support, accelerate, and aid in your exploration with MMagic for AIGC such as image, video, 3D content generation, editing and processing.
 
 Here are a few projects that are built upon MMagic. They are examples of how to use MMagic as a library, to make your projects more maintainable.
 Please find more projects in [MMagic Ecosystem](https://openmmlab.com/ecosystem).

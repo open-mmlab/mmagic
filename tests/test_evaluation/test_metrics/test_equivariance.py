@@ -6,7 +6,7 @@ from mmengine.utils.dl_utils import TORCH_VERSION
 from mmengine.utils.version_utils import digit_version
 
 from mmagic.datasets import BasicImageDataset
-from mmagic.datasets.transforms import PackEditInputs
+from mmagic.datasets.transforms import PackInputs
 from mmagic.evaluation import Equivariance
 from mmagic.models import DataPreprocessor, StyleGAN3
 from mmagic.models.editors.stylegan3 import StyleGAN3Generator
@@ -33,7 +33,7 @@ class TestEquivariance:
         pipeline = [
             dict(type='LoadImageFromFile', key='img'),
             dict(type='Resize', scale=(64, 64)),
-            PackEditInputs()
+            PackInputs()
         ]
         dataset = BasicImageDataset(
             data_root='./tests/data/image/img_root',

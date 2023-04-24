@@ -87,7 +87,7 @@ train_pipeline = [
         direction='vertical'),
     dict(
         type='RandomTransposeHW', keys=['ref', 'ref_lq'], transpose_ratio=0.5),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 valid_pipeline = [
     dict(
@@ -121,7 +121,7 @@ valid_pipeline = [
         output_keys=['img_lq', 'ref_lq'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 demo_pipeline = [
     dict(
@@ -154,7 +154,7 @@ demo_pipeline = [
         output_keys=['img_lq', 'ref_lq'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings

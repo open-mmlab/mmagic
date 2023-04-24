@@ -6,11 +6,11 @@ experiment_name = 'restormer_official_dpdd-dual'
 work_dir = f'./work_dirs/{experiment_name}'
 save_dir = './work_dirs/'
 
-# modify PackEditInputs
+# modify PackInputs
 test_dataloader = _base_.test_dataloader
 for dataloader in test_dataloader:
     test_pipeline = dataloader['dataset']['pipeline']
-    test_pipeline[4] = dict(type='PackEditInputs', keys=['imgL', 'imgR'])
+    test_pipeline[4] = dict(type='PackInputs', keys=['imgL', 'imgR'])
 
 # model settings
 model = dict(

@@ -33,7 +33,7 @@ class TestUnpairedImageDataset(object):
                 crop_size=(256, 256),
                 random_crop=True),
             dict(type='Flip', direction='horizontal', keys=['img_a', 'img_b']),
-            dict(type='PackEditInputs', keys=['img_a', 'img_b']),
+            dict(type='PackInputs', keys=['img_a', 'img_b']),
         ]
 
     def test_unpaired_image_dataset(self):

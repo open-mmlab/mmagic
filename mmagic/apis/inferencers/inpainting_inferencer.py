@@ -45,7 +45,7 @@ class InpaintingInferencer(BaseMMagicInferencer):
                 mask_mode='file',
             ),
             dict(type='GetMaskedImage'),
-            dict(type='PackEditInputs'),
+            dict(type='PackInputs'),
         ]
 
         infer_pipeline = Compose(infer_pipeline_cfg)

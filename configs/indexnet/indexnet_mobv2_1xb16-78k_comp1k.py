@@ -60,7 +60,7 @@ train_pipeline = [
         keep_ratio=False,
         interpolation='bicubic'),
     dict(type='Flip', keys=['alpha', 'merged', 'fg', 'bg', 'trimap']),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 test_pipeline = [
@@ -75,7 +75,7 @@ test_pipeline = [
         color_type='grayscale',
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 train_dataloader = dict(

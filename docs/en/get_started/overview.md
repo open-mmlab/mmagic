@@ -10,7 +10,7 @@ Welcome to MMagic! In this section, you will know about
 
 ## What is MMagic?
 
-MMagic is an open-source toolbox for professional AI researchers and machine learning engineers to explore image and video processing, editing and synthesis.
+MMagic (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation) is an open-source AIGC toolbox for professional AI researchers and machine learning engineers to explore image and video processing, editing and generation.
 
 MMagic allows researchers and engineers to use pre-trained state-of-the-art models, train and develop new customized models easily.
 
@@ -24,65 +24,41 @@ MMagic supports various foundamental generative models, including:
 
 MMagic supports various applications, including:
 
+- Text-to-Image
+- Image-to-image translation
+- 3D-aware generation
 - Image super-resolution
 - Video super-resolution
 - Video frame interpolation
 - Image inpainting
 - Image matting
-- Image-to-image translation
+- Image restoration
+- Image colorization
+- Image generation
 - And many other applications are coming soon!
 
 <div align=center>
-  <img src="https://user-images.githubusercontent.com/12756472/158984079-c4754015-c1f6-48c5-ac46-62e79448c372.jpg"/>
-</div>
-</br>
-
-<div align=center>
     <video width="100%" controls>
-        <source src="https://user-images.githubusercontent.com/12756472/175944645-cabe8c2b-9f25-440b-91cc-cdac4e752c5a.mp4" type="video/mp4">
-        <object data="https://user-images.githubusercontent.com/12756472/175944645-cabe8c2b-9f25-440b-91cc-cdac4e752c5a.mp4" width="100%">
+        <source src="https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4" type="video/mp4">
+        <object data="https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4" width="100%">
         </object>
     </video>
 </div>
 </br>
 
-<div align=center>
-<video width="100%" controls>
-    <source src="https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4" type="video/mp4">
-    <object src="https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4" width="100%">
-    </object>
-</video>
-</div>
-
-<div align="center">
-  <b> StyleGAN3 Images</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/22982797/150450502-c182834f-796f-4397-bd38-df1efe4a8a47.png" width="800"/>
-</div>
-
-<div align="center">
-  <b> BigGAN Images </b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/22982797/127615534-6278ce1b-5cff-4189-83c6-9ecc8de08dfc.png" width="800"/>
-</div>
-
 ## Why should I use MMagic?
 
-- **State of the Art**
+- **State of the Art Models**
 
   MMagic provides state-of-the-art generative models to process, edit and synthesize images and videos.
 
 - **Powerful and Popular Applications**
 
-  MMagic supports popular and contemporary *inpainting*, *matting*, *super-resolution* and *generation* applications. Specifically, MMagic supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN's applications. It's time to play with your GANs!
+  MMagic supports popular and contemporary image restoration, text-to-image, 3D-aware generation, inpainting, matting, super-resolution and generation applications. Specifically, MMagic supports fine-tuning for stable diffusion and many exciting diffusion's application such as ControlNet Animation with SAM. MMagic also supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN’s applications. It’s time to begin your AIGC exploration journey!
 
-- **New Modular Design for Flexible Combination:**
+- **Efficient Framework**
 
-  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](../howto/losses.md))
-
-- **Efficient Distributed Training:**
-
-  With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
+  By using MMEngine and MMCV of OpenMMLab 2.0 framework, MMagic decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different module. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs. With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
 
 ## Get started
 

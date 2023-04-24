@@ -92,11 +92,11 @@ You can also paste some visual results here if the model doesn't have quantitati
 <!-- Replace to the citation of the paper your project refers to. -->
 
 ```bibtex
-@misc{mmediting2022,
-    title = {{MMagic}: {OpenMMLab} Image and Video Editing Toolbox},
+@misc{mmagic2023,
+    title = {{MMagic}: {OpenMMLab} Multimodal Advanced, Generative, and Intelligent Creation Toolbox},
     author = {{MMagic Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmagic}},
-    year = {2022}
+    year = {2023}
 }
 ```
 

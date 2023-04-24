@@ -189,9 +189,11 @@ python -c "import mmagic; print(mmagic.__version__)"
 ```
 
 **Getting Started**
+
 Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMagic.
 
 **Install MMagic from source**
+
 You can also experiment on the latest developed version rather than the stable release by installing MMagic from source with the following commands:
 
 ```shell
@@ -395,7 +397,7 @@ If MMagic is helpful to your research, please cite it as below.
 
 ```bibtex
 @misc{mmagic2023,
-    title = {{MMagic}: {OpenMMLab} Image and Video Editing Toolbox},
+    title = {{MMagic}: {OpenMMLab} Multimodal Advanced, Generative, and Intelligent Creation Toolbox},
     author = {{MMagic Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmagic}},
     year = {2023}

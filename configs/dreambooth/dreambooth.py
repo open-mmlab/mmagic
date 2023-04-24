@@ -46,7 +46,7 @@ optim_wrapper = dict(
 pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='Resize', scale=(512, 512)),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 dataset = dict(
     type='DreamBoothDataset',

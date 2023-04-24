@@ -51,7 +51,7 @@ train_pipeline = [
         padding=((64, 64), (0, 0), (0, 0)),
     ),
     dict(type='Flip', keys=['gt'], direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = train_pipeline

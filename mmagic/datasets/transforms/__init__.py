@@ -11,7 +11,7 @@ from .crop import (CenterCropLongEdge, Crop, CropAroundCenter, CropAroundFg,
                    RandomResizedCrop)
 from .fgbg import (CompositeFg, MergeFgAndBg, PerturbBg, RandomJitter,
                    RandomLoadResizeBg)
-from .formatting import PackEditInputs
+from .formatting import PackInputs
 from .generate_assistant import (GenerateCoordinateAndCell,
                                  GenerateFacialHeatmap)
 from .generate_frame_indices import (GenerateFrameIndices,
@@ -36,14 +36,14 @@ __all__ = [
     'FixedCrop', 'GenerateCoordinateAndCell', 'GenerateFacialHeatmap',
     'GenerateFrameIndices', 'GenerateFrameIndiceswithPadding',
     'GenerateSegmentIndices', 'GetMaskedImage', 'GetSpatialDiscountMask',
-    'MATLABLikeResize', 'MirrorSequence', 'ModCrop', 'Normalize',
-    'PackEditInputs', 'PairedRandomCrop', 'RandomAffine', 'RandomBlur',
-    'RandomDownSampling', 'RandomJPEGCompression', 'RandomMaskDilation',
-    'RandomNoise', 'RandomResize', 'RandomResizedCrop', 'RandomRotation',
-    'RandomTransposeHW', 'RandomVideoCompression', 'RescaleToZeroOne',
-    'Resize', 'SetValues', 'TemporalReverse', 'ToTensor', 'UnsharpMasking',
-    'CropAroundCenter', 'CropAroundFg', 'GenerateSeg', 'CropAroundUnknown',
-    'GenerateSoftSeg', 'FormatTrimap', 'TransformTrimap', 'GenerateTrimap',
+    'MATLABLikeResize', 'MirrorSequence', 'ModCrop', 'Normalize', 'PackInputs',
+    'PairedRandomCrop', 'RandomAffine', 'RandomBlur', 'RandomDownSampling',
+    'RandomJPEGCompression', 'RandomMaskDilation', 'RandomNoise',
+    'RandomResize', 'RandomResizedCrop', 'RandomRotation', 'RandomTransposeHW',
+    'RandomVideoCompression', 'RescaleToZeroOne', 'Resize', 'SetValues',
+    'TemporalReverse', 'ToTensor', 'UnsharpMasking', 'CropAroundCenter',
+    'CropAroundFg', 'GenerateSeg', 'CropAroundUnknown', 'GenerateSoftSeg',
+    'FormatTrimap', 'TransformTrimap', 'GenerateTrimap',
     'GenerateTrimapWithDistTransform', 'CompositeFg', 'RandomLoadResizeBg',
     'MergeFgAndBg', 'PerturbBg', 'RandomJitter', 'LoadPairedImageFromFile',
     'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'InstanceCrop'

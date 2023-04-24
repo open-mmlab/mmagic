@@ -69,7 +69,7 @@ train_pipeline = [
         keys=['img', 'gt'],
         flip_ratio=0.5,
         direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 test_pipeline = [
     dict(
@@ -82,7 +82,7 @@ test_pipeline = [
         key='gt',
         color_type='color',
         channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 inference_pipeline = [
@@ -97,7 +97,7 @@ inference_pipeline = [
         keys=['img'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings

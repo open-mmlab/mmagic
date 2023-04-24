@@ -128,5 +128,5 @@ test_pipeline = [
         keep_ratio=False,
     ),
     dict(type='GetMaskedImage'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]

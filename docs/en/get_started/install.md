@@ -19,7 +19,7 @@ In this section, we demonstrate how to prepare an environment with PyTorch.
 
 MMagic works on Linux, Windows, and macOS. It requires:
 
-- Python >= 3.6
+- Python >= 3.7
 - [PyTorch](https://pytorch.org/) >= 1.8
 - [MMCV](https://github.com/open-mmlab/mmcv) >= 2.0.0
 
@@ -72,11 +72,28 @@ mim install 'mmengine'
 Or
 
 ```shell
+pip install mmengine
+```
+
+Or
+
+```shell
 pip install git+https://github.com/open-mmlab/mmengine.git
 ```
 
 **Step 2.** Install MMagic.
-Install [MMagic](https://github.com/open-mmlab/mmagic) from the source code.
+
+```shell
+mim install 'mmagic'
+```
+
+Or
+
+```shell
+pip install mmagic
+```
+
+Or install [MMagic](https://github.com/open-mmlab/mmagic) from the source code.
 
 ```shell
 git clone https://github.com/open-mmlab/mmagic.git
@@ -85,7 +102,7 @@ pip3 install -e . -v
 ```
 
 **Step 5.**
-Verification.
+Verify MMagic has been successfully installed.
 
 ```shell
 cd ~

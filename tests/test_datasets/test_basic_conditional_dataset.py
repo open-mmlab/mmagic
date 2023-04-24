@@ -79,7 +79,7 @@ class TestBasicConditonalDataset(TestCase):
         dataset = BasicConditionalDataset(
             data_root=DATA_DIR,
             lazy_init=True,
-            pipeline=[dict(type='PackEditInputs')])
+            pipeline=[dict(type='PackInputs')])
         self.assertFalse(dataset._fully_initialized)
         self.assertIn("Haven't been initialized", repr(dataset))
         self.assertIn('With transforms:', repr(dataset))
@@ -90,7 +90,7 @@ class TestBasicConditonalDataset(TestCase):
             data_root=DATA_DIR,
             ann_file=ann_file,
             lazy_init=True,
-            pipeline=[dict(type='PackEditInputs')])
+            pipeline=[dict(type='PackInputs')])
         self.assertEqual(dataset[0]['data_samples'].gt_label.label.tolist(),
                          [1, 2, 3, 4])
         self.assertEqual(dataset[1]['data_samples'].gt_label.label.tolist(),

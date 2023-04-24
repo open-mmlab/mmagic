@@ -56,7 +56,7 @@ metrics = [
 
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img', color_type='color'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 test_dataset = dict(
     type='BasicConditionalDataset',
