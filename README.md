@@ -53,17 +53,60 @@ English | [简体中文](README_zh-CN.md)
 
 ## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### New release [**MMagic v1.0.0rc7**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.0rc7) \[07/04/2023\]:
+### New release [**MMagic v1.0.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.0) \[25/04/2023\]:
 
-- Support DiffuserWrapper
-- Support ControlNet (training and inference).
-- Support PyTorch 2.0 (successfully compile 33+ models on 'inductor' backend).
+We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration).
 
-**MMagic** has supported all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) and unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine) 😍.
+After iterative updates with OpenMMLab 2.0 framework and merged with MMGeneration, MMEditing has become a powerful tool that supports low-level algorithms based on both GAN and CNN. Today, MMEditing embraces the Diffusion Model and transforms into a more advanced and comprehensive AIGC toolkit: **MMagic** (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation). MMagic will provide more agile and flexible experimental support for researchers and AIGC enthusiasts, and help you on your AIGC exploration journey.
+
+We highlight the following new features.
+
+**1. New Models**
+
+We support 11 new models in 4 new tasks.
+
+- Text2Image / Diffusion
+  - ControlNet
+  - DreamBooth
+  - Stable Diffusion
+  - Disco Diffusion
+  - GLIDE
+  - Guided Diffusion
+- 3D-aware Generation
+  - EG3D
+- Image Restoration
+  - NAFNet
+  - Restormer
+  - SwinIR
+- Image Colorization
+  - InstColorization
+
+**2. Magic Diffusion Model**
+
+For the Diffusion Model, we provide the following "magic" :
+
+- Support image generation based on Stable Diffusion and Disco Diffusion.
+- Support Finetune methods such as Dreambooth and DreamBooth LoRA.
+- Support controllability in text-to-image generation using ControlNet.
+- Support acceleration and optimization strategies based on xFormers to improve training and inference efficiency.
+- Support video generation based on MultiFrame Render.
+- Support calling basic models and sampling strategies through DiffuserWrapper.
+
+**3. Upgraded Framework**
+
+By using MMEngine and MMCV of OpenMMLab 2.0 framework, MMagic has upgraded in the following new features:
+
+- Refactor DataSample to support the combination and splitting of batch dimensions.
+- Refactor DataPreprocessor and unify the data format for various tasks during training and inference.
+- Refactor MultiValLoop and MultiTestLoop, supporting the evaluation of both generation-type metrics (e.g. FID) and reconstruction-type metrics (e.g. SSIM), and supporting the evaluation of multiple datasets at once.
+- Support visualization on local files or using tensorboard and wandb.
+- Support for 33+ algorithms accelerated by Pytorch 2.0.
+
+**MMagic** has supported all the tasks, models, metrics, and losses in [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration) and unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine) 😍.
 
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
-Please refer to [migration documents](docs/en/migration/overview.md) to migrate from [old version](https://github.com/open-mmlab/mmagic/tree/master) MMagic 0.x to our brand new 1.x version.
+Please refer to [migration documents](docs/en/migration/overview.md) to migrate from [old version](https://github.com/open-mmlab/mmagic/tree/0.x) MMEditing 0.x to new version MMagic 1.x .
 
 ## 📄 Table of Contents
 
@@ -80,31 +123,27 @@ Please refer to [migration documents](docs/en/migration/overview.md) to migrate 
 
 ## 📖 Introduction
 
-MMagic is an open-source image and video editing&generating toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+MMagic (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation) is an advanced and comprehensive AIGC toolkit that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration). It is an open-source image and video editing&generating toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
 Currently, MMagic support multiple image and video generation/editing tasks.
 
-https://user-images.githubusercontent.com/49083766/233324087-04542ec1-97cb-45d9-a096-c5337c3e5c75.mp4
+https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4
 
 The best practice on our main branch works with **Python 3.8+** and **PyTorch 1.9+**.
 
 ### ✨ Major features
 
-- **State of the Art**
+- **State of the Art Models**
 
   MMagic provides state-of-the-art generative models to process, edit and synthesize images and videos.
 
 - **Powerful and Popular Applications**
 
-  MMagic supports popular and contemporary image restoration, text-to-image, 3D-aware generation, inpainting, matting, super-resolution and generation applications. Specifically, MMagic supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN’s applications. It’s time to play with your GANs!
+  MMagic supports popular and contemporary image restoration, text-to-image, 3D-aware generation, inpainting, matting, super-resolution and generation applications. Specifically, MMagic supports fine-tuning for stable diffusion and many exciting diffusion's application such as ControlNet Animation with SAM. MMagic also supports GAN interpolation, GAN projection, GAN manipulations and many other popular GAN’s applications. It’s time to begin your AIGC exploration journey!
 
-- **New Modular Design for Flexible Combination**
+- **Efficient Framework**
 
-  We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. Specifically, a new design for complex loss modules is proposed for customizing the links between modules, which can achieve flexible combinations among different modules.(Tutorial for [losses](https://mmagic.readthedocs.io/en/latest/howto/losses.html))
-
-- **Efficient Distributed Training**
-
-  With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
+  By using MMEngine and MMCV of OpenMMLab 2.0 framework, MMagic decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different module. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs. With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -118,7 +157,7 @@ More and more community contributors are joining us to make our repo better. Som
 
 [Projects](projects/README.md) is opened to make it easier for everyone to add projects to MMagic.
 
-We appreciate all contributions to improve MMagic. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
+We appreciate all contributions to improve MMagic. Please refer to [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/blob/main/CONTRIBUTING.md) in MMCV and [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING.md) in MMEngine for more details about the contributing guideline.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -131,16 +170,29 @@ Below are quick steps for installation.
 Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/).
 
 **Step 2.**
-Install MMCV with [MIM](https://github.com/open-mmlab/mim).
+Install MMCV, MMEngine and MMagic with [MIM](https://github.com/open-mmlab/mim).
 
 ```shell
 pip3 install openmim
-# wait for more pre-compiled pkgs to release
 mim install 'mmcv>=2.0.0'
+mim install 'mmengine'
+mim install 'mmagic'
 ```
 
 **Step 3.**
-Install MMagic from source.
+Verify MMagic has been successfully installed.
+
+```shell
+cd ~
+python -c "import mmagic; print(mmagic.__version__)"
+# Example output: 1.0.0
+```
+
+**Getting Started**
+Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMagic.
+
+**Install MMagic from source**
+You can also experiment on the latest developed version rather than the stable release by installing MMagic from source with the following commands:
 
 ```shell
 git clone https://github.com/open-mmlab/mmagic.git
@@ -149,10 +201,6 @@ pip3 install -e .
 ```
 
 Please refer to [installation](docs/en/get_started/install.md) for more detailed instruction.
-
-**Getting Started**
-
-Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMagic.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -307,9 +355,11 @@ Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en
       <td>
         <ul>
           <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
-          <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
-          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
+          <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
           <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
+          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
+          <li><a href="configs/guided_diffusion/README.md">Guided Diffusion (NeurIPS'2021)</a></li>
+          <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
         </ul>
       </td>
       <td>
@@ -344,10 +394,19 @@ We appreciate all the contributors who implement their methods or add new featur
 If MMagic is helpful to your research, please cite it as below.
 
 ```bibtex
-@misc{mmagic2022,
+@misc{mmagic2023,
     title = {{MMagic}: {OpenMMLab} Image and Video Editing Toolbox},
     author = {{MMagic Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmagic}},
+    year = {2023}
+}
+```
+
+```bibtex
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {{MMEditing Contributors}},
+    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
     year = {2022}
 }
 ```
@@ -366,7 +425,7 @@ Please refer to [LICENSES](LICENSE) for the careful check, if you are using our 
 - [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab foundational library for training deep learning models.
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab foundational library for computer vision.
 - [MIM](https://github.com/open-mmlab/mim): MIM installs OpenMMLab packages.
-- [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab image classification toolbox and benchmark.
+- [MMPreTrain](https://github.com/open-mmlab/mmpretrain): OpenMMLab Pre-training Toolbox and Benchmark.
 - [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab detection toolbox and benchmark.
 - [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab's next-generation platform for general 3D object detection.
 - [MMRotate](https://github.com/open-mmlab/mmrotate): OpenMMLab rotated object detection toolbox and benchmark.
@@ -380,8 +439,7 @@ Please refer to [LICENSES](LICENSE) for the careful check, if you are using our 
 - [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab's next-generation action understanding toolbox and benchmark.
 - [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab video perception toolbox and benchmark.
 - [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab optical flow toolbox and benchmark.
-- [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab image and video editing toolbox.
-- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab image and video generative models toolbox.
+- [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab Multimodal Advanced, Generative, and Intelligent Creation Toolbox.
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab model deployment framework.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>

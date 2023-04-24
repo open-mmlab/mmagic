@@ -1,6 +1,6 @@
 # Migration of Model Settings
 
-We update model settings in MMEdit 1.x. Important modifications are as following.
+We update model settings in MMagic 1.x. Important modifications are as following.
 
 - Remove `pretrained` fields.
 - Add `train_cfg` and `test_cfg` fields in model settings.
@@ -63,9 +63,9 @@ model = dict(
 </thead>
 </table>
 
-We refactor models in MMEdit 1.x. Important modifications are as following.
+We refactor models in MMagic 1.x. Important modifications are as following.
 
-- The `models` in MMedit 1.x is refactored to five parts: `base_models`, `data_preprocessors`, `editors`, `layers` and `losses`.
+- The `models` in MMagic 1.x is refactored to six parts: `archs`, `base_models`, `data_preprocessors`, `editors`, `diffusion_schedulers` and `losses`.
 - Add `data_preprocessor` module in `models`. Normalization and color space transforms operations are moved from datasets transforms pipelines to data_preprocessor. The data out from the data pipeline is transformed by this module and then fed into the model.
 
 More details of models are shown in [model guides](../howto/models.md).
