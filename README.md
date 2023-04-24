@@ -397,7 +397,7 @@ If MMagic is helpful to your research, please cite it as below.
 
 ```bibtex
 @misc{mmagic2023,
-    title = {{MMagic}: {OpenMMLab} Image and Video Editing Toolbox},
+    title = {{MMagic}: {OpenMMLab} Multimodal Advanced, Generative, and Intelligent Creation Toolbox},
     author = {{MMagic Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmagic}},
     year = {2023}

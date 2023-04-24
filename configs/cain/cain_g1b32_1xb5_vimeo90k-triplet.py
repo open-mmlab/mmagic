@@ -148,7 +148,6 @@ default_hooks = dict(
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     sampler_seed=dict(type='DistSamplerSeedHook'),
-    # visualization=dict(type='EditVisualizationHook'),
     param_scheduler=dict(
         type='ReduceLRSchedulerHook',
         by_epoch=True,

@@ -16,10 +16,10 @@ def assert_tensor_equal(img, ref_img, ratio_thr=0.999):
     assert torch.sum(diff <= 1) / float(area) > ratio_thr
 
 
-def test_pack_edit_inputs():
+def test_pack_inputs():
 
-    pack_edit_inputs = PackInputs(meta_keys='a', data_keys='numpy')
-    assert repr(pack_edit_inputs) == 'PackInputs'
+    pack_inputs = PackInputs(meta_keys='a', data_keys='numpy')
+    assert repr(pack_inputs) == 'PackInputs'
 
     ori_results = dict(
         img=np.random.rand(64, 64, 3),
@@ -42,7 +42,7 @@ def test_pack_edit_inputs():
 
     results = ori_results.copy()
 
-    packed_results = pack_edit_inputs(results)
+    packed_results = pack_inputs(results)
 
     target_keys = ['inputs', 'data_samples']
     assert set(target_keys).issubset(set(packed_results.keys()))

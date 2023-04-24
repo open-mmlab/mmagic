@@ -9,7 +9,7 @@ from mmagic.utils import register_all_modules
 register_all_modules()
 
 
-def test_edit():
+def test_mmagic():
     with pytest.raises(Exception):
         MMagic('dog', ['error_type'], None)
 
@@ -41,16 +41,16 @@ def test_edit():
         osp.dirname(__file__), '..', 'configs', 'biggan',
         'biggan_2xb25-500kiters_cifar10-32x32.py')
 
-    mmedit_instance = MMagic(
+    mmagic_instance = MMagic(
         'biggan',
         model_ckpt='',
         model_config=cfg,
         extra_parameters={'sample_model': 'ema'})
-    mmedit_instance.print_extra_parameters()
-    inference_result = mmedit_instance.infer(label=1)
+    mmagic_instance.print_extra_parameters()
+    inference_result = mmagic_instance.infer(label=1)
     result_img = inference_result[1]
     assert result_img.shape == (4, 3, 32, 32)
 
 
 if __name__ == '__main__':
-    test_edit()
+    test_mmagic()
