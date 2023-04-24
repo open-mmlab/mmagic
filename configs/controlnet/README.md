@@ -52,6 +52,8 @@ controlnet=dict(
 Running the following codes, you can get a text-generated image.
 
 ```python
+import cv2
+import numpy as np
 import mmcv
 from mmengine import Config
 from PIL import Image
@@ -61,7 +63,7 @@ from mmedit.utils import register_all_modules
 
 register_all_modules()
 
-cfg = Config.fromfile('configs/controlnet/controlnet_canny.py')
+cfg = Config.fromfile('configs/controlnet/controlnet-canny.py')
 controlnet = MODELS.build(cfg.model).cuda()
 
 prompt = 'Room with blue walls and a yellow ceiling.'
@@ -112,7 +114,7 @@ from mmedit.utils import register_all_modules
 
 register_all_modules()
 
-cfg = Config.fromfile('configs/controlnet/controlnet_pose.py')
+cfg = Config.fromfile('configs/controlnet/controlnet-pose.py')
 # convert ControlNet's weight from SD-v1.5 to Counterfeit-v2.5
 cfg.model.unet.from_pretrained = 'gsdf/Counterfeit-V2.5'
 cfg.model.vae.from_pretrained = 'gsdf/Counterfeit-V2.5'

@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Union
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from mmengine.logging import MMLogger
 from mmengine.model import BaseModel
 from mmengine.runner import set_random_seed
@@ -14,6 +15,8 @@ from transformers import CLIPTokenizer
 
 from mmedit.models.utils import build_module, set_tomesd, set_xformers
 from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
+from mmedit.structures import EditDataSample
+from mmedit.utils.typing import SampleList
 
 logger = MMLogger.get_current_instance()
 
@@ -190,6 +193,10 @@ class StableDiffusion(BaseModel):
         # 2. Define call parameters
         batch_size = 1 if isinstance(prompt, str) else len(prompt)
         device = self.device
+
+        img_dtype = self.vae.module.dtype if hasattr(self.vae, 'module') \
+            else self.vae.dtype
+        latent_dtype = next(self.unet.parameters()).dtype
         # here `guidance_scale` is defined analog to the
         # guidance weight `w` of equation (2)
         # of the Imagen paper: https://arxiv.org/pdf/2205.11487.pdf .
@@ -208,7 +215,10 @@ class StableDiffusion(BaseModel):
         timesteps = self.scheduler.timesteps
 
         # 5. Prepare latent variables
-        num_channels_latents = self.unet.in_channels
+        if hasattr(self.unet, 'module'):
+            num_channels_latents = self.unet.module.in_channels
+        else:
+            num_channels_latents = self.unet.in_channels
         latents = self.prepare_latents(
             batch_size * num_images_per_prompt,
             num_channels_latents,
@@ -234,6 +244,8 @@ class StableDiffusion(BaseModel):
             latent_model_input = self.scheduler.scale_model_input(
                 latent_model_input, t)
 
+            latent_model_input = latent_model_input.to(latent_dtype)
+            text_embeddings = text_embeddings.to(latent_dtype)
             # predict the noise residual
             noise_pred = self.unet(
                 latent_model_input, t,
@@ -250,7 +262,7 @@ class StableDiffusion(BaseModel):
                     noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
 
         # 8. Post-processing
-        image = self.decode_latents(latents.to(self.vae.dtype))
+        image = self.decode_latents(latents.to(img_dtype))
         if return_type == 'image':
             image = self.output_to_pil(image)
         elif return_type == 'numpy':
@@ -405,7 +417,10 @@ class StableDiffusion(BaseModel):
             image (torch.Tensor): image result.
         """
         latents = 1 / 0.18215 * latents
-        image = self.vae.decode(latents)['sample']
+        if hasattr(self.vae, 'module'):
+            image = self.vae.module.decode(latents)['sample']
+        else:
+            image = self.vae.decode(latents)['sample']
         # we always cast to float32 as this does not cause
         # significant overhead and is compatible with bfloa16
         return image.float()
@@ -436,6 +451,36 @@ class StableDiffusion(BaseModel):
         # check if the scheduler accepts generator
         accepts_generator = 'generator' in set(
             inspect.signature(self.scheduler.step).parameters.keys())
+        if accepts_generator:
+            extra_step_kwargs['generator'] = generator
+        return extra_step_kwargs
+
+    def prepare_test_scheduler_extra_step_kwargs(self, generator, eta):
+        """prepare extra kwargs for the scheduler step.
+
+        Args:
+            generator (torch.Generator):
+                generator for random functions.
+            eta (float):
+                eta (η) is only used with the DDIMScheduler,
+                it will be ignored for other schedulers.
+                eta corresponds to η in DDIM paper:
+                https://arxiv.org/abs/2010.02502
+                and should be between [0, 1]
+
+        Return:
+            extra_step_kwargs (dict):
+                dict contains 'generator' and 'eta'
+        """
+        accepts_eta = 'eta' in set(
+            inspect.signature(self.test_scheduler.step).parameters.keys())
+        extra_step_kwargs = {}
+        if accepts_eta:
+            extra_step_kwargs['eta'] = eta
+
+        # check if the scheduler accepts generator
+        accepts_generator = 'generator' in set(
+            inspect.signature(self.test_scheduler.step).parameters.keys())
         if accepts_generator:
             extra_step_kwargs['generator'] = generator
         return extra_step_kwargs
@@ -493,6 +538,102 @@ class StableDiffusion(BaseModel):
         # deviation required by the scheduler
         latents = latents * self.scheduler.init_noise_sigma
         return latents
+
+    @torch.no_grad()
+    def val_step(self, data: dict) -> SampleList:
+        data = self.data_preprocessor(data)
+        data_samples = data['data_samples']
+        prompt = data_samples.prompt
+
+        output = self.infer(prompt, return_type='tensor')
+        samples = output['samples']
+
+        samples = self.data_preprocessor.destruct(samples, data_samples)
+        gt_img = self.data_preprocessor.destruct(data['inputs'], data_samples)
+
+        out_data_sample = EditDataSample(
+            fake_img=samples, gt_img=gt_img, prompt=prompt)
+
+        # out_data_sample = EditDataSample(fake_img=samples, prompt=prompt)
+        data_sample_list = out_data_sample.split()
+        return data_sample_list
+
+    @torch.no_grad()
+    def test_step(self, data: dict) -> SampleList:
+        data = self.data_preprocessor(data)
+        data_samples = data['data_samples']
+        prompt = data_samples.prompt
+
+        output = self.infer(prompt, return_type='tensor')
+        samples = output['samples']
+
+        samples = self.data_preprocessor.destruct(samples, data_samples)
+        gt_img = self.data_preprocessor.destruct(data['inputs'], data_samples)
+
+        out_data_sample = EditDataSample(
+            fake_img=samples, gt_img=gt_img, prompt=prompt)
+        data_sample_list = out_data_sample.split()
+        return data_sample_list
+
+    def train_step(self, data, optim_wrapper_dict):
+        data = self.data_preprocessor(data)
+        inputs, data_samples = data['inputs'], data['data_samples']
+
+        vae = self.vae.module if hasattr(self.vae, 'module') else self.vae
+
+        optim_wrapper = optim_wrapper_dict['unet']
+        with optim_wrapper.optim_context(self.unet):
+            # image = inputs['img']  # image for new concept
+            image = inputs
+            prompt = data_samples.prompt
+            num_batches = image.shape[0]
+
+            image = image.to(self.dtype)
+            latents = vae.encode(image).latent_dist.sample()
+            latents = latents * vae.config.scaling_factor
+
+            noise = torch.randn_like(latents)
+            timesteps = torch.randint(
+                0,
+                self.scheduler.num_train_timesteps, (num_batches, ),
+                device=self.device)
+            timesteps = timesteps.long()
+
+            noisy_latents = self.scheduler.add_noise(latents, noise, timesteps)
+
+            input_ids = self.tokenizer(
+                prompt,
+                max_length=self.tokenizer.model_max_length,
+                return_tensors='pt',
+                padding='max_length',
+                truncation=True)['input_ids'].to(self.device)
+
+            encoder_hidden_states = self.text_encoder(input_ids)[0]
+
+            if self.scheduler.config.prediction_type == 'epsilon':
+                gt = noise
+            elif self.scheduler.config.prediction_type == 'v_prediction':
+                gt = self.scheduler.get_velocity(latents, noise, timesteps)
+            else:
+                raise ValueError('Unknown prediction type '
+                                 f'{self.scheduler.config.prediction_type}')
+
+            # NOTE: convert to float manually
+            model_output = self.unet(
+                noisy_latents.float(),
+                timesteps,
+                encoder_hidden_states=encoder_hidden_states.float())
+            model_pred = model_output['sample']
+
+            loss_dict = dict()
+            # calculate loss in FP32
+            loss_mse = F.mse_loss(model_pred.float(), gt.float())
+            loss_dict['loss_mse'] = loss_mse
+
+            parsed_loss, log_vars = self.parse_losses(loss_dict)
+            optim_wrapper.update_params(parsed_loss)
+
+        return log_vars
 
     def forward(self,
                 inputs: torch.Tensor,

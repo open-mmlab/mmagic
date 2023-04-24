@@ -1,0 +1,46 @@
+Collections:
+- Name: DreamBooth
+  Paper:
+    Title: 'DreamBooth: Fine Tuning Text-to-Image Diffusion Models for Subject-Driven
+      Generation'
+    URL: https://arxiv.org/abs/2208.12242
+  README: configs/dreambooth/README.md
+  Task:
+  - text2image
+  Year: 2022
+Models:
+- Config: configs/dreambooth/dreambooth.py
+  In Collection: DreamBooth
+  Name: dreambooth
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
+- Config: configs/dreambooth/dreambooth-finetune_text_encoder.py
+  In Collection: DreamBooth
+  Name: dreambooth-finetune_text_encoder
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
+- Config: configs/dreambooth/dreambooth-prior_pre.py
+  In Collection: DreamBooth
+  Name: dreambooth-prior_pre
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
+- Config: configs/dreambooth/dreambooth-lora.py
+  In Collection: DreamBooth
+  Name: dreambooth-lora
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
+- Config: configs/dreambooth/dreambooth-lora-prior_pre.py
+  In Collection: DreamBooth
+  Name: dreambooth-lora-prior_pre
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image

@@ -44,7 +44,10 @@ class EditEvaluator(Evaluator):
     """
 
     def __init__(self, metrics: Union[dict, BaseMetric, Sequence]):
-        super().__init__(metrics)
+        if metrics is not None:
+            super().__init__(metrics)
+        else:
+            self.metrics = None
         self.is_ready = False
 
     def prepare_metrics(self, module: BaseModel, dataloader: DataLoader):
@@ -64,6 +67,10 @@ class EditEvaluator(Evaluator):
             module (BaseModel): Model to evaluate.
             dataloader (DataLoader): The dataloader for real images.
         """
+        if self.metrics is None:
+            self.is_ready = True
+            return
+
         if self.is_ready:
             return
 
@@ -108,6 +115,9 @@ class EditEvaluator(Evaluator):
             List[Tuple[List[BaseMetric], Iterator]]: A list of "metrics-shared
                 sampler" pair.
         """
+        if self.metrics is None:
+            return [[[None], []]]
+
         # grouping metrics based on `SAMPLER_MODE` and `sample_mode`
         metric_mode_dict = defaultdict(list)
         for metric in self.metrics:
@@ -137,6 +147,8 @@ class EditEvaluator(Evaluator):
                 metrics specific sampler or the dataloader.
             metrics (Optional[Sequence[BaseMetric]]): Metrics to evaluate.
         """
+        if self.metrics is None:
+            return
 
         _data_samples = []
         for data_sample in data_samples:
@@ -159,6 +171,8 @@ class EditEvaluator(Evaluator):
             dict: Evaluation results of all metrics. The keys are the names
                 of the metrics, and the values are corresponding results.
         """
+        if self.metrics is None:
+            return {'No Metric': 'Nan'}
         metrics = {}
         for metric in self.metrics:
             _results = metric.evaluate()

@@ -166,7 +166,7 @@ def prepare_keys_df2k_ost(folder_path):
 
     print('Reading image path list ...')
     img_path_list = sorted(
-        list(mmcv.scandir(folder_path, suffix='png', recursive=False)))
+        list(mmengine.scandir(folder_path, suffix='png', recursive=False)))
     keys = [img_path.split('.png')[0] for img_path in sorted(img_path_list)]
 
     return img_path_list, keys
@@ -236,7 +236,7 @@ def make_lmdb(data_path,
         dataset = {}  # use dict to keep the order for multiprocessing
         shapes = {}
         print(f'Read images with multiprocessing, #thread: {n_thread} ...')
-        prog_bar = mmcv.ProgressBar(len(img_path_list))
+        prog_bar = mmengine.ProgressBar(len(img_path_list))
 
         def callback(arg):
             """get the image data and update prog_bar."""
@@ -264,7 +264,7 @@ def make_lmdb(data_path,
     env = lmdb.open(lmdb_path, map_size=data_size * 10)
 
     # write data to lmdb
-    prog_bar = mmcv.ProgressBar(len(img_path_list))
+    prog_bar = mmengine.ProgressBar(len(img_path_list))
     txn = env.begin(write=True)
     txt_file = open(osp.join(lmdb_path, 'meta_info.txt'), 'w')
     for idx, (path, key) in enumerate(zip(img_path_list, keys)):

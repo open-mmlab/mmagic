@@ -401,7 +401,7 @@ class TestGenVisualizationHook(TestCase):
         self.assertEqual(messageHub_vis_args['name'], 'train_feat_map')
         self.assertEqual(len(messageHub_vis_args['gen_samples']), 4)
         self.assertEqual(messageHub_vis_args['vis_mode'], None)
-        self.assertEqual(messageHub_vis_args['n_row'], 4)
+        self.assertEqual(messageHub_vis_args['n_row'], None)
 
         # test vis with messagehub info --> list[str]
         mock_visualuzer.add_datasample.reset_mock()
@@ -415,7 +415,7 @@ class TestGenVisualizationHook(TestCase):
         self.assertEqual(messageHub_vis_args['name'], 'train_feat_map')
         self.assertEqual(len(messageHub_vis_args['gen_samples']), 4)
         self.assertEqual(messageHub_vis_args['vis_mode'], None)
-        self.assertEqual(messageHub_vis_args['n_row'], 4)
+        self.assertEqual(messageHub_vis_args['n_row'], None)
 
         # test vis with messagehub info --> dict
         mock_visualuzer.add_datasample.reset_mock()
@@ -429,7 +429,7 @@ class TestGenVisualizationHook(TestCase):
         self.assertEqual(messageHub_vis_args['name'], 'train_feat_map')
         self.assertEqual(len(messageHub_vis_args['gen_samples']), 4)
         self.assertEqual(messageHub_vis_args['vis_mode'], 'feature_map')
-        self.assertEqual(messageHub_vis_args['n_row'], 4)
+        self.assertEqual(messageHub_vis_args['n_row'], None)
 
         # test vis with messagehub info --> list[dict]
         mock_visualuzer.add_datasample.reset_mock()
@@ -452,13 +452,13 @@ class TestGenVisualizationHook(TestCase):
         self.assertEqual(feat_map_vis_args['name'], 'train_feat_map')
         self.assertEqual(len(feat_map_vis_args['gen_samples']), 4)
         self.assertEqual(feat_map_vis_args['vis_mode'], 'feature_map')
-        self.assertEqual(feat_map_vis_args['n_row'], 4)
+        self.assertEqual(feat_map_vis_args['n_row'], None)
 
         _, x_t_vis_args = called_args_list[2]
         self.assertEqual(x_t_vis_args['name'], 'train_x_t')
         self.assertEqual(len(x_t_vis_args['gen_samples']), 1)
         self.assertEqual(x_t_vis_args['vis_mode'], None)
-        self.assertEqual(x_t_vis_args['n_row'], 1)
+        self.assertEqual(x_t_vis_args['n_row'], None)
 
         # test vis messageHub info --> errors
         hook.message_vis_kwargs = 'error'
@@ -473,6 +473,50 @@ class TestGenVisualizationHook(TestCase):
         message_hub.update_info('vis_results', dict(feat_map='feat_map'))
         with self.assertRaises(TypeError):
             hook.after_train_iter(runner, 1, data_batch, None)
+
+    def test_after_train_iter_contain_mul_elements(self):
+        # test contain_mul_elements + n_row != None
+        # n_row = 8, n_samples = 3, batch_size = 2, model_n_samples = 4
+        # run math.ceil(3 / 2) = 2 times, visualize 2 * 4 = 8 samples,
+        class MockModel:
+
+            def __init__(self, n_samples):
+                self.n_samples = n_samples
+
+            def noise_fn(self, *args, **kwargs):
+                return torch.randn(2, 2)
+
+            def val_step(self, *args, **kwargs):
+                return [EditDataSample() for _ in range(self.n_samples)]
+
+            def eval(self):
+                return self
+
+            def train(self):
+                return self
+
+        runner = MagicMock()
+        runner.model = MockModel(n_samples=4)
+        runner.train_dataloader = MagicMock()
+        runner.train_dataloader.batch_size = 2
+
+        hook = GenVisualizationHook(
+            interval=2, vis_kwargs_list=dict(type='GAN'), n_samples=3, n_row=8)
+        mock_visualuzer = MagicMock()
+        mock_visualuzer.add_datasample = MagicMock()
+        hook._visualizer = mock_visualuzer
+
+        # build a empty data sample
+        data_batch = [
+            dict(inputs=None, data_samples=EditDataSample())
+            for idx in range(10)
+        ]
+
+        for idx in range(3):
+            hook.after_train_iter(runner, idx, data_batch, None)
+        self.assertEqual(mock_visualuzer.add_datasample.call_count, 1)
+        called_args_list = mock_visualuzer.add_datasample.call_args_list[0]
+        self.assertEqual(len(called_args_list[1]['gen_samples']), 8)
 
     def test_after_test_iter(self):
         model = MagicMock()

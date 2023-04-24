@@ -40,6 +40,7 @@ def update_and_check_evaluator(evaluator: EVALUATOR_TYPE
         'Can only conduct check and update for list of metrics, a config dict '
         f'or a Evaluator object. But receives {type(evaluator)}.')
     evaluator.setdefault('type', 'EditEvaluator')
+    evaluator.setdefault('metrics', None)  # default as 'dummy evaluator'
     _type = evaluator['type']
     if _type != 'EditEvaluator':
         print_log(warning_template.format(_type), 'current', WARNING)

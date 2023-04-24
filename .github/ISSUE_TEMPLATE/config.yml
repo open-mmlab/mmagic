@@ -1,6 +1,9 @@
 blank_issues_enabled: false
 
 contact_links:
-  - name: MMEditing Documentation
-    url: https://mmediting.readthedocs.io/en/latest/
-    about: Check if your question is answered in docs
+  - name: 💬 Forum
+    url: https://github.com/open-mmlab/mmediting/discussions
+    about: Ask general usage questions and discuss with other MMEditing community members
+  - name: 🌐 Explore OpenMMLab
+    url: https://openmmlab.com/
+    about: Get to know more about OpenMMLab

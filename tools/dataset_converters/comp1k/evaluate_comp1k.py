@@ -5,6 +5,7 @@ import re
 
 import cv2
 import mmcv
+import mmengine
 import numpy as np
 
 from mmedit.evaluation import gauss_gradient
@@ -190,8 +191,8 @@ def evaluate(pred_root, gt_root, trimap_root, verbose, nproc):
         nproc (int): number of processers.
     """
 
-    images = sorted(mmcv.scandir(pred_root))
-    gt_files_num = len(list(mmcv.scandir(gt_root)))
+    images = sorted(mmengine.scandir(pred_root))
+    gt_files_num = len(list(mmengine.scandir(gt_root)))
     # If ground truth alpha mattes are not copied (number of files is 50), we
     # use the below pattern to recover the name of the original alpha matte.
     if gt_files_num == 50:
@@ -210,7 +211,7 @@ def evaluate(pred_root, gt_root, trimap_root, verbose, nproc):
             osp.join(trimap_root, img) if trimap_root is not None else None)
         pairs.append((pred_alpha_path, alpha_path, trimap_path))
 
-    results = mmcv.track_parallel_progress(evaluate_one, pairs, nproc)
+    results = mmengine.track_parallel_progress(evaluate_one, pairs, nproc)
 
     if verbose:
         # for sad_result, mse_result, grad_result, conn_result in results:
