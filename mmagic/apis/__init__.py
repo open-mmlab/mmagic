@@ -1,4 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from .inferencers import Inferencers
+from .mmagic_inferencer import MMagicInferencer
 
-__all__ = ['Inferencers']
+__all__ = ['MMagicInferencer']
