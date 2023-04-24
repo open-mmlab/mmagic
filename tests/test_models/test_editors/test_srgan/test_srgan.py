@@ -5,7 +5,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmagic.models import SRGAN, EditDataPreprocessor, ModifiedVGG, MSRResNet
+from mmagic.models import SRGAN, DataPreprocessor, ModifiedVGG, MSRResNet
 from mmagic.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
 from mmagic.structures import DataSample
 
@@ -38,7 +38,7 @@ def test_srgan_resnet(init_weights):
             fake_label_val=0),
         train_cfg=None,
         test_cfg=None,
-        data_preprocessor=EditDataPreprocessor())
+        data_preprocessor=DataPreprocessor())
 
     assert isinstance(model, SRGAN)
     assert isinstance(model.generator, MSRResNet)

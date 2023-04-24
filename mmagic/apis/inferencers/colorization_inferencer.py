@@ -11,10 +11,10 @@ from mmengine.dataset.utils import default_collate as collate
 
 from mmagic.structures import DataSample
 from mmagic.utils import tensor2img
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 
 
-class ColorizationInferencer(BaseMMEditInferencer):
+class ColorizationInferencer(BaseMMagicInferencer):
     """inferencer that predicts with colorization models."""
 
     func_kwargs = dict(

@@ -20,13 +20,13 @@ model = dict(
     pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean'),
     lq_pixel_loss=dict(type='MSELoss', loss_weight=0.01, reduction='mean'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0.5 * 255, 0.5 * 255, 0.5 * 255],
         std=[255, 255, 255],
     ))
 
 val_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(type='PSNR', crop_border=8, convert_to='Y'),
         dict(type='SSIM', crop_border=8, convert_to='Y'),
@@ -106,7 +106,7 @@ optim_wrapper = dict(
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=400_000, val_interval=50000)
-val_cfg = dict(type='EditValLoop')
+val_cfg = dict(type='MultiValLoop')
 
 # No learning policy
 

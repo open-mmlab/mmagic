@@ -15,4 +15,4 @@ for dataloader in test_dataloader:
 # model settings
 model = dict(
     generator=dict(inp_channels=6, dual_pixel_task=True),
-    data_preprocessor=dict(type='EditDataPreprocessor'))
+    data_preprocessor=dict(type='DataPreprocessor'))

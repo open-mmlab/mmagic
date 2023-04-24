@@ -15,13 +15,13 @@ from torchvision.utils import make_grid
 
 from mmagic.structures import DataSample
 from mmagic.utils import ForwardInputs, try_import
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 from .inference_functions import calculate_grid_size
 
 imageio = try_import('imageio')
 
 
-class EG3DInferencer(BaseMMEditInferencer):
+class EG3DInferencer(BaseMMagicInferencer):
 
     func_kwargs = dict(
         preprocess=['inputs'],

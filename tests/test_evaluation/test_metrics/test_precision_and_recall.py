@@ -9,7 +9,7 @@ from mmengine.runner import Runner
 from mmagic.datasets import BasicImageDataset
 from mmagic.datasets.transforms import PackEditInputs
 from mmagic.evaluation import PrecisionAndRecall
-from mmagic.models import LSGAN, EditDataPreprocessor
+from mmagic.models import LSGAN, DataPreprocessor
 from mmagic.models.editors.dcgan import DCGANGenerator
 from mmagic.utils import register_all_modules
 
@@ -61,7 +61,7 @@ class TestPR:
                 batch_size=2,
                 dataset=dataset,
                 sampler=dict(type='DefaultSampler')))
-        gan_data_preprocessor = EditDataPreprocessor()
+        gan_data_preprocessor = DataPreprocessor()
         generator = DCGANGenerator(128, noise_size=10, base_channels=20)
         cls.module = LSGAN(
             generator, data_preprocessor=gan_data_preprocessor)  # noqa

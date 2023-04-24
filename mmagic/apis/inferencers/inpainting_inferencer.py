@@ -12,10 +12,10 @@ from torch.nn.parallel import scatter
 
 from mmagic.structures import DataSample
 from mmagic.utils import tensor2img
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 
 
-class InpaintingInferencer(BaseMMEditInferencer):
+class InpaintingInferencer(BaseMMagicInferencer):
     """inferencer that predicts with inpainting models."""
 
     func_kwargs = dict(

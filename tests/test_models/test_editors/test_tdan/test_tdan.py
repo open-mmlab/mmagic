@@ -3,7 +3,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmagic.models.data_preprocessors import EditDataPreprocessor
+from mmagic.models.data_preprocessors import DataPreprocessor
 from mmagic.models.editors import TDAN, TDANNet
 from mmagic.models.losses import MSELoss
 from mmagic.structures import DataSample
@@ -15,12 +15,12 @@ def test_tdan():
         generator=dict(type='TDANNet'),
         pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean'),
         lq_pixel_loss=dict(type='MSELoss', loss_weight=0.01, reduction='mean'),
-        data_preprocessor=EditDataPreprocessor(mean=[0.5, 0.5, 0.5]))
+        data_preprocessor=DataPreprocessor(mean=[0.5, 0.5, 0.5]))
 
     assert model.__class__.__name__ == 'TDAN'
     assert isinstance(model.generator, TDANNet)
     assert isinstance(model.pixel_loss, MSELoss)
-    assert isinstance(model.data_preprocessor, EditDataPreprocessor)
+    assert isinstance(model.data_preprocessor, DataPreprocessor)
 
     optimizer = Adam(model.generator.parameters(), lr=0.001)
     optim_wrapper = OptimWrapper(optimizer)

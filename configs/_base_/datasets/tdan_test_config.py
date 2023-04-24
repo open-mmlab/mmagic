@@ -39,7 +39,7 @@ SPMC_bi_dataloader = dict(
         pipeline=SPMC_pipeline))
 
 SPMC_bd_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(
             type='PSNR', crop_border=8, convert_to='Y', prefix='SPMCS-BDx4-Y'),
@@ -47,7 +47,7 @@ SPMC_bd_evaluator = dict(
             type='SSIM', crop_border=8, convert_to='Y', prefix='SPMCS-BDx4-Y'),
     ])
 SPMC_bi_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(
             type='PSNR', crop_border=8, convert_to='Y', prefix='SPMCS-BIx4-Y'),
@@ -96,20 +96,20 @@ vid4_bi_dataloader = dict(
         pipeline=vid4_pipeline))
 
 vid4_bd_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(type='PSNR', convert_to='Y', prefix='VID4-BDx4-Y'),
         dict(type='SSIM', convert_to='Y', prefix='VID4-BDx4-Y'),
     ])
 vid4_bi_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(type='PSNR', convert_to='Y', prefix='VID4-BIx4-Y'),
         dict(type='SSIM', convert_to='Y', prefix='VID4-BIx4-Y'),
     ])
 
 # config for test
-test_cfg = dict(type='EditTestLoop')
+test_cfg = dict(type='MultiTestLoop')
 test_dataloader = [
     SPMC_bd_dataloader,
     SPMC_bi_dataloader,

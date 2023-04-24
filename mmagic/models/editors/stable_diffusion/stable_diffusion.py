@@ -60,7 +60,7 @@ class StableDiffusion(BaseModel):
                  test_scheduler: Optional[ModelType] = None,
                  enable_xformers: bool = True,
                  data_preprocessor: Optional[ModelType] = dict(
-                     type='EditDataPreprocessor'),
+                     type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None):
 
         # TODO: support `from_pretrained` for this class
@@ -263,8 +263,8 @@ class StableDiffusion(BaseModel):
 
     def output_to_pil(self, image) -> List[Image.Image]:
         """Convert output tensor to PIL image. Output tensor will be de-normed
-        to [0, 255] by `EditDataPreprocessor.destruct`. Due to no
-        `data_samples` is passed, color order conversion will not be performed.
+        to [0, 255] by `DataPreprocessor.destruct`. Due to no `data_samples` is
+        passed, color order conversion will not be performed.
 
         Args:
             image (torch.Tensor): The output tensor of the decoder.

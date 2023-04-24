@@ -8,7 +8,7 @@ from mmengine.utils.version_utils import digit_version
 from mmagic.datasets import BasicImageDataset
 from mmagic.datasets.transforms import PackEditInputs
 from mmagic.evaluation import Equivariance
-from mmagic.models import EditDataPreprocessor, StyleGAN3
+from mmagic.models import DataPreprocessor, StyleGAN3
 from mmagic.models.editors.stylegan3 import StyleGAN3Generator
 from mmagic.utils import register_all_modules
 
@@ -44,7 +44,7 @@ class TestEquivariance:
                 batch_size=2,
                 dataset=dataset,
                 sampler=dict(type='DefaultSampler')))
-        gan_data_preprocessor = EditDataPreprocessor()
+        gan_data_preprocessor = DataPreprocessor()
         generator = StyleGAN3Generator(64, 8, 3, noise_size=8)
         cls.module = StyleGAN3(
             generator, data_preprocessor=gan_data_preprocessor)

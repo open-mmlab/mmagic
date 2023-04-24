@@ -3,7 +3,7 @@ _base_ = ['../_base_/gen_default_runtime.py']
 # define GAN model
 model = dict(
     type='ProgressiveGrowingGAN',
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     noise_size=512,
     generator=dict(type='PGGANGenerator', out_scale=128),
     discriminator=dict(type='PGGANDiscriminator', in_scale=128),

@@ -50,7 +50,7 @@ class TestEG3D(TestCase):
         self.default_cfg = dict(
             generator=self.generator_cfg,
             camera=self.camera_cfg,
-            data_preprocessor=dict(type='EditDataPreprocessor'))
+            data_preprocessor=dict(type='DataPreprocessor'))
 
     def test_init(self):
         cfg_ = deepcopy(self.default_cfg)

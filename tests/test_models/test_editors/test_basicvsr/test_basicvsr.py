@@ -4,7 +4,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmagic.models import BasicVSR, BasicVSRNet, EditDataPreprocessor
+from mmagic.models import BasicVSR, BasicVSRNet, DataPreprocessor
 from mmagic.models.losses import CharbonnierLoss
 from mmagic.structures import DataSample
 
@@ -21,7 +21,7 @@ def test_basicvsr():
             type='CharbonnierLoss', loss_weight=1.0, reduction='mean'),
         train_cfg=dict(fix_iter=1),
         ensemble=None,
-        data_preprocessor=EditDataPreprocessor())
+        data_preprocessor=DataPreprocessor())
 
     assert isinstance(model, BasicVSR)
     assert isinstance(model.generator, BasicVSRNet)
@@ -65,7 +65,7 @@ def test_basicvsr():
             type='CharbonnierLoss', loss_weight=1.0, reduction='mean'),
         train_cfg=dict(fix_iter=1),
         ensemble=dict(type='SpatialTemporalEnsemble'),
-        data_preprocessor=EditDataPreprocessor())
+        data_preprocessor=DataPreprocessor())
 
     with pytest.raises(NotImplementedError):
         model = BasicVSR(
@@ -78,4 +78,4 @@ def test_basicvsr():
                 type='CharbonnierLoss', loss_weight=1.0, reduction='mean'),
             train_cfg=dict(fix_iter=1),
             ensemble=dict(type=''),
-            data_preprocessor=EditDataPreprocessor())
+            data_preprocessor=DataPreprocessor())

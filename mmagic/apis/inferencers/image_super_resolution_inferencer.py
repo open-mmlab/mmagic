@@ -10,10 +10,10 @@ from mmengine.dataset import Compose
 from mmengine.dataset.utils import default_collate as collate
 
 from mmagic.utils import tensor2img
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 
 
-class ImageSuperResolutionInferencer(BaseMMEditInferencer):
+class ImageSuperResolutionInferencer(BaseMMagicInferencer):
     """inferencer that predicts with restoration models."""
 
     func_kwargs = dict(

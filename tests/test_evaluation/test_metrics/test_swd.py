@@ -6,7 +6,7 @@ import numpy as np
 import torch
 
 from mmagic.evaluation import SlicedWassersteinDistance
-from mmagic.models import EditDataPreprocessor
+from mmagic.models import DataPreprocessor
 from mmagic.structures import DataSample
 
 
@@ -18,7 +18,7 @@ class TestSWD(TestCase):
 
     def test_prosess(self):
         model = MagicMock()
-        model.data_preprocessor = EditDataPreprocessor()
+        model.data_preprocessor = DataPreprocessor()
         swd = SlicedWassersteinDistance(fake_nums=100, image_shape=(3, 32, 32))
         swd.prepare(model, None)
 

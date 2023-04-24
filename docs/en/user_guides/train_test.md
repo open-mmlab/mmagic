@@ -205,8 +205,8 @@ val_dataloader = dict(
 train_cfg = dict(by_epoch=False, val_begin=1, val_interval=10000)
 
 # define val loop and evaluator
-val_cfg = dict(type='EditValLoop')
-val_evaluator = dict(type='EditEvaluator', metrics=metrics)
+val_cfg = dict(type='MultiValLoop')
+val_evaluator = dict(type='Evaluator', metrics=metrics)
 ```
 
 You can set `val_begin` and `val_interval` to adjust when to begin validation and interval of validation.

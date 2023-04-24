@@ -3,7 +3,7 @@ target_domain = None  # set by user
 # model settings
 model = dict(
     type='Pix2Pix',
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     generator=dict(
         type='UnetGenerator',
         in_channels=3,

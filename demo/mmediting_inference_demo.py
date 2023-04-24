@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 # isort: off
 from argparse import ArgumentParser
-from mmagic.edit import MMEdit
+from mmagic.mmagic import MMagic
 from mmengine import DictAction
 
 
@@ -109,25 +109,25 @@ def main():
     user_defined.update(vars(args))
 
     if args.print_supported_models:
-        inference_supported_models = MMEdit.get_inference_supported_models()
+        inference_supported_models = MMagic.get_inference_supported_models()
         print('all supported models:')
         print(inference_supported_models)
         return
 
     if args.print_supported_tasks:
-        supported_tasks = MMEdit.get_inference_supported_tasks()
+        supported_tasks = MMagic.get_inference_supported_tasks()
         print('all supported tasks:')
         print(supported_tasks)
         return
 
     if args.print_task_supported_models:
         task_supported_models = \
-            MMEdit.get_task_supported_models(args.print_task_supported_models)
+            MMagic.get_task_supported_models(args.print_task_supported_models)
         print('translation models:')
         print(task_supported_models)
         return
 
-    editor = MMEdit(**vars(args))
+    editor = MMagic(**vars(args))
     editor.infer(**user_defined)
 
 

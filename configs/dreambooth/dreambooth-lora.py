@@ -34,7 +34,7 @@ model = dict(
         type='DDIMScheduler',
         from_pretrained=stable_diffusion_v15_url,
         subfolder='scheduler'),
-    data_preprocessor=dict(type='EditDataPreprocessor', data_keys=None),
+    data_preprocessor=dict(type='DataPreprocessor', data_keys=None),
     prior_loss_weight=0,
     val_prompts=val_prompts,
     lora_config=lora_config)

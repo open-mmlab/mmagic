@@ -7,7 +7,7 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmagic.models import EditDataPreprocessor, StyleGAN2
+from mmagic.models import DataPreprocessor, StyleGAN2
 from mmagic.structures import DataSample
 
 
@@ -46,7 +46,7 @@ class TestStyleGAN2(TestCase):
         stylegan2 = StyleGAN2(
             self.generator_cfg,
             self.disc_cfg,
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             ema_config=self.ema_config,
             loss_config=self.loss_config)
 
