@@ -54,7 +54,7 @@ class SRVimeo90KDataset(BaseSRDataset):
         self.data_infos = self.load_annotations()
 
     def load_annotations(self):
-        """Load annotations for VimeoK dataset.
+        """Load annotations for Vimeo90K dataset.
 
         Returns:
             list[dict]: A list of dicts for paired paths and other information.
