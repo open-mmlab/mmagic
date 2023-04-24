@@ -28,11 +28,11 @@ class TestDataSample(TestCase):
             scale_factor=np.array([1.5, 1.5]),
             img_shape=torch.rand(4))
 
-        edit_data_sample = DataSample(metainfo=meta_info)
-        assert 'target_size' in edit_data_sample
-        assert edit_data_sample.target_size == [256, 256]
-        assert edit_data_sample.get('target_size') == [256, 256]
-        assert len(edit_data_sample) == 1
+        data_sample = DataSample(metainfo=meta_info)
+        assert 'target_size' in data_sample
+        assert data_sample.target_size == [256, 256]
+        assert data_sample.get('target_size') == [256, 256]
+        assert len(data_sample) == 1
 
     def _check_in_and_same(self, data_sample, field, value, is_meta=False):
         if is_meta:
