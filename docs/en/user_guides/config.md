@@ -298,7 +298,7 @@ In addition to neural network components such as generator, discriminator etc, i
 ```python
 model = dict(
     type='StyleGAN2',  # The name of the model
-    data_preprocessor=dict(type='GANDataPreprocessor'),  # The config of data preprocessor, usually includs image normalization and padding
+    data_preprocessor=dict(type='DataPreprocessor'),  # The config of data preprocessor, usually includs image normalization and padding
     generator=dict(  # The config for generator
         type='StyleGANv2Generator',  # The name of the generator
         out_size=1024,  # The output resolution of the generator
@@ -392,8 +392,8 @@ train_cfg = dict(  # The config for training
     val_begin=1,  # Which iteration to start the validation
     val_interval=10000,  # Validation intervals
     max_iters=800002)  # Maximum training iterations
-val_cfg = dict(type='GenValLoop')  # The validation loop type
-test_cfg = dict(type='GenTestLoop')  # The testing loop type
+val_cfg = dict(type='MultiValLoop')  # The validation loop type
+test_cfg = dict(type='MultiTestLoop')  # The testing loop type
 ```
 
 ### Optimization config
@@ -403,7 +403,7 @@ The optimizer wrapper not only provides the functions of the optimizer, but also
 
 ```python
 optim_wrapper = dict(
-    constructor='GenOptimWrapperConstructor',
+    constructor='MultiOptimWrapperConstructor',
     generator=dict(
         optimizer=dict(type='Adam', lr=0.0016, betas=(0, 0.9919919678228657))),
     discriminator=dict(
@@ -675,7 +675,7 @@ To help the users have a basic idea of a complete config, we make a brief commen
 model = dict(
     type='DIM',  # The name of model (we call mattor).
     data_preprocessor=dict(  # The Config to build data preprocessor
-        type='MattorPreprocessor',
+        type='DataPreprocessor',
         mean=[123.675, 116.28, 103.53],
         std=[58.395, 57.12, 57.375],
         bgr_to_rgb=True,
@@ -897,7 +897,6 @@ train_pipeline = [  # Training data processing pipeline
         keys=['lq', 'gt'],  # Images to be transposed
         transpose_ratio=0.5  # Transpose ratio
         ),
-    dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
     dict(type='PackInputs')  # The config of collecting data from the current pipeline
 ]
 test_pipeline = [  # Test pipeline
