@@ -41,13 +41,13 @@ def test_edit():
         osp.dirname(__file__), '..', '..', 'configs', 'biggan',
         'biggan_2xb25-500kiters_cifar10-32x32.py')
 
-    mmedit_instance = MMagicInferencer(
+    mmagic_instance = MMagicInferencer(
         'biggan',
         model_ckpt='',
         model_config=cfg,
         extra_parameters={'sample_model': 'ema'})
-    mmedit_instance.print_extra_parameters()
-    inference_result = mmedit_instance.infer(label=1)
+    mmagic_instance.print_extra_parameters()
+    inference_result = mmagic_instance.infer(label=1)
     result_img = inference_result[1]
     assert result_img.shape == (4, 3, 32, 32)
 
