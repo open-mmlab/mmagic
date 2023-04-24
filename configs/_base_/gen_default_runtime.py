@@ -57,12 +57,12 @@ visualizer = dict(type='Visualizer', vis_backends=vis_backends)
 train_cfg = dict(by_epoch=False, val_begin=1, val_interval=10000)
 
 # config for val
-val_cfg = dict(type='EditValLoop')
-val_evaluator = dict(type='EditEvaluator')
+val_cfg = dict(type='MultiValLoop')
+val_evaluator = dict(type='Evaluator')
 
 # config for test
-test_cfg = dict(type='EditTestLoop')
-test_evaluator = dict(type='EditEvaluator')
+test_cfg = dict(type='MultiTestLoop')
+test_evaluator = dict(type='Evaluator')
 
 # config for optim_wrapper_constructor
 optim_wrapper = dict(constructor='MultiOptimWrapperConstructor')

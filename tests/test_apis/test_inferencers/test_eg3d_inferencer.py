@@ -45,7 +45,7 @@ config = dict(
             focal=1.025390625,
             up=[0, 0, 1],
             radius=1.2),
-        data_preprocessor=dict(type='EditDataPreprocessor')))
+        data_preprocessor=dict(type='DataPreprocessor')))
 
 
 def test_eg3d_inferencer():

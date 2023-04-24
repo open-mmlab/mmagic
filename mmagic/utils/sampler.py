@@ -138,7 +138,7 @@ class ValDataSampler:
             dataset = runner.val_loop.dataloader.dataset
             batch_size = runner.val_loop.dataloader.batch_size
         else:
-            # EditValLoop use `dataloaders` instead `dataloader`
+            # MultiValLoop use `dataloaders` instead `dataloader`
             loaders = runner.val_loop.dataloaders
             dataset = ConcatDataset([loader.dataset for loader in loaders])
             batch_size = loaders[0].batch_size

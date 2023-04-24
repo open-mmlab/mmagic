@@ -33,7 +33,7 @@ model = dict(
         eval_bsize=30000),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0.5 * 255, 0.5 * 255, 0.5 * 255],
         std=[0.5 * 255, 0.5 * 255, 0.5 * 255],
     ))

@@ -15,7 +15,7 @@ model = dict(
     ensemble=dict(type='SpatialTemporalEnsemble', is_temporal_ensemble=False),
     train_cfg=dict(fix_iter=5000),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
     ))

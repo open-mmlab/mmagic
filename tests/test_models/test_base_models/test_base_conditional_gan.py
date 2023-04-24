@@ -9,7 +9,7 @@ from mmengine.structures import LabelData
 from mmengine.testing import assert_allclose
 from torch.nn import ModuleList
 
-from mmagic.models import BaseConditionalGAN, EditDataPreprocessor
+from mmagic.models import BaseConditionalGAN, DataPreprocessor
 from mmagic.models.losses import (DiscShiftLossComps, GANLossComps,
                                   GeneratorPathRegularizerComps,
                                   GradientPenaltyLossComps)
@@ -50,7 +50,7 @@ class TestBaseGAN(TestCase):
             noise_size=10,
             num_classes=10,
             generator=deepcopy(generator),
-            data_preprocessor=EditDataPreprocessor())
+            data_preprocessor=DataPreprocessor())
         gan.eval()
 
         # no mode
@@ -105,7 +105,7 @@ class TestBaseGAN(TestCase):
             noise_size=10,
             num_classes=10,
             generator=deepcopy(generator),
-            data_preprocessor=EditDataPreprocessor())
+            data_preprocessor=DataPreprocessor())
         gan.eval()
         inputs = dict(num_batches=3)
         outputs = gan(inputs, None)
@@ -128,7 +128,7 @@ class TestBaseGAN(TestCase):
             noise_size=10,
             num_classes=10,
             generator=deepcopy(generator),
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             ema_config=dict(interval=1))
         gan.eval()
         # inputs = dict(inputs=dict(num_batches=3))
@@ -180,7 +180,7 @@ class TestBaseGAN(TestCase):
             num_classes=10,
             generator=deepcopy(generator),
             discriminator=deepcopy(discriminator),
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             loss_config=dict())
         self.assertIsNone(gan.gan_loss)
         self.assertIsNone(gan.disc_auxiliary_losses)
@@ -201,7 +201,7 @@ class TestBaseGAN(TestCase):
             num_classes=10,
             generator=deepcopy(generator),
             discriminator=deepcopy(discriminator),
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             loss_config=loss_config)
         self.assertIsInstance(gan.disc_auxiliary_losses, ModuleList)
         self.assertIsInstance(gan.disc_auxiliary_losses[0], DiscShiftLossComps)
@@ -227,7 +227,7 @@ class TestBaseGAN(TestCase):
             num_classes=10,
             generator=deepcopy(generator),
             discriminator=deepcopy(discriminator),
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             loss_config=loss_config)
         self.assertIsInstance(gan.gan_loss, GANLossComps)
         self.assertIsInstance(gan.disc_auxiliary_losses, ModuleList)
@@ -242,7 +242,7 @@ class TestBaseGAN(TestCase):
             num_classes=10,
             generator=deepcopy(generator),
             discriminator=deepcopy(discriminator),
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             loss_config=loss_config)
         # mock gen aux loss to avoid build styleGAN Generator
         gen_aux_loss_mock = MagicMock(return_value=torch.Tensor([1.]))
@@ -278,7 +278,7 @@ class TestBaseGAN(TestCase):
             num_classes=10,
             generator=deepcopy(generator),
             discriminator=deepcopy(discriminator),
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             loss_config=loss_config)
         log_vars = gan.train_step(data, optim_wrapper=optimizer_wrapper)
         self.assertIn('loss', log_vars)

@@ -26,7 +26,7 @@ class TestPGGAN(TestCase):
     discriminator_cfg = dict(
         type='PGGANDiscriminator', in_scale=16, label_size=0)
 
-    data_preprocessor = dict(type='EditDataPreprocessor')
+    data_preprocessor = dict(type='DataPreprocessor')
 
     nkimgs_per_scale = {'4': 0.004, '8': 0.008, '16': 0.016}
 

@@ -7,7 +7,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmagic.models.data_preprocessors import EditDataPreprocessor
+from mmagic.models.data_preprocessors import DataPreprocessor
 from mmagic.models.editors import (RealBasicVSR, RealBasicVSRNet,
                                    UNetDiscriminatorWithSpectralNorm)
 from mmagic.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
@@ -59,7 +59,7 @@ def test_real_basicvsr(init_weights):
         is_use_sharpened_gt_in_pixel=True,
         is_use_sharpened_gt_in_percep=True,
         is_use_sharpened_gt_in_gan=False,
-        data_preprocessor=EditDataPreprocessor())
+        data_preprocessor=DataPreprocessor())
 
     assert isinstance(model, RealBasicVSR)
     assert isinstance(model.generator, RealBasicVSRNet)

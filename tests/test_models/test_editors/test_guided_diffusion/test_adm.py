@@ -15,7 +15,7 @@ class TestAdm(TestCase):
     def setup_class(cls):
         # test init
         cls.model = AblatedDiffusionModel(
-            data_preprocessor=dict(type='EditDataPreprocessor'),
+            data_preprocessor=dict(type='DataPreprocessor'),
             unet=dict(
                 type='DenoisingUnet',
                 image_size=64,

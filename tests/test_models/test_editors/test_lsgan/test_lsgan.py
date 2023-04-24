@@ -7,7 +7,7 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch.optim import SGD
 
-from mmagic.models import LSGAN, EditDataPreprocessor
+from mmagic.models import LSGAN, DataPreprocessor
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 
@@ -22,12 +22,12 @@ class TestLSGAN(TestCase):
     def test_init(self):
         gan = LSGAN(
             noise_size=10,
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             generator=generator,
             discriminator=discriminator)
 
         self.assertIsInstance(gan, LSGAN)
-        self.assertIsInstance(gan.data_preprocessor, EditDataPreprocessor)
+        self.assertIsInstance(gan.data_preprocessor, DataPreprocessor)
 
         # test only generator have noise size
         gen_cfg = deepcopy(generator)
@@ -35,7 +35,7 @@ class TestLSGAN(TestCase):
         gan = LSGAN(
             generator=gen_cfg,
             discriminator=discriminator,
-            data_preprocessor=EditDataPreprocessor())
+            data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.noise_size, 10)
 
         # test init with nn.Module
@@ -47,12 +47,12 @@ class TestLSGAN(TestCase):
         gan = LSGAN(
             generator=gen,
             discriminator=disc,
-            data_preprocessor=EditDataPreprocessor())
+            data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.generator, gen)
         self.assertEqual(gan.discriminator, disc)
 
         # test init without discriminator
-        gan = LSGAN(generator=gen, data_preprocessor=EditDataPreprocessor())
+        gan = LSGAN(generator=gen, data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.discriminator, None)
 
     def test_train_step(self):
@@ -64,7 +64,7 @@ class TestLSGAN(TestCase):
             noise_size=10,
             generator=generator,
             discriminator=discriminator,
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             discriminator_steps=n_disc)
         # prepare messageHub
         message_hub.update_info('iter', 0)

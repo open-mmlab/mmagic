@@ -18,7 +18,7 @@ model = dict(
     ensemble=dict(type='SpatialTemporalEnsemble', is_temporal_ensemble=False),
     train_cfg=dict(fix_iter=5000),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
     ))
@@ -53,9 +53,9 @@ test_dataloader = dict(
         pipeline=test_pipeline))
 
 test_evaluator = dict(
-    type='EditEvaluator', metrics=[
+    type='Evaluator', metrics=[
         dict(type='PSNR'),
         dict(type='SSIM'),
     ])
 
-test_cfg = dict(type='EditTestLoop')
+test_cfg = dict(type='MultiTestLoop')

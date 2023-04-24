@@ -53,7 +53,7 @@ config = dict(
         type='DDIMScheduler',
         from_pretrained=stable_diffusion_v15_url,
         subfolder='scheduler'),
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     enable_xformers=False,
     init_cfg=dict(type='init_from_unet'))
 

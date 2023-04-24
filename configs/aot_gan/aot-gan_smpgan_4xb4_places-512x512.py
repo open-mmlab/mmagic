@@ -13,7 +13,7 @@ model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
 model = dict(
     type='AOTInpaintor',
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[127.5],
         std=[127.5],
     ),
@@ -139,8 +139,8 @@ train_cfg = dict(
     max_iters=500002,
     val_interval=50000,
 )
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(

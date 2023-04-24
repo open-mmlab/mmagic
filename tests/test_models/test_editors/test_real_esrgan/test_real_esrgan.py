@@ -5,7 +5,7 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmagic.models import (EditDataPreprocessor, RealESRGAN, RRDBNet,
+from mmagic.models import (DataPreprocessor, RealESRGAN, RRDBNet,
                            UNetDiscriminatorWithSpectralNorm)
 from mmagic.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
 from mmagic.structures import DataSample
@@ -54,7 +54,7 @@ def test_real_esrgan(init_weights):
         is_use_ema=False,
         train_cfg=None,
         test_cfg=None,
-        data_preprocessor=EditDataPreprocessor())
+        data_preprocessor=DataPreprocessor())
 
     assert isinstance(model, RealESRGAN)
     assert isinstance(model.generator, RRDBNet)

@@ -33,7 +33,7 @@ model = dict(
     train_cfg=dict(pixel_init=10000, disc_repeat=2),
     test_cfg=dict(),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[129.795, 108.12, 96.39],
         std=[255, 255, 255],
     ))

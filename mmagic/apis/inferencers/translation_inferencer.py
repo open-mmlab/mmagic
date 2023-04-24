@@ -10,10 +10,10 @@ from mmengine.dataset.utils import default_collate as collate
 from torchvision import utils
 
 from mmagic.models.base_models import BaseTranslationModel
-from .base_mmedit_inferencer import BaseMMEditInferencer, InputsType, PredType
+from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 
 
-class TranslationInferencer(BaseMMEditInferencer):
+class TranslationInferencer(BaseMMagicInferencer):
     """inferencer that predicts with translation models."""
 
     func_kwargs = dict(

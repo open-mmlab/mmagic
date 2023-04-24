@@ -15,7 +15,7 @@ test_pkl_data = None
 model = dict(
     type='SinGAN',
     data_preprocessor=dict(
-        type='EditDataPreprocessor', non_image_keys=['input_sample']),
+        type='DataPreprocessor', non_image_keys=['input_sample']),
     generator=dict(
         type='SinGANMultiScaleGenerator',
         in_channels=3,
