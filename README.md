@@ -170,17 +170,29 @@ Below are quick steps for installation.
 Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/).
 
 **Step 2.**
-Install MMCV and MMEngine with [MIM](https://github.com/open-mmlab/mim).
+Install MMCV, MMEngine and MMagic with [MIM](https://github.com/open-mmlab/mim).
 
 ```shell
 pip3 install openmim
-# wait for more pre-compiled pkgs to release
 mim install 'mmcv>=2.0.0'
 mim install 'mmengine'
+mim install 'mmagic'
 ```
 
 **Step 3.**
-Install MMagic from source.
+Verify MMagic has been successfully installed.
+
+```shell
+cd ~
+python -c "import mmagic; print(mmagic.__version__)"
+# Example output: 1.0.0
+```
+
+**Getting Started**
+Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMagic.
+
+**Install MMagic from source**
+You can also experiment on the latest developed version rather than the stable release by installing MMagic from source with the following commands:
 
 ```shell
 git clone https://github.com/open-mmlab/mmagic.git
@@ -189,10 +201,6 @@ pip3 install -e .
 ```
 
 Please refer to [installation](docs/en/get_started/install.md) for more detailed instruction.
-
-**Getting Started**
-
-Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMagic.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 

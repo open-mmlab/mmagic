@@ -167,17 +167,30 @@ MMagic 依赖 [PyTorch](https://pytorch.org/)，[MMEngine](https://github.com/op
 依照[官方教程](https://pytorch.org/get-started/locally/)安装 PyTorch 。
 
 **步骤 2.**
-使用 [MIM](https://github.com/open-mmlab/mim) 安装 MMCV 和 MMEngine 。
+使用 [MIM](https://github.com/open-mmlab/mim) 安装 MMCV，MMEngine 和 MMagic 。
 
 ```
 pip3 install openmim
-# wait for more pre-compiled pkgs to release
 mim install 'mmcv>=2.0.0'
 mim install 'mmengine'
+mim install 'mmagic'
 ```
 
 **步骤 3.**
-从源码安装 MMagic
+验证 MMagic 安装成功。
+
+```shell
+cd ~
+python -c "import mmagic; print(mmagic.__version__)"
+# Example output: 1.0.0
+```
+
+**开始使用**
+
+请参考[快速运行](docs/zh_cn/get_started/quick_run.md)和[推理演示](docs/zh_cn/user_guides/inference.md)获取 MMagic 的基本用法。
+
+**从源码安装 MMagic**
+使用以下命令从源码安装 MMagic，你可以选择不使用已发布的稳定版本，而在最新开发的版本上进行实验。
 
 ```
 git clone https://github.com/open-mmlab/mmagic.git
@@ -186,10 +199,6 @@ pip3 install -e .
 ```
 
 更详细的安装指南请参考 [安装指南](docs/zh_cn/get_started/install.md) 。
-
-**开始使用**
-
-请参考[快速运行](docs/zh_cn/get_started/quick_run.md)和[推理演示](docs/zh_cn/user_guides/inference.md)获取 MMagic 的基本用法。
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
