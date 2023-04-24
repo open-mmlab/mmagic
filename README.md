@@ -386,10 +386,19 @@ We appreciate all the contributors who implement their methods or add new featur
 If MMagic is helpful to your research, please cite it as below.
 
 ```bibtex
-@misc{mmagic2022,
+@misc{mmagic2023,
     title = {{MMagic}: {OpenMMLab} Image and Video Editing Toolbox},
     author = {{MMagic Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmagic}},
+    year = {2023}
+}
+```
+
+```bibtex
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {{MMEditing Contributors}},
+    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
     year = {2022}
 }
 ```
@@ -422,8 +431,7 @@ Please refer to [LICENSES](LICENSE) for the careful check, if you are using our 
 - [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab's next-generation action understanding toolbox and benchmark.
 - [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab video perception toolbox and benchmark.
 - [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab optical flow toolbox and benchmark.
-- [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab image and video editing toolbox.
-- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab image and video generative models toolbox.
+- [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab Multimodal Advanced, Generative, and Intelligent Creation Toolbox.
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab model deployment framework.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>

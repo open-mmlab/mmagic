@@ -381,10 +381,19 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
 如果 MMagic 对您的研究有所帮助，请按照如下 bibtex 引用它。
 
 ```bibtex
-@misc{mmagic2022,
+@misc{mmagic2023,
     title = {{MMagic}: {OpenMMLab} Image and Video Editing Toolbox},
     author = {{MMagic Contributors}},
     howpublished = {\url{https://github.com/open-mmlab/mmagic}},
+    year = {2023}
+}
+```
+
+```bibtex
+@misc{mmediting2022,
+    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
+    author = {{MMEditing Contributors}},
+    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
     year = {2022}
 }
 ```
@@ -416,8 +425,7 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
 - [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab 新一代视频理解工具箱
 - [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab 一体化视频目标感知平台
 - [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab 光流估计工具箱与测试基准
-- [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab 图像视频编辑工具箱
-- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab 图片视频生成模型工具箱
+- [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab 新一代人工智能内容生成（AIGC）工具箱
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab 模型部署框架
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
