@@ -32,7 +32,7 @@ class TestPairedImageDataset(object):
                     dict(type='FixedCrop', keys=['img'], crop_size=(256, 256))
                 ]),
             dict(type='Flip', direction='horizontal', keys=['img_a', 'img_b']),
-            dict(type='PackEditInputs', keys=['img_a', 'img_b'])
+            dict(type='PackInputs', keys=['img_a', 'img_b'])
         ]
 
     def test_paired_image_dataset(self):

@@ -19,7 +19,7 @@ class TestSinGANDataset(object):
         cls.scale_factor_init = 0.75
         cls.pipeline = [
             dict(
-                type='PackEditInputs',
+                type='PackInputs',
                 keys=[f'real_scale{i}' for i in range(cls.num_scales)])
         ]
 

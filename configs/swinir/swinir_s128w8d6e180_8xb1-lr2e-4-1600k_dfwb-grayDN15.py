@@ -62,7 +62,7 @@ train_pipeline = [
             gaussian_sigma=[sigma, sigma],
             gaussian_gray_noise_prob=0),
         keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = [
@@ -84,7 +84,7 @@ val_pipeline = [
             gaussian_sigma=[sigma, sigma],
             gaussian_gray_noise_prob=0),
         keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings

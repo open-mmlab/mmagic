@@ -55,5 +55,5 @@ test_pipeline = [
         keys=['img', 'cropped_img'],
         scale=(256, 256),
         keep_ratio=False),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]

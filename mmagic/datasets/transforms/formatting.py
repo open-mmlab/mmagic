@@ -9,7 +9,7 @@ from mmagic.utils import all_to_tensor
 
 
 @TRANSFORMS.register_module()
-class PackEditInputs(BaseTransform):
+class PackInputs(BaseTransform):
     """Pack data into DataSample for training, evaluation and testing.
 
     MMagic follows the design of data structure from MMEngine.
@@ -36,11 +36,11 @@ class PackEditInputs(BaseTransform):
     ) -> None:
 
         assert keys is not None, \
-            'keys in PackEditInputs can not be None.'
+            'keys in PackInputs can not be None.'
         assert data_keys is not None, \
-            'data_keys in PackEditInputs can not be None.'
+            'data_keys in PackInputs can not be None.'
         assert meta_keys is not None, \
-            'meta_keys in PackEditInputs can not be None.'
+            'meta_keys in PackInputs can not be None.'
 
         self.keys = keys if isinstance(keys, List) else [keys]
         self.data_keys = data_keys if isinstance(data_keys,

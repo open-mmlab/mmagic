@@ -25,7 +25,7 @@ train_pipeline = [
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = [
@@ -40,7 +40,7 @@ val_pipeline = [
         key='gt',
         color_type='color',
         channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
@@ -50,7 +50,7 @@ demo_pipeline = [
         key='img',
         color_type='color',
         channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 data_root = 'data/REDS'

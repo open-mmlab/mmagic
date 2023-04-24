@@ -11,7 +11,7 @@ train_pipeline = [
         key='gt',
         channel_order='rgb',
         imdecode_backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
@@ -20,7 +20,7 @@ demo_pipeline = [
         key='img',
         channel_order='rgb',
         imdecode_backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings

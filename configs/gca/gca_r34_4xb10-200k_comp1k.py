@@ -67,7 +67,7 @@ train_pipeline = [
     dict(type='RandomJitter'),
     dict(type='MergeFgAndBg'),
     dict(type='FormatTrimap', to_onehot=True),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 test_pipeline = [
@@ -83,7 +83,7 @@ test_pipeline = [
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
     dict(type='FormatTrimap', to_onehot=True),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 train_dataloader = dict(

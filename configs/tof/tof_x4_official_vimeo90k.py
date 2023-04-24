@@ -28,7 +28,7 @@ val_pipeline = [
         key='gt',
         color_type='color',
         channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
@@ -38,7 +38,7 @@ demo_pipeline = [
         key='img',
         color_type='color',
         channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 data_root = 'data/Vid4'

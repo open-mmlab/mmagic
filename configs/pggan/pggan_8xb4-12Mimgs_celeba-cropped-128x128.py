@@ -39,12 +39,12 @@ train_pipeline = [
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='Resize', keys='gt', scale=(128, 128)),
     dict(type='Flip', keys='gt', direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 test_pipeline = [
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='Resize', keys='gt', scale=(128, 128)),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 train_dataloader = dict(

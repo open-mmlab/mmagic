@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from mmcv.transforms import to_tensor
 
-from mmagic.datasets.transforms import PackEditInputs
+from mmagic.datasets.transforms import PackInputs
 from mmagic.structures.data_sample import DataSample
 
 
@@ -18,8 +18,8 @@ def assert_tensor_equal(img, ref_img, ratio_thr=0.999):
 
 def test_pack_edit_inputs():
 
-    pack_edit_inputs = PackEditInputs(meta_keys='a', data_keys='numpy')
-    assert repr(pack_edit_inputs) == 'PackEditInputs'
+    pack_edit_inputs = PackInputs(meta_keys='a', data_keys='numpy')
+    assert repr(pack_edit_inputs) == 'PackInputs'
 
     ori_results = dict(
         img=np.random.rand(64, 64, 3),
