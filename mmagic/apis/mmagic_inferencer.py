@@ -8,12 +8,12 @@ import torch
 import yaml
 from mmengine.registry import init_default_scope
 
-from mmagic.apis import Inferencers
-from mmagic.apis.inferencers.base_mmagic_inferencer import InputsType
+from .inferencers import Inferencers
+from .inferencers.base_mmagic_inferencer import InputsType
 
 
-class MMagic:
-    """MMagic API for mmagic models inference.
+class MMagicInferencer:
+    """MMagicInferencer API for mmagic models inference.
 
     Args:
         model_name (str): Name of the editing model.
@@ -29,11 +29,11 @@ class MMagic:
 
     Examples:
         >>> # inference of a conditional model, biggan for example
-        >>> editor = MMagic(model_name='biggan')
+        >>> editor = MMagicInferencer(model_name='biggan')
         >>> editor.infer(label=1, result_out_dir='./biggan_res.jpg')
 
         >>> # inference of a translation model, pix2pix for example
-        >>> editor = MMagic(model_name='pix2pix')
+        >>> editor = MMagicInferencer(model_name='pix2pix')
         >>> editor.infer(img='./test.jpg', result_out_dir='./pix2pix_res.jpg')
 
         >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
@@ -98,6 +98,7 @@ class MMagic:
 
         # text2image models
         'disco_diffusion',
+        'stable_diffusion',
 
         # 3D-aware generation
         'eg3d',
@@ -119,7 +120,7 @@ class MMagic:
                  seed: int = 2022,
                  **kwargs) -> None:
         init_default_scope('mmagic')
-        MMagic.init_inference_supported_models_cfg()
+        MMagicInferencer.init_inference_supported_models_cfg()
         inferencer_kwargs = {}
         inferencer_kwargs.update(
             self._get_inferencer_kwargs(model_name, model_setting,
@@ -221,50 +222,52 @@ class MMagic:
 
     @staticmethod
     def init_inference_supported_models_cfg() -> None:
-        if not MMagic.inference_supported_models_cfg_inited:
+        if not MMagicInferencer.inference_supported_models_cfg_inited:
             all_cfgs_dir = osp.join(osp.dirname(__file__), '..', 'configs')
 
-            for model_name in MMagic.inference_supported_models:
+            for model_name in MMagicInferencer.inference_supported_models:
                 meta_file_dir = osp.join(all_cfgs_dir, model_name,
                                          'metafile.yml')
                 with open(meta_file_dir, 'r') as stream:
                     parsed_yaml = yaml.safe_load(stream)
                 task = parsed_yaml['Models'][0]['Results'][0]['Task']
-                MMagic.inference_supported_models_cfg[model_name] = {}
-                MMagic.inference_supported_models_cfg[model_name][
+                MMagicInferencer.inference_supported_models_cfg[
+                    model_name] = {}
+                MMagicInferencer.inference_supported_models_cfg[model_name][
                     'task'] = task  # noqa
-                MMagic.inference_supported_models_cfg[model_name][
+                MMagicInferencer.inference_supported_models_cfg[model_name][
                     'settings'] = parsed_yaml['Models']  # noqa
 
-            MMagic.inference_supported_models_cfg_inited = True
+            MMagicInferencer.inference_supported_models_cfg_inited = True
 
     @staticmethod
     def get_inference_supported_models() -> List:
         """static function for getting inference supported modes."""
-        return MMagic.inference_supported_models
+        return MMagicInferencer.inference_supported_models
 
     @staticmethod
     def get_inference_supported_tasks() -> List:
         """static function for getting inference supported tasks."""
-        if not MMagic.inference_supported_models_cfg_inited:
-            MMagic.init_inference_supported_models_cfg()
+        if not MMagicInferencer.inference_supported_models_cfg_inited:
+            MMagicInferencer.init_inference_supported_models_cfg()
 
         supported_task = set()
-        for key in MMagic.inference_supported_models_cfg.keys():
-            if MMagic.inference_supported_models_cfg[key]['task'] \
+        for key in MMagicInferencer.inference_supported_models_cfg.keys():
+            if MMagicInferencer.inference_supported_models_cfg[key]['task'] \
                not in supported_task:
-                supported_task.add(
-                    MMagic.inference_supported_models_cfg[key]['task'])
+                supported_task.add(MMagicInferencer.
+                                   inference_supported_models_cfg[key]['task'])
         return list(supported_task)
 
     @staticmethod
     def get_task_supported_models(task: str) -> List:
         """static function for getting task supported models."""
-        if not MMagic.inference_supported_models_cfg_inited:
-            MMagic.init_inference_supported_models_cfg()
+        if not MMagicInferencer.inference_supported_models_cfg_inited:
+            MMagicInferencer.init_inference_supported_models_cfg()
 
         supported_models = []
-        for key in MMagic.inference_supported_models_cfg.keys():
-            if MMagic.inference_supported_models_cfg[key]['task'] == task:
+        for key in MMagicInferencer.inference_supported_models_cfg.keys():
+            if MMagicInferencer.inference_supported_models_cfg[key][
+                    'task'] == task:
                 supported_models.append(key)
         return supported_models

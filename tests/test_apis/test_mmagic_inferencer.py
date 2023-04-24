@@ -3,7 +3,7 @@ import os.path as osp
 
 import pytest
 
-from mmagic.mmagic import MMagic
+from mmagic.apis import MMagicInferencer
 from mmagic.utils import register_all_modules
 
 register_all_modules()
@@ -11,27 +11,27 @@ register_all_modules()
 
 def test_edit():
     with pytest.raises(Exception):
-        MMagic('dog', ['error_type'], None)
+        MMagicInferencer('dog', ['error_type'], None)
 
     with pytest.raises(Exception):
-        MMagic()
+        MMagicInferencer()
 
     with pytest.raises(Exception):
-        MMagic(model_setting=1)
+        MMagicInferencer(model_setting=1)
 
-    supported_models = MMagic.get_inference_supported_models()
-    MMagic.inference_supported_models_cfg_inited = False
-    supported_models = MMagic.get_inference_supported_models()
+    supported_models = MMagicInferencer.get_inference_supported_models()
+    MMagicInferencer.inference_supported_models_cfg_inited = False
+    supported_models = MMagicInferencer.get_inference_supported_models()
 
-    supported_tasks = MMagic.get_inference_supported_tasks()
-    MMagic.inference_supported_models_cfg_inited = False
-    supported_tasks = MMagic.get_inference_supported_tasks()
+    supported_tasks = MMagicInferencer.get_inference_supported_tasks()
+    MMagicInferencer.inference_supported_models_cfg_inited = False
+    supported_tasks = MMagicInferencer.get_inference_supported_tasks()
 
     task_supported_models = \
-        MMagic.get_task_supported_models('Image2Image Translation')
-    MMagic.inference_supported_models_cfg_inited = False
+        MMagicInferencer.get_task_supported_models('Image2Image Translation')
+    MMagicInferencer.inference_supported_models_cfg_inited = False
     task_supported_models = \
-        MMagic.get_task_supported_models('Image2Image Translation')
+        MMagicInferencer.get_task_supported_models('Image2Image Translation')
 
     print(supported_models)
     print(supported_tasks)
@@ -41,7 +41,7 @@ def test_edit():
         osp.dirname(__file__), '..', 'configs', 'biggan',
         'biggan_2xb25-500kiters_cifar10-32x32.py')
 
-    mmedit_instance = MMagic(
+    mmedit_instance = MMagicInferencer(
         'biggan',
         model_ckpt='',
         model_config=cfg,

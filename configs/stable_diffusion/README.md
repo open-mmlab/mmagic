@@ -41,9 +41,9 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 
 ## Pretrained models
 
-|                               Model                               | Dataset |                            Download                            |
-| :---------------------------------------------------------------: | :-----: | :------------------------------------------------------------: |
-| [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py) |    -    | [model](https://huggingface.co/runwayml/stable-diffusion-v1-5) |
+|                               Model                               | Dataset | Download |
+| :---------------------------------------------------------------: | :-----: | :------: |
+| [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py) |    -    |    -     |
 
 We use stable diffusion v1.5 weights. This model has several weights including vae, unet and clip.
 

@@ -72,6 +72,7 @@ model = dict(
     type='StableDiffusion',
     unet=unet,
     vae=vae,
+    enable_xformers=False,
     text_encoder=dict(
         type='ClipWrapper',
         clip_type='huggingface',
