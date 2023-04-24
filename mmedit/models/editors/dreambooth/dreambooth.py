@@ -73,13 +73,14 @@ class DreamBooth(StableDiffusion):
                  finetune_text_encoder: bool = False,
                  dtype: str = 'fp16',
                  enable_xformers: bool = True,
+                 tomesd_cfg: Optional[dict] = None,
                  data_preprocessor: Optional[ModelType] = dict(
                      type='EditDataPreprocessor'),
                  init_cfg: Optional[dict] = None):
 
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, enable_xformers, data_preprocessor,
-                         init_cfg)
+                         test_scheduler, enable_xformers, tomesd_cfg,
+                         data_preprocessor, init_cfg)
         self.num_class_images = num_class_images
         self.class_prior_prompt = class_prior_prompt
         self.prior_loss_weight = prior_loss_weight
