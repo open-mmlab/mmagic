@@ -59,4 +59,5 @@ model = dict(
         subfolder='text_encoder'),
     tokenizer='runwayml/stable-diffusion-v1-5',
     scheduler=diffusion_scheduler,
-    test_scheduler=diffusion_scheduler)
+    test_scheduler=diffusion_scheduler,
+    init_cfg=dict())
