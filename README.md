@@ -365,12 +365,12 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
       </td>
       <td>
         <ul>
-          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
-          <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
-          <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
-          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
-          <li><a href="configs/guided_diffusion/README.md">Guided Diffusion (NeurIPS'2021)</a></li>
           <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
+          <li><a href="configs/guided_diffusion/README.md">Guided Diffusion (NeurIPS'2021)</a></li>
+          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
+          <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
+          <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
+          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
         </ul>
       </td>
       <td>
