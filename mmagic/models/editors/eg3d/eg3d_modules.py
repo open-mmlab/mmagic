@@ -82,7 +82,7 @@ class TriPlaneBackbone(StyleGAN2Generator):
             num_truncation_layer (int, optional): Number of layers use
                 truncated latent. Defaults to None.
             update_ws (bool): Whether update latent code with EMA. Only work
-                when `w_avg` is registeried. Defaults to False.
+                when `w_avg` is registered. Defaults to False.
 
         Returns:
             torch.Tensor: Style codes after mapping.

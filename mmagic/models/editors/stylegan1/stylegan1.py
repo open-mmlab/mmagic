@@ -23,7 +23,7 @@ class StyleGAN1(ProgressiveGrowingGAN):
     Adversarial Networks`.
 
     <https://openaccess.thecvf.com/content_CVPR_2019/html/Karras_A_Style-Based_Generator_Architecture_for_Generative_Adversarial_Networks_CVPR_2019_paper.html>`_  # noqa
-    (StyleGANv1). This class is inheriant from
+    (StyleGANv1). This class is inherited from
     :class:`~ProgressiveGrowingGAN` to support progressive training.
 
     Detailed architecture can be found in
@@ -72,7 +72,7 @@ class StyleGAN1(ProgressiveGrowingGAN):
 
         if style_channels is not None and model_style_channels is not None:
             assert style_channels == model_style_channels, (
-                'Input \'style_channels\' is unconsistency with '
+                'Input \'style_channels\' is inconsistent with '
                 f'\'generator.style_channels\'. Receive \'{style_channels}\' '
                 f'and \'{model_style_channels}\'.')
         else:

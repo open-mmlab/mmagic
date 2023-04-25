@@ -15,7 +15,7 @@ class LTE(BaseModule):
 
     Args:
         requires_grad (bool): Require grad or not. Default: True.
-        pixel_range (float): Pixel range of geature. Default: 1.
+        pixel_range (float): Pixel range of feature. Default: 1.
         load_pretrained_vgg (bool): Load pretrained VGG from torchvision.
             Default: True.
             Train: must load pretrained VGG.

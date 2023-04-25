@@ -13,7 +13,7 @@ from ...base_models import BaseGAN
 
 @MODELS.register_module()
 class GGAN(BaseGAN):
-    """Impelmentation of `Geomoetric GAN`.
+    """Implementation of `Geometric GAN`.
 
     <https://arxiv.org/abs/1705.02894>`_(GGAN).
     """

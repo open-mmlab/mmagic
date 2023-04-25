@@ -101,7 +101,7 @@ class BaseCamera(object):
             focal (Optional[float], optional): Focal in pixel. If
                 not passed, :attr:`self.focal` will be used. Defaults to None.
             batch_size (int): The batch size of the output. Defaults to 1.
-            device (DeviceType, optional): Device to put the intrinstic
+            device (DeviceType, optional): Device to put the intrinsic
                 matrix. If not passed, :attr:`self.device` will be used.
                 Defaults to None.
 
@@ -135,7 +135,7 @@ class BaseCamera(object):
         Args:
             fov (Optional[float], optional): FOV (field of view) in degree. If
                 not passed, :attr:`self.fov` will be used. Defaults to None.
-            device (DeviceType, optional): Device to put the intrinstic
+            device (DeviceType, optional): Device to put the intrinsic
                 matrix. If not passed, :attr:`self.device` will be used.
                 Defaults to None.
 
@@ -146,7 +146,7 @@ class BaseCamera(object):
         assert fov is not None, (
             '\'fov\' and \'self.fov\' should not be None at the same time.')
         # device = self.device if device is None else device
-        # NOTE: EG3D multpile '1 / 1.414' as `image_width` to `focal`, we
+        # NOTE: EG3D multiplies '1 / 1.414' as `image_width` to `focal`, we
         # retain this operation
         focal = float(1 / (math.tan(fov * math.pi / 360) * 1.414))
         intrinsics = [[focal, 0, 0.5], [0, focal, 0.5], [0, 0, 1]]

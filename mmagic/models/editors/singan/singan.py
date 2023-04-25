@@ -549,7 +549,7 @@ class SinGAN(BaseGAN):
         We initialize the weight and learning rate scheduler of the
         corresponding module at the start of each resolution's training. At
         the end of each resolution's training, we update the weight of the
-        noise of current resolution by mse loss between reconstruced image and
+        noise of current resolution by mse loss between reconstructed image and
         real image.
 
         Args:
@@ -644,7 +644,7 @@ class SinGAN(BaseGAN):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             SampleList: A list of ``DataSample`` contain generated results.

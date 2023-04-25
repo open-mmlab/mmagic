@@ -84,7 +84,7 @@ class GenerateSeg(BaseTransform):
         alpha = results['alpha']
         trimap = results['trimap']
 
-        # generete segmentation mask
+        # generate segmentation mask
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
                                            (self.kernel_size,
                                             self.kernel_size))

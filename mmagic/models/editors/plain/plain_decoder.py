@@ -156,7 +156,7 @@ class PlainDecoder(BaseModule):
 
     Args:
         in_channels (int): Channel num of input features.
-        init_cfg (dict, optional): Initialization config dict. efaults to None.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self, in_channels, init_cfg: Optional[dict] = None):

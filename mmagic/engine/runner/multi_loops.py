@@ -100,7 +100,7 @@ class MultiValLoop(BaseLoop):
         if self._total_length is not None:
             return self._total_length
 
-        warnings.warn('\'total_length\' has not been initializeda and return '
+        warnings.warn('\'total_length\' has not been initialized and return '
                       '\'0\' for safety. This result is likely to be incorrect'
                       ' and we recommend you to call \'total_length\' after '
                       '\'self.run\' is called.')
@@ -156,7 +156,7 @@ class MultiValLoop(BaseLoop):
         else:
             assert all([
                 is_evaluator(cfg) for cfg in evaluator
-            ]), ('Unsupport evaluator type, please check your input and '
+            ]), ('Unsupported evaluator type, please check your input and '
                  'the docstring.')
             evaluator = [update_and_check_evaluator(cfg) for cfg in evaluator]
 
@@ -351,7 +351,7 @@ class MultiTestLoop(BaseLoop):
         if self._total_length is not None:
             return self._total_length
 
-        warnings.warn('\'total_length\' has not been initializeda and return '
+        warnings.warn('\'total_length\' has not been initialized and return '
                       '\'0\' for safety. This result is likely to be incorrect'
                       ' and we recommend you to call \'total_length\' after '
                       '\'self.run\' is called.')
@@ -407,7 +407,7 @@ class MultiTestLoop(BaseLoop):
         else:
             assert all([
                 is_evaluator(cfg) for cfg in evaluator
-            ]), ('Unsupport evaluator type, please check your input and '
+            ]), ('Unsupported evaluator type, please check your input and '
                  'the docstring.')
             evaluator = [update_and_check_evaluator(cfg) for cfg in evaluator]
 

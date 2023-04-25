@@ -156,7 +156,7 @@ def get_valid_noise_size(noise_size: Optional[int],
     # get noise_size
     if noise_size is not None and model_noise_size is not None:
         assert noise_size == model_noise_size, (
-            'Input \'noise_size\' is unconsistency with '
+            'Input \'noise_size\' is inconsistent with '
             f'\'generator.noise_size\'. Receive \'{noise_size}\' and '
             f'\'{model_noise_size}\'.')
     else:
@@ -194,7 +194,7 @@ def get_valid_num_batches(batch_inputs: Optional[ForwardInputs] = None,
         if isinstance(batch_inputs, Tensor):
             return batch_inputs.shape[0]
 
-        # get num_batces from batch_inputs
+        # get num_batches from batch_inputs
         num_batches_dict = {
             k: v.shape[0]
             for k, v in batch_inputs.items() if isinstance(v, Tensor)
@@ -208,7 +208,7 @@ def get_valid_num_batches(batch_inputs: Optional[ForwardInputs] = None,
             assert all([
                 bz == num_batches_inputs for bz in num_batches_dict.values()
             ]), ('\'num_batches\' is inconsistency among the preprocessed '
-                 f'input. \'num_batches\' parsed resutls: {num_batches_dict}')
+                 f'input. \'num_batches\' parsed results: {num_batches_dict}')
         else:
             num_batches_inputs = None
     else:

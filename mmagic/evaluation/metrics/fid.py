@@ -222,7 +222,7 @@ class FrechetInceptionDistance(GenerativeMetric):
         return float(fid), float(mean_norm), float(trace)
 
     def compute_metrics(self, fake_results: list) -> dict:
-        """Compulate the result of FID metric.
+        """Compute the result of FID metric.
 
         Args:
             fake_results (list): List of image feature of fake images.
