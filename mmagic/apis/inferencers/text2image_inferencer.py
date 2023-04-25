@@ -4,6 +4,7 @@ from typing import Dict, List
 
 import numpy as np
 from mmengine import mkdir_or_exist
+from PIL.Image import Image
 from torchvision.utils import save_image
 
 from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
@@ -18,29 +19,7 @@ class Text2ImageInferencer(BaseMMagicInferencer):
         visualize=['result_out_dir'],
         postprocess=[])
 
-    extra_parameters = dict(
-        scheduler_kwargs=None,
-        height=None,
-        width=None,
-        init_image=None,
-        batch_size=1,
-        num_inference_steps=1000,
-        skip_steps=0,
-        show_progress=False,
-        text_prompts=[],
-        image_prompts=[],
-        eta=0.8,
-        clip_guidance_scale=5000,
-        init_scale=1000,
-        tv_scale=0.,
-        sat_scale=0.,
-        range_scale=150,
-        cut_overview=[12] * 400 + [4] * 600,
-        cut_innercut=[4] * 400 + [12] * 600,
-        cut_ic_pow=[1] * 1000,
-        cut_icgray_p=[0.2] * 400 + [0] * 600,
-        cutn_batches=4,
-        seed=2022)
+    extra_parameters = dict(height=None, width=None, seed=1)
 
     def preprocess(self, text: InputsType) -> Dict:
         """Process the inputs into a model-feedable format.
@@ -52,7 +31,10 @@ class Text2ImageInferencer(BaseMMagicInferencer):
             result(Dict): Results of preprocess.
         """
         result = self.extra_parameters
-        result['text_prompts'] = text
+        if type(text) is dict:
+            result['text_prompts'] = text
+        else:
+            result['prompt'] = text
 
         return result
 
@@ -78,6 +60,11 @@ class Text2ImageInferencer(BaseMMagicInferencer):
         """
         if result_out_dir:
             mkdir_or_exist(os.path.dirname(result_out_dir))
-            save_image(preds, result_out_dir, normalize=True)
+            if type(preds) is list:
+                preds = preds[0]
+            if type(preds) is Image:
+                preds.save(result_out_dir)
+            else:
+                save_image(preds, result_out_dir, normalize=True)
 
         return preds
