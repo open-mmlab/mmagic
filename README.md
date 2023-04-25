@@ -2,6 +2,10 @@
   <img src="docs/en/_static/image/mmagic-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
+    <font size="10"><b>M</b>ultimodal <b>A</b>dvanced, <b>G</b>enerative, and <b>I</b>ntelligent <b>C</b>reation (MMagic [em'mædʒɪk])</font>
+  </div>
+  <div>&nbsp;</div>
+  <div align="center">
     <b><font size="5">OpenMMLab website</font></b>
     <sup>
       <a href="https://openmmlab.com">
@@ -57,7 +61,7 @@ English | [简体中文](README_zh-CN.md)
 
 We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration).
 
-After iterative updates with OpenMMLab 2.0 framework and merged with MMGeneration, MMEditing has become a powerful tool that supports low-level algorithms based on both GAN and CNN. Today, MMEditing embraces the Diffusion Model and transforms into a more advanced and comprehensive AIGC toolkit: **MMagic** (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation). MMagic will provide more agile and flexible experimental support for researchers and AIGC enthusiasts, and help you on your AIGC exploration journey.
+After iterative updates with OpenMMLab 2.0 framework and merged with MMGeneration, MMEditing has become a powerful tool that supports low-level algorithms based on both GAN and CNN. Today, MMEditing embraces Generative AI and transforms into a more advanced and comprehensive AIGC toolkit: **MMagic** (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation). MMagic will provide more agile and flexible experimental support for researchers and AIGC enthusiasts, and help you on your AIGC exploration journey.
 
 We highlight the following new features.
 
@@ -110,14 +114,14 @@ Please refer to [migration documents](docs/en/migration/overview.md) to migrate 
 
 ## 📄 Table of Contents
 
-- [📖 Introduction](#📖-introduction)
-- [🙌 Contributing](#🙌-contributing)
-- [🛠️ Installation](#🛠️-installation)
-- [📊 Model Zoo](#📊-model-zoo)
-- [🤝 Acknowledgement](#🤝-acknowledgement)
-- [🖊️ Citation](#🖊️-citation)
-- [🎫 License](#🎫-license)
-- [🏗️ ️OpenMMLab Family](#🏗️-️openmmlab-family)
+- [📖 Introduction](#-introduction)
+- [🙌 Contributing](#-contributing)
+- [🛠️ Installation](#%EF%B8%8F-installation)
+- [📊 Model Zoo](#-model-zoo)
+- [🤝 Acknowledgement](#-acknowledgement)
+- [🖊️ Citation](#%EF%B8%8F-citation)
+- [🎫 License](#-license)
+- [🏗️ ️OpenMMLab Family](#%EF%B8%8F-️openmmlab-family)
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -143,7 +147,7 @@ The best practice on our main branch works with **Python 3.8+** and **PyTorch 1.
 
 - **Efficient Framework**
 
-  By using MMEngine and MMCV of OpenMMLab 2.0 framework, MMagic decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different module. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs. With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
+  By using MMEngine and MMCV of OpenMMLab 2.0 framework, MMagic decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs. With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -189,6 +193,7 @@ python -c "import mmagic; print(mmagic.__version__)"
 ```
 
 **Getting Started**
+
 After installing MMagic successfully, now you are able to play with MMagic! To generate an image from text, you only need several lines of codes by MMagic!
 
 ```python
@@ -365,12 +370,12 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
       </td>
       <td>
         <ul>
-          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
-          <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
-          <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
-          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
-          <li><a href="configs/guided_diffusion/README.md">Guided Diffusion (NeurIPS'2021)</a></li>
           <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
+          <li><a href="configs/guided_diffusion/README.md">Guided Diffusion (NeurIPS'2021)</a></li>
+          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
+          <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
+          <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
+          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
         </ul>
       </td>
       <td>
