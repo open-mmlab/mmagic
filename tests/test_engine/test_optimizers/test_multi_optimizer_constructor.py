@@ -4,7 +4,7 @@ import torch.nn as nn
 from mmengine import MMLogger
 from mmengine.optim import OptimWrapper
 
-from mmedit.engine.optimizers import MultiOptimWrapperConstructor
+from mmagic.engine.optimizers import MultiOptimWrapperConstructor
 
 logger = MMLogger.get_instance('test_multi_optimizer_constructor')
 

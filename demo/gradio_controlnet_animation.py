@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import gradio as gr
 
-from mmedit.edit import MMEdit
+from mmagic.apis import MMagicInferencer
 
-editor = MMEdit(model_name='controlnet_animation')
+editor = MMagicInferencer(model_name='controlnet_animation')
 
 
 def process(video, prompt, a_prompt, negative_prompt,

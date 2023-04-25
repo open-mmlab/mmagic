@@ -8,9 +8,9 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import StyleGAN3
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.models import StyleGAN3
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -20,7 +20,7 @@ class TestStyleGAN3(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.default_cfg = dict(
-            data_preprocessor=dict(type='EditDataPreprocessor'),
+            data_preprocessor=dict(type='DataPreprocessor'),
             generator=dict(
                 type='StyleGANv3Generator',
                 noise_size=6,
@@ -90,6 +90,6 @@ class TestStyleGAN3(TestCase):
             discriminator=OptimWrapper(optimizer_d, accumulative_counts=1))
 
         img = torch.randn(3, 16, 16)
-        data = dict(inputs=dict(), data_samples=[EditDataSample(gt_img=img)])
+        data = dict(inputs=dict(), data_samples=[DataSample(gt_img=img)])
         message_hub.update_info('iter', 0)
         _ = stylegan.train_step(data, optim_wrapper_dict)

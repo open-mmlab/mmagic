@@ -6,7 +6,7 @@ import torch
 from mmengine.utils.dl_utils import TORCH_VERSION
 from mmengine.utils.version_utils import digit_version
 
-from mmedit.models.editors.stylegan3.stylegan3_utils import (
+from mmagic.models.editors.stylegan3.stylegan3_utils import (
     apply_fractional_pseudo_rotation, apply_fractional_rotation,
     apply_fractional_translation, apply_integer_translation)
 

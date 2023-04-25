@@ -14,8 +14,8 @@
 请按照[此处](https://github.com/tkarras/progressive_growing_of_gans#preparing-datasets-for-training)准备数据集。
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

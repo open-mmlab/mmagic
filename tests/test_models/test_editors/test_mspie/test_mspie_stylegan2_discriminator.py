@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors.mspie import MSStyleGAN2Discriminator
+from mmagic.models.editors.mspie import MSStyleGAN2Discriminator
 
 
 class TestMSStyleGANv2Disc:

@@ -3,7 +3,7 @@ import numpy.testing as npt
 import pytest
 import torch
 
-from mmedit.models import mask_reduce_loss, reduce_loss
+from mmagic.models import mask_reduce_loss, reduce_loss
 
 
 def test_utils():

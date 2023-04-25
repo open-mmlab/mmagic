@@ -16,7 +16,7 @@ from tqdm import tqdm
 from utils import filter_jobs, parse_job_list_from_file
 
 console = Console()
-MMEDIT_ROOT = Path(__file__).absolute().parents[1]
+MMAGIC_ROOT = Path(__file__).absolute().parents[1]
 
 # key-in-metafile: key-in-results.pkl
 METRICS_MAP = {
@@ -176,10 +176,10 @@ def parse_args():
 
 
 def create_train_job_batch(commands, model_info, args, port, script_name):
-    config_http_prefix_blob = ('https://github.com/open-mmlab/mmediting/'
-                               'blob/master/')
-    config_http_prefix_tree = ('https://github.com/open-mmlab/mmediting/'
-                               'tree/master/')
+    config_http_prefix_blob = ('https://github.com/open-mmlab/mmagic/'
+                               'blob/main/')
+    config_http_prefix_tree = ('https://github.com/open-mmlab/mmagic/'
+                               'tree/main/')
     fname = model_info.name
 
     config = model_info.config
@@ -281,7 +281,7 @@ def create_train_job_batch(commands, model_info, args, port, script_name):
 
 def train(args):
     # parse model-index.yml
-    model_index_file = MMEDIT_ROOT / 'model-index.yml'
+    model_index_file = MMAGIC_ROOT / 'model-index.yml'
 
     model_index = load(str(model_index_file))
     model_index.build_models_with_collections()
@@ -418,7 +418,7 @@ def show_summary(summary_data, models_map, work_dir, save=False):
 
 
 def summary(args):
-    model_index_file = MMEDIT_ROOT / 'model-index.yml'
+    model_index_file = MMAGIC_ROOT / 'model-index.yml'
     model_index = load(str(model_index_file))
     model_index.build_models_with_collections()
     models = OrderedDict({model.name: model for model in model_index.models})

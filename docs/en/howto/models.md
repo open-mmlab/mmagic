@@ -1,11 +1,11 @@
 # How to design your own models
 
-MMEditing is built upon MMEngine and MMCV, which enables users to design new models quickly, train and evaluate them easily.
+MMagic is built upon MMEngine and MMCV, which enables users to design new models quickly, train and evaluate them easily.
 In this section, you will learn how to design your own models.
 
 The structure of this guide are as follows:
 
-- [Overview of models in MMEditing](#overview-of-models-in-mmediting)
+- [Overview of models in MMagic](#overview-of-models-in-mmagic)
 - [An example of SRCNN](#an-example-of-srcnn)
   - [Define the network of SRCNN](#step-1-define-the-network-of-srcnn)
   - [Define the model of SRCNN](#step-2-define-the-model-of-srcnn)
@@ -16,23 +16,23 @@ The structure of this guide are as follows:
   - [Start training DCGAN](#step-3-start-training-dcgan)
 - [References](#references)
 
-## Overview of models in MMEditing
+## Overview of models in MMagic
 
-In MMEditing, one algorithm can be splited two compents: **Model** and **Module**.
+In MMagic, one algorithm can be splited two compents: **Model** and **Module**.
 
-- **Model** are topmost wrappers and always inherint from `BaseModel` provided in MMEngine. **Model** is responsible to network forward, loss calculation and backward, parameters updating, etc. In MMEditing, **Model** should be registered as `MODELS`.
-- **Module** includes the neural network **architectures** to train or inference, pre-defined **loss classes**, and **data preprocessors** to preprocess the input data batch. **Module** always present as elements of **Model**. In MMEditing, **Module** should be registered as **MODULES**.
+- **Model** are topmost wrappers and always inherint from `BaseModel` provided in MMEngine. **Model** is responsible to network forward, loss calculation and backward, parameters updating, etc. In MMagic, **Model** should be registered as `MODELS`.
+- **Module** includes the neural network **architectures** to train or inference, pre-defined **loss classes**, and **data preprocessors** to preprocess the input data batch. **Module** always present as elements of **Model**. In MMagic, **Module** should be registered as **MODULES**.
 
-Take DCGAN model as an example, [generator](https://github.com/open-mmlab/mmediting/blob/main/mmedit/models/editors/dcgan/dcgan_generator.py) and [discriminator](https://github.com/open-mmlab/mmediting/blob/main/mmedit/models/editors/dcgan/dcgan_discriminator.py) are the **Module**, which generate images and discriminate real or fake images. [`DCGAN`](https://github.com/open-mmlab/mmediting/blob/main/mmedit/models/editors/dcgan/dcgan.py) is the **Model**, which take data from dataloader and train generator and discriminator alternatively.
+Take DCGAN model as an example, [generator](https://github.com/open-mmlab/mmagic/blob/main/mmagic/models/editors/dcgan/dcgan_generator.py) and [discriminator](https://github.com/open-mmlab/mmagic/blob/main/mmagic/models/editors/dcgan/dcgan_discriminator.py) are the **Module**, which generate images and discriminate real or fake images. [`DCGAN`](https://github.com/open-mmlab/mmagic/blob/main/mmagic/models/editors/dcgan/dcgan.py) is the **Model**, which take data from dataloader and train generator and discriminator alternatively.
 
 You can find the implementation of **Model** and **Module** by the following link.
 
 - **Model**:
-  - [Editors](https://github.com/open-mmlab/mmediting/tree/main/mmedit/models/editors)
+  - [Editors](https://github.com/open-mmlab/mmagic/tree/main/mmagic/models/editors)
 - **Module**:
-  - [Layers](https://github.com/open-mmlab/mmediting/tree/main/mmedit/models/layers)
-  - [Losses](https://github.com/open-mmlab/mmediting/tree/main/mmedit/models/losses)
-  - [Data Preprocessor](https://github.com/open-mmlab/mmediting/tree/main/mmedit/models/data_preprocessors)
+  - [Layers](https://github.com/open-mmlab/mmagic/tree/main/mmagic/models/layers)
+  - [Losses](https://github.com/open-mmlab/mmagic/tree/main/mmagic/models/losses)
+  - [Data Preprocessor](https://github.com/open-mmlab/mmagic/tree/main/mmagic/models/data_preprocessors)
 
 ## An example of SRCNN
 
@@ -42,17 +42,17 @@ Here, we take the implementation of the classical image super-resolution model, 
 
 SRCNN is the first deep learning method for single image super-resolution \[1\].
 To implement the network architecture of SRCNN,
-we need to create a new file `mmedit/models/editors/srgan/sr_resnet.py` and implement `class MSRResNet`.
+we need to create a new file `mmagic/models/editors/srgan/sr_resnet.py` and implement `class MSRResNet`.
 
 In this step, we implement `class MSRResNet` by inheriting from `mmengine.models.BaseModule` and define the network architecture in `__init__` function.
-In particular, we need to use `@MODELS.register_module()` to add the implementation of `class MSRResNet` into the registration of MMEditing.
+In particular, we need to use `@MODELS.register_module()` to add the implementation of `class MSRResNet` into the registration of MMagic.
 
 ```python
 import torch.nn as nn
 from mmengine.model import BaseModule
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
-from mmedit.models.utils import (PixelShufflePack, ResidualBlockNoBN,
+from mmagic.models.utils import (PixelShufflePack, ResidualBlockNoBN,
                                  default_init_weights, make_layer)
 
 
@@ -172,7 +172,7 @@ Then, we implement the `forward` function of  `class MSRResNet`, which takes as 
         return out
 ```
 
-After the implementation of `class MSRResNet`, we need to update the model list in `mmedit/models/editors/__init__.py`, so that we can import and use `class MSRResNet` by `mmedit.models.editors`.
+After the implementation of `class MSRResNet`, we need to update the model list in `mmagic/models/editors/__init__.py`, so that we can import and use `class MSRResNet` by `mmagic.models.editors`.
 
 ```python
 from .srgan.sr_resnet import MSRResNet
@@ -184,7 +184,7 @@ After the implementation of the network architecture,
 we need to define our model `class BaseEditModel` and implement the forward loop of `class BaseEditModel`.
 
 To implement `class BaseEditModel`,
-we create a new file `mmedit/models/base_models/base_edit_model.py`.
+we create a new file `mmagic/models/base_models/base_edit_model.py`.
 Specifically, `class BaseEditModel` inherits from `mmengine.model.BaseModel`.
 In the `__init__` function, we define the loss functions, training and testing configurations, networks of `class BaseEditModel`.
 
@@ -194,8 +194,8 @@ from typing import List, Optional
 import torch
 from mmengine.model import BaseModel
 
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
 
 
 @MODELS.register_module()
@@ -253,7 +253,7 @@ Specifically, the implemented `forward` function of `class BaseEditModel` takes 
 ```python
     def forward(self,
                 batch_inputs: torch.Tensor,
-                data_samples: Optional[List[EditDataSample]] = None,
+                data_samples: Optional[List[DataSample]] = None,
                 mode: str = 'tensor',
                 **kwargs):
         """Returns losses or predictions of training, validation, testing, and
@@ -350,7 +350,7 @@ In `forward_inference` function, `class BaseEditModel` first converts the forwar
                 data samples collated by :attr:`data_preprocessor`.
 
         Returns:
-            List[EditDataSample]: predictions.
+            List[DataSample]: predictions.
         """
 
         feats = self.forward_tensor(batch_inputs, data_samples, **kwargs)
@@ -358,7 +358,7 @@ In `forward_inference` function, `class BaseEditModel` first converts the forwar
         predictions = []
         for idx in range(feats.shape[0]):
             predictions.append(
-                EditDataSample(
+                DataSample(
                     pred_img=feats[idx].to('cpu'),
                     metainfo=data_samples[idx].metainfo))
 
@@ -393,8 +393,8 @@ In `forward_train`, `class BaseEditModel` calculate the loss function and return
 ```
 
 After the implementation of `class BaseEditModel`,
-we need to update the model list in `mmedit/models/__init__.py`,
-so that we can import and use `class BaseEditModel` by `mmedit.models`.
+we need to update the model list in `mmagic/models/__init__.py`,
+so that we can import and use `class BaseEditModel` by `mmagic.models`.
 
 ```python
 from .base_models.base_edit_model import BaseEditModel
@@ -406,7 +406,7 @@ After implementing the network architecture and the forward loop of SRCNN,
 now we can create a new file `configs/srcnn/srcnn_x4k915_g1_1000k_div2k.py`
 to set the configurations needed by training SRCNN.
 
-In the configuration file, we need to specify the parameters of our model, `class BaseEditModel`, including the generator network architecture, loss function, additional training and testing configuration, and data preprocessor of input tensors. Please refer to the [Introduction to the loss in MMEditing](./losses.md) for more details of losses in MMEditing.
+In the configuration file, we need to specify the parameters of our model, `class BaseEditModel`, including the generator network architecture, loss function, additional training and testing configuration, and data preprocessor of input tensors. Please refer to the [Introduction to the loss in MMagic](./losses.md) for more details of losses in MMagic.
 
 ```python
 # model settings
@@ -419,7 +419,7 @@ model = dict(
         upscale_factor=scale),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
     ))
@@ -438,10 +438,10 @@ Here, we take the implementation of the classical gan model, DCGAN \[2\], as an 
 
 ### Step 1: Define the network of DCGAN
 
-DCGAN is a classical image generative adversarial network \[2\]. To implement the network architecture of DCGAN, we need to create tow new files `mmedit/models/editors/dcgan/dcgan_generator.py` and `mmedit/models/editors/dcgan/dcgan_discriminator.py`, and implement generator (`class DCGANGenerator`) and discriminator (`class DCGANDiscriminator`).
+DCGAN is a classical image generative adversarial network \[2\]. To implement the network architecture of DCGAN, we need to create tow new files `mmagic/models/editors/dcgan/dcgan_generator.py` and `mmagic/models/editors/dcgan/dcgan_discriminator.py`, and implement generator (`class DCGANGenerator`) and discriminator (`class DCGANDiscriminator`).
 
 In this step, we implement `class DCGANGenerator`, `class DCGANDiscriminator` and define the network architecture in `__init__` function.
-In particular, we need to use `@MODULES.register_module()` to add the generator and discriminator into the registration of MMEditing.
+In particular, we need to use `@MODULES.register_module()` to add the generator and discriminator into the registration of MMagic.
 
 Take the following code as example:
 
@@ -453,7 +453,7 @@ from mmcv.utils.parrots_wrapper import _BatchNorm
 from mmengine.logging import MMLogger
 from mmengine.model.utils import normal_init
 
-from mmedit.models.builder import MODULES
+from mmagic.models.builder import MODULES
 from ..common import get_module_device
 
 
@@ -550,9 +550,9 @@ If you want to implement specific weights initialization method for you network,
                             f' got {type(pretrained)} instead.')
 ```
 
-After the implementation of class `DCGANGenerator`, we need to update the model list in `mmedit/models/editors/__init__.py`, so that we can import and use class `DCGANGenerator` by `mmedit.models.editors`.
+After the implementation of class `DCGANGenerator`, we need to update the model list in `mmagic/models/editors/__init__.py`, so that we can import and use class `DCGANGenerator` by `mmagic.models.editors`.
 
-Implementation of Class `DCGANDiscriminator` follows the similar logic, and you can find the implementation [here](https://github.com/open-mmlab/mmediting/blob/main/mmedit/models/editors/dcgan/dcgan_discriminator.py).
+Implementation of Class `DCGANDiscriminator` follows the similar logic, and you can find the implementation [here](https://github.com/open-mmlab/mmagic/blob/main/mmagic/models/editors/dcgan/dcgan_discriminator.py).
 
 ### Step 2: Design the model of DCGAN
 
@@ -561,14 +561,14 @@ After the implementation of the network **Module**, we need to define our **Mode
 Your **Model** should inherit from [`BaseModel`](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/base_model/base_model.py#L16) provided by MMEngine and implement three functions, `train_step`, `val_step` and `test_step`.
 
 - `train_step`: This function is responsible to update the parameters of the network and called by MMEngine's Loop ([`IterBasedTrainLoop`](https://github.com/open-mmlab/mmengine/blob/main/mmengine/runner/loops.py#L183) or [`EpochBasedTrainLoop`](https://github.com/open-mmlab/mmengine/blob/main/mmengine/runner/loops.py#L18)). `train_step` take data batch and [`OptimWrapper`](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/optim_wrapper.md) as input and return a dict of log.
-- `val_step`: This function is responsible for getting output for validation during the training process. and is called by [`GenValLoop`](https://github.com/open-mmlab/mmediting/blob/main/mmedit/engine/runner/loops.py#L12).
-- `test_step`: This function is responsible for getting output in test process and is called by [`GenTestLoop`](https://github.com/open-mmlab/mmediting/blob/main/mmedit/engine/runner/loops.py#L95).
+- `val_step`: This function is responsible for getting output for validation during the training process. and is called by [`MultiValLoop`](https://github.com/open-mmlab/mmagic/blob/main/mmagic/engine/runner/multi_loops.py#L19).
+- `test_step`: This function is responsible for getting output in test process and is called by [`MultiTestLoop`](https://github.com/open-mmlab/mmagic/blob/main/mmagic/engine/runner/multi_loops.py#L274).
 
-> Note that, in `train_step`, `val_step` and `test_step`, `DataPreprocessor` is called to preprocess the input data batch before feed them to the neural network. To know more about `DataPreprocessor` please refer to this [file](https://github.com/open-mmlab/mmediting/blob/main/mmedit/models/data_preprocessors/gen_preprocessor.py) and this [tutorial](https://github.com/open-mmlab/mmengine/blob/main/docs/zh_cn/tutorials/model.md#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%99%A8datapreprocessor).
+> Note that, in `train_step`, `val_step` and `test_step`, `DataPreprocessor` is called to preprocess the input data batch before feed them to the neural network. To know more about `DataPreprocessor` please refer to this [file](https://github.com/open-mmlab/mmagic/blob/main/mmagic/models/data_preprocessors/gen_preprocessor.py) and this [tutorial](https://github.com/open-mmlab/mmengine/blob/main/docs/zh_cn/tutorials/model.md#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%99%A8datapreprocessor).
 
-For simplify using, we provide [`BaseGAN`](https://github.com/open-mmlab/mmediting/blob/main/mmedit/models/base_models/base_gan.py) class in MMEditing, which implements generic `train_step`, `val_step` and `test_step` function for GAN models. With `BaseGAN` as base class, each specific GAN algorithm only need to implement `train_generator` and `train_discriminator`.
+For simplify using, we provide [`BaseGAN`](https://github.com/open-mmlab/mmagic/blob/main/mmagic/models/base_models/base_gan.py) class in MMagic, which implements generic `train_step`, `val_step` and `test_step` function for GAN models. With `BaseGAN` as base class, each specific GAN algorithm only need to implement `train_generator` and `train_discriminator`.
 
-In `train_step`, we support data preprocessing, gradient accumulation (realized by [`OptimWrapper`](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/optim_wrapper.md)) and expontial moving averate (EMA) realized by [(`ExponentialMovingAverage`)](https://github.com/open-mmlab/mmediting/blob/main/mmedit/models/base_models/average_model.py#L19). With `BaseGAN.train_step`, each specific GAN algorithm only need to implement `train_generator` and `train_discriminator`.
+In `train_step`, we support data preprocessing, gradient accumulation (realized by [`OptimWrapper`](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/optim_wrapper.md)) and expontial moving averate (EMA) realized by [(`ExponentialMovingAverage`)](https://github.com/open-mmlab/mmagic/blob/main/mmagic/models/base_models/average_model.py#L19). With `BaseGAN.train_step`, each specific GAN algorithm only need to implement `train_generator` and `train_discriminator`.
 
 ```python
     def train_step(self, data: dict,
@@ -652,7 +652,7 @@ import torch.nn.functional as F
 from mmengine.optim import OptimWrapper
 from torch import Tensor
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 from .base_gan import BaseGAN
 
 
@@ -709,7 +709,7 @@ class DCGAN(BaseGAN):
         return log_vars
 ```
 
-After the implementation of `class DCGAN`, we need to update the model list in `mmedit/models/__init__.py`, so that we can import and use `class DCGAN` by `mmedit.models`.
+After the implementation of `class DCGAN`, we need to update the model list in `mmagic/models/__init__.py`, so that we can import and use `class DCGAN` by `mmagic.models`.
 
 ### Step 3: Start training DCGAN
 

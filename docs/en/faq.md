@@ -4,7 +4,7 @@ We list some common troubles faced by many users and their corresponding
 solutions here. Feel free to enrich the list if you find any frequent issues
 and have ways to help others to solve them. If the contents here do not cover
 your issue, please create an issue using the
-[provided templates](https://github.com/open-mmlab/mmediting/issues/new/choose)
+[provided templates](https://github.com/open-mmlab/mmagic/issues/new/choose)
 and make sure you fill in all required information in the template.
 
 ## FAQ

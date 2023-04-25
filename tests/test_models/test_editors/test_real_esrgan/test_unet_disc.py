@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models import UNetDiscriminatorWithSpectralNorm
+from mmagic.models import UNetDiscriminatorWithSpectralNorm
 
 
 @pytest.mark.skipif(

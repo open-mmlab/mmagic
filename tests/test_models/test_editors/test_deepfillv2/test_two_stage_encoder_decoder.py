@@ -8,9 +8,9 @@ import torch
 from mmengine import Config
 from mmengine.optim import OptimWrapper
 
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 
 @pytest.mark.skipif(
@@ -51,7 +51,7 @@ def test_two_stage_inpaintor():
         'inputs':
         masked_img,
         'data_samples':
-        [EditDataSample(
+        [DataSample(
             mask=mask,
             mask_bbox=mask_bbox,
             gt_img=gt_img,

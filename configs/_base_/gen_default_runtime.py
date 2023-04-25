@@ -1,4 +1,4 @@
-default_scope = 'mmedit'
+default_scope = 'mmagic'
 
 randomness = dict(seed=2022, diff_rank_seed=True)
 # env settings
@@ -11,7 +11,7 @@ mp_start_method = 'fork'
 # configure for default hooks
 default_hooks = dict(
     # record time of every iteration.
-    timer=dict(type='EditIterTimerHook'),
+    timer=dict(type='IterTimerHook'),
     # print log every 100 iterations.
     logger=dict(type='LoggerHook', interval=100, log_metric_by_epoch=False),
     # save checkpoint per 10000 iterations
@@ -35,7 +35,7 @@ env_cfg = dict(
 
 # set log level
 log_level = 'INFO'
-log_processor = dict(type='EditLogProcessor', by_epoch=False)
+log_processor = dict(type='LogProcessor', by_epoch=False)
 
 # load from which checkpoint
 load_from = None
@@ -50,19 +50,19 @@ model_wrapper_cfg = dict(
     find_unused_parameters=False)
 
 # set visualizer
-vis_backends = [dict(type='GenVisBackend')]
-visualizer = dict(type='GenVisualizer', vis_backends=vis_backends)
+vis_backends = [dict(type='VisBackend')]
+visualizer = dict(type='Visualizer', vis_backends=vis_backends)
 
 # config for training
 train_cfg = dict(by_epoch=False, val_begin=1, val_interval=10000)
 
 # config for val
-val_cfg = dict(type='EditValLoop')
-val_evaluator = dict(type='EditEvaluator')
+val_cfg = dict(type='MultiValLoop')
+val_evaluator = dict(type='Evaluator')
 
 # config for test
-test_cfg = dict(type='EditTestLoop')
-test_evaluator = dict(type='EditEvaluator')
+test_cfg = dict(type='MultiTestLoop')
+test_evaluator = dict(type='Evaluator')
 
 # config for optim_wrapper_constructor
 optim_wrapper = dict(constructor='MultiOptimWrapperConstructor')

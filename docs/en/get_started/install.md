@@ -6,22 +6,22 @@ In this section, you will know about:
   - [Prerequisites](#prerequisites)
   - [Best practices](#best-practices)
   - [Customize installation](#customize-installation)
-  - [Developing with multiple MMEditing versions](#developing-with-multiple-mmediting-versions)
+  - [Developing with multiple MMagic versions](#developing-with-multiple-mmagic-versions)
 
 ## Installation
 
-We recommend that users follow our [Best practices](#best-practices) to install MMEditing.
+We recommend that users follow our [Best practices](#best-practices) to install MMagic.
 However, the whole process is highly customizable. See [Customize installation](#customize-installation) section for more information.
 
 ### Prerequisites
 
 In this section, we demonstrate how to prepare an environment with PyTorch.
 
-MMEditing works on Linux, Windows, and macOS. It requires:
+MMagic works on Linux, Windows, and macOS. It requires:
 
-- Python >= 3.6
-- [PyTorch](https://pytorch.org/) >= 1.5
-- [MMCV](https://github.com/open-mmlab/mmcv) >= 2.0.0rc1
+- Python >= 3.7
+- [PyTorch](https://pytorch.org/) >= 1.8
+- [MMCV](https://github.com/open-mmlab/mmcv) >= 2.0.0
 
 >
 
@@ -35,8 +35,8 @@ Download and install Miniconda from [official website](https://docs.conda.io/en/
 Create a [conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/environments.html#) and activate it
 
 ```shell
-conda create --name mmedit python=3.8 -y
-conda activate mmedit
+conda create --name mmagic python=3.8 -y
+conda activate mmagic
 ```
 
 **Step 2.**
@@ -66,25 +66,48 @@ mim install 'mmcv>=2.0.0'
 **Step 1.** Install [MMEngine](https://github.com/open-mmlab/mmengine).
 
 ```shell
+mim install 'mmengine'
+```
+
+Or
+
+```shell
+pip install mmengine
+```
+
+Or
+
+```shell
 pip install git+https://github.com/open-mmlab/mmengine.git
 ```
 
-**Step 2.** Install MMEditing.
-Install [MMEditing](https://github.com/open-mmlab/mmediting) from the source code.
+**Step 2.** Install MMagic.
 
 ```shell
-git clone https://github.com/open-mmlab/mmediting.git
-cd mmediting
+mim install 'mmagic'
+```
+
+Or
+
+```shell
+pip install mmagic
+```
+
+Or install [MMagic](https://github.com/open-mmlab/mmagic) from the source code.
+
+```shell
+git clone https://github.com/open-mmlab/mmagic.git
+cd mmagic
 pip3 install -e . -v
 ```
 
 **Step 5.**
-Verification.
+Verify MMagic has been successfully installed.
 
 ```shell
 cd ~
-python -c "import mmedit; print(mmedit.__version__)"
-# Example output: 1.0.0rc1
+python -c "import mmagic; print(mmagic.__version__)"
+# Example output: 1.0.0
 ```
 
 The installation is successful if the version number is output correctly.
@@ -94,7 +117,7 @@ You may be curious about what `-e .` means when supplied with `pip install`.
 Here is the description:
 
 - `-e` means [editable mode](https://pip.pypa.io/en/latest/cli/pip_install/#cmdoption-e).
-  When `import mmedit`, modules under the cloned directory are imported.
+  When `import mmagic`, modules under the cloned directory are imported.
   If `pip install` without `-e`, pip will copy cloned codes to somewhere like `lib/python/site-package`.
   Consequently, modified code under the cloned directory takes no effect unless `pip install` again.
   Thus, `pip install` with `-e` is particularly convenient for developers. If some codes are modified, new codes will be imported next time without reinstallation.
@@ -136,33 +159,33 @@ For example, the following command install mmcv-full built for PyTorch 1.10.x an
 pip install 'mmcv>=2.0.0' -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10/index.html
 ```
 
-#### Using MMEditing with Docker
+#### Using MMagic with Docker
 
-We provide a [Dockerfile](https://github.com/open-mmlab/mmediting/blob/master/docker/Dockerfile) to build an image.
+We provide a [Dockerfile](https://github.com/open-mmlab/mmagic/blob/main/docker/Dockerfile) to build an image.
 Ensure that your [docker version](https://docs.docker.com/engine/install/) >=19.03.
 
 ```shell
 # build an image with PyTorch 1.8, CUDA 11.1
 # If you prefer other versions, just modified the Dockerfile
-docker build -t mmediting docker/
+docker build -t mmagic docker/
 ```
 
 Run it with
 
 ```shell
-docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmediting/data mmediting
+docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmagic/data mmagic
 ```
 
 #### Trouble shooting
 
 If you have some issues during the installation, please first view the [FAQ](../faq.md) page.
-You may [open an issue](https://github.com/open-mmlab/mmediting/issues/new/choose) on GitHub if no solution is found.
+You may [open an issue](https://github.com/open-mmlab/mmagic/issues/new/choose) on GitHub if no solution is found.
 
-### Developing with multiple MMEditing versions
+### Developing with multiple MMagic versions
 
-The train and test scripts already modify the `PYTHONPATH` to ensure the script uses the `MMEditing` in the current directory.
+The train and test scripts already modify the `PYTHONPATH` to ensure the script uses the `MMagic` in the current directory.
 
-To use the default MMEditing installed in the environment rather than that you are working with, you can remove the following line in those scripts
+To use the default MMagic installed in the environment rather than that you are working with, you can remove the following line in those scripts
 
 ```shell
 PYTHONPATH="$(dirname $0)/..":$PYTHONPATH

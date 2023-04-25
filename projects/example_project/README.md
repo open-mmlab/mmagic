@@ -18,8 +18,8 @@ This is an implementation of \[XXX\].
 
 ### Setup Environment \[required\]
 
-Please refer to [Get Started](https://mmediting.readthedocs.io/en/latest/get_started/I.html) to install
-MMEditing.
+Please refer to [Get Started](https://mmagic.readthedocs.io/en/latest/get_started/I.html) to install
+MMagic.
 
 At first, add the current folder to `PYTHONPATH`, so that Python can find your code. Run command in the current directory to add it.
 
@@ -31,26 +31,26 @@ export PYTHONPATH=`pwd`:$PYTHONPATH
 
 ### Data Preparation \[optional\]
 
-Prepare the ImageNet-2012 dataset according to the [instruction](https://mmediting.readthedocs.io/en/latest/user_guides/dataset_prepare.html#imagenet).
+Prepare the ImageNet-2012 dataset according to the [instruction](https://mmagic.readthedocs.io/en/latest/user_guides/dataset_prepare.html#imagenet).
 
 ### Training commands \[optional\]
 
 **To train with single GPU:**
 
 ```bash
-mim train mmedit configs/examplenet_8xb32_in1k.py
+mim train mmagic configs/examplenet_8xb32_in1k.py
 ```
 
 **To train with multiple GPUs:**
 
 ```bash
-mim train mmedit configs/examplenet_8xb32_in1k.py --launcher pytorch --gpus 8
+mim train mmagic configs/examplenet_8xb32_in1k.py --launcher pytorch --gpus 8
 ```
 
 **To train with multiple GPUs by slurm:**
 
 ```bash
-mim train mmedit configs/examplenet_8xb32_in1k.py --launcher slurm \
+mim train mmagic configs/examplenet_8xb32_in1k.py --launcher slurm \
     --gpus 16 --gpus-per-node 8 --partition $PARTITION
 ```
 
@@ -59,19 +59,19 @@ mim train mmedit configs/examplenet_8xb32_in1k.py --launcher slurm \
 **To test with single GPU:**
 
 ```bash
-mim test mmedit configs/examplenet_8xb32_in1k.py $CHECKPOINT
+mim test mmagic configs/examplenet_8xb32_in1k.py $CHECKPOINT
 ```
 
 **To test with multiple GPUs:**
 
 ```bash
-mim test mmedit configs/examplenet_8xb32_in1k.py $CHECKPOINT --launcher pytorch --gpus 8
+mim test mmagic configs/examplenet_8xb32_in1k.py $CHECKPOINT --launcher pytorch --gpus 8
 ```
 
 **To test with multiple GPUs by slurm:**
 
 ```bash
-mim test mmedit configs/examplenet_8xb32_in1k.py $CHECKPOINT --launcher slurm \
+mim test mmagic configs/examplenet_8xb32_in1k.py $CHECKPOINT --launcher slurm \
     --gpus 16 --gpus-per-node 8 --partition $PARTITION
 ```
 
@@ -92,24 +92,24 @@ You can also paste some visual results here if the model doesn't have quantitati
 <!-- Replace to the citation of the paper your project refers to. -->
 
 ```bibtex
-@misc{mmediting2022,
-    title = {{MMEditing}: {OpenMMLab} Image and Video Editing Toolbox},
-    author = {{MMEditing Contributors}},
-    howpublished = {\url{https://github.com/open-mmlab/mmediting}},
-    year = {2022}
+@misc{mmagic2023,
+    title = {{MMagic}: {OpenMMLab} Multimodal Advanced, Generative, and Intelligent Creation Toolbox},
+    author = {{MMagic Contributors}},
+    howpublished = {\url{https://github.com/open-mmlab/mmagic}},
+    year = {2023}
 }
 ```
 
 ## Checklist \[required\]
 
 Here is a checklist of this project's progress. And you can ignore this part if you don't plan to contribute
-to MMediting projects.
+to MMagic projects.
 
 - [ ] Milestone 1: PR-ready, and acceptable to be one of the `projects/`.
 
   - [ ] Finish the code
 
-    <!-- The code's design shall follow existing interfaces and convention. For example, each model component should be registered into `mmedit.registry.MODELS` and configurable via a config file. -->
+    <!-- The code's design shall follow existing interfaces and convention. For example, each model component should be registered into `mmagic.registry.MODELS` and configurable via a config file. -->
 
   - [ ] Basic docstrings & proper citation
 
@@ -129,7 +129,7 @@ to MMediting projects.
 
   - [ ] Unit tests
 
-    <!-- Unit tests for the major module are required. [Example](https://github.com/open-mmlab/mmediting/blob/main/tests/test_models/test_backbones/test_vision_transformer.py) -->
+    <!-- Unit tests for the major module are required. [Example](https://github.com/open-mmlab/mmagic/blob/main/tests/test_models/test_backbones/test_vision_transformer.py) -->
 
   - [ ] Code style
 
@@ -137,4 +137,4 @@ to MMediting projects.
 
   - [ ] `metafile.yml` and `README.md`
 
-    <!-- It will used for mmediting to acquire your models. [Example](https://github.com/open-mmlab/mmediting/blob/main/configs/mvit/metafile.yml). In particular, you may have to refactor this README into a standard one. [Example](https://github.com/open-mmlab/mmediting/blob/main/configs/swin_transformer/README.md) -->
+    <!-- It will used for mmagic to acquire your models. [Example](https://github.com/open-mmlab/mmagic/blob/main/configs/mvit/metafile.yml). In particular, you may have to refactor this README into a standard one. [Example](https://github.com/open-mmlab/mmagic/blob/main/configs/swin_transformer/README.md) -->

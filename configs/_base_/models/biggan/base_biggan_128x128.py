@@ -1,7 +1,7 @@
 model = dict(
     type='BigGAN',
     num_classes=1000,
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     generator=dict(
         type='BigGANGenerator',
         output_scale=128,

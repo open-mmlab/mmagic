@@ -9,7 +9,7 @@ import mmengine
 import numpy as np
 from PIL import Image
 
-from mmedit.utils import modify_args
+from mmagic.utils import modify_args
 
 
 def fix_png_files(directory):

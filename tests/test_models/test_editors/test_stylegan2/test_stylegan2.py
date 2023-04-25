@@ -7,8 +7,8 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import EditDataPreprocessor, StyleGAN2
-from mmedit.structures import EditDataSample
+from mmagic.models import DataPreprocessor, StyleGAN2
+from mmagic.structures import DataSample
 
 
 class TestStyleGAN2(TestCase):
@@ -46,7 +46,7 @@ class TestStyleGAN2(TestCase):
         stylegan2 = StyleGAN2(
             self.generator_cfg,
             self.disc_cfg,
-            data_preprocessor=EditDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             ema_config=self.ema_config,
             loss_config=self.loss_config)
 
@@ -62,7 +62,7 @@ class TestStyleGAN2(TestCase):
 
         # prepare inputs
         img = torch.randn(3, 32, 32)
-        data = dict(inputs=dict(), data_samples=[EditDataSample(gt_img=img)])
+        data = dict(inputs=dict(), data_samples=[DataSample(gt_img=img)])
 
         # simulate train_loop here
         message_hub.update_info('iter', 0)

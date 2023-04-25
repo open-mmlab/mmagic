@@ -18,7 +18,7 @@ ema_config = dict(
 model = dict(
     type='BigGAN',
     num_classes=1000,
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     ema_config=ema_config,
     generator=dict(
         type='BigGANDeepGenerator',

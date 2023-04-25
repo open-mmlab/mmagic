@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 
-from mmedit.models.editors.biggan.biggan_snmodule import SpectralNorm
+from mmagic.models.editors.biggan.biggan_snmodule import SpectralNorm
 
 
 class MyBlock(nn.Module):

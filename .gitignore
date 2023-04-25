@@ -121,7 +121,7 @@ configs_ceph/
 configs_ceph_*/
 /data/
 /data
-mmedit/.mim
+mmagic/.mim
 demo/*.png
 *.csv
 out/*.png

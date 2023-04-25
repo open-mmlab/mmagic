@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models import NAFBaseline, NAFBaselineLocal
+from mmagic.models import NAFBaseline, NAFBaselineLocal
 
 
 def test_nafnet():

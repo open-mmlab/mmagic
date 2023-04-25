@@ -1,4 +1,4 @@
-# MMEditing Viewer
+# MMagic Viewer
 
 - [Introduction](#introduction)
 - [Major features](#major-features)
@@ -9,7 +9,7 @@
 
 ## Introduction
 
-**MMEditing Viewer** is a qualitative comparison tools to facilitate your research.
+**MMagic Viewer** is a qualitative comparison tools to facilitate your research.
 
 ## Major features
 
@@ -24,7 +24,7 @@
 
 ## Prerequisites
 
-MMEditing Viewer works on Linux, Windows and macOS. It requires:
+MMagic Viewer works on Linux, Windows and macOS. It requires:
 
 - Python >= 3.6
 - PyQt5
@@ -55,10 +55,10 @@ pip install opencv-python-headless
 ```
 
 **Step 2.**
-Install MMEditing.
+Install MMagic.
 
 ```shell
-git clone https://github.com/open-mmlab/mmediting.git
+git clone https://github.com/open-mmlab/mmagic.git
 ```
 
 **Step 3.**
@@ -96,4 +96,4 @@ https://user-images.githubusercontent.com/49083766/199232634-eca70d28-8437-400a-
 
 ## Contributing
 
-We appreciate all contributions to improve MMEditing Viewer. You can create your issue to report bugs or request new features. Welcome to give us suggestions or contribute your codes.
+We appreciate all contributions to improve MMagic Viewer. You can create your issue to report bugs or request new features. Welcome to give us suggestions or contribute your codes.

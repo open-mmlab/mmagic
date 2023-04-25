@@ -29,7 +29,7 @@ train_pipeline = [
         scale=(320, 320),
         keep_ratio=False),
     dict(type='GenerateTrimap', kernel_size=(1, 30)),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 test_pipeline = [
@@ -44,7 +44,7 @@ test_pipeline = [
         color_type='grayscale',
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 train_dataloader = dict(dataset=dict(pipeline=train_pipeline))

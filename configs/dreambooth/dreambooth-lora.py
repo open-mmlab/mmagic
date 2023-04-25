@@ -34,7 +34,7 @@ model = dict(
         type='DDIMScheduler',
         from_pretrained=stable_diffusion_v15_url,
         subfolder='scheduler'),
-    data_preprocessor=dict(type='EditDataPreprocessor', data_keys=None),
+    data_preprocessor=dict(type='DataPreprocessor', data_keys=None),
     prior_loss_weight=0,
     val_prompts=val_prompts,
     lora_config=lora_config)
@@ -51,7 +51,7 @@ optim_wrapper = dict(
 pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='Resize', scale=(512, 512)),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 dataset = dict(
     type='DreamBoothDataset',
@@ -73,7 +73,7 @@ test_cfg = test_evaluator = test_dataloader = None
 default_hooks = dict(logger=dict(interval=10))
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=50,
         fixed_input=True,
         # visualize train dataset

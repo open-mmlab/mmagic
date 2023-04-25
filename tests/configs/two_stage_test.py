@@ -5,7 +5,7 @@ model = dict(
     disc_input_with_mask=True,
     train_cfg=dict(disc_step=1, start_iter=0),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[127.5],
         std=[127.5],
     ),

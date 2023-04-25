@@ -27,8 +27,7 @@ model = dict(
         resi_connection='1conv'),
     pixel_loss=dict(type='CharbonnierLoss', eps=1e-9),
     data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
-                                                             255.]))
+        type='DataPreprocessor', mean=[0., 0., 0.], std=[255., 255., 255.]))
 
 train_pipeline = [
     dict(
@@ -57,7 +56,7 @@ train_pipeline = [
         type='RandomJPEGCompression',
         params=dict(quality=[quality, quality], color_type='color'),
         keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = [
@@ -77,7 +76,7 @@ val_pipeline = [
         type='RandomJPEGCompression',
         params=dict(quality=[quality, quality], color_type='color'),
         keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings

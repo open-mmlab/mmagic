@@ -1,4 +1,4 @@
-cifar_pipeline = [dict(type='PackEditInputs')]
+cifar_pipeline = [dict(type='PackInputs')]
 cifar_dataset = dict(
     type='CIFAR10',
     data_root='./data',

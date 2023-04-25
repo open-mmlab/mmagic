@@ -1,9 +1,9 @@
 # Tutorial 3: Inference with pre-trained models
 
-MMEditing provides APIs for you to easily play with state-of-the-art models on your own images or videos.
-Specifically, MMEditing supports various fundamental generative models, including:
+MMagic provides APIs for you to easily play with state-of-the-art models on your own images or videos.
+Specifically, MMagic supports various fundamental generative models, including:
 unconditional Generative Adversarial Networks (GANs), conditional GANs, internal learning, diffusion models, etc.
-MMEditing also supports various applications, including:
+MMagic also supports various applications, including:
 image super-resolution, video super-resolution, video frame interpolation, image inpainting, image matting, image-to-image translation, etc.
 
 In this section, we will specify how to play with our pre-trained models.
@@ -22,10 +22,10 @@ In this section, we will specify how to play with our pre-trained models.
 
 ## Sample images with unconditional GANs
 
-MMEditing provides high-level APIs for sampling images with unconditional GANs. Here is an example of building StyleGAN2-256 and obtaining the synthesized images.
+MMagic provides high-level APIs for sampling images with unconditional GANs. Here is an example of building StyleGAN2-256 and obtaining the synthesized images.
 
 ```python
-from mmedit.apis import init_model, sample_unconditional_model
+from mmagic.apis import init_model, sample_unconditional_model
 
 # Specify the path to model config and checkpoint file
 config_file = 'configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py'
@@ -53,10 +53,10 @@ Note that more arguments are also offered to customize your sampling procedure. 
 
 ## Sample images with conditional GANs
 
-MMEditing provides high-level APIs for sampling images with conditional GANs. Here is an example for building SAGAN-128 and obtaining the synthesized images.
+MMagic provides high-level APIs for sampling images with conditional GANs. Here is an example for building SAGAN-128 and obtaining the synthesized images.
 
 ```python
-from mmedit.apis import init_model, sample_conditional_model
+from mmagic.apis import init_model, sample_conditional_model
 
 # Specify the path to model config and checkpoint file
 config_file = 'configs/sagan/sagan_woReLUinplace-Glr1e-4_Dlr4e-4_noaug-ndisc1-8xb32-bigGAN-sch_imagenet1k-128x128.py'
@@ -97,10 +97,10 @@ Note that more arguments are also offered to customizing your sampling procedure
 
 ## Sample images with diffusion models
 
-MMEditing provides high-level APIs for sampling images with diffusion models. Here is an example for building I-DDPM and obtaining the synthesized images.
+MMagic provides high-level APIs for sampling images with diffusion models. Here is an example for building I-DDPM and obtaining the synthesized images.
 
 ```python
-from mmedit.apis import init_model, sample_ddpm_model
+from mmagic.apis import init_model, sample_ddpm_model
 
 # Specify the path to model config and checkpoint file
 config_file = 'configs/improved_ddpm/ddpm_cosine-hybird-timestep-4k_16xb8-1500kiters_imagenet1k-64x64.py'
@@ -113,7 +113,7 @@ model = init_model(config_file, checkpoint_file, device=device)
 fake_imgs = sample_ddpm_model(model, 4)
 ```
 
-Indeed, we have already provided a more friendly demo script to users. You can use [demo/ddpm_demo.py](https://github.com/open-mmlab/mmediting/blob/main/demo/ddpm_demo.py) with the following commands:
+Indeed, we have already provided a more friendly demo script to users. You can use [demo/ddpm_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/ddpm_demo.py) with the following commands:
 
 ```shell
 python demo/ddpm_demo.py \
@@ -324,10 +324,10 @@ python demo/video_interpolation_demo.py \
 
 ## Run a demo of image translation models
 
-MMEditing provides high-level APIs for translating images by using image translation models. Here is an example of building Pix2Pix and obtaining the translated images.
+MMagic provides high-level APIs for translating images by using image translation models. Here is an example of building Pix2Pix and obtaining the translated images.
 
 ```python
-from mmedit.apis import init_model, sample_img2img_model
+from mmagic.apis import init_model, sample_img2img_model
 
 # Specify the path to model config and checkpoint file
 config_file = 'configs/pix2pix/pix2pix_vanilla-unet-bn_wo-jitter-flip-4xb1-190kiters_edges2shoes.py'

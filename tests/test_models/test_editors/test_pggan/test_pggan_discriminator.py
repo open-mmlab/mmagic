@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors.pggan import PGGANDiscriminator
+from mmagic.models.editors.pggan import PGGANDiscriminator
 
 
 class TestPGGANDiscriminator:

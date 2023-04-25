@@ -25,7 +25,7 @@ Adobe Composition-1k 数据集由前景图像及其相应的 alpha 图像组成�
 Adobe composition-1k 数据集仅包含 `alpha` 和 `fg`（以及测试集中的 `trimap`）。在训练或评估之前，需要将 `fg` 与 COCO 数据（训练）或 VOC 数据（测试）合并。使用以下脚本执行图像合成并生成用于训练或测试的注释文件：
 
 ```shell
-# 在 MMEditing 的根文件夹下运行脚本
+# 在 MMagic 的根文件夹下运行脚本
 python tools/dataset_converters/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --composite
 ```
 
@@ -50,8 +50,8 @@ python tools/dataset_converters/matting/comp1k/preprocess_comp1k_dataset.py data
 最终的文件夹结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -102,8 +102,8 @@ python tools/dataset_converters/matting/comp1k/extend_fg.py data/adobe_compositi
 最终的文件夹结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

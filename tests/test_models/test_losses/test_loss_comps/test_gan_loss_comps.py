@@ -3,7 +3,7 @@ import numpy.testing as npt
 import pytest
 import torch
 
-from mmedit.models.losses import GANLossComps
+from mmagic.models.losses import GANLossComps
 
 
 def test_gan_losses():

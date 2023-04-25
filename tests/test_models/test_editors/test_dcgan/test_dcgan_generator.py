@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.editors.dcgan import DCGANGenerator
-from mmedit.registry import MODELS
+from mmagic.models.editors.dcgan import DCGANGenerator
+from mmagic.registry import MODELS
 
 
 class TestDCGANGenerator(object):

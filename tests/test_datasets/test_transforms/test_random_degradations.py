@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import (DegradationsWithShuffle, RandomBlur,
+from mmagic.datasets.transforms import (DegradationsWithShuffle, RandomBlur,
                                         RandomJPEGCompression, RandomNoise,
                                         RandomResize, RandomVideoCompression)
 

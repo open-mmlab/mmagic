@@ -9,9 +9,9 @@ import torch.nn as nn
 from mmengine.utils import digit_version
 from torchvision.version import __version__ as TV_VERSION
 
-from mmedit.models import DenoisingUnet, DiscoDiffusion
-from mmedit.models.diffusion_schedulers import EditDDIMScheduler
-from mmedit.utils import register_all_modules
+from mmagic.models import DenoisingUnet, DiscoDiffusion
+from mmagic.models.diffusion_schedulers import EditDDIMScheduler
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -226,9 +226,9 @@ class TestDiscoDiffusion(TestCase):
             def forward(self, x):
                 return x
 
-        mock_path = ('mmedit.models.editors.disco_diffusion.guider.'
+        mock_path = ('mmagic.models.editors.disco_diffusion.guider.'
                      'TORCHVISION_VERSION')
-        affine_mock_path = ('mmedit.models.editors.disco_diffusion.guider.T.'
+        affine_mock_path = ('mmagic.models.editors.disco_diffusion.guider.T.'
                             'RandomAffine')
         with patch(affine_mock_path, new=affineMock):
             with patch(mock_path, '0.8.1'):

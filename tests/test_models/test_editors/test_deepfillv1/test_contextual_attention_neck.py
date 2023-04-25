@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.base_archs import SimpleGatedConvModule
-from mmedit.models.editors import ContextualAttentionNeck
+from mmagic.models.archs import SimpleGatedConvModule
+from mmagic.models.editors import ContextualAttentionNeck
 
 
 def test_deepfill_contextual_attention_neck():

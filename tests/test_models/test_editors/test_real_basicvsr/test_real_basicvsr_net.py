@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors import RealBasicVSRNet
+from mmagic.models.editors import RealBasicVSRNet
 
 
 @pytest.mark.skipif(

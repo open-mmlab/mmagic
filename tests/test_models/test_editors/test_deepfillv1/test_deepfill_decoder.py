@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import DeepFillDecoder
+from mmagic.models.editors import DeepFillDecoder
 
 
 def test_deepfill_dec():

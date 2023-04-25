@@ -11,7 +11,7 @@ from PIL import Image
 from skimage import img_as_float
 from skimage.io import imread, imsave
 
-from mmedit.datasets.transforms import MATLABLikeResize
+from mmagic.datasets.transforms import MATLABLikeResize
 
 
 def export_images(lmdb_path, meta_file_path, out_dir):

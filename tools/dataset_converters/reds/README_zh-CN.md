@@ -26,8 +26,8 @@ python tools/dataset_converters/reds/preprocess_reds_dataset.py ./data/REDS
 ```
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -61,7 +61,7 @@ python tools/dataset_converters/reds/preprocess_reds_dataset.py --root-path ./da
 
 ## 裁剪为子图
 
-MMEditing 支持将 REDS 图像裁剪为子图像以加快 IO。我们提供了这样一个脚本：
+MMagic 支持将 REDS 图像裁剪为子图像以加快 IO。我们提供了这样一个脚本：
 
 ```shell
 python tools/dataset_converters/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
@@ -70,8 +70,8 @@ python tools/dataset_converters/reds/crop_sub_images.py --data-root ./data/REDS 
 生成的数据存储在 `REDS` 下，数据结构如下，其中`_sub`表示子图像。
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

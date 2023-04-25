@@ -17,8 +17,8 @@ The datasets can be download from [here](https://opendatalab.org.cn/SPMCS).
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

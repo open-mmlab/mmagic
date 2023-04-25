@@ -8,10 +8,10 @@ import torch
 from mmengine.logging import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import EditDataPreprocessor, Pix2Pix
-from mmedit.models.base_archs import PatchDiscriminator
-from mmedit.models.editors.pix2pix import UnetGenerator
-from mmedit.utils import register_all_modules
+from mmagic.models import DataPreprocessor, Pix2Pix
+from mmagic.models.archs import PatchDiscriminator
+from mmagic.models.editors.pix2pix import UnetGenerator
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -58,7 +58,7 @@ def obj_from_dict(info: dict, parent=None, default_args=None):
 def test_pix2pix():
     # model settings
     model_cfg = dict(
-        data_preprocessor=EditDataPreprocessor(),
+        data_preprocessor=DataPreprocessor(),
         generator=dict(
             type='UnetGenerator',
             in_channels=3,
@@ -220,7 +220,7 @@ def test_pix2pix():
 def test_pix2pix_val_step():
     # model settings
     model_cfg = dict(
-        data_preprocessor=EditDataPreprocessor(),
+        data_preprocessor=DataPreprocessor(),
         generator=dict(
             type='UnetGenerator',
             in_channels=3,
