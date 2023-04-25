@@ -112,12 +112,12 @@ Please refer to [migration documents](docs/en/migration/overview.md) to migrate 
 
 - [📖 Introduction](#-introduction)
 - [🙌 Contributing](#-contributing)
-- [🛠️ Installation](#🛠️-installation)
+- [🛠️ Installation](#%EF%B8%8F-installation)
 - [📊 Model Zoo](#-model-zoo)
 - [🤝 Acknowledgement](#-acknowledgement)
-- [🖊️ Citation](#🖊️-citation)
+- [🖊️ Citation](#%EF%B8%8F-citation)
 - [🎫 License](#-license)
-- [🏗️ ️OpenMMLab Family](#🏗️-️openmmlab-family)
+- [🏗️ ️OpenMMLab Family](#%EF%B8%8F-️%EF%B8%8Fopenmmlab-family)
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
