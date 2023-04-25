@@ -51,15 +51,15 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 - 支持基于 MultiFrame Render 的视频生成.
   MMagic 支持通过 ControlNet 与多帧渲染法实现长视频的生成。
-  prompt key words: a handsome man, silver hair, smiling, play basketball
+  prompt keywords: a handsome man, silver hair, smiling, play basketball
 
   https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4
 
-  prompt key words: a girl, black hair, white pants, smiling, play basketball
+  prompt keywords: a girl, black hair, white pants, smiling, play basketball
 
   https://user-images.githubusercontent.com/49083766/233559964-bd5127bd-52f6-44b6-a089-9d7adfbc2430.mp4
 
-  prompt key words: a handsome man
+  prompt keywords: a handsome man
 
   https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4
 
