@@ -189,6 +189,15 @@ python -c "import mmagic; print(mmagic.__version__)"
 ```
 
 **Getting Started**
+After installing MMagic successfully, now you are able to play with MMagic! To generate an image from text, you only need several lines of codes by MMagic!
+
+```python
+from mmagic.apis import MMagicInferencer
+sd_inferencer = MMagicInferencer(model_name='stable_diffusion')
+text_prompts = 'A panda is having dinner at KFC'
+result_out_dir = 'output/sd_res.png'
+sd_inferencer.infer(text=text_prompts, result_out_dir=result_out_dir)
+```
 
 Please see [quick run](docs/en/get_started/quick_run.md) and [inference](docs/en/user_guides/inference.md) for the basic usage of MMagic.
 

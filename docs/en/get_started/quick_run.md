@@ -20,7 +20,7 @@ fake_imgs = sample_unconditional_model(model, 4)
 Or you can just run the following command.
 
 ```bash
-python demo/unconditional_demo.py \
+python demo/mmagic_inference_demo_demo.py \
 configs/styleganv2/stylegan2_c2_lsun-church_256_b4x8_800k.py \
 https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth
 
