@@ -332,7 +332,7 @@ class FixedCrop:
 
 @PIPELINES.register_module()
 class PairedRandomCrop:
-    """Paried random crop.
+    """Paired random crop.
 
     It crops a pair of lq and gt images with corresponding locations.
     It also supports accepting lq list and gt list.

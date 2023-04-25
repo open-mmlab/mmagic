@@ -88,14 +88,14 @@ class TestGenerationDatasets:
         pair_folder = self.data_prefix / 'paired'
 
         # input path is Path object
-        generation_paried_dataset = GenerationPairedDataset(
+        generation_paired_dataset = GenerationPairedDataset(
             dataroot=pair_folder, pipeline=pipeline, test_mode=True)
-        data_infos = generation_paried_dataset.data_infos
+        data_infos = generation_paired_dataset.data_infos
         assert data_infos == [
             dict(pair_path=str(pair_folder / 'test' / '3.jpg'))
         ]
-        result = generation_paried_dataset[0]
-        assert (len(generation_paried_dataset) == 1)
+        result = generation_paired_dataset[0]
+        assert (len(generation_paired_dataset) == 1)
         assert assert_dict_has_keys(result, target_keys)
         assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(pair_folder / 'test' /
@@ -104,14 +104,14 @@ class TestGenerationDatasets:
                                                          '3.jpg'))
 
         # input path is str
-        generation_paried_dataset = GenerationPairedDataset(
+        generation_paired_dataset = GenerationPairedDataset(
             dataroot=str(pair_folder), pipeline=pipeline, test_mode=True)
-        data_infos = generation_paried_dataset.data_infos
+        data_infos = generation_paired_dataset.data_infos
         assert data_infos == [
             dict(pair_path=str(pair_folder / 'test' / '3.jpg'))
         ]
-        result = generation_paried_dataset[0]
-        assert (len(generation_paried_dataset) == 1)
+        result = generation_paired_dataset[0]
+        assert (len(generation_paired_dataset) == 1)
         assert assert_dict_has_keys(result, target_keys)
         assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(pair_folder / 'test' /
@@ -120,22 +120,22 @@ class TestGenerationDatasets:
                                                          '3.jpg'))
 
         # test_mode = False
-        generation_paried_dataset = GenerationPairedDataset(
+        generation_paired_dataset = GenerationPairedDataset(
             dataroot=str(pair_folder), pipeline=pipeline, test_mode=False)
-        data_infos = generation_paried_dataset.data_infos
+        data_infos = generation_paired_dataset.data_infos
         assert data_infos == [
             dict(pair_path=str(pair_folder / 'train' / '1.jpg')),
             dict(pair_path=str(pair_folder / 'train' / '2.jpg'))
         ]
-        assert (len(generation_paried_dataset) == 2)
-        result = generation_paried_dataset[0]
+        assert (len(generation_paired_dataset) == 2)
+        result = generation_paired_dataset[0]
         assert assert_dict_has_keys(result, target_keys)
         assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(pair_folder /
                                                          'train' / '1.jpg'))
         assert (result['meta'].data['img_b_path'] == str(pair_folder /
                                                          'train' / '1.jpg'))
-        result = generation_paried_dataset[1]
+        result = generation_paired_dataset[1]
         assert assert_dict_has_keys(result, target_keys)
         assert assert_dict_has_keys(result['meta'].data, target_meta_keys)
         assert (result['meta'].data['img_a_path'] == str(pair_folder /
