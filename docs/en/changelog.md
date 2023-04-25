@@ -8,7 +8,7 @@ We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEd
 
 Since its inception, MMEditing has been the preferred algorithm library for many super-resolution, editing, and generation tasks, helping research teams win more than 10 top international competitions and supporting over 100 GitHub ecosystem projects. After iterative updates with OpenMMLab 2.0 framework and merged with MMGeneration, MMEditing has become a powerful tool that supports low-level algorithms based on both GAN and CNN.
 
-Today, MMEditing embraces the Diffusion Model and transforms into a more advanced and comprehensive AIGC toolkit: **MMagic** (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation).
+Today, MMEditing embraces Generative AI and transforms into a more advanced and comprehensive AIGC toolkit: **MMagic** (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation).
 
 In MMagic, we have supports 53+ models in multiple tasks such as fine-tuning for stable diffusion, text-to-image, image and video restoration, super-resolution, editing and generation. With excellent training and experiment management support from [MMEngine](https://github.com/open-mmlab/mmengine), MMagic will provide more agile and flexible experimental support for researchers and AIGC enthusiasts, and help you on your AIGC exploration journey. With MMagic, experience more magic in generation! Let's open a new era beyond editing together. More than Editing, Unlock the Magic!
 
