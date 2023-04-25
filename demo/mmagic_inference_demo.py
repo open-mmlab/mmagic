@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 # isort: off
 from argparse import ArgumentParser
-from mmagic.apis import MMagicInferencer
 from mmengine import DictAction
+from mmagic.apis import MMagicInferencer
 
 
 def parse_args():
@@ -25,8 +25,8 @@ def parse_args():
         help='path to input mask file for inpainting models')
     parser.add_argument(
         '--text',
-        nargs='+',
-        action=DictAction,
+        type=str,
+        default='',
         help='text input for text2image models')
     parser.add_argument(
         '--result-out-dir',

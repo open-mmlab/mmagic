@@ -179,9 +179,9 @@ python mmagic_inference_demo.py \
 
 ```shell
 python mmagic_inference_demo.py \
-        --model-name disco \
-        --text 0=["clouds surround the mountains and Chinese palaces,sunshine,lake,overlook,overlook,unreal engine,light effect,Dream，Greg Rutkowski,James Gurney,artstation"] \
-        --result-out-dir ../resources/output/text2image/demo_text2image_disco_res.png
+        --model-name stable_diffusion \
+        --text "A panda is having dinner at KFC" \
+        --result-out-dir ../resources/output/text2image/demo_text2image_stable_diffusion_res.png
 ```
 
 #### 2.2.9 3D-aware Generation (EG3D)
