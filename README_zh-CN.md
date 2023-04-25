@@ -57,7 +57,7 @@
 
 我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
 
-经过 OpenMMLab 2.0 框架的迭代更新以及与 MMGeneration 的合并，MMEditing 已经成为了一个支持基于 GAN 和 CNN 的底层视觉算法的强大工具。而今天，MMEditing 将拥抱 Diffusion Model（扩散模型），正式更名为 **MMagic**（**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation），转化为更为先进、全面的 AIGC 开源算法库。MMagic 将为广大研究者与 AIGC 爱好者们提供更加快捷灵活的实验支持，助力你的 AIGC 探索之旅。
+经过 OpenMMLab 2.0 框架的迭代更新以及与 MMGeneration 的合并，MMEditing 已经成为了一个支持基于 GAN 和 CNN 的底层视觉算法的强大工具。而今天，MMEditing 将更加拥抱生成式 AI（Generative AI），正式更名为 **MMagic**（**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation），致力于打造更先进、更全面的 AIGC 开源算法库。MMagic 将为广大研究者与 AIGC 爱好者们提供更加快捷灵活的实验支持，助力你的 AIGC 探索之旅。
 
 以下是此次版本发布的重点新功能:
 
@@ -108,14 +108,14 @@
 
 ## 📄 目录
 
-- [📖 介绍](#📖-介绍)
-- [🙌 参与贡献](#🙌-参与贡献)
-- [🛠️ 安装](#🛠️-安装)
-- [📊 模型库](#📊-模型库)
-- [🤝 致谢](#🤝-致谢)
-- [🖊️ 引用](#🖊️-引用)
-- [🎫 许可证](#🎫-许可证)
-- [🏗️ ️OpenMMLab 的其他项目](#🏗️-️openmmlab-的其他项目)
+- [📖 介绍](#-介绍)
+- [🙌 参与贡献](#-参与贡献)
+- [🛠️ 安装](#%EF%B8%8F-安装)
+- [📊 模型库](#-模型库)
+- [🤝 致谢](#-致谢)
+- [🖊️ 引用](#%EF%B8%8F-引用)
+- [🎫 许可证](#-许可证)
+- [🏗️ ️OpenMMLab 的其他项目](#%EF%B8%8F-️openmmlab-的其他项目)
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 
@@ -186,6 +186,7 @@ python -c "import mmagic; print(mmagic.__version__)"
 ```
 
 **开始使用**
+
 成功安装 MMagic 后，你可以很容易地上手使用 MMagic！仅需几行代码，你就可以使用 MMagic 完成文本生成图像！
 
 ```python
@@ -362,12 +363,12 @@ pip3 install -e .
       </td>
       <td>
         <ul>
-          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
-          <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
-          <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
-          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
-          <li><a href="configs/guided_diffusion/README.md">Guided Diffusion (NeurIPS'2021)</a></li>
           <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
+          <li><a href="configs/guided_diffusion/README.md">Guided Diffusion (NeurIPS'2021)</a></li>
+          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
+          <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
+          <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
+          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
         </ul>
       </td>
       <td>
