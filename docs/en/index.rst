@@ -6,7 +6,7 @@ Languages:
 |
 `简体中文 <https://mmagic.readthedocs.io/zh_CN/latest/>`_
 
-MMagic (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation) is an open-source AIGC toolbox for professional AI researchers and machine learning engineers to explore image and video processing, editing and generation.
+MMagic ( **M** ultimodal **A** dvanced, **G** enerative, and **I** ntelligent **C** reation) is an open-source AIGC toolbox for professional AI researchers and machine learning engineers to explore image and video processing, editing and generation.
 
 MMagic supports various foundamental generative models, including:
 
