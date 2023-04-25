@@ -2,7 +2,7 @@
   <img src="docs/en/_static/image/mmagic-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
-    <font size="5"><b>M</b>ultimodal <b>A</b>dvanced, <b>G</b>enerative, and <b>I</b>ntelligent <b>C</b>reation</font>
+    <font size="8"><b>M</b>ultimodal <b>A</b>dvanced, <b>G</b>enerative, and <b>I</b>ntelligent <b>C</b>reation</font>
   </div>
   <div align="center">
     <b><font size="5">OpenMMLab website</font></b>
