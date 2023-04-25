@@ -189,6 +189,7 @@ python -c "import mmagic; print(mmagic.__version__)"
 ```
 
 **Getting Started**
+
 After installing MMagic successfully, now you are able to play with MMagic! To generate an image from text, you only need several lines of codes by MMagic!
 
 ```python

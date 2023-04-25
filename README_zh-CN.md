@@ -186,6 +186,7 @@ python -c "import mmagic; print(mmagic.__version__)"
 ```
 
 **开始使用**
+
 成功安装 MMagic 后，你可以很容易地上手使用 MMagic！仅需几行代码，你就可以使用 MMagic 完成文本生成图像！
 
 ```python
