@@ -2,11 +2,13 @@
 
 Welcome to MMagic! In this section, you will know about
 
-- [What is MMagic?](#what-is-mmagic)
-- [Why should I use MMagic?](#why-should-i-use-mmagic)
-- [Get started](#get-started)
-- [User guides](#user-guides)
-- [Advanced guides](#advanced-guides)
+- [Overview](#overview)
+  - [What is MMagic?](#what-is-mmagic)
+  - [Why should I use MMagic?](#why-should-i-use-mmagic)
+  - [Get started](#get-started)
+  - [User guides](#user-guides)
+    - [Advanced guides](#advanced-guides)
+    - [How to](#how-to)
 
 ## What is MMagic?
 

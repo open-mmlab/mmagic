@@ -8,7 +8,7 @@ image super-resolution, video super-resolution, video frame interpolation, image
 
 In this section, we will specify how to play with our pre-trained models.
 
-- [Tutorial 3: Inference with Pre-trained Models](#tutorial-3-inference-with-pre-trained-models)
+- [Tutorial 3: Inference with pre-trained models](#tutorial-3-inference-with-pre-trained-models)
   - [Sample images with unconditional GANs](#sample-images-with-unconditional-gans)
   - [Sample images with conditional GANs](#sample-images-with-conditional-gans)
   - [Sample images with diffusion models](#sample-images-with-diffusion-models)
