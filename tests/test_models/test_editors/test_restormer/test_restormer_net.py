@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors import Restormer
+from mmagic.models.editors import Restormer
 
 
 @pytest.mark.skipif(

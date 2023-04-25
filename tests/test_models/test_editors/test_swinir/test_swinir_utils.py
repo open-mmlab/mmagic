@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.swinir.swinir_utils import (drop_path, to_2tuple,
+from mmagic.models.editors.swinir.swinir_utils import (drop_path, to_2tuple,
                                                        window_partition,
                                                        window_reverse)
 

@@ -1,6 +1,6 @@
 model = dict(
     type='StyleGANv1',
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     style_channels=512,
     generator=dict(
         type='StyleGANv1Generator', out_size=None, style_channels=512),

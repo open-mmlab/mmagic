@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import TOFlowVSRNet
+from mmagic.models.editors import TOFlowVSRNet
 
 
 def test_toflow_vsr_net():

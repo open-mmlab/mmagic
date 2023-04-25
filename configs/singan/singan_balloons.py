@@ -19,7 +19,7 @@ model = dict(
 # DATA
 pipeline = [
     dict(
-        type='PackEditInputs',
+        type='PackInputs',
         keys=[f'real_scale{i}' for i in range(num_scales)] + ['input_sample'])
 ]
 data_root = './data/singan/balloons.png'
@@ -34,7 +34,7 @@ custom_hooks = [
         after_run=True,
         data_name_list=['noise_weights', 'fixed_noises', 'curr_stage']),
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='SinGAN', name='balloons'))

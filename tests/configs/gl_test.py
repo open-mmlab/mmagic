@@ -20,7 +20,7 @@ local_disc_cfg = dict(
 model = dict(
     type='GLInpaintor',
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[127.5],
         std=[127.5],
     ),
@@ -47,7 +47,7 @@ model = dict(
 model_dirty = dict(
     type='GLInpaintor',
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[127.5],
         std=[127.5],
     ),
@@ -67,7 +67,7 @@ model_dirty = dict(
 model_inference = dict(
     type='GLInpaintor',
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[127.5],
         std=[127.5],
     ),
@@ -128,5 +128,5 @@ test_pipeline = [
         keep_ratio=False,
     ),
     dict(type='GetMaskedImage'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]

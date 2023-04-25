@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 from torch.utils.data import DataLoader
 
-from mmedit.utils.sampler import ArgumentsSampler, ValDataSampler
+from mmagic.utils.sampler import ArgumentsSampler, ValDataSampler
 
 
 def test_argument_sampler():

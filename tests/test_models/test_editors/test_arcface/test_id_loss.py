@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models import IDLossModel
+from mmagic.models import IDLossModel
 
 
 class TestArcFace:

@@ -19,8 +19,8 @@ The datasets RealSRSet+5images can be download from [here](https://github.com/Ji
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

@@ -5,7 +5,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors.arcface.arcface_modules import get_blocks
+from mmagic.models.editors.arcface.arcface_modules import get_blocks
 
 
 @pytest.mark.skipif(

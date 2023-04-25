@@ -11,11 +11,11 @@ import torch
 import torch.nn as nn
 from mmengine.runner import Runner
 
-from mmedit.datasets import PairedImageDataset
-from mmedit.evaluation import FrechetInceptionDistance, TransFID
-from mmedit.models import EditDataPreprocessor, Pix2Pix
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.datasets import PairedImageDataset
+from mmagic.evaluation import FrechetInceptionDistance, TransFID
+from mmagic.models import DataPreprocessor, Pix2Pix
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -128,19 +128,18 @@ class TestFID(TestCase):
                 inception_pkl=self.inception_pkl)
         gen_images = torch.randn(4, 3, 2, 2)
         gen_samples = [
-            EditDataSample(fake=(gen_images[i])).to_dict() for i in range(4)
+            DataSample(fake=(gen_images[i])).to_dict() for i in range(4)
         ]
         fid.process(None, gen_samples)
         fid.process(None, gen_samples)
 
         fid.fake_results.clear()
         gen_sample = [
-            EditDataSample(orig=EditDataSample(
-                fake=torch.randn(3, 2, 2))).to_dict()
+            DataSample(orig=DataSample(fake=torch.randn(3, 2, 2))).to_dict()
         ]
         fid.process(None, gen_sample)
         gen_sample = [
-            EditDataSample(orig=EditDataSample(
+            DataSample(orig=DataSample(
                 fake_img=torch.randn(3, 2, 2))).to_dict()
         ]
         fid.process(None, gen_sample)
@@ -160,7 +159,7 @@ class TestFID(TestCase):
         dataloader = MagicMock()
         fid.prepare(module, dataloader)
         gen_samples = [
-            EditDataSample(fake_img=torch.randn(3, 2, 2)).to_dict()
+            DataSample(fake_img=torch.randn(3, 2, 2)).to_dict()
             for _ in range(4)
         ]
         fid.process(None, gen_samples)
@@ -203,7 +202,7 @@ class TestTransFID:
                         interpolation='bicubic'),
                     dict(type='FixedCrop', keys=['img'], crop_size=(256, 256))
                 ]),
-            dict(type='PackEditInputs', keys=['img_edge', 'img_shoe', 'pair'])
+            dict(type='PackInputs', keys=['img_edge', 'img_shoe', 'pair'])
         ]
         dataset = PairedImageDataset(
             data_root='tests/data/paired', pipeline=pipeline, test_mode=True)
@@ -212,7 +211,7 @@ class TestTransFID:
                 batch_size=2,
                 dataset=dataset,
                 sampler=dict(type='DefaultSampler')))
-        gan_data_preprocessor = EditDataPreprocessor()
+        gan_data_preprocessor = DataPreprocessor()
         generator = dict(
             type='UnetGenerator',
             in_channels=3,

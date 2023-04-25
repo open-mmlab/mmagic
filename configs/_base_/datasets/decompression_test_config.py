@@ -17,7 +17,7 @@ test_pipeline = [
         params=dict(quality=[quality, quality]),
         bgr2rgb=True,
         keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 classic5_data_root = 'data/Classic5'

@@ -34,7 +34,7 @@ key_mapping = dict(
         f'img_{domain_b}': f'img_{domain_b}'
     })
 pack_input = dict(
-    type='PackEditInputs',
+    type='PackInputs',
     keys=[f'img_{domain_a}', f'img_{domain_b}'],
     data_keys=[f'img_{domain_a}', f'img_{domain_b}'])
 
@@ -57,7 +57,7 @@ optim_wrapper = dict(
 
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=[

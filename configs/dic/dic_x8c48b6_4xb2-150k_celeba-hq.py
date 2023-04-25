@@ -19,7 +19,7 @@ model = dict(
     train_cfg=dict(),
     test_cfg=dict(),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[129.795, 108.12, 96.39],
         std=[255, 255, 255],
     ))
@@ -51,7 +51,7 @@ train_pipeline = [
         ori_size=128,
         target_size=32,
         sigma=1.0),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 valid_pipeline = [
     dict(
@@ -74,7 +74,7 @@ valid_pipeline = [
         output_keys=['img'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 test_pipeline = valid_pipeline
 
@@ -99,7 +99,7 @@ inference_pipeline = [
         output_keys=['img'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings
@@ -141,8 +141,8 @@ test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=150_000, val_interval=2000)
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(

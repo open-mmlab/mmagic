@@ -1,0 +1,18 @@
+Collections:
+- Name: Controlnet Animation
+  Paper:
+    Title: Controlnet
+    URL: https://github.com/lllyasviel/ControlNet
+  README: configs/controlnet_animation/README.md
+  Task:
+  - controlnet_animation
+  Year: 2023
+Models:
+- Config: configs/controlnet_animation/anythingv3_config.py
+  In Collection: Controlnet Animation
+  Name: anythingv3_config
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: controlnet_animation
+  Weights: https://huggingface.co/Linaqruf/anything-v3.0/tree/main

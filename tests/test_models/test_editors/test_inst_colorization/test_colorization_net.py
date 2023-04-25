@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 def test_colorization_net():

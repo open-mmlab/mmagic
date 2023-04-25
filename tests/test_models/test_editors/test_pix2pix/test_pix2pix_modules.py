@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.pix2pix.pix2pix_modules import \
+from mmagic.models.editors.pix2pix.pix2pix_modules import \
     UnetSkipConnectionBlock
 
 

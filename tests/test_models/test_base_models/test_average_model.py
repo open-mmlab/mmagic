@@ -8,7 +8,7 @@ import torch.nn as nn
 from mmengine.model import BaseModel
 from mmengine.testing import assert_allclose
 
-from mmedit.models.base_models import ExponentialMovingAverage, RampUpEMA
+from mmagic.models.base_models import ExponentialMovingAverage, RampUpEMA
 
 
 class ToyModule(nn.Module):

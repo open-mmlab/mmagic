@@ -4,7 +4,7 @@ import os
 import os.path as osp
 from itertools import cycle
 
-import mmcv
+import mmengine
 
 
 def generate_json(data_root, seg_root, bg_root, all_data):
@@ -40,7 +40,7 @@ def generate_json(data_root, seg_root, bg_root, all_data):
     for bg_dir in bg_dirs:
         bg_frames.extend([
             osp.join(bg_root, bg_dir, f)
-            for f in sorted(mmcv.scandir(osp.join(bg_root, bg_dir)))
+            for f in sorted(mmengine.scandir(osp.join(bg_root, bg_dir)))
         ])
     bg_stream = cycle(bg_frames)
 
@@ -50,7 +50,7 @@ def generate_json(data_root, seg_root, bg_root, all_data):
         video_full_path = osp.join(video_root, video_dir)
         seg_full_path = osp.join(seg_root, video_dir)
         num_frames = len(
-            list(mmcv.scandir(video_full_path, suffix='_img.png')))
+            list(mmengine.scandir(video_full_path, suffix='_img.png')))
         # In the original Background Matting github repo, the
         # last 80 frames is not used.
         effective_frames = num_frames if all_data else num_frames - 80
@@ -71,7 +71,7 @@ def generate_json(data_root, seg_root, bg_root, all_data):
                 bg_sup_path=bg_sup)
             data_infos.append(data_info)
     save_json_path = 'fixed_camera_train.json'
-    mmcv.dump(data_infos, osp.join(data_root, save_json_path))
+    mmengine.dump(data_infos, osp.join(data_root, save_json_path))
 
 
 def parse_args():

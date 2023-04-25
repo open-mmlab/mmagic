@@ -7,10 +7,10 @@ import pytest
 import torch
 from mmengine import Config
 
-from mmedit.models import GLEncoderDecoder
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.models import GLEncoderDecoder
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 
 def test_one_stage_inpaintor():
@@ -60,12 +60,12 @@ def test_one_stage_inpaintor():
         masked_img = gt_img * (1. - mask)
         mask_bbox = [100, 100, 110, 110]
         inputs = masked_img.unsqueeze(0)
-        data_sample = EditDataSample(
+        data_sample = DataSample(
             mask=mask,
             mask_bbox=mask_bbox,
             gt_img=gt_img,
         )
-        data_samples = EditDataSample.stack([data_sample])
+        data_samples = DataSample.stack([data_sample])
         data_batch = {'inputs': inputs, 'data_samples': [data_sample]}
 
         # test forward_tensor

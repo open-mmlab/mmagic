@@ -10,7 +10,7 @@ test_pipelines = [[
     dict(
         type='RandomDownSampling', scale_min=scale_test, scale_max=scale_test),
     dict(type='GenerateCoordinateAndCell', scale=scale_test, reshape_gt=False),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ] for scale_test in scale_test_list]
 
 # test config for Set5
@@ -73,7 +73,7 @@ div2k_evaluators = [[
 ] for scale in scale_test_list]
 
 # test config
-test_cfg = dict(type='EditTestLoop')
+test_cfg = dict(type='MultiTestLoop')
 test_dataloader = [
     *set5_dataloaders,
     *set14_dataloaders,

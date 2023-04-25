@@ -4,7 +4,7 @@ import copy
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import (BinarizeImage, Clip, ColorJitter,
+from mmagic.datasets.transforms import (BinarizeImage, Clip, ColorJitter,
                                         RandomAffine, RandomMaskDilation,
                                         UnsharpMasking)
 

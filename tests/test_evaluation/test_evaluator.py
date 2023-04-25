@@ -3,20 +3,20 @@ from copy import deepcopy
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from mmedit.evaluation import (EditEvaluator, FrechetInceptionDistance,
+from mmagic.evaluation import (Evaluator, FrechetInceptionDistance,
                                InceptionScore)
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
-fid_loading_str = 'mmedit.evaluation.metrics.fid.FrechetInceptionDistance._load_inception'  # noqa
-is_loading_str = 'mmedit.evaluation.metrics.inception_score.InceptionScore._load_inception'  # noqa
+fid_loading_str = 'mmagic.evaluation.metrics.fid.FrechetInceptionDistance._load_inception'  # noqa
+is_loading_str = 'mmagic.evaluation.metrics.inception_score.InceptionScore._load_inception'  # noqa
 
 loading_mock = MagicMock(return_value=(MagicMock(), 'StyleGAN'))
 
 
-class TestEditEvaluator(TestCase):
+class TestEvaluator(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -37,21 +37,21 @@ class TestEditEvaluator(TestCase):
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_init(self):
-        evaluator = EditEvaluator(self.metrics)
+        evaluator = Evaluator(self.metrics)
         self.assertFalse(evaluator.is_ready)
 
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_prepare_metric(self):
-        evaluator = EditEvaluator(self.metrics)
+        evaluator = Evaluator(self.metrics)
         model = MagicMock()
         model.data_preprocessor.device = 'cpu'
         dataloader = MagicMock()
-        with patch('mmedit.evaluation.metrics.fid.prepare_inception_feat'):
+        with patch('mmagic.evaluation.metrics.fid.prepare_inception_feat'):
             evaluator.prepare_metrics(model, dataloader)
             self.assertTrue(evaluator.is_ready)
 
-        evaluator = EditEvaluator(self.metrics)
+        evaluator = Evaluator(self.metrics)
         evaluator.metrics = [MagicMock()]
         evaluator.is_ready = True
         evaluator.prepare_metrics(model, dataloader)
@@ -60,7 +60,7 @@ class TestEditEvaluator(TestCase):
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_prepare_samplers(self):
-        evaluator = EditEvaluator(self.metrics)
+        evaluator = Evaluator(self.metrics)
 
         model = MagicMock()
         model.data_preprocessor.device = 'cpu'
@@ -86,7 +86,7 @@ class TestEditEvaluator(TestCase):
                 fake_nums=12,
                 inception_style='pytorch',
                 sample_model='ema'))
-        evaluator = EditEvaluator(cfg)
+        evaluator = Evaluator(cfg)
 
         # mock metrics
         model = MagicMock()
@@ -128,7 +128,7 @@ class TestEditEvaluator(TestCase):
         # all metrics (5 groups): [[IS-orig, FID-orig], [TransFID-orig],
         #                          [FID-ema], [FID-cond-ema, IS-cond-ema],
         #                          [IS-cond-orig]]
-        evaluator = EditEvaluator(cfg)
+        evaluator = Evaluator(cfg)
 
         # mock metrics
         model = MagicMock()
@@ -143,10 +143,10 @@ class TestEditEvaluator(TestCase):
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_process(self):
-        evaluator = EditEvaluator(self.metrics)
+        evaluator = Evaluator(self.metrics)
         metrics_mock = [MagicMock(), MagicMock()]
 
-        data_samples = [EditDataSample(a=1, b=2), dict(c=3, d=4)]
+        data_samples = [DataSample(a=1, b=2), dict(c=3, d=4)]
 
         # NOTE: data_batch is not used in evaluation
         evaluator.process(
@@ -164,7 +164,7 @@ class TestEditEvaluator(TestCase):
     @patch(is_loading_str, loading_mock)
     @patch(fid_loading_str, loading_mock)
     def test_evaluate(self):
-        evaluator = EditEvaluator(self.metrics)
+        evaluator = Evaluator(self.metrics)
 
         # mock metrics
         metric_mock1, metric_mock2 = MagicMock(), MagicMock()
@@ -182,3 +182,29 @@ class TestEditEvaluator(TestCase):
         evaluator.metrics = [metric_mock3, metric_mock4]
         with self.assertRaises(ValueError):
             evaluator.evaluate()
+
+
+class TestNonMetricEvaluator(TestCase):
+
+    def test_init(self):
+        evaluator = Evaluator(None)
+        self.assertIsNone(evaluator.metrics)
+
+    def test_prepare_metrics(self):
+        evaluator = Evaluator(None)
+        evaluator.prepare_metrics(None, None)
+        self.assertTrue(evaluator.is_ready)
+
+    def test_prepare_samplers(self):
+        evaluator = Evaluator(None)
+        metric_sampler_list = evaluator.prepare_samplers(None, None)
+        self.assertEqual(metric_sampler_list, [[[None], []]])
+
+    def test_process(self):
+        evaluator = Evaluator(None)
+        evaluator.process(None, None, None)
+
+    def test_evalute(self):
+        evaluator = Evaluator(None)
+        output = evaluator.evaluate()
+        self.assertEqual(output, {'No Metric': 'Nan'})

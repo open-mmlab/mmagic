@@ -17,8 +17,8 @@ The datasets can be downloaded from [here](https://drive.google.com/file/d/1G4V4
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

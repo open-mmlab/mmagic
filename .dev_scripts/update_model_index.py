@@ -72,7 +72,7 @@ It is forbidden to set value as `NULL`, `None` or empty list and str.
         - `Version` (str): required
     - `Image` (str): optional
 
-The README.md file in MMEditing follows following convention,
+The README.md file in MMagic follows following convention,
     - `Model`: [name_in_the_paper](path_to_config)
     - `Download`: [model](url_to_pre_trained_weights) | [log](url_to_log)
 """
@@ -90,7 +90,7 @@ from modelindex.models.Result import Result
 from utils import (collate_metrics, dump_yaml_and_check_difference,
                    found_table, modelindex_to_dict)
 
-MMEditing_ROOT = osp.dirname(osp.dirname(__file__))
+MMagic_ROOT = osp.dirname(osp.dirname(__file__))
 KEYWORDS = [
     'Model',
     'Dataset',
@@ -106,7 +106,7 @@ def parse_md(md_file):
     Returns:
         Bool: If the target YAML file is different from the original.
     """
-    readme = osp.relpath(md_file, MMEditing_ROOT)
+    readme = osp.relpath(md_file, MMagic_ROOT)
     readme = readme.replace('\\', '/')  # for windows
     collection = Collection()
     collection_meta = Metadata()
@@ -232,18 +232,18 @@ def update_model_index():
     Returns:
         Bool: If the updated model-index.yml is different from the original.
     """
-    configs_dir = osp.join(MMEditing_ROOT, 'configs')
+    configs_dir = osp.join(MMagic_ROOT, 'configs')
     yml_files = glob.glob(osp.join(configs_dir, '**', '*.yml'), recursive=True)
     yml_files.sort()
 
     model_index = {
         'Import': [
-            osp.relpath(yml_file, MMEditing_ROOT).replace(
+            osp.relpath(yml_file, MMagic_ROOT).replace(
                 '\\', '/')  # force using / as path separators
             for yml_file in yml_files
         ]
     }
-    model_index_file = osp.join(MMEditing_ROOT, 'model-index.yml')
+    model_index_file = osp.join(MMagic_ROOT, 'model-index.yml')
     is_different = dump_yaml_and_check_difference(model_index,
                                                   model_index_file)
 
@@ -252,7 +252,7 @@ def update_model_index():
 
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
-        configs_root = osp.join(MMEditing_ROOT, 'configs')
+        configs_root = osp.join(MMagic_ROOT, 'configs')
         file_list = glob.glob(
             osp.join(configs_root, '**', '*README.md'), recursive=True)
         file_list.sort()

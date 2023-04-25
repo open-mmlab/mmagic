@@ -77,7 +77,7 @@ cluster_num: '2'
 default_floating_range: 1.0
 model_floating_ranges: {}
 partition: mm_lol
-repo: mmediting
+repo: mmagic
 branch: dev-1.x
 task_type: test
 third_part_libs: []

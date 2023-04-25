@@ -18,8 +18,8 @@
 请注意，我们将原始的验证集（文件名 0801 到 0900）合并进了原始的训练集（文件名 0001 到 0800）。文件目录结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -64,8 +64,8 @@ python tools/dataset_converters/div2k/preprocess_div2k_dataset.py --data-root ./
 生成的数据保存在 `DIV2K` 目录下，其文件结构如下所示，其中 `_sub` 表示子图:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

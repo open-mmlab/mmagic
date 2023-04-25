@@ -3,12 +3,12 @@ dataset_type = 'BasicImageDataset'
 train_pipeline = [
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='Flip', keys=['gt'], direction='horizontal'),
-    dict(type='PackEditInputs', keys='gt')
+    dict(type='PackInputs', keys='gt')
 ]
 
 val_pipeline = [
     dict(type='LoadImageFromFile', key='gt'),
-    dict(type='PackEditInputs', keys=['gt'])
+    dict(type='PackInputs', keys=['gt'])
 ]
 
 # `batch_size` and `data_root` need to be set.

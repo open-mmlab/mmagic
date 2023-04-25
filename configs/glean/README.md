@@ -52,7 +52,7 @@ python tools/train.py configs/glean/glean_x8_2xb8_cat.py
 ./tools/dist_train.sh configs/glean/glean_x8_2xb8_cat.py 8
 ```
 
-For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMagic).
 
 </details>
 
@@ -74,7 +74,7 @@ python tools/test.py configs/glean/glean_x8_2xb8_cat.py https://download.openmml
 ./tools/dist_test.sh configs/glean/glean_x8_2xb8_cat.py https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth 8
 ```
 
-For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).
 
 </details>
 

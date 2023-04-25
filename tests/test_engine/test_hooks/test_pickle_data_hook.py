@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from mmedit.engine.hooks import PickleDataHook
+from mmagic.engine.hooks import PickleDataHook
 
 
 class ToyModel(nn.Module):

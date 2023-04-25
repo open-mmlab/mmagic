@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
-from mmedit.apis.inferencers.video_interpolation_inferencer import \
+from mmagic.apis.inferencers.video_interpolation_inferencer import \
     VideoInterpolationInferencer
-from mmedit.utils import register_all_modules
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

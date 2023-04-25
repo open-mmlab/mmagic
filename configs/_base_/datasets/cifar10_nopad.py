@@ -1,6 +1,6 @@
 cifar_pipeline = [
     dict(type='Flip', keys=['gt'], flip_ratio=0.5, direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 cifar_dataset = dict(
     type='CIFAR10',
@@ -10,7 +10,7 @@ cifar_dataset = dict(
     pipeline=cifar_pipeline)
 
 # test dataset do not use flip
-cifar_pipeline_test = [dict(type='PackEditInputs')]
+cifar_pipeline_test = [dict(type='PackInputs')]
 cifar_dataset_test = dict(
     type='CIFAR10',
     data_root='./data',

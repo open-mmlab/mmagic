@@ -39,7 +39,7 @@ For example, if we use FP16 at the super resolution module in [FFHQ model](./eg3
 You can use the following command to generate sequence images with continuous changed camera position as input.
 
 ```shell
-python demo/mmediting_inference_demo.py --model-name eg3d \
+python demo/mmagic_inference_demo.py --model-name eg3d \
     --model-config configs/eg3d/eg3d_cvt-official-rgb_afhq-512x512.py \
     --model-ckpt https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_afhq-512x512-ca1dd7c9.pth \
     --result-out-dir eg3d_output \  # save images and videos to `eg3d_output`
@@ -56,7 +56,7 @@ The the following video will be saved to `eg3d_output`.
 To interpolate the camera position and style code at the same time, you can use the following command.
 
 ```shell
-python demo/mmediting_inference_demo.py --model-name eg3d \
+python demo/mmagic_inference_demo.py --model-name eg3d \
     --model-config configs/eg3d/eg3d_cvt-official-rgb_ffhq-512x512.py \
     --model-ckpt https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_ffhq-512x512-5a0ddcb6.pth \
     --result-out-dir eg3d_output \  # save images and videos to `eg3d_output`
@@ -72,7 +72,7 @@ python demo/mmediting_inference_demo.py --model-name eg3d \
 If you only want to save video of depth map, you can use the following command:
 
 ```shell
-python demo/mmediting_inference_demo.py --model-name eg3d \
+python demo/mmagic_inference_demo.py --model-name eg3d \
     --model-config configs/eg3d/eg3d_cvt-official-rgb_shapenet-128x128.py \
     --model-ckpt https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_shapenet-128x128-85757f4d.pth \
     --result-out-dir eg3d_output \  # save images and videos to `eg3d_output`
@@ -102,7 +102,7 @@ def main():
     parser.add_argument(
         'in-anno', type=str, help='Path to the official annotation file.')
     parser.add_argument(
-        'out-anno', type=str, help='Path to MMEditing\'s annotation file.')
+        'out-anno', type=str, help='Path to MMagicing\'s annotation file.')
     args = parser.parse_args()
 
     anno = load(args.in_anno)
