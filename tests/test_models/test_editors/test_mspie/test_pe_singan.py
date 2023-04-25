@@ -2,9 +2,9 @@
 import torch
 from mmengine import MessageHub
 
-from mmedit.engine import SinGANOptimWrapperConstructor
-from mmedit.models import PESinGAN
-from mmedit.utils import register_all_modules
+from mmagic.engine import SinGANOptimWrapperConstructor
+from mmagic.models import PESinGAN
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -26,7 +26,7 @@ class TestPESinGAN:
             num_scales=3)  # noqa
 
         cls.data_preprocessor = dict(
-            type='EditDataPreprocessor', non_image_keys=['input_sample'])
+            type='DataPreprocessor', non_image_keys=['input_sample'])
 
         cls.noise_weight_init = 0.1
         cls.iters_per_scale = 2

@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.7
-      - name: Build MMEditing
+      - name: Build MMagic
         run: |
           pip install torch==1.8.1+cpu torchvision==0.9.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
           pip install wheel

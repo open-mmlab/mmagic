@@ -7,7 +7,7 @@ from pathlib import Path
 from modelindex.load_model_index import load
 from tqdm import tqdm
 
-MMEDIT_ROOT = Path(__file__).absolute().parents[3]
+MMAGIC_ROOT = Path(__file__).absolute().parents[3]
 TARGET_ROOT = Path(__file__).absolute().parents[1] / 'model_zoo'
 
 
@@ -20,7 +20,7 @@ def write_file(file, content):
 def update_model_zoo():
     """load collections and models from model index, return summary,
     collections and models."""
-    model_index_file = MMEDIT_ROOT / 'model-index.yml'
+    model_index_file = MMAGIC_ROOT / 'model-index.yml'
     model_index = load(str(model_index_file))
     model_index.build_models_with_collections()
 
@@ -38,12 +38,12 @@ def update_model_zoo():
 
     # assert the number of configs with the number of files
     collections = set([m.in_collection for m in full_models])
-    assert len(collections) == len(os.listdir(MMEDIT_ROOT / 'configs')) - 1
+    assert len(collections) == len(os.listdir(MMAGIC_ROOT / 'configs')) - 1
 
-    configs = set([str(MMEDIT_ROOT / m.config) for m in full_models])
+    configs = set([str(MMAGIC_ROOT / m.config) for m in full_models])
     base_configs = glob(
-        str(MMEDIT_ROOT / 'configs/_base_/**/*.py'), recursive=True)
-    all_configs = glob(str(MMEDIT_ROOT / 'configs/**/*.py'), recursive=True)
+        str(MMAGIC_ROOT / 'configs/_base_/**/*.py'), recursive=True)
+    all_configs = glob(str(MMAGIC_ROOT / 'configs/**/*.py'), recursive=True)
     valid_configs = set(all_configs) - set(base_configs)
     untrackable_configs = valid_configs - configs
     assert len(untrackable_configs) == 0, '/n'.join(
@@ -103,7 +103,7 @@ def update_model_zoo():
         for m in models:
             if m.readme not in readme:
                 readme.add(m.readme)
-                with open(MMEDIT_ROOT / m.readme, 'r') as f:
+                with open(MMAGIC_ROOT / m.readme, 'r') as f:
                     c = f.read()
                 content += c.replace('# ', '## ')
         overview = (f'# {task}\n\n'

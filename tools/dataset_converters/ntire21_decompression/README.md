@@ -19,8 +19,8 @@ Please follows the tutorials of the [Homepage](https://github.com/RenYang-home/N
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

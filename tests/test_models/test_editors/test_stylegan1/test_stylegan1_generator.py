@@ -5,8 +5,8 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.models.editors.stylegan1 import StyleGAN1Generator
-from mmedit.utils import register_all_modules
+from mmagic.models.editors.stylegan1 import StyleGAN1Generator
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

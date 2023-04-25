@@ -19,8 +19,8 @@ The test datasets can be download from [here](https://github.com/cszn/DnCNN/tree
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

@@ -5,7 +5,7 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.models.editors.pix2pix import UnetGenerator
+from mmagic.models.editors.pix2pix import UnetGenerator
 
 
 class TestUnetGenerator:

@@ -9,7 +9,7 @@ train_pipeline = [
         interpolation='lanczos',
         backend='pillow'),
     dict(type='Flip', keys=['gt'], direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # `batch_size` and `data_root` need to be set.

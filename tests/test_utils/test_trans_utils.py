@@ -4,9 +4,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import (CropAroundCenter, CropAroundFg,
+from mmagic.datasets.transforms import (CropAroundCenter, CropAroundFg,
                                         CropAroundUnknown, LoadImageFromFile)
-from mmedit.utils import (adjust_gamma, bbox2mask, brush_stroke_mask,
+from mmagic.utils import (adjust_gamma, bbox2mask, brush_stroke_mask,
                           get_irregular_mask, random_bbox)
 
 dtype_range = {

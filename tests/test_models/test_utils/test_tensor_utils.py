@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.utils.tensor_utils import get_unknown_tensor, normalize_vecs
+from mmagic.models.utils.tensor_utils import get_unknown_tensor, normalize_vecs
 
 
 def test_tensor_utils():

@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors.edvr.edvr_net import (EDVRNet, PCDAlignment,
+from mmagic.models.editors.edvr.edvr_net import (EDVRNet, PCDAlignment,
                                                  TSAFusion)
 
 

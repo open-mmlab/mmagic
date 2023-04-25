@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import (ContextualAttentionNeck, DeepFillDecoder,
+from mmagic.models.editors import (ContextualAttentionNeck, DeepFillDecoder,
                                    DeepFillEncoder, DeepFillRefiner,
                                    GLDilationNeck)
 

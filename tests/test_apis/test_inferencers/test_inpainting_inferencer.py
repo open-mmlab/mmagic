@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
-from mmedit.apis.inferencers.inpainting_inferencer import InpaintingInferencer
-from mmedit.utils import register_all_modules
+from mmagic.apis.inferencers.inpainting_inferencer import InpaintingInferencer
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

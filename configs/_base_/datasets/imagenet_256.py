@@ -8,14 +8,14 @@ train_pipeline = [
     dict(type='RandomCropLongEdge', keys=['img']),
     dict(type='Resize', scale=(256, 256), keys=['img'], backend='pillow'),
     dict(type='Flip', keys=['img'], flip_ratio=0.5, direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='CenterCropLongEdge', keys=['img']),
     dict(type='Resize', scale=(256, 256), backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 train_dataloader = dict(

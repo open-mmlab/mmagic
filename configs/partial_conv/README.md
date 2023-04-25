@@ -47,7 +47,7 @@ python tools/train.py configs/partial_conv/pconv_stage2_4xb2_places-256x256.py
 ./tools/dist_train.sh configs/partial_conv/pconv_stage2_4xb2_places-256x256.py 8
 ```
 
-For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMagic).
 
 </details>
 
@@ -69,7 +69,7 @@ python tools/test.py configs/partial_conv/pconv_stage2_4xb2_places-256x256.py ht
 ./tools/dist_test.sh configs/partial_conv/pconv_stage2_4xb2_places-256x256.py https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth 8
 ```
 
-For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).
 
 </details>
 

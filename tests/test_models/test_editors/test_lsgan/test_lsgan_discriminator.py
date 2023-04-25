@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.editors.lsgan import LSGANDiscriminator
-from mmedit.registry import MODELS
+from mmagic.models.editors.lsgan import LSGANDiscriminator
+from mmagic.registry import MODELS
 
 
 class TestLSGANDiscriminator(object):

@@ -5,7 +5,7 @@ import torch
 from mmengine import Config
 from mmengine.registry import init_default_scope
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 try:
     from mmengine.analysis import get_model_complexity_info
@@ -83,7 +83,7 @@ def main():
 
     cfg = Config.fromfile(args.config)
 
-    init_default_scope(cfg.get('default_scope', 'mmedit'))
+    init_default_scope(cfg.get('default_scope', 'mmagic'))
 
     model = MODELS.build(cfg.model)
     inputs = torch.randn(1, *input_shape)
@@ -101,8 +101,7 @@ def main():
     elif hasattr(model, 'infer'):
         model.forward = model.infer
 
-    analysis_results = get_model_complexity_info(
-        model, input_shape, inputs=inputs)
+    analysis_results = get_model_complexity_info(model, inputs=inputs)
     flops = analysis_results['flops_str']
     params = analysis_results['params_str']
     activations = analysis_results['activations_str']

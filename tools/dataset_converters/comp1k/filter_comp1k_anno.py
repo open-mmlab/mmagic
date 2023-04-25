@@ -2,12 +2,12 @@
 import argparse
 import os.path as osp
 
-import mmcv
+import mmengine
 
 
 def generate_json(comp1k_json_path, target_list_path, save_json_path):
-    data_infos = mmcv.load(comp1k_json_path)
-    targets = mmcv.list_from_file(target_list_path)
+    data_infos = mmengine.load(comp1k_json_path)
+    targets = mmengine.list_from_file(target_list_path)
     new_data_infos = []
     for data_info in data_infos:
         for target in targets:
@@ -15,7 +15,7 @@ def generate_json(comp1k_json_path, target_list_path, save_json_path):
                 new_data_infos.append(data_info)
                 break
 
-    mmcv.dump(new_data_infos, save_json_path)
+    mmengine.dump(new_data_infos, save_json_path)
 
 
 def parse_args():

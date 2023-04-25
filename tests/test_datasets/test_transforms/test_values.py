@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import CopyValues, SetValues
+from mmagic.datasets.transforms import CopyValues, SetValues
 
 
 class TestAugmentations:

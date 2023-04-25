@@ -15,7 +15,7 @@ test_pkl_data = None
 model = dict(
     type='SinGAN',
     data_preprocessor=dict(
-        type='EditDataPreprocessor', non_image_keys=['input_sample']),
+        type='DataPreprocessor', non_image_keys=['input_sample']),
     generator=dict(
         type='SinGANMultiScaleGenerator',
         in_channels=3,
@@ -43,7 +43,7 @@ data_root = './data/singan/fish-crop.jpg'
 
 pipeline = [
     dict(
-        type='PackEditInputs',
+        type='PackInputs',
         keys=[f'real_scale{i}' for i in range(num_scales)] + ['input_sample'])
 ]
 dataset = dict(
@@ -80,7 +80,7 @@ custom_hooks = [
         after_run=True,
         data_name_list=['noise_weights', 'fixed_noises', 'curr_stage']),
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='SinGAN', name='fish'))

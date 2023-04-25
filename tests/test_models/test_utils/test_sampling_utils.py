@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.models.utils.sampling_utils import label_sample_fn, noise_sample_fn
+from mmagic.models.utils.sampling_utils import label_sample_fn, noise_sample_fn
 
 
 def test_noise_sample_fn():

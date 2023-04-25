@@ -11,7 +11,7 @@ train_pipeline = [
         key='gt',
         channel_order='rgb',
         imdecode_backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
@@ -20,7 +20,7 @@ demo_pipeline = [
         key='img',
         channel_order='rgb',
         imdecode_backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings
@@ -72,8 +72,8 @@ epoch_length = 5000
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_000_000, val_interval=epoch_length)
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(
@@ -106,5 +106,4 @@ default_hooks = dict(
     logger=dict(type='LoggerHook', interval=100),
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
-    # visualization=dict(type='EditVisualizationHook'),
 )

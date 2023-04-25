@@ -2,7 +2,7 @@
 
 import torch
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 def test_fusion_net():

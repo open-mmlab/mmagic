@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.singan import SinGANMultiScaleDiscriminator
+from mmagic.models.editors.singan import SinGANMultiScaleDiscriminator
 
 
 class TestSinGANDisc:

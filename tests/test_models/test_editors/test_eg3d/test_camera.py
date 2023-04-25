@@ -7,7 +7,7 @@ from unittest.mock import patch
 import torch
 from mmengine.testing import assert_allclose
 
-from mmedit.models.editors.eg3d.camera import (BaseCamera, GaussianCamera,
+from mmagic.models.editors.eg3d.camera import (BaseCamera, GaussianCamera,
                                                UniformCamera)
 
 
@@ -112,7 +112,7 @@ class TestBaseCamera(TestCase):
         cam2world = camera.sample_camera2world()
         self.assertEqual(cam2world.shape, (1, 4, 4))
 
-        mock_path = 'mmedit.models.editors.eg3d.camera.TORCH_VERSION'
+        mock_path = 'mmagic.models.editors.eg3d.camera.TORCH_VERSION'
         with patch(mock_path, '1.6.0'):
             print(torch.__version__)
             cfg_ = deepcopy(self.default_cfg)

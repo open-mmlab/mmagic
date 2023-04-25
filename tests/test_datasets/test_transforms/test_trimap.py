@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import (FormatTrimap, GenerateTrimap,
+from mmagic.datasets.transforms import (FormatTrimap, GenerateTrimap,
                                         GenerateTrimapWithDistTransform,
                                         TransformTrimap)
 

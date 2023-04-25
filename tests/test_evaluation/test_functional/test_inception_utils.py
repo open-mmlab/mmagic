@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 
 from torch.utils.data import Dataset
 
-from mmedit.datasets.transforms import LoadImageFromFile
-from mmedit.evaluation.functional.inception_utils import (
+from mmagic.datasets.transforms import LoadImageFromFile
+from mmagic.evaluation.functional.inception_utils import (
     get_inception_feat_cache_name_and_args, get_vgg_feat_cache_name_and_args)
 
 

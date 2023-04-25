@@ -18,7 +18,7 @@ model = dict(
     ensemble=dict(type='SpatialTemporalEnsemble', is_temporal_ensemble=False),
     train_cfg=dict(fix_iter=5000),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
     ))
@@ -31,13 +31,13 @@ test_pipeline = [
         filename_tmpl='{:03d}.png'),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 test_dataloader = dict(
@@ -53,9 +53,9 @@ test_dataloader = dict(
         pipeline=test_pipeline))
 
 test_evaluator = dict(
-    type='EditEvaluator', metrics=[
+    type='Evaluator', metrics=[
         dict(type='PSNR'),
         dict(type='SSIM'),
     ])
 
-test_cfg = dict(type='EditTestLoop')
+test_cfg = dict(type='MultiTestLoop')

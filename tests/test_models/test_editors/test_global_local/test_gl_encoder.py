@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
 
 
 def test_gl_encoder():
