@@ -115,7 +115,7 @@
 - [🤝 致谢](#-致谢)
 - [🖊️ 引用](#%EF%B8%8F-引用)
 - [🎫 许可证](#-许可证)
-- [🏗️ ️OpenMMLab 的其他项目](#%EF%B8%8F-️%EF%B8%8Fopenmmlab-的其他项目)
+- [🏗️ ️OpenMMLab 的其他项目](#%EF%B8%8F-️openmmlab-的其他项目)
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 
