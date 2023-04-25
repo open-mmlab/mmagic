@@ -110,18 +110,18 @@ Please refer to [migration documents](docs/en/migration/overview.md) to migrate 
 
 ## 📄 Table of Contents
 
-- [📖 Introduction](#📖-introduction)
-- [🙌 Contributing](#🙌-contributing)
-- [🛠️ Installation](#🛠️-installation)
-- [📊 Model Zoo](#📊-model-zoo)
-- [🤝 Acknowledgement](#🤝-acknowledgement)
-- [🖊️ Citation](#🖊️-citation)
-- [🎫 License](#🎫-license)
-- [🏗️ ️OpenMMLab Family](#🏗️-️openmmlab-family)
+- [📖 Introduction](#-introduction-)
+- [🙌 Contributing](#-contributing-)
+- [🛠️ Installation](#-installation-)
+- [📊 Model Zoo](#-model-zoo-)
+- [🤝 Acknowledgement](#-acknowledgement-)
+- [🖊️ Citation](#-citation-)
+- [🎫 License](#-license-)
+- [🏗️ ️OpenMMLab Family](#-️openmmlab-family-)
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
-## 📖 Introduction
+## 📖  Introduction
 
 MMagic (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation) is an advanced and comprehensive AIGC toolkit that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration). It is an open-source image and video editing&generating toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
