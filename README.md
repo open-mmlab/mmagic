@@ -111,13 +111,13 @@ Please refer to [migration documents](docs/en/migration/overview.md) to migrate 
 ## 📄 Table of Contents
 
 - [📖 Introduction](#-introduction)
-- [🙌 Contributing](#🙌-contributing)
-- [🛠️ Installation](#🛠️-installation)
-- [📊 Model Zoo](#📊-model-zoo)
-- [🤝 Acknowledgement](#🤝-acknowledgement)
-- [🖊️ Citation](#🖊️-citation)
-- [🎫 License](#🎫-license)
-- [🏗️ ️OpenMMLab Family](#🏗️-️openmmlab-family)
+- [🙌 Contributing](#-contributing)
+- [🛠️ Installation](#-installation)
+- [📊 Model Zoo](#-model-zoo)
+- [🤝 Acknowledgement](#-acknowledgement)
+- [🖊️ Citation](#-citation)
+- [🎫 License](#-license)
+- [🏗️ ️OpenMMLab Family](#-️openmmlab-family)
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
