@@ -186,6 +186,15 @@ python -c "import mmagic; print(mmagic.__version__)"
 ```
 
 **开始使用**
+成功安装 MMagic 后，你可以很容易地上手使用 MMagic！仅需几行代码，你就可以使用 MMagic 完成文本生成图像！
+
+```python
+from mmagic.apis import MMagicInferencer
+sd_inferencer = MMagicInferencer(model_name='stable_diffusion')
+text_prompts = 'A panda is having dinner at KFC'
+result_out_dir = 'output/sd_res.png'
+sd_inferencer.infer(text=text_prompts, result_out_dir=result_out_dir)
+```
 
 请参考[快速运行](docs/zh_cn/get_started/quick_run.md)和[推理演示](docs/zh_cn/user_guides/inference.md)获取 MMagic 的基本用法。
 
