@@ -2,7 +2,13 @@
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
+import torch
+import torch.nn as nn
+
+from mmagic.models.archs import TokenizerWrapper
 from mmagic.models.editors import ClipWrapper
+from mmagic.models.editors.disco_diffusion.clip_wrapper import \
+    EmbeddingLayerWithFixes
 
 
 class TestClipWrapper(TestCase):
@@ -60,3 +66,52 @@ class TestClipWrapper(TestCase):
             subfolder='text_encoder')
         self.assertEqual(model.model, mock_model)
         self.assertEqual(model.model.config, mock_model.config)
+
+
+def test_embedding_layer_with_fixes():
+    embedding_layer = nn.Embedding(10, 15)
+    print(embedding_layer.weight.shape)
+    embedding_layer_wrapper = EmbeddingLayerWithFixes(embedding_layer)
+
+    assert embedding_layer_wrapper.external_embeddings == []
+    # test naive forward
+    input_ids = torch.randint(0, 10, (3, 20)).type(torch.long)
+    out_feat = embedding_layer_wrapper(input_ids)
+    print(out_feat.shape)
+
+    tokenizer = TokenizerWrapper('openai/clip-vit-base-patch32')
+    # 'Goodbye' in kiswahili
+    tokenizer.add_placeholder_tokens('kwaheri', num_vec_per_token=1)
+    # 'how much' in kiswahili
+    tokenizer.add_placeholder_tokens('ngapi', num_vec_per_token=4)
+
+    # test add single embedding
+    new_embedding = {
+        'name': 'kwaheri',  # 'Goodbye' in kiswahili
+        'embedding': torch.ones(1, 15) * 4,
+        'start': tokenizer.get_token_info('kwaheri')['start'],
+        'end': tokenizer.get_token_info('kwaheri')['end']
+    }
+    embedding_layer_wrapper.add_embeddings(new_embedding)
+    input_text = ['hello world, kwaheri!', 'hello world', 'kwaheri']
+    input_ids = tokenizer(
+        input_text, padding='max_length', truncation=True,
+        return_tensors='pt')['input_ids']
+    out_feat = embedding_layer_wrapper(input_ids)
+    assert (out_feat[0, 4] == 4).all()
+    assert (out_feat[2, 1] == 4).all()
+
+    new_embedding = {
+        'name': 'ngapi',  # 'how much' in kiswahili
+        'embedding': torch.ones(4, 15) * 2.3,
+        'start': tokenizer.get_token_info('ngapi')['start'],
+        'end': tokenizer.get_token_info('ngapi')['end']
+    }
+    embedding_layer_wrapper.add_embeddings(new_embedding)
+    input_text = ['hello, ngapi!', 'hello world', 'kwaheri my friend, ngapi?']
+    input_ids = tokenizer(
+        input_text, padding='max_length', truncation=True,
+        return_tensors='pt')['input_ids']
+    out_feat = embedding_layer_wrapper(input_ids)
+    assert (out_feat[0, 3:7] == 2.3).all()
+    assert (out_feat[2, 5:9] == 2.3).all()
