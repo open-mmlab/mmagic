@@ -21,7 +21,7 @@ The style-based GAN architecture (StyleGAN) yields state-of-the-art results in d
 ## Results and Models
 
 <div align="center">
-  <b> Results (compressed) from StyleGAN2 config-f trained by mmediting</b>
+  <b> Results (compressed) from StyleGAN2 config-f trained by mmagic</b>
   <br/>
   <img src="https://user-images.githubusercontent.com/12726765/113825919-25433100-97b4-11eb-84f7-5c66b3cfbc68.png" width="800"/>
 </div>

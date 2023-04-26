@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.diffusion_schedulers.ddim_scheduler import EditDDIMScheduler
+from mmagic.models.diffusion_schedulers.ddim_scheduler import EditDDIMScheduler
 
 
 def test_ddim():

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.nafnet.naf_avgpool2d import NAFAvgPool2d
+from mmagic.models.editors.nafnet.naf_avgpool2d import NAFAvgPool2d
 
 
 def test_avgpool2d():

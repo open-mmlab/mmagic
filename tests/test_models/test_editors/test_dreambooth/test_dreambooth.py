@@ -10,9 +10,9 @@ import torch.nn as nn
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 test_dir = osp.join(osp.dirname(__file__), '../../../..', 'tests')
 config_path = osp.join(test_dir, 'configs', 'diffuser_wrapper_cfg')
@@ -50,7 +50,7 @@ config = dict(
         from_pretrained=stable_diffusion_v15_url,
         subfolder='scheduler'),
     dtype='fp32',
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     enable_xformers=False,
     val_prompts=val_prompts)
 
@@ -63,7 +63,7 @@ class TestControlStableDiffusion(TestCase):
     def setUp(self):
         # mock SiLU
         if digit_version(TORCH_VERSION) <= digit_version('1.6.0'):
-            from mmedit.models.editors.ddpm.denoising_unet import SiLU
+            from mmagic.models.editors.ddpm.denoising_unet import SiLU
             torch.nn.SiLU = SiLU
         dreambooth = MODELS.build(config)
         assert not any([p.requires_grad for p in dreambooth.vae.parameters()])
@@ -76,8 +76,7 @@ class TestControlStableDiffusion(TestCase):
         data = dict(
             inputs=[torch.ones([3, 64, 64])],
             data_samples=[
-                EditDataSample(
-                    prompt='an insect robot preparing a delicious meal')
+                DataSample(prompt='an insect robot preparing a delicious meal')
             ])
 
         def mock_encode_prompt(*args, **kwargs):
@@ -102,8 +101,7 @@ class TestControlStableDiffusion(TestCase):
         data = dict(
             inputs=[torch.ones([3, 64, 64])],
             data_samples=[
-                EditDataSample(
-                    prompt='an insect robot preparing a delicious meal')
+                DataSample(prompt='an insect robot preparing a delicious meal')
             ])
 
         def mock_encode_prompt(*args, **kwargs):
@@ -129,8 +127,7 @@ class TestControlStableDiffusion(TestCase):
         data = dict(
             inputs=[torch.ones([3, 64, 64])],
             data_samples=[
-                EditDataSample(
-                    prompt='an insect robot preparing a delicious meal')
+                DataSample(prompt='an insect robot preparing a delicious meal')
             ])
 
         optimizer = MagicMock()

@@ -1,20 +1,20 @@
-# assign issues to owners automatically
-assign:
-  issues: enabled # or disabled
-  pull_requests: enabled # or disabled
-  # assign strategy, both issues and pull requests follow the same strategy
-  strategy:
-    # random
-    # round-robin
-    daily-shift-based
-  scedule:
-    '*/1 * * * *'
-  # assignees
-  assignees:
-    - LeoXing1996
-    - zengyh1900
-    - plyfager
-    - liuwenran
-    - Z-Fran
-    - LeoXing1996
-    - LeoXing1996
+# # assign issues to owners automatically
+# assign:
+#   issues: enabled # or disabled
+#   pull_requests: enabled # or disabled
+#   # assign strategy, both issues and pull requests follow the same strategy
+#   strategy:
+#     # random
+#     # round-robin
+#     daily-shift-based
+#   scedule:
+#     '*/1 * * * *'
+#   # assignees
+#   assignees:
+#     - LeoXing1996
+#     - zengyh1900
+#     - plyfager
+#     - liuwenran
+#     - Z-Fran
+#     - LeoXing1996
+#     - LeoXing1996

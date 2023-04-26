@@ -1,23 +1,24 @@
 # Contributing guidance
 
-Welcome to the MMEditing community, we are committed to building a toolbox for cutting-edge image, video and 3D content generation, editing and processing techniques.
+Welcome to the MMagic community, we are committed to building a Multimodal Advanced, Generative, and Intelligent Creation Toolbox.
 
 This section introduces following contents:
 
-- [Pull Request Workflow](#pull-request-workflow)
-  - [1. fork and clone](#1-fork-and-clone)
-  - [2. configure pre-commit](#2-configure-pre-commit)
-  - [3. create a development branch](#3-create-a-development-branch)
-  - [4. commit the code and pass the unit test](#4-commit-the-code-and-pass-the-unit-test)
-  - [5. push the code to remote](#5-push-the-code-to-remote)
-  - [6. create a pull request](#6-create-a-pull-request)
-  - [7. resolve conflicts](#7-resolve-conflicts)
-- [Guidance](#guidance)
-  - [unit test](#unit-test)
-  - [document rendering](#document-rendering)
-- [Code Style](#code-style)
-  - [Python](#python)
-  - [C++ and CUDA](#c-and-cuda)
+- [Contributing guidance](#contributing-guidance)
+  - [Pull Request Workflow](#pull-request-workflow)
+    - [1. Fork and clone](#1-fork-and-clone)
+    - [2. Configure pre-commit](#2-configure-pre-commit)
+    - [3. Create a development branch](#3-create-a-development-branch)
+    - [4. Commit the code and pass the unit test](#4-commit-the-code-and-pass-the-unit-test)
+    - [5. Push the code to remote](#5-push-the-code-to-remote)
+    - [6. Create a Pull Request](#6-create-a-pull-request)
+    - [7. Resolve conflicts](#7-resolve-conflicts)
+  - [Guidance](#guidance)
+    - [Unit test](#unit-test)
+    - [Document rendering](#document-rendering)
+  - [Code style](#code-style)
+    - [Python](#python)
+    - [C++ and CUDA](#c-and-cuda)
   - [PR Specs](#pr-specs)
 
 All kinds of contributions are welcomed, including but not limited to
@@ -29,7 +30,6 @@ You can directly post a Pull Request to fix typo in code or documents
 The steps to fix the bug of code implementation are as follows.
 
 1. If the modification involve significant changes, you should create an issue first and describe the error information and how to trigger the bug. Other developers will discuss with you and propose an proper solution.
-
 2. Posting a pull request after fixing the bug and adding corresponding unit test.
 
 **New Feature or Enhancement**
@@ -54,22 +54,22 @@ If you are posting a pull request for the first time, you should fork the OpenMM
 Then, you can clone the repositories to local:
 
 ```shell
-git clone git@github.com:{username}/mmediting.git
+git clone git@github.com:{username}/mmagic.git
 ```
 
 After that, you should ddd official repository as the upstream repository
 
 ```bash
-git remote add upstream git@github.com:open-mmlab/mmediting
+git remote add upstream git@github.com:open-mmlab/mmagic
 ```
 
 Check whether remote repository has been added successfully by `git remote -v`
 
 ```bash
-origin	git@github.com:{username}/mmediting.git (fetch)
-origin	git@github.com:{username}/mmediting.git (push)
-upstream	git@github.com:open-mmlab/mmediting (fetch)
-upstream	git@github.com:open-mmlab/mmediting (push)
+origin	git@github.com:{username}/mmagic.git (fetch)
+origin	git@github.com:{username}/mmagic.git (push)
+upstream	git@github.com:open-mmlab/mmagic (fetch)
+upstream	git@github.com:open-mmlab/mmagic (push)
 ```
 
 ```{note}
@@ -78,7 +78,7 @@ Here's a brief introduction to origin and upstream. When we use "git clone", we 
 
 #### 2. Configure pre-commit
 
-You should configure [pre-commit](https://pre-commit.com/#intro) in the local development environment to make sure the code style matches that of OpenMMLab. **Note**: The following code should be executed under the mmediting directory.
+You should configure [pre-commit](https://pre-commit.com/#intro) in the local development environment to make sure the code style matches that of OpenMMLab. **Note**: The following code should be executed under the mmagic directory.
 
 ```shell
 pip install -U pre-commit
@@ -116,21 +116,21 @@ git commit -m "xxx" --no-verify
 
 #### 3. Create a development branch
 
-After configuring the pre-commit, we should create a branch based on the master branch to develop the new feature or fix the bug. The proposed branch name is `username/pr_name`
+After configuring the pre-commit, we should create a branch based on the main branch to develop the new feature or fix the bug. The proposed branch name is `username/pr_name`
 
 ```shell
 git checkout -b yhc/refactor_contributing_doc
 ```
 
-In subsequent development, if the master branch of the local repository is behind the master branch of "upstream", we need to pull the upstream for synchronization, and then execute the above command:
+In subsequent development, if the main branch of the local repository is behind the main branch of "upstream", we need to pull the upstream for synchronization, and then execute the above command:
 
 ```shell
-git pull upstream master
+git pull upstream main
 ```
 
 #### 4. Commit the code and pass the unit test
 
-- MMEditing introduces mypy to do static type checking to increase the robustness of the code. Therefore, we need to add Type Hints to our code and pass the mypy check. If you are not familiar with Type Hints, you can refer to [this tutorial](https://docs.python.org/3/library/typing.html).
+- mmagic introduces mypy to do static type checking to increase the robustness of the code. Therefore, we need to add Type Hints to our code and pass the mypy check. If you are not familiar with Type Hints, you can refer to [this tutorial](https://docs.python.org/3/library/typing.html).
 
 - The committed code should pass through the unit test
 
@@ -180,7 +180,7 @@ Find more details about Pull Request description in [pull request guidelines](#p
 
 <img src="https://user-images.githubusercontent.com/57566630/167307490-f9ebf9fa-63c0-4d83-8ba1-081ea169eb3a.png" width="1200">
 
-MMEditing will run unit test for the posted Pull Request on different platforms (Linux, Window, Mac), based on different versions of Python, PyTorch, CUDA to make sure the code is correct. We can see the specific test information by clicking `Details` in the above image so that we can modify the code.
+mmagic will run unit test for the posted Pull Request on different platforms (Linux, Window, Mac), based on different versions of Python, PyTorch, CUDA to make sure the code is correct. We can see the specific test information by clicking `Details` in the above image so that we can modify the code.
 
 (3) If the Pull Request passes the CI, then you can wait for the review from other developers. You'll modify the code based on the reviewer's comments, and repeat the steps [4](#4-commit-the-code-and-pass-the-unit-test)-[5](#5-push-the-code-to-remote) until all reviewers approve it. Then, we will merge it ASAP.
 
@@ -188,18 +188,18 @@ MMEditing will run unit test for the posted Pull Request on different platforms 
 
 #### 7. Resolve conflicts
 
-If your local branch conflicts with the latest master branch of "upstream", you'll need to resolove them. There are two ways to do this:
+If your local branch conflicts with the latest main branch of "upstream", you'll need to resolove them. There are two ways to do this:
 
 ```shell
 git fetch --all --prune
-git rebase upstream/master
+git rebase upstream/main
 ```
 
 or
 
 ```shell
 git fetch --all --prune
-git merge upstream/master
+git merge upstream/main
 ```
 
 If you are very good at handling conflicts, then you can use rebase to resolve conflicts, as this will keep your commit logs tidy. If you are not familiar with `rebase`, then you can use `merge` to resolve conflicts.

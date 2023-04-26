@@ -3,7 +3,7 @@ import os.path as osp
 import shutil
 from unittest import TestCase
 
-from mmedit.registry import DIFFUSION_SCHEDULERS
+from mmagic.registry import DIFFUSION_SCHEDULERS
 
 test_dir = osp.join(osp.dirname(__file__), '../../..', 'tests')
 config_path = osp.join(test_dir, 'configs', 'scheduler_cfg')

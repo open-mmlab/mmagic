@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.editors.wgan_gp import WGANGPDiscriminator
-from mmedit.registry import MODELS
+from mmagic.models.editors.wgan_gp import WGANGPDiscriminator
+from mmagic.registry import MODELS
 
 
 class TestWGANGPDiscriminator(object):

@@ -52,15 +52,15 @@ We use pretrained model from hugging face.
 
 There are two ways to try controlnet animation.
 
-### 1. Use MMEdit inference API.
+### 1. Use MMagic inference API.
 
 Running the following codes, you can get an generated animation video.
 
 ```python
-from mmedit.edit import MMEdit
+from mmagic.apis import MMagicInferencer
 
 # Create a MMEdit instance and infer
-editor = MMEdit(model_name='controlnet_animation')
+editor = MMagicInferencer(model_name='controlnet_animation')
 
 prompt = 'a girl, black hair, T-shirt, smoking, best quality, extremely detailed'
 negative_prompt = 'longbody, lowres, bad anatomy, bad hands, missing fingers, ' + \
@@ -80,6 +80,10 @@ editor.infer(video=video, prompt=prompt, negative_prompt=negative_prompt, save_p
 ```python
 python demo/gradio_controlnet_animation.py
 ```
+
+## Play animation with SAM
+
+We also provide a demo to play controlnet animation with sam, for details, please see [OpenMMLab PlayGround](https://github.com/open-mmlab/playground/blob/main/mmediting_sam/README.md).
 
 ## Citation
 

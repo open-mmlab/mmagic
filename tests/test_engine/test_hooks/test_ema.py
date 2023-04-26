@@ -8,7 +8,7 @@ import torch.nn as nn
 from mmengine.model import MMDistributedDataParallel
 from packaging import version
 
-from mmedit.engine import ExponentialMovingAverageHook
+from mmagic.engine import ExponentialMovingAverageHook
 
 
 class SimpleModule(nn.Module):

@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.datasets.data_utils import infer_io_backend
+from mmagic.datasets.data_utils import infer_io_backend
 
 
 def test_infer_io_backend():

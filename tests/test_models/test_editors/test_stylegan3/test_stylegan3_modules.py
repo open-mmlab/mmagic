@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors.stylegan3.stylegan3_modules import MappingNetwork
+from mmagic.models.editors.stylegan3.stylegan3_modules import MappingNetwork
 
 
 @pytest.mark.skipif(

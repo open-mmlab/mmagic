@@ -3,13 +3,13 @@ import os.path as osp
 
 import pytest
 
-from mmedit.apis.inferencers import Inferencers
-from mmedit.utils import register_all_modules
+from mmagic.apis.inferencers import Inferencers
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
 
-def test_mmedit_inferencer():
+def test_mmagic_inferencer():
     with pytest.raises(Exception) as e_info:
         inferencer_instance = Inferencers('colorization', ['error_type'], None)
 

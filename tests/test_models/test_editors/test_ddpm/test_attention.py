@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors.ddpm.attention import (ApproximateGELU,
+from mmagic.models.editors.ddpm.attention import (ApproximateGELU,
                                                   CrossAttention, FeedForward,
                                                   Transformer2DModel)
 

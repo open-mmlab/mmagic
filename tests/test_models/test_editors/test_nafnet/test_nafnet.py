@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models import NAFNet, NAFNetLocal
+from mmagic.models import NAFNet, NAFNetLocal
 
 
 def test_nafnet():

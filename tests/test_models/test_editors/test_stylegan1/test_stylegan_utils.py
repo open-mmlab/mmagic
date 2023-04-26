@@ -3,9 +3,9 @@ from unittest.mock import MagicMock, patch
 
 import torch
 
-from mmedit.models.editors.stylegan1 import get_mean_latent, style_mixing
+from mmagic.models.editors.stylegan1 import get_mean_latent, style_mixing
 
-get_module_device_str = 'mmedit.models.editors.stylegan1.stylegan_utils.get_module_device'  # noqa
+get_module_device_str = 'mmagic.models.editors.stylegan1.stylegan_utils.get_module_device'  # noqa
 
 
 @patch(get_module_device_str, MagicMock(return_value='cpu'))

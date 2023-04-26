@@ -5,10 +5,10 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import (EditDataPreprocessor, RealESRGAN, RRDBNet,
+from mmagic.models import (DataPreprocessor, RealESRGAN, RRDBNet,
                            UNetDiscriminatorWithSpectralNorm)
-from mmedit.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
-from mmedit.structures import EditDataSample
+from mmagic.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
+from mmagic.structures import DataSample
 
 
 @patch.object(PerceptualVGG, 'init_weights')
@@ -54,7 +54,7 @@ def test_real_esrgan(init_weights):
         is_use_ema=False,
         train_cfg=None,
         test_cfg=None,
-        data_preprocessor=EditDataPreprocessor())
+        data_preprocessor=DataPreprocessor())
 
     assert isinstance(model, RealESRGAN)
     assert isinstance(model.generator, RRDBNet)
@@ -74,7 +74,7 @@ def test_real_esrgan(init_weights):
     # prepare data
     inputs = torch.rand(1, 3, 32, 32)
     target = torch.rand(3, 128, 128)
-    data_sample = EditDataSample(gt_img=target, gt_unsharp=target)
+    data_sample = DataSample(gt_img=target, gt_unsharp=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train

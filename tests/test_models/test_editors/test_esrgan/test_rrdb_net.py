@@ -3,7 +3,7 @@
 import pytest
 import torch
 
-from mmedit.models import RRDBNet
+from mmagic.models import RRDBNet
 
 
 def test_rrdbnet_backbone():

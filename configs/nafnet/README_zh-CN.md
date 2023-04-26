@@ -25,7 +25,7 @@
 
 Note:
 
-- 评估结果a(b)中，a代表由MMEditing测量，b代表由原论文提供。
+- 评估结果a(b)中，a代表由MMagic测量，b代表由原论文提供。
 - PSNR是在RGB通道评估。
 - SSIM是平均的分别在RGB通道评估的SSIM, 而原论文使用了3D的SSIM卷积核做统一评估。
 

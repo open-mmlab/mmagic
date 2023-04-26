@@ -7,7 +7,7 @@ import torch.nn as nn
 from addict import Dict
 from mmengine import MODELS, Config
 
-from mmedit.utils import register_all_modules
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

@@ -3,8 +3,8 @@ import os.path as osp
 
 import pytest
 
-from mmedit.datasets import GrowScaleImgDataset
-from mmedit.utils import register_all_modules
+from mmagic.datasets import GrowScaleImgDataset
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

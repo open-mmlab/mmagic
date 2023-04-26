@@ -1,6 +1,6 @@
 # Migration of Optimizers
 
-We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMEditing. Here is migration of Optimizers about MMGeneration.
+We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMagic. Here is migration of Optimizers about MMGeneration.
 
 In version 0.x, MMGeneration uses PyTorch's native Optimizer, which only provides general parameter optimization.
 In version 1.x, we use `OptimizerWrapper` provided by MMEngine.
@@ -13,7 +13,7 @@ Compared to PyTorch's `Optimizer`, `OptimizerWrapper` supports the following fea
 
 For GAN models, generator and discriminator use different optimizer and training schedule.
 To ensure that the GAN model's function signature of `train_step` is consistent with other models, we use `OptimWrapperDict`, inherited from `OptimizerWrapper`, to wrap the optimizer of the generator and discriminator.
-To automate this process MMGeneration implement `GenOptimWrapperContructor`.
+To automate this process MMagic implement `MultiOptimWrapperContructor`.
 And you should specify this constructor in your config is you want to train GAN model.
 
 The config for the 0.x and 1.x versions are shown below:
@@ -39,8 +39,7 @@ optimizer = dict(
 
 ```python
 optim_wrapper = dict(
-    # Use constructor implemented by MMGeneration
-    constructor='GenOptimWrapperConstructor',
+    constructor='MultiOptimWrapperConstructor',
     generator=dict(optimizer=dict(type='Adam', lr=0.0002, betas=(0.0, 0.999), eps=1e-6)),
     discriminator=dict(
         optimizer=dict(type='Adam', lr=0.0004, betas=(0.0, 0.999), eps=1e-6)))
@@ -110,7 +109,7 @@ train_cfg = dict(
 model = dict(
     type='BigGAN',
     num_classes=1000,
-    data_preprocessor=dict(type='GANDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     generator=dict(
         type='BigGANGenerator',
         output_scale=128,
@@ -139,7 +138,7 @@ model = dict(
     discriminator_steps=1)
 
 optim_wrapper = dict(
-    constructor='GenOptimWrapperConstructor',
+    constructor='MultiOptimWrapperConstructor',
     generator=dict(
         # generator perform `accumulative_counts = 8` times gradient accumulations before each update
         accumulative_counts=8,

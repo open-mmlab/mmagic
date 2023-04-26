@@ -4,7 +4,7 @@ import numpy.testing as npt
 import pytest
 import torch
 
-from mmedit.models import GANLoss, GaussianBlur
+from mmagic.models import GANLoss, GaussianBlur
 
 
 def test_gan_losses():

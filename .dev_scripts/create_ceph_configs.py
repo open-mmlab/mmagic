@@ -188,7 +188,7 @@ def update_ceph_config(filename, args, dry_run=False):
         if hasattr(config, 'vis_backends'):
             # TODO: support upload to ceph
             # for vis_cfg in config['vis_backends']:
-            #     if vis_cfg['type'] == 'GenVisBackend':
+            #     if vis_cfg['type'] == 'VisBackend':
             #         vis_cfg['ceph_path'] = work_dir
 
             # add pavi config
@@ -198,7 +198,7 @@ def update_ceph_config(filename, args, dry_run=False):
                 # check if pavi config is inheritance from _base_
                 find_inherit = False
                 for vis_cfg in config['vis_backends']:
-                    if vis_cfg['type'] == 'PaviGenVisBackend':
+                    if vis_cfg['type'] == 'PaviVisBackend':
                         vis_cfg['exp_name'] = name
                         vis_cfg['project'] = project
                         find_inherit = True
@@ -206,9 +206,7 @@ def update_ceph_config(filename, args, dry_run=False):
 
                 if not find_inherit:
                     pavi_cfg = dict(
-                        type='PaviGenVisBackend',
-                        exp_name=name,
-                        project=project)
+                        type='PaviVisBackend', exp_name=name, project=project)
                     config['vis_backends'].append(pavi_cfg)
 
             # add wandb config
@@ -218,7 +216,7 @@ def update_ceph_config(filename, args, dry_run=False):
                 # check if wandb config is inheritance from _base_
                 find_inherit = False
                 for vis_cfg in config['vis_backends']:
-                    if vis_cfg['type'] == 'WandbGenVisBackend':
+                    if vis_cfg['type'] == 'WandbVisBackend':
                         vis_cfg['name'] = name  # name of config
                         vis_cfg['project'] = project  # name of model
                         find_inherit = True
@@ -226,7 +224,7 @@ def update_ceph_config(filename, args, dry_run=False):
 
                 if not find_inherit:
                     pavi_cfg = dict(
-                        type='WandbGenVisBackend',
+                        type='WandbVisBackend',
                         init_kwargs=dict(name=name, project=project))
                     config['vis_backends'].append(pavi_cfg)
 
@@ -234,12 +232,12 @@ def update_ceph_config(filename, args, dry_run=False):
             if args.add_tensorboard:
                 find_inherit = False
                 for vis_cfg in config['vis_backends']:
-                    if vis_cfg['type'] == 'TensorboardGenVisBackend':
+                    if vis_cfg['type'] == 'TensorboardVisBackend':
                         find_inherit = True
                         break
 
                 if not find_inherit:
-                    tensorboard_cfg = dict(type='TensorboardGenVisBackend')
+                    tensorboard_cfg = dict(type='TensorboardVisBackend')
                     config['vis_backends'].append(tensorboard_cfg)
 
             config['visualizer']['vis_backends'] = config['vis_backends']

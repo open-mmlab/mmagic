@@ -8,10 +8,10 @@ This section introduces the migration of data settings:
 
 ## Data pipelines
 
-We update data pipelines settings in MMEdit 1.x. Important modifications are as following.
+We update data pipelines settings in MMagic 1.x. Important modifications are as following.
 
 - Remove normalization and color space transforms operations. They are moved from datasets transforms pipelines to data_preprocessor.
-- The original formatting transforms pipelines `Collect` and `ToTensor` are combined as `PackEditInputs`.
+- The original formatting transforms pipelines `Collect` and `ToTensor` are combined as `PackInputs`.
   More details of data pipelines are shown in [transform guides](../howto/transforms.md).
 
 <table class="docutils">
@@ -114,7 +114,7 @@ train_pipeline = [  # Training data processing pipeline
         keys=['lq', 'gt'],  # Images to be transposed
         transpose_ratio=0.5  # Transpose ratio
         ),
-    dict(type='PackEditInputs')  # The config of collecting data from current pipeline
+    dict(type='PackInputs')  # The config of collecting data from current pipeline
 ]
 test_pipeline = [  # Test pipeline
     dict(type='LoadImageFromFile',  # Load images from files
@@ -127,7 +127,7 @@ test_pipeline = [  # Test pipeline
         color_type='color',  # Color type of image
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
-    dict(type='PackEditInputs')  # The config of collecting data from current pipeline
+    dict(type='PackInputs')  # The config of collecting data from current pipeline
 ]
 ```
 
@@ -139,7 +139,7 @@ test_pipeline = [  # Test pipeline
 
 ## Dataloader
 
-We update dataloader settings in MMEdit 1.x. Important modifications are as following.
+We update dataloader settings in MMagic 1.x. Important modifications are as following.
 
 - The original `data` field is split to `train_dataloader`, `val_dataloader` and `test_dataloader`. This allows us to configure them in fine-grained. For example, you can specify different sampler and batch size during training and test.
 - The `samples_per_gpu` is renamed to `batch_size`.

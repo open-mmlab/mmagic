@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors import IndexNetDecoder, IndexNetEncoder
+from mmagic.models.editors import IndexNetDecoder, IndexNetEncoder
 
 
 def test_indexnet_decoder():

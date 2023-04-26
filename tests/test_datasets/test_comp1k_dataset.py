@@ -3,7 +3,7 @@
 import os.path as osp
 from pathlib import Path
 
-from mmedit.datasets import AdobeComp1kDataset
+from mmagic.datasets import AdobeComp1kDataset
 
 
 class TestMattingDatasets:

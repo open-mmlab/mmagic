@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from mmengine.fileio.backends import LocalBackend
 
-from mmedit.datasets.transforms import (GetSpatialDiscountMask,
+from mmagic.datasets.transforms import (GetSpatialDiscountMask,
                                         LoadImageFromFile, LoadMask)
 
 

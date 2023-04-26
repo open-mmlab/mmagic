@@ -4,8 +4,8 @@ from pathlib import Path
 
 import mmcv
 
-from mmedit.datasets import BasicImageDataset
-from mmedit.datasets.transforms import LoadImageFromFile
+from mmagic.datasets import BasicImageDataset
+from mmagic.datasets.transforms import LoadImageFromFile
 
 
 class TestImageDatasets:

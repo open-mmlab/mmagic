@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors.swinir.swinir_rstb import RSTB
+from mmagic.models.editors.swinir.swinir_rstb import RSTB
 
 
 @pytest.mark.skipif(

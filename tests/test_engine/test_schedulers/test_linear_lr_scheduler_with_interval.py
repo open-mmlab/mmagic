@@ -7,7 +7,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from mmengine import MessageHub
 
-from mmedit.engine.schedulers import LinearLrInterval
+from mmagic.engine.schedulers import LinearLrInterval
 
 
 class ToyModel(torch.nn.Module):

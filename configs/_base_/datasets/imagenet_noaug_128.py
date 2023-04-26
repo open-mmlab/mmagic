@@ -3,20 +3,20 @@ dataset_type = 'ImageNet'
 
 # different from mmcls, we adopt the setting used in BigGAN.
 # Remove `RandomFlip` augmentation and change `RandomCropLongEdge` to
-# `CenterCropLongEdge` to elminiate randomness.
+# `CenterCropLongEdge` to eliminate randomness.
 # dataset settings
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='CenterCropLongEdge'),
     dict(type='Resize', scale=(128, 128), backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='CenterCropLongEdge'),
     dict(type='Resize', scale=(128, 128), backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 train_dataloader = dict(

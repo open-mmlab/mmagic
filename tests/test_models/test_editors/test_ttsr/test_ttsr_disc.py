@@ -5,7 +5,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models import TTSRDiscriminator
+from mmagic.models import TTSRDiscriminator
 
 
 @pytest.mark.skipif(

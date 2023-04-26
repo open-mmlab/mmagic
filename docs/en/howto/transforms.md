@@ -1,15 +1,15 @@
 # How to design your own data transforms
 
-In this tutorial, we introduce the design of transforms pipeline in MMEditing.
+In this tutorial, we introduce the design of transforms pipeline in MMagic.
 
 The structure of this guide are as follows:
 
-- [Design Your Own Data Pipelines](#design-your-own-data-pipelines)
-  - [Data pipelines in MMEditing](#data-pipelines-in-mmediting)
+- [How to design your own data transforms](#how-to-design-your-own-data-transforms)
+  - [Data pipelines in MMagic](#data-pipelines-in-mmagic)
     - [A simple example of data transform](#a-simple-example-of-data-transform)
     - [An example of BasicVSR](#an-example-of-basicvsr)
     - [An example of Pix2Pix](#an-example-of-pix2pix)
-  - [Supported transforms in MMEditing](#supported-transforms-in-mmediting)
+  - [Supported transforms in MMagic](#supported-transforms-in-mmagic)
     - [Data loading](#data-loading)
     - [Pre-processing](#pre-processing)
     - [Formatting](#formatting)
@@ -17,7 +17,7 @@ The structure of this guide are as follows:
     - [A simple example of MyTransform](#a-simple-example-of-mytransform)
     - [An example of flipping](#an-example-of-flipping)
 
-## Data pipelines in MMEditing
+## Data pipelines in MMagic
 
 Following typical conventions, we use `Dataset` and `DataLoader` for data loading with multiple workers. `Dataset` returns a dict of data items corresponding the arguments of models' forward method.
 
@@ -27,13 +27,13 @@ A pipeline consists of a sequence of operations. Each operation takes a dict as 
 
 The operations are categorized into data loading, pre-processing, and formatting
 
-In MMEditing, all data transformations are inherited from `BaseTransform`.
+In MMagic, all data transformations are inherited from `BaseTransform`.
 The input and output types of transformations are both dict.
 
 ### A simple example of data transform
 
 ```python
->>> from mmedit.transforms import LoadPairedImageFromFile
+>>> from mmagic.transforms import LoadPairedImageFromFile
 >>> transforms = LoadPairedImageFromFile(
 >>>     key='pair',
 >>>     domain_a='horse',
@@ -45,10 +45,10 @@ The input and output types of transformations are both dict.
 dict_keys(['pair_path', 'pair', 'pair_ori_shape', 'img_mask', 'img_photo', 'img_mask_path', 'img_photo_path', 'img_mask_ori_shape', 'img_photo_ori_shape'])
 ```
 
-Generally, the last step of the transforms pipeline must be `PackEditInputs`.
-`PackEditInputs` will pack the processed data into a dict containing two fields: `inputs` and `data_samples`.
+Generally, the last step of the transforms pipeline must be `PackInputs`.
+`PackInputs` will pack the processed data into a dict containing two fields: `inputs` and `data_samples`.
 `inputs` is the variable you want to use as the model's input, which can be the type of `torch.Tensor`, dict of `torch.Tensor`, or any type you want.
-`data_samples` is a list of `EditDataSample`. Each `EditDataSample` contains groundtruth and necessary information for corresponding input.
+`data_samples` is a list of `DataSample`. Each `DataSample` contains groundtruth and necessary information for corresponding input.
 
 ### An example of BasicVSR
 
@@ -69,21 +69,21 @@ train_pipeline = [
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type='MirrorSequence', keys=['img', 'gt']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
     dict(type='MirrorSequence', keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 ```
 
@@ -112,20 +112,20 @@ pipeline = [
         share_random_params=True,
         transforms=[
             dict(
-                type='mmedit.Resize', scale=(286, 286),
+                type='mmagic.Resize', scale=(286, 286),
                 interpolation='bicubic'),
-            dict(type='mmedit.FixedCrop', crop_size=(256, 256))
+            dict(type='mmagic.FixedCrop', crop_size=(256, 256))
         ]),
     dict(
         type='Flip',
         keys=[f'img_{domain_a}', f'img_{domain_b}'],
         direction='horizontal'),
     dict(
-        type='PackEditInputs',
+        type='PackInputs',
         keys=[f'img_{domain_a}', f'img_{domain_b}', 'pair'])
 ```
 
-## Supported transforms in MMEditing
+## Supported transforms in MMagic
 
 ### Data loading
 
@@ -530,7 +530,7 @@ pipeline = [
       </tr>
       <tr>
          <td>
-            <code>PackEditInputs</code>
+            <code>PackInputs</code>
          </td>
          <td>
             - add: inputs, data_sample
@@ -549,7 +549,7 @@ pipeline = [
 ```python
 import random
 from mmcv.transforms import BaseTransform
-from mmedit.registry import TRANSFORMS
+from mmagic.registry import TRANSFORMS
 
 
 @TRANSFORMS.register_module()

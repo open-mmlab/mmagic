@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.utils import register_all_modules, try_import
+from mmagic.utils import register_all_modules, try_import
 
 
 def test_register_all_modules():

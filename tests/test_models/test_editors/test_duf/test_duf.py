@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors.duf import DynamicUpsamplingFilter
+from mmagic.models.editors.duf import DynamicUpsamplingFilter
 
 
 def test_dynamic_upsampling_filter():

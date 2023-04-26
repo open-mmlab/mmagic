@@ -8,7 +8,7 @@ from mmengine.config import Config, DictAction
 from mmengine.hooks import Hook
 from mmengine.runner import Runner
 
-from mmedit.utils import print_colored_log
+from mmagic.utils import print_colored_log
 
 
 # TODO: support fuse_conv_bn, visualization, and format_only
@@ -66,7 +66,7 @@ def main():
     runner = Runner.from_cfg(cfg)
 
     print_colored_log(f'Working directory: {cfg.work_dir}')
-    print_colored_log(f'Log directiry: {runner._log_dir}')
+    print_colored_log(f'Log directory: {runner._log_dir}')
 
     if args.out:
 

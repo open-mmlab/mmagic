@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.editors.lsgan import LSGANGenerator
-from mmedit.registry import MODELS
+from mmagic.models.editors.lsgan import LSGANGenerator
+from mmagic.registry import MODELS
 
 
 class TestLSGANGenerator(object):

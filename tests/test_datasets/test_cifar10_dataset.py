@@ -8,8 +8,8 @@ from unittest.mock import MagicMock, patch
 
 import numpy as np
 
-from mmedit.registry import DATASETS
-from mmedit.utils import register_all_modules
+from mmagic.registry import DATASETS
+from mmagic.utils import register_all_modules
 
 DATA_DIR = osp.abspath(osp.join(osp.dirname(__file__), '../data/dataset/'))
 
@@ -128,7 +128,7 @@ class TestCIFAR10(TestCase):
 
         # Test automatically download
         with patch(
-                'mmedit.datasets.cifar10_dataset.download_and_extract_archive'
+                'mmagic.datasets.cifar10_dataset.download_and_extract_archive'
         ) as mock:
             cfg = {**self.DEFAULT_ARGS, 'lazy_init': True, 'test_mode': True}
             dataset = dataset_class(**cfg)

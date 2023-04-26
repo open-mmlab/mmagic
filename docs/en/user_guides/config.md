@@ -1,19 +1,35 @@
-# Tutorial 1: Learn about Configs in MMEditing
+# Tutorial 1: Learn about Configs in MMagic
 
 We incorporate modular and inheritance design into our config system, which is convenient to conduct various experiments.
 If you wish to inspect the config file, you may run `python tools/misc/print_config.py /PATH/TO/CONFIG` to see the complete config.
 
 You can learn about the usage of our config system according to the following tutorials.
 
-- [Modify config](#modify-config-through-script-arguments)
-- [Config file structure](#config-file-structure)
-- [Config name style](#config-name-style)
-- [An example of EDSR](#an-example-of-edsr)
-- [An example of StyleGAN2](#an-example-of-stylegan2)
-- [Other examples](#other-examples)
-  - [An example of config system for inpainting](#an-example-of-config-system-for-inpainting)
-  - [An example of config system for matting](#an-example-of-config-system-for-matting)
-  - [An example of config system for restoration](#an-example-of-config-system-for-restoration)
+- [Tutorial 1: Learn about Configs in MMagic](#tutorial-1-learn-about-configs-in-mmagic)
+  - [Modify config through script arguments](#modify-config-through-script-arguments)
+  - [Config file structure](#config-file-structure)
+  - [Config name style](#config-name-style)
+  - [An example of EDSR](#an-example-of-edsr)
+    - [Model config](#model-config)
+    - [Data config](#data-config)
+      - [Data pipeline](#data-pipeline)
+      - [Dataloader](#dataloader)
+    - [Evaluation config](#evaluation-config)
+    - [Training and testing config](#training-and-testing-config)
+    - [Optimization config](#optimization-config)
+    - [Hook config](#hook-config)
+    - [Runtime config](#runtime-config)
+  - [An example of StyleGAN2](#an-example-of-stylegan2)
+    - [Model config](#model-config-1)
+    - [Dataset and evaluator config](#dataset-and-evaluator-config)
+    - [Training and testing config](#training-and-testing-config-1)
+    - [Optimization config](#optimization-config-1)
+    - [Hook config](#hook-config-1)
+    - [Runtime config](#runtime-config-1)
+  - [Other examples](#other-examples)
+    - [An example of config system for inpainting](#an-example-of-config-system-for-inpainting)
+    - [An example of config system for matting](#an-example-of-config-system-for-matting)
+    - [An example of config system for restoration](#an-example-of-config-system-for-restoration)
 
 ## Modify config through script arguments
 
@@ -77,13 +93,13 @@ Please refer to [MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs
 ## An example of EDSR
 
 To help the users have a basic idea of a complete config,
-we make a brief comments on the [config of the EDSR model](https://github.com/open-mmlab/mmediting/blob/main/configs/edsr/edsr_x2c64b16_g1_300k_div2k.py) we implemented as the following.
+we make a brief comments on the [config of the EDSR model](https://github.com/open-mmlab/mmagic/blob/main/configs/edsr/edsr_x2c64b16_g1_300k_div2k.py) we implemented as the following.
 For more detailed usage and the corresponding alternative for each modules,
 please refer to the API documentation and the [tutorial in MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/config.md).
 
 ### Model config
 
-In MMEditing's config, we use model fields to set up a model.
+In MMagic's config, we use model fields to set up a model.
 
 ```python
 model = dict(
@@ -102,7 +118,7 @@ model = dict(
     train_cfg=dict(),  # Config of training model.
     test_cfg=dict(),  # Config of testing model.
     data_preprocessor=dict(  # The Config to build data preprocessor
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
+        type='DataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
                                                              255.]))
 ```
 
@@ -139,7 +155,7 @@ train_pipeline = [  # Training data processing pipeline
         keys=['lq', 'gt'],  # Images to be transposed
         transpose_ratio=0.5  # Transpose ratio
         ),
-    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
+    dict(type='PackInputs')  # The config of collecting data from the current pipeline
 ]
 test_pipeline = [  # Test pipeline
     dict(type='LoadImageFromFile',  # Load images from files
@@ -152,7 +168,7 @@ test_pipeline = [  # Test pipeline
         color_type='color',  # Color type of image
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
-    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
+    dict(type='PackInputs')  # The config of collecting data from the current pipeline
 ]
 ```
 
@@ -271,7 +287,7 @@ custom_hooks = [dict(type='BasicVisualizationHook', interval=1)] # Config of vis
 ### Runtime config
 
 ```python
-default_scope = 'mmedit' # Used to set registries location
+default_scope = 'mmagic' # Used to set registries location
 env_cfg = dict(  # Parameters to setup distributed training, the port can also be set
     cudnn_benchmark=False,
     mp_cfg=dict(mp_start_method='fork', opencv_num_threads=4),
@@ -285,7 +301,7 @@ resume = False  # Resume checkpoints from a given path, the training will be res
 
 ## An example of StyleGAN2
 
-Taking [Stylegan2 at 1024x1024 scale](https://github.com/open-mmlab/mmediting/blob/main/configs//styleganv2/stylegan2_c2_8xb4-fp16-global-800kiters_quicktest-ffhq-256x256.py) as an example,
+Taking [Stylegan2 at 1024x1024 scale](https://github.com/open-mmlab/mmagic/blob/main/configs//styleganv2/stylegan2_c2_8xb4-fp16-global-800kiters_quicktest-ffhq-256x256.py) as an example,
 we introduce each field in the config according to different function modules.
 
 ### Model config
@@ -298,7 +314,7 @@ In addition to neural network components such as generator, discriminator etc, i
 ```python
 model = dict(
     type='StyleGAN2',  # The name of the model
-    data_preprocessor=dict(type='GANDataPreprocessor'),  # The config of data preprocessor, usually includs image normalization and padding
+    data_preprocessor=dict(type='DataPreprocessor'),  # The config of data preprocessor, usually includs image normalization and padding
     generator=dict(  # The config for generator
         type='StyleGANv2Generator',  # The name of the generator
         out_size=1024,  # The output resolution of the generator
@@ -331,11 +347,11 @@ data_root = './data/ffhq/'  # Root path of data
 train_pipeline = [  # Training data process pipeline
     dict(type='LoadImageFromFile', key='img'),  # First pipeline to load images from file path
     dict(type='Flip', keys=['img'], direction='horizontal'),  # Argumentation pipeline that flip the images
-    dict(type='PackEditInputs', keys=['img'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
+    dict(type='PackInputs', keys=['img'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
 ]
 val_pipeline = [
     dict(type='LoadImageFromFile', key='img'),  # First pipeline to load images from file path
-    dict(type='PackEditInputs', keys=['img'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
+    dict(type='PackInputs', keys=['img'])  # The last pipeline that formats the annotation data (if have) and decides which keys in the data should be packed into data_samples
 ]
 train_dataloader = dict(  # The config of train dataloader
     batch_size=4,  # Batch size of a single GPU
@@ -367,7 +383,7 @@ The config of evaluators consists of one or a list of metric configs:
 
 ```python
 val_evaluator = dict(  # The config for validation evaluator
-    type='EditEvaluator',  # The type of evaluation
+    type='Evaluator',  # The type of evaluation
     metrics=[  # The config for metrics
         dict(
             type='FrechetInceptionDistance',
@@ -392,8 +408,8 @@ train_cfg = dict(  # The config for training
     val_begin=1,  # Which iteration to start the validation
     val_interval=10000,  # Validation intervals
     max_iters=800002)  # Maximum training iterations
-val_cfg = dict(type='GenValLoop')  # The validation loop type
-test_cfg = dict(type='GenTestLoop')  # The testing loop type
+val_cfg = dict(type='MultiValLoop')  # The validation loop type
+test_cfg = dict(type='MultiTestLoop')  # The testing loop type
 ```
 
 ### Optimization config
@@ -403,7 +419,7 @@ The optimizer wrapper not only provides the functions of the optimizer, but also
 
 ```python
 optim_wrapper = dict(
-    constructor='GenOptimWrapperConstructor',
+    constructor='MultiOptimWrapperConstructor',
     generator=dict(
         optimizer=dict(type='Adam', lr=0.0016, betas=(0, 0.9919919678228657))),
     discriminator=dict(
@@ -416,7 +432,7 @@ optim_wrapper = dict(
 `param_scheduler` is a field that configures methods of adjusting optimization hyperparameters such as learning rate and momentum.
 Users can combine multiple schedulers to create a desired parameter adjustment strategy.
 Find more in [parameter scheduler tutorial](https://mmengine.readthedocs.io/en/latest/tutorials/param_scheduler.html).
-Since StyleGAN2 do not use parameter scheduler, we use config in [CycleGAN](https://github.com/open-mmlab/mmediting/blob/main/configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py) as an example:
+Since StyleGAN2 do not use parameter scheduler, we use config in [CycleGAN](https://github.com/open-mmlab/mmagic/blob/main/configs/cyclegan/cyclegan_lsgan-id0-resnet-in_1xb1-250kiters_summer2winter.py) as an example:
 
 ```python
 # parameter scheduler in CycleGAN config
@@ -438,7 +454,7 @@ Users can attach hooks to training, validation, and testing loops to insert some
 
 ```python
 default_hooks = dict(
-    timer=dict(type='EditIterTimerHook'),
+    timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100, log_metric_by_epoch=False),
     checkpoint=dict(
         type='CheckpointHook',
@@ -455,7 +471,7 @@ default_hooks = dict(
 ```python
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))
@@ -465,7 +481,7 @@ custom_hooks = [
 ### Runtime config
 
 ```python
-default_scope = 'mmedit'  # The default registry scope to find modules. Refer to https://mmengine.readthedocs.io/en/latest/tutorials/registry.html
+default_scope = 'mmagic'  # The default registry scope to find modules. Refer to https://mmengine.readthedocs.io/en/latest/tutorials/registry.html
 
 # config for environment
 env_cfg = dict(
@@ -476,7 +492,7 @@ env_cfg = dict(
 
 log_level = 'INFO'  # The level of logging
 log_processor = dict(
-    type='EditLogProcessor',  # log processor to process runtime logs
+    type='LogProcessor',  # log processor to process runtime logs
     by_epoch=False)  # print log by iteration
 load_from = None  # load model checkpoint as a pre-trained model for a given path
 resume = False  # Whether to resume from the checkpoint define in `load_from`. If `load_from` is `None`, it will resume the latest checkpoint in `work_dir`
@@ -494,7 +510,7 @@ For more detailed usage and the corresponding alternative for each modules, plea
 model = dict(
     type='GLInpaintor', # The name of inpaintor
     data_preprocessor=dict(
-        type='EditDataPreprocessor', # The name of data preprocessor
+        type='DataPreprocessor', # The name of data preprocessor
         mean=[127.5], # Mean value used in data normalization
         std=[127.5], # Std value used in data normalization
     ),
@@ -579,7 +595,7 @@ train_pipeline = [
         std=[127.5] * 3,  # Std value used in normalization
         to_rgb=False),  # Whether to transfer image channels to rgb
     dict(type='GetMaskedImage'), # The config of getting masked image pipeline
-    dict(type='PackEditInputs'), # The config of collecting data from the current pipeline
+    dict(type='PackInputs'), # The config of collecting data from the current pipeline
 ]
 
 test_pipeline = train_pipeline  # Constructing testing/validation pipeline
@@ -626,7 +642,7 @@ optim_wrapper = dict( # Config used to build optimizer, support all the optimize
         type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0004)),
     disc=dict(type='OptimWrapper', optimizer=dict(type='Adam', lr=0.0004)))
 
-default_scope = 'mmedit' # Used to set registries location
+default_scope = 'mmagic' # Used to set registries location
 save_dir = './work_dirs' # Directory to save the model checkpoints and logs for the current experiments
 exp_name = 'gl_places'  # The experiment name
 
@@ -675,7 +691,7 @@ To help the users have a basic idea of a complete config, we make a brief commen
 model = dict(
     type='DIM',  # The name of model (we call mattor).
     data_preprocessor=dict(  # The Config to build data preprocessor
-        type='MattorPreprocessor',
+        type='DataPreprocessor',
         mean=[123.675, 116.28, 103.53],
         std=[58.395, 57.12, 57.375],
         bgr_to_rgb=True,
@@ -740,7 +756,7 @@ train_pipeline = [  # Training data processing pipeline.
     dict(
         type='GenerateTrimap',  # Generate trimap from alpha matte.
         kernel_size=(1, 30)),  # Kernel size range of the erode/dilate kernel.
-    dict(type='PackEditInputs'),  # The config of collecting data from the current pipeline
+    dict(type='PackInputs'),  # The config of collecting data from the current pipeline
 ]
 test_pipeline = [
     dict(
@@ -756,7 +772,7 @@ test_pipeline = [
     dict(
         type='LoadImageFromFile',  # Load image from file
         key='merged'),  # Key of image to load. The pipeline will read merged from path `merged_path`.
-    dict(type='PackEditInputs'),  # The config of collecting data from the current pipeline
+    dict(type='PackInputs'),  # The config of collecting data from the current pipeline
 ]
 
 train_dataloader = dict(
@@ -812,7 +828,7 @@ optim_wrapper = dict(
     )
 )  # Config used to build optimizer, support all the optimizers in PyTorch whose arguments are also the same as those in PyTorch.
 
-default_scope = 'mmedit'  # Used to set registries location
+default_scope = 'mmagic'  # Used to set registries location
 save_dir = './work_dirs'  # Directory to save the model checkpoints and logs for the current experiments.
 
 default_hooks = dict(  # Used to build default hooks
@@ -869,7 +885,7 @@ model = dict(
     train_cfg=dict(),  # Config of training model.
     test_cfg=dict(),  # Config of testing model.
     data_preprocessor=dict(  # The Config to build data preprocessor
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
+        type='DataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
                                                              255.]))
 
 train_pipeline = [  # Training data processing pipeline
@@ -897,8 +913,7 @@ train_pipeline = [  # Training data processing pipeline
         keys=['lq', 'gt'],  # Images to be transposed
         transpose_ratio=0.5  # Transpose ratio
         ),
-    dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
-    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
+    dict(type='PackInputs')  # The config of collecting data from the current pipeline
 ]
 test_pipeline = [  # Test pipeline
     dict(type='LoadImageFromFile',  # Load images from files
@@ -912,7 +927,7 @@ test_pipeline = [  # Test pipeline
         channel_order='rgb',  # Channel order of image
         imdecode_backend='cv2'),  # decode backend
     dict(type='ToTensor', keys=['img', 'gt']),  # Convert images to tensor
-    dict(type='PackEditInputs')  # The config of collecting data from the current pipeline
+    dict(type='PackInputs')  # The config of collecting data from the current pipeline
 ]
 
 # dataset settings
@@ -982,7 +997,7 @@ default_hooks = dict(  # Used to build default hooks
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 
-default_scope = 'mmedit'  # Used to set registries location
+default_scope = 'mmagic'  # Used to set registries location
 save_dir = './work_dirs'  # Directory to save the model checkpoints and logs for the current experiments.
 
 env_cfg = dict(  # Parameters to setup distributed training, the port can also be set

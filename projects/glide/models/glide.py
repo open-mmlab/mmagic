@@ -12,9 +12,9 @@ from mmengine.optim import OptimWrapperDict
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
-from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
-from mmedit.structures import EditDataSample
-from mmedit.utils.typing import ForwardInputs, SampleList
+from mmagic.registry import DIFFUSION_SCHEDULERS, MODELS, MODULES
+from mmagic.structures import DataSample
+from mmagic.utils.typing import ForwardInputs, SampleList
 
 # from .guider import ImageTextGuider
 
@@ -196,7 +196,7 @@ class Glide(BaseModel):
     def forward(self,
                 inputs: ForwardInputs,
                 data_samples: Optional[list] = None,
-                mode: Optional[str] = None) -> List[EditDataSample]:
+                mode: Optional[str] = None) -> List[DataSample]:
         """_summary_
 
         Args:
@@ -206,7 +206,7 @@ class Glide(BaseModel):
             mode (Optional[str], optional): _description_. Defaults to None.
 
         Returns:
-            List[EditDataSample]: _description_
+            List[DataSample]: _description_
         """
         init_image = inputs.get('init_image', None)
         batch_size = inputs.get('batch_size', 1)
@@ -229,13 +229,13 @@ class Glide(BaseModel):
 
         batch_sample_list = []
         for idx in range(batch_size):
-            gen_sample = EditDataSample()
+            gen_sample = DataSample()
             if data_samples:
                 gen_sample.update(data_samples[idx])
             if isinstance(outputs, dict):
-                gen_sample.ema = EditDataSample(
+                gen_sample.ema = DataSample(
                     fake_img=outputs['ema'][idx], sample_model='ema')
-                gen_sample.orig = EditDataSample(
+                gen_sample.orig = DataSample(
                     fake_img=outputs['orig'][idx], sample_model='orig')
                 gen_sample.sample_model = 'ema/orig'
                 gen_sample.set_gt_label(labels[idx])
@@ -262,7 +262,7 @@ class Glide(BaseModel):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             SampleList: Generated image or image dict.
@@ -276,10 +276,10 @@ class Glide(BaseModel):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
-            List[EditDataSample]: Generated image or image dict.
+            List[DataSample]: Generated image or image dict.
         """
         data = self.data_preprocessor(data)
         outputs = self(**data)
