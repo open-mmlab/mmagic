@@ -47,7 +47,7 @@ class VisBackend(BaseVisBackend):
             Default to 'scalars.json'.
         ceph_path (Optional[str]): The remote path of Ceph cloud storage.
             Defaults to None.
-        delete_local (bool): Whether eelete local after uploading to ceph or
+        delete_local (bool): Whether delete local after uploading to ceph or
             not. If ``ceph_path`` is None, this will be ignored. Defaults to
             True.
     """

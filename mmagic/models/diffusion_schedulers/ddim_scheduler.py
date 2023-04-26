@@ -71,7 +71,7 @@ class EditDDIMScheduler:
         # At every step in ddim, we are looking into the
         # previous alphas_cumprod. For the final step,
         # there is no previous alphas_cumprod because we are already
-        # at 0 `set_alpha_to_one` decides whether we set this paratemer
+        # at 0 `set_alpha_to_one` decides whether we set this parameter
         # simply to one or whether we use the final alpha of the
         # "non-previous" one.
         self.final_alpha_cumprod = np.array(

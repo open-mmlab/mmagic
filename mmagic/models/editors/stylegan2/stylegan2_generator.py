@@ -74,7 +74,7 @@ class StyleGAN2Generator(nn.Module):
         lr_mlp (float, optional): The learning rate for the style mapping
             layer. Defaults to 0.01.
         default_style_mode (str, optional): The default mode of style mixing.
-            In training, we defaultly adopt mixing style mode. However, in the
+            In training, we adopt mixing style mode in default. However, in the
             evaluation, we use 'single' style mode. `['mix', 'single']` are
             currently supported. Defaults to 'mix'.
         eval_style_mode (str, optional): The evaluation mode of style mixing.
@@ -93,7 +93,7 @@ class StyleGAN2Generator(nn.Module):
         fp16_enabled (bool, optional): Whether to use fp16 training in this
             module. If this flag is `True`, the whole module will be wrapped
             with ``auto_fp16``. Defaults to False.
-        pretrained (dict | None, optional): Information for pretained models.
+        pretrained (dict | None, optional): Information for pretrained models.
             The necessary key is 'ckpt_path'. Besides, you can also provide
             'prefix' to load the generator part from the whole state dict.
             Defaults to None.
@@ -209,7 +209,7 @@ class StyleGAN2Generator(nn.Module):
             blk_out_channels_ = self.channels[2**i]
 
             # If `fp16_enabled` is True, all of layers will be run in auto
-            # FP16. In the case of `num_fp16_sacles` > 0, only partial
+            # FP16. In the case of `num_fp16_scales` > 0, only partial
             # layers will be run in fp16.
             _use_fp16 = (self.log_size - i) < num_fp16_scales or fp16_enabled
 
@@ -386,7 +386,7 @@ class StyleGAN2Generator(nn.Module):
                 with the buffered noise tensor injected to the style conv
                 block. Defaults to True.
             update_ws (bool): Whether update latent code with EMA. Only work
-                when `w_avg` is registeried. Defaults to False.
+                when `w_avg` is registered. Defaults to False.
 
         Returns:
             torch.Tensor | dict: Generated image tensor or dictionary \
@@ -436,9 +436,9 @@ class StyleGAN2Generator(nn.Module):
                 embedding = self.embed(label)
                 # NOTE: If conditional input is passed, do norm for cond
                 # embedding and noise input respectively
-                # do pixel_norm (2nd_momuent_norm) to cond embedding
+                # do pixel_norm (2nd_moment_norm) to cond embedding
                 embedding = self.pixel_norm(embedding)
-                # do pixel_norm (2nd_momuent_norm) to noise input
+                # do pixel_norm (2nd_moment_norm) to noise input
                 styles = [self.pixel_norm(s) for s in styles]
 
             styles_list = []

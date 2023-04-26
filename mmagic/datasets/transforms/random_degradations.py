@@ -373,7 +373,7 @@ class RandomResize:
             imgs (Tensor): training images.
 
         Returns:
-            Tensor: images after radomly resized
+            Tensor: images after randomly resized
         """
         is_single_image = False
         if isinstance(imgs, np.ndarray):

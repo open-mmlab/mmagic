@@ -34,11 +34,11 @@ def build_index_block(in_channels,
         groups (int, optional): The groups of the block. Defaults to 1.
         norm_cfg (dict, optional): The norm config of the block.
             Defaults to dict(type='BN').
-        use_nonlinear (bool, optional): Whether use nonlinearty in the block.
+        use_nonlinear (bool, optional): Whether use nonlinearity in the block.
             If true, a ConvModule with kernel size 1 will be appended and an
-            ``ReLU6`` nonlinearty will be added to the origin ConvModule.
+            ``ReLU6`` nonlinearity will be added to the origin ConvModule.
             Defaults to False.
-        expansion (int, optional): Expandsion ratio of the middle channels.
+        expansion (int, optional): Expansion ratio of the middle channels.
             Effective when ``use_nonlinear`` is true. Defaults to 1.
 
     Returns:
@@ -341,7 +341,7 @@ class IndexNetEncoder(BaseModule):
             layer. Defaults to dict(type='BN').
         freeze_bn (bool, optional): Whether freeze batch norm layer.
             Defaults to False.
-        use_nonlinear (bool, optional): Whether use nonlinearty in index
+        use_nonlinear (bool, optional): Whether use nonlinearity in index
             network. Refer to the paper for more information.
             Defaults to True.
         use_context (bool, optional): Whether use larger kernel size in

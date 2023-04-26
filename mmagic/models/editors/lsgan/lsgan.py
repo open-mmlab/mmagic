@@ -13,7 +13,7 @@ from ...base_models import BaseGAN
 
 @MODELS.register_module()
 class LSGAN(BaseGAN):
-    """Impelmentation of `Least Squares Generative Adversarial Networks`.
+    """Implementation of `Least Squares Generative Adversarial Networks`.
 
     Paper link: https://arxiv.org/pdf/1611.04076.pdf
 

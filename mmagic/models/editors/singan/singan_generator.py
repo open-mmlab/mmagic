@@ -177,7 +177,7 @@ class SinGANMultiScaleGenerator(nn.Module):
                 self.blocks[curr_scale],
                 self.blocks[curr_scale - 1].state_dict(),
                 logger=MMLogger.get_current_instance())
-            logger.info('Successfully load pretrianed model from last scale.')
+            logger.info('Successfully load pretrained model from last scale.')
         else:
             logger.info(
                 'Cannot load pretrained model from last scale since'

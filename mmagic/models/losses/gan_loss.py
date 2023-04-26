@@ -502,7 +502,7 @@ def gen_path_regularizer(generator: nn.Module,
                          use_apex_amp: bool = False) -> Tuple[torch.Tensor]:
     """Generator Path Regularization.
 
-    Path regularization is proposed in StyelGAN2, which can help the improve
+    Path regularization is proposed in StyleGAN2, which can help the improve
     the continuity of the latent space. More details can be found in:
     Analyzing and Improving the Image Quality of StyleGAN, CVPR2020.
 
@@ -520,7 +520,7 @@ def gen_path_regularizer(generator: nn.Module,
         weight (float, optional): Weight of this loss item. Defaults to ``1.``.
         pl_batch_size (int | None, optional): The batch size in calculating
             generator path. Once this argument is set, the ``num_batches`` will
-            be overridden with this argument and won't be affectted by
+            be overridden with this argument and won't be affected by
             ``pl_batch_shrink``. Defaults to None.
         sync_mean_buffer (bool, optional): Whether to sync mean path length
             across all of GPUs. Defaults to False.
@@ -554,7 +554,7 @@ def gen_path_regularizer(generator: nn.Module,
             retain_graph=True,
             only_inputs=True)[0]
 
-        # unsacle the grad
+        # unscale the grad
         inv_scale = 1. / loss_scaler.get_scale()
         grad = grad * inv_scale
     elif use_apex_amp:
@@ -573,7 +573,7 @@ def gen_path_regularizer(generator: nn.Module,
             retain_graph=True,
             only_inputs=True)[0]
 
-        # unsacle the grad
+        # unscale the grad
         inv_scale = 1. / _loss_scaler.loss_scale()
         grad = grad * inv_scale
     else:

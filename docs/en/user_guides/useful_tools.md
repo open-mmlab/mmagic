@@ -4,9 +4,10 @@ We provide lots of useful tools under `tools/` directory.
 
 The structure of this guide is as follows:
 
-- [Get the FLOPs and params](#get-the-flops-and-params)
-- [Publish a model](#publish-a-model)
-- [Print full config](#print-full-config)
+- [Tutorial 7: Useful tools](#tutorial-7-useful-tools)
+  - [Get the FLOPs and params](#get-the-flops-and-params)
+  - [Publish a model](#publish-a-model)
+  - [Print full config](#print-full-config)
 
 ## Get the FLOPs and params
 
