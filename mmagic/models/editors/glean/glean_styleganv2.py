@@ -22,17 +22,17 @@ class GLEANStyleGANv2(BaseModule):
     that in 'StyleGAN2v2Generator'.
 
     In StyleGAN2, we use a static architecture composing of a style mapping
-    module and number of covolutional style blocks. More details can be found
+    module and number of convolutional style blocks. More details can be found
     in: Analyzing and Improving the Image Quality of StyleGAN CVPR2020.
 
     You can load pretrained model through passing information into
     ``pretrained`` argument. We have already offered official weights as
     follows:
 
-    - styelgan2-ffhq-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth  # noqa
+    - stylegan2-ffhq-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-ffhq-config-f-official_20210327_171224-bce9310c.pth  # noqa
     - stylegan2-horse-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-horse-config-f-official_20210327_173203-ef3e69ca.pth  # noqa
     - stylegan2-car-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-car-config-f-official_20210327_172340-8cfe053c.pth  # noqa
-    - styelgan2-cat-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-cat-config-f-official_20210327_172444-15bc485b.pth  # noqa
+    - stylegan2-cat-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-cat-config-f-official_20210327_172444-15bc485b.pth  # noqa
     - stylegan2-church-config-f: http://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth  # noqa
 
     If you want to load the ema model, you can just use following codes:
@@ -64,14 +64,14 @@ class GLEANStyleGANv2(BaseModule):
         style_channels (int): The number of channels for style code.
             Default: 512.
         num_mlps (int, optional): The number of MLP layers. Defaults to 8.
-        channel_multiplier (int, optional): The mulitiplier factor for the
+        channel_multiplier (int, optional): The multiplier factor for the
             channel number. Defaults to 2.
         blur_kernel (list, optional): The blurry kernel. Defaults
             to [1, 3, 3, 1].
         lr_mlp (float, optional): The learning rate for the style mapping
             layer. Defaults to 0.01.
         default_style_mode (str, optional): The default mode of style mixing.
-            In training, we defaultly adopt mixing style mode. However, in the
+            In training, we adopt mixing style mode in default. However, in the
             evaluation, we use 'single' style mode. `['mix', 'single']` are
             currently supported. Defaults to 'mix'.
         eval_style_mode (str, optional): The evaluation mode of style mixing.

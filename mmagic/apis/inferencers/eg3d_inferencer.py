@@ -92,7 +92,7 @@ class EG3DInferencer(BaseMMagicInferencer):
             inputs (ForwardInputs): Model inputs. If data sample (the second
                 element of `inputs`) is not passed, will generate a sequence
                 of images corresponding to passed `interpolation` mode.
-            interpolation (str): The interplolation mode. Supported choices
+            interpolation (str): The interpolation mode. Supported choices
                 are 'both', 'conditioning', and 'camera'. Defaults to 'both'.
             num_images (int): The number of frames of interpolation.
                 Defaults to 500.

@@ -261,7 +261,7 @@ class TransformerBlock(BaseModule):
             x (Tensor): Input tensor with shape (B, C, H, W).
 
         Returns:
-            Tesnor: Forward results.
+            Tensor: Forward results.
         """
         x = x + self.attn(self.norm1(x))
         x = x + self.ffn(self.norm2(x))
@@ -291,7 +291,7 @@ class OverlapPatchEmbed(BaseModule):
             x (Tensor): Input tensor with shape (B, C, H, W).
 
         Returns:
-            Tesnor: Forward results.
+            Tensor: Forward results.
         """
         x = self.proj(x)
 
@@ -324,7 +324,7 @@ class Downsample(BaseModule):
             x (Tensor): Input tensor with shape (B, C, H, W).
 
         Returns:
-            Tesnor: Forward results.
+            Tensor: Forward results.
         """
         return self.body(x)
 
@@ -355,7 +355,7 @@ class Upsample(BaseModule):
             x (Tensor): Input tensor with shape (B, C, H, W).
 
         Returns:
-            Tesnor: Forward results.
+            Tensor: Forward results.
         """
         return self.body(x)
 

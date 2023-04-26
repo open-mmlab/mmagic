@@ -368,7 +368,7 @@ class Glide(BaseModel):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             SampleList: Generated image or image dict.
@@ -382,7 +382,7 @@ class Glide(BaseModel):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             List[DataSample]: Generated image or image dict.

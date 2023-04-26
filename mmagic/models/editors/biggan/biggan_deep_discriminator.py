@@ -79,7 +79,7 @@ class BigGANDeepDiscriminator(nn.Module):
         arch_cfg (dict, optional): Config for the architecture of this
             discriminator. Defaults to None.
         pretrained (str | dict, optional): Path for the pretrained model or
-            dict containing information for pretained models whose necessary
+            dict containing information for pretrained models whose necessary
             key is 'ckpt_path'. Besides, you can also provide 'prefix' to load
             the generator part from the whole state dict. Defaults to None.
     """
@@ -253,7 +253,7 @@ class BigGANDeepDiscriminator(nn.Module):
 
         Args:
             pretrained (str | dict, optional): Path for the pretrained model or
-                dict containing information for pretained models whose
+                dict containing information for pretrained models whose
                 necessary key is 'ckpt_path'. Besides, you can also provide
                 'prefix' to load the generator part from the whole state dict.
                 Defaults to None.

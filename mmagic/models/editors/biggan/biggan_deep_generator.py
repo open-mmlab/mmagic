@@ -96,7 +96,7 @@ class BigGANDeepGenerator(nn.Module):
         out_norm_cfg (dict, optional): Config for the norm of output layer.
             Defaults to dict(type='BN').
         pretrained (str | dict, optional): Path for the pretrained model or
-            dict containing information for pretained models whose necessary
+            dict containing information for pretrained models whose necessary
             key is 'ckpt_path'. Besides, you can also provide 'prefix' to load
             the generator part from the whole state dict. Defaults to None.
         rgb2bgr (bool, optional): Whether to reformat the output channels
@@ -358,7 +358,7 @@ class BigGANDeepGenerator(nn.Module):
         elif isinstance(label, torch.Tensor):
             if not use_outside_embedding:
                 assert label.ndim == 1, (
-                    'The label shoube be in shape of (n, )'
+                    'The label should be in shape of (n, )'
                     f'but got {label.shape}.')
             label_batch = label
         elif callable(label):
@@ -425,7 +425,7 @@ class BigGANDeepGenerator(nn.Module):
 
         Args:
             pretrained (str | dict, optional): Path for the pretrained model or
-                dict containing information for pretained models whose
+                dict containing information for pretrained models whose
                 necessary key is 'ckpt_path'. Besides, you can also provide
                 'prefix' to load the generator part from the whole state dict.
                 Defaults to None.

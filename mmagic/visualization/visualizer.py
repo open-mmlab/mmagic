@@ -156,7 +156,7 @@ class Visualizer(BaseVisualizer):
             else:
                 vis_results.append(sample)
 
-        # concatnate along batch size
+        # concatenate along batch size
         vis_results = torch.cat(vis_results)
         vis_results = [
             make_grid(vis_results[:, t, ...].cpu(),
@@ -180,7 +180,7 @@ class Visualizer(BaseVisualizer):
             target_mean (Sequence[Union[float, int]]): The target mean of the
                 visualization results.
             target_std (Sequence[Union[float, int]]): The target std of the
-                visualization resutts.
+                visualization results.
             n_rows (int, optional): Number of images in one row.
 
         Returns:
@@ -217,7 +217,7 @@ class Visualizer(BaseVisualizer):
             else:
                 vis_results.append(sample)
 
-        # concatnate along batch size
+        # concatenate along batch size
         vis_results = torch.cat(vis_results, dim=0)
         vis_results = make_grid(vis_results, nrow=n_row).cpu().permute(1, 2, 0)
         vis_results = vis_results.numpy().astype(np.uint8)
@@ -293,7 +293,7 @@ class Visualizer(BaseVisualizer):
             target_mean (Sequence[Union[float, int]]): The target mean of the
                 visualization results. Defaults to 127.5.
             target_std (Sequence[Union[float, int]]): The target std of the
-                visualization resutts. Defaults to 127.5.
+                visualization results. Defaults to 127.5.
             show (bool): Whether to display the drawn image. Default to False.
             wait_time (float): The interval of show (s). Defaults to 0.
             step (int): Global step value to record. Defaults to 0.

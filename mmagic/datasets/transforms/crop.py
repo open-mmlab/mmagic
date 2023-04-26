@@ -341,7 +341,7 @@ class ModCrop(BaseTransform):
 
 @TRANSFORMS.register_module()
 class PairedRandomCrop(BaseTransform):
-    """Paried random crop.
+    """Paired random crop.
 
     It crops a pair of img and gt images with corresponding locations.
     It also supports accepting img list and gt list.

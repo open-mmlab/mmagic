@@ -151,7 +151,7 @@ def generate_json(data_root, source_bg_dir, composite, nproc, mode):
         data_root (str): path to Adobe composition-1k directory.
         source_bg_dir (str): source background directory.
         composite (bool): whether composite fg with bg and write to file.
-        nproc (int): number of processers.
+        nproc (int): number of processes.
         mode (str): training or test mode.
     """
 
@@ -237,7 +237,7 @@ def parse_args():
         action='store_true',
         help='whether to composite training foreground and background offline')
     parser.add_argument(
-        '--nproc', type=int, default=4, help='number of processer')
+        '--nproc', type=int, default=4, help='number of processes')
     parser.add_argument(
         '--skip-train',
         action='store_true',

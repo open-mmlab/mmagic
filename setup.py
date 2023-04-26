@@ -170,7 +170,7 @@ def make_cuda_ext(name, module, sources, sources_cuda=[]):
         extra_compile_args=extra_compile_args)
 
 
-def add_mim_extention():
+def add_mim_extension():
     """Add extra files that are required to support MIM into the package.
 
     These files will be added by creating a symlink to the originals if the
@@ -230,7 +230,7 @@ def add_mim_extention():
 
 
 if __name__ == '__main__':
-    add_mim_extention()
+    add_mim_extension()
     setup(
         name='mmagic',
         version=get_version(),

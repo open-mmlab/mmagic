@@ -8,7 +8,7 @@ so that the new loss module can be adopted in our framework without extra effort
 
 This guides includes:
 
-- [Design Your Own Loss Functions](#design-your-own-loss-functions)
+- [How to design your own loss functions](#how-to-design-your-own-loss-functions)
   - [Introduction to supported losses](#introduction-to-supported-losses)
   - [Design a new loss function](#design-a-new-loss-function)
     - [An example of MSELoss](#an-example-of-mseloss)

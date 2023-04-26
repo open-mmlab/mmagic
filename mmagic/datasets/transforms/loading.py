@@ -41,7 +41,7 @@ class LoadImageFromFile(BaseTransform):
         to_y_channel (bool): Whether to convert the loaded image to y channel.
             Only support 'rgb2ycbcr' and 'rgb2ycbcr'
             Defaults to False.
-        backend_args (dict, optional): Arguments to instantiate the preifx of
+        backend_args (dict, optional): Arguments to instantiate the prefix of
             uri corresponding backend. Defaults to None.
     """
 
@@ -465,7 +465,7 @@ class LoadPairedImageFromFile(LoadImageFromFile):
         to_y_channel (bool): Whether to convert the loaded image to y channel.
             Only support 'rgb2ycbcr' and 'rgb2ycbcr'
             Defaults to False.
-        backend_args (dict, optional): Arguments to instantiate the preifx of
+        backend_args (dict, optional): Arguments to instantiate the prefix of
             uri corresponding backend. Defaults to None.
         io_backend (str, optional): io backend where images are store. Defaults
             to None.

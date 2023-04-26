@@ -21,7 +21,7 @@ ModelType = Union[Dict, nn.Module]
 
 @MODELS.register_module()
 class StyleGAN2(BaseGAN):
-    """Impelmentation of `Analyzing and Improving the Image Quality of
+    """Implementation of `Analyzing and Improving the Image Quality of
     Stylegan`. # noqa.
 
     Paper link: https://openaccess.thecvf.com/content_CVPR_2020/html/Karras_Analyzing_and_Improving_the_Image_Quality_of_StyleGAN_CVPR_2020_paper.html. # noqa

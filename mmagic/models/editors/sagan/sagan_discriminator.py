@@ -27,11 +27,11 @@ class ProjDiscriminator(nn.Module):
 
     The design of the model structure is highly corresponding to the output
     resolution. Therefore, we provide `channels_cfg` and `downsample_cfg` to
-    control the input channels and the downsample behavior of the intermedia
+    control the input channels and the downsample behavior of the intermediate
     blocks.
 
     ``downsample_cfg``: In default config of SNGAN / Proj-GAN, whether to apply
-        downsample in each intermedia blocks is quite flexible and
+        downsample in each intermediate blocks is quite flexible and
         corresponding to the resolution of the output image. Therefore, we
         support user to define the ``downsample_cfg`` by themselves, and to
         control the structure of the discriminator.
@@ -63,7 +63,7 @@ class ProjDiscriminator(nn.Module):
             smaller than ``1``, self-attention corresponding to this index
             would be ignored. Default to 0.
         channels_cfg (list | dict[list], optional): Config for input channels
-            of the intermedia blocks. If list is passed, each element of the
+            of the intermediate blocks. If list is passed, each element of the
             list means the input channels of current block is how many times
             compared to the ``base_channels``. For block ``i``, the input and
             output channels should be ``channels_cfg[i]`` and
@@ -72,16 +72,16 @@ class ProjDiscriminator(nn.Module):
             to define channels.  Default: Please refer to
             ``_defualt_channels_cfg``.
         downsample_cfg (list[bool] | dict[list], optional): Config for
-            downsample behavior of the intermedia layers. If a list is passed,
-            ``downsample_cfg[idx] == True`` means apply downsample in idx-th
-            block, and vice versa. If dict is provided, the key dict should
-            be the input scale of the image and corresponding value should be
-            a list ti define the downsample behavior. Default: Please refer
-            to ``_default_downsample_cfg``.
+            downsample behavior of the intermediate layers. If a list is
+            passed, ``downsample_cfg[idx] == True`` means apply downsample in
+            idx-th block, and vice versa. If dict is provided, the key dict
+            should be the input scale of the image and corresponding value
+            should be a list ti define the downsample behavior. Default: Please
+            refer to ``_default_downsample_cfg``.
         from_rgb_cfg (dict, optional): Config for the first layer to convert
             rgb image to feature map. Defaults to
             ``dict(type='SNGANDiscHeadResBlock')``.
-        blocks_cfg (dict, optional): Config for the intermedia blocks.
+        blocks_cfg (dict, optional): Config for the intermediate blocks.
             Defaults to ``dict(type='SNGANDiscResBlock')``
         act_cfg (dict, optional): Activation config for the final output
             layer. Defaults to ``dict(type='ReLU')``.
@@ -98,7 +98,7 @@ class ProjDiscriminator(nn.Module):
         init_cfg (dict, optional): Config for weight initialization.
             Default to ``dict(type='BigGAN')``.
         pretrained (str | dict , optional): Path for the pretrained model or
-            dict containing information for pretained models whose necessary
+            dict containing information for pretrained models whose necessary
             key is 'ckpt_path'. Besides, you can also provide 'prefix' to load
             the generator part from the whole state dict.  Defaults to None.
     """
@@ -292,7 +292,7 @@ class ProjDiscriminator(nn.Module):
 
         Args:
             pretrained (str | dict, optional): Path for the pretrained model or
-                dict containing information for pretained models whose
+                dict containing information for pretrained models whose
                 necessary key is 'ckpt_path'. Besides, you can also provide
                 'prefix' to load the generator part from the whole state dict.
                 Defaults to None.

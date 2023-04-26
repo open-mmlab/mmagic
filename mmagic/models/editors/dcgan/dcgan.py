@@ -13,7 +13,7 @@ from ...base_models import BaseGAN
 
 @MODELS.register_module()
 class DCGAN(BaseGAN):
-    """Impelmentation of `Unsupervised Representation Learning with Deep
+    """Implementation of `Unsupervised Representation Learning with Deep
     Convolutional Generative Adversarial Networks`.
 
     Paper link:

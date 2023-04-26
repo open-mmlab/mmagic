@@ -18,9 +18,9 @@ from ..stylegan2 import StyleGAN2Discriminator
 class DualDiscriminator(StyleGAN2Discriminator):
     """Dual Discriminator for EG3D. DualDiscriminator shares the same network
     structure with StyleGAN2's Discriminator. However, DualDiscriminator take
-    volume rendered low-resolution image and super-resolutioned image at the
-    same time. The LR image will be upsampled and concatenate with SR ones, and
-    then feed to the discruminator together.
+    volume rendered low-resolution image and super-resolved image at the same
+    time. The LR image will be upsampled and concatenate with SR ones, and then
+    feed to the discriminator together.
 
     Args:
         img_channels (int): The number of the image channels. Defaults to 3.
