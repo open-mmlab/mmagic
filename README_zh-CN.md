@@ -373,6 +373,7 @@ pip3 install -e .
           <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
           <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
           <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
+          <li><a href="configs/controlnet_animation/README.md">ControlNet Animation (2023)</a></li>
         </ul>
       </td>
       <td>

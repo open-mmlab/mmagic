@@ -81,6 +81,10 @@ editor.infer(video=video, prompt=prompt, negative_prompt=negative_prompt, save_p
 python demo/gradio_controlnet_animation.py
 ```
 
+## Play animation with SAM
+
+We also provide a demo to play controlnet animation with sam, for details, please see [OpenMMLab PlayGround](https://github.com/open-mmlab/playground/blob/main/mmediting_sam/README.md).
+
 ## Citation
 
 ```bibtex
