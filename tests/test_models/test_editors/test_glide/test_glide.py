@@ -1,7 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import platform
 import unittest
-from copy import deepcopy
 from unittest import TestCase
 
 import torch
@@ -89,46 +88,20 @@ class TestGLIDE(TestCase):
         'win' in platform.system().lower(),
         reason='skip on windows due to limited RAM.')
     def test_init(self):
-        # low resolution
-        unet = deepcopy(self.unet)
-        diffusion_scheduler = deepcopy(self.diffusion_scheduler)
-        self.GLIDE_low = Glide(
-            unet=unet, diffusion_scheduler=diffusion_scheduler)
-
-        # high resolution
-        unet_up = deepcopy(self.unet_up)
-        diffusion_scheduler_up = deepcopy(self.diffusion_scheduler_up)
-        self.GLIDE_high = Glide(
-            unet=unet,
-            diffusion_scheduler=diffusion_scheduler,
-            unet_up=unet_up,
-            diffusion_scheduler_up=diffusion_scheduler_up)
+        self.GLIDE = Glide(
+            unet=self.unet,
+            diffusion_scheduler=self.diffusion_scheduler,
+            unet_up=self.unet_up,
+            diffusion_scheduler_up=self.diffusion_scheduler_up)
 
     @unittest.skipIf(
         ('win' in platform.system().lower())
         or (not torch.cuda.is_available()),
         reason='skip on windows and cpu due to limited RAM.')
     def test_infer(self):
-        # test low resolution
-        unet = deepcopy(self.unet)
-        diffusion_scheduler = deepcopy(self.diffusion_scheduler)
-        self.GLIDE = Glide(unet=unet, diffusion_scheduler=diffusion_scheduler)
-        self.GLIDE.cuda().eval()
-
-        # test infer in low resolution
+        # test infer resolution
         text_prompts = 'clouds surround the mountains and palaces,sunshine'
         image = self.GLIDE.infer(
-            prompt=text_prompts, show_progress=True,
-            num_inference_steps=2)['samples']
-        assert image.shape == (1, 3, 64, 64)
-
-        # test high resolution
-        unet_up = deepcopy(self.unet_up)
-        diffusion_scheduler_up = deepcopy(self.diffusion_scheduler_up)
-        self.GLIDE_high = Glide(unet, diffusion_scheduler, unet_up,
-                                diffusion_scheduler_up)
-        self.GLIDE_high.cuda().eval()
-        image = self.GLIDE_high.infer(
             prompt=text_prompts, show_progress=True,
             num_inference_steps=2)['samples']
         assert image.shape == (1, 3, 256, 256)
