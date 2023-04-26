@@ -84,7 +84,7 @@ image.save('robot.png')
 
 ## Use ToMe to accelerate your stable diffusion model
 
-We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed based on [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmediting`, you just need to add `tomesd_cfg` to `model` in [stable-diffusion-config](configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py).
+We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed based on [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` in [stable-diffusion-ddim](configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py).
 
 ```python
 ...
@@ -92,59 +92,17 @@ model = dict(
     type='StableDiffusion',
     unet=unet,
     vae=vae,
+    enable_xformers=False,
     text_encoder=dict(
         type='ClipWrapper',
         clip_type='huggingface',
-        pretrained_model_name_or_path='runwayml/stable-diffusion-v1-5',
+        pretrained_model_name_or_path=stable_diffusion_v15_url,
         subfolder='text_encoder'),
-    tokenizer='runwayml/stable-diffusion-v1-5',
+    tokenizer=stable_diffusion_v15_url,
     scheduler=diffusion_scheduler,
     test_scheduler=diffusion_scheduler,
     tomesd_cfg=dict(
-        ratio=0.5),
-    init_cfg=dict())
-```
-
-Then following the code below, you can evaluate the speed-up performance on stable diffusion model.
-
-```python
-import time
-import numpy as np
-
-from mmengine import MODELS, Config
-from mmengine.registry import init_default_scope
-
-init_default_scope('mmedit')
-
-size = 512
-ratios = [0.5, 0.75]
-samples_perprompt = 5
-
-config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py'
-config = Config.fromfile(config).copy()
-config.model.init_cfg.pretrained_model_path = '/path/to/your/stable-diffusion-v1-5'
-
-prompt = 'A mecha robot in a favela in expressionist style'
-
-for ratio in ratios:
-    # use tomesd
-    config.model.tomesd_cfg.ratio = ratio
-    # # do not use tomesd
-    # config.model.tomesd_cfg = None
-
-    sd_model = MODELS.build(config.model).to('cuda')
-
-    t = time.time()
-    for i in range(100//samples_perprompt):
-        image = sd_model.infer(prompt, height=size, width=size, num_images_per_prompt=samples_perprompt)['samples']
-
-    print(f"Generating 100 images with {samples_perprompt} images per prompt, merging ratio {ratio}, time used : {time.time() - t}s")
-
-# # Results
-# | `ratio`  | size | num_images_per_prompt |       time (s)   |
-# | w/o tome | 512  |           5           |       578.86     |
-# |   0.5    | 512  |           5           |  436.45 (↓24.6%) |
-# |   0.75   | 512  |           5           |  389.77 (↓32.7%) |
+        ratio=0.5))
 ```
 
 The detailed settings for **tomesd_cfg** are as follows:
@@ -158,6 +116,87 @@ The detailed settings for **tomesd_cfg** are as follows:
 - `merge_mlp` **(bool)**: Whether or not to merge tokens for the mlp layers **(particular not recommended)**.
 
 For more details about the **tomesd** setting, please refer to [Token Merging for Stable Diffusion](https://arxiv.org/abs/2303.17604).
+
+Then following the code below, you can evaluate the speed-up performance on stable diffusion models or stable-diffusion-based models ([DreamBooth](../dreambooth/README.md), [ControlNet](../controlnet/README.md)).
+
+```python
+import time
+import numpy as np
+
+from mmengine import MODELS, Config
+from mmengine.registry import init_default_scope
+
+init_default_scope('mmagic')
+
+_device = 3
+work_dir = '/path/to/your/work_dir'
+config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py'
+config = Config.fromfile(config).copy()
+# # change the 'pretrained_model_path' if you have downloaded the weights manually
+# config.model.unet.from_pretrained = '/path/to/your/stable-diffusion-v1-5'
+# config.model.vae.from_pretrained = '/path/to/your/stable-diffusion-v1-5'
+
+# w/o tomesd
+config.model.tomesd_cfg = None
+StableDiffuser = MODELS.build(config.model).to(f'cuda:{_device}')
+prompt = 'A mecha robot in a favela in expressionist style'
+
+# inference time evaluation params
+size = 512
+ratios = [0.75, 0.75]
+samples_perprompt = 5
+
+t = time.time()
+for i in range(100//samples_perprompt):
+    image = StableDiffuser.infer(prompt, height=size, width=size, num_images_per_prompt=samples_perprompt)['samples'][0]
+    if i == 0:
+        image.save(f"{work_dir}/wo_tomesd.png")
+print(f"Generating 100 images with {samples_perprompt} images per prompt, without ToMe speed-up, time used : {time.time() - t}s")
+
+for ratio in ratios:
+    # w/ tomesd
+    config.model.tomesd_cfg = dict(ratio=ratio)
+    sd_model = MODELS.build(config.model).to(f'cuda:{_device}')
+
+    t = time.time()
+    for i in range(100//samples_perprompt):
+        image = sd_model.infer(prompt, height=size, width=size, num_images_per_prompt=samples_perprompt)['samples'][0]
+        if i == 0:
+            image.save(f"{work_dir}/w_tomesd_ratio_{ratio}.png")
+
+    print(f"Generating 100 images with {samples_perprompt} images per prompt, merging ratio {ratio}, time used : {time.time() - t}s")
+```
+
+Here are some performance comparisons:
+
+|                               Model                               | Dataset | Download |            Ratio            | Size / Num images per prompt |                     Time (s)                      |
+| :---------------------------------------------------------------: | :-----: | :------: | :-------------------------: | :--------------------------: | :-----------------------------------------------: |
+| [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py) |    -    |    -     | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 542.20 <br> 427.65 (↓21.1%) <br>  393.05 (↓27.5%) |
+
+<table align="center">
+<thead>
+  <tr>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/49406546/234613951-43b94470-89ff-4edc-a2e2-bea9e7a8a566.png" width="400"/>
+  <br/>
+  <b> w/o ToMe </b>
+</div></td>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/49406546/234613969-213e3436-b73c-4b8e-82ce-b91492b44db3.png" width="400"/>
+  <br/>
+  <b> w/ ToMe Speed-up (token merge ratio=0.5) </b>
+</div></td>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/49406546/234613983-82fee9a3-05f7-4b1d-85dc-a507e85ecb31.png" width="400"/>
+  <br/>
+  <b> w/ ToMe Speed-up (token merge ratio=0.75) </b>
+</div></td>
+  </tr>
+</thead>
+</table>
 
 ## Comments
 

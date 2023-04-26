@@ -15,3 +15,9 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Image
+  - Dataset: '-'
+    Metrics:
+      Size / Num images per prompt:
+        PSNR: 512.0
+        SSIM: 5.0
+    Task: Text2Image

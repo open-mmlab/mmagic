@@ -177,6 +177,21 @@ optim_wrapper = dict(
     controlnet=dict(accumulative_counts=4, optimizer=dict(type='AdamW', lr=1e-5)))
 ```
 
+## Use ToMe to accelerate your training and inference
+
+We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed for stable-diffusion-based models referring to [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` in [ControlNet-Canny](./controlnet-canny.py).
+
+```python
+model = dict(
+    type='ControlStableDiffusion',
+    ...
+    tomesd_cfg=dict(ratio=0.5),
+    ...
+    init_cfg=dict(type='init_from_unet'))
+```
+
+For more details, you can refer to [Stable Diffusion Acceleration](../stable_diffusion/README.md#use-tome-to-accelerate-your-stable-diffusion-model).
+
 ## Comments
 
 Our codebase for the stable diffusion models builds heavily on [diffusers codebase](https://github.com/huggingface/diffusers) and the model weights are from [stable-diffusion-1.5](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion_controlnet.py) and [ControlNet](https://huggingface.co/lllyasviel/ControlNet/tree/main/models).

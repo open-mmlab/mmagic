@@ -70,6 +70,21 @@ bash tools/dist_train.sh configs/dreambooth/dreambooth_lora.py 1
 </thead>
 </table>
 
+## Use ToMe to accelerate your training and inference
+
+We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed for stable-diffusion-based models referring to [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` in [DreamBooth](./dreambooth.py).
+
+```python
+model = dict(
+    type='DreamBooth',
+    ...
+    tomesd_cfg=dict(ratio=0.5),
+    ...
+    val_prompts=val_prompts)
+```
+
+For more details, you can refer to [Stable Diffusion Acceleration](../stable_diffusion/README.md#use-tome-to-accelerate-your-stable-diffusion-model).
+
 ## Comments
 
 Our codebase for the stable diffusion models builds heavily on [diffusers codebase](https://github.com/huggingface/diffusers) and the model weights are from [stable-diffusion-1.5](https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion_controlnet.py).

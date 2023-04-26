@@ -14,8 +14,9 @@ from torch.nn import init
 
 from mmagic.structures import DataSample
 from mmagic.utils.typing import ForwardInputs
-from .tome_utils import (add_tome_cfg_hook, build_mmedit_tomesd_block,
+from .tome_utils import (add_tome_cfg_hook, build_mmagic_tomesd_block,
                          isinstance_str)
+
 
 def default_init_weights(module, scale=1):
     """Initialize network weights.
@@ -341,10 +342,10 @@ def set_tomesd(model: torch.nn.Module,
     # Make sure the module is not currently patched
     remove_tomesd(model)
 
-    is_mmedit = isinstance_str(model, 'StableDiffusion') or isinstance_str(
+    is_mmagic = isinstance_str(model, 'StableDiffusion') or isinstance_str(
         model, 'BaseModel')
 
-    if is_mmedit:
+    if is_mmagic:
         # Supports "StableDiffusion.unet" and "unet"
         diffusion_model = model.unet if hasattr(model, 'unet') else model
     else:
@@ -374,8 +375,8 @@ def set_tomesd(model: torch.nn.Module,
     for _, module in diffusion_model.named_modules():
         if isinstance_str(module, 'BasicTransformerBlock'):
             # TODO: can support more stable diffusion based models
-            if is_mmedit:
-                make_tome_block_fn = build_mmedit_tomesd_block
+            if is_mmagic:
+                make_tome_block_fn = build_mmagic_tomesd_block
             else:
                 raise TypeError(
                     'Currently `tome` only support *stable-diffusion* model!')
@@ -390,7 +391,7 @@ def remove_tomesd(model: torch.nn.Module):
 
     Refer to: https://github.com/dbolya/tomesd/blob/main/tomesd/patch.py#L251 # noqa
     """
-    # For mmediting Stable Diffusion models
+    # For mmagic Stable Diffusion models
     model = model.unet if hasattr(model, 'unet') else model
 
     for _, module in model.named_modules():

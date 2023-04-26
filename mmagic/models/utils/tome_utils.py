@@ -19,9 +19,9 @@ def add_tome_cfg_hook(model: torch.nn.Module):
     model._tome_info['hooks'].append(model.register_forward_pre_hook(hook))
 
 
-def build_mmedit_tomesd_block(block_class: Type[torch.nn.Module]
+def build_mmagic_tomesd_block(block_class: Type[torch.nn.Module]
                               ) -> Type[torch.nn.Module]:
-    """Make a patched class for a mmedit model. This patch applies ToMe to the
+    """Make a patched class for a mmagic model. This patch applies ToMe to the
     forward function of the block.
 
     Refer to: https://github.com/dbolya/tomesd/blob/main/tomesd/patch.py#L67 # noqa
@@ -39,37 +39,74 @@ def build_mmedit_tomesd_block(block_class: Type[torch.nn.Module]
         def forward(
             self,
             hidden_states,
-            context=None,
+            encoder_hidden_states=None,
             timestep=None,
-        ) -> torch.Tensor:
-            # ->(1) ToMeBlock
+            attention_mask=None,
+            cross_attention_kwargs=None,
+            class_labels=None,
+        ):
+            # -> (1) ToMeBlock
             m_a, m_c, m_m, u_a, u_c, u_m = build_merge(hidden_states,
                                                        self._tome_info)
+            if self.use_ada_layer_norm:
+                norm_hidden_states = self.norm1(hidden_states, timestep)
+            elif self.use_ada_layer_norm_zero:
+                norm_hidden_states, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.norm1(
+                    hidden_states, timestep, class_labels, hidden_dtype=hidden_states.dtype
+                )
+            else:
+                norm_hidden_states = self.norm1(hidden_states)
+
+            # -> (2) ToMe m_a
+            norm_hidden_states = m_a(norm_hidden_states)
 
             # 1. Self-Attention
-            # ->(2) ToMe m_a
-            norm_hidden_states = (m_a(self.norm1(hidden_states)))
+            cross_attention_kwargs = cross_attention_kwargs if cross_attention_kwargs is not None else {}
+            attn_output = self.attn1(
+                norm_hidden_states,
+                encoder_hidden_states=encoder_hidden_states if self.only_cross_attention else None,
+                attention_mask=attention_mask,
+                **cross_attention_kwargs,
+            )
+            if self.use_ada_layer_norm_zero:
+                attn_output = gate_msa.unsqueeze(1) * attn_output
 
-            # ->(3) ToMe u_a
-            if self.only_cross_attention:
-                hidden_states = u_a(self.attn1(norm_hidden_states,
-                                               context)) + hidden_states
-            else:
-                hidden_states = u_a(
-                    self.attn1(norm_hidden_states)) + hidden_states
+            # -> (3) ToMe u_a
+            hidden_states = u_a(attn_output) + hidden_states
 
-            # 2. Cross-Attention
-            # ->(4) ToMe m_c
-            norm_hidden_states = (m_c(self.norm2(hidden_states)))
-            # ->(5) ToMe u_c
-            hidden_states = u_c(
-                self.attn2(norm_hidden_states,
-                           context=context)) + hidden_states
+            if self.attn2 is not None:
+                norm_hidden_states = (
+                    self.norm2(hidden_states, timestep) if self.use_ada_layer_norm else self.norm2(hidden_states)
+                )
+                # -> (4) ToMe m_c
+                norm_hidden_states = m_c(norm_hidden_states)
+
+                # 2. Cross-Attention
+                attn_output = self.attn2(
+                    norm_hidden_states,
+                    encoder_hidden_states=encoder_hidden_states,
+                    attention_mask=attention_mask,
+                    **cross_attention_kwargs,
+                )
+                # -> (5) ToMe u_c
+                hidden_states = u_c(attn_output) + hidden_states
 
             # 3. Feed-forward
-            # ->(6) ToMe m_m, u_m
-            hidden_states = u_m(self.ff(m_m(
-                self.norm3(hidden_states)))) + hidden_states
+            norm_hidden_states = self.norm3(hidden_states)
+
+            if self.use_ada_layer_norm_zero:
+                norm_hidden_states = norm_hidden_states * (1 + scale_mlp[:, None]) + shift_mlp[:, None]
+
+            # -> (6) ToMe m_m
+            norm_hidden_states = m_m(norm_hidden_states)
+
+            ff_output = self.ff(norm_hidden_states)
+
+            if self.use_ada_layer_norm_zero:
+                ff_output = gate_mlp.unsqueeze(1) * ff_output
+
+            # -> (7) ToMe u_m
+            hidden_states = u_m(ff_output) + hidden_states
 
             return hidden_states
 
