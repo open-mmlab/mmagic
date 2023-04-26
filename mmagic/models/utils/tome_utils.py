@@ -51,11 +51,12 @@ def build_mmagic_tomesd_block(block_class: Type[torch.nn.Module]
             if self.use_ada_layer_norm:
                 norm_hidden_states = self.norm1(hidden_states, timestep)
             elif self.use_ada_layer_norm_zero:
-                norm_hidden_states, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.norm1(
-                    hidden_states,
-                    timestep,
-                    class_labels,
-                    hidden_dtype=hidden_states.dtype)
+                norm_hidden_states, gate_msa,\
+                    shift_mlp, scale_mlp, gate_mlp = self.norm1(
+                                    hidden_states,
+                                    timestep,
+                                    class_labels,
+                                    hidden_dtype=hidden_states.dtype)
             else:
                 norm_hidden_states = self.norm1(hidden_states)
 
@@ -63,7 +64,10 @@ def build_mmagic_tomesd_block(block_class: Type[torch.nn.Module]
             norm_hidden_states = m_a(norm_hidden_states)
 
             # 1. Self-Attention
-            cross_attention_kwargs = cross_attention_kwargs if cross_attention_kwargs is not None else {}
+            if cross_attention_kwargs is not None:
+                cross_attention_kwargs = cross_attention_kwargs
+            else:
+                cross_attention_kwargs = {}
             attn_output = self.attn1(
                 norm_hidden_states,
                 encoder_hidden_states=encoder_hidden_states
