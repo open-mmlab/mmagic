@@ -52,8 +52,10 @@ def build_mmagic_tomesd_block(block_class: Type[torch.nn.Module]
                 norm_hidden_states = self.norm1(hidden_states, timestep)
             elif self.use_ada_layer_norm_zero:
                 norm_hidden_states, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.norm1(
-                    hidden_states, timestep, class_labels, hidden_dtype=hidden_states.dtype
-                )
+                    hidden_states,
+                    timestep,
+                    class_labels,
+                    hidden_dtype=hidden_states.dtype)
             else:
                 norm_hidden_states = self.norm1(hidden_states)
 
@@ -64,7 +66,8 @@ def build_mmagic_tomesd_block(block_class: Type[torch.nn.Module]
             cross_attention_kwargs = cross_attention_kwargs if cross_attention_kwargs is not None else {}
             attn_output = self.attn1(
                 norm_hidden_states,
-                encoder_hidden_states=encoder_hidden_states if self.only_cross_attention else None,
+                encoder_hidden_states=encoder_hidden_states
+                if self.only_cross_attention else None,
                 attention_mask=attention_mask,
                 **cross_attention_kwargs,
             )
@@ -76,8 +79,8 @@ def build_mmagic_tomesd_block(block_class: Type[torch.nn.Module]
 
             if self.attn2 is not None:
                 norm_hidden_states = (
-                    self.norm2(hidden_states, timestep) if self.use_ada_layer_norm else self.norm2(hidden_states)
-                )
+                    self.norm2(hidden_states, timestep)
+                    if self.use_ada_layer_norm else self.norm2(hidden_states))
                 # -> (4) ToMe m_c
                 norm_hidden_states = m_c(norm_hidden_states)
 
@@ -95,7 +98,8 @@ def build_mmagic_tomesd_block(block_class: Type[torch.nn.Module]
             norm_hidden_states = self.norm3(hidden_states)
 
             if self.use_ada_layer_norm_zero:
-                norm_hidden_states = norm_hidden_states * (1 + scale_mlp[:, None]) + shift_mlp[:, None]
+                norm_hidden_states = norm_hidden_states * (
+                    1 + scale_mlp[:, None]) + shift_mlp[:, None]
 
             # -> (6) ToMe m_m
             norm_hidden_states = m_m(norm_hidden_states)
