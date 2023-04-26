@@ -25,8 +25,7 @@ model = dict(
         resi_connection='1conv'),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
-                                                             255.]))
+        type='DataPreprocessor', mean=[0., 0., 0.], std=[255., 255., 255.]))
 
 test_pipeline = [
     dict(
@@ -41,7 +40,7 @@ test_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='cv2'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 test_dataloader = dict(

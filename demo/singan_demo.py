@@ -12,11 +12,11 @@ from mmengine.runner import load_checkpoint, set_random_seed
 # yapf: disable
 sys.path.append(os.path.abspath(os.path.join(__file__, '../..')))  # isort:skip  # noqa
 
-from mmedit.engine import *  # isort:skip  # noqa: F401,F403,E402
-from mmedit.datasets import *  # isort:skip  # noqa: F401,F403,E402
-from mmedit.models import *  # isort:skip  # noqa: F401,F403,E402
+from mmagic.engine import *  # isort:skip  # noqa: F401,F403,E402
+from mmagic.datasets import *  # isort:skip  # noqa: F401,F403,E402
+from mmagic.models import *  # isort:skip  # noqa: F401,F403,E402
 
-from mmedit.registry import MODELS  # isort:skip  # noqa
+from mmagic.registry import MODELS  # isort:skip  # noqa
 
 # yapf: enable
 
@@ -58,7 +58,7 @@ def _tensor2img(img):
 
 @torch.no_grad()
 def main():
-    MMLogger.get_instance('mmedit')
+    MMLogger.get_instance('mmagic')
 
     args = parse_args()
     cfg = Config.fromfile(args.config)
@@ -71,7 +71,7 @@ def main():
         set_random_seed(args.seed, deterministic=args.deterministic)
 
     # set scope manually
-    cfg.model['_scope_'] = 'mmedit'
+    cfg.model['_scope_'] = 'mmagic'
     # build the model and load checkpoint
     model = MODELS.build(cfg.model)
 

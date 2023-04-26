@@ -16,8 +16,8 @@ The test datasets (Rain100H, Rain100L, Test100, Test1200, Test2800) can be downl
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

@@ -7,12 +7,12 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import (LTE, TTSR, EditDataPreprocessor, SearchTransformer,
+from mmagic.models import (LTE, TTSR, DataPreprocessor, SearchTransformer,
                            TTSRDiscriminator, TTSRNet)
-from mmedit.models.losses import (GANLoss, L1Loss, PerceptualVGG,
+from mmagic.models.losses import (GANLoss, L1Loss, PerceptualVGG,
                                   TransferalPerceptualLoss)
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
 
 
 @pytest.mark.skipif(
@@ -50,7 +50,7 @@ def test_ttsr(init_weights):
             loss_weight=1e-3,
             real_label_val=1.0,
             fake_label_val=0),
-        data_preprocessor=EditDataPreprocessor(
+        data_preprocessor=DataPreprocessor(
             mean=[127.5, 127.5, 127.5],
             std=[127.5, 127.5, 127.5],
         ))
@@ -80,7 +80,7 @@ def test_ttsr(init_weights):
 
     # prepare data
     inputs = torch.rand(1, 3, 32, 32)
-    data_sample = EditDataSample(
+    data_sample = DataSample(
         gt_img=torch.rand(3, 128, 128),
         ref_img=torch.rand(3, 128, 128),
         img_lq=torch.rand(3, 128, 128),
@@ -101,7 +101,7 @@ def test_ttsr(init_weights):
     assert output[0].output.pred_img.shape == (3, 128, 128)
 
     # feat
-    stacked_data_sample = EditDataSample.stack([data_sample])
+    stacked_data_sample = DataSample.stack([data_sample])
     output = model(
         torch.rand(1, 3, 32, 32), stacked_data_sample, mode='tensor')
     assert output.shape == (1, 3, 128, 128)

@@ -5,7 +5,7 @@ import os.path as osp
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import (GenerateFrameIndices,
+from mmagic.datasets.transforms import (GenerateFrameIndices,
                                         GenerateFrameIndiceswithPadding,
                                         GenerateSegmentIndices)
 

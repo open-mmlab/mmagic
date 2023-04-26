@@ -1,7 +1,6 @@
 model = dict(
     type='Glide',
-    data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[127.5], std=[127.5]),
+    data_preprocessor=dict(type='DataPreprocessor', mean=[127.5], std=[127.5]),
     unet=dict(
         type='Text2ImUNet',
         image_size=64,

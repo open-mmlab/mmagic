@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        If you have already identified the reason, we strongly appreciate you creating a new PR to fix it [here](https://github.com/open-mmlab/mmediting/pulls)!
+        If you have already identified the reason, we strongly appreciate you creating a new PR to fix it [here](https://github.com/open-mmlab/mmagic/pulls)!
         If this issue is about installing MMCV, please file an issue at [MMCV](https://github.com/open-mmlab/mmcv/issues/new/choose).
         If you need our help, please fill in as much of the following form as you're able to.
 
@@ -18,11 +18,11 @@ body:
       label: Prerequisite
       description: Please check the following items before creating a new issue.
       options:
-      - label: I have searched [Issues](https://github.com/open-mmlab/mmediting/issues) and [Discussions](https://github.com/open-mmlab/mmediting/discussions) but cannot get the expected help.
+      - label: I have searched [Issues](https://github.com/open-mmlab/mmagic/issues) and [Discussions](https://github.com/open-mmlab/mmagic/discussions) but cannot get the expected help.
         required: true
-      - label: I have read the [FAQ documentation](https://mmediting.readthedocs.io/en/latest/faq.html) but cannot get the expected help.
+      - label: I have read the [FAQ documentation](https://mmagic.readthedocs.io/en/latest/faq.html) but cannot get the expected help.
         required: true
-      - label: The bug has not been fixed in the [latest version (main)](https://github.com/open-mmlab/mmediting) or [latest version (0.x)](https://github.com/open-mmlab/mmediting/tree/0.x).
+      - label: The bug has not been fixed in the [latest version (main)](https://github.com/open-mmlab/mmagic) or [latest version (0.x)](https://github.com/open-mmlab/mmagic/tree/0.x).
         required: true
 
   - type: dropdown
@@ -42,8 +42,8 @@ body:
       label: Branch
       description: The problem arises when I'm working on
       options:
-        - main branch https://github.com/open-mmlab/mmediting
-        - 0.x branch https://github.com/open-mmlab/mmediting/tree/0.x
+        - main branch https://github.com/open-mmlab/mmagic
+        - 0.x branch https://github.com/open-mmlab/mmagic/tree/0.x
     validations:
       required: true
 
@@ -52,7 +52,7 @@ body:
     attributes:
       label: Environment
       description: |
-        Please run `python mmedit/utils/collect_env.py` to collect necessary environment information and copy-paste it here.
+        Please run `python mmagic/utils/collect_env.py` to collect necessary environment information and copy-paste it here.
         You may add additional information that may be helpful for locating the problem, such as
           - How you installed PyTorch \[e.g., pip, conda, source\]
           - Other environment variables that may be related (such as `$PATH`, `$LD_LIBRARY_PATH`, `$PYTHONPATH`, etc.)

@@ -2,7 +2,7 @@
 import os
 from pathlib import Path
 
-from mmedit.datasets import BasicFramesDataset
+from mmagic.datasets import BasicFramesDataset
 
 
 class TestFramesDatasets:

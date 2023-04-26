@@ -2,7 +2,7 @@
 import os
 from pathlib import Path
 
-from mmedit.datasets import MSCoCoDataset
+from mmagic.datasets import MSCoCoDataset
 
 
 class TestMSCoCoDatasets:

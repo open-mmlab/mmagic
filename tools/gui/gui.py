@@ -38,7 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.setWindowTitle('MMEditing Viewer')
+        self.setWindowTitle('MMagic Viewer')
         # # MenuBar
         # menubar_Aaa = self.menuBar().addMenu('Aaa')
         # menubar_Bbb = self.menuBar().addMenu('Bbb')

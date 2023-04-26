@@ -7,11 +7,11 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models.data_preprocessors import EditDataPreprocessor
-from mmedit.models.editors import (RealBasicVSR, RealBasicVSRNet,
+from mmagic.models.data_preprocessors import DataPreprocessor
+from mmagic.models.editors import (RealBasicVSR, RealBasicVSRNet,
                                    UNetDiscriminatorWithSpectralNorm)
-from mmedit.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
-from mmedit.structures import EditDataSample
+from mmagic.models.losses import GANLoss, L1Loss, PerceptualLoss, PerceptualVGG
+from mmagic.structures import DataSample
 
 
 @patch.object(PerceptualVGG, 'init_weights')
@@ -59,7 +59,7 @@ def test_real_basicvsr(init_weights):
         is_use_sharpened_gt_in_pixel=True,
         is_use_sharpened_gt_in_percep=True,
         is_use_sharpened_gt_in_gan=False,
-        data_preprocessor=EditDataPreprocessor())
+        data_preprocessor=DataPreprocessor())
 
     assert isinstance(model, RealBasicVSR)
     assert isinstance(model.generator, RealBasicVSRNet)
@@ -80,7 +80,7 @@ def test_real_basicvsr(init_weights):
     # prepare data
     inputs = torch.rand(5, 3, 64, 64)
     target = torch.rand(5, 3, 256, 256)
-    data_sample = EditDataSample(gt_img=target, gt_unsharp=target)
+    data_sample = DataSample(gt_img=target, gt_unsharp=target)
     data = dict(inputs=[inputs], data_samples=[data_sample])
 
     # train

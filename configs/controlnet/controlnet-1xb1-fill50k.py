@@ -33,7 +33,7 @@ model = dict(
         type='DDIMScheduler',
         from_pretrained=stable_diffusion_v15_url,
         subfolder='scheduler'),
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     init_cfg=dict(type='init_from_unet'))
 
 # config for training
@@ -45,7 +45,7 @@ pipeline = [
     dict(type='LoadImageFromFile', key='source', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='target', channel_order='rgb'),
     dict(
-        type='PackEditInputs',
+        type='PackInputs',
         keys=['source', 'target'],
         data_keys='prompt',
         meta_keys=[
@@ -70,7 +70,7 @@ test_cfg = test_evaluator = test_dataloader = None
 # hooks
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=300,
         fixed_input=True,
         # visualize train dataset

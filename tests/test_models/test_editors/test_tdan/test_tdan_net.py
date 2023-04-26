@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import TDANNet
+from mmagic.models.editors import TDANNet
 
 
 def test_tdan_net():

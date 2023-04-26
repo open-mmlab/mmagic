@@ -38,8 +38,8 @@ python tools/dataset_converters/vid4/preprocess_vid4_dataset.py --data-root ./da
 文件目录结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

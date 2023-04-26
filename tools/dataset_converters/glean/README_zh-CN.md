@@ -28,8 +28,8 @@ python tools/dataset_converters/glean/preprocess_cat_train_dataset.py --lmdb-pat
 生成的数据存储在 `cat_train` 目录下，目录结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -58,8 +58,8 @@ python tools/dataset_converters/glean/preprocess_cat_test_dataset.py --data-path
 生成的数据存储在 `cat_test` 目录下，目录结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -99,8 +99,8 @@ python tools/dataset_converters/glean/preprocess_ffhq_celebahq_dataset.py --data
 生成的数据存储在 `ffhq` 目录下，目录结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -140,8 +140,8 @@ python tools/dataset_converters/glean/preprocess_ffhq_celebahq_dataset.py --data
 生成的数据存储在 `CelebA-HQ` 目录下，目录结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configsdata
 ├── data
@@ -160,8 +160,8 @@ mmediting
 文件目录重构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

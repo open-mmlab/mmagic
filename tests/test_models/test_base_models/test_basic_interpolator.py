@@ -2,9 +2,9 @@
 import torch
 from torch import nn
 
-from mmedit.models import BasicInterpolator
-from mmedit.models.losses import L1Loss
-from mmedit.registry import MODELS
+from mmagic.models import BasicInterpolator
+from mmagic.models.losses import L1Loss
+from mmagic.registry import MODELS
 
 
 @MODELS.register_module()

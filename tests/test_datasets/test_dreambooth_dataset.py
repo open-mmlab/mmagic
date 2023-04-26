@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
 
-from mmedit.datasets import DreamBoothDataset
+from mmagic.datasets import DreamBoothDataset
 
 # we use controlnet's dataset to test
 data_dir = os.path.join(__file__, '../', '../', 'data', 'controlnet')

@@ -7,7 +7,7 @@ import torch
 from mmengine import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
-from mmedit.models.editors.stylegan2.ada.augment import AugmentPipe
+from mmagic.models.editors.stylegan2.ada.augment import AugmentPipe
 
 
 class TestAuementPipe(TestCase):

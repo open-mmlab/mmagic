@@ -38,8 +38,8 @@ python tools/dataset_converters/vid4/preprocess_vid4_dataset.py --data-root ./da
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

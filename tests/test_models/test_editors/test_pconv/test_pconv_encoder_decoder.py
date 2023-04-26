@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors import PConvEncoderDecoder
+from mmagic.models.editors import PConvEncoderDecoder
 
 
 def test_pconv_encdec():

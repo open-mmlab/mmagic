@@ -6,8 +6,8 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.datasets.transforms import LoadImageFromFile
-from mmedit.evaluation.metrics import MattingMSE
+from mmagic.datasets.transforms import LoadImageFromFile
+from mmagic.evaluation.metrics import MattingMSE
 
 
 class TestMattingMetrics:

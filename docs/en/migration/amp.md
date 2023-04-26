@@ -5,7 +5,7 @@ Instead, users must use `auto_fp16` decorator to warp the specific submodule and
 This allows for fine-grained control of the model parameters, but is more cumbersome to use.
 In addition, users need to handle operations such as scaling of the loss function during the training process by themselves.
 
-In 1.x version, MMEditing use `AmpOptimWrapper` provided by MMEngine.
+MMagic 1.x use `AmpOptimWrapper` provided by MMEngine.
 In `AmpOptimWrapper.update_params`, gradient scaling and `GradScaler` updating is automatically performed.
 And in `optim_context` context manager, `auto_cast` is applied to the entire forward process.
 
@@ -104,7 +104,7 @@ optim_wrapper = dict(
 ```python
 # code
 import torch.nn as nn
-from mmedit.registry import MODULES
+from mmagic.registry import MODULES
 from mmengine.model import BaseModel
 
 
@@ -141,7 +141,7 @@ class DemoModel(BaseModel):
 </thead>
 </table>
 
-To avoid user modifications to the configuration file, MMEditing provides the `--amp` option in `train.py`, which allows the user to start AMP training without modifying the configuration file.
+To avoid user modifications to the configuration file, MMagic provides the `--amp` option in `train.py`, which allows the user to start AMP training without modifying the configuration file.
 Users can start AMP training by following command:
 
 ```bash

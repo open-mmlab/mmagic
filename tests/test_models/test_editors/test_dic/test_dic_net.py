@@ -5,9 +5,9 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models.editors import (FeedbackBlock, FeedbackBlockCustom,
+from mmagic.models.editors import (FeedbackBlock, FeedbackBlockCustom,
                                    FeedbackBlockHeatmapAttention)
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 def test_feedback_block():

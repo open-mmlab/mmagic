@@ -21,8 +21,8 @@ If this PR introduces a new feature, it is better to list some use cases here, a
 
 **Before PR**:
 
-- [ ] I have read and followed the workflow indicated in the [CONTRIBUTING.md](https://github.com/open-mmlab/mmediting/blob/master/.github/CONTRIBUTING.md) to create this PR.
-- [ ] Pre-commit or linting tools indicated in [CONTRIBUTING.md](https://github.com/open-mmlab/mmediting/blob/master/.github/CONTRIBUTING.md) are used to fix the potential lint issues.
+- [ ] I have read and followed the workflow indicated in the [CONTRIBUTING.md](https://github.com/open-mmlab/mmagic/blob/main/.github/CONTRIBUTING.md) to create this PR.
+- [ ] Pre-commit or linting tools indicated in [CONTRIBUTING.md](https://github.com/open-mmlab/mmagic/blob/main/.github/CONTRIBUTING.md) are used to fix the potential lint issues.
 - [ ] Bug fixes are covered by unit tests, the case that causes the bug should be added in the unit tests.
 - [ ] New functionalities are covered by complete unit tests. If not, please add more unit test to ensure the correctness.
 - [ ] The documentation has been modified accordingly, including docstring or example tutorials.

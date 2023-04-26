@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
-from mmedit.datasets import SinGANDataset
-from mmedit.utils import register_all_modules
+from mmagic.datasets import SinGANDataset
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -19,7 +19,7 @@ class TestSinGANDataset(object):
         cls.scale_factor_init = 0.75
         cls.pipeline = [
             dict(
-                type='PackEditInputs',
+                type='PackInputs',
                 keys=[f'real_scale{i}' for i in range(cls.num_scales)])
         ]
 

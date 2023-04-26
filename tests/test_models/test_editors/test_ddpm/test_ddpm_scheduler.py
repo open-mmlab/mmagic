@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.diffusion_schedulers.ddpm_scheduler import EditDDPMScheduler
+from mmagic.models.diffusion_schedulers.ddpm_scheduler import EditDDPMScheduler
 
 
 def test_ddpm():

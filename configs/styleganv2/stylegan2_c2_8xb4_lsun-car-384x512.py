@@ -51,7 +51,7 @@ train_pipeline = [
         padding=((64, 64), (0, 0), (0, 0)),
     ),
     dict(type='Flip', keys=['gt'], direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = train_pipeline
@@ -88,7 +88,7 @@ test_dataloader = dict(
 # VIS_HOOK
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))

@@ -7,7 +7,7 @@ import os.path as osp
 from mmengine.config import Config, DictAction
 from mmengine.runner import Runner
 
-from mmedit.utils import print_colored_log
+from mmagic.utils import print_colored_log
 
 
 def parse_args():

@@ -13,7 +13,7 @@ model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
 model = dict(
     type='AOTInpaintor',
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[127.5],
         std=[127.5],
     ),
@@ -97,7 +97,7 @@ train_pipeline = [
         saturation=0.5,
         hue=0.5),
     dict(type='GetMaskedImage'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 test_pipeline = [
@@ -118,7 +118,7 @@ test_pipeline = [
         crop_size=(512, 512),
     ),
     dict(type='GetMaskedImage'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 train_dataloader = dict(
@@ -139,8 +139,8 @@ train_cfg = dict(
     max_iters=500002,
     val_interval=50000,
 )
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(

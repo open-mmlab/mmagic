@@ -28,8 +28,8 @@ python tools/dataset_converters/glean/preprocess_cat_train_dataset.py --lmdb-pat
 The generated data is stored under `cat_train` and the folder structure is as follows.
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -58,8 +58,8 @@ python tools/dataset_converters/glean/preprocess_cat_test_dataset.py --data-path
 The generated data is stored under `cat_test` and the folder structure is as follows.
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -99,8 +99,8 @@ python tools/dataset_converters/glean/preprocess_ffhq_celebahq_dataset.py --data
 The generated data is stored under `ffhq` and the folder structure is as follows.
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -140,8 +140,8 @@ python tools/dataset_converters/glean/preprocess_ffhq_celebahq_dataset.py --data
 The generated data is stored under `CelebA-HQ` and the folder structure is as follows.
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configsdata
 ├── data
@@ -160,8 +160,8 @@ We merge FFHQ(`ffhq/images`) and CelebA-HQ(`CelebA-HQ/GT`) to generate FFHQ_Cele
 The folder structure should looks like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

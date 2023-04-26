@@ -5,10 +5,10 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models.utils import (build_module, generation_init_weights,
+from mmagic.models.utils import (build_module, generation_init_weights,
                                  get_module_device, get_valid_num_batches,
                                  set_requires_grad)
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 def test_generation_init_weights():

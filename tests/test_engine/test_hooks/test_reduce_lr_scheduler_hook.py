@@ -6,7 +6,7 @@ import torch
 import torch.nn.functional as F
 from mmengine import MessageHub
 
-from mmedit.engine.hooks import ReduceLRSchedulerHook
+from mmagic.engine.hooks import ReduceLRSchedulerHook
 
 
 class ToyModel(torch.nn.Module):

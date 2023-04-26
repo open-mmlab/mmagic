@@ -5,7 +5,7 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.models.editors.cyclegan import ResnetGenerator
+from mmagic.models.editors.cyclegan import ResnetGenerator
 
 
 @pytest.mark.skipif(

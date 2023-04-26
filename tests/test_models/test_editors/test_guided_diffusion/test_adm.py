@@ -4,8 +4,8 @@ from unittest import TestCase
 import pytest
 import torch
 
-from mmedit.models import AblatedDiffusionModel
-from mmedit.utils import register_all_modules
+from mmagic.models import AblatedDiffusionModel
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -15,7 +15,7 @@ class TestAdm(TestCase):
     def setup_class(cls):
         # test init
         cls.model = AblatedDiffusionModel(
-            data_preprocessor=dict(type='EditDataPreprocessor'),
+            data_preprocessor=dict(type='DataPreprocessor'),
             unet=dict(
                 type='DenoisingUnet',
                 image_size=64,

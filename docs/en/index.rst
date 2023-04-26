@@ -1,14 +1,14 @@
-Welcome to MMEditing's documentation!
+Welcome to MMagic's documentation!
 =====================================
 
 Languages:
-`English <https://mmediting.readthedocs.io/en/latest/>`_
+`English <https://mmagic.readthedocs.io/en/latest/>`_
 |
-`简体中文 <https://mmediting.readthedocs.io/zh_CN/latest/>`_
+`简体中文 <https://mmagic.readthedocs.io/zh_CN/latest/>`_
 
-MMEditing is an open-source toolbox for image and video processing, editing and synthesis.
+MMagic (**M**\ultimodal **A**\dvanced, **G**\enerative, and **I**\ntelligent **C**\reation) is an open-source AIGC toolbox for professional AI researchers and machine learning engineers to explore image and video processing, editing and generation.
 
-MMEditing supports various foundamental generative models, including:
+MMagic supports various foundamental generative models, including:
 
 * Unconditional Generative Adversarial Networks (GANs)
 * Conditional Generative Adversarial Networks (GANs)
@@ -16,19 +16,23 @@ MMEditing supports various foundamental generative models, including:
 * Diffusion Models
 * And many other generative models are coming soon!
 
+MMagic supports various applications, including:
 
-MMEditing supports various applications, including:
+- Text-to-Image
+- Image-to-image translation
+- 3D-aware generation
+- Image super-resolution
+- Video super-resolution
+- Video frame interpolation
+- Image inpainting
+- Image matting
+- Image restoration
+- Image colorization
+- Image generation
+- And many other applications are coming soon!
 
-* Image super-resolution
-* Video super-resolution
-* Video frame interpolation
-* Image inpainting
-* Image matting
-* Image-to-image translation
-* And many other applications are coming soon!
-
-MMEditing is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
-Codes are available on `GitHub <https://github.com/open-mmlab/mmediting>`_.
+MMagic is based on `PyTorch <https://pytorch.org>`_ and is a part of the `OpenMMLab project <https://openmmlab.com/>`_.
+Codes are available on `GitHub <https://github.com/open-mmlab/mmagic>`_.
 
 
 Documentation
@@ -117,24 +121,24 @@ Documentation
    :maxdepth: 2
    :caption: API Reference
 
-   mmedit.apis.inferencers <autoapi/mmedit/apis/inferencers/index.rst>
-   mmedit.structures <autoapi/mmedit/structures/index.rst>
-   mmedit.datasets <autoapi/mmedit/datasets/index.rst>
-   mmedit.datasets.transforms <autoapi/mmedit/datasets/transforms/index.rst>
-   mmedit.evaluation <autoapi/mmedit/evaluation/index.rst>
-   mmedit.visualization <autoapi/mmedit/visualization/index.rst>
-   mmedit.engine.hooks <autoapi/mmedit/engine/hooks/index.rst>
-   mmedit.engine.logging <autoapi/mmedit/engine/logging/index.rst>
-   mmedit.engine.optimizers <autoapi/mmedit/engine/optimizers/index.rst>
-   mmedit.engine.runner <autoapi/mmedit/engine/runner/index.rst>
-   mmedit.engine.schedulers <autoapi/mmedit/engine/schedulers/index.rst>
-   mmedit.models.base_archs <autoapi/mmedit/models/base_archs/index.rst>
-   mmedit.models.base_models <autoapi/mmedit/models/base_models/index.rst>
-   mmedit.models.losses <autoapi/mmedit/models/losses/index.rst>
-   mmedit.models.data_preprocessors <autoapi/mmedit/models/data_preprocessors/index.rst>
-   mmedit.models.utils <autoapi/mmedit/models/losses/utils.rst>
-   mmedit.models.editors <autoapi/mmedit/models/editors/index.rst>
-   mmedit.utils <autoapi/mmedit/utils/index.rst>
+   mmagic.apis.inferencers <autoapi/mmagic/apis/inferencers/index.rst>
+   mmagic.structures <autoapi/mmagic/structures/index.rst>
+   mmagic.datasets <autoapi/mmagic/datasets/index.rst>
+   mmagic.datasets.transforms <autoapi/mmagic/datasets/transforms/index.rst>
+   mmagic.evaluation <autoapi/mmagic/evaluation/index.rst>
+   mmagic.visualization <autoapi/mmagic/visualization/index.rst>
+   mmagic.engine.hooks <autoapi/mmagic/engine/hooks/index.rst>
+   mmagic.engine.logging <autoapi/mmagic/engine/logging/index.rst>
+   mmagic.engine.optimizers <autoapi/mmagic/engine/optimizers/index.rst>
+   mmagic.engine.runner <autoapi/mmagic/engine/runner/index.rst>
+   mmagic.engine.schedulers <autoapi/mmagic/engine/schedulers/index.rst>
+   mmagic.models.archs <autoapi/mmagic/models/archs/index.rst>
+   mmagic.models.base_models <autoapi/mmagic/models/base_models/index.rst>
+   mmagic.models.losses <autoapi/mmagic/models/losses/index.rst>
+   mmagic.models.data_preprocessors <autoapi/mmagic/models/data_preprocessors/index.rst>
+   mmagic.models.utils <autoapi/mmagic/models/losses/utils.rst>
+   mmagic.models.editors <autoapi/mmagic/models/editors/index.rst>
+   mmagic.utils <autoapi/mmagic/utils/index.rst>
 
 
 .. toctree::

@@ -8,9 +8,9 @@ from mmengine.dataset import DefaultSampler, InfiniteSampler, pseudo_collate
 from mmengine.runner import IterBasedTrainLoop
 from torch.utils.data.dataloader import DataLoader
 
-from mmedit.engine import PGGANFetchDataHook
-from mmedit.registry import DATASETS, MODELS
-from mmedit.utils import register_all_modules
+from mmagic.engine import PGGANFetchDataHook
+from mmagic.registry import DATASETS, MODELS
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -19,7 +19,7 @@ class TestPGGANFetchDataHook(TestCase):
 
     pggan_cfg = dict(
         type='ProgressiveGrowingGAN',
-        data_preprocessor=dict(type='EditDataPreprocessor'),
+        data_preprocessor=dict(type='DataPreprocessor'),
         noise_size=512,
         generator=dict(type='PGGANGenerator', out_scale=8),
         discriminator=dict(type='PGGANDiscriminator', in_scale=8),
