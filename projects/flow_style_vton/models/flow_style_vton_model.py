@@ -5,8 +5,8 @@ import torch.nn.functional as F
 from mmengine.model import BaseModel
 from mmengine.runner.checkpoint import _load_checkpoint
 
-from mmedit.registry import MODELS
-from mmedit.utils.typing import ForwardInputs
+from mmagic.registry import MODELS
+from mmagic.utils.typing import ForwardInputs
 
 
 @MODELS.register_module()

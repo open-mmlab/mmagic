@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 @MODELS.register_module()
@@ -135,7 +135,6 @@ class ModulatedConv2d(nn.Module):
 
         if not normalize_mlp:
             self.mlp_class_std = EqualLinear(latent_dim, fin)
-
         if padding_type == 'reflect':
             self.padding = nn.ReflectionPad2d(padding_size)
         else:

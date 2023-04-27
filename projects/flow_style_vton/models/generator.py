@@ -3,7 +3,7 @@ import os
 import torch
 import torch.nn as nn
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 @MODELS.register_module()
