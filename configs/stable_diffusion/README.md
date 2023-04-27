@@ -41,9 +41,10 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 
 ## Pretrained models
 
-|                               Model                               | Dataset | Download |
-| :---------------------------------------------------------------: | :-----: | :------: |
-| [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py) |    -    |    -     |
+|                                        Model                                         | Dataset | Download |
+| :----------------------------------------------------------------------------------: | :-----: | :------: |
+|          [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py)           |    -    |    -     |
+| [stable_diffusion_v1.5_tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     |
 
 We use stable diffusion v1.5 weights. This model has several weights including vae, unet and clip.
 
@@ -84,7 +85,7 @@ image.save('robot.png')
 
 ## Use ToMe to accelerate your stable diffusion model
 
-We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed based on [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` in [stable-diffusion-ddim](configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py).
+We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed based on [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` as shown in [stable_diffusion_v1.5_tomesd](configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py).
 
 ```python
 ...
@@ -105,15 +106,15 @@ model = dict(
         ratio=0.5))
 ```
 
-The detailed settings for **tomesd_cfg** are as follows:
+The detailed settings for `tomesd_cfg` are as follows:
 
-- `ratio` **(float)**: The ratio of tokens to merge. I.e., 0.4 would reduce the total number of tokens by 40%.The maximum value for this is 1-(1/(`sx` * `sy`)). **By default, the max ratio is 0.75, usually \<= 0.5 is recommended.** Higher values result in more speed-up, but with more visual quality loss.
-- `max_downsample` **(int)**: Apply ToMe to layers with at most this amount of downsampling. E.g., 1 only applies to layers with no downsampling, while 8 applies to all layers. Should be chosen from $1, 2, 4, 8$. **1 and 2 are recommended.**
-- `sx`, `sy` **(int, int)**: The stride for computing dst sets. A higher stride means you can merge more tokens, **default setting of (2, 2) works well in most cases**. `sx` and `sy` do not need to divide image size.
-- `use_rand` **(bool)**: Whether or not to allow random perturbations when computing dst sets. By default: True, but if you're having weird artifacts you can try turning this off.
-- `merge_attn` **(bool)**: Whether or not to merge tokens for attention **(recommended)**.
-- `merge_crossattn` **(bool)**: Whether or not to merge tokens for cross attention **(not recommended)**.
-- `merge_mlp` **(bool)**: Whether or not to merge tokens for the mlp layers **(particular not recommended)**.
+- `ratio (float)`: The ratio of tokens to merge. For example, 0.4 would reduce the total number of tokens by 40%.The maximum value for this is 1-(1/(`sx` * `sy`)). **By default, the max ratio is 0.75, usually \<= 0.5 is recommended.** Higher values result in more speed-up, but with more visual quality loss.
+- `max_downsample (int)`: Apply ToMe to layers with at most this amount of downsampling. E.g., 1 only applies to layers with no downsampling, while 8 applies to all layers. Should be chosen from 1, 2, 4, 8. **1, 2 are recommended.**
+- `sx, sy (int, int)`: The stride for computing dst sets. A higher stride means you can merge more tokens, **default setting of (2, 2) works well in most cases**. `sx` and `sy` do not need to divide image size.
+- `use_rand (bool)`: Whether or not to allow random perturbations when computing dst sets. By default: True, but if you're having weird artifacts you can try turning this off.
+- `merge_attn (bool)`: Whether or not to merge tokens for attention **(recommended)**.
+- `merge_crossattn (bool)`: Whether or not to merge tokens for cross attention **(not recommended)**.
+- `merge_mlp (bool)`: Whether or not to merge tokens for the mlp layers **(especially not recommended)**.
 
 For more details about the **tomesd** setting, please refer to [Token Merging for Stable Diffusion](https://arxiv.org/abs/2303.17604).
 
@@ -128,9 +129,9 @@ from mmengine.registry import init_default_scope
 
 init_default_scope('mmagic')
 
-_device = 3
+_device = 0
 work_dir = '/path/to/your/work_dir'
-config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py'
+config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-tomesd_0.5.py'
 config = Config.fromfile(config).copy()
 # # change the 'pretrained_model_path' if you have downloaded the weights manually
 # config.model.unet.from_pretrained = '/path/to/your/stable-diffusion-v1-5'
@@ -143,7 +144,7 @@ prompt = 'A mecha robot in a favela in expressionist style'
 
 # inference time evaluation params
 size = 512
-ratios = [0.75, 0.75]
+ratios = [0.5, 0.75]
 samples_perprompt = 5
 
 t = time.time()
@@ -167,11 +168,11 @@ for ratio in ratios:
     print(f"Generating 100 images with {samples_perprompt} images per prompt, merging ratio {ratio}, time used : {time.time() - t}s")
 ```
 
-Here are some performance comparisons:
+Here are some inference performance comparisons running on **single RTX 3090** with `torch 2.0.0+cu118` as backends:
 
-|                               Model                               | Dataset | Download |            Ratio            | Size / Num images per prompt |                     Time (s)                      |
-| :---------------------------------------------------------------: | :-----: | :------: | :-------------------------: | :--------------------------: | :-----------------------------------------------: |
-| [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py) |    -    |    -     | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 542.20 <br> 427.65 (↓21.1%) <br>  393.05 (↓27.5%) |
+|                                       Model                                       | Dataset | Download |            Ratio            | Size / Num images per prompt |                     Time (s)                      |
+| :-------------------------------------------------------------------------------: | :-----: | :------: | :-------------------------: | :--------------------------: | :-----------------------------------------------: |
+| [stable_diffusion_v1.5-tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 542.20 <br> 427.65 (↓21.1%) <br>  393.05 (↓27.5%) |
 
 <table align="center">
 <thead>

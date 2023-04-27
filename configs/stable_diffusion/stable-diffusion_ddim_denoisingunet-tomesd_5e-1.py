@@ -80,4 +80,5 @@ model = dict(
         subfolder='text_encoder'),
     tokenizer=stable_diffusion_v15_url,
     scheduler=diffusion_scheduler,
-    test_scheduler=diffusion_scheduler)
+    test_scheduler=diffusion_scheduler,
+    tomesd_cfg=dict(ratio=0.5))
