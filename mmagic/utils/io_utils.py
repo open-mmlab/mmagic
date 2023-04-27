@@ -57,7 +57,7 @@ def download_from_url(url,
     if dest_path.startswith('~'):
         dest_path = os.path.expanduser('~') + dest_path[1:]
 
-    # advoid downloading existed file
+    # avoid downloading existed file
     if os.path.exists(dest_path):
         return dest_path
 

@@ -30,7 +30,7 @@ if transformers is not None:
         _no_split_modules = ['CLIPEncoderLayer']
 
         def __init__(self, config: CLIPConfig):
-            """check result image for stable diffsuion to prevent NSFW content
+            """check result image for stable diffusion to prevent NSFW content
             generated.
 
             Args:
@@ -183,5 +183,5 @@ if transformers is not None:
 else:
 
     def load_clip_submodels(init_cfg, submodels, requires_safety_checker):
-        raise ImportError('Please install tranformers via '
+        raise ImportError('Please install transformers via '
                           '\'pip install transformers\'')

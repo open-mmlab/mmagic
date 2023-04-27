@@ -60,7 +60,7 @@ class EDVR(BaseEditModel):
             if self.tsa_iter is None:
                 raise KeyError(
                     'In TSA mode, train_cfg must contain "tsa_iter".')
-            # only train TSA module at the beginging if with TSA module
+            # only train TSA module at the beginning if with TSA module
             for k, v in self.generator.named_parameters():
                 if 'fusion' not in k:
                     v.requires_grad = False

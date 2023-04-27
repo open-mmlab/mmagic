@@ -59,7 +59,7 @@ class BasicImageDataset(BaseDataset):
             template excludes the file extension. Default: dict().
         search_key (str): The key used for searching the folder to get
             data_list. Default: 'gt'.
-        backend_args (dict, optional): Arguments to instantiate the preifx of
+        backend_args (dict, optional): Arguments to instantiate the prefix of
             uri corresponding backend. Defaults to None.
         suffix (str or tuple[str], optional):  File suffix
             that we are interested in. Default: None.

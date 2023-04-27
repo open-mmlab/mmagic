@@ -136,14 +136,14 @@ class BaseConditionalGAN(BaseGAN):
         # check consistency between gen and disc
         if num_classes_gen is not None and num_classes_disc is not None:
             assert num_classes_disc == num_classes_gen, (
-                '\'num_classes\' is unconsistency between generator and '
+                '\'num_classes\' is inconsistent between generator and '
                 f'discriminator. Receive \'{num_classes_gen}\' and '
                 f'\'{num_classes_disc}\'.')
         model_num_classes = num_classes_gen or num_classes_disc
 
         if num_classes is not None and model_num_classes is not None:
             assert num_classes == model_num_classes, (
-                'Input \'num_classes\' is unconsistency with '
+                'Input \'num_classes\' is inconsistent with '
                 f'model\'s ones. Receive \'{num_classes}\' and '
                 f'\'{model_num_classes}\'.')
 

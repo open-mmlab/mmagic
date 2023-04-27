@@ -43,10 +43,10 @@ class SNGANGenerator(nn.Module):
         output_scale (int): Output scale for the generated image.
         num_classes (int, optional): The number classes you would like to
             generate. This arguments would influence the structure of the
-            intermedia blocks and label sampling operation in ``forward``
+            intermediate blocks and label sampling operation in ``forward``
             (e.g. If num_classes=0, ConditionalNormalization layers would
             degrade to unconditional ones.). This arguments would be passed
-            to intermedia blocks by overwrite their config. Defaults to 0.
+            to intermediate blocks by overwrite their config. Defaults to 0.
         base_channels (int, optional): The basic channel number of the
             generator. The other layers contains channels based on this number.
             Default to 64.
@@ -66,7 +66,7 @@ class SNGANGenerator(nn.Module):
             self-attention corresponding to this index would be ignored.
             Default to 0.
         channels_cfg (list | dict[list], optional): Config for input channels
-            of the intermedia blocks. If list is passed, each element of the
+            of the intermediate blocks. If list is passed, each element of the
             list means the input channels of current block is how many times
             compared to the ``base_channels``. For block ``i``, the input and
             output channels should be ``channels_cfg[i]`` and
@@ -74,7 +74,7 @@ class SNGANGenerator(nn.Module):
             should be the output scale and corresponding value should be a list
             to define channels.  Default: Please refer to
             ``_defualt_channels_cfg``.
-        blocks_cfg (dict, optional): Config for the intermedia blocks.
+        blocks_cfg (dict, optional): Config for the intermediate blocks.
             Defaults to ``dict(type='SNGANGenResBlock')``
         act_cfg (dict, optional): Activation config for the final output
             layer. Defaults to ``dict(type='ReLU')``.
@@ -103,7 +103,7 @@ class SNGANGenerator(nn.Module):
         init_cfg (string, optional): Config for weight initialization.
             Defaults to ``dict(type='BigGAN')``.
         pretrained (str | dict, optional): Path for the pretrained model or
-            dict containing information for pretained models whose necessary
+            dict containing information for pretrained models whose necessary
             key is 'ckpt_path'. Besides, you can also provide 'prefix' to load
             the generator part from the whole state dict.  Defaults to None.
         rgb_to_bgr (bool, optional): Whether to reformat the output channels
@@ -279,7 +279,7 @@ class SNGANGenerator(nn.Module):
             if label.ndim != 1:
                 assert all([s == 1 for s in label.shape[1:]])
                 label = label.view(-1)
-            assert label.ndim == 1, ('The label shoube be in shape of (n, )'
+            assert label.ndim == 1, ('The label should be in shape of (n, )'
                                      f'but got {label.shape}.')
             label_batch = label
         elif callable(label):
@@ -339,7 +339,7 @@ class SNGANGenerator(nn.Module):
 
         Args:
             pretrained (str | dict, optional): Path for the pretrained model or
-                dict containing information for pretained models whose
+                dict containing information for pretrained models whose
                 necessary key is 'ckpt_path'. Besides, you can also provide
                 'prefix' to load the generator part from the whole state dict.
                 Defaults to None.
@@ -423,5 +423,5 @@ class SNGANGenerator(nn.Module):
                                           f'\'{self.init_type}\'')
 
         else:
-            raise TypeError("'pretrined' must be a str or None. "
+            raise TypeError("'pretrained' must be a str or None. "
                             f'But receive {type(pretrained)}.')

@@ -54,7 +54,7 @@ class BasicFramesDataset(BaseDataset):
             template excludes the file extension. Default: '{}'.
         search_key (str): The key used for searching the folder to get
             data_list. Default: 'gt'.
-        backend_args (dict, optional): Arguments to instantiate the preifx of
+        backend_args (dict, optional): Arguments to instantiate the prefix of
             uri corresponding backend. Defaults to None.
         depth (int): The depth of path. Default: 1
         num_input_frames (None | int): Number of input frames. Default: None.

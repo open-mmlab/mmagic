@@ -651,7 +651,7 @@ class BigGANDeepGenResBlock(nn.Module):
         # Drop channels in x  if necessary
         if self.in_channels != self.out_channels:
             x = x[:, :self.out_channels]
-        # unsample both h and x at this point
+        # upsample both h and x at this point
         if self.with_upsample:
             x0 = self.upsample_layer(x0)
             x = self.upsample_layer(x)

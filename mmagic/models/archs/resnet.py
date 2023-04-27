@@ -442,7 +442,7 @@ class ResNet(nn.Module):
                 if m.kernel_size == (3, 3):
                     m.dilation = (dilate // 2, dilate // 2)
                     m.padding = (dilate // 2, dilate // 2)
-            # other convoluions
+            # other convolutions
             else:
                 if m.kernel_size == (3, 3):
                     m.dilation = (dilate, dilate)

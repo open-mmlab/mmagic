@@ -97,7 +97,7 @@ class SinGANDataset(BaseDataset):
                             self.scale_factor_init)
 
     def load_data_list(self, min_size, max_size, scale_factor_init):
-        """Load annatations for SinGAN Dataset.
+        """Load annotations for SinGAN Dataset.
 
         Args:
             min_size (int): The minimum size for the image pyramid.

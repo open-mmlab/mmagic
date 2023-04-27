@@ -5,13 +5,14 @@ The latest deployment guide for MMagic can be found from [here](https://mmdeploy
 
 This tutorial is organized as follows:
 
-- [Installation](#installation)
-- [Convert model](#convert-model)
-- [Model specification](#model-specification)
-- [Model inference](#model-inference)
-  - [Backend model inference](#backend-model-inference)
-  - [SDK model inference](#sdk-model-inference)
-- [Supported models](#supported-models)
+- [Tutorial 8: Deploy models in MMagic](#tutorial-8-deploy-models-in-mmagic)
+  - [Installation](#installation)
+  - [Convert model](#convert-model)
+  - [Model specification](#model-specification)
+  - [Model inference](#model-inference)
+    - [Backend model inference](#backend-model-inference)
+    - [SDK model inference](#sdk-model-inference)
+  - [Supported models](#supported-models)
 
 ## Installation
 

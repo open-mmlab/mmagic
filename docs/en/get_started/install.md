@@ -3,10 +3,15 @@
 In this section, you will know about:
 
 - [Installation](#installation)
-  - [Prerequisites](#prerequisites)
-  - [Best practices](#best-practices)
-  - [Customize installation](#customize-installation)
-  - [Developing with multiple MMagic versions](#developing-with-multiple-mmagic-versions)
+  - [Installation](#installation-1)
+    - [Prerequisites](#prerequisites)
+    - [Best practices](#best-practices)
+    - [Customize installation](#customize-installation)
+      - [CUDA Version](#cuda-version)
+      - [Install MMCV without MIM](#install-mmcv-without-mim)
+      - [Using MMagic with Docker](#using-mmagic-with-docker)
+      - [Trouble shooting](#trouble-shooting)
+    - [Developing with multiple MMagic versions](#developing-with-multiple-mmagic-versions)
 
 ## Installation
 

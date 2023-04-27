@@ -4,10 +4,17 @@ The visualization of images is an important way to measure the quality of image 
 Using `visualizer` in config file can save visual results when training or testing. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/visualization.md) to learn the usage of visualization. MMagic provides a rich set of visualization functions.
 In this tutorial, we introduce the usage of the visualization functions provided by MMagic.
 
-- [Overview](#overview)
-- [Visualization hook](#visualization-hook)
-- [Visualizer](#visualizer)
-- [VisBackend](#visbackend)
+- [Tutorial 6: Visualization](#tutorial-6-visualization)
+  - [Overview](#overview)
+    - [Visualization configuration of GANs](#visualization-configuration-of-gans)
+    - [Visualization configuration of image translation models](#visualization-configuration-of-image-translation-models)
+    - [Visualization configuration of diffusion models](#visualization-configuration-of-diffusion-models)
+    - [Visualization configuration of inpainting models](#visualization-configuration-of-inpainting-models)
+    - [Visualization configuration of matting models](#visualization-configuration-of-matting-models)
+    - [Visualization configuration of SISR/VSR/VFI models](#visualization-configuration-of-sisrvsrvfi-models)
+  - [Visualization Hook](#visualization-hook)
+  - [Visualizer](#visualizer)
+  - [VisBackend](#visbackend)
 
 ## Overview
 
