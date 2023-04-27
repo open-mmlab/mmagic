@@ -15,7 +15,7 @@ from torch.nn import init
 from mmagic.structures import DataSample
 from mmagic.utils.typing import ForwardInputs
 from .tome_utils import (add_tome_cfg_hook, build_mmagic_tomesd_block,
-                         isinstance_str)
+                         build_mmagic_wrapper_tomesd_block, isinstance_str)
 
 
 def default_init_weights(module, scale=1):
@@ -348,6 +348,10 @@ def set_tomesd(model: torch.nn.Module,
     if is_mmagic:
         # Supports "StableDiffusion.unet" and "unet"
         diffusion_model = model.unet if hasattr(model, 'unet') else model
+        if isinstance_str(diffusion_model, 'DenoisingUnet'):
+            is_wrapper = False
+        else:
+            is_wrapper = True
     else:
         if not hasattr(model, 'model') or not hasattr(model.model,
                                                       'diffusion_model'):
@@ -355,6 +359,8 @@ def set_tomesd(model: torch.nn.Module,
             print('Expected a Stable Diffusion / Latent Diffusion model.')
             raise RuntimeError('Provided model was not supported.')
         diffusion_model = model.model.diffusion_model
+        # TODO: can support more diffusion models, like Stability AI
+        is_wrapper = None
 
     diffusion_model._tome_info = {
         'size': None,
@@ -376,7 +382,13 @@ def set_tomesd(model: torch.nn.Module,
         if isinstance_str(module, 'BasicTransformerBlock'):
             # TODO: can support more stable diffusion based models
             if is_mmagic:
-                make_tome_block_fn = build_mmagic_tomesd_block
+                if is_wrapper is None:
+                    raise NotImplementedError(
+                        'Specific ToMe block not implemented')
+                elif not is_wrapper:
+                    make_tome_block_fn = build_mmagic_tomesd_block
+                elif is_wrapper:
+                    make_tome_block_fn = build_mmagic_wrapper_tomesd_block
             else:
                 raise TypeError(
                     'Currently `tome` only support *stable-diffusion* model!')

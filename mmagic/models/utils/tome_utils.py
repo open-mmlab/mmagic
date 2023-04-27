@@ -19,10 +19,10 @@ def add_tome_cfg_hook(model: torch.nn.Module):
     model._tome_info['hooks'].append(model.register_forward_pre_hook(hook))
 
 
-def build_mmagic_tomesd_block(block_class: Type[torch.nn.Module]
-                              ) -> Type[torch.nn.Module]:
-    """Make a patched class for a mmagic model. This patch applies ToMe to the
-    forward function of the block.
+def build_mmagic_wrapper_tomesd_block(block_class: Type[torch.nn.Module]
+                                      ) -> Type[torch.nn.Module]:
+    """Make a patched class for a DiffusersWrapper model in mmagic. This patch
+    applies ToMe to the forward function of the block.
 
     Refer to: https://github.com/dbolya/tomesd/blob/main/tomesd/patch.py#L67 # noqa
     Args:
@@ -115,6 +115,58 @@ def build_mmagic_tomesd_block(block_class: Type[torch.nn.Module]
 
             # -> (7) ToMe u_m
             hidden_states = u_m(ff_output) + hidden_states
+
+            return hidden_states
+
+    return ToMeBlock
+
+
+def build_mmagic_tomesd_block(block_class: Type[torch.nn.Module]
+                              ) -> Type[torch.nn.Module]:
+    """Make a patched class for a mmagic StableDiffusion model. This patch
+    applies ToMe to the forward function of the block.
+
+    Refer to: https://github.com/dbolya/tomesd/blob/main/tomesd/patch.py#L67 # noqa
+    Args:
+        block_class (torch.nn.Module): original class need tome speedup.
+
+    Returns:
+        ToMeBlock (torch.nn.Module): patched class based on the original class.
+    """
+
+    class ToMeBlock(block_class):
+        # Save for unpatching later
+        _parent = block_class
+
+        def forward(self, hidden_states, context=None, timestep=None):
+            # ->(1) ToMeBlock
+            m_a, m_c, m_m, u_a, u_c, u_m = build_merge(hidden_states,
+                                                       self._tome_info)
+
+            # 1. Self-Attention
+            # ->(2) ToMe m_a
+            norm_hidden_states = (m_a(self.norm1(hidden_states)))
+
+            # ->(3) ToMe u_a
+            if self.only_cross_attention:
+                hidden_states = u_a(self.attn1(norm_hidden_states,
+                                               context)) + hidden_states
+            else:
+                hidden_states = u_a(
+                    self.attn1(norm_hidden_states)) + hidden_states
+
+            # 2. Cross-Attention
+            # ->(4) ToMe m_c
+            norm_hidden_states = (m_c(self.norm2(hidden_states)))
+            # ->(5) ToMe u_c
+            hidden_states = u_c(
+                self.attn2(norm_hidden_states,
+                           context=context)) + hidden_states
+
+            # 3. Feed-forward
+            # ->(6) ToMe m_m, u_m
+            hidden_states = u_m(self.ff(m_m(
+                self.norm3(hidden_states)))) + hidden_states
 
             return hidden_states
 
