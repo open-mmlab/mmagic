@@ -12,4 +12,5 @@ imageio-ffmpeg==0.4.4
 interrogate
 mmdet >= 3.0.0
 pytest
+torch>=1.12.1
 transformers
