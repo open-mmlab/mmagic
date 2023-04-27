@@ -27,7 +27,7 @@ class ImageSuperResolutionInferencer(BaseMMagicInferencer):
 
         Args:
             img(InputsType): Image to be restored by models.
-            ref(InputsType): Reference image for resoration models.
+            ref(InputsType): Reference image for restoration models.
                 Defaults to None.
 
         Returns:

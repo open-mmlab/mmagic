@@ -4,7 +4,7 @@ In this tutorial, we introduce the design of transforms pipeline in MMagic.
 
 The structure of this guide are as follows:
 
-- [Design Your Own Data Pipelines](#design-your-own-data-pipelines)
+- [How to design your own data transforms](#how-to-design-your-own-data-transforms)
   - [Data pipelines in MMagic](#data-pipelines-in-mmagic)
     - [A simple example of data transform](#a-simple-example-of-data-transform)
     - [An example of BasicVSR](#an-example-of-basicvsr)

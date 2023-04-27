@@ -2,8 +2,10 @@
 
 This section introduce the following contents in terms of migration from MMEditing 0.x
 
-- [New dependencies](#new-dependencies)
-- [Overall structures](#overall-structures)
+- [Overview](#overview)
+  - [New dependencies](#new-dependencies)
+  - [Overall structures](#overall-structures)
+  - [Other config settings](#other-config-settings)
 
 ## New dependencies
 

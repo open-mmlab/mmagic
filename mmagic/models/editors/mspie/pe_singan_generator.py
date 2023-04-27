@@ -16,7 +16,7 @@ from ..singan.singan_modules import GeneratorBlock
 class SinGANMSGeneratorPE(SinGANMultiScaleGenerator):
     """Multi-Scale Generator used in SinGAN with positional encoding.
 
-    More details can be found in: Positional Encoding as Spatial Inductvie Bias
+    More details can be found in: Positional Encoding as Spatial Inductive Bias
     in GANs, CVPR'2021.
 
     Notes:

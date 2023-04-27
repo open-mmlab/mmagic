@@ -88,7 +88,7 @@ class StyleGAN2Discriminator(BaseModule):
             with order `rgb`. Since we provide several converted weights,
             whose input order is `rgb`. You can set this argument to True if
             you want to finetune on converted weights. Defaults to False.
-        pretrained (dict | None, optional): Information for pretained models.
+        pretrained (dict | None, optional): Information for pretrained models.
             The necessary key is 'ckpt_path'. Besides, you can also provide
             'prefix' to load the generator part from the whole state dict.
             Defaults to None.

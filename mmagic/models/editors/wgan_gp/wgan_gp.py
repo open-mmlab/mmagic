@@ -13,7 +13,7 @@ from mmagic.structures import DataSample
 
 @MODELS.register_module()
 class WGANGP(BaseGAN):
-    """Impelmentation of `Improved Training of Wasserstein GANs`.
+    """Implementation of `Improved Training of Wasserstein GANs`.
 
     Paper link: https://arxiv.org/pdf/1704.00028
 
