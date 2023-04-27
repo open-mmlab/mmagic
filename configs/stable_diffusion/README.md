@@ -131,7 +131,7 @@ init_default_scope('mmagic')
 
 _device = 0
 work_dir = '/path/to/your/work_dir'
-config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-tomesd_0.5.py'
+config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py'
 config = Config.fromfile(config).copy()
 # # change the 'pretrained_model_path' if you have downloaded the weights manually
 # config.model.unet.from_pretrained = '/path/to/your/stable-diffusion-v1-5'
@@ -168,11 +168,12 @@ for ratio in ratios:
     print(f"Generating 100 images with {samples_perprompt} images per prompt, merging ratio {ratio}, time used : {time.time() - t}s")
 ```
 
-Here are some inference performance comparisons running on **single RTX 3090** with `torch 2.0.0+cu118` as backends:
+Here are some inference performance comparisons running on **single RTX 3090** with `torch 2.0.0+cu118` as backends. The results are reasonable, when enabling `xformers`, the speed-up ratio is a little bit lower. But `tomesd` still effectively reduces the inference time. It is especially recommended that enable `tomesd` when the `image_size` and `num_images_per_prompt` are large, since the number of similar tokens are larger and `tomesd` can achieve better performance.
 
-|                                       Model                                       | Dataset | Download |            Ratio            | Size / Num images per prompt |                     Time (s)                      |
-| :-------------------------------------------------------------------------------: | :-----: | :------: | :-------------------------: | :--------------------------: | :-----------------------------------------------: |
-| [stable_diffusion_v1.5-tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 542.20 <br> 427.65 (↓21.1%) <br>  393.05 (↓27.5%) |
+|                                   Model                                    | Dataset | Download | xformer |            Ratio            | Size / Num images per prompt |                     Time (s)                      |
+| :------------------------------------------------------------------------: | :-----: | :------: | :-----: | :-------------------------: | :--------------------------: | :-----------------------------------------------: |
+| [stable_diffusion_v1.5-tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     |   w/o   | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 542.20 <br> 427.65 (↓21.1%) <br>  393.05 (↓27.5%) |
+| [stable_diffusion_v1.5-tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     |   w/    | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 541.64 <br> 428.53 (↓20.9%) <br>  396.38 (↓26.8%) |
 
 <table align="center">
 <thead>
