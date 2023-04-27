@@ -25,8 +25,8 @@ python tools/dataset_converters/reds/preprocess_reds_dataset.py --root-path ./da
 ```
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -60,7 +60,7 @@ python tools/dataset_converters/reds/preprocess_reds_dataset.py --root-path ./da
 
 ## Crop to sub-images
 
-MMEditing also supports cropping REDS images to sub-images for faster IO. We provide such a script:
+MMagic also supports cropping REDS images to sub-images for faster IO. We provide such a script:
 
 ```shell
 python tools/dataset_converters/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
@@ -69,8 +69,8 @@ python tools/dataset_converters/reds/crop_sub_images.py --data-root ./data/REDS 
 The generated data is stored under `REDS` and the data structure is as follows, where `_sub` indicates the sub-images.
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

@@ -17,8 +17,8 @@
 文件目录结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

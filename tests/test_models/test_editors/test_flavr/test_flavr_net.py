@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.flavr.flavr_net import UpConv3d
-from mmedit.registry import MODELS
+from mmagic.models.editors.flavr.flavr_net import UpConv3d
+from mmagic.registry import MODELS
 
 
 def test_flavr_net():

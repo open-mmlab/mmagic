@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, Mock, patch
 
 from mmengine.logging import MessageHub
 
-from mmedit.engine import EditIterTimerHook
+from mmagic.engine import IterTimerHook
 
 
 def time_patch():
@@ -18,7 +18,7 @@ def time_patch():
 class TestIterTimerHook(TestCase):
 
     def setUp(self) -> None:
-        self.hook = EditIterTimerHook()
+        self.hook = IterTimerHook()
 
     def test_init(self):
         assert self.hook.time_sec_tot == 0

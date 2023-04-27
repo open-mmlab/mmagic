@@ -4,8 +4,8 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.models.editors.biggan import BigGANDeepDiscriminator
-from mmedit.registry import MODELS
+from mmagic.models.editors.biggan import BigGANDeepDiscriminator
+from mmagic.registry import MODELS
 
 
 class TestBigGANDeepDiscriminator(object):

@@ -22,8 +22,8 @@ python tools/dataset_converters/sidd/preprocess_sidd_test_dataset.py --data-root
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

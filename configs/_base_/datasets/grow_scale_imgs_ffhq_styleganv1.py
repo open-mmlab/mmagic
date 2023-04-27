@@ -3,7 +3,7 @@ dataset_type = 'GrowScaleImgDataset'
 pipeline = [
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='Flip', keys='gt', direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 train_dataloader = dict(

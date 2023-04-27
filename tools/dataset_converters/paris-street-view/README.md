@@ -15,8 +15,8 @@
 Obtain the dataset [here](https://github.com/pathak22/context-encoder/issues/24).
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

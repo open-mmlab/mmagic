@@ -4,7 +4,7 @@ from unittest import TestCase
 
 import torch
 
-from mmedit.models.editors.eg3d.eg3d_modules import (SuperResolutionModule,
+from mmagic.models.editors.eg3d.eg3d_modules import (SuperResolutionModule,
                                                      TriPlaneBackbone)
 
 

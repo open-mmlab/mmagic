@@ -32,7 +32,7 @@ train_pipeline = [
         keep_ratio=False,
     ),
     dict(type='GetMaskedImage'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 test_pipeline = train_pipeline
@@ -55,8 +55,8 @@ train_cfg = dict(
     max_iters=5000003,
     val_interval=250000,
 )
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 checkpoint = dict(
     type='CheckpointHook', interval=250000, by_epoch=False, out_dir=save_dir)

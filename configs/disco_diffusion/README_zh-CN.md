@@ -78,7 +78,7 @@ Disco Diffusion(DD)是一个 Google Colab 笔记本，它利用一种叫做 CLIP
 
 ```python
 from mmengine import Config, MODELS
-from mmedit.utils import register_all_modules
+from mmagic.utils import register_all_modules
 from torchvision.utils import save_image
 
 register_all_modules()
@@ -104,7 +104,7 @@ save_image(image, "image.png")
 
 ## 教程
 
-考虑到`disco-diffusion`包含许多可调整的参数，我们为用户提供了一个[jupyter-notebook](./tutorials.ipynb)/[colab](https://githubtocolab.com/open-mmlab/mmediting/blob/main/configs/disco_diffusion/tutorials.ipynb)的教程，展示了不同参数的含义，并给出相应的调整结果。
+考虑到`disco-diffusion`包含许多可调整的参数，我们为用户提供了一个[jupyter-notebook](./tutorials.ipynb)/[colab](https://githubtocolab.com/open-mmlab/mmagic/blob/main/configs/disco_diffusion/tutorials.ipynb)的教程，展示了不同参数的含义，并给出相应的调整结果。
 请参考[Disco Sheet](https://docs.google.com/document/d/1l8s7uS2dGqjztYSjPpzlmXLjl5PM3IGkRWI3IiCuK7g/edit)。
 
 ## 鸣谢

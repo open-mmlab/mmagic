@@ -7,12 +7,12 @@ import numpy as np
 import torch
 from mmengine.config import ConfigDict
 
-from mmedit.datasets.transforms import PackEditInputs
-from mmedit.models.base_models import BaseMattor
-from mmedit.models.editors import DIM
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.datasets.transforms import PackInputs
+from mmagic.models.base_models import BaseMattor
+from mmagic.models.editors import DIM
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -59,14 +59,14 @@ def _demo_input_train(img_shape, batch_size=1, cuda=False, meta={}):
             (img_shape[0], img_shape[1], 3)).astype(np.float32))
 
     data_samples = []
-    packinputs = PackEditInputs()
+    packinputs = PackInputs()
     for _ in range(batch_size):
         ds = packinputs(results)['data_samples']
         if cuda:
             ds = ds.cuda()
         data_samples.append(ds)
 
-    data_samples = EditDataSample.stack(data_samples)
+    data_samples = DataSample.stack(data_samples)
     return inputs, data_samples
 
 
@@ -96,19 +96,19 @@ def _demo_input_test(img_shape, batch_size=1, cuda=False, meta={}):
         ori_merged_shape=img_shape)
 
     data_samples = []
-    packinputs = PackEditInputs()
+    packinputs = PackInputs()
     for _ in range(batch_size):
         ds = packinputs(results)['data_samples']
         if cuda:
             ds = ds.cuda()
         data_samples.append(ds)
-    data_samples = EditDataSample.stack(data_samples)
+    data_samples = DataSample.stack(data_samples)
     return inputs, data_samples
 
 
 def assert_pred_alpha(predictions, batch_size):
     assert isinstance(predictions, list)
-    assert isinstance(predictions[0], EditDataSample)
+    assert isinstance(predictions[0], DataSample)
     pred_alpha = predictions[0].output.pred_alpha.data
     assert isinstance(pred_alpha, torch.Tensor)
     assert pred_alpha.dtype == torch.uint8
@@ -263,7 +263,7 @@ def test_dim():
         input_test = _demo_input_test((48, 48))
         output_test = model(*input_test, mode='predict')
         assert isinstance(output_test, list)
-        assert isinstance(output_test[0], EditDataSample)
+        assert isinstance(output_test[0], DataSample)
         pred_alpha = output_test[0].output.pred_alpha.data
         assert isinstance(pred_alpha, torch.Tensor)
         assert pred_alpha.dtype == torch.uint8

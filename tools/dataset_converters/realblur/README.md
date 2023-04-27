@@ -17,8 +17,8 @@ The test datasets RealBlurJ can be download from [here](https://drive.google.com
 The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

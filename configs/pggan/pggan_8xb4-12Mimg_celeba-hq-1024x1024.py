@@ -3,7 +3,7 @@ _base_ = ['../_base_/gen_default_runtime.py']
 # define GAN model
 model = dict(
     type='ProgressiveGrowingGAN',
-    data_preprocessor=dict(type='EditDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     noise_size=512,
     generator=dict(type='PGGANGenerator', out_scale=1024, noise_size=512),
     discriminator=dict(type='PGGANDiscriminator', in_scale=1024),
@@ -52,7 +52,7 @@ dataset_type = 'GrowScaleImgDataset'
 pipeline = [
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='Flip', keys='gt', direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 train_dataloader = dict(
@@ -92,7 +92,7 @@ test_dataloader = dict(
 # VIS_HOOK + DATAFETCH
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         # vis ema and orig at the same time

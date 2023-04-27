@@ -5,9 +5,9 @@ from unittest.mock import MagicMock
 
 from mmengine.model import MMSeparateDistributedDataParallel
 
-from mmedit.engine import PGGANOptimWrapperConstructor
-from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
+from mmagic.engine import PGGANOptimWrapperConstructor
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -16,7 +16,7 @@ class TestPGGANOptimWrapperConstructor(TestCase):
 
     pggan_cfg = dict(
         type='ProgressiveGrowingGAN',
-        data_preprocessor=dict(type='EditDataPreprocessor'),
+        data_preprocessor=dict(type='DataPreprocessor'),
         noise_size=512,
         generator=dict(type='PGGANGenerator', out_scale=8),
         discriminator=dict(type='PGGANDiscriminator', in_scale=8),

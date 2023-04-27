@@ -2,8 +2,8 @@ blank_issues_enabled: false
 
 contact_links:
   - name: 💬 Forum
-    url: https://github.com/open-mmlab/mmediting/discussions
-    about: Ask general usage questions and discuss with other MMEditing community members
+    url: https://github.com/open-mmlab/mmagic/discussions
+    about: Ask general usage questions and discuss with other MMagic community members
   - name: 🌐 Explore OpenMMLab
     url: https://openmmlab.com/
     about: Get to know more about OpenMMLab

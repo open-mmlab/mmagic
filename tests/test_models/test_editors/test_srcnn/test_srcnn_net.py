@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models import SRCNNNet
+from mmagic.models import SRCNNNet
 
 
 def test_srcnn():

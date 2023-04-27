@@ -18,8 +18,8 @@
 Note that we merge the original val dataset (image names from 0801 to 0900) to the original train dataset (image names from 0001 to 0800). The folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -64,8 +64,8 @@ python tools/dataset_converters/div2k/preprocess_div2k_dataset.py --data-root ./
 The generated data is stored under `DIV2K` and the data structure is as follows, where `_sub` indicates the sub-images.
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

@@ -8,8 +8,8 @@ import mmcv
 import mmengine
 import numpy as np
 
-from mmedit.evaluation import gauss_gradient
-from mmedit.utils import modify_args
+from mmagic.evaluation import gauss_gradient
+from mmagic.utils import modify_args
 
 
 def sad(alpha, trimap, pred_alpha):

@@ -21,7 +21,7 @@ We investigate conditional adversarial networks as a general-purpose solution to
 ## Results and Models
 
 <div align="center">
-  <b> Results from Pix2Pix trained by mmediting</b>
+  <b> Results from Pix2Pix trained by mmagic</b>
   <br/>
   <img src="https://user-images.githubusercontent.com/22982797/114269080-4ff0ec00-9a37-11eb-92c4-1525864e0307.PNG" width="800"/>
 </div>

@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pytest
 import torch
 
-from mmedit.models import (PerceptualLoss, PerceptualVGG,
+from mmagic.models import (PerceptualLoss, PerceptualVGG,
                            TransferalPerceptualLoss)
 
 

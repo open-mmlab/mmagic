@@ -22,8 +22,8 @@ python tools/dataset_converters/sidd/preprocess_sidd_test_dataset.py --data-root
 文件目录结构应如下所示：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

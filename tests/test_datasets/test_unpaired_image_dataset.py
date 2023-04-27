@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
-from mmedit.datasets import UnpairedImageDataset
-from mmedit.utils import register_all_modules
+from mmagic.datasets import UnpairedImageDataset
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -33,7 +33,7 @@ class TestUnpairedImageDataset(object):
                 crop_size=(256, 256),
                 random_crop=True),
             dict(type='Flip', direction='horizontal', keys=['img_a', 'img_b']),
-            dict(type='PackEditInputs', keys=['img_a', 'img_b']),
+            dict(type='PackInputs', keys=['img_a', 'img_b']),
         ]
 
     def test_unpaired_image_dataset(self):

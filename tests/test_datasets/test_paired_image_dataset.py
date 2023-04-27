@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
-from mmedit.datasets import PairedImageDataset
-from mmedit.utils import register_all_modules
+from mmagic.datasets import PairedImageDataset
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -32,7 +32,7 @@ class TestPairedImageDataset(object):
                     dict(type='FixedCrop', keys=['img'], crop_size=(256, 256))
                 ]),
             dict(type='Flip', direction='horizontal', keys=['img_a', 'img_b']),
-            dict(type='PackEditInputs', keys=['img_a', 'img_b'])
+            dict(type='PackInputs', keys=['img_a', 'img_b'])
         ]
 
     def test_paired_image_dataset(self):

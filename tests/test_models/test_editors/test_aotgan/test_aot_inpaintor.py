@@ -5,10 +5,10 @@ import torch
 from mmengine import Config
 from mmengine.optim import OptimWrapper
 
-from mmedit.models import AOTEncoderDecoder
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.models import AOTEncoderDecoder
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 
 def test_aot_inpaintor():
@@ -49,7 +49,7 @@ def test_aot_inpaintor():
         'inputs':
         masked_img,
         'data_samples':
-        [EditDataSample(
+        [DataSample(
             mask=mask,
             mask_bbox=mask_bbox,
             gt_img=gt_img,

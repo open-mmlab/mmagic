@@ -4,7 +4,7 @@ model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
 model = dict(
     type='PConvInpaintor',
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[127.5],
         std=[127.5],
     ),

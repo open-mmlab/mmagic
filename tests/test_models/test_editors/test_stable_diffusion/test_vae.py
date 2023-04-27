@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.stable_diffusion.vae import (
+from mmagic.models.editors.stable_diffusion.vae import (
     AttentionBlock, AutoencoderKL, DiagonalGaussianDistribution, Downsample2D,
     ResnetBlock2D, Upsample2D)
 

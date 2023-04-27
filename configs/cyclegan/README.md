@@ -21,7 +21,7 @@ Image-to-image translation is a class of vision and graphics problems where the 
 ## Results and Models
 
 <div align="center">
-  <b> Results from CycleGAN trained by mmediting</b>
+  <b> Results from CycleGAN trained by mmagic</b>
   <br/>
   <img src="https://user-images.githubusercontent.com/22982797/114303527-108ed200-9b01-11eb-978c-274392e4d8e0.PNG" width="800"/>
 </div>

@@ -22,7 +22,7 @@ test_pipeline = [
             gaussian_sigma=[sigma, sigma],
             gaussian_gray_noise_prob=1),
         keys=['img']),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 data_root = 'data/denoising_gaussian_test'

@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.datasets.transforms import (GenerateCoordinateAndCell,
+from mmagic.datasets.transforms import (GenerateCoordinateAndCell,
                                         GenerateFacialHeatmap,
                                         LoadImageFromFile)
 

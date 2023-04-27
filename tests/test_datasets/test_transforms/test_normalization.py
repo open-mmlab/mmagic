@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import Normalize, RescaleToZeroOne
+from mmagic.datasets.transforms import Normalize, RescaleToZeroOne
 
 
 class TestAugmentations:

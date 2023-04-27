@@ -5,7 +5,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models.editors.pggan import (EqualizedLR,
+from mmagic.models.editors.pggan import (EqualizedLR,
                                          EqualizedLRConvDownModule,
                                          EqualizedLRConvModule,
                                          EqualizedLRConvUpModule,
@@ -13,7 +13,7 @@ from mmedit.models.editors.pggan import (EqualizedLR,
                                          MiniBatchStddevLayer,
                                          PGGANNoiseTo2DFeat, PixelNorm,
                                          equalized_lr)
-from mmedit.utils import register_all_modules
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

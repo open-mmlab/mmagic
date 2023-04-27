@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import ModifiedVGG
+from mmagic.models.editors import ModifiedVGG
 
 
 def test_modifiedVGG():

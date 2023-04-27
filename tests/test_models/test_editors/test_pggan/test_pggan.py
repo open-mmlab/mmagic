@@ -6,10 +6,10 @@ import pytest
 import torch
 from mmengine import MessageHub
 
-from mmedit.engine import PGGANOptimWrapperConstructor
-from mmedit.models import ProgressiveGrowingGAN
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.engine import PGGANOptimWrapperConstructor
+from mmagic.models import ProgressiveGrowingGAN
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -26,7 +26,7 @@ class TestPGGAN(TestCase):
     discriminator_cfg = dict(
         type='PGGANDiscriminator', in_scale=16, label_size=0)
 
-    data_preprocessor = dict(type='EditDataPreprocessor')
+    data_preprocessor = dict(type='DataPreprocessor')
 
     nkimgs_per_scale = {'4': 0.004, '8': 0.008, '16': 0.016}
 
@@ -56,7 +56,7 @@ class TestPGGAN(TestCase):
         data_batch = dict(
             inputs=dict(),
             data_samples=[
-                EditDataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
+                DataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
             ])
 
         for iter_num in range(6):
@@ -120,8 +120,7 @@ class TestPGGAN(TestCase):
             data_batch = dict(
                 inputs=dict(),
                 data_samples=[
-                    EditDataSample(gt_img=torch.randn(3, 4, 32))
-                    for _ in range(3)
+                    DataSample(gt_img=torch.randn(3, 4, 32)) for _ in range(3)
                 ])
             _ = pggan.train_step(data_batch, optim_wrapper_dict)
 
@@ -135,7 +134,7 @@ class TestPGGAN(TestCase):
         data_batch = dict(
             inputs=dict(),
             data_samples=[
-                EditDataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
+                DataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
             ])
         pggan.train_step(data_batch, optim_wrapper_dict)
 
@@ -167,7 +166,7 @@ class TestPGGAN(TestCase):
         data_batch = dict(
             inputs=dict(),
             data_samples=[
-                EditDataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
+                DataSample(gt_img=torch.randn(3, 16, 16)) for _ in range(3)
             ])
 
         for iter_num in range(6):

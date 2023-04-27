@@ -7,8 +7,8 @@ import numpy as np
 import pytest
 from mmengine import Config
 
-from mmedit.apis.inferencers.eg3d_inferencer import EG3DInferencer
-from mmedit.utils import register_all_modules
+from mmagic.apis.inferencers.eg3d_inferencer import EG3DInferencer
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -45,7 +45,7 @@ config = dict(
             focal=1.025390625,
             up=[0, 0, 1],
             radius=1.2),
-        data_preprocessor=dict(type='EditDataPreprocessor')))
+        data_preprocessor=dict(type='DataPreprocessor')))
 
 
 def test_eg3d_inferencer():

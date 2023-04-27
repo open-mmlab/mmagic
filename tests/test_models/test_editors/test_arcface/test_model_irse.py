@@ -5,7 +5,7 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.models.editors.arcface.model_irse import Backbone
+from mmagic.models.editors.arcface.model_irse import Backbone
 
 
 class TestIRSEModel:

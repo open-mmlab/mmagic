@@ -6,12 +6,12 @@ import pytest
 import torch
 from mmengine.runner import Runner
 
-from mmedit.datasets import BasicImageDataset
-from mmedit.datasets.transforms import PackEditInputs
-from mmedit.evaluation import PerceptualPathLength
-from mmedit.models import LSGAN, EditDataPreprocessor
-from mmedit.models.editors.stylegan2 import StyleGAN2Generator
-from mmedit.utils import register_all_modules
+from mmagic.datasets import BasicImageDataset
+from mmagic.datasets.transforms import PackInputs
+from mmagic.evaluation import PerceptualPathLength
+from mmagic.models import LSGAN, DataPreprocessor
+from mmagic.models.editors.stylegan2 import StyleGAN2Generator
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -44,7 +44,7 @@ class TestPPL:
         pipeline = [
             dict(type='LoadImageFromFile', key='img'),
             dict(type='Resize', scale=(64, 64)),
-            PackEditInputs()
+            PackInputs()
         ]
         dataset = BasicImageDataset(
             data_root='tests/data/image/img_root',
@@ -55,7 +55,7 @@ class TestPPL:
                 batch_size=2,
                 dataset=dataset,
                 sampler=dict(type='DefaultSampler')))
-        gan_data_preprocessor = EditDataPreprocessor()
+        gan_data_preprocessor = DataPreprocessor()
         generator = StyleGAN2Generator(64, 8)
         cls.module = LSGAN(generator, data_preprocessor=gan_data_preprocessor)
 

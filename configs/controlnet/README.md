@@ -58,8 +58,8 @@ import mmcv
 from mmengine import Config
 from PIL import Image
 
-from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -109,8 +109,8 @@ import mmcv
 from mmengine import Config
 from PIL import Image
 
-from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
