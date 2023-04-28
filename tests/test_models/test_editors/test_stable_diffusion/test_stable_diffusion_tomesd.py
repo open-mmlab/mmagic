@@ -98,8 +98,7 @@ model = dict(
     'win' in platform.system().lower(),
     reason='skip on windows due to limited RAM.')
 @pytest.mark.skipif(
-    not hasattr(torch.Tensor, 'scatter_reduce'),
-    reason='requires torch>=1.11')
+    not hasattr(torch.Tensor, 'scatter_reduce'), reason='requires torch>=1.11')
 def test_stable_diffusion():
     StableDiffuser = MODELS.build(Config(model))
     StableDiffuser.tokenizer = dummy_tokenizer()
