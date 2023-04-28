@@ -179,7 +179,7 @@ optim_wrapper = dict(
 
 ## Use ToMe to accelerate your training and inference
 
-We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed for stable-diffusion-based models referring to [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` in [ControlNet-Canny](./controlnet-canny.py). The only requirement is `torch >= 1.11` in order to support `torch.Tensor.scatter_reduce()` functionality. Please do check it before running the demo.
+We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed for stable-diffusion-based models referring to [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` in [ControlNet-Canny](./controlnet-canny.py). The only requirement is `torch >= 1.12.1` in order to properly support `torch.Tensor.scatter_reduce()` functionality. Please do check it before running the demo.
 
 ```python
 model = dict(
