@@ -98,9 +98,8 @@ model = dict(
     'win' in platform.system().lower(),
     reason='skip on windows due to limited RAM.')
 @pytest.mark.skipif(
-    torch.__version__ < '1.11.1',
-    reason='requires torch>=1.11 to support\
-                        torch.Tensor.scatter_reduce()')
+    not hasattr(torch.Tensor, 'scatter_reduce'),
+    reason='requires torch>=1.11')
 def test_stable_diffusion():
     StableDiffuser = MODELS.build(Config(model))
     StableDiffuser.tokenizer = dummy_tokenizer()
