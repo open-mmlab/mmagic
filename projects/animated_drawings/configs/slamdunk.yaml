@@ -1,0 +1,14 @@
+scene:
+  ANIMATED_CHARACTERS:
+    - character_cfg: configs/characters/yingmu/char_cfg.yaml
+      motion_cfg: configs/motion/new_record.yaml
+      retarget_cfg: configs/retarget/new_record_spf.yaml
+view:
+  CAMERA_POS: [0.6, 1.1, 4.0]
+  CAMERA_FWD: [0.0, 0.5, 2.0]
+  BACKGROUND_IMAGE: /home/PJLAB/liuwenran/Downloads/animadraw/noperson.png
+
+controller:
+  MODE: video_render
+  OUTPUT_VIDEO_PATH: ./new_record_video.mp4
+  OUTPUT_VIDEO_CODEC: mp4v

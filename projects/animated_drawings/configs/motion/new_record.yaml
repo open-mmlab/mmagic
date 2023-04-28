@@ -1,0 +1,11 @@
+filepath: examples/bvh/cxk/New_Recording_1_mixamo.bvh
+start_frame_idx: 0
+end_frame_idx: 399
+groundplane_joint: LeftFoot
+forward_perp_joint_vectors:
+  - - LeftShoulder
+    - RightShoulder
+  - - LeftUpLeg
+    - RightUpLeg
+scale: 0.025
+up: +y
