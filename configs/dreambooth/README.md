@@ -37,10 +37,11 @@ The file structure will be like this:
 ```text
 data
 └── dreambooth
-    ├── alvan-nee-Id1DBHv4fbg-unsplash.jpeg
-    ├── alvan-nee-bQaAJCbNq3g-unsplash.jpeg
-    ├── alvan-nee-brFsZ7qszSY-unsplash.jpeg
-    └── alvan-nee-eoqnr8ikwFE-unsplash.jpeg
+    └──imgs
+       ├── alvan-nee-Id1DBHv4fbg-unsplash.jpeg
+       ├── alvan-nee-bQaAJCbNq3g-unsplash.jpeg
+       ├── alvan-nee-brFsZ7qszSY-unsplash.jpeg
+       └── alvan-nee-eoqnr8ikwFE-unsplash.jpeg
 ```
 
 2. Start training with the following command:

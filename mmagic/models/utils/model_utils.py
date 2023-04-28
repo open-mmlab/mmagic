@@ -282,7 +282,7 @@ def set_xformers(module: nn.Module, prefix: str = '') -> nn.Module:
         nn.Module: The module with xformers' efficient Attention.
     """
 
-    if not xformers_is_enable:
+    if not xformers_is_enable():
         print_log('Do not support Xformers. Please install Xformers first. '
                   'The program will run without Xformers.')
         return
