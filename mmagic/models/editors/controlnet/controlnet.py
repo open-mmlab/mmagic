@@ -61,11 +61,12 @@ class ControlStableDiffusion(StableDiffusion):
                  scheduler: ModelType,
                  test_scheduler: Optional[ModelType] = None,
                  enable_xformers: bool = True,
+                 tomesd_cfg: Optional[dict] = None,
                  data_preprocessor=dict(type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None):
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, enable_xformers, data_preprocessor,
-                         init_cfg)
+                         test_scheduler, enable_xformers, tomesd_cfg,
+                         data_preprocessor, init_cfg)
 
         self.controlnet = build_module(controlnet, MODELS)
 
