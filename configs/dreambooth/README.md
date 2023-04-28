@@ -49,7 +49,7 @@ data
 ```bash
 bash tools/dist_train.sh configs/dreambooth/dreambooth.py 1
 # or
-bash tools/dist_train.sh configs/dreambooth/dreambooth_lora.py 1
+bash tools/dist_train.sh configs/dreambooth/dreambooth-lora.py 1
 ```
 
 <table align="center">
