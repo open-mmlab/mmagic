@@ -1,12 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import platform
 
+import clip
 import pytest
 import torch
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
-import clip
 from mmagic.models.losses import CLIPLoss
 
 
