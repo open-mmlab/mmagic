@@ -76,8 +76,6 @@ class InpaintingInferencer(BaseMMagicInferencer):
         Returns:
             List[np.ndarray]: Result of visualize
         """
-        # import ipdb
-        # ipdb.set_trace()
         result = preds[0].output.pred_img / 255.
 
         result = tensor2img(result)[..., ::-1]
