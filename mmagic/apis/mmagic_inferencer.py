@@ -63,6 +63,8 @@ class MMagicInferencer:
         'styleganv3',
 
         # matting models
+        'dim',
+        'indexnet',
         'gca',
 
         # inpainting models
