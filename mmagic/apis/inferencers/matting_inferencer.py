@@ -7,8 +7,6 @@ import numpy as np
 import torch
 from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
-from mmengine.dataset.utils import default_collate as collate
-from torch.nn.parallel import scatter
 
 from mmagic.structures import DataSample
 from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
@@ -53,21 +51,15 @@ class MattingInferencer(BaseMMagicInferencer):
         _data = test_pipeline(data)
         trimap = _data['data_samples'].trimap.data
         preprocess_res = dict()
-        preprocess_res['inputs'] = torch.cat([_data['inputs'], trimap],
-                                             dim=0).float()
-        preprocess_res = collate([preprocess_res])
-        preprocess_res['data_samples'] = DataSample.stack(
-            [_data['data_samples']])
-        preprocess_res['mode'] = 'predict'
-        if 'cuda' in str(self.device):
-            preprocess_res = scatter(preprocess_res, [self.device])[0]
-
+        preprocess_res['inputs'] = [_data['inputs']]
+        preprocess_res['data_samples'] = [_data['data_samples']]
         return preprocess_res
 
     def forward(self, inputs: InputsType) -> PredType:
         """Forward the inputs to the model."""
+        inputs = self.model.data_preprocessor(inputs)
         with torch.no_grad():
-            return self.model(**inputs)
+            return self.model(mode='predict', **inputs)
 
     def visualize(self,
                   preds: PredType,
