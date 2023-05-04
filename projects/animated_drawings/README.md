@@ -1,6 +1,6 @@
 # Animated Drawings (SIGGRAPH'2023)
 
-> [A Method for Animating Children's Drawings of The Human Figure](https://dl.acm.org/doi/10.1145/3592788)
+> [A Method for Animating Children's Drawings of The Human Figure](https://arxiv.org/abs/2303.12741)
 
 > **Task**: Drawing
 
@@ -15,45 +15,62 @@ Children’s drawings have a wonderful inventiveness, creativity, and variety to
 <!-- [IMAGE] -->
 
 <div align=center >
- <img src="https://user-images.githubusercontent.com/6675724/219223438-2c93f9cb-d4b5-45e9-a433-149ed76affa6.gif" width="400"/>
+ <img src="https://user-images.githubusercontent.com/6675724/219223438-2c93f9cb-d4b5-45e9-a433-149ed76affa6.gif" width="800"/>
 </div >
-
-## Results
 
 ## Quick Start
 
-You can run glide as follows:
+### 1. Install Animated Drawings
 
-```python
-import torch
-from mmagic.apis import init_model
-from mmengine.registry import init_default_scope
-from projects.glide.models import *
-
-init_default_scope('mmagic')
-
-config = 'projects/glide/configs/glide_ddim-classifier-free_laion-64x64.py'
-ckpt = 'https://download.openmmlab.com/mmagic/glide/glide_laion-64x64-02afff47.pth'
-model = init_model(config, ckpt).cuda().eval()
-prompt = "an oil painting of a corgi"
-
-with torch.no_grad():
-    samples = model.infer(init_image=None,
-                prompt=prompt,
-                batch_size=16,
-                guidance_scale=3.,
-                num_inference_steps=100,
-                labels=None,
-                classifier_scale=0.0,
-                show_progress=True)['samples']
+```shell
+cd  mmagic/projects/animated_drawings
+pip install -e git+https://github.com/facebookresearch/AnimatedDrawings.git#egg=animated_drawings
 ```
+
+### 2. Download resources
+
+```shell
+cd  mmagic/projects/animated_drawings
+mkdir resources
+# download image
+wget -O sakuragi.png https://user-images.githubusercontent.com/12782558/236157945-452fb9d0-e02e-4f36-8338-34f0ca0fe962.png
+# download mask image
+wget -O sakuragi_mask.png https://user-images.githubusercontent.com/12782558/236157965-539a5467-edae-40d0-a9da-7bb5906bcdc4.png
+```
+
+### 3. Generate character
+
+By running following codes, you will get texture and mask images for animated rendering in characters/slamdunk directory.
+
+```shell
+cd mmagic/projects/animated_drawings
+python tools/generate_character.py
+```
+
+### 3. Generate video
+
+By running following codes, you will get a Sakuragi moving like a zombie.
+
+```shell
+cd mmagic/projects/animated_drawings
+python tools/generate_video.py
+```
+
+The output video will be saved at resources dir, and it looks like this:
+
+<div align=center >
+ <img src="https://user-images.githubusercontent.com/12782558/236162056-c9a65baa-89c4-4cb3-84da-7777f5f21757.gif" width="512"/>
+</div >
 
 ## Citation
 
 ```bibtex
-@article{2021GLIDE,
-  title={GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models},
-  author={ Nichol, A.  and  Dhariwal, P.  and  Ramesh, A.  and  Shyam, P.  and  Mishkin, P.  and  Mcgrew, B.  and  Sutskever, I.  and  Chen, M. },
-  year={2021},
+@misc{smith2023method,
+      title={A Method for Animating Children's Drawings of the Human Figure},
+      author={Harrison Jesse Smith and Qingyuan Zheng and Yifei Li and Somya Jain and Jessica K. Hodgins},
+      year={2023},
+      eprint={2303.12741},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
 }
 ```

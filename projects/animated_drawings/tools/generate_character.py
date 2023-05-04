@@ -112,9 +112,12 @@ def parse_args():
     parser.add_argument(
         '--charname', type=str, default='slamdunk', help='Character name.')
     parser.add_argument(
-        '--img', type=str, default='sakuragi.png', help='Img name.')
+        '--img', type=str, default='resources/sakuragi.png', help='Img name.')
     parser.add_argument(
-        '--mask', type=str, default='sakuragi_mask.png', help='Img mask name.')
+        '--mask',
+        type=str,
+        default='resources/sakuragi_mask.png',
+        help='Img mask name.')
 
     args, unknown = parser.parse_known_args()
 
@@ -133,10 +136,10 @@ def main():
     image_name = args.img
     mask_name = args.mask
 
-    image = Image.open(os.path.join(char_root_dir, char_name, image_name))
+    image = Image.open(image_name)
     detected_map, candidate, subset = posedet(image)
-    # pose_name = 'pose.png'
-    # detected_map.save(os.path.join(char_root_dir, char_name, pose_name))
+    pose_name = 'pose.png'
+    detected_map.save(os.path.join(char_root_dir, char_name, pose_name))
 
     # resize image
     image_np = np.array(image, dtype=np.uint8)
@@ -146,7 +149,7 @@ def main():
     image_resized.save(os.path.join(char_root_dir, char_name, 'texture.png'))
 
     # resize mask image
-    mask = Image.open(os.path.join(char_root_dir, char_name, mask_name))
+    mask = Image.open(mask_name)
     mask_np = np.array(mask, dtype=np.uint8)
     mask_np = HWC3(mask_np)
     mask_np = resize_image(mask_np, detect_resolution)
