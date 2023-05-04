@@ -1,8 +1,8 @@
 scene:
   ANIMATED_CHARACTERS:
-    - character_cfg: configs/characters/yingmu/char_cfg.yaml
-      motion_cfg: configs/motion/new_record.yaml
-      retarget_cfg: configs/retarget/new_record_spf.yaml
+    - character_cfg: characters/slamdunk/char_cfg.yaml
+      motion_cfg: configs/motion/zombie.yaml
+      retarget_cfg: configs/retarget/fair1_spf.yaml
 view:
   CAMERA_POS: [0.6, 1.1, 4.0]
   CAMERA_FWD: [0.0, 0.5, 2.0]
