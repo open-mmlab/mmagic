@@ -1,4 +1,5 @@
 import os
+from argparse import ArgumentParser
 
 import cv2
 import numpy as np
@@ -10,7 +11,6 @@ from controlnet_aux.open_pose.face import faceDetect
 from controlnet_aux.open_pose.hand import handDetect
 from controlnet_aux.open_pose.util import (HWC3, draw_bodypose, draw_facepose,
                                            draw_handpose, resize_image)
-from argparse import ArgumentParser
 
 
 def draw_pose(pose, H, W, draw_body=True, draw_hand=True, draw_face=True):
@@ -101,6 +101,7 @@ class OpenposeDetectorPoint(OpenposeDetector):
 
         return detected_map, candidate, subset
 
+
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument(
@@ -110,19 +111,15 @@ def parse_args():
         help='Characters root dir.')
     parser.add_argument(
         '--charname', type=str, default='slamdunk', help='Character name.')
-    parser.add_argument('--img',
-        type=str,
-        default='sakuragi.png',
-        help='Img name.')
     parser.add_argument(
-        '--mask',
-        type=str,
-        default='sakuragi_mask.png',
-        help='Img mask name.')
+        '--img', type=str, default='sakuragi.png', help='Img name.')
+    parser.add_argument(
+        '--mask', type=str, default='sakuragi_mask.png', help='Img mask name.')
 
     args, unknown = parser.parse_known_args()
 
     return args, unknown
+
 
 def main():
     args, unknown = parse_args()
@@ -156,7 +153,6 @@ def main():
     image_resized = Image.fromarray(mask_np)
     image_resized.save(os.path.join(char_root_dir, char_name, 'mask.png'))
 
-    point_location = {}
     W, H = image_resized.size
 
     config_file = os.path.join(char_root_dir, char_name, 'char_cfg.yaml')
@@ -188,9 +184,9 @@ def main():
     # yapf: enable
     config_dict['skeleton'] = skeleton
 
-
     with open(config_file, 'w') as file:
-        documents = yaml.dump(config_dict, file)
+        yaml.dump(config_dict, file)
+
 
 if __name__ == '__main__':
     main()

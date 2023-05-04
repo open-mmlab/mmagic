@@ -20,10 +20,6 @@ Children’s drawings have a wonderful inventiveness, creativity, and variety to
 
 ## Results
 
-
-
-
-
 ## Quick Start
 
 You can run glide as follows:
