@@ -1,0 +1,14 @@
+scene:
+  ANIMATED_CHARACTERS:
+    - character_cfg: characters/slamdunk/char_cfg.yaml
+      motion_cfg: configs/motion/zombie.yaml
+      retarget_cfg: configs/retarget/fair1_spf.yaml
+view:
+  CAMERA_POS: [1.6, 1.7, 4.0]
+  CAMERA_FWD: [0.0, 0.5, 2.0]
+  BACKGROUND_IMAGE: resources/basketball_playground.png
+
+controller:
+  MODE: video_render
+  OUTPUT_VIDEO_PATH: ./resources/slamdunk_video.mp4
+  OUTPUT_VIDEO_CODEC: mp4v
