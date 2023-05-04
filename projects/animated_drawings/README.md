@@ -36,6 +36,8 @@ mkdir resources
 wget -O sakuragi.png https://user-images.githubusercontent.com/12782558/236157945-452fb9d0-e02e-4f36-8338-34f0ca0fe962.png
 # download mask image
 wget -O sakuragi_mask.png https://user-images.githubusercontent.com/12782558/236157965-539a5467-edae-40d0-a9da-7bb5906bcdc4.png
+# download background image
+wget -O basketball_playground.png https://user-images.githubusercontent.com/12782558/236190727-0e456482-2ae3-4304-9e6c-6ba7d319ea71.png
 ```
 
 ### 3. Generate character

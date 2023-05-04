@@ -6,7 +6,7 @@ scene:
 view:
   CAMERA_POS: [1.6, 1.7, 4.0]
   CAMERA_FWD: [0.0, 0.5, 2.0]
-  BACKGROUND_IMAGE: /home/PJLAB/liuwenran/Downloads/slamdunk/basketball_playground.png
+  BACKGROUND_IMAGE: resources/basketball_playground.png
 
 controller:
   MODE: video_render
