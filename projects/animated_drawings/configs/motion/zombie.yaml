@@ -1,6 +1,6 @@
-filepath: bvh/fair1/zombie.bvh
+filepath: bvh/zombie.bvh
 start_frame_idx: 0
-end_frame_idx: 779
+end_frame_idx: 320
 groundplane_joint: LeftFoot
 forward_perp_joint_vectors:
   - - LeftShoulder

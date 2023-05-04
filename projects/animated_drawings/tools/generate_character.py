@@ -10,6 +10,7 @@ from controlnet_aux.open_pose.face import faceDetect
 from controlnet_aux.open_pose.hand import handDetect
 from controlnet_aux.open_pose.util import (HWC3, draw_bodypose, draw_facepose,
                                            draw_handpose, resize_image)
+from argparse import ArgumentParser
 
 
 def draw_pose(pose, H, W, draw_body=True, draw_hand=True, draw_face=True):
@@ -100,68 +101,96 @@ class OpenposeDetectorPoint(OpenposeDetector):
 
         return detected_map, candidate, subset
 
+def parse_args():
+    parser = ArgumentParser()
+    parser.add_argument(
+        '--chardir',
+        type=str,
+        default='characters',
+        help='Characters root dir.')
+    parser.add_argument(
+        '--charname', type=str, default='slamdunk', help='Character name.')
+    parser.add_argument('--img',
+        type=str,
+        default='sakuragi.png',
+        help='Img name.')
+    parser.add_argument(
+        '--mask',
+        type=str,
+        default='sakuragi_mask.png',
+        help='Img mask name.')
 
-detect_resolution = 512
-control_detector = 'lllyasviel/ControlNet'
-posedet = OpenposeDetectorPoint.from_pretrained(control_detector)
+    args, unknown = parser.parse_known_args()
 
-char_root_dir = 'configs/characters'
-char_name = 'test'
-image_name = '345.webp'
-mask_name = '345mask.png'
+    return args, unknown
 
-image = Image.open(os.path.join(char_root_dir, char_name, image_name))
-detected_map, candidate, subset = posedet(image)
-# pose_name = 'pose.png'
-# detected_map.save(os.path.join(char_root_dir, char_name, pose_name))
+def main():
+    args, unknown = parse_args()
 
-# resize image
-image_np = np.array(image, dtype=np.uint8)
-image_np = HWC3(image_np)
-image_np = resize_image(image_np, detect_resolution)
-image_resized = Image.fromarray(image_np)
-image_resized.save(os.path.join(char_root_dir, char_name, 'texture.png'))
+    detect_resolution = 512
+    control_detector = 'lllyasviel/ControlNet'
+    posedet = OpenposeDetectorPoint.from_pretrained(control_detector)
 
-# resize mask image
-mask = Image.open(os.path.join(char_root_dir, char_name, mask_name))
-mask_np = np.array(mask, dtype=np.uint8)
-mask_np = HWC3(mask_np)
-mask_np = resize_image(mask_np, detect_resolution)
-image_resized = Image.fromarray(mask_np)
-image_resized.save(os.path.join(char_root_dir, char_name, 'mask.png'))
+    char_root_dir = args.chardir
+    char_name = args.charname
+    image_name = args.img
+    mask_name = args.mask
 
-point_location = {}
-W, H = image_resized.size
+    image = Image.open(os.path.join(char_root_dir, char_name, image_name))
+    detected_map, candidate, subset = posedet(image)
+    # pose_name = 'pose.png'
+    # detected_map.save(os.path.join(char_root_dir, char_name, pose_name))
 
-config_file = os.path.join(char_root_dir, char_name, 'char_cfg.yaml')
-config_dict = {}
-config_dict['width'] = detected_map.size[0]
-config_dict['height'] = detected_map.size[1]
+    # resize image
+    image_np = np.array(image, dtype=np.uint8)
+    image_np = HWC3(image_np)
+    image_np = resize_image(image_np, detect_resolution)
+    image_resized = Image.fromarray(image_np)
+    image_resized.save(os.path.join(char_root_dir, char_name, 'texture.png'))
 
-# yapf: disable
-kpts = candidate
-kpts[:, 0] = kpts[:, 0] * W
-kpts[:, 1] = kpts[:, 1] * H
-skeleton = []
-skeleton.append({'loc' : [round(x) for x in (kpts[8]+kpts[11])/2], 'name': 'root'          , 'parent': None})       # noqa
-skeleton.append({'loc' : [round(x) for x in (kpts[8]+kpts[11])/2], 'name': 'hip'           , 'parent': 'root'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[1]            ], 'name': 'torso'         , 'parent': 'hip'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[0]            ], 'name': 'neck'          , 'parent': 'torso'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[2]            ], 'name': 'right_shoulder', 'parent': 'torso'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[3]            ], 'name': 'right_elbow'   , 'parent': 'right_shoulder'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[4]            ], 'name': 'right_hand'    , 'parent': 'right_elbow'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[5]            ], 'name': 'left_shoulder' , 'parent': 'torso'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[6]            ], 'name': 'left_elbow'    , 'parent': 'left_shoulder'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[7]            ], 'name': 'left_hand'     , 'parent': 'left_elbow'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[8]            ], 'name': 'right_hip'     , 'parent': 'root'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[9]            ], 'name': 'right_knee'    , 'parent': 'right_hip'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[10]           ], 'name': 'right_foot'    , 'parent': 'right_knee'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[11]           ], 'name': 'left_hip'      , 'parent': 'root'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[12]           ], 'name': 'left_knee'     , 'parent': 'left_hip'})       # noqa
-skeleton.append({'loc' : [round(x) for x in  kpts[13]           ], 'name': 'left_foot'     , 'parent': 'left_knee'})       # noqa
-# yapf: enable
-config_dict['skeleton'] = skeleton
+    # resize mask image
+    mask = Image.open(os.path.join(char_root_dir, char_name, mask_name))
+    mask_np = np.array(mask, dtype=np.uint8)
+    mask_np = HWC3(mask_np)
+    mask_np = resize_image(mask_np, detect_resolution)
+    image_resized = Image.fromarray(mask_np)
+    image_resized.save(os.path.join(char_root_dir, char_name, 'mask.png'))
+
+    point_location = {}
+    W, H = image_resized.size
+
+    config_file = os.path.join(char_root_dir, char_name, 'char_cfg.yaml')
+    config_dict = {}
+    config_dict['width'] = detected_map.size[0]
+    config_dict['height'] = detected_map.size[1]
+
+    # yapf: disable
+    kpts = candidate
+    kpts[:, 0] = kpts[:, 0] * W
+    kpts[:, 1] = kpts[:, 1] * H
+    skeleton = []
+    skeleton.append({'loc' : [round(x) for x in (kpts[8]+kpts[11])/2], 'name': 'root'          , 'parent': None})       # noqa
+    skeleton.append({'loc' : [round(x) for x in (kpts[8]+kpts[11])/2], 'name': 'hip'           , 'parent': 'root'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[1]            ], 'name': 'torso'         , 'parent': 'hip'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[0]            ], 'name': 'neck'          , 'parent': 'torso'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[2]            ], 'name': 'right_shoulder', 'parent': 'torso'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[3]            ], 'name': 'right_elbow'   , 'parent': 'right_shoulder'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[4]            ], 'name': 'right_hand'    , 'parent': 'right_elbow'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[5]            ], 'name': 'left_shoulder' , 'parent': 'torso'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[6]            ], 'name': 'left_elbow'    , 'parent': 'left_shoulder'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[7]            ], 'name': 'left_hand'     , 'parent': 'left_elbow'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[8]            ], 'name': 'right_hip'     , 'parent': 'root'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[9]            ], 'name': 'right_knee'    , 'parent': 'right_hip'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[10]           ], 'name': 'right_foot'    , 'parent': 'right_knee'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[11]           ], 'name': 'left_hip'      , 'parent': 'root'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[12]           ], 'name': 'left_knee'     , 'parent': 'left_hip'})       # noqa
+    skeleton.append({'loc' : [round(x) for x in  kpts[13]           ], 'name': 'left_foot'     , 'parent': 'left_knee'})       # noqa
+    # yapf: enable
+    config_dict['skeleton'] = skeleton
 
 
-with open(config_file, 'w') as file:
-    documents = yaml.dump(config_dict, file)
+    with open(config_file, 'w') as file:
+        documents = yaml.dump(config_dict, file)
+
+if __name__ == '__main__':
+    main()

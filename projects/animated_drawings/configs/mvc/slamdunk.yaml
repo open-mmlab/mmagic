@@ -4,11 +4,11 @@ scene:
       motion_cfg: configs/motion/zombie.yaml
       retarget_cfg: configs/retarget/fair1_spf.yaml
 view:
-  CAMERA_POS: [0.6, 1.1, 4.0]
+  CAMERA_POS: [1.6, 1.7, 4.0]
   CAMERA_FWD: [0.0, 0.5, 2.0]
-  BACKGROUND_IMAGE: /home/PJLAB/liuwenran/Downloads/animadraw/noperson.png
+  BACKGROUND_IMAGE: /home/PJLAB/liuwenran/Downloads/slamdunk/basketball_playground.png
 
 controller:
   MODE: video_render
-  OUTPUT_VIDEO_PATH: ./new_record_video.mp4
+  OUTPUT_VIDEO_PATH: ./resources/slamdunk_video.mp4
   OUTPUT_VIDEO_CODEC: mp4v
