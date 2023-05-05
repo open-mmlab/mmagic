@@ -85,7 +85,7 @@ image.save('robot.png')
 
 ## Use ToMe to accelerate your stable diffusion model
 
-We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed based on [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` as shown in [stable_diffusion_v1.5_tomesd](configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py). The only requirement is `torch >= 1.12.1` in order to properly support `torch.Tensor.scatter_reduce()` functionality. Please do check it before running the demo.
+We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed based on [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` as shown in [stable_diffusion_v1.5_tomesd](stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py). The only requirement is `torch >= 1.12.1` in order to properly support `torch.Tensor.scatter_reduce()` functionality. Please do check it before running the demo.
 
 ```python
 ...
