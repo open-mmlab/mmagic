@@ -1,7 +1,7 @@
 # assign issues to owners automatically
 assign:
-  issues: disabled # or disabled
-  pull_requests: disabled # or disabled
+  issues: enabled # or disabled
+  pull_requests: enabled # or disabled
   # assign strategy, both issues and pull requests follow the same strategy
   strategy:
     # random
@@ -10,11 +10,11 @@ assign:
   scedule:
     '*/1 * * * *'
   # assignees
-  assignees:
-    - LeoXing1996
-    - zengyh1900
-    - plyfager
-    - liuwenran
-    - Z-Fran
-    - LeoXing1996
-    - LeoXing1996
+  # assignees:
+    # - LeoXing1996
+    # - zengyh1900
+    # - plyfager
+    # - liuwenran
+    # - Z-Fran
+    # - LeoXing1996
+    # - LeoXing1996
