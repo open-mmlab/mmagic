@@ -1,48 +1,36 @@
 # Quick run
 
-After installing MMagic successfully, now you are able to play with MMagic!
-
-To synthesize an image of a church, you only need several lines of codes by MMagic!
+After installing MMagic successfully, now you are able to play with MMagic! To generate an image from text, you only need several lines of codes by MMagic!
 
 ```python
-from mmagic.apis import init_model, sample_unconditional_model
-
-config_file = 'configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-church-256x256.py'
-# you can download this checkpoint in advance and use a local file path.
-checkpoint_file = 'https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth'
-device = 'cuda:0'
-# init a generative model
-model = init_model(config_file, checkpoint_file, device=device)
-# sample images
-fake_imgs = sample_unconditional_model(model, 4)
+from mmagic.apis import MMagicInferencer
+sd_inferencer = MMagicInferencer(model_name='stable_diffusion')
+text_prompts = 'A panda is having dinner at KFC'
+result_out_dir = 'output/sd_res.png'
+sd_inferencer.infer(text=text_prompts, result_out_dir=result_out_dir)
 ```
 
 Or you can just run the following command.
 
 ```bash
-python demo/mmagic_inference_demo_demo.py \
-configs/styleganv2/stylegan2_c2_lsun-church_256_b4x8_800k.py \
-https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth
-
+python demo/mmagic_inference_demo.py \
+    --model-name stable_diffusion \
+    --text "A panda is having dinner at KFC" \
+    --result-out-dir ./output/sd_res.png
 ```
 
-You will see a new image `unconditional_samples.png` in folder `work_dirs/demos/`, which contained generated samples.
+You will see a new image `sd_res.png` in folder `output/`, which contained generated samples.
 
 What's more, if you want to make these photos much more clear,
 you only need several lines of codes for image super-resolution by MMagic!
 
 ```python
-import mmcv
-from mmagic.apis import init_model, restoration_inference
-from mmagic.utils import tensor2img
-
+from mmagic.apis import MMagicInferencer
 config = 'configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py'
 checkpoint = 'https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth'
 img_path = 'tests/data/image/lq/baboon_x4.png'
-model = init_model(config, checkpoint)
-output = restoration_inference(model, img_path)
-output = tensor2img(output)
-mmcv.imwrite(output, 'output.png')
+editor = MMagicInferencer('esrgan', model_config=config, model_ckpt=checkpoint)
+output = editor.infer(img=img_path,result_out_dir='output.png')
 ```
 
 Now, you can check your fancy photos in `output.png`.
