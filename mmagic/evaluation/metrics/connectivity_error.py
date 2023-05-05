@@ -1,21 +1,19 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 """Evaluation metrics used in Image Matting."""
 
-from typing import List, Sequence
+from typing import Optional, Sequence
 
-import cv2
-import numpy as np
 import torch.nn as nn
 from mmengine.model import is_model_wrapper
+from mmeval import ConnectivityError as _ConnectivityError
 from torch.utils.data.dataloader import DataLoader
 
 from mmagic.registry import METRICS
-from .base_sample_wise_metric import BaseSampleWiseMetric
-from .metrics_utils import _fetch_data_and_check, average
+from .metrics_utils import _fetch_data_and_check
 
 
 @METRICS.register_module()
-class ConnectivityError(BaseSampleWiseMetric):
+class ConnectivityError(_ConnectivityError):
     """Connectivity error for evaluating alpha matte prediction.
 
     .. note::
@@ -29,10 +27,14 @@ class ConnectivityError(BaseSampleWiseMetric):
         into this metric
 
     Args:
-        step (float): Step of threshold when computing intersection between
-            `alpha` and `pred_alpha`. Default to 0.1 .
-        norm_const (int): Divide the result to reduce its magnitude.
-            Default to 1000.
+        scaling (float, optional): Scaling factor for final metric.
+            E.g. scaling=100 means the final metric will be amplified by 100
+            for output. Default: 1
+
+        prefix (str, optional): The prefix that will be added in the metric
+            names to disambiguate homonymous metrics of different evaluators.
+            If prefix is not provided in the argument, self.default_prefix
+            will be used instead. Default: None.
 
     Default prefix: ''
 
@@ -41,15 +43,17 @@ class ConnectivityError(BaseSampleWiseMetric):
     """
 
     metric = 'ConnectivityError'
+    SAMPLER_MODE = 'normal'
+    sample_model = 'orig'
 
     def __init__(
         self,
-        step=0.1,
-        norm_constant=1000,
+        scaling: float = 1,
+        prefix: Optional[str] = None,
         **kwargs,
     ) -> None:
-        self.step = step
-        self.norm_constant = norm_constant
+        self.prefix = prefix
+        self.scaling = scaling
         super().__init__(**kwargs)
 
     def prepare(self, module: nn.Module, dataloader: DataLoader):
@@ -69,60 +73,25 @@ class ConnectivityError(BaseSampleWiseMetric):
             predictions (Sequence[dict]): A batch of outputs from
                 the model.
         """
-
+        pred_alphas, gt_alphas, trimaps = [], [], []
         for data_sample in data_samples:
             pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
+            pred_alphas.append(pred_alpha)
+            gt_alphas.append(gt_alpha)
+            trimaps.append(trimap)
 
-            thresh_steps = np.arange(0, 1 + self.step, self.step)
-            round_down_map = -np.ones_like(gt_alpha)
-            for i in range(1, len(thresh_steps)):
-                gt_alpha_thresh = gt_alpha >= thresh_steps[i]
-                pred_alpha_thresh = pred_alpha >= thresh_steps[i]
-                intersection = gt_alpha_thresh & pred_alpha_thresh
-                intersection = intersection.astype(np.uint8)
+        self.add(pred_alphas, gt_alphas, trimaps)
 
-                # connected components
-                _, output, stats, _ = cv2.connectedComponentsWithStats(
-                    intersection, connectivity=4)
-                # start from 1 in dim 0 to exclude background
-                size = stats[1:, -1]
+    def evaluate(self, *args, **kwargs):
+        """Returns metric results and print pretty table of metrics per class.
 
-                # largest connected component of the intersection
-                omega = np.zeros_like(gt_alpha)
-                if len(size) != 0:
-                    max_id = np.argmax(size)
-                    # plus one to include background
-                    omega[output == max_id + 1] = 1
-
-                mask = (round_down_map == -1) & (omega == 0)
-                round_down_map[mask] = thresh_steps[i - 1]
-            round_down_map[round_down_map == -1] = 1
-
-            gt_alpha_diff = gt_alpha - round_down_map
-            pred_alpha_diff = pred_alpha - round_down_map
-            # only calculate difference larger than or equal to 0.15
-            gt_alpha_phi = 1 - gt_alpha_diff * (gt_alpha_diff >= 0.15)
-            pred_alpha_phi = 1 - pred_alpha_diff * (pred_alpha_diff >= 0.15)
-
-            connectivity_error = np.sum(
-                np.abs(gt_alpha_phi - pred_alpha_phi) * (trimap == 128))
-
-            # divide by 1000 to reduce the magnitude of the result
-            connectivity_error /= self.norm_constant
-
-            self.results.append({'conn_err': connectivity_error})
-
-    def compute_metrics(self, results: List):
-        """Compute the metrics from processed results.
-
-        Args:
-            results (dict): The processed results of each batch.
-
-        Returns:
-            Dict: The computed metrics. The keys are the names of the metrics,
-            and the values are corresponding results.
+        This method would be invoked by ``mmengine.Evaluator``.
         """
+        metric_results = self.compute(*args, **kwargs)
+        self.reset()
 
-        conn_err = average(results, 'conn_err')
-
-        return {'ConnectivityError': conn_err}
+        key_template = f'{self.prefix}/{{}}' if self.prefix else '{}'
+        return {
+            key_template.format(k): v * self.scaling
+            for k, v in metric_results.items()
+        }
