@@ -1,22 +1,22 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Sequence
+from typing import Optional, Sequence
 
 import torch.nn as nn
 from mmengine.model import is_model_wrapper
+from mmeval import MattingMeanSquaredError as _MattingMeanSquaredError
 from torch.utils.data.dataloader import DataLoader
 
 from mmagic.registry import METRICS
-from .base_sample_wise_metric import BaseSampleWiseMetric
-from .metrics_utils import _fetch_data_and_check, average
+from .metrics_utils import _fetch_data_and_check
 
 
 @METRICS.register_module()
-class MattingMSE(BaseSampleWiseMetric):
+class MattingMSE(_MattingMeanSquaredError):
     """Mean Squared Error metric for image matting.
 
     This metric compute per-pixel squared error average across all
     pixels.
-    i.e. mean((a-b)^2) / norm_const
+    i.e. mean((a-b)^2)
 
     .. note::
 
@@ -31,8 +31,14 @@ class MattingMSE(BaseSampleWiseMetric):
     Default prefix: ''
 
     Args:
-        norm_const (int): Divide the result to reduce its magnitude.
-            Default to 1000.
+        scaling (float, optional): Scaling factor for final metric.
+            E.g. scaling=100 means the final metric will be amplified by 100
+            for output. Default: 1
+
+        prefix (str, optional): The prefix that will be added in the metric
+            names to disambiguate homonymous metrics of different evaluators.
+            If prefix is not provided in the argument, self.default_prefix
+            will be used instead. Default: None.
 
     Metrics:
         - MattingMSE (float): Mean of Squared Error
@@ -40,14 +46,18 @@ class MattingMSE(BaseSampleWiseMetric):
 
     default_prefix = ''
     metric = 'MattingMSE'
+    SAMPLER_MODE = 'normal'
+    sample_model = 'orig'
 
     def __init__(
         self,
-        norm_const=1000,
+        scaling: float = 1,
+        prefix: Optional[str] = None,
         **kwargs,
     ) -> None:
-        self.norm_const = norm_const
         super().__init__(**kwargs)
+        self.prefix = prefix
+        self.scaling = scaling
 
     def prepare(self, module: nn.Module, dataloader: DataLoader):
         self.size = len(dataloader.dataset)
@@ -65,28 +75,25 @@ class MattingMSE(BaseSampleWiseMetric):
             data_samples (Sequence[dict]): A batch of outputs from
                 the model.
         """
+        pred_alphas, gt_alphas, trimaps = [], [], []
         for data_sample in data_samples:
             pred_alpha, gt_alpha, trimap = _fetch_data_and_check(data_sample)
+            pred_alphas.append(pred_alpha)
+            gt_alphas.append(gt_alpha)
+            trimaps.append(trimap)
 
-            weight_sum = (trimap == 128).sum()
-            if weight_sum != 0:
-                mse_result = ((pred_alpha - gt_alpha)**2).sum() / weight_sum
-            else:
-                mse_result = 0
+        self.add(pred_alphas, gt_alphas, trimaps)
 
-            self.results.append({'mse': mse_result})
+    def evaluate(self, *args, **kwargs):
+        """Returns metric results and print pretty table of metrics per class.
 
-    def compute_metrics(self, results: List):
-        """Compute the metrics from processed results.
-
-        Args:
-            results (dict): The processed results of each batch.
-
-        Returns:
-            Dict: The computed metrics. The keys are the names of the metrics,
-            and the values are corresponding results.
+        This method would be invoked by ``mmengine.Evaluator``.
         """
+        metric_results = self.compute(*args, **kwargs)
+        self.reset()
 
-        mse = average(results, 'mse')
-
-        return {'MattingMSE': mse}
+        key_template = f'{self.prefix}/{{}}' if self.prefix else '{}'
+        return {
+            key_template.format(k): v * self.scaling
+            for k, v in metric_results.items()
+        }
