@@ -7,9 +7,9 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch.optim import SGD
 
-from mmedit.models import SAGAN, GenDataPreprocessor
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
+from mmagic.models import SAGAN, DataPreprocessor
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
 
 generator = dict(
     type='SAGANGenerator',
@@ -36,14 +36,14 @@ class TestSAGAN(TestCase):
         gan = SAGAN(
             noise_size=10,
             num_classes=10,
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             generator=generator,
             discriminator=discriminator,
             generator_steps=1,
             discriminator_steps=4)
 
         self.assertIsInstance(gan, SAGAN)
-        self.assertIsInstance(gan.data_preprocessor, GenDataPreprocessor)
+        self.assertIsInstance(gan.data_preprocessor, DataPreprocessor)
 
         # test only generator have noise size
         gen_cfg = deepcopy(generator)
@@ -52,7 +52,7 @@ class TestSAGAN(TestCase):
             noise_size=10,
             generator=gen_cfg,
             discriminator=discriminator,
-            data_preprocessor=GenDataPreprocessor())
+            data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.noise_size, 10)
 
         # test init with nn.Module
@@ -65,21 +65,19 @@ class TestSAGAN(TestCase):
             noise_size=10,
             generator=gen,
             discriminator=disc,
-            data_preprocessor=GenDataPreprocessor())
+            data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.generator, gen)
         self.assertEqual(gan.discriminator, disc)
 
         # test init without discriminator
         gan = SAGAN(
-            noise_size=10,
-            generator=gen,
-            data_preprocessor=GenDataPreprocessor())
+            noise_size=10, generator=gen, data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.discriminator, None)
 
         # test init with different num_classes
         gan = SAGAN(
             num_classes=10,
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             generator=generator,
             discriminator=discriminator,
             generator_steps=1,
@@ -94,7 +92,7 @@ class TestSAGAN(TestCase):
             noise_size=10,
             generator=generator,
             discriminator=discriminator,
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             discriminator_steps=n_disc)
         # prepare messageHub
         message_hub.update_info('iter', 0)
@@ -106,13 +104,13 @@ class TestSAGAN(TestCase):
             discriminator=OptimWrapper(
                 disc_optim, accumulative_counts=accu_iter))
         # prepare inputs
-        img = torch.randn(1, 3, 16, 16)
-        label = torch.randint(0, 10, (3, 1))
+        img = torch.randn(3, 16, 16)
+        label = torch.randint(0, 10, (1, ))
 
-        data_sample = EditDataSample()
+        data_sample = DataSample(gt_img=img)
         data_sample.set_gt_label(label)
 
-        data = dict(inputs=img, data_samples=[data_sample])
+        data = dict(inputs=dict(), data_samples=[data_sample])
 
         # simulate train_loop here
         for idx in range(n_disc * accu_iter):

@@ -21,11 +21,9 @@ model = dict(
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='sum'),
     train_cfg=dict(tsa_iter=5000),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1),
     ))
 
 # optimizer

@@ -2,7 +2,7 @@
 
 import torch
 
-from mmedit.models.editors.inst_colorization import color_utils
+from mmagic.models.editors.inst_colorization import color_utils
 
 
 class TestColorUtils:

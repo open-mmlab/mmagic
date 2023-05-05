@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors.ddpm.unet_blocks import (CrossAttnDownBlock2D,
+from mmagic.models.editors.ddpm.unet_blocks import (CrossAttnDownBlock2D,
                                                     CrossAttnUpBlock2D,
                                                     UNetMidBlock2DCrossAttn,
                                                     get_down_block,

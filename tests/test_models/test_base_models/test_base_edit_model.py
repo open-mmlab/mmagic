@@ -4,11 +4,11 @@ from mmengine.optim import OptimWrapper
 from torch import nn
 from torch.optim import Adam
 
-from mmedit.models import BaseEditModel, EditDataPreprocessor
-from mmedit.models.losses import L1Loss
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
-from mmedit.utils import register_all_modules
+from mmagic.models import BaseEditModel, DataPreprocessor
+from mmagic.models.losses import L1Loss
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -33,7 +33,7 @@ def test_base_edit_model():
     model = BaseEditModel(
         generator=dict(type='ToyBaseModel'),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-        data_preprocessor=EditDataPreprocessor())
+        data_preprocessor=DataPreprocessor())
 
     assert model.__class__.__name__ == 'BaseEditModel'
     assert isinstance(model.generator, ToyBaseModel)
@@ -45,7 +45,7 @@ def test_base_edit_model():
     # prepare data
     inputs = torch.rand(1, 3, 20, 20)
     target = torch.rand(3, 20, 20)
-    data_sample = EditDataSample(gt_img=PixelData(data=target))
+    data_sample = DataSample(gt_img=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
@@ -59,7 +59,7 @@ def test_base_edit_model():
 
     # val
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (3, 20, 20)
+    assert output[0].output.pred_img.shape == (3, 20, 20)
 
     # feat
     output = model(torch.rand(1, 3, 20, 20), mode='tensor')

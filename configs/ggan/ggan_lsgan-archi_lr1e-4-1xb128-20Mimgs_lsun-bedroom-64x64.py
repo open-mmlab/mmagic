@@ -6,7 +6,7 @@ _base_ = [
 model = dict(
     type='GGAN',
     noise_size=1024,
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     generator=dict(type='LSGANGenerator', output_scale=64),
     discriminator=dict(type='LSGANDiscriminator', input_scale=64))
 
@@ -35,7 +35,7 @@ default_hooks = dict(
 # VIS_HOOK
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))

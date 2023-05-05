@@ -4,7 +4,7 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.models.editors.pggan import PGGANGenerator
+from mmagic.models.editors.pggan import PGGANGenerator
 
 
 class TestPGGANGenerator:

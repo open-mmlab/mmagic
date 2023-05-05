@@ -22,7 +22,10 @@ model = dict(
         num_blocks=23,
         growth_channels=32,
         upscale_factor=scale,
-        init_cfg=dict(type='Pretrained', checkpoint=pretrain_generator_url)),
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint=pretrain_generator_url,
+            prefix='generator.')),
     discriminator=dict(type='ModifiedVGG', in_channels=3, mid_channels=64),
     pixel_loss=dict(type='L1Loss', loss_weight=1e-2, reduction='mean'),
     perceptual_loss=dict(
@@ -41,7 +44,7 @@ model = dict(
     train_cfg=dict(),
     test_cfg=dict(),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
     ))

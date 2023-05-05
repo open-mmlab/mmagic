@@ -6,8 +6,8 @@ import pytest
 import torch
 
 # yapf:disable
-from mmedit.models.editors.biggan import BigGANDeepGenerator
-from mmedit.registry import MODELS
+from mmagic.models.editors.biggan import BigGANDeepGenerator
+from mmagic.registry import MODELS
 
 # yapf:enable
 

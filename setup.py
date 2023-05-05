@@ -17,7 +17,7 @@ def readme():
     return content
 
 
-version_file = 'mmedit/version.py'
+version_file = 'mmagic/version.py'
 
 
 def get_git_hash():
@@ -51,7 +51,7 @@ def get_hash():
         sha = get_git_hash()[:7]
     elif os.path.exists(version_file):
         try:
-            from mmedit.version import __version__
+            from mmagic.version import __version__
             sha = __version__.split('+')[-1]
         except ImportError:
             raise ImportError('Unable to get git version')
@@ -191,7 +191,7 @@ def add_mim_extention():
 
     filenames = ['tools', 'configs', 'demo', 'model-index.yml']
     repo_path = osp.dirname(__file__)
-    mim_path = osp.join(repo_path, 'mmedit', '.mim')
+    mim_path = osp.join(repo_path, 'mmagic', '.mim')
     os.makedirs(mim_path, exist_ok=True)
 
     for filename in filenames:
@@ -232,16 +232,17 @@ def add_mim_extention():
 if __name__ == '__main__':
     add_mim_extention()
     setup(
-        name='mmedit',
+        name='mmagic',
         version=get_version(),
-        description='OpenMMLab Image and Video Editing Toolbox and Benchmark',
+        description='OpenMMLab Multimodal Advanced, Generative, and '
+        'Intelligent Creation Toolbox',
         long_description=readme(),
         long_description_content_type='text/markdown',
-        maintainer='MMEditing Contributors',
+        maintainer='MMagic Contributors',
         maintainer_email='openmmlab@gmail.com',
         keywords='computer vision, super resolution, video interpolation, '
         'inpainting, matting, SISR, RefSR, VSR, GAN, VFI',
-        url='https://github.com/open-mmlab/mmediting',
+        url='https://github.com/open-mmlab/mmagic',
         packages=find_packages(exclude=('configs', 'tools', 'demo')),
         include_package_data=True,
         classifiers=[

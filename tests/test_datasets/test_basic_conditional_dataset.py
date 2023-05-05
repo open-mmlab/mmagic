@@ -5,8 +5,8 @@ from unittest import TestCase
 
 import numpy as np
 
-from mmedit.datasets import BasicConditionalDataset
-from mmedit.utils import register_all_modules
+from mmagic.datasets import BasicConditionalDataset
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -47,14 +47,14 @@ class TestBasicConditonalDataset(TestCase):
         data = dataset[0]
         self.assertEqual(data['sample_idx'], 0)
         self.assertEqual(data['gt_label'], 0)
-        self.assertIn('a/1.JPG', data['img_path'])
+        self.assertIn('a/1.JPG', data['gt_path'])
 
         # test data prefix --> b/subb
         dataset = BasicConditionalDataset(data_root=DATA_DIR, data_prefix='b')
         self.assertIn('subb', dataset.CLASSES)
 
         dataset = BasicConditionalDataset(
-            data_root=DATA_DIR, data_prefix={'img_path': 'b'})
+            data_root=DATA_DIR, data_prefix={'gt_path': 'b'})
         self.assertIn('subb', dataset.CLASSES)
 
         # test runtime error --> no samples
@@ -79,7 +79,7 @@ class TestBasicConditonalDataset(TestCase):
         dataset = BasicConditionalDataset(
             data_root=DATA_DIR,
             lazy_init=True,
-            pipeline=[dict(type='PackEditInputs')])
+            pipeline=[dict(type='PackInputs')])
         self.assertFalse(dataset._fully_initialized)
         self.assertIn("Haven't been initialized", repr(dataset))
         self.assertIn('With transforms:', repr(dataset))
@@ -90,7 +90,7 @@ class TestBasicConditonalDataset(TestCase):
             data_root=DATA_DIR,
             ann_file=ann_file,
             lazy_init=True,
-            pipeline=[dict(type='PackEditInputs')])
+            pipeline=[dict(type='PackInputs')])
         self.assertEqual(dataset[0]['data_samples'].gt_label.label.tolist(),
                          [1, 2, 3, 4])
         self.assertEqual(dataset[1]['data_samples'].gt_label.label.tolist(),

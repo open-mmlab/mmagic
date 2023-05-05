@@ -20,16 +20,17 @@ model = dict(
     pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean'),
     lq_pixel_loss=dict(type='MSELoss', loss_weight=0.01, reduction='mean'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0.5 * 255, 0.5 * 255, 0.5 * 255],
         std=[255, 255, 255],
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1)))
+    ))
 
-val_evaluator = [
-    dict(type='PSNR', crop_border=8, convert_to='Y'),
-    dict(type='SSIM', crop_border=8, convert_to='Y'),
-]
+val_evaluator = dict(
+    type='Evaluator',
+    metrics=[
+        dict(type='PSNR', crop_border=8, convert_to='Y'),
+        dict(type='SSIM', crop_border=8, convert_to='Y'),
+    ])
 
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
@@ -44,20 +45,20 @@ train_pipeline = [
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = [
     dict(type='GenerateFrameIndiceswithPadding', padding='reflection'),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
     dict(type='GenerateSegmentIndices', interval_list=[1]),
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 data_root = 'data'
@@ -105,7 +106,7 @@ optim_wrapper = dict(
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=400_000, val_interval=50000)
-val_cfg = dict(type='ValLoop')
+val_cfg = dict(type='MultiValLoop')
 
 # No learning policy
 

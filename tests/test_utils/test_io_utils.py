@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 
-from mmedit.utils.io_utils import download_from_url
+from mmagic.utils.io_utils import download_from_url
 
 
 def test_download_from_url():

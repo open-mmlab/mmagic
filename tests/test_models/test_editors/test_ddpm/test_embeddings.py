@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.ddpm.embeddings import TimestepEmbedding, Timesteps
+from mmagic.models.editors.ddpm.embeddings import TimestepEmbedding, Timesteps
 
 
 def test_TimestepEmbedding():

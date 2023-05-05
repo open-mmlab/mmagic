@@ -12,7 +12,7 @@ import numpy as np
 import titlecase
 from tqdm import tqdm
 
-github_link = 'https://github.com/open-mmlab/mmediting/blob/1.x/'
+github_link = 'https://github.com/open-mmlab/mmagic/blob/main/'
 
 
 def anchor(name):

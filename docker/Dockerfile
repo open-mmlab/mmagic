@@ -14,10 +14,10 @@ RUN apt-get update && apt-get install -y git ninja-build libglib2.0-0 libsm6 lib
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install mmediting
+# Install mmagic
 RUN conda clean --all
-RUN git clone -b 1.x https://github.com/open-mmlab/mmediting.git /mmediting
-WORKDIR /mmediting
+RUN git clone https://github.com/open-mmlab/mmagicg.git /mmagic
+WORKDIR /mmagic
 ENV FORCE_CUDA="1"
 RUN pip install openmim
 RUN mim install mmcv==${MMCV}

@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 import torch
 from mmengine.model import MMDistributedDataParallel
 
-from mmedit.models import BaseTranslationModel
+from mmagic.models import BaseTranslationModel
 
 
 class ToyTranslationModel(BaseTranslationModel):

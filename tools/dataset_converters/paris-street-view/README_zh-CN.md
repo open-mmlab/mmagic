@@ -15,8 +15,8 @@
 请从[此处](https://github.com/pathak22/context-encoder/issues/24)获取数据集。
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

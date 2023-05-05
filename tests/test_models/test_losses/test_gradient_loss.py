@@ -3,7 +3,7 @@ import numpy.testing as npt
 import pytest
 import torch
 
-from mmedit.models import DiscShiftLoss, GradientLoss, GradientPenaltyLoss
+from mmagic.models import DiscShiftLoss, GradientLoss, GradientPenaltyLoss
 
 
 def test_gradient_loss():

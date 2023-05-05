@@ -7,13 +7,13 @@ from glob import glob
 from tqdm import tqdm
 
 parser = ArgumentParser()
-parser.add_argument('--src', type=str, default='mmedit')
+parser.add_argument('--src', type=str, default='mmagic')
 parser.add_argument('--dst', type=str, default='tests')
 parser.add_argument(
     '--exclude',
     nargs='+',
     default=[
-        'mmedit/.mim', 'mmedit/registry.py', 'mmedit/version.py',
+        'mmagic/.mim', 'mmagic/registry.py', 'mmagic/version.py',
         '__pycache__', '__init__', '**/__init__.py', '**/stylegan3_ops/*',
         '**/conv2d_gradfix.py', '**/grid_sample_gradfix.py', '**/misc.py',
         '**/upfirdn2d.py', '**/all_gather_layer.py', '**/typing.py'
@@ -34,7 +34,7 @@ def update_ut():
     missing_ut = []
     blank_ut = []
 
-    file_list = glob('mmedit/**/*.py', recursive=True)
+    file_list = glob('mmagic/**/*.py', recursive=True)
 
     for f in tqdm(file_list):
         if check_exclude(f):
@@ -44,7 +44,7 @@ def update_ut():
 
             dirname = osp.dirname(f)
             dirname = dirname.replace('__', '')
-            dirname = dirname.replace('mmedit', 'tests')
+            dirname = dirname.replace('mmagic', 'tests')
             dirname = dirname.replace('/', '/test_')
             os.makedirs(dirname, exist_ok=True)
 

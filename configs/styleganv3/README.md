@@ -28,7 +28,7 @@ results pave the way for generative models better suited for video and animation
 ## Results and Models
 
 <div align="center">
-  <b> Results (compressed) from StyleGAN3 config-T converted by mmediting</b>
+  <b> Results (compressed) from StyleGAN3 config-T converted by mmagic</b>
   <br/>
   <img src="https://user-images.githubusercontent.com/22982797/150450502-c182834f-796f-4397-bd38-df1efe4a8a47.png" width="800"/>
 </div>

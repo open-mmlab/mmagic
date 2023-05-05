@@ -5,7 +5,7 @@ from copy import deepcopy
 import pytest
 import torch
 
-from mmedit.models.editors.stylegan2 import StyleGAN2Generator
+from mmagic.models.editors.stylegan2 import StyleGAN2Generator
 
 
 class TestStyleGAN2Generator:

@@ -1,6 +1,6 @@
 # Migration of Schedule Settings
 
-We update schedule settings in MMEdit 1.x. Important modifications are as following.
+We update schedule settings in MMagic 1.x. Important modifications are as following.
 
 - Now we use `optim_wrapper` field to specify all configuration about the optimization process. And the `optimizer` is a sub field of `optim_wrapper` now.
 - The `lr_config` field is removed and we use new `param_scheduler` to replace it.
@@ -47,4 +47,4 @@ test_cfg = dict(type='TestLoop')  # The name of test loop type
 </thead>
 </table>
 
-> More details of schedule settings are shown in [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/migration/migrate_param_scheduler_from_mmcv.md).
+> More details of schedule settings are shown in [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/migration/param_scheduler.md).

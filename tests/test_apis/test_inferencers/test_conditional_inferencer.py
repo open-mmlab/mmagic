@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
-from mmedit.apis.inferencers.conditional_inferencer import \
+from mmagic.apis.inferencers.conditional_inferencer import \
     ConditionalInferencer
-from mmedit.utils import register_all_modules
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -24,7 +24,3 @@ def test_conditional_inferencer():
         label=1, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.shape == (4, 3, 32, 32)
-
-
-if __name__ == '__main__':
-    test_conditional_inferencer()

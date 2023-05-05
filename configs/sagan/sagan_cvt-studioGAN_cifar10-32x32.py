@@ -7,9 +7,9 @@ _base_ = [
 # NOTE:
 # * CIFAR is loaded in 'RGB'
 # * studio GAN train their model in 'RGB' order
-# model = dict(
-#     data_preprocessor=dict(rgb_to_bgr=True), generator=dict(rgb_to_bgr=True))
-model = dict(generator=dict(rgb_to_bgr=True))
+model = dict(
+    data_preprocessor=dict(output_channel_order='BGR'),
+    generator=dict(rgb_to_bgr=True))
 
 # NOTE: do not support training for converted configs
 train_cfg = train_dataloader = optim_wrapper = None
@@ -33,5 +33,6 @@ metrics = [
 ]
 
 # EVALUATION
-val_dataloader = test_dataloader = dict(batch_size=128)
-val_evaluator = test_evaluator = dict(metrics=metrics)
+val_dataloader = val_evaluator = val_cfg = None
+test_dataloader = dict(batch_size=128)
+test_evaluator = dict(metrics=metrics)

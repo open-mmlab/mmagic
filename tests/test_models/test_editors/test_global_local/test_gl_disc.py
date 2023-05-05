@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 def test_gl_discs():

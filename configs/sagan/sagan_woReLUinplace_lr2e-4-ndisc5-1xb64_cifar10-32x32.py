@@ -9,7 +9,7 @@ disc_step = 5
 init_cfg = dict(type='studio')
 model = dict(
     # CIFAR images are RGB, convert to BGR
-    data_preprocessor=dict(rgb_to_bgr=True),
+    data_preprocessor=dict(output_channel_order='BGR'),
     generator=dict(init_cfg=init_cfg),
     discriminator=dict(init_cfg=init_cfg))
 
@@ -25,7 +25,7 @@ optim_wrapper = dict(
 # VIS_HOOK
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))

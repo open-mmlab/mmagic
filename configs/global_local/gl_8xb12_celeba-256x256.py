@@ -40,7 +40,7 @@ train_pipeline = [
         keep_ratio=False,
     ),
     dict(type='GetMaskedImage'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 test_pipeline = train_pipeline
@@ -63,8 +63,8 @@ train_cfg = dict(
     max_iters=300002,
     val_interval=50000,
 )
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # runtime settings
 # inheritate from _base_

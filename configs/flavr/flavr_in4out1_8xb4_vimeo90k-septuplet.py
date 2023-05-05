@@ -23,11 +23,7 @@ model = dict(
     required_frames=4,
     step_frames=1,
     init_cfg=None,
-    data_preprocessor=dict(
-        type='EditDataPreprocessor',
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1),
-    ))
+    data_preprocessor=dict(type='DataPreprocessor', ))
 
 train_pipeline = [
     dict(
@@ -57,7 +53,7 @@ train_pipeline = [
         saturation=0.05,
         hue=0.05),
     dict(type='TemporalReverse', keys=['img'], reverse_ratio=0.5),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = [
@@ -71,7 +67,7 @@ val_pipeline = [
         key='gt',
         channel_order='rgb',
         imdecode_backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
@@ -80,7 +76,7 @@ demo_pipeline = [
         key='img',
         channel_order='rgb',
         imdecode_backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings
@@ -130,8 +126,8 @@ val_evaluator = [
 test_evaluator = val_evaluator
 
 train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=500)
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(
@@ -160,7 +156,6 @@ default_hooks = dict(
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
     sampler_seed=dict(type='DistSamplerSeedHook'),
-    # visualization=dict(type='EditVisualizationHook'),
     param_scheduler=dict(
         type='ReduceLRSchedulerHook',
         by_epoch=True,

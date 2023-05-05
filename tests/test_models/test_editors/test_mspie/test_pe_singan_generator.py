@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models.editors.mspie import SinGANMSGeneratorPE
+from mmagic.models.editors.mspie import SinGANMSGeneratorPE
 
 
 class TestSinGANPEGen:

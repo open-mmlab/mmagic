@@ -1,5 +1,5 @@
-from mmedit.models import ResNet
-from mmedit.registry import MODELS
+from mmagic.models import ResNet
+from mmagic.registry import MODELS
 
 
 # Register your model to the `MODELS`.
@@ -12,7 +12,7 @@ class ExampleNet(ResNet):
 
     def __init__(self, **kwargs) -> None:
         print('#############################\n'
-              '#  Hello MMEditing!  #\n'
+              '#  Hello MMagic!  #\n'
               '#############################')
         super().__init__(**kwargs)
 

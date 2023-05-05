@@ -50,7 +50,7 @@ python tools/train.py configs/gca/gca_r34_4xb10-200k_comp1k.py
 ./tools/dist_train.sh configs/gca/gca_r34_4xb10-200k_comp1k.py 8
 ```
 
-For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMagic).
 
 </details>
 
@@ -72,7 +72,7 @@ python tools/test.py configs/gca/gca_r34_4xb10-200k_comp1k.py https://download.o
 ./tools/dist_test.sh configs/gca/gca_r34_4xb10-200k_comp1k.py https://download.openmmlab.com/mmediting/mattors/gca/gca_r34_4x10_200k_comp1k_SAD-33.38_20220615-65595f39.pth 8
 ```
 
-For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).
 
 </details>
 

@@ -17,7 +17,7 @@ from rich.table import Table
 from task_mapping import TASK_MAPPING
 
 console = Console()
-MMEDITING_ROOT = Path(__file__).absolute().parents[1]
+MMagic_ROOT = Path(__file__).absolute().parents[1]
 
 
 def parse_args():
@@ -82,10 +82,10 @@ def parse_args():
 
 
 def create_test_job_batch(commands, model_info, args, port, script_name):
-    config_http_prefix_blob = ('https://github.com/open-mmlab/mmediting/'
-                               'blob/master/')
-    config_http_prefix_tree = ('https://github.com/open-mmlab/mmediting/'
-                               'tree/master/')
+    config_http_prefix_blob = ('https://github.com/open-mmlab/mmagic/'
+                               'blob/main/')
+    config_http_prefix_tree = ('https://github.com/open-mmlab/mmagic/'
+                               'tree/main/')
     fname = model_info.name
 
     config = model_info.config
@@ -163,6 +163,7 @@ def create_test_job_batch(commands, model_info, args, port, script_name):
                   f'#SBATCH --ntasks=2\n'
                   f'#SBATCH --cpus-per-task=16\n\n'
                   f'export MASTER_PORT={port}\n'
+                  f'export CUBLAS_WORKSPACE_CONFIG=:4096:8\n'
                   f'{runner} -u {script_name} {config} {checkpoint} '
                   f'--work-dir={work_dir} '
                   f'--out={result_file} '
@@ -183,7 +184,7 @@ def create_test_job_batch(commands, model_info, args, port, script_name):
 
 def test(args):
     # parse model-index.yml
-    model_index_file = MMEDITING_ROOT / 'model-index.yml'
+    model_index_file = MMagic_ROOT / 'model-index.yml'
     model_index = load(str(model_index_file))
     model_index.build_models_with_collections()
     models = OrderedDict({model.name: model for model in model_index.models})
@@ -345,7 +346,7 @@ def show_summary(summary_data,
 
 
 def summary(args):
-    model_index_file = MMEDITING_ROOT / 'model-index.yml'
+    model_index_file = MMagic_ROOT / 'model-index.yml'
     model_index = load(str(model_index_file))
     model_index.build_models_with_collections()
     models = OrderedDict({model.name: model for model in model_index.models})

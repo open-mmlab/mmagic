@@ -1,0 +1,41 @@
+Collections:
+- Name: Control Net
+  Paper:
+    Title: Adding Conditional Control to Text-to-Image Diffusion Models
+    URL: https://arxiv.org/abs/2302.05543
+  README: configs/controlnet/README.md
+  Task:
+  - text2image
+  Year: 2023
+Models:
+- Config: configs/controlnet/controlnet-canny.py
+  In Collection: Control Net
+  Name: controlnet-canny
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
+  Weights: https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_canny.pth
+- Config: configs/controlnet/controlnet-seg.py
+  In Collection: Control Net
+  Name: controlnet-seg
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
+  Weights: https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_seg.pth
+- Config: configs/controlnet/controlnet-pose.py
+  In Collection: Control Net
+  Name: controlnet-pose
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
+  Weights: https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_openpose.pth
+- Config: configs/controlnet/controlnet-1xb1-fill50k.py
+  In Collection: Control Net
+  Name: controlnet-1xb1-fill50k
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image

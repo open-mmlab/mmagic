@@ -2,7 +2,7 @@
 import torch
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
-from mmedit.models.editors import PConvEncoder
+from mmagic.models.editors import PConvEncoder
 
 
 def test_pconv_enc():

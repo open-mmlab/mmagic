@@ -1,13 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 from unittest import TestCase
 
+import pytest
 import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import StyleGAN3
-from mmedit.utils import register_all_modules
+from mmagic.models import StyleGAN3
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -17,7 +20,7 @@ class TestStyleGAN3(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.default_cfg = dict(
-            data_preprocessor=dict(type='GenDataPreprocessor'),
+            data_preprocessor=dict(type='DataPreprocessor'),
             generator=dict(
                 type='StyleGANv3Generator',
                 noise_size=6,
@@ -49,16 +52,19 @@ class TestStyleGAN3(TestCase):
                 g_reg_weight=8.0,
                 pl_batch_shrink=2))
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_val_and_test_step(self):
         cfg = deepcopy(self.default_cfg)
         stylegan = StyleGAN3(**cfg)
 
-        data = dict(inputs=dict(num_batches=2), data_samples=[])
+        data = dict(inputs=dict(num_batches=2))
         outputs = stylegan.test_step(data)
         self.assertEqual(len(outputs), 2)
         self.assertEqual(outputs[0].fake_img.data.shape, (3, 16, 16))
 
-        data = dict(inputs=dict(num_batches=2), data_samples=[])
+        data = dict(inputs=dict(num_batches=2))
         outputs = stylegan.val_step(data)
         self.assertEqual(len(outputs), 2)
         self.assertEqual(outputs[0].fake_img.data.shape, (3, 16, 16))
@@ -69,6 +75,9 @@ class TestStyleGAN3(TestCase):
         outputs = stylegan.test_step(data)
         outputs = stylegan.val_step(data)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_train_step(self):
         message_hub = MessageHub.get_instance('test-s3-train-step')
         cfg = deepcopy(self.default_cfg)
@@ -80,7 +89,7 @@ class TestStyleGAN3(TestCase):
             generator=OptimWrapper(optimizer_g, accumulative_counts=1),
             discriminator=OptimWrapper(optimizer_d, accumulative_counts=1))
 
-        img = torch.randn(1, 3, 16, 16)
-        data = dict(inputs=dict(img=img), data_samples=[])
+        img = torch.randn(3, 16, 16)
+        data = dict(inputs=dict(), data_samples=[DataSample(gt_img=img)])
         message_hub.update_info('iter', 0)
         _ = stylegan.train_step(data, optim_wrapper_dict)

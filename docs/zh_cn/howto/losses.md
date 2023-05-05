@@ -1,8 +1,8 @@
 # 如何设计自己的损失函数
 
-`losses` 在 `MMEditing` 中注册为 `LOSSES`。
-在 MMEditing 中设计自己的损失函数，步骤和在 MMEditing 中自定义任何其他模型类似。
-本节主要具体介绍了如何在 MMEditing 中实现自定义的损失函数。
+`losses` 在 `MMagic` 中注册为 `LOSSES`。
+在 MMagic 中设计自己的损失函数，步骤和在 MMagic 中自定义任何其他模型类似。
+本节主要具体介绍了如何在 MMagic 中实现自定义的损失函数。
 本教程建议您在实现自定义的损失函数时，应该遵循本教程相同的设计，这样在我们的框架中使用您新定义的损失函数，就不需要额外的工作。
 
 本指南包括：
@@ -53,10 +53,10 @@ def mse_loss(pred，target)：
 Class MSELoss(nn.Module)：
 
      def __init__(self, loss_weight=1.0, reduction='mean', sample_wise=False):
-         # 代码可以在``mmedit/models/losses/pixelwise_loss.py``中找到
+         # 代码可以在``mmagic/models/losses/pixelwise_loss.py``中找到
 
      def forward(self, pred, target, weight=None, **kwargs):
-         # 代码可以在``mmedit/models/losses/pixelwise_loss.py``中找到
+         # 代码可以在``mmagic/models/losses/pixelwise_loss.py``中找到
 ```
 
 根据这个损失函数的定义，我们现在可以简单地通过在配置文件中定义它来使用：
@@ -65,12 +65,12 @@ Class MSELoss(nn.Module)：
 pixel_loss=dict(type='MSELoss', loss_weight=1.0, reduction='mean')
 ```
 
-请注意，上面的`pixel_loss`必须在模型中定义。 详情请参考[自定义模型](./models.md)。 与自定义模型类似，为了使用您自己实现的损失函数，您需要在编写后在`mmedit/models/losses/__init__.py`中导入该损失函数。
+请注意，上面的`pixel_loss`必须在模型中定义。 详情请参考[自定义模型](./models.md)。 与自定义模型类似，为了使用您自己实现的损失函数，您需要在编写后在`mmagic/models/losses/__init__.py`中导入该损失函数。
 
 ### DiscShiftLoss 的一个例子
 
 一般来说，要实现一个损失模块，我们会编写一个函数实现，然后用类实现包装它。
-但是，在 MMEditing 中，我们提供了另一个统一的接口 data_info 供用户定义输入参数和数据项之间的映射。
+但是，在 MMagic 中，我们提供了另一个统一的接口 data_info 供用户定义输入参数和数据项之间的映射。
 
 ```python
 @weighted_loss
@@ -82,10 +82,10 @@ Class DiscShiftLoss(nn.Module)：
 
      def __init__(self, loss_weight=1.0, data_info=None):
          super(DiscShiftLoss，self).__init__()
-         # 代码可以在``mmgen/models/losses/disc_auxiliary_loss.py``中找到
+         # 代码可以在``mmagic/models/losses/disc_auxiliary_loss.py``中找到
 
      def forward(self, *args, **kwargs):
-         # 代码可以在``mmgen/models/losses/disc_auxiliary_loss.py``中找到
+         # 代码可以在``mmagic/models/losses/disc_auxiliary_loss.py``中找到
 ```
 
 这种损失模块设计的目标是允许在生成模型(`MODELS`)中自动使用它，而无需其他复杂代码来定义数据和关键字参数之间的映射。 因此，与 OpenMMLab 中的其他框架不同，我们的损失模块包含一个特殊的关键字 data_info，它是一个定义输入参数与生成模型数据之间映射的字典。 以`DiscShiftLoss`为例，用户在编写配置文件时，可能会用到这个loss，如下：
@@ -247,7 +247,7 @@ class GANWithCustomizedLoss(BaseModel):
 <tbody>
   <tr>
     <td>vanilla gan loss</td>
-    <td>mmedit.models.GANLoss</td>
+    <td>mmagic.models.GANLoss</td>
 <td>
 
 ```python
@@ -265,14 +265,14 @@ loss_gan=dict(
 </tr>
   <tr>
     <td>lsgan loss</td>
-    <td>mmedit.models.GANLoss</td>
+    <td>mmagic.models.GANLoss</td>
 <td>
 </td>
 
 </tr>
   <tr>
     <td>wgan loss</td>
-    <td>mmedit.models.GANLoss</td>
+    <td>mmagic.models.GANLoss</td>
     <td>
 
 ```python
@@ -289,7 +289,7 @@ loss_gan=dict(
 </tr>
   <tr>
     <td>hinge loss</td>
-    <td>mmedit.models.GANLoss</td>
+    <td>mmagic.models.GANLoss</td>
     <td>
 
 ```python
@@ -306,7 +306,7 @@ loss_gan=dict(
 </tr>
   <tr>
     <td>smgan loss</td>
-    <td>mmedit.models.GANLoss</td>
+    <td>mmagic.models.GANLoss</td>
 <td>
 
 ```python
@@ -323,7 +323,7 @@ loss_gan=dict(
 </tr>
   <tr>
     <td>gradient penalty</td>
-    <td>mmedit.models.GradientPenaltyLoss</td>
+    <td>mmagic.models.GradientPenaltyLoss</td>
     <td>
 
 ```python
@@ -336,7 +336,7 @@ loss_gp=dict(type='GradientPenaltyLoss', loss_weight=10.)
 </tr>
   <tr>
     <td>discriminator shift loss</td>
-    <td>mmedit.models.DiscShiftLoss</td>
+    <td>mmagic.models.DiscShiftLoss</td>
     <td>
 
 ```python
@@ -350,25 +350,25 @@ loss_disc_shift=dict(type='DiscShiftLoss', loss_weight=0.001)
 </tr>
   <tr>
     <td>clip loss</td>
-    <td>mmedit.models.CLIPLoss</td>
+    <td>mmagic.models.CLIPLoss</td>
     <td></td>
 
 </tr>
   <tr>
     <td>L1 composition loss</td>
-    <td>mmedit.models.L1CompositionLoss</td>
+    <td>mmagic.models.L1CompositionLoss</td>
     <td></td>
 
 </tr>
   <tr>
     <td>MSE composition loss</td>
-    <td>mmedit.models.MSECompositionLoss</td>
+    <td>mmagic.models.MSECompositionLoss</td>
     <td></td>
 
 </tr>
   <tr>
     <td>charbonnier composition loss</td>
-    <td>mmedit.models.CharbonnierCompLoss</td>
+    <td>mmagic.models.CharbonnierCompLoss</td>
     <td>
 
 ```python
@@ -381,13 +381,13 @@ loss_comp=dict(type='CharbonnierCompLoss', loss_weight=0.5)
 </tr>
   <tr>
     <td>face id Loss</td>
-    <td>mmedit.models.FaceIdLoss</td>
+    <td>mmagic.models.FaceIdLoss</td>
     <td></td>
 
 </tr>
   <tr>
     <td>light cnn feature loss</td>
-    <td>mmedit.models.LightCNNFeatureLoss</td>
+    <td>mmagic.models.LightCNNFeatureLoss</td>
     <td>
 
 ```python
@@ -404,13 +404,13 @@ feature_loss=dict(
 </tr>
   <tr>
     <td>gradient loss</td>
-    <td>mmedit.models.GradientLoss</td>
+    <td>mmagic.models.GradientLoss</td>
     <td></td>
 
 </tr>
   <tr>
     <td>l1 Loss</td>
-    <td>mmedit.models.L1Loss</td>
+    <td>mmagic.models.L1Loss</td>
     <td>
 
 ```python
@@ -423,7 +423,7 @@ pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean')
 </tr>
   <tr>
     <td>mse loss</td>
-    <td>mmedit.models.MSELoss</td>
+    <td>mmagic.models.MSELoss</td>
     <td>
 
 ```python
@@ -436,7 +436,7 @@ align_loss=dict(type='MSELoss', loss_weight=0.1, reduction='mean')
 </tr>
   <tr>
     <td>charbonnier loss</td>
-    <td>mmedit.models.CharbonnierLoss</td>
+    <td>mmagic.models.CharbonnierLoss</td>
     <td>
 
 ```python
@@ -449,7 +449,7 @@ loss_alpha=dict(type='CharbonnierLoss', loss_weight=0.5)
 </tr>
   <tr>
     <td>masked total variation loss</td>
-    <td>mmedit.models.MaskedTVLoss</td>
+    <td>mmagic.models.MaskedTVLoss</td>
     <td>
 
 ```python
@@ -466,7 +466,7 @@ loss_tv=dict(
 </tr>
   <tr>
     <td>perceptual loss</td>
-    <td>mmedit.models.PerceptualLoss</td>
+    <td>mmagic.models.PerceptualLoss</td>
     <td>
 
 ```python
@@ -492,7 +492,7 @@ perceptual_loss=dict(
 </tr>
   <tr>
     <td>transferal perceptual loss</td>
-    <td>mmedit.models.TransferalPerceptualLoss</td>
+    <td>mmagic.models.TransferalPerceptualLoss</td>
     <td>
 
 ```python
@@ -516,10 +516,10 @@ transferal_perceptual_loss=dict(
 
 | Method                               | class                                       |
 | ------------------------------------ | ------------------------------------------- |
-| clip loss component                  | mmedit.models.CLIPLossComps                 |
-| discriminator shift loss component   | mmedit.models. DiscShiftLossComps           |
-| gradient penalty loss component      | mmedit.models. GradientPenaltyLossComps     |
-| r1 gradient penalty component        | mmedit.models. R1GradientPenaltyComps       |
-| face Id loss component               | mmedit.models. FaceIdLossComps              |
-| gan loss component                   | mmedit.models. GANLossComps                 |
-| generator path regularizer component | mmedit.models.GeneratorPathRegularizerComps |
+| clip loss component                  | mmagic.models.CLIPLossComps                 |
+| discriminator shift loss component   | mmagic.models. DiscShiftLossComps           |
+| gradient penalty loss component      | mmagic.models. GradientPenaltyLossComps     |
+| r1 gradient penalty component        | mmagic.models. R1GradientPenaltyComps       |
+| face Id loss component               | mmagic.models. FaceIdLossComps              |
+| gan loss component                   | mmagic.models. GANLossComps                 |
+| generator path regularizer component | mmagic.models.GeneratorPathRegularizerComps |

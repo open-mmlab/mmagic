@@ -6,12 +6,12 @@ import torch
 import torch.nn as nn
 from mmengine.runner import Runner
 
-from mmedit.datasets import BasicImageDataset
-from mmedit.datasets.transforms import PackEditInputs
-from mmedit.evaluation import PrecisionAndRecall
-from mmedit.models import LSGAN, GenDataPreprocessor
-from mmedit.models.editors.dcgan import DCGANGenerator
-from mmedit.utils import register_all_modules
+from mmagic.datasets import BasicImageDataset
+from mmagic.datasets.transforms import PackInputs
+from mmagic.evaluation import PrecisionAndRecall
+from mmagic.models import LSGAN, DataPreprocessor
+from mmagic.models.editors.dcgan import DCGANGenerator
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -46,13 +46,14 @@ class TestPR:
     @classmethod
     def setup_class(cls):
         pipeline = [
-            dict(type='LoadImageFromFile', key='img'),
-            dict(type='Resize', scale=(128, 128)),
-            PackEditInputs()
+            dict(type='LoadImageFromFile', key='gt'),
+            dict(type='Resize', keys='gt', scale=(128, 128)),
+            PackInputs()
         ]
         dataset = BasicImageDataset(
             data_root='tests/data/image/img_root',
             pipeline=pipeline,
+            data_prefix=dict(gt=''),
             test_mode=True,
             recursive=True)
         cls.dataloader = Runner.build_dataloader(
@@ -60,7 +61,7 @@ class TestPR:
                 batch_size=2,
                 dataset=dataset,
                 sampler=dict(type='DefaultSampler')))
-        gan_data_preprocessor = GenDataPreprocessor()
+        gan_data_preprocessor = DataPreprocessor()
         generator = DCGANGenerator(128, noise_size=10, base_channels=20)
         cls.module = LSGAN(
             generator, data_preprocessor=gan_data_preprocessor)  # noqa

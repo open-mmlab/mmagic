@@ -2,7 +2,7 @@
 
 > [Disco Diffusion](https://github.com/alembics/disco-diffusion)
 
-> **Task**: Text2Image, Image2Image, diffusion
+> **Task**: Text2Image, Image2Image
 
 <!-- [ALGORITHM] -->
 
@@ -81,7 +81,7 @@ from mmengine import Config, MODELS
 from mmengine.registry import init_default_scope
 from torchvision.utils import save_image
 
-init_default_scope('mmedit')
+init_default_scope('mmagic')
 
 disco = MODELS.build(
     Config.fromfile('configs/disco_diffusion/disco-baseline.py').model).cuda().eval()
@@ -104,7 +104,7 @@ save_image(image, "image.png")
 
 ## Tutorials
 
-Considering that `disco-diffusion` contains many adjustable parameters, we provide users with a [jupyter-notebook](./tutorials.ipynb) / [colab](https://githubtocolab.com/open-mmlab/mmediting/blob/dev-1.x/configs/disco_diffusion/tutorials.ipynb) tutorial that exhibits the meaning of different parameters, and gives results corresponding to adjustment.
+Considering that `disco-diffusion` contains many adjustable parameters, we provide users with a [jupyter-notebook](./tutorials.ipynb) / [colab](https://githubtocolab.com/open-mmlab/mmagic/blob/main/configs/disco_diffusion/tutorials.ipynb) tutorial that exhibits the meaning of different parameters, and gives results corresponding to adjustment.
 Refer to [Disco Sheet](https://docs.google.com/document/d/1l8s7uS2dGqjztYSjPpzlmXLjl5PM3IGkRWI3IiCuK7g/edit).
 
 ## Credits

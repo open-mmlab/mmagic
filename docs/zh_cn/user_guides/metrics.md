@@ -1,8 +1,8 @@
 # 教程 5：使用评价指标
 
-MMEditing支持**17个指标**以评估模型质量。
+MMagic支持**17个指标**以评估模型质量。
 
-有关用法，请参阅[MMEditing中的训练与测试](../user_guides/train_test.md)。
+有关用法，请参阅[MMagic中的训练与测试](../user_guides/train_test.md)。
 
 在这里，我们将逐个介绍不同指标的详细信息。
 
@@ -140,11 +140,11 @@ val_evaluator = [
 
 Fréchet初始距离是两个图像数据集之间相似度的度量。它被证明与人类对视觉质量的判断有很好的相关性，最常用于评估生成对抗网络样本的质量。FID是通过计算两个高斯函数之间的Fréchet距离来计算的，这些高斯函数适合于Inception网络的特征表示。
 
-在`MMEditing`中，我们提供了两个版本的FID计算。一个是常用的PyTorch版本，另一个用于StyleGAN。同时，我们在StyleGAN2-FFHQ1024模型中比较了这两种实现之间的差异(详细信息可以在这里找到\[https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv2/README.md\])。幸运的是，最终结果只是略有不同。因此，我们建议用户采用更方便的PyTorch版本。
+在`MMagic`中，我们提供了两个版本的FID计算。一个是常用的PyTorch版本，另一个用于StyleGAN。同时，我们在StyleGAN2-FFHQ1024模型中比较了这两种实现之间的差异(详细信息可以在这里找到\[https://github.com/open-mmlab/mmagic/blob/main/configs/styleganv2/README.md\])。幸运的是，最终结果只是略有不同。因此，我们建议用户采用更方便的PyTorch版本。
 
 **关于PyTorch版本和Tero版本:** 常用的PyTorch版本采用修改后的InceptionV3网络提取真假图像特征。然而，Tero的FID需要Tensorflow InceptionV3的[脚本模块](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/inception-2015-12-05.pt)。注意，应用此脚本模块需要' PyTorch >= 1.6.0 '。
 
-**关于提取真实的初始数据:** 为了方便用户，在测试时自动提取真实的特征并保存在本地，存储的特征在下次测试时自动读取。具体来说，我们将根据用于计算实际特性的参数计算一个哈希值，并使用哈希值来标记特性文件，在测试时，如果' inception_pkl '没有设置，我们将在' MMEDIT_CACHE_DIR ' (~/.cache/openmmlab/mmedit/)中寻找该特性。如果未找到缓存的初始pkl，则将执行提取。
+**关于提取真实的初始数据:** 为了方便用户，在测试时自动提取真实的特征并保存在本地，存储的特征在下次测试时自动读取。具体来说，我们将根据用于计算实际特性的参数计算一个哈希值，并使用哈希值来标记特性文件，在测试时，如果' inception_pkl '没有设置，我们将在' MMAGIC_CACHE_DIR ' (~/.cache/openmmlab/mmagic/)中寻找该特性。如果未找到缓存的初始pkl，则将执行提取。
 
 要使用FID指标，请在配置文件中添加以下配置:
 
@@ -159,7 +159,7 @@ metrics = [
 ]
 ```
 
-如果您在一台新机器上工作，那么您可以复制'MMEDIT_CACHE_DIR'中的'pkl'文件，将它们复制到新机器并设置'inception_pkl'字段。
+如果您在一台新机器上工作，那么您可以复制'MMAGIC_CACHE_DIR'中的'pkl'文件，将它们复制到新机器并设置'inception_pkl'字段。
 
 ```python
 metrics = [
@@ -206,17 +206,17 @@ metrics = [
 | :-------------------------------------------------------------: | :------------------: | :-----------------: | :-------------------------: | :-------------------: |
 |   [OpenAI (baseline)](https://github.com/openai/improved-gan)   |      Tensorflow      |       Pillow        |       Pillow Bicubic        | **312.255 +/- 4.970** |
 | [StyleGAN-Ada](https://github.com/NVlabs/stylegan2-ada-pytorch) | Tero's Script Model  |       Pillow        |       Pillow Bicubic        |   311.895 +/ 4.844    |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |         cv2         |        cv2 Bilinear         |   322.932 +/- 2.317   |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |         cv2         |         cv2 Bicubic         |   324.604 +/- 5.157   |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |         cv2         |       Pillow Bicubic        |   318.161 +/- 5.330   |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |       Pillow        |       Pillow Bilinear       |   313.126 +/- 5.449   |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |       Pillow        |        cv2 Bilinear         |    318.021+/-3.864    |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |       Pillow        |       Pillow Bicubic        |   317.997 +/- 5.350   |
-|                          mmedit (Ours)                          | Tero's Script Model  |         cv2         |        cv2 Bilinear         |   318.879 +/- 2.433   |
-|                          mmedit (Ours)                          | Tero's Script Model  |         cv2         |         cv2 Bicubic         |   316.125 +/- 5.718   |
-|                          mmedit (Ours)                          | Tero's Script Model  |         cv2         |       Pillow Bicubic        | **312.045 +/- 5.440** |
-|                          mmedit (Ours)                          | Tero's Script Model  |       Pillow        |       Pillow Bilinear       |   308.645 +/- 5.374   |
-|                          mmedit (Ours)                          | Tero's Script Model  |       Pillow        |       Pillow Bicubic        |   311.733 +/- 5.375   |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |         cv2         |        cv2 Bilinear         |   322.932 +/- 2.317   |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |         cv2         |         cv2 Bicubic         |   324.604 +/- 5.157   |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |         cv2         |       Pillow Bicubic        |   318.161 +/- 5.330   |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |       Pillow        |       Pillow Bilinear       |   313.126 +/- 5.449   |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |       Pillow        |        cv2 Bilinear         |    318.021+/-3.864    |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |       Pillow        |       Pillow Bicubic        |   317.997 +/- 5.350   |
+|                          mmagic (Ours)                          | Tero's Script Model  |         cv2         |        cv2 Bilinear         |   318.879 +/- 2.433   |
+|                          mmagic (Ours)                          | Tero's Script Model  |         cv2         |         cv2 Bicubic         |   316.125 +/- 5.718   |
+|                          mmagic (Ours)                          | Tero's Script Model  |         cv2         |       Pillow Bicubic        | **312.045 +/- 5.440** |
+|                          mmagic (Ours)                          | Tero's Script Model  |       Pillow        |       Pillow Bilinear       |   308.645 +/- 5.374   |
+|                          mmagic (Ours)                          | Tero's Script Model  |       Pillow        |       Pillow Bicubic        |   311.733 +/- 5.375   |
 
 </details>
 
@@ -224,7 +224,7 @@ metrics = [
 
 ## Precision and Recall
 
-我们的'Precision and Recall'实现遵循StyleGAN2中使用的版本。在该度量中，采用VGG网络对图像进行特征提取。不幸的是，我们还没有发现PyTorch VGG实现与StyleGAN2中使用的Tero版本产生类似的结果。(关于差异，请参阅这个[文件](https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv2/README.md)。)因此，在我们的实现中，我们默认采用[Teor's VGG](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt)网络。需要注意的是，应用这个脚本模块需要'PyTorch >= 1.6.0'。如果使用较低的PyTorch版本，我们将使用PyTorch官方VGG网络进行特征提取。
+我们的'Precision and Recall'实现遵循StyleGAN2中使用的版本。在该度量中，采用VGG网络对图像进行特征提取。不幸的是，我们还没有发现PyTorch VGG实现与StyleGAN2中使用的Tero版本产生类似的结果。(关于差异，请参阅这个[文件](https://github.com/open-mmlab/mmagicing/blob/main/configs/styleganv2/README.md)。)因此，在我们的实现中，我们默认采用[Teor's VGG](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt)网络。需要注意的是，应用这个脚本模块需要'PyTorch >= 1.6.0'。如果使用较低的PyTorch版本，我们将使用PyTorch官方VGG网络进行特征提取。
 要使用' P&R '进行评估，请在配置文件中添加以下配置:
 
 ```python

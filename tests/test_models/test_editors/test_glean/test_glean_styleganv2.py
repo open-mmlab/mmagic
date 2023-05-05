@@ -7,11 +7,11 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import SRGAN, EditDataPreprocessor, GLEANStyleGANv2
-from mmedit.models.editors.stylegan2 import StyleGAN2Discriminator
-from mmedit.models.losses import (GANLoss, MSELoss, PerceptualLoss,
+from mmagic.models import SRGAN, DataPreprocessor, GLEANStyleGANv2
+from mmagic.models.editors.stylegan2 import StyleGAN2Discriminator
+from mmagic.models.losses import (GANLoss, MSELoss, PerceptualLoss,
                                   PerceptualVGG)
-from mmedit.structures import EditDataSample, PixelData
+from mmagic.structures import DataSample
 
 
 @pytest.mark.skipif(
@@ -42,7 +42,7 @@ def test_glean(init_weights):
             fake_label_val=0),
         train_cfg=None,
         test_cfg=None,
-        data_preprocessor=EditDataPreprocessor())
+        data_preprocessor=DataPreprocessor())
 
     assert isinstance(model, SRGAN)
     assert isinstance(model.generator, GLEANStyleGANv2)
@@ -62,7 +62,7 @@ def test_glean(init_weights):
     # prepare data
     inputs = torch.rand(1, 3, 16, 16)
     target = torch.rand(3, 64, 64)
-    data_sample = EditDataSample(gt_img=PixelData(data=target))
+    data_sample = DataSample(gt_img=target)
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
@@ -74,7 +74,7 @@ def test_glean(init_weights):
 
     # val
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (3, 64, 64)
+    assert output[0].output.pred_img.shape == (3, 64, 64)
 
     # feat
     output = model(torch.rand(1, 3, 16, 16), mode='tensor')

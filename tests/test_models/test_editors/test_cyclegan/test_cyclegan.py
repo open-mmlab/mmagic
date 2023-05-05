@@ -6,10 +6,10 @@ import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 
-from mmedit.models import CycleGAN, GenDataPreprocessor
-from mmedit.models.base_archs import PatchDiscriminator
-from mmedit.models.editors.cyclegan import ResnetGenerator
-from mmedit.structures import EditDataSample
+from mmagic.models import CycleGAN, DataPreprocessor
+from mmagic.models.archs import PatchDiscriminator
+from mmagic.models.editors.cyclegan import ResnetGenerator
+from mmagic.structures import DataSample
 
 
 def obj_from_dict(info: dict, parent=None, default_args=None):
@@ -75,8 +75,7 @@ def test_cyclegan():
     train_settings = None
 
     # build synthesizer
-    synthesizer = CycleGAN(
-        **model_cfg, data_preprocessor=GenDataPreprocessor())
+    synthesizer = CycleGAN(**model_cfg, data_preprocessor=DataPreprocessor())
 
     # test attributes
     assert synthesizer.__class__.__name__ == 'CycleGAN'
@@ -174,7 +173,7 @@ def test_cyclegan():
                 data_batch_cuda['img_mask'],
                 target_domain='photo',
                 test_mode=True)
-        assert torch.equal(outputs['source'],
+        assert torch.equal(outputs['source'].cpu(),
                            data_batch_cuda['img_mask'].cpu())
         assert torch.is_tensor(outputs['target'])
         assert outputs['target'].size() == (1, 3, 64, 64)
@@ -184,7 +183,7 @@ def test_cyclegan():
                 data_batch_cuda['img_photo'],
                 target_domain='mask',
                 test_mode=True)
-        assert torch.equal(outputs['source'],
+        assert torch.equal(outputs['source'].cpu(),
                            data_batch_cuda['img_photo'].cpu())
         assert torch.is_tensor(outputs['target'])
         assert outputs['target'].size() == (1, 3, 64, 64)
@@ -227,7 +226,7 @@ def test_cyclegan():
     # test disc_steps and disc_init_steps
     train_settings = dict(discriminator_steps=2, disc_init_steps=2)
     synthesizer = CycleGAN(
-        **model_cfg, **train_settings, data_preprocessor=GenDataPreprocessor())
+        **model_cfg, **train_settings, data_preprocessor=DataPreprocessor())
     optimizer = OptimWrapperDict(
         generators=OptimWrapper(
             obj_from_dict(
@@ -281,7 +280,7 @@ def test_cyclegan():
     data_batch = dict(inputs={'img_mask': inputs, 'img_photo': targets})
     train_settings = dict(buffer_size=0)
     synthesizer = CycleGAN(
-        **model_cfg, **train_settings, data_preprocessor=GenDataPreprocessor())
+        **model_cfg, **train_settings, data_preprocessor=DataPreprocessor())
     optimizer = OptimWrapperDict(
         generators=OptimWrapper(
             obj_from_dict(
@@ -309,7 +308,7 @@ def test_cyclegan():
         inputs=dict(
             img_photo=torch.randn(1, 3, 64, 64),
             img_mask=torch.randn(1, 3, 64, 64)),
-        data_samples=[EditDataSample(mode='test')])
+        data_samples=[DataSample(mode='test')])
     out = synthesizer.test_step(data)
     assert len(out) == 1
     assert out[0].fake_photo.data.shape == (3, 64, 64)

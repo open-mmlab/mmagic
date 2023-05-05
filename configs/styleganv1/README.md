@@ -21,7 +21,7 @@ We propose an alternative generator architecture for generative adversarial netw
 ## Results and Models
 
 <div align="center">
-  <b> Results (compressed) from StyleGANv1 trained by mmediting</b>
+  <b> Results (compressed) from StyleGANv1 trained by mmagic</b>
   <br/>
   <img src="https://user-images.githubusercontent.com/12726765/113845642-4f9ee980-97c8-11eb-85c7-49d6d21dd46b.png" width="800"/>
 </div>

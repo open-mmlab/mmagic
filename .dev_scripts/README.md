@@ -1,4 +1,4 @@
-# Scripts for developing MMEditing
+# Scripts for developing MMagic
 
 - [1. Check UT](#1-check-ut)
 - [2. Test all the models](#2-test-all-the-models)
@@ -20,7 +20,7 @@
 Please check your UT by the following scripts:
 
 ```python
-cd mmediting/
+cd mmagic/
 python .dev_script/update_ut.py
 ```
 
@@ -29,7 +29,7 @@ Please create UTs according to your package code implementation.
 
 ## 2. Test all the models
 
-Please follow these steps to test all the models in MMEditing:
+Please follow these steps to test all the models in MMagic:
 
 First, you will need download all the pre-trained checkpoints by:
 

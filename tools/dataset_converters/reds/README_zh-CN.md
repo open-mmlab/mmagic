@@ -22,12 +22,12 @@
 可通过运行以下命令来准备 REDS 数据集:
 
 ```shell
-python tools/dataset_converters/super-resolution/reds/preprocess_reds_dataset.py ./data/REDS
+python tools/dataset_converters/reds/preprocess_reds_dataset.py ./data/REDS
 ```
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -37,9 +37,15 @@ mmediting
 │   │   │   ├── 001
 │   │   │   ├── ...
 │   │   ├── train_sharp_bicubic
-│   │   │   ├── 000
-│   │   │   ├── 001
-│   │   │   ├── ...
+│   │   │   ├── X4
+│   │   │   |   ├── 000
+│   │   │   |   ├── 001
+│   │   │   |   ├── ...
+│   │   ├── meta_info_reds4_train.txt
+│   │   ├── meta_info_reds4_val.txt
+│   │   ├── meta_info_official_train.txt
+│   │   ├── meta_info_official_val.txt
+│   │   ├── meta_info_REDS_GT.txt
 │   ├── REDS4
 │   │   ├── GT
 │   │   ├── sharp_bicubic
@@ -50,22 +56,22 @@ mmediting
 如果您想使用 `LMDB` 以获得更快的 IO 速度，可以通过以下脚本来构建 LMDB 文件：
 
 ```shell
-python tools/dataset_converters/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
+python tools/dataset_converters/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
 
 ## 裁剪为子图
 
-MMEditing 支持将 REDS 图像裁剪为子图像以加快 IO。我们提供了这样一个脚本：
+MMagic 支持将 REDS 图像裁剪为子图像以加快 IO。我们提供了这样一个脚本：
 
 ```shell
-python tools/dataset_converters/super-resolution/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
+python tools/dataset_converters/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
 ```
 
 生成的数据存储在 `REDS` 下，数据结构如下，其中`_sub`表示子图像。
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

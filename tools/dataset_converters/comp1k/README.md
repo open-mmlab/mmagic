@@ -28,7 +28,7 @@ It is needed to merge `fg` with COCO data (training) or VOC data (test) before t
 Use the following script to perform image composition and generate annotation files for training or testing:
 
 ```shell
-# The script is run under the root folder of MMEditing
+# The script is run under the root folder of MMagic
 python tools/dataset_converters/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composition-1k data/coco data/VOCdevkit --composite
 ```
 
@@ -54,8 +54,8 @@ python tools/data/matting/comp1k/preprocess_comp1k_dataset.py data/adobe_composi
 The result folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -108,8 +108,8 @@ python tools/dataset_converters/matting/comp1k/extend_fg.py data/adobe_compositi
 The final folder structure should look like:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
