@@ -5,7 +5,7 @@ from unittest.mock import Mock, patch
 
 import torch
 
-from mmedit.models.editors.eg3d.eg3d_generator import TriplaneGenerator
+from mmagic.models.editors.eg3d.eg3d_generator import TriplaneGenerator
 
 
 class TestEG3DGenerator(TestCase):
@@ -68,7 +68,7 @@ class TestEG3DGenerator(TestCase):
         render_kwargs = dict(a=1, b='b')
         render_mock = Mock(
             return_value=(torch.randn(2, 25, 8), torch.randn(2, 25, 1), None))
-        patch_func = 'mmedit.models.editors.eg3d.renderer.EG3DRenderer.forward'
+        patch_func = 'mmagic.models.editors.eg3d.renderer.EG3DRenderer.forward'
         with patch(patch_func, new=render_mock):
             gen = TriplaneGenerator(**cfg_)
             gen(noise, cond, render_kwargs=render_kwargs)

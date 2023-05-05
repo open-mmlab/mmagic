@@ -2,7 +2,7 @@
 import os.path as osp
 from unittest import TestCase
 
-from mmedit.datasets import ImageNet
+from mmagic.datasets import ImageNet
 
 DATA_DIR = osp.abspath(osp.join(osp.dirname(__file__), '../data/dataset/'))
 

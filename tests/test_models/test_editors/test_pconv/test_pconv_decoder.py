@@ -1,7 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import PConvDecoder, PConvEncoder
+from mmagic.models.editors import PConvDecoder, PConvEncoder
+from mmagic.utils import register_all_modules
+
+register_all_modules()
 
 
 def test_pconv_dec():

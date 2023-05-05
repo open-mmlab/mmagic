@@ -13,10 +13,7 @@ model = dict(
         type='MattorPreprocessor',
         mean=[123.675, 116.28, 103.53],
         std=[58.395, 57.12, 57.375],
-        bgr_to_rgb=True,
-        proc_inputs='normalize',
         proc_trimap='rescale_to_zero_one',
-        proc_gt='rescale_to_zero_one',
     ),
     backbone=dict(
         type='SimpleEncoderDecoder',
@@ -63,7 +60,7 @@ train_pipeline = [
         keep_ratio=False,
         interpolation='bicubic'),
     dict(type='Flip', keys=['alpha', 'merged', 'fg', 'bg', 'trimap']),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 test_pipeline = [
@@ -78,7 +75,7 @@ test_pipeline = [
         color_type='grayscale',
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 train_dataloader = dict(
@@ -99,8 +96,8 @@ train_cfg = dict(
     max_iters=78000,
     val_interval=2600,
 )
-val_cfg = dict(type='ValLoop')
-test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(

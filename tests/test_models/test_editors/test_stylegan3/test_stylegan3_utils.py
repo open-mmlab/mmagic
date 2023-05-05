@@ -1,14 +1,19 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 from mmengine.utils.dl_utils import TORCH_VERSION
 from mmengine.utils.version_utils import digit_version
 
-from mmedit.models.editors.stylegan3.stylegan3_utils import (
+from mmagic.models.editors.stylegan3.stylegan3_utils import (
     apply_fractional_pseudo_rotation, apply_fractional_rotation,
     apply_fractional_translation, apply_integer_translation)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() or not torch.cuda.is_available(),
+    reason='skip due to uncompiled ops.')
 def test_integer_transformation():
     x = torch.randn(1, 3, 16, 16)
     t = torch.randn(2)
@@ -24,6 +29,9 @@ def test_integer_transformation():
     z, m = apply_integer_translation(x, t[0], t[1])
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower() or not torch.cuda.is_available(),
+    reason='skip due to uncompiled ops.')
 def test_fractional_translation():
     x = torch.randn(1, 3, 16, 16)
     t = torch.randn(2)
@@ -40,6 +48,9 @@ def test_fractional_translation():
 
 
 @pytest.mark.skipif(
+    'win' in platform.system().lower() or not torch.cuda.is_available(),
+    reason='skip due to uncompiled ops.')
+@pytest.mark.skipif(
     digit_version(TORCH_VERSION) < digit_version('1.8.0'),
     reason='version limitation')
 def test_fractional_rotation():
@@ -51,7 +62,8 @@ def test_fractional_rotation():
 
 
 @pytest.mark.skipif(
-    digit_version(TORCH_VERSION) < digit_version('1.8.0'),
+    digit_version(TORCH_VERSION) < digit_version('1.8.0')
+    or 'win' in platform.system().lower() or not torch.cuda.is_available(),
     reason='version limitation')
 def test_fractional_pseduo_rotation():
     angle = torch.randn([])

@@ -11,11 +11,10 @@ model = dict(
     generator=dict(type='TOFlowVSRNet', adapt_official_weights=True),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='sum'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0.485 * 255, 0.456 * 255, 0.406 * 255],
         std=[0.229 * 255, 0.224 * 255, 0.225 * 255],
-        input_view=(1, -1, 1, 1),
-        output_view=(-1, 1, 1)))
+    ))
 
 val_pipeline = [
     dict(type='GenerateFrameIndiceswithPadding', padding='reflection_circle'),
@@ -29,7 +28,7 @@ val_pipeline = [
         key='gt',
         color_type='color',
         channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
@@ -39,7 +38,7 @@ demo_pipeline = [
         key='img',
         color_type='color',
         channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 data_root = 'data/Vid4'
@@ -62,12 +61,14 @@ val_dataloader = dict(
 # TODO: data is not uploaded yet
 # test_dataloader = val_dataloader
 
-val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR'),
-    dict(type='SSIM'),
-]
+val_evaluator = dict(
+    type='Evaluator',
+    metrics=[
+        dict(type='MAE'),
+        dict(type='PSNR'),
+        dict(type='SSIM'),
+    ])
 # test_evaluator = val_evaluator
 
-val_cfg = dict(type='ValLoop')
-# test_cfg = dict(type='TestLoop')
+val_cfg = dict(type='MultiValLoop')
+# test_cfg = dict(type='MultiTestLoop')

@@ -19,11 +19,9 @@ model = dict(
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='mean'),
     train_cfg=dict(fix_iter=-1),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(1, -1, 1, 1),
     ))
 
 train_dataloader = dict(num_workers=6, batch_size=2)

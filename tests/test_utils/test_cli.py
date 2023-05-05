@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import sys
 
-from mmedit.utils import modify_args
+from mmagic.utils import modify_args
 
 
 def test_modify_args():

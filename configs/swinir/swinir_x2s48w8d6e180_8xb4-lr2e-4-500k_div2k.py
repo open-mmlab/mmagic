@@ -12,7 +12,7 @@ img_size = 48
 # evaluated on Y channels
 test_evaluator = _base_.test_evaluator
 for evaluator in test_evaluator:
-    for metric in evaluator:
+    for metric in evaluator['metrics']:
         metric['convert_to'] = 'Y'
 
 # model settings
@@ -33,8 +33,7 @@ model = dict(
         resi_connection='1conv'),
     pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
-                                                             255.]))
+        type='DataPreprocessor', mean=[0., 0., 0.], std=[255., 255., 255.]))
 
 train_pipeline = [
     dict(
@@ -59,7 +58,7 @@ train_pipeline = [
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 val_pipeline = [
@@ -75,7 +74,7 @@ val_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='cv2'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings

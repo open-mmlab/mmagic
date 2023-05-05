@@ -46,7 +46,7 @@ train_dataloader = dict(
 pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='Resize', scale=(256, 256)),
-    dict(type='PackEditInputs', keys=['img'])
+    dict(type='PackInputs', keys=['img'])
 ]
 
 val_dataloader = dict(
@@ -77,7 +77,7 @@ optim_wrapper = dict(
 # VIS_HOOK
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))

@@ -5,7 +5,7 @@ _base_ = [
 
 model = dict(
     type='AblatedDiffusionModel',
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     unet=dict(
         type='DenoisingUnet',
         image_size=512,
@@ -25,7 +25,7 @@ model = dict(
             use_new_attention_order=False),
         use_scale_shift_norm=True),
     diffusion_scheduler=dict(
-        type='DDIMScheduler',
+        type='EditDDIMScheduler',
         variance_type='learned_range',
         beta_schedule='linear'),
     rgb2bgr=True,

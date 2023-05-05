@@ -7,7 +7,7 @@ _base_ = [
 loss_config = dict(gp_norm_mode='HWC', gp_loss_weight=10)
 model = dict(
     type='WGANGP',
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     generator=dict(type='WGANGPGenerator', noise_size=128, out_scale=128),
     discriminator=dict(
         type='WGANGPDiscriminator',
@@ -46,7 +46,7 @@ optim_wrapper = dict(
 # VIS_HOOK
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))

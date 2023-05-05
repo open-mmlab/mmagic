@@ -1,10 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 from unittest import TestCase
 
+import pytest
 import torch
 
-from mmedit.models.editors.eg3d.dual_discriminator import DualDiscriminator
+from mmagic.models.editors.eg3d.dual_discriminator import DualDiscriminator
 
 
 class TestEG3DDiscriminator(TestCase):
@@ -25,6 +27,9 @@ class TestEG3DDiscriminator(TestCase):
         self.assertEqual(disc.convs[0][0].conv.weight.shape[1], 2)
         self.assertFalse(disc.use_dual_disc)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_forward(self):
         cfg = deepcopy(self.default_cfg)
         disc = DualDiscriminator(**cfg)

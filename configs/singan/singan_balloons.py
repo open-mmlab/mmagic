@@ -17,8 +17,13 @@ model = dict(
     test_pkl_data=test_pkl_data)
 
 # DATA
+pipeline = [
+    dict(
+        type='PackInputs',
+        keys=[f'real_scale{i}' for i in range(num_scales)] + ['input_sample'])
+]
 data_root = './data/singan/balloons.png'
-train_dataloader = dict(dataset=dict(data_root=data_root))
+train_dataloader = dict(dataset=dict(data_root=data_root, pipeline=pipeline))
 
 # HOOKS
 custom_hooks = [
@@ -29,7 +34,7 @@ custom_hooks = [
         after_run=True,
         data_name_list=['noise_weights', 'fixed_noises', 'curr_stage']),
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='SinGAN', name='balloons'))

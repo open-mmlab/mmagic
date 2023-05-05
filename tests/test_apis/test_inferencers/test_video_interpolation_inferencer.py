@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
-from mmedit.apis.inferencers.video_interpolation_inferencer import \
+from mmagic.apis.inferencers.video_interpolation_inferencer import \
     VideoInterpolationInferencer
-from mmedit.utils import register_all_modules
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -56,7 +56,3 @@ def test_video_interpolation_inferencer_fps_multiplier():
     inference_result = inferencer_instance(
         video=video_path, result_out_dir=result_out_dir)
     assert inference_result is None
-
-
-if __name__ == '__main__':
-    test_video_interpolation_inferencer_fps_multiplier()

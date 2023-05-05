@@ -3,7 +3,10 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models.editors import MaskConvModule
+from mmagic.models.editors import MaskConvModule
+from mmagic.utils import register_all_modules
+
+register_all_modules()
 
 
 def test_mask_conv_module():

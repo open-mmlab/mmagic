@@ -13,7 +13,8 @@ ema_config = dict(
 model = dict(
     type='BigGAN',
     num_classes=10,
-    data_preprocessor=dict(type='GenDataPreprocessor', rgb_to_bgr=True),
+    data_preprocessor=dict(
+        type='DataPreprocessor', output_channel_order='BGR'),
     generator=dict(
         type='BigGANGenerator',
         output_scale=32,
@@ -47,7 +48,7 @@ test_dataloader = dict(batch_size=25, num_workers=8)
 # VIS_HOOK
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         # vis ema and orig at the same time

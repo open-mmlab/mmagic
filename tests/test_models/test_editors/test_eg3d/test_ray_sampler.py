@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.eg3d.ray_sampler import sample_rays
+from mmagic.models.editors.eg3d.ray_sampler import sample_rays
 
 
 def test_sample_rays():

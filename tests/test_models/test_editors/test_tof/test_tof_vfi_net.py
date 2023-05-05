@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import TOFlowVFINet
+from mmagic.models.editors import TOFlowVFINet
 
 
 def test_tof_vfi_net():

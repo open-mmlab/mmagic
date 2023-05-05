@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.wgan_gp.wgan_gp_module import (ConvLNModule,
+from mmagic.models.editors.wgan_gp.wgan_gp_module import (ConvLNModule,
                                                           WGANDecisionHead,
                                                           WGANNoiseTo2DFeat)
 

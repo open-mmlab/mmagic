@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.models.editors import FBAResnetDilated
+from mmagic.models.editors import FBAResnetDilated
 
 
 def _demo_inputs(input_shape=(1, 4, 64, 64)):

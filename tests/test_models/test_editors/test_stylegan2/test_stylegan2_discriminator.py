@@ -8,13 +8,14 @@ import torch.nn as nn
 from mmengine import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
-from mmedit.models.editors.stylegan2 import (ADAAug, ADAStyleGAN2Discriminator,
+from mmagic.models.editors.stylegan2 import (ADAAug, ADAStyleGAN2Discriminator,
                                              StyleGAN2Discriminator)
-from mmedit.models.utils import get_module_device
+from mmagic.models.utils import get_module_device
 
 
 @pytest.mark.skipif(
-    'win' in platform.system().lower() and 'cu' in torch.__version__,
+    ('win' in platform.system().lower() and 'cu' in torch.__version__)
+    or not torch.cuda.is_available(),
     reason='skip on windows-cuda due to limited RAM.')
 class TestStyleGANv2Disc:
 

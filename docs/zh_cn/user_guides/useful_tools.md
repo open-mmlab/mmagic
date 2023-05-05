@@ -86,20 +86,20 @@ python tools/pytorch2onnx.py
 
 下表列出了保证可导出到 ONNX 并可在 ONNX Runtime 中运行的模型。
 
-|   模型   |                                                                                配置                                                                                 | 动态形状 | 批量推理 | 备注 |
-| :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------: | :------: | :--: |
-|  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |    Y     |    Y     |      |
-|  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |    Y     |    Y     |      |
-|  SRCNN   |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |    Y     |    Y     |      |
-|   DIM    |          [dim_stage3_v16_pln_1x1_1000k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py)           |    Y     |    Y     |      |
-|   GCA    |                     [gca_r34_4x10_200k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/gca/gca_r34_4x10_200k_comp1k.py)                      |    N     |    Y     |      |
-| IndexNet |             [indexnet_mobv2_1x16_78k_comp1k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/indexnet/indexnet_mobv2_1x16_78k_comp1k.py)             |    Y     |    Y     |      |
+|   模型   |                                                                               配置                                                                               | 动态形状 | 批量推理 | 备注 |
+| :------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------: | :------: | :--: |
+|  ESRGAN  |       [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmagic/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py)       |    Y     |    Y     |      |
+|  ESRGAN  | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmagic/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |    Y     |    Y     |      |
+|  SRCNN   |            [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmagic/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)             |    Y     |    Y     |      |
+|   DIM    |          [dim_stage3_v16_pln_1x1_1000k_comp1k.py](https://github.com/open-mmlab/mmagic/blob/master/configs/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py)           |    Y     |    Y     |      |
+|   GCA    |                     [gca_r34_4x10_200k_comp1k.py](https://github.com/open-mmlab/mmagic/blob/master/configs/gca/gca_r34_4x10_200k_comp1k.py)                      |    N     |    Y     |      |
+| IndexNet |             [indexnet_mobv2_1x16_78k_comp1k.py](https://github.com/open-mmlab/mmagic/blob/master/configs/indexnet/indexnet_mobv2_1x16_78k_comp1k.py)             |    Y     |    Y     |      |
 
 **注**：
 
 - *以上所有模型均使用 Pytorch==1.6.0 和 onnxruntime==1.5.1*
 - 如果您遇到上面列出的模型的任何问题，请创建一个 issue，我们会尽快处理。对于列表中未包含的型号，请尝试自行解决。
-- 由于此功能是实验性的并且可能会快速更改，请始终尝试使用最新的 `mmcv` 和 `mmedit`。
+- 由于此功能是实验性的并且可能会快速更改，请始终尝试使用最新的 `mmcv` 和 `mmagic`。
 
 ### 将 ONNX 转换为 TensorRT（实验性）
 
@@ -136,7 +136,7 @@ python tools/onnx2tensorrt.py
 - `--verify`: 确定是否验证导出模型的正确性。默认为 `False`。
 - `--verbose`: 确定在创建 TensorRT 引擎时是否详细记录日志消息。默认为 `False`。
 
-**注**：此工具仍处于试验阶段。 目前不支持某些自定义运算符。 我们现在只支持 `restorer`。 在生成 SRCNN 的 ONNX 文件时，将 SCRNN 模型中的 'bicubic' 替换为 'bilinear' \[此处\](https://github.com/open-mmlab/mmediting/blob/764e6065e315b7d0033762038fcbf0bb1c570d4d/mmedit.bones/modelsrnn py#L40）。 因为 TensorRT 目前不支持 bicubic 插值，最终性能将下降约 4%。
+**注**：此工具仍处于试验阶段。 目前不支持某些自定义运算符。 我们现在只支持 `restorer`。 在生成 SRCNN 的 ONNX 文件时，将 SCRNN 模型中的 'bicubic' 替换为 'bilinear' \[此处\](https://github.com/open-mmlab/mmagic/blob/764e6065e315b7d0033762038fcbf0bb1c570d4d/mmagic.bones/modelsrnn py#L40）。 因为 TensorRT 目前不支持 bicubic 插值，最终性能将下降约 4%。
 
 #### 支持导出到 TensorRT 的模型列表
 
@@ -144,15 +144,15 @@ python tools/onnx2tensorrt.py
 
 |  模型  |                                                                     配置                                                                      | 动态形状 | 批量推理 |                 备注                  |
 | :----: | :-------------------------------------------------------------------------------------------------------------------------------------------: | :------: | :------: | :-----------------------------------: |
-| ESRGAN | [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py) |    Y     |    Y     |                                       |
-| ESRGAN | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |    Y     |    Y     |                                       |
-| SRCNN  | [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmediting/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)  |    Y     |    Y     | 'bicubic' 上采样必须替换为 'bilinear' |
+| ESRGAN | [esrgan_x4c64b23g32_g1_400k_div2k.py](https://github.com/open-mmlab/mmagic/blob/master/configs/restorers/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py) |    Y     |    Y     |                                       |
+| ESRGAN | [esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py](https://github.com/open-mmlab/mmagic/blob/master/configs/restorers/esrgan/esrgan_psnr_x4c64b23g32_g1_1000k_div2k.py) |    Y     |    Y     |                                       |
+| SRCNN  |   [srcnn_x4k915_g1_1000k_div2k.py](https://github.com/open-mmlab/mmagic/blob/master/configs/restorers/srcnn/srcnn_x4k915_g1_1000k_div2k.py)   |    Y     |    Y     | 'bicubic' 上采样必须替换为 'bilinear' |
 
 **注**：
 
 - *以上所有模型均使用 Pytorch==1.8.1、onnxruntime==1.7.0 和 tensorrt==7.2.3.4 进行测试*
 - 如果您遇到上面列出的模型的任何问题，请创建一个问题，我们会尽快处理。 对于列表中未包含的型号，请尝试自行解决。
-- 由于此功能是实验性的并且可能会快速更改，因此请始终尝试使用最新的 `mmcv` 和 `mmedit`。
+- 由于此功能是实验性的并且可能会快速更改，因此请始终尝试使用最新的 `mmcv` 和 `mmagic`。
 
 ### 评估 ONNX 和 TensorRT 模型（实验性）
 

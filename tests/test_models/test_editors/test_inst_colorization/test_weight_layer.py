@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors.inst_colorization.weight_layer import WeightLayer
+from mmagic.models.editors.inst_colorization.weight_layer import WeightLayer
 
 
 @pytest.mark.skipif(

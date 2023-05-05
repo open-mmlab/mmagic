@@ -10,25 +10,25 @@ import numpy as np
 import torch
 from mmengine import Config, MessageHub
 
-from mmedit.visualization import (GenVisBackend, PaviGenVisBackend,
-                                  TensorboardGenVisBackend, WandbGenVisBackend)
+from mmagic.visualization import (PaviVisBackend, TensorboardVisBackend,
+                                  VisBackend, WandbVisBackend)
 
 
-class TestGenVisBackend(TestCase):
+class TestVisBackend(TestCase):
 
     def test_vis_backend(self):
         message_hub = MessageHub.get_instance('test-visbackend')
-        config = Config(dict(work_dir='./mmedit/test/vis_backend_test/'))
+        config = Config(dict(work_dir='./mmagic/test/vis_backend_test/'))
         message_hub.update_info('cfg', config.pretty_text)
 
         data_root = 'tmp_dir'
         sys.modules['petrel_client'] = MagicMock()
-        vis_backend = GenVisBackend(save_dir='tmp_dir', ceph_path='s3://xxx')
+        vis_backend = VisBackend(save_dir='tmp_dir', ceph_path='s3://xxx')
 
         self.assertEqual(vis_backend.experiment, vis_backend)
         # test path mapping
         src_path = osp.abspath(
-            './mmedit/test/vis_backend_test/test_vis_data/test.png')
+            './mmagic/test/vis_backend_test/test_vis_data/test.png')
         tar_path = 's3://xxx/vis_backend_test/test_vis_data/test.png'
         file_client = vis_backend._file_client
         mapped_path = file_client._map_path(src_path)
@@ -61,7 +61,7 @@ class TestGenVisBackend(TestCase):
         self.assertTrue(osp.exists(osp.join(data_root, 'scalars.json')))
 
         # test with `ceph_path` is None
-        vis_backend = GenVisBackend(save_dir='tmp_dir')
+        vis_backend = VisBackend(save_dir='tmp_dir')
         vis_backend.add_config(Config(dict(name='test')))
         vis_backend.add_image(
             name='add_img', image=np.random.random((8, 8, 3)).astype(np.uint8))
@@ -91,7 +91,7 @@ class TestTensorboardBackend(TestCase):
 
     def test_tensorboard(self):
         save_dir = 'tmp_dir'
-        vis_backend = TensorboardGenVisBackend(save_dir)
+        vis_backend = TensorboardVisBackend(save_dir)
         sys.modules['torch.utils.tensorboard'] = MagicMock()
 
         # add image
@@ -112,7 +112,7 @@ class TestPaviBackend(TestCase):
     def test_pavi(self):
         save_dir = 'tmp_dir'
         exp_name = 'unit test'
-        vis_backend = PaviGenVisBackend(save_dir=save_dir, exp_name=exp_name)
+        vis_backend = PaviVisBackend(save_dir=save_dir, exp_name=exp_name)
         with self.assertRaises(ImportError):
             vis_backend._init_env()
         sys.modules['pavi'] = MagicMock()
@@ -139,7 +139,7 @@ class TestWandbBackend(TestCase):
         wandb_mock = MagicMock()
         sys.modules['wandb'] = wandb_mock
 
-        vis_backend = WandbGenVisBackend(
+        vis_backend = WandbVisBackend(
             save_dir=f'parent_dir/exp_name/{timestamp}/vis_data',
             init_kwargs=dict(project='test_backend'))
         # test save gif image
@@ -153,7 +153,7 @@ class TestWandbBackend(TestCase):
 
         # test wandb backend with name
         wandb_mock.reset_mock()
-        vis_backend = WandbGenVisBackend(
+        vis_backend = WandbVisBackend(
             save_dir=f'parent_dir/exp_name/{timestamp}/vis_data',
             init_kwargs=dict(project='test_backend', name='test_wandb'))
         vis_backend._init_env()

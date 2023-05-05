@@ -62,5 +62,15 @@ repos:
     hooks:
       - id: check-algo-readme
       - id: check-copyright
-        args: ["demo", "mmedit", "tests", "tools"]
+        args: ["demo", "mmagic", "tests", "tools"]
       - id: remove-improper-eol-in-cn-docs
+  - repo: local
+    hooks:
+      - id: update-model-zoo
+        name: update-model-zoo
+        description: update model-zoo.yml
+        entry: docs/en/.dev_scripts/update_model_zoo.py
+        additional_dependencies: [mmengine, modelindex, tqdm, rich]
+        language: python
+        files: ^configs/.*\.md$
+        require_serial: true

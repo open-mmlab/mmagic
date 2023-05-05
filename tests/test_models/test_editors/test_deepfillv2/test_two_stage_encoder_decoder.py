@@ -8,9 +8,9 @@ import torch
 from mmengine import Config
 from mmengine.optim import OptimWrapper
 
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample, PixelData
-from mmedit.utils import register_all_modules
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 
 @pytest.mark.skipif(
@@ -42,21 +42,20 @@ def test_two_stage_inpaintor():
     assert inpaintor.with_gan
 
     # prepare data
-    gt_img = torch.rand((3, 256, 256))
-    mask = torch.zeros((1, 256, 256))
-    mask[..., 50:180, 60:170] = 1.
-    masked_img = gt_img.unsqueeze(0) * (1. - mask)
-    mask_bbox = [100, 100, 110, 110]
+    gt_img = torch.randn(3, 128, 128)
+    mask = torch.zeros((1, 128, 128))
+    mask[..., 12:45, 14:42] = 1.
+    masked_img = gt_img.unsqueeze(0) * (1. - mask) + mask
+    mask_bbox = [25, 25, 27, 27]
     data_batch = {
         'inputs':
         masked_img,
-        'data_samples': [
-            EditDataSample(
-                mask=PixelData(data=mask),
-                mask_bbox=mask_bbox,
-                gt_img=PixelData(data=gt_img),
-            )
-        ]
+        'data_samples':
+        [DataSample(
+            mask=mask,
+            mask_bbox=mask_bbox,
+            gt_img=gt_img,
+        )]
     }
 
     optim_g = torch.optim.Adam(inpaintor.generator.parameters(), lr=0.0001)
@@ -86,11 +85,11 @@ def test_two_stage_inpaintor():
     data = inpaintor.data_preprocessor(data_batch, True)
     data_inputs, data_sample = data['inputs'], data['data_samples']
     output = inpaintor.forward_test(data_inputs, data_sample)
-    prediction = output[0]
+    prediction = output.split()[0]
     assert 'fake_res' in prediction
     assert 'fake_img' in prediction
     assert 'pred_img' in prediction
-    assert prediction.pred_img.shape == (256, 256)
+    assert prediction.pred_img.shape == (3, 128, 128)
 
     # check for gp_loss
     cfg_copy = copy.deepcopy(cfg)

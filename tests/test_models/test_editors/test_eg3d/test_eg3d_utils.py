@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.eg3d.eg3d_utils import (get_ray_limits_box,
+from mmagic.models.editors.eg3d.eg3d_utils import (get_ray_limits_box,
                                                    inverse_transform_sampling,
                                                    linspace_batch)
 

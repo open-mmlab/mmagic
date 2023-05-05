@@ -5,7 +5,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models import RDNNet
+from mmagic.models import RDNNet
 
 
 @pytest.mark.skipif(
