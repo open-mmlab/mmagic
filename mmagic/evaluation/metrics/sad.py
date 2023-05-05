@@ -1,23 +1,26 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Sequence
+from typing import Optional, Sequence
 
-import numpy as np
 import torch.nn as nn
 from mmengine.model import is_model_wrapper
+from mmeval import SumAbsoluteDifferences as _SumAbsoluteDifferences
 from torch.utils.data.dataloader import DataLoader
 
 from mmagic.registry import METRICS
-from .base_sample_wise_metric import BaseSampleWiseMetric
-from .metrics_utils import _fetch_data_and_check, average
+from .metrics_utils import _fetch_data_and_check
 
 
 @METRICS.register_module()
-class SAD(BaseSampleWiseMetric):
+class SAD(_SumAbsoluteDifferences):
     """Sum of Absolute Differences metric for image matting.
 
     This metric compute per-pixel absolute difference and sum across all
     pixels.
     i.e. sum(abs(a-b)) / norm_const
+
+    .. note::
+        norm_const (int): Divide the result to reduce its magnitude.
+            Default to 1000.
 
     .. note::
 
@@ -32,8 +35,14 @@ class SAD(BaseSampleWiseMetric):
     Default prefix: ''
 
     Args:
-        norm_const (int): Divide the result to reduce its magnitude.
-            Default to 1000.
+        scaling (float, optional): Scaling factor for final metric.
+            E.g. scaling=100 means the final metric will be amplified by 100
+            for output. Default: 1
+
+        prefix (str, optional): The prefix that will be added in the metric
+            names to disambiguate homonymous metrics of different evaluators.
+            If prefix is not provided in the argument, self.default_prefix
+            will be used instead. Default: None.
 
     Metrics:
         - SAD (float): Sum of Absolute Differences
@@ -41,14 +50,19 @@ class SAD(BaseSampleWiseMetric):
 
     default_prefix = ''
     metric = 'SAD'
+    SAMPLER_MODE = 'normal'
+    sample_model = 'orig'
 
     def __init__(
         self,
-        norm_const=1000,
+        scaling: float = 1,
+        prefix: Optional[str] = None,
         **kwargs,
     ) -> None:
-        self.norm_const = norm_const
+
         super().__init__(**kwargs)
+        self.scaling = scaling
+        self.prefix = prefix
 
     def prepare(self, module: nn.Module, dataloader: DataLoader):
         self.size = len(dataloader.dataset)
@@ -66,27 +80,38 @@ class SAD(BaseSampleWiseMetric):
             predictions (Sequence[dict]): A batch of outputs from
                 the model.
         """
+        pred_alphas, gt_alphas = [], []
         for data_sample in data_samples:
             pred_alpha, gt_alpha, _ = _fetch_data_and_check(data_sample)
+            pred_alphas.append(pred_alpha)
+            gt_alphas.append(gt_alpha)
 
-            # divide by 1000 to reduce the magnitude of the result
-            sad_sum = np.abs(pred_alpha - gt_alpha).sum() / self.norm_const
+        self.add(pred_alphas, gt_alphas)
 
-            result = {'sad': sad_sum}
-
-            self.results.append(result)
-
-    def compute_metrics(self, results: List):
-        """Compute the metrics from processed results.
+    def get_metric_sampler(self, model: nn.Module, dataloader: DataLoader,
+                           metrics) -> DataLoader:
+        """Get sampler for normal metrics. Directly returns the dataloader.
 
         Args:
-            results (dict): The processed results of each batch.
+            model (nn.Module): Model to evaluate.
+            dataloader (DataLoader): Dataloader for real images.
+            metrics (List['GenMetric']): Metrics with the same sample mode.
 
         Returns:
-            Dict: The computed metrics. The keys are the names of the metrics,
-            and the values are corresponding results.
+            DataLoader: Default sampler for normal metrics.
         """
+        return dataloader
 
-        sad = average(results, 'sad')
+    def evaluate(self, *args, **kwargs):
+        """Returns metric results and print pretty table of metrics per class.
 
-        return {'SAD': sad}
+        This method would be invoked by ``mmengine.Evaluator``.
+        """
+        metric_results = self.compute(*args, **kwargs)
+        self.reset()
+
+        key_template = f'{self.prefix}/{{}}' if self.prefix else '{}'
+        return {
+            key_template.format(k): v * self.scaling
+            for k, v in metric_results.items()
+        }
