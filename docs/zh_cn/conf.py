@@ -110,12 +110,12 @@ html_theme_options = {
             'children': [
                 {
                     'name': 'MMagic 1.x',
-                    'url': 'https://mmagic.readthedocs.io/en/latest/',
+                    'url': 'https://mmagic.readthedocs.io/zh_CN/latest/',
                     'description': 'Main 分支文档'
                 },
                 {
                     'name': 'MMEditing 0.x',
-                    'url': 'https://mmagic.readthedocs.io/en/0.x/',
+                    'url': 'https://mmagic.readthedocs.io/zh_CN/0.x/',
                     'description': '0.x 分支文档'
                 },
             ],
