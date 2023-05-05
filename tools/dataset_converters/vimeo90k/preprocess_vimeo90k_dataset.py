@@ -14,8 +14,8 @@ import numpy as np
 from skimage import img_as_float
 from skimage.io import imread, imsave
 
-from mmedit.datasets.transforms import MATLABLikeResize, blur_kernels
-from mmedit.utils import modify_args
+from mmagic.datasets.transforms import MATLABLikeResize, blur_kernels
+from mmagic.utils import modify_args
 
 
 def make_lmdb(mode,
@@ -100,7 +100,7 @@ def make_lmdb(mode,
     env = lmdb.open(lmdb_path, map_size=data_size * 10)
 
     # write data to lmdb
-    pbar = mmcv.ProgressBar(len(all_img_list))
+    pbar = mmengine.ProgressBar(len(all_img_list))
     txn = env.begin(write=True)
     txt_file = open(osp.join(lmdb_path, 'meta_info.txt'), 'w')
     for idx, (path, key) in enumerate(zip(all_img_list, keys)):

@@ -62,7 +62,7 @@ repos:
     hooks:
       - id: check-algo-readme
       - id: check-copyright
-        args: ["demo", "mmedit", "tests", "tools"]
+        args: ["demo", "mmagic", "tests", "tools"]
       - id: remove-improper-eol-in-cn-docs
   - repo: local
     hooks:

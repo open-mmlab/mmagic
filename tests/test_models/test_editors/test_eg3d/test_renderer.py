@@ -5,7 +5,7 @@ from unittest.mock import Mock, patch
 
 import torch
 
-from mmedit.models.editors.eg3d.renderer import EG3DDecoder, EG3DRenderer
+from mmagic.models.editors.eg3d.renderer import EG3DDecoder, EG3DRenderer
 
 
 class TestEG3DRenderer(TestCase):
@@ -87,7 +87,7 @@ class TestEG3DRenderer(TestCase):
         # test without hierarchical sampling + test render_kwargs
         render_kwargs = dict(depth_resolution_importance=0)
         mock_func = Mock(return_value=(rgb, depth, weights[..., None]))
-        mock_path = ('mmedit.models.editors.eg3d.renderer.EG3DRenderer.'
+        mock_path = ('mmagic.models.editors.eg3d.renderer.EG3DRenderer.'
                      'volume_rendering')
         with patch(mock_path, new=mock_func):
             renderer = EG3DRenderer(**cfg_)
@@ -99,7 +99,7 @@ class TestEG3DRenderer(TestCase):
             mock_func.assert_called_once()
 
         # cover TORCH_VERSION < 1.8.0
-        mock_path = 'mmedit.models.editors.eg3d.renderer.TORCH_VERSION'
+        mock_path = 'mmagic.models.editors.eg3d.renderer.TORCH_VERSION'
         with patch(mock_path, '1.6.0'):
             cfg_ = deepcopy(self.renderer_cfg)
             renderer = EG3DRenderer(**cfg_)

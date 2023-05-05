@@ -4,8 +4,8 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors.stylegan1 import StyleGAN1Discriminator
-from mmedit.utils import register_all_modules
+from mmagic.models.editors.stylegan1 import StyleGAN1Discriminator
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

@@ -6,7 +6,7 @@ except ImportError:
 import pytest
 import torch
 
-from mmedit.models import (DepthwiseIndexBlock, HolisticIndexBlock,
+from mmagic.models import (DepthwiseIndexBlock, HolisticIndexBlock,
                            IndexNetEncoder)
 
 

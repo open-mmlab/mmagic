@@ -20,8 +20,8 @@ The training and test datasets can be download from [here](http://toflow.csail.m
 The Vimeo90K-triplet  dataset has a `clip/sequence/img` folder structure:
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

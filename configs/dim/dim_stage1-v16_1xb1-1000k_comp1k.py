@@ -49,7 +49,7 @@ train_pipeline = [
         scale=(320, 320),
         keep_ratio=False),
     dict(type='GenerateTrimap', kernel_size=(1, 30)),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 test_pipeline = [
     dict(
@@ -63,7 +63,7 @@ test_pipeline = [
         color_type='grayscale',
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 train_dataloader = dict(batch_size=1, dataset=dict(pipeline=train_pipeline))
@@ -77,8 +77,8 @@ train_cfg = dict(
     max_iters=1_000_000,
     val_interval=40000,
 )
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(

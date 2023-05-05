@@ -1,6 +1,6 @@
 # Migration of Distributed Training Settings
 
-We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMEditing. Here is migration of Distributed Training Settings about MMGeneration.
+We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMagic. Here is migration of Distributed Training Settings about MMGeneration.
 
 In 0.x version, MMGeneration uses `DDPWrapper` and `DynamicRunner` to train static and dynamic model (e.g., PGGAN and StyleGANv2) respectively. In 1.x version, we use `MMSeparateDistributedDataParallel` provided by MMEngine to implement distributed training.
 

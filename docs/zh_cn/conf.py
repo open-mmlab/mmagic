@@ -21,9 +21,9 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'MMEditing'
-copyright = '2020, MMEditing Authors'
-author = 'MMEditing Authors'
+project = 'MMagic'
+copyright = '2023, MMagic Authors'
+author = 'MMagic Authors'
 
 # -- General configuration ---------------------------------------------------
 
@@ -45,7 +45,7 @@ extensions.append('notfound.extension')  # enable customizing not-found page
 
 extensions.append('autoapi.extension')
 autoapi_type = 'python'
-autoapi_dirs = ['../../mmedit']
+autoapi_dirs = ['../../mmagic']
 autoapi_add_toctree_entry = False
 autoapi_template_dir = '_templates'
 # autoapi_options = ['members', 'undoc-members', 'show-module-summary']
@@ -67,7 +67,7 @@ autoapi_template_dir = '_templates'
 # autodoc_inherit_docstrings = True
 
 autodoc_mock_imports = [
-    'mmedit.version', 'mmcv._ext', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmagic.version', 'mmcv._ext', 'mmcv.ops.ModulatedDeformConv2d',
     'mmcv.ops.modulated_deform_conv2d', 'clip', 'resize_right', 'pandas'
 ]
 
@@ -102,21 +102,21 @@ html_theme_options = {
     'menu': [
         {
             'name': 'GitHub',
-            'url': 'https://github.com/open-mmlab/mmediting',
+            'url': 'https://github.com/open-mmlab/mmagic',
         },
         {
             'name':
             '版本',
             'children': [
                 {
-                    'name': 'MMEditing 0.x',
-                    'url': 'https://mmediting.readthedocs.io/en/latest/',
+                    'name': 'MMagic 1.x',
+                    'url': 'https://mmagic.readthedocs.io/en/latest/',
                     'description': 'Main 分支文档'
                 },
                 {
-                    'name': 'MMEditing 1.x',
-                    'url': 'https://mmediting.readthedocs.io/en/1.x/',
-                    'description': '1.x 分支文档'
+                    'name': 'MMEditing 0.x',
+                    'url': 'https://mmagic.readthedocs.io/en/0.x/',
+                    'description': '0.x 分支文档'
                 },
             ],
             'active':

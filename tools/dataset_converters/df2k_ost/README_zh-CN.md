@@ -19,8 +19,8 @@
 请先将所有图片放入 `GT` 文件夹（命名不需要按顺序）：
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -43,8 +43,8 @@ python tools/dataset_converters/df2k_ost/preprocess_df2k_ost_dataset.py --data-r
 生成的数据存放在 `df2k_ost` 下，数据结构如下，其中 `_sub` 表示子图像。
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -75,5 +75,5 @@ mmediting
 如果你想使用 LMDB 数据集来获得更快的 IO 速度，你可以通过以下方式制作 LMDB 文件：
 
 ```shell
-python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
+python tools/dataset_converters/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
 ```

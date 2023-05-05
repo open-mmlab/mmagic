@@ -70,7 +70,7 @@ python tools/train.py configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py
 ./tools/dist_train.sh configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py 8
 ```
 
-For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMagic).
 
 </details>
 
@@ -109,7 +109,7 @@ python tools/test.py configs/tof/tof_x4_official_vimeo90k.py https://download.op
 ./tools/dist_test.sh configs/tof/tof_x4_official_vimeo90k.py https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth 8
 ```
 
-For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).
 
 </details>
 

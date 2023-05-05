@@ -7,7 +7,7 @@ import os.path as osp
 from mmengine.config import Config, DictAction
 from mmengine.runner import Runner
 
-from mmedit.utils import print_colored_log
+from mmagic.utils import print_colored_log
 
 
 def parse_args():
@@ -40,7 +40,10 @@ def parse_args():
         choices=['none', 'pytorch', 'slurm', 'mpi'],
         default='none',
         help='job launcher')
-    parser.add_argument('--local_rank', type=int, default=0)
+    # When using PyTorch version >= 2.0.0, the `torch.distributed.launch`
+    # will pass the `--local-rank` parameter to `tools/train.py` instead
+    # of `--local_rank`.
+    parser.add_argument('--local_rank', '--local-rank', type=int, default=0)
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
@@ -69,7 +72,7 @@ def main():
     # enable automatic-mixed-precision training
     if args.amp is True:
         if ('constructor' not in cfg.optim_wrapper) or \
-                cfg.optim_wrapper['constructor'] == 'DefaultOptimWrapperConstructor': # noqa
+                cfg.optim_wrapper['constructor'] == 'DefaultOptimWrapperConstructor':  # noqa
             optim_wrapper = cfg.optim_wrapper.type
             if optim_wrapper == 'AmpOptimWrapper':
                 print_colored_log(

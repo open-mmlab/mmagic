@@ -5,7 +5,7 @@ import pytest
 import torch
 from mmengine.model import MMDistributedDataParallel
 
-from mmedit.evaluation.metrics.base_gen_metric import (GenerativeMetric,
+from mmagic.evaluation.metrics.base_gen_metric import (GenerativeMetric,
                                                        GenMetric)
 
 
@@ -13,7 +13,7 @@ def mock_collect_fn(results, *args, **kwargs):
     return results[0]
 
 
-@patch('mmedit.evaluation.metrics.base_gen_metric.collect_results',
+@patch('mmagic.evaluation.metrics.base_gen_metric.collect_results',
        mock_collect_fn)
 class ToyMetric(GenMetric):
 
@@ -24,7 +24,7 @@ class ToyMetric(GenMetric):
         return dict(score=1)
 
 
-@patch('mmedit.evaluation.metrics.base_gen_metric.collect_results',
+@patch('mmagic.evaluation.metrics.base_gen_metric.collect_results',
        mock_collect_fn)
 class ToyGenerativeMetric(GenerativeMetric):
 

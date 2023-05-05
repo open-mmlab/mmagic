@@ -21,12 +21,12 @@ The original val dataset (clip names from 000 to 029) are modified to avoid conf
 You can prepare the REDS dataset by running:
 
 ```shell
-python tools/dataset_converters/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS
+python tools/dataset_converters/reds/preprocess_reds_dataset.py --root-path ./data/REDS
 ```
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -55,22 +55,22 @@ mmediting
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/dataset_converters/super-resolution/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
+python tools/dataset_converters/reds/preprocess_reds_dataset.py --root-path ./data/REDS --make-lmdb
 ```
 
 ## Crop to sub-images
 
-MMEditing also support cropping REDS images to sub-images for faster IO. We provide such a script:
+MMagic also supports cropping REDS images to sub-images for faster IO. We provide such a script:
 
 ```shell
-python tools/dataset_converters/super-resolution/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
+python tools/dataset_converters/reds/crop_sub_images.py --data-root ./data/REDS  -scales 4
 ```
 
 The generated data is stored under `REDS` and the data structure is as follows, where `_sub` indicates the sub-images.
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

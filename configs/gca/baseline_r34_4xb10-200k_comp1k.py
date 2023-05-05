@@ -67,7 +67,7 @@ train_pipeline = [
     dict(type='RandomJitter'),
     dict(type='MergeFgAndBg'),
     dict(type='FormatTrimap', to_onehot=True),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 test_pipeline = [
     dict(
@@ -82,7 +82,7 @@ test_pipeline = [
         save_original_img=True),
     dict(type='LoadImageFromFile', key='merged'),
     dict(type='FormatTrimap', to_onehot=True),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]
 
 train_dataloader = dict(
@@ -103,8 +103,8 @@ train_cfg = dict(
     max_iters=200_000,
     val_interval=10_000,
 )
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(

@@ -3,7 +3,7 @@ dataset_type = 'BasicImageDataset'
 train_pipeline = [
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='Resize', keys='gt', scale=(64, 64)),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # `batch_size` and `data_root` need to be set.

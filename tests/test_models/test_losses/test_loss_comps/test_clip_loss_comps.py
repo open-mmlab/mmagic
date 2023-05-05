@@ -7,7 +7,7 @@ import torch
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
-from mmedit.models.losses import CLIPLossComps
+from mmagic.models.losses import CLIPLossComps
 
 
 @pytest.mark.skipif(

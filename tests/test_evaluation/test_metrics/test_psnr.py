@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmedit.evaluation.metrics import PSNR, psnr
+from mmagic.evaluation.metrics import PSNR, psnr
 
 
 class TestPixelMetrics:

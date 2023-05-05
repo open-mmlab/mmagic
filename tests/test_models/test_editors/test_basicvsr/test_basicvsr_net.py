@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import BasicVSRNet
+from mmagic.models.editors import BasicVSRNet
 
 
 def test_basicvsr_net():

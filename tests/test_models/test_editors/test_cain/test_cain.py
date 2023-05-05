@@ -6,11 +6,11 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import EditDataPreprocessor
-from mmedit.models.editors import CAIN, CAINNet
-from mmedit.models.losses import L1Loss
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
+from mmagic.models import DataPreprocessor
+from mmagic.models.editors import CAIN, CAINNet
+from mmagic.models.losses import L1Loss
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
 
 
 @pytest.mark.skipif(
@@ -98,11 +98,11 @@ def test_cain():
     model = CAIN(
         generator=dict(type='CAINNet'),
         pixel_loss=dict(type='L1Loss', loss_weight=1.0, reduction='mean'),
-        data_preprocessor=EditDataPreprocessor(pad_mode='reflect'))
+        data_preprocessor=DataPreprocessor(pad_mode='reflect'))
 
     # test attributes
     assert isinstance(model, CAIN)
-    assert isinstance(model.data_preprocessor, EditDataPreprocessor)
+    assert isinstance(model.data_preprocessor, DataPreprocessor)
     assert isinstance(model.generator, CAINNet)
     assert isinstance(model.pixel_loss, L1Loss)
 
@@ -112,7 +112,7 @@ def test_cain():
     # prepare data
     inputs = torch.rand(2, 3, 32, 32)
     target = torch.rand(3, 32, 32)
-    data_sample = EditDataSample(gt_img=target)
+    data_sample = DataSample(gt_img=target)
     data = dict(inputs=[inputs], data_samples=[data_sample])
 
     # train

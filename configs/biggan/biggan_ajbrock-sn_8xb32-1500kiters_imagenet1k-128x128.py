@@ -31,7 +31,7 @@ optim_wrapper = dict(
 # VIS_HOOK
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=10000,
         fixed_input=True,
         # vis ema and orig at the same time

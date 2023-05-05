@@ -4,8 +4,8 @@ import platform
 import pytest
 import torch
 
-from mmedit.models import IDLossModel
-from mmedit.models.losses import FaceIdLossComps
+from mmagic.models import IDLossModel
+from mmagic.models.losses import FaceIdLossComps
 
 
 @pytest.mark.skipif(

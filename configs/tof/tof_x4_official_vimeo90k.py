@@ -11,7 +11,7 @@ model = dict(
     generator=dict(type='TOFlowVSRNet', adapt_official_weights=True),
     pixel_loss=dict(type='CharbonnierLoss', loss_weight=1.0, reduction='sum'),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0.485 * 255, 0.456 * 255, 0.406 * 255],
         std=[0.229 * 255, 0.224 * 255, 0.225 * 255],
     ))
@@ -28,7 +28,7 @@ val_pipeline = [
         key='gt',
         color_type='color',
         channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 demo_pipeline = [
@@ -38,7 +38,7 @@ demo_pipeline = [
         key='img',
         color_type='color',
         channel_order='rgb'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 data_root = 'data/Vid4'
@@ -62,7 +62,7 @@ val_dataloader = dict(
 # test_dataloader = val_dataloader
 
 val_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(type='MAE'),
         dict(type='PSNR'),
@@ -70,5 +70,5 @@ val_evaluator = dict(
     ])
 # test_evaluator = val_evaluator
 
-val_cfg = dict(type='EditValLoop')
-# test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+# test_cfg = dict(type='MultiTestLoop')

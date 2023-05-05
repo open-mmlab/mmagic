@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from unittest import TestCase
 
 import pytest
@@ -6,7 +7,7 @@ import torch
 from mmengine import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
-from mmedit.models.editors.stylegan2.ada.augment import AugmentPipe
+from mmagic.models.editors.stylegan2.ada.augment import AugmentPipe
 
 
 class TestAuementPipe(TestCase):
@@ -45,8 +46,10 @@ class TestAuementPipe(TestCase):
         )
 
     @pytest.mark.skipif(
-        digit_version(TORCH_VERSION) <= digit_version('1.6.0'),
-        reason='torch version lower than 1.7.0 does not have `torch.exp2` api')
+        digit_version(TORCH_VERSION) <= digit_version('1.6.0')
+        or 'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason=('torch version lower than 1.7.0 does not have '
+                '`torch.exp2` api, skip on windows due to uncompiled ops.'))
     def test_forward(self):
         augment_pipeline = AugmentPipe(**self.default_cfg)
 

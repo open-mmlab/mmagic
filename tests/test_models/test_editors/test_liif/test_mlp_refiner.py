@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors import MLPRefiner
+from mmagic.models.editors import MLPRefiner
 
 
 def test_MLPRefiner():

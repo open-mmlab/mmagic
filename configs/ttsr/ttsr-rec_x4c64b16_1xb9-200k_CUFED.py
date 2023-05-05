@@ -24,7 +24,7 @@ model = dict(
     train_cfg=dict(),
     test_cfg=dict(),
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[127.5, 127.5, 127.5],
         std=[127.5, 127.5, 127.5],
     ))
@@ -87,7 +87,7 @@ train_pipeline = [
         direction='vertical'),
     dict(
         type='RandomTransposeHW', keys=['ref', 'ref_lq'], transpose_ratio=0.5),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 valid_pipeline = [
     dict(
@@ -121,7 +121,7 @@ valid_pipeline = [
         output_keys=['img_lq', 'ref_lq'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 demo_pipeline = [
     dict(
@@ -154,7 +154,7 @@ demo_pipeline = [
         output_keys=['img_lq', 'ref_lq'],
         interpolation='bicubic',
         backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings
@@ -189,7 +189,7 @@ val_dataloader = dict(
 test_dataloader = val_dataloader
 
 val_evaluator = dict(
-    type='EditEvaluator',
+    type='Evaluator',
     metrics=[
         dict(type='MAE'),
         dict(type='PSNR', crop_border=scale),
@@ -199,8 +199,8 @@ test_evaluator = val_evaluator
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=200_000, val_interval=5000)
-val_cfg = dict(type='EditValLoop')
-test_cfg = dict(type='EditTestLoop')
+val_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 
 # optimizer
 optim_wrapper = dict(

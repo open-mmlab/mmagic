@@ -4,9 +4,9 @@ import unittest
 
 import torch
 
-from mmedit.apis.inferencers.colorization_inferencer import \
+from mmagic.apis.inferencers.colorization_inferencer import \
     ColorizationInferencer
-from mmedit.utils import register_all_modules
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 

@@ -5,7 +5,7 @@ import numpy.testing as npt
 import pytest
 import torch
 
-from mmedit.models import (CharbonnierLoss, L1Loss, MaskedTVLoss, MSELoss,
+from mmagic.models import (CharbonnierLoss, L1Loss, MaskedTVLoss, MSELoss,
                            PSNRLoss)
 
 

@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.editors.dcgan import DCGANDiscriminator
-from mmedit.registry import MODELS
+from mmagic.models.editors.dcgan import DCGANDiscriminator
+from mmagic.registry import MODELS
 
 
 class TestDCGANDiscriminator(object):

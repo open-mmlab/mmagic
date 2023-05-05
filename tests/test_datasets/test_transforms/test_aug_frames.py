@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import MirrorSequence, TemporalReverse
+from mmagic.datasets.transforms import MirrorSequence, TemporalReverse
 
 
 class TestAugmentations:

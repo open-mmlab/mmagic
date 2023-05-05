@@ -19,8 +19,8 @@
 Please first put all the images into the `GT` folder (naming does not need to be in order):
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -43,8 +43,8 @@ python tools/dataset_converters/df2k_ost/preprocess_df2k_ost_dataset.py --data-r
 The generated data is stored under `df2k_ost` and the data structure is as follows, where `_sub` indicates the sub-images.
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -75,5 +75,5 @@ Note that `preprocess_df2k_ost_dataset.py` will generate default annotation file
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
+python tools/dataset_converters/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
 ```

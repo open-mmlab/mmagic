@@ -25,7 +25,7 @@ jobs:
           name: Check docstring coverage
           command: |
             pip install interrogate
-            interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --ignore-magic --ignore-regex "__repr__" --fail-under 90 mmedit
+            interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --ignore-magic --ignore-regex "__repr__" --fail-under 90 mmagic
   build_cpu:
     parameters:
       # The python version must match available image tags in
@@ -57,11 +57,11 @@ jobs:
             python -V
             pip install torch==<< parameters.torch >>+cpu torchvision==<< parameters.torchvision >>+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - run:
-          name: Install mmediting dependencies
+          name: Install mmagic dependencies
           command: |
             pip install git+https://github.com/open-mmlab/mmengine.git@main
             pip install -U openmim
-            mim install 'mmcv >= 2.0.0rc1'
+            mim install 'mmcv >= 2.0.0'
             pip install -r requirements/tests.txt
       - run:
           name: Build and install
@@ -70,7 +70,7 @@ jobs:
       - run:
           name: Run unittests
           command: |
-            coverage run --branch --source mmedit -m pytest tests/
+            coverage run --branch --source mmagic -m pytest tests/
             coverage xml
             coverage report -m
   build_cuda:
@@ -97,23 +97,23 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build .circleci/docker -t mmedit:gpu --build-arg PYTORCH=<< parameters.torch >> --build-arg CUDA=<< parameters.cuda >> --build-arg CUDNN=<< parameters.cudnn >>
-            docker run --gpus all -t -d -v /home/circleci/project:/mmedit -v /home/circleci/mmengine:/mmengine -v /home/circleci/mmdetection:/mmdetection -w /mmedit --name mmedit mmedit:gpu
+            docker build .circleci/docker -t mmagic:gpu --build-arg PYTORCH=<< parameters.torch >> --build-arg CUDA=<< parameters.cuda >> --build-arg CUDNN=<< parameters.cudnn >>
+            docker run --gpus all -t -d -v /home/circleci/project:/mmagic -v /home/circleci/mmengine:/mmengine -v /home/circleci/mmdetection:/mmdetection -w /mmagic --name mmagic mmagic:gpu
       - run:
-          name: Install mmedit dependencies
+          name: Install mmagic dependencies
           command: |
-            docker exec mmedit pip install -e /mmengine
-            docker exec mmedit pip install -U openmim
-            docker exec mmedit mim install 'mmcv >= 2.0.0rc1'
-            docker exec mmedit pip install -r requirements/tests.txt
+            docker exec mmagic pip install -e /mmengine
+            docker exec mmagic pip install -U openmim
+            docker exec mmagic mim install 'mmcv >= 2.0.0'
+            docker exec mmagic pip install -r requirements/tests.txt
       - run:
           name: Build and install
           command: |
-            docker exec mmedit pip install -e .
+            docker exec mmagic pip install -e .
       - run:
           name: Run unittests
           command: |
-            docker exec mmedit pytest tests/
+            docker exec mmagic pytest tests/
 
 workflows:
   pr_stage_lint:
@@ -125,7 +125,7 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
-                - 1.x
+                - main
   pr_stage_test:
     when:
       not:
@@ -137,11 +137,11 @@ workflows:
             branches:
               ignore:
                 - dev-1.x
-                - 1.x
+                - main
       - build_cpu:
           name: minimum_version_cpu
-          torch: 1.6.0
-          torchvision: 0.7.0
+          torch: 1.8.1
+          torchvision: 0.9.1
           python: 3.7.4
           requires:
             - lint
@@ -171,10 +171,10 @@ workflows:
     jobs:
       - build_cuda:
           name: minimum_version_gpu
-          torch: 1.6.0
+          torch: 1.8.1
           # Use double quotation mark to explicitly specify its type
           # as string instead of number
-          cuda: "10.1"
+          cuda: "10.2"
           filters:
             branches:
               only:

@@ -2,8 +2,8 @@
 import numpy as np
 import pytest
 
-from mmedit.evaluation.metrics import metrics_utils
-from mmedit.evaluation.metrics.metrics_utils import reorder_image
+from mmagic.evaluation.metrics import metrics_utils
+from mmagic.evaluation.metrics.metrics_utils import reorder_image
 
 
 def test_average():

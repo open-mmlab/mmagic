@@ -5,11 +5,11 @@ import torch
 from mmengine import Config
 from mmengine.optim import OptimWrapper
 
-from mmedit.models.editors import (DeepFillEncoderDecoder, DeepFillRefiner,
+from mmagic.models.editors import (DeepFillEncoderDecoder, DeepFillRefiner,
                                    GLEncoderDecoder)
-from mmedit.registry import MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 
 def test_deepfill_encdec():
@@ -65,12 +65,13 @@ def test_deepfillv1_inpaintor():
     data_batch = {
         'inputs':
         masked_img,
-        'data_samples':
-        [EditDataSample(
-            mask=mask,
-            mask_bbox=mask_bbox,
-            gt_img=gt_img,
-        )]
+        'data_samples': [
+            DataSample(
+                metainfo=dict(mask_bbox=mask_bbox),
+                mask=mask,
+                gt_img=gt_img,
+            )
+        ]
     }
 
     # prepare model and optimizer

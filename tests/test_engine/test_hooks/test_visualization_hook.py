@@ -11,22 +11,22 @@ from mmengine.testing import assert_allclose
 from mmengine.visualization import Visualizer
 from torch.utils.data.dataset import Dataset
 
-from mmedit.engine import GenVisualizationHook
-from mmedit.engine.hooks import BasicVisualizationHook
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
-from mmedit.visualization import ConcatImageVisualizer
+from mmagic.engine import VisualizationHook
+from mmagic.engine.hooks import BasicVisualizationHook
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
+from mmagic.visualization import ConcatImageVisualizer
 
-from mmedit.registry import MODELS  # isort:skip  # noqa
+from mmagic.registry import MODELS  # isort:skip  # noqa
 
 register_all_modules()
 
 
-class TestVisualizationHook(TestCase):
+class TestBasicVisualizationHook(TestCase):
 
     def setUp(self) -> None:
         input = torch.rand(2, 3, 32, 32)
-        data_sample = EditDataSample(
+        data_sample = DataSample(
             path_rgb='rgb.png',
             tensor3d=torch.ones(3, 32, 32) *
             torch.tensor([[[0.1]], [[0.2]], [[0.3]]]),
@@ -83,26 +83,26 @@ class TestVisualizationHook(TestCase):
         assert runner.visualizer.assert_not_called
 
 
-class TestGenVisualizationHook(TestCase):
+class TestVisualizationHook(TestCase):
 
     Visualizer.get_instance('test-gen-visualizer')
     MessageHub.get_instance('test-gen-visualizer')
 
     def test_init(self):
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10, vis_kwargs_list=dict(type='Noise'))
         self.assertEqual(hook.interval, 10)
         self.assertEqual(hook.vis_kwargs_list, [dict(type='Noise')])
         self.assertEqual(hook.n_samples, 64)
         self.assertFalse(hook.show)
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10,
             vis_kwargs_list=[dict(type='Noise'),
                              dict(type='Translation')])
         self.assertEqual(len(hook.vis_kwargs_list), 2)
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10, vis_kwargs_list=dict(type='GAN'), show=True)
         self.assertEqual(hook._visualizer._vis_backends, {})
 
@@ -110,7 +110,7 @@ class TestGenVisualizationHook(TestCase):
         gan_model_cfg = dict(
             type='DCGAN',
             noise_size=10,
-            data_preprocessor=dict(type='EditDataPreprocessor'),
+            data_preprocessor=dict(type='DataPreprocessor'),
             generator=dict(
                 type='DCGANGenerator', output_scale=32, base_channels=32))
         model = MODELS.build(gan_model_cfg)
@@ -119,7 +119,7 @@ class TestGenVisualizationHook(TestCase):
         runner.train_dataloader = MagicMock()
         runner.train_dataloader.batch_size = 10
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10, vis_kwargs_list=dict(type='GAN'), n_samples=9)
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
@@ -127,8 +127,7 @@ class TestGenVisualizationHook(TestCase):
 
         # build a empty data sample
         data_batch = [
-            dict(inputs=None, data_samples=EditDataSample())
-            for idx in range(10)
+            dict(inputs=None, data_samples=DataSample()) for idx in range(10)
         ]
         hook.vis_sample(runner, 0, data_batch, None)
         _, called_kwargs = mock_visualuzer.add_datasample.call_args
@@ -156,8 +155,7 @@ class TestGenVisualizationHook(TestCase):
         translation_cfg = dict(
             type='CycleGAN',
             data_preprocessor=dict(
-                type='EditDataPreprocessor',
-                data_keys=['img_photo', 'img_mask']),
+                type='DataPreprocessor', data_keys=['img_photo', 'img_mask']),
             generator=dict(
                 type='ResnetGenerator',
                 in_channels=3,
@@ -195,7 +193,7 @@ class TestGenVisualizationHook(TestCase):
                 img_mask = torch.ones(3, 32, 32) * (weight + 1)
                 return dict(
                     inputs=dict(img_photo=img_photo, img_mask=img_mask),
-                    data_samples=EditDataSample(
+                    data_samples=DataSample(
                         img_photo=img_photo, img_mask=img_mask))
 
         train_dataloader = MagicMock()
@@ -211,7 +209,7 @@ class TestGenVisualizationHook(TestCase):
         runner.val_loop = MagicMock()
         runner.val_loop.dataloader = val_dataloader
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10,
             vis_kwargs_list=[
                 dict(type='Translation'),
@@ -224,8 +222,7 @@ class TestGenVisualizationHook(TestCase):
 
         # build a empty data sample
         data_batch = [
-            dict(inputs=None, data_samples=EditDataSample())
-            for idx in range(4)
+            dict(inputs=None, data_samples=DataSample()) for idx in range(4)
         ]
         hook.vis_sample(runner, 0, data_batch, None)
         called_kwargs_list = mock_visualuzer.add_datasample.call_args_list
@@ -271,7 +268,7 @@ class TestGenVisualizationHook(TestCase):
     #     ddpm_cfg = dict(
     #         type='BasicGaussianDiffusion',
     #         num_timesteps=4,
-    #         data_preprocessor=dict(type='EditDataPreprocessor'),
+    #         data_preprocessor=dict(type='DataPreprocessor'),
     #         betas_cfg=dict(type='cosine'),
     #         denoising=dict(
     #             type='DenoisingUnet',
@@ -292,7 +289,7 @@ class TestGenVisualizationHook(TestCase):
     #     runner.train_dataloader = MagicMock()
     #     runner.train_dataloader.batch_size = 10
 
-    #     hook = GenVisualizationHook(
+    #     hook = VisualizationHook(
     #         interval=10,
     #         n_samples=2,
     #         vis_kwargs_list=dict(
@@ -304,7 +301,7 @@ class TestGenVisualizationHook(TestCase):
 
     #     # build a empty data sample
     #     data_batch = [
-    #         dict(inputs=None, data_sample=EditDataSample())
+    #         dict(inputs=None, data_sample=DataSample())
     #         for idx in range(10)
     #     ]
     #     hook.vis_sample(runner, 0, data_batch, None)
@@ -333,7 +330,7 @@ class TestGenVisualizationHook(TestCase):
 
     #     # build a empty data sample
     #     data_batch = [
-    #         dict(inputs=None, data_sample=EditDataSample())
+    #         dict(inputs=None, data_sample=DataSample())
     #         for idx in range(10)
     #     ]
     #     hook.vis_sample(runner, 0, data_batch, None)
@@ -344,7 +341,7 @@ class TestGenVisualizationHook(TestCase):
 
     def test_after_val_iter(self):
         model = MagicMock()
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10, n_samples=2, vis_kwargs_list=dict(type='GAN'))
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
@@ -353,14 +350,14 @@ class TestGenVisualizationHook(TestCase):
         runner = MagicMock()
         runner.model = model
 
-        hook.after_val_iter(runner, 0, [dict()], [EditDataSample()])
+        hook.after_val_iter(runner, 0, [dict()], [DataSample()])
         mock_visualuzer.assert_not_called()
 
     def test_after_train_iter(self):
         gan_model_cfg = dict(
             type='DCGAN',
             noise_size=10,
-            data_preprocessor=dict(type='EditDataPreprocessor'),
+            data_preprocessor=dict(type='DataPreprocessor'),
             generator=dict(
                 type='DCGANGenerator', output_scale=32, base_channels=32))
         model = MODELS.build(gan_model_cfg)
@@ -369,7 +366,7 @@ class TestGenVisualizationHook(TestCase):
         runner.train_dataloader = MagicMock()
         runner.train_dataloader.batch_size = 10
 
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=2, vis_kwargs_list=dict(type='GAN'), n_samples=9)
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
@@ -377,8 +374,7 @@ class TestGenVisualizationHook(TestCase):
 
         # build a empty data sample
         data_batch = [
-            dict(inputs=None, data_samples=EditDataSample())
-            for idx in range(10)
+            dict(inputs=None, data_samples=DataSample()) for idx in range(10)
         ]
         for idx in range(3):
             hook.after_train_iter(runner, idx, data_batch, None)
@@ -401,7 +397,7 @@ class TestGenVisualizationHook(TestCase):
         self.assertEqual(messageHub_vis_args['name'], 'train_feat_map')
         self.assertEqual(len(messageHub_vis_args['gen_samples']), 4)
         self.assertEqual(messageHub_vis_args['vis_mode'], None)
-        self.assertEqual(messageHub_vis_args['n_row'], 4)
+        self.assertEqual(messageHub_vis_args['n_row'], None)
 
         # test vis with messagehub info --> list[str]
         mock_visualuzer.add_datasample.reset_mock()
@@ -415,7 +411,7 @@ class TestGenVisualizationHook(TestCase):
         self.assertEqual(messageHub_vis_args['name'], 'train_feat_map')
         self.assertEqual(len(messageHub_vis_args['gen_samples']), 4)
         self.assertEqual(messageHub_vis_args['vis_mode'], None)
-        self.assertEqual(messageHub_vis_args['n_row'], 4)
+        self.assertEqual(messageHub_vis_args['n_row'], None)
 
         # test vis with messagehub info --> dict
         mock_visualuzer.add_datasample.reset_mock()
@@ -429,13 +425,13 @@ class TestGenVisualizationHook(TestCase):
         self.assertEqual(messageHub_vis_args['name'], 'train_feat_map')
         self.assertEqual(len(messageHub_vis_args['gen_samples']), 4)
         self.assertEqual(messageHub_vis_args['vis_mode'], 'feature_map')
-        self.assertEqual(messageHub_vis_args['n_row'], 4)
+        self.assertEqual(messageHub_vis_args['n_row'], None)
 
         # test vis with messagehub info --> list[dict]
         mock_visualuzer.add_datasample.reset_mock()
 
         feat_map = torch.randn(4, 16, 4, 4)
-        x_t = [EditDataSample(info='x_t')]
+        x_t = [DataSample(info='x_t')]
         vis_results = dict(feat_map=feat_map, x_t=x_t)
         message_hub.update_info('vis_results', vis_results)
 
@@ -452,13 +448,13 @@ class TestGenVisualizationHook(TestCase):
         self.assertEqual(feat_map_vis_args['name'], 'train_feat_map')
         self.assertEqual(len(feat_map_vis_args['gen_samples']), 4)
         self.assertEqual(feat_map_vis_args['vis_mode'], 'feature_map')
-        self.assertEqual(feat_map_vis_args['n_row'], 4)
+        self.assertEqual(feat_map_vis_args['n_row'], None)
 
         _, x_t_vis_args = called_args_list[2]
         self.assertEqual(x_t_vis_args['name'], 'train_x_t')
         self.assertEqual(len(x_t_vis_args['gen_samples']), 1)
         self.assertEqual(x_t_vis_args['vis_mode'], None)
-        self.assertEqual(x_t_vis_args['n_row'], 1)
+        self.assertEqual(x_t_vis_args['n_row'], None)
 
         # test vis messageHub info --> errors
         hook.message_vis_kwargs = 'error'
@@ -474,9 +470,52 @@ class TestGenVisualizationHook(TestCase):
         with self.assertRaises(TypeError):
             hook.after_train_iter(runner, 1, data_batch, None)
 
+    def test_after_train_iter_contain_mul_elements(self):
+        # test contain_mul_elements + n_row != None
+        # n_row = 8, n_samples = 3, batch_size = 2, model_n_samples = 4
+        # run math.ceil(3 / 2) = 2 times, visualize 2 * 4 = 8 samples,
+        class MockModel:
+
+            def __init__(self, n_samples):
+                self.n_samples = n_samples
+
+            def noise_fn(self, *args, **kwargs):
+                return torch.randn(2, 2)
+
+            def val_step(self, *args, **kwargs):
+                return [DataSample() for _ in range(self.n_samples)]
+
+            def eval(self):
+                return self
+
+            def train(self):
+                return self
+
+        runner = MagicMock()
+        runner.model = MockModel(n_samples=4)
+        runner.train_dataloader = MagicMock()
+        runner.train_dataloader.batch_size = 2
+
+        hook = VisualizationHook(
+            interval=2, vis_kwargs_list=dict(type='GAN'), n_samples=3, n_row=8)
+        mock_visualuzer = MagicMock()
+        mock_visualuzer.add_datasample = MagicMock()
+        hook._visualizer = mock_visualuzer
+
+        # build a empty data sample
+        data_batch = [
+            dict(inputs=None, data_samples=DataSample()) for idx in range(10)
+        ]
+
+        for idx in range(3):
+            hook.after_train_iter(runner, idx, data_batch, None)
+        self.assertEqual(mock_visualuzer.add_datasample.call_count, 1)
+        called_args_list = mock_visualuzer.add_datasample.call_args_list[0]
+        self.assertEqual(len(called_args_list[1]['gen_samples']), 8)
+
     def test_after_test_iter(self):
         model = MagicMock()
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10,
             n_samples=2,
             max_save_at_test=None,
@@ -496,11 +535,11 @@ class TestGenVisualizationHook(TestCase):
 
         outputs = []
         for gt, ema, orig, x_t in zip(gt_list, ema_list, orig_list, x_t_list):
-            gen_sample = EditDataSample(
+            gen_sample = DataSample(
                 gt_img=gt,
-                ema=EditDataSample(fake_img=ema),
-                orig=EditDataSample(fake_img=orig),
-                new_model=EditDataSample(x_t=x_t))
+                ema=DataSample(fake_img=ema),
+                orig=DataSample(fake_img=orig),
+                new_model=DataSample(x_t=x_t))
             outputs.append(gen_sample)
 
         hook.after_test_iter(runner, 42, [], outputs)
@@ -549,14 +588,12 @@ class TestGenVisualizationHook(TestCase):
         self.assertTrue(all([kwargs['target_keys'] for kwargs in kwargs_list]))
 
         # test get target key automatically with error
-        outputs = [
-            EditDataSample(ema=EditDataSample(fake_img=torch.randn(3, 6, 6)))
-        ]
+        outputs = [DataSample(ema=DataSample(fake_img=torch.randn(3, 6, 6)))]
         with self.assertRaises(AssertionError):
             hook.after_test_iter(runner, 42, [], outputs)
 
         # test max save time
-        hook = GenVisualizationHook(
+        hook = VisualizationHook(
             interval=10,
             n_samples=2,
             test_vis_keys='ema',
@@ -572,8 +609,7 @@ class TestGenVisualizationHook(TestCase):
 
         ema_list = [torch.randn(3, 6, 6) for _ in range(4)]
         outputs = [
-            EditDataSample(ema=EditDataSample(fake_img=ema))
-            for ema in ema_list
+            DataSample(ema=DataSample(fake_img=ema)) for ema in ema_list
         ]
         hook.after_test_iter(runner, 42, [], outputs)
         mock_visualuzer.add_datasample.assert_not_called()
