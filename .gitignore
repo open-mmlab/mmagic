@@ -147,3 +147,7 @@ resources/
 # Slurm
 batchscript-*
 *.out
+
+*.png
+*.jpg
+*.zip
