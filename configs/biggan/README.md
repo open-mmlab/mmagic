@@ -44,8 +44,6 @@ Evaluation of our trained BigGAN.
 | [BigGAN 128x128 Best FID](./biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py) | ImageNet1k | **8.69**(1232000) |   101.15(1232000)   | [model](https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_b32x8_best_fid_iter_1232000_20211111_122548-5315b13d.pth)\|[log](https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_b32x8_1500k_20211111_122548-5315b13d.log.json) |
 | [BigGAN 128x128 Best IS](./biggan_ajbrock-sn_8xb32-1500kiters_imagenet1k-128x128.py) | ImageNet1k |  13.51(1328000)   | **129.07**(1328000) | [model](https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_b32x8_best_is_iter_1328000_20211111_122911-28c688bc.pth)\|[log](https://download.openmmlab.com/mmediting/biggan/biggan_imagenet1k_128x128_b32x8_1500k_20211111_122548-5315b13d.log.json) |
 
-Note: `BigGAN-Deep` trained on `ImageNet1k` will come later.
-
 ### Note on reproducibility
 
 `BigGAN 128x128` model is trained with V100 GPUs and CUDA 10.1 and can hardly reproduce the result with A100 and CUDA 11.3. If you have any idea about the reproducibility, please feel free to contact with us.

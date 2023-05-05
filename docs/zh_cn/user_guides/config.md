@@ -1,6 +1,6 @@
 # 教程 1: 了解配置文件（待更新）
 
-mmedit 采用基于 python 文件的配置系统，您可以在 `$MMEditing/configs` 下查看预置的配置文件。
+mmagic 采用基于 python 文件的配置系统，您可以在 `$MMagic/configs` 下查看预置的配置文件。
 
 ## 配置文件命名风格
 
@@ -318,7 +318,7 @@ log_config = dict(  # 配置注册记录器钩子
     hooks=[
         dict(type='TextLoggerHook', by_epoch=False),
         # dict(type='TensorboardLoggerHook'),  # 支持 Tensorboard 记录器
-        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmedit'))
+        # dict(type='PaviLoggerHook', init_kwargs=dict(project='mmagic'))
     ])  # 用于记录训练过程的记录器
 
 visual_config = dict(  # 构建可视化钩子的配置
@@ -515,7 +515,7 @@ workflow = [('train', 1)]  # runner 的工作流程。 [('train', 1)] 表示只�
 
 ## 示例-EDSR
 
-为了帮助用户理解 mmediting 的配置文件结构，这里以 EDSR 为例，给出其配置文件的注释。对于每个模块的详细用法以及对应参数的选择，请参照 API 文档。
+为了帮助用户理解 mmagic 的配置文件结构，这里以 EDSR 为例，给出其配置文件的注释。对于每个模块的详细用法以及对应参数的选择，请参照 API 文档。
 
 ```python
 exp_name = 'edsr_x2c64b16_1x16_300k_div2k'  # 实验名称

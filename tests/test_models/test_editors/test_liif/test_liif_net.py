@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.registry import BACKBONES
+from mmagic.registry import MODELS
 
 
 @pytest.mark.skipif(
@@ -31,7 +31,7 @@ def test_liif_edsr_net():
         eval_bsize=30000)
 
     # build model
-    model = BACKBONES.build(model_cfg)
+    model = MODELS.build(model_cfg)
 
     # test attributes
     assert model.__class__.__name__ == 'LIIFEDSRNet'
@@ -85,7 +85,7 @@ def test_liif_rdn_net():
         eval_bsize=30000)
 
     # build model
-    model = BACKBONES.build(model_cfg)
+    model = MODELS.build(model_cfg)
 
     # test attributes
     assert model.__class__.__name__ == 'LIIFRDNNet'

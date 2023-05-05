@@ -11,11 +11,11 @@ import torch
 from mmcv.onnx import register_extra_symbolics
 from mmengine import Config
 from mmengine.dataset import Compose
+from mmengine.registry import init_default_scope
 from mmengine.runner import load_checkpoint
 
-from mmedit.apis import delete_cfg
-from mmedit.registry import MODELS
-from mmedit.utils import register_all_modules
+from mmagic.apis import delete_cfg
+from mmagic.registry import MODELS
 
 
 def pytorch2onnx(model,
@@ -54,7 +54,7 @@ def pytorch2onnx(model,
         data = torch.cat((merged, trimap), dim=1).float()
         data = model.resize_inputs(data)
     elif model_type == 'image_restorer':
-        data = input['inputs'].unsqueeze(0)
+        data = input['inputs'].unsqueeze(0).float()
     elif model_type == 'inpainting':
         masks = input['data_samples'].mask.data.unsqueeze(0)
         img = input['inputs'].unsqueeze(0)
@@ -139,7 +139,7 @@ def pytorch2onnx(model,
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Convert MMediting to ONNX')
+    parser = argparse.ArgumentParser(description='Convert MMagic to ONNX')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
     parser.add_argument(
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     if model_type == 'mattor' and args.trimap_path is None:
         raise ValueError('Please set `--trimap-path` to convert mattor model.')
 
-    assert args.opset_version == 11, 'MMEditing only support opset 11 now'
+    assert args.opset_version == 11, 'MMagic only support opset 11 now'
 
     if args.device < 0 or not torch.cuda.is_available():
         device = torch.device('cpu')
@@ -190,14 +190,14 @@ if __name__ == '__main__':
     config = Config.fromfile(args.config)
     delete_cfg(config, key='init_cfg')
 
+    init_default_scope(config.get('default_scope', 'mmagic'))
+
     # ONNX does not support spectral norm
     if model_type == 'mattor':
         if hasattr(config.model.backbone.encoder, 'with_spectral_norm'):
             config.model.backbone.encoder.with_spectral_norm = False
             config.model.backbone.decoder.with_spectral_norm = False
         config.test_cfg.metrics = None
-
-    register_all_modules()
 
     # build the model
     model = MODELS.build(config.model)

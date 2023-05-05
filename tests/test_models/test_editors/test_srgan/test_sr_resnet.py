@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from mmedit.models import ModifiedVGG, MSRResNet
+from mmagic.models import ModifiedVGG, MSRResNet
 
 
 def test_srresnet_backbone():

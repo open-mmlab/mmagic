@@ -4,18 +4,18 @@ dataset_type = 'ImageNet'
 # different from mmcls, we adopt the setting used in BigGAN.
 # We use `RandomCropLongEdge` in training and `CenterCropLongEdge` in testing.
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
-    dict(type='RandomCropLongEdge', keys=['img']),
-    dict(type='Resize', scale=(64, 64), keys=['img'], backend='pillow'),
-    dict(type='Flip', flip_ratio=0.5, direction='horizontal'),
-    dict(type='PackEditInputs')
+    dict(type='LoadImageFromFile', key='gt'),
+    dict(type='RandomCropLongEdge', keys='gt'),
+    dict(type='Resize', scale=(64, 64), keys='gt', backend='pillow'),
+    dict(type='Flip', keys='gt', flip_ratio=0.5, direction='horizontal'),
+    dict(type='PackInputs')
 ]
 
 test_pipeline = [
-    dict(type='LoadImageFromFile', key='img'),
-    dict(type='CenterCropLongEdge', keys=['img']),
-    dict(type='Resize', scale=(64, 64), backend='pillow'),
-    dict(type='PackEditInputs')
+    dict(type='LoadImageFromFile', key='gt'),
+    dict(type='CenterCropLongEdge', keys='gt'),
+    dict(type='Resize', scale=(64, 64), keys='gt', backend='pillow'),
+    dict(type='PackInputs')
 ]
 
 train_dataloader = dict(

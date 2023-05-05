@@ -16,8 +16,8 @@
 请从 [Places365](http://places2.csail.mit.edu/download.html) 下载并准备数据。
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

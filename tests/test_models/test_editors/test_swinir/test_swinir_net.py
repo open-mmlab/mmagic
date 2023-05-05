@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors import SwinIRNet
+from mmagic.models.editors import SwinIRNet
 
 
 def test_swinir_cpu():

@@ -2,7 +2,7 @@
 
 import torch
 
-from mmedit.registry import MODULES
+from mmagic.registry import MODELS
 
 
 def test_fusion_net():
@@ -11,7 +11,7 @@ def test_fusion_net():
         type='FusionNet', input_nc=4, output_nc=2, norm_type='batch')
 
     # build model
-    model = MODULES.build(model_cfg)
+    model = MODELS.build(model_cfg)
 
     # test attributes
     assert model.__class__.__name__ == 'FusionNet'

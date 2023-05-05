@@ -8,8 +8,8 @@ from unittest.mock import MagicMock, patch
 
 import numpy as np
 
-from mmedit.registry import DATASETS
-from mmedit.utils import register_all_modules
+from mmagic.registry import DATASETS
+from mmagic.utils import register_all_modules
 
 DATA_DIR = osp.abspath(osp.join(osp.dirname(__file__), '../data/dataset/'))
 
@@ -97,8 +97,9 @@ class TestCIFAR10(TestCase):
 
         data_info = dataset[0]
         fake_img = self.fake_imgs[0].reshape(3, 32, 32).transpose(1, 2, 0)
-        np.testing.assert_equal(data_info['img'], fake_img)
+        np.testing.assert_equal(data_info['gt'], fake_img)
         np.testing.assert_equal(data_info['gt_label'], self.fake_labels[0])
+        assert data_info['gt_channel_order'] == 'RGB'
 
         # Test with test_mode=True
         cfg = {**self.DEFAULT_ARGS, 'test_mode': True}
@@ -107,8 +108,9 @@ class TestCIFAR10(TestCase):
 
         data_info = dataset[0]
         fake_img = self.fake_imgs[4].reshape(3, 32, 32).transpose(1, 2, 0)
-        np.testing.assert_equal(data_info['img'], fake_img)
+        np.testing.assert_equal(data_info['gt'], fake_img)
         np.testing.assert_equal(data_info['gt_label'], self.fake_labels[4])
+        assert data_info['gt_channel_order'] == 'RGB'
 
         # Test load meta
         cfg = {**self.DEFAULT_ARGS, 'lazy_init': True}
@@ -126,7 +128,7 @@ class TestCIFAR10(TestCase):
 
         # Test automatically download
         with patch(
-                'mmedit.datasets.cifar10_dataset.download_and_extract_archive'
+                'mmagic.datasets.cifar10_dataset.download_and_extract_archive'
         ) as mock:
             cfg = {**self.DEFAULT_ARGS, 'lazy_init': True, 'test_mode': True}
             dataset = dataset_class(**cfg)

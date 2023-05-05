@@ -21,8 +21,10 @@ model = dict(
     train_cfg=dict(),
     test_cfg=dict(metrics=['PSNR'], crop_border=scale),
     data_preprocessor=dict(
-        type='EditDataPreprocessor', mean=[0., 0., 0.], std=[255., 255.,
-                                                             255.]))
+        type='DataPreprocessor',
+        mean=[0., 0., 0.],
+        std=[255., 255., 255.],
+    ))
 
 train_pipeline = [
     dict(
@@ -47,7 +49,7 @@ train_pipeline = [
     dict(
         type='Flip', keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 val_pipeline = [
     dict(
@@ -62,7 +64,7 @@ val_pipeline = [
         color_type='color',
         channel_order='rgb',
         imdecode_backend='cv2'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 
 # dataset settings
@@ -97,15 +99,17 @@ val_dataloader = dict(
         # filename_tmpl=dict(img='{}_x4', gt='{}'),
         pipeline=val_pipeline))
 
-val_evaluator = [
-    dict(type='MAE'),
-    dict(type='PSNR', crop_border=scale),
-    dict(type='SSIM', crop_border=scale),
-]
+val_evaluator = dict(
+    type='Evaluator',
+    metrics=[
+        dict(type='MAE'),
+        dict(type='PSNR', crop_border=scale),
+        dict(type='SSIM', crop_border=scale),
+    ])
 
 train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1000000, val_interval=5000)
-val_cfg = dict(type='ValLoop')
+val_cfg = dict(type='MultiValLoop')
 
 # optimizer
 optim_wrapper = dict(

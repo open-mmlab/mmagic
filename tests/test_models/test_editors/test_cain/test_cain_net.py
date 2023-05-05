@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 @pytest.mark.skipif(

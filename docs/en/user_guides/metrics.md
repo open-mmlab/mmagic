@@ -1,8 +1,8 @@
-# Tutorial 5: Using metrics in MMEditing
+# Tutorial 5: Using metrics in MMagic
 
-MMEditing supports **17 metrics** to assess the quality of models.
+MMagic supports **17 metrics** to assess the quality of models.
 
-Please refer to [Train and Test in MMEditing](../user_guides/train_test.md) for usages.
+Please refer to [Train and Test in MMagic](../user_guides/train_test.md) for usages.
 
 Here, we will specify the details of different metrics one by one.
 
@@ -141,11 +141,11 @@ val_evaluator = [
 
 Fréchet Inception Distance is a measure of similarity between two datasets of images. It was shown to correlate well with the human judgment of visual quality and is most often used to evaluate the quality of samples of Generative Adversarial Networks. FID is calculated by computing the Fréchet distance between two Gaussians fitted to feature representations of the Inception network.
 
-In `MMEditing`, we provide two versions for FID calculation. One is the commonly used PyTorch version and the other one is used in StyleGAN paper. Meanwhile, we have compared the difference between these two implementations in the StyleGAN2-FFHQ1024 model (the details can be found [here](https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv2/README.md)). Fortunately, there is a marginal difference in the final results. Thus, we recommend users adopt the more convenient PyTorch version.
+In `MMagic`, we provide two versions for FID calculation. One is the commonly used PyTorch version and the other one is used in StyleGAN paper. Meanwhile, we have compared the difference between these two implementations in the StyleGAN2-FFHQ1024 model (the details can be found [here](https://github.com/open-mmlab/mmagic/blob/main/configs/styleganv2/README.md)). Fortunately, there is a marginal difference in the final results. Thus, we recommend users adopt the more convenient PyTorch version.
 
 **About PyTorch version and Tero's version:** The commonly used PyTorch version adopts the modified InceptionV3 network to extract features for real and fake images. However, Tero's FID requires a [script module](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/inception-2015-12-05.pt) for Tensorflow InceptionV3. Note that applying this script module needs `PyTorch >= 1.6.0`.
 
-**About extracting real inception data:** For the users' convenience, the real features will be automatically extracted at test time and saved locally, and the stored features will be automatically read at the next test. Specifically, we will calculate a hash value based on the parameters used to calculate the real features, and use the hash value to mark the feature file, and when testing, if the `inception_pkl` is not set, we will look for the feature in `MMEDIT_CACHE_DIR` (~/.cache/openmmlab/mmedit/). If cached inception pkl is not found, then extracting will be performed.
+**About extracting real inception data:** For the users' convenience, the real features will be automatically extracted at test time and saved locally, and the stored features will be automatically read at the next test. Specifically, we will calculate a hash value based on the parameters used to calculate the real features, and use the hash value to mark the feature file, and when testing, if the `inception_pkl` is not set, we will look for the feature in `MMAGIC_CACHE_DIR` (~/.cache/openmmlab/mmagic/). If cached inception pkl is not found, then extracting will be performed.
 
 To use the FID metric, you should add the metric in a config file like this:
 
@@ -160,7 +160,7 @@ metrics = [
 ]
 ```
 
-If you work on an new machine, then you can copy the `pkl` files in `MMEDIT_CACHE_DIR` and copy them to new machine and set `inception_pkl` field.
+If you work on an new machine, then you can copy the `pkl` files in `MMAGIC_CACHE_DIR` and copy them to new machine and set `inception_pkl` field.
 
 ```python
 metrics = [
@@ -208,17 +208,17 @@ We also perform a survey on the influence of data loading pipeline and the versi
 | :-------------------------------------------------------------: | :------------------: | :-----------------: | :-------------------------: | :-------------------: |
 |   [OpenAI (baseline)](https://github.com/openai/improved-gan)   |      Tensorflow      |       Pillow        |       Pillow Bicubic        | **312.255 +/- 4.970** |
 | [StyleGAN-Ada](https://github.com/NVlabs/stylegan2-ada-pytorch) | Tero's Script Model  |       Pillow        |       Pillow Bicubic        |   311.895 +/ 4.844    |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |         cv2         |        cv2 Bilinear         |   322.932 +/- 2.317   |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |         cv2         |         cv2 Bicubic         |   324.604 +/- 5.157   |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |         cv2         |       Pillow Bicubic        |   318.161 +/- 5.330   |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |       Pillow        |       Pillow Bilinear       |   313.126 +/- 5.449   |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |       Pillow        |        cv2 Bilinear         |    318.021+/-3.864    |
-|                          mmedit (Ours)                          |  Pytorch Pretrained  |       Pillow        |       Pillow Bicubic        |   317.997 +/- 5.350   |
-|                          mmedit (Ours)                          | Tero's Script Model  |         cv2         |        cv2 Bilinear         |   318.879 +/- 2.433   |
-|                          mmedit (Ours)                          | Tero's Script Model  |         cv2         |         cv2 Bicubic         |   316.125 +/- 5.718   |
-|                          mmedit (Ours)                          | Tero's Script Model  |         cv2         |       Pillow Bicubic        | **312.045 +/- 5.440** |
-|                          mmedit (Ours)                          | Tero's Script Model  |       Pillow        |       Pillow Bilinear       |   308.645 +/- 5.374   |
-|                          mmedit (Ours)                          | Tero's Script Model  |       Pillow        |       Pillow Bicubic        |   311.733 +/- 5.375   |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |         cv2         |        cv2 Bilinear         |   322.932 +/- 2.317   |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |         cv2         |         cv2 Bicubic         |   324.604 +/- 5.157   |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |         cv2         |       Pillow Bicubic        |   318.161 +/- 5.330   |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |       Pillow        |       Pillow Bilinear       |   313.126 +/- 5.449   |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |       Pillow        |        cv2 Bilinear         |    318.021+/-3.864    |
+|                          mmagic (Ours)                          |  Pytorch Pretrained  |       Pillow        |       Pillow Bicubic        |   317.997 +/- 5.350   |
+|                          mmagic (Ours)                          | Tero's Script Model  |         cv2         |        cv2 Bilinear         |   318.879 +/- 2.433   |
+|                          mmagic (Ours)                          | Tero's Script Model  |         cv2         |         cv2 Bicubic         |   316.125 +/- 5.718   |
+|                          mmagic (Ours)                          | Tero's Script Model  |         cv2         |       Pillow Bicubic        | **312.045 +/- 5.440** |
+|                          mmagic (Ours)                          | Tero's Script Model  |       Pillow        |       Pillow Bilinear       |   308.645 +/- 5.374   |
+|                          mmagic (Ours)                          | Tero's Script Model  |       Pillow        |       Pillow Bicubic        |   311.733 +/- 5.375   |
 
 </details>
 
@@ -227,7 +227,7 @@ to [evaluation](../user_guides/train_test.md) for details.
 
 ## Precision and Recall
 
-Our `Precision and Recall` implementation follows the version used in StyleGAN2. In this metric, a VGG network will be adopted to extract the features for images. Unfortunately, we have not found a PyTorch VGG implementation leading to similar results with Tero's version used in StyleGAN2. (About the differences, please see this [file](https://github.com/open-mmlab/mmediting/blob/1.x/configs/styleganv2/README.md).) Thus, in our implementation, we adopt [Teor's VGG](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt) network by default. Importantly, applying this script module needs `PyTorch >= 1.6.0`. If with a lower PyTorch version, we will use the PyTorch official VGG network for feature extraction.
+Our `Precision and Recall` implementation follows the version used in StyleGAN2. In this metric, a VGG network will be adopted to extract the features for images. Unfortunately, we have not found a PyTorch VGG implementation leading to similar results with Tero's version used in StyleGAN2. (About the differences, please see this [file](https://github.com/open-mmlab/mmagic/blob/main/configs/styleganv2/README.md).) Thus, in our implementation, we adopt [Teor's VGG](https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt) network by default. Importantly, applying this script module needs `PyTorch >= 1.6.0`. If with a lower PyTorch version, we will use the PyTorch official VGG network for feature extraction.
 
 To evaluate with `P&R`, please add the following configuration in the config file:
 

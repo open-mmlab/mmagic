@@ -4,7 +4,7 @@ We list some common troubles faced by many users and their corresponding
 solutions here. Feel free to enrich the list if you find any frequent issues
 and have ways to help others to solve them. If the contents here do not cover
 your issue, please create an issue using the
-[provided templates](https://github.com/open-mmlab/mmediting/issues/new/choose)
+[provided templates](https://github.com/open-mmlab/mmagic/issues/new/choose)
 and make sure you fill in all required information in the template.
 
 ## FAQ
@@ -37,9 +37,9 @@ If mmcv and mmcv-full are both installed, there will be `ModuleNotFoundError`.
 
 **A5**:
 Sometimes, you may set `_delete_=True` to ignore some of fields in base configs.
-You may refer to [MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs/zh_cn/tutorials/config.md#%E5%88%A0%E9%99%A4%E5%AD%97%E5%85%B8%E4%B8%AD%E7%9A%84-key) for simple illustration.
+You may refer to [MMEngine](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/config.md#delete-key-in-dict) for simple illustration.
 
-You may have a careful look at [this tutorial](https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/config.md) for better understanding of this feature.
+You may have a careful look at [this tutorial](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/config.md) for better understanding of this feature.
 
 **Q6**:: How can I use intermediate variables in configs?
 

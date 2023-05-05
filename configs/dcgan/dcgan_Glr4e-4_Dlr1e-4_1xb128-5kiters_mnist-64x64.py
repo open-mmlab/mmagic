@@ -13,9 +13,9 @@ model = dict(
 # define dataset
 # modify train_pipeline to load gray scale images
 train_pipeline = [
-    dict(type='LoadImageFromFile', key='img', color_type='grayscale'),
-    dict(type='Resize', scale=(64, 64)),
-    dict(type='PackEditInputs')
+    dict(type='LoadImageFromFile', key='gt', color_type='grayscale'),
+    dict(type='Resize', keys='gt', scale=(64, 64)),
+    dict(type='PackInputs')
 ]
 
 # set ``batch_size``` and ``data_root```
@@ -36,7 +36,7 @@ test_dataloader = dict(
 # VIS_HOOK
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=500,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))

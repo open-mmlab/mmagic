@@ -1,13 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models import NAFNet, NAFNetLocal
+from mmagic.models import NAFNet, NAFNetLocal
 
 
 def test_nafnet():
 
     model = NAFNet(
-        img_channel=3,
+        img_channels=3,
         mid_channels=64,
         enc_blk_nums=[2, 2, 4, 8],
         middle_blk_num=12,
@@ -39,7 +39,7 @@ def test_nafnet():
 def test_nafnet_local():
 
     model = NAFNetLocal(
-        img_channel=3,
+        img_channels=3,
         mid_channels=64,
         enc_blk_nums=[1, 1, 1, 28],
         middle_blk_num=1,

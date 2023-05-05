@@ -9,7 +9,7 @@ stage = 'full'
 model = dict(
     type='InstColorization',
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[127.5],
         std=[127.5],
     ),
@@ -55,5 +55,5 @@ test_pipeline = [
         keys=['img', 'cropped_img'],
         scale=(256, 256),
         keep_ratio=False),
-    dict(type='PackEditInputs'),
+    dict(type='PackInputs'),
 ]

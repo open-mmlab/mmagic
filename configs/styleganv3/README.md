@@ -28,7 +28,7 @@ results pave the way for generative models better suited for video and animation
 ## Results and Models
 
 <div align="center">
-  <b> Results (compressed) from StyleGAN3 config-T converted by mmediting</b>
+  <b> Results (compressed) from StyleGAN3 config-T converted by mmagic</b>
   <br/>
   <img src="https://user-images.githubusercontent.com/22982797/150450502-c182834f-796f-4397-bd38-df1efe4a8a47.png" width="800"/>
 </div>
@@ -38,10 +38,10 @@ For user convenience, we also offer the converted version of official weights.
 
 ### Paper Settings
 
-|      Model      |      Dataset      |  Iter  |      FID50k       | Download        |
-| :-------------: | :---------------: | :----: | :---------------: | :-----------: | :----------------: |
-|   [stylegan3-t](./stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024.py)  |  ffhq 1024x1024   | 490000 | 3.37<sup>\*</sup> | [ckpt](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_best_fid_iter_490000_20220401_120733-4ff83434.pth) | [log](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_20220322_090417.log.json) |
-| [stylegan3-t-ada](./stylegan3-t_ada-gamma6.6_8xb4-fp16_metfaces-1024x1024.py) | metface 1024x1024 | 130000 |       15.09   | [ckpt](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_best_fid_iter_130000_20220401_115101-f2ef498e.pth) | [log](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_20220328_142211.log.json)|
+|                                     Model                                     |      Dataset      |  Iter  |      FID50k       |                                      Download                                       |
+| :---------------------------------------------------------------------------: | :---------------: | :----: | :---------------: | :---------------------------------------------------------------------------------: |
+|   [stylegan3-t](./stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024.py)    |  ffhq 1024x1024   | 490000 | 3.37<sup>\*</sup> | [ckpt](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_best_fid_iter_490000_20220401_120733-4ff83434.pth) \| [log](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_20220322_090417.log.json) |
+| [stylegan3-t-ada](./stylegan3-t_ada-gamma6.6_8xb4-fp16_metfaces-1024x1024.py) | metface 1024x1024 | 130000 |       15.09       | [ckpt](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_best_fid_iter_130000_20220401_115101-f2ef498e.pth) \| [log](https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_20220328_142211.log.json) |
 
 ### Experimental Settings
 

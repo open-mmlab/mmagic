@@ -2,7 +2,7 @@ _base_ = '../_base_/gen_default_runtime.py'
 
 model = dict(
     type='EG3D',
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     generator=dict(
         type='TriplaneGenerator',
         out_size=512,
@@ -56,7 +56,7 @@ metrics = [
 
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img', color_type='color'),
-    dict(type='PackEditInputs')
+    dict(type='PackInputs')
 ]
 test_dataset = dict(
     type='BasicConditionalDataset',
@@ -77,7 +77,7 @@ test_evaluator = dict(metrics=metrics)
 
 custom_hooks = [
     dict(
-        type='GenVisualizationHook',
+        type='VisualizationHook',
         interval=5000,
         fixed_input=True,
         vis_kwargs_list=dict(type='GAN', name='fake_img'))

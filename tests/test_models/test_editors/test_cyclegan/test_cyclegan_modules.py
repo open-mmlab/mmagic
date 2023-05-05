@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 
-from mmedit.models.editors.cyclegan.cyclegan_modules import (
+from mmagic.models.editors.cyclegan.cyclegan_modules import (
     GANImageBuffer, ResidualBlockWithDropout)
 
 

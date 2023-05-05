@@ -6,8 +6,8 @@ import torch
 from mmengine.utils.dl_utils import TORCH_VERSION
 from mmengine.utils.version_utils import digit_version
 
-from mmedit.models.editors.stylegan2 import StyleGAN2Generator
-from mmedit.models.losses import GeneratorPathRegularizerComps
+from mmagic.models.editors.stylegan2 import StyleGAN2Generator
+from mmagic.models.losses import GeneratorPathRegularizerComps
 
 
 @pytest.mark.skipif(

@@ -23,18 +23,18 @@ Video super-resolution (VSR) aims to restore a photo-realistic high-resolution (
 Evaluated on Y-channel. 8 pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 
-|                   Model     | Dataset |  PSNR (Y) |  SSIM (Y) |  Training Resources    |                    Download                    |
-| :----------------------------------------: | :------------------: | :----------------------: | :------------------: | :----------------------: | :----------------------: | :--------------------------------------------: |
-| [tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi](./tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bi.py) |          -           |            -             |          -           |            -             | 8 (Tesla V100-SXM2-32GB) |                       -                        |
-| [tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bd](./tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bd.py) |          -           |            -             |          -           |            -             | 8 (Tesla V100-SXM2-32GB) |
-| [tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi](./tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py) | Vid4 (BIx4) | **26.49**       | **0.792**       | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) | [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
-| [tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi](./tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py) | SPMCS-30 (BIx4) | **30.42**         | **0.856**         |  8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) | [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
-| [tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi](./tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py) | Vid4 (BDx4) |25.93         |          0.772         | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) | [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
-| [tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi](./tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py) | SPMCS-30 (BDx4) | 29.69           | 0.842           | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) | [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
-| [tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd](./tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py) | Vid4 (BIx4) | 25.80         |  0.784         |  8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) | [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
-| [tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd](./tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py) | SPMCS-30 (BIx4) |29.56           |0.851           | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) | [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
-| [tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd](./tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py) |  Vid4 (BDx4) | **26.87**       |**0.815**       | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) | [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
-| [tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd](./tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py) | SPMCS-30 (BDx4) |**30.77**         | **0.868**         |8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) | [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
+|                                 Model                                  |     Dataset     | PSNR (Y)  | SSIM (Y)  |    Training Resources    |                                 Download                                  |
+| :--------------------------------------------------------------------: | :-------------: | :-------: | :-------: | :----------------------: | :-----------------------------------------------------------------------: |
+| [tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bi](./tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bi.py) |        -        |     -     |     -     | 8 (Tesla V100-SXM2-32GB) |                                     -                                     |
+| [tdan_x4_1xb16-lr1e-4-400k_vimeo90k-bd](./tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bd.py) |        -        |     -     |     -     | 8 (Tesla V100-SXM2-32GB) |                                     -                                     |
+| [tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi](./tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py) |   Vid4 (BIx4)   | **26.49** | **0.792** | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
+| [tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi](./tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py) | SPMCS-30 (BIx4) | **30.42** | **0.856** | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
+| [tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi](./tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py) |   Vid4 (BDx4)   |   25.93   |   0.772   | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
+| [tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi](./tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py) | SPMCS-30 (BDx4) |   29.69   |   0.842   | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528_135616.log.json) |
+| [tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd](./tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py) |   Vid4 (BIx4)   |   25.80   |   0.784   | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
+| [tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd](./tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py) | SPMCS-30 (BIx4) |   29.56   |   0.851   | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
+| [tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd](./tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py) |   Vid4 (BDx4)   | **26.87** | **0.815** | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
+| [tdan_x4ft_1xb16-lr5e-5-800k_vimeo90k-bd](./tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py) | SPMCS-30 (BDx4) | **30.77** | **0.868** | 8 (Tesla V100-SXM2-32GB) | [model](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528-c53ab844.pth) \| [log](https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bdx4_20210528_122401.log.json) |
 
 ## Quick Start
 
@@ -73,7 +73,7 @@ python tools/train.py configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py
 ./tools/dist_train.sh configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py 8
 ```
 
-For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMagic).
 
 </details>
 
@@ -95,7 +95,7 @@ python tools/test.py configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py htt
 ./tools/dist_test.sh configs/tdan/tdan_x4ft_1xb16-lr5e-5-400k_vimeo90k-bi.py https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth 8
 ```
 
-For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).
 
 </details>
 

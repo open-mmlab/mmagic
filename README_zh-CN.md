@@ -1,5 +1,9 @@
-<div align="center">
-  <img src="docs/zh_cn/_static/image/mmediting-logo.png" width="500px"/>
+<div id="top" align="center">
+  <img src="docs/zh_cn/_static/image/mmagic-logo.png" width="500px"/>
+  <div>&nbsp;</div>
+  <div align="center">
+    <font size="10"><b>M</b>ultimodal <b>A</b>dvanced, <b>G</b>enerative, and <b>I</b>ntelligent <b>C</b>reation (MMagic [em'mædʒɪk])</font>
+  </div>
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab 官网</font></b>
@@ -18,295 +22,396 @@
   </div>
   <div>&nbsp;</div>
 
-[![PyPI](https://badge.fury.io/py/mmedit.svg)](https://pypi.org/project/mmedit/)
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmediting.readthedocs.io/en/1.x/)
-[![badge](https://github.com/open-mmlab/mmediting/workflows/build/badge.svg)](https://github.com/open-mmlab/mmediting/actions)
-[![codecov](https://codecov.io/gh/open-mmlab/mmediting/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmediting)
-[![license](https://img.shields.io/github/license/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/blob/1.x/LICENSE)
-[![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
-[![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmediting.svg)](https://github.com/open-mmlab/mmediting/issues)
+[![PyPI](https://badge.fury.io/py/mmagic.svg)](https://pypi.org/project/mmagic/)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmagic.readthedocs.io/zh_CN/latest/)
+[![badge](https://github.com/open-mmlab/mmagic/workflows/build/badge.svg)](https://github.com/open-mmlab/mmagic/actions)
+[![codecov](https://codecov.io/gh/open-mmlab/mmagic/branch/master/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmagic)
+[![license](https://img.shields.io/github/license/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/blob/main/LICENSE)
+[![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/issues)
+[![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/issues)
 
-[📘使用文档](https://mmediting.readthedocs.io/zh_CN/1.x/) |
-[🛠️安装教程](https://mmediting.readthedocs.io/zh_CN/1.x/2_get_started.htmll) |
-[👀模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html) |
-[🆕更新记录](docs/zh_cn/changelog.md) |
-[🚀进行中的项目](https://github.com/open-mmlab/mmediting/projects) |
-[🤔提出问题](https://github.com/open-mmlab/mmediting/issues)
+[📘使用文档](https://mmagic.readthedocs.io/zh_CN/latest/) |
+[🛠️安装教程](https://mmagic.readthedocs.io/zh_CN/latest/get_started/install.html) |
+[📊模型库](https://mmagic.readthedocs.io/zh_CN/latest/model_zoo/overview.html) |
+[🆕更新记录](https://mmagic.readthedocs.io/zh_CN/latest/changelog.html) |
+[🚀进行中的项目](https://github.com/open-mmlab/mmagic/projects) |
+[🤔提出问题](https://github.com/open-mmlab/mmagic/issues)
 
 [English](README.md) | 简体中文
 
 </div>
 
-## 介绍
-
-MMEditing 是基于 PyTorch 的图像&视频编辑和生成开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
-
-目前 MMEditing 支持下列任务：
-
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/22982797/191167628-2ac529d6-6614-4b53-ad65-0cfff909aa7d.jpg"/>
+  <a href="https://openmmlab.medium.com/" style="text-decoration:none;">
+    <img src="https://user-images.githubusercontent.com/25839884/218352562-cdded397-b0f3-4ca1-b8dd-a60df8dca75b.png" width="3%" alt="" /></a>
+  <img src="https://user-images.githubusercontent.com/25839884/218346358-56cc8e2f-a2b8-487f-9088-32480cceabcf.png" width="3%" alt="" />
+  <a href="https://discord.gg/raweFPmdzG" style="text-decoration:none;">
+    <img src="https://user-images.githubusercontent.com/25839884/218347213-c080267f-cbb6-443e-8532-8e1ed9a58ea9.png" width="3%" alt="" /></a>
+  <img src="https://user-images.githubusercontent.com/25839884/218346358-56cc8e2f-a2b8-487f-9088-32480cceabcf.png" width="3%" alt="" />
+  <a href="https://twitter.com/OpenMMLab" style="text-decoration:none;">
+    <img src="https://user-images.githubusercontent.com/25839884/218346637-d30c8a0f-3eba-4699-8131-512fb06d46db.png" width="3%" alt="" /></a>
+  <img src="https://user-images.githubusercontent.com/25839884/218346358-56cc8e2f-a2b8-487f-9088-32480cceabcf.png" width="3%" alt="" />
+  <a href="https://www.youtube.com/openmmlab" style="text-decoration:none;">
+    <img src="https://user-images.githubusercontent.com/25839884/218346691-ceb2116a-465a-40af-8424-9f30d2348ca9.png" width="3%" alt="" /></a>
 </div>
 
-主分支代码目前支持 **PyTorch 1.5 以上**的版本。
+## 🚀 最新进展 <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-一些示例:
+### 最新的 [**MMagic v1.0.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.0) 版本已经在 \[25/04/2023\] 发布:
 
-https://user-images.githubusercontent.com/12756472/158972852-be5849aa-846b-41a8-8687-da5dee968ac7.mp4
+我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
 
-https://user-images.githubusercontent.com/12756472/158972813-d8d0f19c-f49c-4618-9967-52652726ef19.mp4
+经过 OpenMMLab 2.0 框架的迭代更新以及与 MMGeneration 的合并，MMEditing 已经成为了一个支持基于 GAN 和 CNN 的底层视觉算法的强大工具。而今天，MMEditing 将更加拥抱生成式 AI（Generative AI），正式更名为 **MMagic**（**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation），致力于打造更先进、更全面的 AIGC 开源算法库。MMagic 将为广大研究者与 AIGC 爱好者们提供更加快捷灵活的实验支持，助力你的 AIGC 探索之旅。
 
-<table align="center">
-<thead>
-  <tr>
-    <td>
-<div align="center">
-  <b> GAN Interpolation</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12726765/114679300-9fd4f900-9d3e-11eb-8f37-c36a018c02f7.gif" width="200"/>
-</div></td>
-    <td>
-<div align="center">
-  <b> GAN Projector</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12726765/114524392-c11ee200-9c77-11eb-8b6d-37bc637f5626.gif" width="200"/>
-</div></td>
-    <td>
-<div align="center">
-  <b> GAN Manipulation</b>
-  <br/>
-  <img src="https://user-images.githubusercontent.com/12726765/114523716-20302700-9c77-11eb-804e-327ae1ca0c5b.gif" width="200"/>
-</div></td>
-  </tr>
-</thead>
-</table>
+以下是此次版本发布的重点新功能:
 
-### 主要特性
+**1. 新算法**
 
-- **模块化设计**
+我们支持了4个新任务以及11个新算法。
 
-  MMEditing 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。
+- Text2Image / Diffusion
+  - ControlNet
+  - DreamBooth
+  - Stable Diffusion
+  - Disco Diffusion
+  - GLIDE
+  - Guided Diffusion
+- 3D-aware Generation
+  - EG3D
+- Image Restoration
+  - NAFNet
+  - Restormer
+  - SwinIR
+- Image Colorization
+  - InstColorization
 
-- **支持多种任务**
+**2. Magic Diffusion Model**
 
-  MMEditing 支持*修复*、*抠图*、*超分辨率*、*插帧*等多种主流编辑任务。
+针对 Diffusion Model，我们提供了以下“魔法”
 
-- **高效的分布式训练**
+- 支持基于 Stable Diffusion 与 Disco Diffusion 的图像生成.
+- 支持 Dreambooth 以及 DreamBooth LoRA 等 Finetune 方法.
+- 支持 ControlNet 进行可控性的文本到图像生成.
+- 支持 xFormers 加速和优化策略，提高训练与推理效率.
+- 支持基于 MultiFrame Render 的视频生成.
+- 支持通过 Wrapper 调用 Diffusers 的基础模型以及采样策略.
 
-  得益于 [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), 动态模型的训练可以轻松实现。
+**3. 框架升级**
 
-- **SOTA**
+通过 OpenMMLab 2.0 框架的 MMEngine 和 MMCV， MMagic 在以下几方面完成升级：
 
-  MMEditing 提供修复/抠图/超分辨率/插帧/生成等任务最先进的算法。
+- 重构 DataSample，支持 batch 维度的组合与拆分.
+- 重构 DataPreprocessor，并统一各种任务在训练与推理时的数据格式.
+- 重构 MultiValLoop 与 MultiTestLoop，同时支持生成类型指标（e.g. FID）与重建类型指标（e.g. SSIM） 的评测，同时支持一次性评测多个数据集
+- 支持本地可视化以及使用 tensorboard 或 wandb的可视化.
+- 支持 33+ 算法 Pytorch 2.0 加速.
 
-需要注意的是 **MMSR** 已作为 MMEditing 的一部分并入本仓库。
-MMEditing 缜密地设计新的框架并将其精心实现，希望能够为您带来更好的体验。
+**MMagic** 已经支持了[MMEditing](https://github.com/open-mmlab/mmediting)和[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
 
-## 最新进展
+如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmagic/tree/master) MMEditing 0.x 迁移到新版本 MMagic 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
 
-### 🌟 1.x 预览版本
+## 📄 目录
 
-全新的 [**MMEditing v1.0.0rc5**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc5) 已经在 04/01/2023 发布:
+- [📖 介绍](#-介绍)
+- [🙌 参与贡献](#-参与贡献)
+- [🛠️ 安装](#%EF%B8%8F-安装)
+- [📊 模型库](#-模型库)
+- [🤝 致谢](#-致谢)
+- [🖊️ 引用](#%EF%B8%8F-引用)
+- [🎫 许可证](#-许可证)
+- [🏗️ ️OpenMMLab 的其他项目](#%EF%B8%8F-️openmmlab-的其他项目)
 
-- 支持了著名的文本生成图像方法 [stable diffusion](configs/stable_diffusion/README.md)!
-- 支持了一个高效的图像复原算法 [Restormer](configs/restormer/README.md)!
-- 支持了一个新的文本到图像生成算法 [GLIDE](projects/glide/configs/README.md)!
-- 支持了基于swin的图像复原算法 [SwinIR](configs/swinir/README.md)!
-- 开启了[projects](projects/README.md)以便社区用户添加新的项目到MMEditing.
-- 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
-- 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
-- 支持基于图像子块以及滑动条的图像和视频比较可视化工具。
+<p align="right"><a href="#top">🔝返回顶部</a></p>
 
-在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
+## 📖 介绍
 
-### 💎 稳定版本
+MMagic 是基于 PyTorch 的图像&视频编辑和生成开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
 
-最新的 **0.16.0** 版本已经在 31/10/2022 发布：
+目前 MMagic 支持多种图像和视频的生成/编辑任务。
 
-- `VisualizationHook` 将被启用，建议用户使用 `MMEditVisualizationHook`。
-- 修复 FLAVR 的注册问题。
-- 修正 RDB 模型中的通道数。
+https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4
 
-如果像了解更多版本更新细节和历史信息，请阅读[更新日志](docs/en/changelog.md)。
+主分支代码的最佳实践基于 **Python 3.8+** 和 **PyTorch 1.9+** 。
 
-## 安装
+### ✨ 主要特性
 
-MMEditing 依赖 [PyTorch](https://pytorch.org/)，[MMEngine](https://github.com/open-mmlab/mmengine) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
+- **SOTA 算法**
+
+  MMagic 提供了处理、编辑、生成图像和视频的 SOTA 算法。
+
+- **强有力且流行的应用**
+
+  MMagic 支持了流行的图像修复、图文生成、3D生成、图像修补、抠图、超分辨率和生成等任务的应用。特别是 MMagic 支持了 Stable Diffusion 的微调和许多激动人心的 diffusion 应用，例如 ControlNet 动画生成。MMagic 也支持了 GANs 的插值，投影，编辑和其他流行的应用。请立即开始你的 AIGC 探索之旅！
+
+- **高效的框架**
+
+  通过 OpenMMLab 2.0 框架的 MMEngine 和 MMCV， MMagic 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。我们可以像搭建“乐高”一样定义训练流程，提供丰富的组件和策略。在 MMagic 中，你可以使用不同的 APIs 完全控制训练流程。得益于 [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), 动态模型结构的分布式训练可以轻松实现。
+
+<p align="right"><a href="#top">🔝返回顶部</a></p>
+
+## 🙌 参与贡献
+
+越来越多社区贡献者的加入使我们的算法库日益发展。最近由社区贡献的项目包括：
+
+- [GLIDE](projects/glide/configs/README.md) 来自 @Taited.
+- [Restormer](configs/restormer/README.md) 来自 @AlexZou14.
+- [SwinIR](configs/swinir/README.md) 来自 @Zdafeng.
+
+为使向 MMagic 中添加项目更加容易，我们开启了 [Projects](projects/README.md) 。
+
+感谢您为改善 MMagic 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/blob/main/CONTRIBUTING_zh-CN.md) 和 MMEngine 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING_zh-CN.md) 以获取贡献指南。
+
+<p align="right"><a href="#top">🔝返回顶部</a></p>
+
+## 🛠️ 安装
+
+MMagic 依赖 [PyTorch](https://pytorch.org/)，[MMEngine](https://github.com/open-mmlab/mmengine) 和 [MMCV](https://github.com/open-mmlab/mmcv)，以下是安装的简要步骤。
 
 **步骤 1.**
-依照[官方教程](https://pytorch.org/get-started/locally/)安装PyTorch
+依照[官方教程](https://pytorch.org/get-started/locally/)安装 PyTorch 。
 
 **步骤 2.**
-使用 [MIM](https://github.com/open-mmlab/mim) 安装 MMCV
+使用 [MIM](https://github.com/open-mmlab/mim) 安装 MMCV，MMEngine 和 MMagic 。
 
 ```
 pip3 install openmim
-# wait for more pre-compiled pkgs to release
-mim install 'mmcv>=2.0.0rc1'
+mim install 'mmcv>=2.0.0'
+mim install 'mmengine'
+mim install 'mmagic'
 ```
 
 **步骤 3.**
-从源码安装 MMEditing
+验证 MMagic 安装成功。
+
+```shell
+cd ~
+python -c "import mmagic; print(mmagic.__version__)"
+# Example output: 1.0.0
+```
+
+**开始使用**
+
+成功安装 MMagic 后，你可以很容易地上手使用 MMagic！仅需几行代码，你就可以使用 MMagic 完成文本生成图像！
+
+```python
+from mmagic.apis import MMagicInferencer
+sd_inferencer = MMagicInferencer(model_name='stable_diffusion')
+text_prompts = 'A panda is having dinner at KFC'
+result_out_dir = 'output/sd_res.png'
+sd_inferencer.infer(text=text_prompts, result_out_dir=result_out_dir)
+```
+
+请参考[快速运行](docs/zh_cn/get_started/quick_run.md)和[推理演示](docs/zh_cn/user_guides/inference.md)获取 MMagic 的基本用法。
+
+**从源码安装 MMagic**
+
+使用以下命令从源码安装 MMagic，你可以选择不使用已发布的稳定版本，而在最新开发的版本上进行实验。
 
 ```
-git clone -b 1.x https://github.com/open-mmlab/mmediting.git
-cd mmediting
+git clone https://github.com/open-mmlab/mmagic.git
+cd mmagic
 pip3 install -e .
 ```
 
-更详细的安装指南请参考 [installation](docs/zh_cn/get_started/install.md) 。
+更详细的安装指南请参考 [安装指南](docs/zh_cn/get_started/install.md) 。
 
-## 开始使用
+<p align="right"><a href="#top">🔝Back to top</a></p>
 
-请参考[使用教程](docs/zh_cn/get_started/install.md)和[功能演示](docs/zh_cn/get_started/quick_run.md)获取MMEditing的基本用法。
+## 📊 模型库
 
-## 模型库
+<div align="center">
+  <b>支持的算法</b>
+</div>
+<table align="center">
+  <tbody>
+    <tr align="center" valign="bottom">
+      <td>
+        <b>Conditional GANs</b>
+      </td>
+      <td>
+        <b>Unconditional GANs</b>
+      </td>
+      <td>
+        <b>Image Restoration</b>
+      </td>
+      <td>
+        <b>Image Super-Resolution</b>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <ul>
+            <li><a href="configs/sngan_proj/README.md">SNGAN/Projection GAN (ICLR'2018)</a></li>
+            <li><a href="configs/sagan/README.md">SAGAN (ICML'2019)</a></li>
+            <li><a href="configs/biggan/README.md">BIGGAN/BIGGAN-DEEP (ICLR'2018)</a></li>
+      </ul>
+      </td>
+      <td>
+        <ul>
+          <li><a href="configs/dcgan/README.md">DCGAN (ICLR'2016)</a></li>
+          <li><a href="configs/wgan-gp/README.md">WGAN-GP (NeurIPS'2017)</a></li>
+          <li><a href="configs/lsgan/README.md">LSGAN (ICCV'2017)</a></li>
+          <li><a href="configs/ggan/README.md">GGAN (ArXiv'2017)</a></li>
+          <li><a href="configs/pggan/README.md">PGGAN (ICLR'2018)</a></li>
+          <li><a href="configs/singan/README.md">SinGAN (ICCV'2019)</a></li>
+          <li><a href="configs/styleganv1/README.md">StyleGANV1 (CVPR'2019)</a></li>
+          <li><a href="configs/styleganv2/README.md">StyleGANV2 (CVPR'2019)</a></li>
+          <li><a href="configs/styleganv3/README.md">StyleGANV3 (NeurIPS'2021)</a></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li><a href="configs/swinir/README.md">SwinIR (ICCVW'2021)</a></li>
+          <li><a href="configs/nafnet/README.md">NAFNet (ECCV'2022)</a></li>
+          <li><a href="configs/restormer/README.md">Restormer (CVPR'2022)</a></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li><a href="configs/srcnn/README.md">SRCNN (TPAMI'2015)</a></li>
+          <li><a href="configs/srgan_resnet/README.md">SRResNet&SRGAN (CVPR'2016)</a></li>
+          <li><a href="configs/edsr/README.md">EDSR (CVPR'2017)</a></li>
+          <li><a href="configs/esrgan/README.md">ESRGAN (ECCV'2018)</a></li>
+          <li><a href="configs/rdn/README.md">RDN (CVPR'2018)</a></li>
+          <li><a href="configs/dic/README.md">DIC (CVPR'2020)</a></li>
+          <li><a href="configs/ttsr/README.md">TTSR (CVPR'2020)</a></li>
+          <li><a href="configs/glean/README.md">GLEAN (CVPR'2021)</a></li>
+          <li><a href="configs/liif/README.md">LIIF (CVPR'2021)</a></li>
+          <li><a href="configs/real_esrgan/README.md">Real-ESRGAN (ICCVW'2021)</a></li>
+        </ul>
+      </td>
+    </tr>
+</td>
+    </tr>
+  </tbody>
+<tbody>
+    <tr align="center" valign="bottom">
+      <td>
+        <b>Video Super-Resolution</b>
+      </td>
+      <td>
+        <b>Video Interpolation</b>
+      </td>
+      <td>
+        <b>Image Colorization</b>
+      </td>
+      <td>
+        <b>Image Translation</b>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <ul>
+            <li><a href="configs/edvr/README.md">EDVR (CVPR'2018)</a></li>
+            <li><a href="configs/tof/README.md">TOF (IJCV'2019)</a></li>
+            <li><a href="configs/tdan/README.md">TDAN (CVPR'2020)</a></li>
+            <li><a href="configs/basicvsr/README.md">BasicVSR (CVPR'2021)</a></li>
+            <li><a href="configs/iconvsr/README.md">IconVSR (CVPR'2021)</a></li>
+            <li><a href="configs/basicvsr_pp/README.md">BasicVSR++ (CVPR'2022)</a></li>
+            <li><a href="configs/real_basicvsr/README.md">RealBasicVSR (CVPR'2022)</a></li>
+      </ul>
+      </td>
+      <td>
+        <ul>
+          <li><a href="configs/tof/README.md">TOFlow (IJCV'2019)</a></li>
+          <li><a href="configs/cain/README.md">CAIN (AAAI'2020)</a></li>
+          <li><a href="configs/flavr/README.md">FLAVR (CVPR'2021)</a></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li><a href="configs/inst_colorization/README.md">InstColorization (CVPR'2020)</a></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li><a href="configs/pix2pix/README.md">Pix2Pix (CVPR'2017)</a></li>
+          <li><a href="configs/cyclegan/README.md">CycleGAN (ICCV'2017)</a></li>
+        </ul>
+      </td>
+    </tr>
+</td>
+    </tr>
+  </tbody>
+<tbody>
+    <tr align="center" valign="bottom">
+      <td>
+        <b>Inpainting</b>
+      </td>
+      <td>
+        <b>Matting</b>
+      </td>
+      <td>
+        <b>Text-to-Image</b>
+      </td>
+      <td>
+        <b>3D-aware Generation</b>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <ul>
+          <li><a href="configs/global_local/README.md">Global&Local (ToG'2017)</a></li>
+          <li><a href="configs/deepfillv1/README.md">DeepFillv1 (CVPR'2018)</a></li>
+          <li><a href="configs/partial_conv/README.md">PConv (ECCV'2018)</a></li>
+          <li><a href="configs/deepfillv2/README.md">DeepFillv2 (CVPR'2019)</a></li>
+          <li><a href="configs/aot_gan/README.md">AOT-GAN (TVCG'2019)</a></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li><a href="configs/dim/README.md">DIM (CVPR'2017)</a></li>
+          <li><a href="configs/indexnet/README.md">IndexNet (ICCV'2019)</a></li>
+          <li><a href="configs/mask2former">GCA (AAAI'2020)</a></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
+          <li><a href="configs/guided_diffusion/README.md">Guided Diffusion (NeurIPS'2021)</a></li>
+          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
+          <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
+          <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
+          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li><a href="configs/eg3d/README.md">EG3D (CVPR'2022)</a></li>
+        </ul>
+      </td>
+    </tr>
+</td>
+    </tr>
+  </tbody>
+</table>
 
-支持的算法:
+请参考[模型库](https://mmagic.readthedocs.io/zh_CN/latest/model_zoo/overview.html)了解详情。
 
-<details open>
-<summary>图像修复</summary>
+<p align="right"><a href="#top">🔝返回顶部</a></p>
 
-- ✅ [Global&Local](configs/global_local/README.md) (ToG'2017)
-- ✅ [DeepFillv1](configs/deepfillv1/README.md) (CVPR'2018)
-- ✅ [PConv](configs/partial_conv/README.md) (ECCV'2018)
-- ✅ [DeepFillv2](configs/deepfillv2/README.md) (CVPR'2019)
-- ✅ [AOT-GAN](configs/aot_gan/README.md) (TVCG'2021)
+## 🤝 致谢
 
-</details>
+MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
 
-<details open>
-<summary>图像抠图</summary>
+<a href="https://github.com/open-mmlab/mmagic/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=open-mmlab/mmagic" />
+</a>
 
-- ✅ [DIM](configs/dim/README.md) (CVPR'2017)
-- ✅ [IndexNet](configs/indexnet/README.md) (ICCV'2019)
-- ✅ [GCA](configs/gca/README.md) (AAAI'2020)
+<p align="right"><a href="#top">🔝返回顶部</a></p>
 
-</details>
+## 🖊️ 引用
 
-<details open>
-<summary>图像超分辨率</summary>
+如果 MMagic 对您的研究有所帮助，请按照如下 bibtex 引用它。
 
-- ✅ [SRCNN](configs/srcnn/README.md) (TPAMI'2015)
-- ✅ [SRResNet&SRGAN](configs/srgan_resnet/README.md) (CVPR'2016)
-- ✅ [EDSR](configs/edsr/README.md) (CVPR'2017)
-- ✅ [ESRGAN](configs/esrgan/README.md) (ECCV'2018)
-- ✅ [RDN](configs/rdn/README.md) (CVPR'2018)
-- ✅ [DIC](configs/dic/README.md) (CVPR'2020)
-- ✅ [TTSR](configs/ttsr/README.md) (CVPR'2020)
-- ✅ [GLEAN](configs/glean/README.md) (CVPR'2021)
-- ✅ [LIIF](configs/liif/README.md) (CVPR'2021)
-- ✅ [Real-ESRGAN](configs/real_esrgan/README.md) (ICCVW'2021)
-
-</details>
-
-<details open>
-<summary>视频超分辨率</summary>
-
-- ✅ [EDVR](configs/edvr/README.md) (CVPR'2019)
-- ✅ [TOF](configs/tof/README.md) (IJCV'2019)
-- ✅ [TDAN](configs/tdan/README.md) (CVPR'2020)
-- ✅ [BasicVSR](configs/basicvsr/README.md) (CVPR'2021)
-- ✅ [IconVSR](configs/iconvsr/README.md) (CVPR'2021)
-- ✅ [BasicVSR++](configs/basicvsr_pp/README.md) (CVPR'2022)
-- ✅ [RealBasicVSR](configs/real_basicvsr/README.md) (CVPR'2022)
-
-</details>
-
-<details open>
-<summary>视频插帧</summary>
-
-- ✅ [TOFlow](configs/tof/README.md) (IJCV'2019)
-- ✅ [CAIN](configs/cain/README.md) (AAAI'2020)
-- ✅ [FLAVR](configs/flavr/README.md) (CVPR'2021)
-
-</details>
-
-<details open>
-<summary>图像上色</summary>
-
-- ✅ [InstColorization](configs/inst_colorization/README.md) (CVPR'2020)
-
-</details>
-
-<details open>
-<summary>Unconditional GANs</summary>
-
-- ✅ [DCGAN](configs/dcgan/README.md) (ICLR'2016)
-- ✅ [WGAN-GP](configs/wgan-gp/README.md) (NeurIPS'2017)
-- ✅ [LSGAN](configs/lsgan/README.md) (ICCV'2017)
-- ✅ [GGAN](configs/ggan/README.md) (ArXiv'2017)
-- ✅ [PGGAN](configs/pggan/README.md) (ICLR'2018)
-- ✅ [StyleGANV1](configs/styleganv1/README.md) (CVPR'2019)
-- ✅ [StyleGANV2](configs/styleganv2/README.md) (CVPR'2020)
-- ✅ [StyleGANV3](configs/styleganv3/README.md) (NeurIPS'2021)
-
-</details>
-
-<details open>
-<summary>Conditional GANs</summary>
-
-- ✅ [SNGAN](configs/sngan_proj/README.md) (ICLR'2018)
-- ✅ [Projection GAN](configs/sngan_proj/README.md) (ICLR'2018)
-- ✅ [SAGAN](configs/sagan/README.md) (ICML'2019)
-- ✅ [BIGGAN/BIGGAN-DEEP](configs/biggan/README.md) (ICLR'2019)
-
-</details>
-
-<details open>
-<summary>Image2Image</summary>
-
-- ✅ [Pix2Pix](configs/pix2pix/README.md) (CVPR'2017)
-- ✅ [CycleGAN](configs/cyclegan/README.md) (ICCV'2017)
-
-</details>
-
-<details open>
-<summary>Internal Learning</summary>
-
-- ✅ [SinGAN](configs/singan/README.md) (ICCV'2019)
-
-</details>
-
-<details open>
-<summary>Text2Image</summary>
-
-- ✅ [GLIDE](projects/glide/configs/README.md) (NeurIPS'2021)
-- ✅ [Disco-Diffusion](configs/disco_diffusion/README.md)
-- ✅ [Stable-Diffusion](configs/stable_diffusion/README.md)
-
-</details>
-
-<details open>
-
-<summary>3D-aware Generation</summary>
-
-- ✅ [EG3D](configs/eg3d/README.md) (CVPR'2022)
-
-</details>
-
-<details open>
-
-<summary>Image Restoration</summary>
-
-- ✅ [SwinIR](configs/swinir/README.md) (ICCVW'2021)
-- ✅ [NAFNet](configs/nafnet/README.md) (ECCV'2022)
-- ✅ [Restormer](configs/restormer/README.md) (CVPR'2022)
-
-</details>
-
-请参考[模型库](https://mmediting.readthedocs.io/zh_CN/1.x/3_model_zoo.html)了解详情。
-
-## 参与贡献
-
-感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/tree/2.x/CONTRIBUTING.md) 和 MMEngine 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING_zh-CN.md) 以获取贡献指南。
-
-## 致谢
-
-MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。 我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
-
-## 引用
-
-如果 MMEditing 对您的研究有所帮助，请按照如下 bibtex 引用它。
+```bibtex
+@misc{mmagic2023,
+    title = {{MMagic}: {OpenMMLab} Multimodal Advanced, Generative, and Intelligent Creation Toolbox},
+    author = {{MMagic Contributors}},
+    howpublished = {\url{https://github.com/open-mmlab/mmagic}},
+    year = {2023}
+}
+```
 
 ```bibtex
 @misc{mmediting2022,
@@ -317,16 +422,20 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 }
 ```
 
-## 许可证
+<p align="right"><a href="#top">🔝返回顶部</a></p>
+
+## 🎫 许可证
 
 本项目开源自 [Apache 2.0 license](LICENSE)。
 
-## OpenMMLab 的其他项目
+<p align="right"><a href="#top">🔝返回顶部</a></p>
+
+## 🏗️ ️OpenMMLab 的其他项目
 
 - [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab MMEngine.
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab 计算机视觉基础库
 - [MIM](https://github.com/open-mmlab/mim): MIM 是 OpenMMlab 项目、算法、模型的统一入口
-- [MMClassification](https://github.com/open-mmlab/mmclassification): OpenMMLab 图像分类工具箱
+- [MMPreTrain](https://github.com/open-mmlab/mmpretrain): OpenMMLab 预训练工具箱
 - [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab 目标检测工具箱
 - [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab 新一代通用 3D 目标检测平台
 - [MMRotate](https://github.com/open-mmlab/mmrotate): OpenMMLab 旋转框检测工具箱与测试基准
@@ -340,9 +449,10 @@ MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们�
 - [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab 新一代视频理解工具箱
 - [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab 一体化视频目标感知平台
 - [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab 光流估计工具箱与测试基准
-- [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab 图像视频编辑工具箱
-- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab 图片视频生成模型工具箱
+- [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab 新一代人工智能内容生成（AIGC）工具箱
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab 模型部署框架
+
+<p align="right"><a href="#top">🔝返回顶部</a></p>
 
 ## 欢迎加入 OpenMMLab 社区
 

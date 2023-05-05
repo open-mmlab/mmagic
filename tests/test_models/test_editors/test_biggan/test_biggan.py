@@ -7,9 +7,9 @@ from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch.optim import SGD
 
-from mmedit.models import BigGAN, GenDataPreprocessor
-from mmedit.registry import MODULES
-from mmedit.structures import EditDataSample
+from mmagic.models import BigGAN, DataPreprocessor
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
 
 generator = dict(
     type='BigGANGenerator',
@@ -39,14 +39,14 @@ class TestBigGAN(TestCase):
     def test_init(self):
         gan = BigGAN(
             num_classes=10,
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             generator=generator,
             discriminator=discriminator,
             generator_steps=1,
             discriminator_steps=4)
 
         self.assertIsInstance(gan, BigGAN)
-        self.assertIsInstance(gan.data_preprocessor, GenDataPreprocessor)
+        self.assertIsInstance(gan.data_preprocessor, DataPreprocessor)
 
         # test only generator have noise size
         gen_cfg = deepcopy(generator)
@@ -55,30 +55,30 @@ class TestBigGAN(TestCase):
             noise_size=10,
             generator=gen_cfg,
             discriminator=discriminator,
-            data_preprocessor=GenDataPreprocessor())
+            data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.noise_size, 10)
 
         # test init with nn.Module
         gen_cfg = deepcopy(generator)
         gen_cfg['noise_size'] = 10
         disc_cfg = deepcopy(discriminator)
-        gen = MODULES.build(gen_cfg)
-        disc = MODULES.build(disc_cfg)
+        gen = MODELS.build(gen_cfg)
+        disc = MODELS.build(disc_cfg)
         gan = BigGAN(
             generator=gen,
             discriminator=disc,
-            data_preprocessor=GenDataPreprocessor())
+            data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.generator, gen)
         self.assertEqual(gan.discriminator, disc)
 
         # test init without discriminator
-        gan = BigGAN(generator=gen, data_preprocessor=GenDataPreprocessor())
+        gan = BigGAN(generator=gen, data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.discriminator, None)
 
         # test init with different num_classes
         gan = BigGAN(
             num_classes=10,
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             generator=generator,
             discriminator=discriminator,
             generator_steps=1,
@@ -92,7 +92,7 @@ class TestBigGAN(TestCase):
         gan = BigGAN(
             generator=generator,
             discriminator=discriminator,
-            data_preprocessor=GenDataPreprocessor(),
+            data_preprocessor=DataPreprocessor(),
             discriminator_steps=n_disc)
         # prepare messageHub
         message_hub.update_info('iter', 0)
@@ -104,13 +104,13 @@ class TestBigGAN(TestCase):
             discriminator=OptimWrapper(
                 disc_optim, accumulative_counts=accu_iter))
         # prepare inputs
-        img = torch.randn(1, 3, 16, 16)
+        img = torch.randn(3, 16, 16)
         label = torch.randint(0, 10, (3, 1))
 
-        data_sample = EditDataSample()
+        data_sample = DataSample(gt_img=img)
         data_sample.set_gt_label(label)
 
-        data = dict(inputs=img, data_samples=[data_sample])
+        data = dict(inputs=dict(), data_samples=[data_sample])
 
         # simulate train_loop here
         for idx in range(n_disc * accu_iter):

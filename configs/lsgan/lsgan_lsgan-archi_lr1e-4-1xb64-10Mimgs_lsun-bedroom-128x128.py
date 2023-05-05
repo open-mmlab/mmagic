@@ -6,7 +6,7 @@ _base_ = [
 model = dict(
     type='LSGAN',
     noise_size=1024,
-    data_preprocessor=dict(type='GenDataPreprocessor'),
+    data_preprocessor=dict(type='DataPreprocessor'),
     generator=dict(
         type='LSGANGenerator',
         output_scale=128,

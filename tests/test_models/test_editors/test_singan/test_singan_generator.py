@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmedit.models.editors.singan import SinGANMultiScaleGenerator
+from mmagic.models.editors.singan import SinGANMultiScaleGenerator
 
 
 class TestSinGANGen:

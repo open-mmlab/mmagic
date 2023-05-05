@@ -13,6 +13,25 @@ import mmengine
 import numpy as np
 
 
+def generate_anno_file(args):
+    """Generate annotation file for DIV2K datasets from the ground-truth
+    folder."""
+
+    print('Generate annotation files ...')
+    train_file = osp.join(args.data_root, args.anno_train_path)
+    test_file = osp.join(args.data_root, args.anno_test_path)
+    mmengine.utils.mkdir_or_exist(osp.dirname(train_file))
+    mmengine.utils.mkdir_or_exist(osp.dirname(test_file))
+    img_list = sorted(
+        os.listdir(osp.join(args.data_root, 'DIV2K_train_HR_sub')))
+    with open(train_file, 'w') as f1, open(test_file, 'w') as f2:
+        for img in img_list:
+            if img[:4] < '0801':
+                f1.write(f'{img} ({args.crop_size}, {args.crop_size}, 3)\n')
+            else:
+                f2.write(f'{img} ({args.crop_size}, {args.crop_size}, 3)\n')
+
+
 def main_extract_subimages(args):
     """A multi-thread tool to crop large images to sub-images for faster IO.
 
@@ -268,7 +287,7 @@ def make_lmdb(data_path,
         dataset = {}  # use dict to keep the order for multiprocessing
         shapes = {}
         print(f'Read images with multiprocessing, #thread: {n_thread} ...')
-        prog_bar = mmcv.ProgressBar(len(img_path_list))
+        prog_bar = mmengine.ProgressBar(len(img_path_list))
 
         def callback(arg):
             """get the image data and update prog_bar."""
@@ -296,7 +315,7 @@ def make_lmdb(data_path,
     env = lmdb.open(lmdb_path, map_size=data_size * 10)
 
     # write data to lmdb
-    prog_bar = mmcv.ProgressBar(len(img_path_list))
+    prog_bar = mmengine.ProgressBar(len(img_path_list))
     txn = env.begin(write=True)
     txt_file = open(osp.join(lmdb_path, 'meta_info.txt'), 'w')
     for idx, (path, key) in enumerate(zip(img_path_list, keys)):
@@ -352,6 +371,18 @@ def parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--data-root', help='dataset root')
     parser.add_argument(
+        '--anno-train-path',
+        nargs='?',
+        default='meta_info_DIV2K800sub_GT.txt',
+        type=str,
+        help='annotation file path of train dataset')
+    parser.add_argument(
+        '--anno-test-path',
+        nargs='?',
+        default='meta_info_DIV2K100sub_GT.txt',
+        type=str,
+        help='annotation file path of test dataset')
+    parser.add_argument(
         '--scales',
         nargs='*',
         default=[2, 3, 4],
@@ -373,11 +404,13 @@ def parse_args():
         '--thresh-size',
         nargs='?',
         default=0,
+        type=int,
         help='threshold size for HR images')
     parser.add_argument(
         '--compression-level',
         nargs='?',
         default=3,
+        type=int,
         help='compression level when save png images')
     parser.add_argument(
         '--n-thread',
@@ -395,8 +428,13 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
+
     # extract subimages
     main_extract_subimages(args)
+
+    # generate annotation files
+    generate_anno_file(args)
+
     # prepare lmdb files if necessary
     if args.make_lmdb:
         make_lmdb_for_div2k(args.data_root)

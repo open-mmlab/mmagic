@@ -27,7 +27,7 @@ Although there have been significant advances in the field of image restoration 
 
 Note:
 
-- a(b) where a denotes the value run by MMEditing, b denotes the value copied from the original paper.
+- a(b) where a denotes the value run by MMagic, b denotes the value copied from the original paper.
 - PSNR is evaluated on RGB channels.
 - SSIM is evaluated by averaging SSIMs on RGB channels, however the original paper uses the 3D SSIM kernel.
 

@@ -9,7 +9,7 @@ import posixpath as osp  # Even on windows, use posixpath
 import re
 import sys
 
-MMEditing_ROOT = osp.dirname(osp.dirname(osp.dirname(__file__)))
+MMagic_ROOT = osp.dirname(osp.dirname(osp.dirname(__file__)))
 
 
 def update_md(md_file):
@@ -20,7 +20,7 @@ def update_md(md_file):
     Returns:
         Bool: If the target README.md file is different from the original.
     """
-    # See https://github.com/open-mmlab/mmediting/pull/798 for these comments
+    # See https://github.com/open-mmlab/mmagic/pull/798 for these comments
     # unique_dict = generate_unique_name(md_file)
 
     md_file = md_file.replace(os.sep, '/')
@@ -63,7 +63,7 @@ def update_md(md_file):
 
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
-        configs_root = osp.join(MMEditing_ROOT, 'configs')
+        configs_root = osp.join(MMagic_ROOT, 'configs')
         file_list = glob.glob(
             osp.join(configs_root, '**', '*README.md'), recursive=True)
         file_list.sort()

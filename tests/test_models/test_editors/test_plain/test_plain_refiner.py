@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors import PlainRefiner
+from mmagic.models.editors import PlainRefiner
 
 
 @pytest.mark.skipif(

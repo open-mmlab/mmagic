@@ -2,9 +2,9 @@
 import torch
 from mmengine import MessageHub
 
-from mmedit.engine import SinGANOptimWrapperConstructor
-from mmedit.models import SinGAN
-from mmedit.utils import register_all_modules
+from mmagic.engine import SinGANOptimWrapperConstructor
+from mmagic.models import SinGAN
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -23,7 +23,7 @@ class TestSinGAN:
             type='SinGANMultiScaleDiscriminator', in_channels=3, num_scales=3)
 
         cls.data_preprocessor = dict(
-            type='GenDataPreprocessor', non_image_keys=['input_sample'])
+            type='DataPreprocessor', non_image_keys=['input_sample'])
         cls.noise_weight_init = 0.1
         cls.curr_scale = -1
         cls.iters_per_scale = 2

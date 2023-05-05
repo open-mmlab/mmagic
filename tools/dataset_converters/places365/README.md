@@ -16,8 +16,8 @@
 Prepare the data from [Places365](http://places2.csail.mit.edu/download.html).
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

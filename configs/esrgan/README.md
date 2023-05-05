@@ -23,14 +23,14 @@ The Super-Resolution Generative Adversarial Network (SRGAN) is a seminal work th
 Evaluated on RGB channels, `scale` pixels in each border are cropped before evaluation.
 The metrics are `PSNR / SSIM` .
 
-|       Model     |  Dataset |  PSNR |  SSIM | Training Resources |     Download      |
-| :---------: | :-------: | :--------: | :--------: | :-------: | :--------: | :--------: |
-| [esrgan_psnr_x4c64b23g32_1x16_1000k_div2k](./esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) | Set5|30.6428| 0.8559| 1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth) | [log](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420_112550.log.json) |
-| [esrgan_psnr_x4c64b23g32_1x16_1000k_div2k](./esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) | Set14| 27.0543| 0.7447| 1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth) | [log](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420_112550.log.json) |
-| [esrgan_psnr_x4c64b23g32_1x16_1000k_div2k](./esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) | DIV2K|29.3354|  0.8263 | 1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth) | [log](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420_112550.log.json) |
-| [esrgan_x4c64b23g32_1x16_400k_div2k](./esrgan_x4c64b23g32_1xb16-400k_div2k.py) | Set5 |28.2700  | 0.7778   | 1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth) | [log](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508_191042.log.json) |
-| [esrgan_x4c64b23g32_1x16_400k_div2k](./esrgan_x4c64b23g32_1xb16-400k_div2k.py) | Set14|24.6328   | 0.6491   |1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth) | [log](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508_191042.log.json) |
-| [esrgan_x4c64b23g32_1x16_400k_div2k](./esrgan_x4c64b23g32_1xb16-400k_div2k.py) | DIV2K| 26.6531   |  0.7340   |1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth) | [log](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508_191042.log.json) |
+|                                      Model                                      | Dataset |  PSNR   |  SSIM  | Training Resources |                                      Download                                       |
+| :-----------------------------------------------------------------------------: | :-----: | :-----: | :----: | :----------------: | :---------------------------------------------------------------------------------: |
+| [esrgan_psnr_x4c64b23g32_1x16_1000k_div2k](./esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) |  Set5   | 30.6428 | 0.8559 |         1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth) |
+| [esrgan_psnr_x4c64b23g32_1x16_1000k_div2k](./esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) |  Set14  | 27.0543 | 0.7447 |         1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth) |
+| [esrgan_psnr_x4c64b23g32_1x16_1000k_div2k](./esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py) |  DIV2K  | 29.3354 | 0.8263 |         1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth) |
+| [esrgan_x4c64b23g32_1x16_400k_div2k](./esrgan_x4c64b23g32_1xb16-400k_div2k.py)  |  Set5   | 28.2700 | 0.7778 |         1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth) |
+| [esrgan_x4c64b23g32_1x16_400k_div2k](./esrgan_x4c64b23g32_1xb16-400k_div2k.py)  |  Set14  | 24.6328 | 0.6491 |         1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth) |
+| [esrgan_x4c64b23g32_1x16_400k_div2k](./esrgan_x4c64b23g32_1xb16-400k_div2k.py)  |  DIV2K  | 26.6531 | 0.7340 |         1          | [model](https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth) |
 
 ## Quick Start
 
@@ -52,7 +52,7 @@ python tools/train.py configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py
 ./tools/dist_train.sh configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py 8
 ```
 
-For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMagic).
 
 </details>
 
@@ -74,7 +74,7 @@ python tools/test.py configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py https
 ./tools/dist_test.sh configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth 8
 ```
 
-For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).
 
 </details>
 

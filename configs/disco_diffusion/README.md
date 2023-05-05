@@ -2,7 +2,7 @@
 
 > [Disco Diffusion](https://github.com/alembics/disco-diffusion)
 
-> **Task**: Text2Image, Image2Image, diffusion
+> **Task**: Text2Image, Image2Image
 
 <!-- [ALGORITHM] -->
 
@@ -16,9 +16,27 @@ Created by Somnai, augmented by Gandamu, and building on the work of RiversHaveW
 
 <!-- [IMAGE] -->
 
-<div align=center >
- <img src="https://user-images.githubusercontent.com/22982797/204526957-ac30547e-5a44-417a-aaa2-6b357b4a139c.png" width="400"/>
-</div >
+<table align="center">
+<thead>
+  <tr>
+    <td>
+<div align="center">
+
+<img src="https://user-images.githubusercontent.com/22982797/204526957-ac30547e-5a44-417a-aaa2-6b357b4a139c.png" width="400"/>
+</div></td>
+    <td>
+<div align="center">
+
+<img src="https://user-images.githubusercontent.com/22982797/215749979-1ea973c4-3e76-4204-9fa0-b0adf3e942b6.png" width="400"/>
+</div></td>
+    <td>
+<div align="center">
+
+<img src="https://user-images.githubusercontent.com/22982797/215757871-d38e1b78-fee0-4351-be61-5b1e782d1e6e.png" width="400"/>
+</div></td>
+  </tr>
+</thead>
+</table>
 
 ## Results and models
 
@@ -32,15 +50,15 @@ We have converted several `unet` weights and offer related configs. See more det
 
 <!-- SKIP THIS TABLE -->
 
-|            Model             |   Datastet   | Download |
-| :--------------------------: | :----------: | :------: |
-|  pixelartdiffusion_expanded  | Coming soon! |          |
-| pixel_art_diffusion_hard_256 | Coming soon! |          |
-| pixel_art_diffusion_soft_256 | Coming soon! |          |
-|     pixelartdiffusion4k      | Coming soon! |          |
-|    watercolordiffusion_2     | Coming soon! |          |
-|     watercolordiffusion      | Coming soon! |          |
-|      PulpSciFiDiffusion      | Coming soon! |          |
+|            Model             |   Download   |
+| :--------------------------: | :----------: |
+|  pixelartdiffusion_expanded  | Coming soon! |
+| pixel_art_diffusion_hard_256 | Coming soon! |
+| pixel_art_diffusion_soft_256 | Coming soon! |
+|     pixelartdiffusion4k      | Coming soon! |
+|    watercolordiffusion_2     | Coming soon! |
+|     watercolordiffusion      | Coming soon! |
+|      PulpSciFiDiffusion      | Coming soon! |
 
 ## To-do List
 
@@ -52,7 +70,7 @@ We have converted several `unet` weights and offer related configs. See more det
 - [ ] video generation
 - [ ] faster sampler(plms, dpm-solver etc.)
 
-We really welcome community users supporting these items and any other interesting staffs!
+We really welcome community users supporting these items and any other interesting stuffs!
 
 ## Quick Start
 
@@ -60,10 +78,10 @@ Running the following codes, you can get a text-generated image.
 
 ```python
 from mmengine import Config, MODELS
-from mmedit.utils import register_all_modules
+from mmengine.registry import init_default_scope
 from torchvision.utils import save_image
 
-register_all_modules()
+init_default_scope('mmagic')
 
 disco = MODELS.build(
     Config.fromfile('configs/disco_diffusion/disco-baseline.py').model).cuda().eval()
@@ -86,7 +104,7 @@ save_image(image, "image.png")
 
 ## Tutorials
 
-Considering that `disco-diffusion` contains many adjustable parameters, we provide users with a [jupyter-notebook](./tutorials.ipynb) / [colab](https://githubtocolab.com/open-mmlab/mmediting/blob/dev-1.x/configs/disco_diffusion/tutorials.ipynb) tutorial that exhibits the meaning of different parameters, and gives results corresponding to adjustment.
+Considering that `disco-diffusion` contains many adjustable parameters, we provide users with a [jupyter-notebook](./tutorials.ipynb) / [colab](https://githubtocolab.com/open-mmlab/mmagic/blob/main/configs/disco_diffusion/tutorials.ipynb) tutorial that exhibits the meaning of different parameters, and gives results corresponding to adjustment.
 Refer to [Disco Sheet](https://docs.google.com/document/d/1l8s7uS2dGqjztYSjPpzlmXLjl5PM3IGkRWI3IiCuK7g/edit).
 
 ## Credits

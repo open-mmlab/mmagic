@@ -5,10 +5,10 @@ import torch
 from mmengine.optim import OptimWrapper
 from torch.optim import Adam
 
-from mmedit.models import DIC, DICNet, EditDataPreprocessor, LightCNN
-from mmedit.models.losses import (GANLoss, L1Loss, LightCNNFeatureLoss,
+from mmagic.models import DIC, DataPreprocessor, DICNet, LightCNN
+from mmagic.models.losses import (GANLoss, L1Loss, LightCNNFeatureLoss,
                                   PerceptualVGG)
-from mmedit.structures import EditDataSample, PixelData
+from mmagic.structures import DataSample
 
 
 @patch.object(PerceptualVGG, 'init_weights')
@@ -33,7 +33,7 @@ def test_dic(init_weights):
             fake_label_val=0),
         train_cfg=dict(),
         test_cfg=dict(),
-        data_preprocessor=EditDataPreprocessor(
+        data_preprocessor=DataPreprocessor(
             mean=[129.795, 108.12, 96.39],
             std=[255, 255, 255],
         ))
@@ -56,9 +56,7 @@ def test_dic(init_weights):
     # prepare data
     inputs = torch.rand(1, 3, 16, 16)
     target = torch.rand(3, 128, 128)
-    data_sample = EditDataSample(
-        gt_img=PixelData(data=target),
-        gt_heatmap=PixelData(data=torch.rand(68, 32, 32)))
+    data_sample = DataSample(gt_img=target, gt_heatmap=torch.rand(68, 32, 32))
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     # train
@@ -73,7 +71,7 @@ def test_dic(init_weights):
 
     # val
     output = model.val_step(data)
-    assert output[0].output.pred_img.data.shape == (3, 128, 128)
+    assert output[0].output.pred_img.shape == (3, 128, 128)
 
     # feat
     output = model(torch.rand(1, 3, 16, 16), mode='tensor')

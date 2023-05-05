@@ -28,8 +28,9 @@ train_pipeline = [
     #         f'img_{domain_b}': f'img_{domain_b}'
     #     }),
     # dict(
-    #     type='PackEditInputs',
-    #     keys=[f'img_{domain_a}', f'img_{domain_b}'],)
+    #     type='PackInputs',
+    #     keys=[f'img_{domain_a}', f'img_{domain_b}'],
+    #     data_keys=[f'img_{domain_a}', f'img_{domain_b}'])
 ]
 
 test_pipeline = [
@@ -63,8 +64,9 @@ test_pipeline = [
     #         f'img_{domain_b}': f'img_{domain_b}'
     #     }),
     # dict(
-    #     type='PackEditInputs',
-    #     keys=[f'img_{domain_a}', f'img_{domain_b}'],)
+    #     type='PackInputs',
+    #     keys=[f'img_{domain_a}', f'img_{domain_b}'],
+    #     data_keys=[f'img_{domain_a}', f'img_{domain_b}'])
 ]
 
 # `batch_size` and `data_root` need to be set.

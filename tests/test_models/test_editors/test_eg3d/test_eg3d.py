@@ -6,9 +6,9 @@ from unittest.mock import MagicMock
 import torch
 import torch.nn as nn
 
-from mmedit.models.editors.eg3d.eg3d import EG3D
-from mmedit.structures import EditDataSample
-from mmedit.utils import register_all_modules
+from mmagic.models.editors.eg3d.eg3d import EG3D
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -48,7 +48,9 @@ class TestEG3D(TestCase):
             radius=1.2)
         # self.discriminator_cfg = dict()
         self.default_cfg = dict(
-            generator=self.generator_cfg, camera=self.camera_cfg)
+            generator=self.generator_cfg,
+            camera=self.camera_cfg,
+            data_preprocessor=dict(type='DataPreprocessor'))
 
     def test_init(self):
         cfg_ = deepcopy(self.default_cfg)
@@ -84,10 +86,8 @@ class TestEG3D(TestCase):
         target_keys = [
             'fake_img', 'depth', 'lr_img', 'ray_origins', 'ray_directions'
         ]
-        # NOTE: fake_img and lr_img are PixelData, shape do not contains
-        # the number of channel
-        target_shape = [(out_size, out_size), (1, n_points, n_points),
-                        (n_points, n_points), (n_points**2, 3),
+        target_shape = [(3, out_size, out_size), (1, n_points, n_points),
+                        (3, n_points, n_points), (n_points**2, 3),
                         (n_points**2, 3)]
         for output in outputs:
             for key, shape in zip(target_keys, target_shape):
@@ -116,9 +116,10 @@ class TestEG3D(TestCase):
         # test label is passed
         data_samples = []
         for _ in range(4):
-            data_sample = EditDataSample()
+            data_sample = DataSample()
             data_sample.set_gt_label(torch.randn(25))
             data_samples.append(data_sample)
+        data_samples = DataSample.stack(data_samples)
         outputs = model(dict(num_batches=4), data_samples)
         self.assertEqual(len(outputs), 4)
         self._check_datasample_output(outputs, 32, 5)

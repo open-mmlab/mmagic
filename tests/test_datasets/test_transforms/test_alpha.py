@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from mmedit.datasets.transforms import GenerateSeg, GenerateSoftSeg
+from mmagic.datasets.transforms import GenerateSeg, GenerateSoftSeg
 
 
 def assert_keys_contain(result_keys, target_keys):

@@ -5,9 +5,9 @@ import unittest
 import pytest
 import torch
 
-from mmedit.registry import BACKBONES
-from mmedit.structures import EditDataSample, PixelData
-from mmedit.utils import register_all_modules
+from mmagic.registry import MODELS
+from mmagic.structures import DataSample
+from mmagic.utils import register_all_modules
 
 
 @pytest.mark.skipif(
@@ -24,7 +24,7 @@ class TestInstColorization:
         model_cfg = dict(
             type='InstColorization',
             data_preprocessor=dict(
-                type='EditDataPreprocessor',
+                type='DataPreprocessor',
                 mean=[127.5],
                 std=[127.5],
             ),
@@ -63,7 +63,7 @@ class TestInstColorization:
             which_direction='AtoB',
             loss=dict(type='HuberLoss', delta=.01))
 
-        model = BACKBONES.build(model_cfg)
+        model = MODELS.build(model_cfg)
 
         # test attributes
         assert model.__class__.__name__ == 'InstColorization'
@@ -72,9 +72,9 @@ class TestInstColorization:
         inputs = torch.rand(1, 3, 256, 256)
         target_shape = (1, 3, 256, 256)
 
-        data_sample = EditDataSample(gt_img=PixelData(data=inputs))
+        data_sample = DataSample(gt_img=inputs)
         metainfo = dict(
-            cropped_img=PixelData(data=torch.rand(9, 3, 256, 256)),
+            cropped_img=torch.rand(9, 3, 256, 256),
             box_info=torch.tensor([[175, 29, 96, 54, 52, 106],
                                    [14, 191, 84, 61, 51, 111],
                                    [117, 64, 115, 46, 75, 95],
@@ -114,7 +114,8 @@ class TestInstColorization:
             empty_box=False)
         data_sample.set_metainfo(metainfo=metainfo)
 
-        data = dict(inputs=inputs, data_samples=[data_sample])
+        data = dict(
+            inputs=inputs, data_samples=DataSample.stack([data_sample]))
 
         res = model(mode='tensor', **data)
 

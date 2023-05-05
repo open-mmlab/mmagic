@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.editors.dcgan import DCGANDiscriminator
-from mmedit.registry import MODULES
+from mmagic.models.editors.dcgan import DCGANDiscriminator
+from mmagic.registry import MODELS
 
 
 class TestDCGANDiscriminator(object):
@@ -19,7 +19,7 @@ class TestDCGANDiscriminator(object):
 
     def test_dcgan_discriminator(self):
         # test default setting with builder
-        d = MODULES.build(self.default_config)
+        d = MODELS.build(self.default_config)
         pred = d(self.input_tensor)
         assert pred.shape == (2, 5)
         assert d.num_downsamples == 3
@@ -46,7 +46,7 @@ class TestDCGANDiscriminator(object):
             return
 
         # test default setting with builder on GPU
-        d = MODULES.build(self.default_config).cuda()
+        d = MODELS.build(self.default_config).cuda()
         pred = d(self.input_tensor.cuda())
         assert pred.shape == (2, 5)
         assert d.num_downsamples == 3

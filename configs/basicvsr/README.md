@@ -64,7 +64,7 @@ python tools/train.py configs/basicvsr/basicvsr_2xb4_reds4.py
 ./tools/dist_train.sh configs/basicvsr/basicvsr_2xb4_reds4.py 8
 ```
 
-For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMEditing).
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMagic).
 
 </details>
 
@@ -86,7 +86,7 @@ python tools/test.py configs/basicvsr/basicvsr_2xb4_reds4.py https://download.op
 ./tools/dist_test.sh configs/basicvsr/basicvsr_2xb4_reds4.py https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth 8
 ```
 
-For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMEditing).
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).
 
 </details>
 

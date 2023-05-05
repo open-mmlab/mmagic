@@ -33,7 +33,7 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 <div align="center">
   <img src="https://user-images.githubusercontent.com/12782558/210952108-df82e5ad-6eb6-4948-8d22-3802299d1131.png" width="400"/>
   <br/>
-  <b>A panda is having dinner in KFC</b>
+  <b>A panda is having dinner at KFC</b>
 </div></td>
   </tr>
 </thead>
@@ -41,11 +41,20 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 
 ## Pretrained models
 
-We use stable diffusion v1.5 weights. This model has several weights including vae, unet and clip. You should download the weights from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and change the 'pretrained_model_path' in config to the weights dir.
+|                               Model                               | Dataset | Download |
+| :---------------------------------------------------------------: | :-----: | :------: |
+| [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py) |    -    |    -     |
 
-|                               Model                               | Dataset |                            Download                            |
-| :---------------------------------------------------------------: | :-----: | :------------------------------------------------------------: |
-| [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py) |    -    | [model](https://huggingface.co/runwayml/stable-diffusion-v1-5) |
+We use stable diffusion v1.5 weights. This model has several weights including vae, unet and clip.
+
+You may download the weights from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and change the 'from_pretrained' in config to the weights dir.
+
+Download with git:
+
+```shell
+git lfs install
+git clone https://huggingface.co/runwayml/stable-diffusion-v1-5
+```
 
 ## Quick Start
 
@@ -55,17 +64,22 @@ Running the following codes, you can get a text-generated image.
 from mmengine import MODELS, Config
 from torchvision import utils
 
-from mmedit.utils import register_all_modules
+from mmengine.registry import init_default_scope
 
-register_all_modules()
+init_default_scope('mmagic')
 
 config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py'
-StableDiffuser = MODELS.build(Config.fromfile(config).model)
+config = Config.fromfile(config).copy()
+# change the 'pretrained_model_path' if you have downloaded the weights manually
+# config.model.unet.from_pretrained = '/path/to/your/stable-diffusion-v1-5'
+# config.model.vae.from_pretrained = '/path/to/your/stable-diffusion-v1-5'
+
+StableDiffuser = MODELS.build(config.model)
 prompt = 'A mecha robot in a favela in expressionist style'
 StableDiffuser = StableDiffuser.to('cuda')
 
-image = StableDiffuser.infer(prompt)['samples']
-utils.save_image(image, 'robot.png')
+image = StableDiffuser.infer(prompt)['samples'][0]
+image.save('robot.png')
 ```
 
 ## Comments

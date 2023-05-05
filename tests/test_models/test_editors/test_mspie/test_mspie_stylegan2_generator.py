@@ -1,17 +1,19 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 
+import pytest
 import torch
 import torch.nn as nn
 
-from mmedit.models.editors.mspie import MSStyleGANv2Generator
-from mmedit.registry import MODULES
-from mmedit.utils import register_all_modules
+from mmagic.models.editors.mspie import MSStyleGANv2Generator
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MockHeadPosEncoding(nn.Module):
 
     def __init__(self):
@@ -24,6 +26,9 @@ class TestMSStyleGAN2:
     def setup_class(cls):
         cls.default_cfg = dict(out_size=32, style_channels=16)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_msstylegan2_cpu(self):
 
         # test normal forward
@@ -112,6 +117,9 @@ class TestMSStyleGAN2:
         mean_latent = g.get_mean_latent(num_samples=4, bs_per_repeat=2)
         assert mean_latent.shape == (1, 16)
 
+    @pytest.mark.skipif(
+        'win' in platform.system().lower() or not torch.cuda.is_available(),
+        reason='skip on windows due to uncompiled ops.')
     def test_head_pos_encoding(self):
         cfg = deepcopy(self.default_cfg)
         g = MSStyleGANv2Generator(**cfg, head_pos_encoding=dict(type='CSG'))

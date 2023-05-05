@@ -8,7 +8,7 @@ from mmengine.config import Config, DictAction
 from mmengine.hooks import Hook
 from mmengine.runner import Runner
 
-from mmedit.utils import print_colored_log, register_all_modules
+from mmagic.utils import print_colored_log
 
 
 # TODO: support fuse_conv_bn, visualization, and format_only
@@ -44,10 +44,6 @@ def parse_args():
 
 def main():
     args = parse_args()
-
-    # register all modules in mmedit into the registries
-    # do not init the default scope here because it will be init in the runner
-    register_all_modules(init_default_scope=False)
 
     # load config
     cfg = Config.fromfile(args.config)

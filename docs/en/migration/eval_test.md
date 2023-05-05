@@ -1,6 +1,6 @@
 # Migration of Evaluation and Testing Settings
 
-We update evaluation settings in MMEdit 1.x. Important modifications are as following.
+We update evaluation settings in MMagic 1.x. Important modifications are as following.
 
 - The evaluation field is split to `val_evaluator` and `test_evaluator`. The `interval` is moved to `train_cfg.val_interval`.
 - The metrics to evaluation are moved from `test_cfg` to `val_evaluator` and `test_evaluator`.
@@ -48,7 +48,7 @@ test_cfg = dict(type='TestLoop')  # The name of test loop type
 </thead>
 </table>
 
-We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMEditing. Here is migration of Evaluation and Testing Settings about MMGeneration.
+We have merged [MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x) into MMagic. Here is migration of Evaluation and Testing Settings about MMGeneration.
 
 The evaluation field is splited to `val_evaluator` and `test_evaluator`. And it won't support `interval` and `save_best` arguments. The `interval` is moved to `train_cfg.val_interval`, see [the schedule settings](./schedule.md) and the `save_best` is moved to `default_hooks.checkpoint.save_best`.
 
@@ -83,7 +83,7 @@ evaluation = dict(
 
 ```python
 val_evaluator = dict(
-    type='GenEvaluator',
+    type='Evaluator',
     metrics=[
         dict(
             type='FID',
@@ -145,8 +145,8 @@ train_cfg = dict(
     max_iters=1000000,  # max training iteration
     val_begin=1,
     val_interval=10000)  # evaluation interval
-val_cfg = dict(type='GenValLoop')  # specific loop in validation
-test_cfg = dict(type='GenTestLoop')  # specific loop in testing
+val_cfg = dict(type='MultiValLoop')  # specific loop in validation
+test_cfg = dict(type='MultiTestLoop')  # specific loop in testing
 ```
 
 </td>

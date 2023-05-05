@@ -16,8 +16,8 @@ You can download paired datasets from [here](http://efrosgans.eecs.berkeley.edu/
 Then, you need to unzip and move corresponding datasets to follow the folder structure shown above. The datasets have been well-prepared by the original authors.
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data

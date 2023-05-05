@@ -4,8 +4,8 @@ repos:
     rev: 4.0.1
     hooks:
       - id: flake8
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+  - repo: https://github.com/zhouzaida/isort
+    rev: 5.12.1
     hooks:
       - id: isort
   - repo: https://github.com/pre-commit/mirrors-yapf
@@ -62,5 +62,15 @@ repos:
     hooks:
       - id: check-algo-readme
       - id: check-copyright
-        args: ["demo", "mmedit", "tests", "tools"]
+        args: ["demo", "mmagic", "tests", "tools"]
       - id: remove-improper-eol-in-cn-docs
+  - repo: local
+    hooks:
+      - id: update-model-zoo
+        name: update-model-zoo
+        description: update model-zoo.yml
+        entry: docs/en/.dev_scripts/update_model_zoo.py
+        additional_dependencies: [mmengine, modelindex, tqdm, rich]
+        language: python
+        files: ^configs/.*\.md$
+        require_serial: true

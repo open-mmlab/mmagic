@@ -1,0 +1,83 @@
+cases:
+- name: basicvsr-pp_c64n7_8xb1-600k_reds4
+  params:
+    checkpoint: basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
+    checkpoint_url: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
+    config: configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
+    cpus_per_node: 16
+    gpus: 4
+    gpus_per_node: 4
+  results:
+    dataset: REDS4(BIx4)
+    eval:
+    - PSNR
+    - SSIM
+    metrics:
+      PSNR (RGB): 32.3855
+      SSIM (RGB): 0.9069
+
+- name: realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds
+  params:
+    checkpoint: realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth
+    checkpoint_url: https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth
+    config: configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py
+    cpus_per_node: 16
+    gpus: 8
+    gpus_per_node: 8
+  results:
+    dataset: REDS
+    eval:
+    - NIQE
+    metrics:
+      NIQE (Y): 3.7662
+
+- name: stylegan2_c2_8xb4-800kiters_ffhq-256x256
+  params:
+    checkpoint: stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
+    checkpoint_url: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
+    config: configs/styleganv2/stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256.py
+    cpus_per_node: 4
+    gpus: 8
+    gpus_per_node: 8
+  results:
+    dataset: FFHQ256
+    metrics:
+      FID-50k: 3.992
+
+- name: deepfillv1_256x256_8x2_places
+  params:
+    checkpoint: deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
+    checkpoint_url: https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
+    config: configs/deepfillv1/deepfillv1_4xb4_celeba-256x256.py
+    cpus_per_node: 16
+    gpus: 8
+    gpus_per_node: 8
+  results:
+    dataset: Places365-val
+    metrics:
+      PSNR: 23.429
+      SSIM: 0.862
+      l1 error: 11.019
+
+- name: realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost
+  params:
+    checkpoint: realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth
+    checkpoint_url: https://download.openmmlab.com/mmediting/restorers/real_esrgan/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth
+    config: configs/real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py
+    cpus_per_node: 16
+    gpus: 8
+    gpus_per_node: 8
+  results:
+    dataset: df2k_ost
+    metrics:
+      PSNR: 28.0297
+      SSIM: 0.8236
+
+cluster_num: '2'
+default_floating_range: 1.0
+model_floating_ranges: {}
+partition: mm_lol
+repo: mmagic
+branch: dev-1.x
+task_type: test
+third_part_libs: []

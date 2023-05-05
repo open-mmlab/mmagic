@@ -52,11 +52,9 @@ model = dict(
     is_use_sharpened_gt_in_gan=False,
     is_use_ema=True,
     data_preprocessor=dict(
-        type='EditDataPreprocessor',
+        type='DataPreprocessor',
         mean=[0., 0., 0.],
         std=[255., 255., 255.],
-        input_view=(1, -1, 1, 1),
-        output_view=(1, -1, 1, 1),
     ))
 
 # optimizer

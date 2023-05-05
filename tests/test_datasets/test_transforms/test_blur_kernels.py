@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from mmedit.datasets.transforms import blur_kernels
+from mmagic.datasets.transforms import blur_kernels
 
 
 def test_blur_kernels():

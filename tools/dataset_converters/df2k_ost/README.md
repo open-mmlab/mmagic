@@ -19,8 +19,8 @@
 Please first put all the images into the `GT` folder (naming does not need to be in order):
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
@@ -37,27 +37,43 @@ mmediting
 For faster IO, we recommend to crop the images to sub-images. We provide such a script:
 
 ```shell
-python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
+python tools/dataset_converters/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost
 ```
 
 The generated data is stored under `df2k_ost` and the data structure is as follows, where `_sub` indicates the sub-images.
 
 ```text
-mmediting
-├── mmedit
+mmagic
+├── mmagic
 ├── tools
 ├── configs
 ├── data
 │   ├── df2k_ost
 │   │   ├── GT
 │   │   ├── GT_sub
+│   │   ├── meta_info_df2k_ost.txt
 ...
 ```
+
+## Prepare annotation list
+
+If you use the annotation mode for the dataset, you first need to prepare a specific `txt` file.
+
+Each line in the annotation file contains the image names and image shape (usually for the ground-truth images), separated by a white space.
+
+Example of an annotation file:
+
+```text
+0001_s001.png (480,480,3)
+0001_s002.png (480,480,3)
+```
+
+Note that `preprocess_df2k_ost_dataset.py` will generate default annotation files.
 
 ## Prepare LMDB dataset for DF2K_OST
 
 If you want to use LMDB datasets for faster IO speed, you can make LMDB files by:
 
 ```shell
-python tools/dataset_converters/super-resolution/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
+python tools/dataset_converters/df2k_ost/preprocess_df2k_ost_dataset.py --data-root ./data/df2k_ost --make-lmdb
 ```

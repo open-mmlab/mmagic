@@ -2,8 +2,8 @@
 import pytest
 import torch
 
-from mmedit.models.editors.wgan_gp import WGANGPDiscriminator
-from mmedit.registry import MODULES
+from mmagic.models.editors.wgan_gp import WGANGPDiscriminator
+from mmagic.registry import MODELS
 
 
 class TestWGANGPDiscriminator(object):
@@ -35,14 +35,14 @@ class TestWGANGPDiscriminator(object):
     def test_wgangp_discriminator(self):
 
         # test default setting with builder
-        d = MODULES.build(self.default_config)
+        d = MODELS.build(self.default_config)
         assert isinstance(d, WGANGPDiscriminator)
         score = d(self.x)
         assert score.shape == (2, 1)
 
         # test different in_scale
         config = dict(type='WGANGPDiscriminator', in_channel=3, in_scale=64)
-        d = MODULES.build(config)
+        d = MODELS.build(config)
         assert isinstance(d, WGANGPDiscriminator)
         x = torch.randn((2, 3, 64, 64))
         score = d(x)
@@ -54,7 +54,7 @@ class TestWGANGPDiscriminator(object):
             in_channel=3,
             in_scale=128,
             conv_module_cfg=self.conv_ln_module_config)
-        d = MODULES.build(config)
+        d = MODELS.build(config)
         assert isinstance(d, WGANGPDiscriminator)
         score = d(self.x)
         assert score.shape == (2, 1)
@@ -64,7 +64,7 @@ class TestWGANGPDiscriminator(object):
             in_channel=3,
             in_scale=128,
             conv_module_cfg=self.conv_gn_module_config)
-        d = MODULES.build(config)
+        d = MODELS.build(config)
         assert isinstance(d, WGANGPDiscriminator)
         score = d(self.x)
         assert score.shape == (2, 1)
@@ -73,14 +73,14 @@ class TestWGANGPDiscriminator(object):
     def test_wgangp_discriminator_cuda(self):
 
         # test default setting with builder
-        d = MODULES.build(self.default_config).cuda()
+        d = MODELS.build(self.default_config).cuda()
         assert isinstance(d, WGANGPDiscriminator)
         score = d(self.x.cuda())
         assert score.shape == (2, 1)
 
         # test different in_scale
         config = dict(type='WGANGPDiscriminator', in_channel=3, in_scale=64)
-        d = MODULES.build(config).cuda()
+        d = MODELS.build(config).cuda()
         assert isinstance(d, WGANGPDiscriminator)
         x = torch.randn((2, 3, 64, 64))
         score = d(x.cuda())
@@ -92,7 +92,7 @@ class TestWGANGPDiscriminator(object):
             in_channel=3,
             in_scale=128,
             conv_module_cfg=self.conv_ln_module_config)
-        d = MODULES.build(config).cuda()
+        d = MODELS.build(config).cuda()
         assert isinstance(d, WGANGPDiscriminator)
         score = d(self.x.cuda())
         assert score.shape == (2, 1)
@@ -102,7 +102,7 @@ class TestWGANGPDiscriminator(object):
             in_channel=3,
             in_scale=128,
             conv_module_cfg=self.conv_gn_module_config)
-        d = MODULES.build(config).cuda()
+        d = MODELS.build(config).cuda()
         assert isinstance(d, WGANGPDiscriminator)
         score = d(self.x.cuda())
         assert score.shape == (2, 1)

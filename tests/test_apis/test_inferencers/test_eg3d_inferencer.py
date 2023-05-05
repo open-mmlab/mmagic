@@ -7,8 +7,8 @@ import numpy as np
 import pytest
 from mmengine import Config
 
-from mmedit.apis.inferencers.eg3d_inferencer import EG3DInferencer
-from mmedit.utils import register_all_modules
+from mmagic.apis.inferencers.eg3d_inferencer import EG3DInferencer
+from mmagic.utils import register_all_modules
 
 register_all_modules()
 
@@ -44,14 +44,15 @@ config = dict(
             vertical_std=3.141 / 2,
             focal=1.025390625,
             up=[0, 0, 1],
-            radius=1.2)))
+            radius=1.2),
+        data_preprocessor=dict(type='DataPreprocessor')))
 
 
 def test_eg3d_inferencer():
     cfg = Config(config)
 
     result_out_dir = osp.join(
-        osp.dirname(__file__), '..', '..', 'data', 'eg3d_output')
+        osp.dirname(__file__), '..', '..', 'data/out', 'eg3d_output')
 
     inferencer_instance = EG3DInferencer(cfg, None)
     output = inferencer_instance(

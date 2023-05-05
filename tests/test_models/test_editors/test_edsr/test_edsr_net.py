@@ -4,7 +4,7 @@ import platform
 import pytest
 import torch
 
-from mmedit.models.editors import EDSRNet
+from mmagic.models.editors import EDSRNet
 
 
 def test_edsr_cpu():

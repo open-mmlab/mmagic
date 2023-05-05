@@ -30,5 +30,6 @@ metrics = [
 ]
 
 # EVALUATION
-val_dataloader = test_dataloader = dict(batch_size=128)
-val_evaluator = test_evaluator = dict(metrics=metrics)
+val_dataloader = val_evaluator = val_cfg = None
+test_dataloader = dict(batch_size=128)
+test_evaluator = dict(metrics=metrics)

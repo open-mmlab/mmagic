@@ -1,12 +1,12 @@
-# MMEditing Demo
+# MMagic Demo
 
-There are some mmediting demos in this folder. We provide python command line usage here to run these demos and more guidance could also be found in the [documentation](https://mmediting.readthedocs.io/en/dev-1.x/user_guides/3_inference.html)
+There are some mmagic demos in this folder. We provide python command line usage here to run these demos and more guidance could also be found in the [documentation](https://mmagic.readthedocs.io/en/latest/user_guides/3_inference.html)
 
 Table of contents:
 
 [1. Download sample images or videos](#1-download-sample-images-or-videos)
 
-[2. MMEditing inference demo](#2-mmediting-inference-demo)
+[2. MMagic inference demo](#2-mmagic-inference-demo)
 
 &#8195;    [2.1. Check supported tasks and models](#21-check-supported-tasks-and-models)
 
@@ -34,12 +34,12 @@ Table of contents:
 
 ## 1. Download sample images or videos
 
-We prepared some images and videos for you to run demo with. After MMEdit is well installed, you could use demos in this folder to infer these data.
+We prepared some images and videos for you to run demo with. After MMagic is well installed, you could use demos in this folder to infer these data.
 Download with python script [download_inference_resources.py](./download_inference_resources.py).
 
 ```shell
-# cd mmediting demo path
-cd mmediting/demo
+# cd mmagic demo path
+cd mmagic/demo
 
 # see all resources
 python download_inference_resources.py --print-all
@@ -55,36 +55,36 @@ python download_inference_resources.py --task 'Inpainting'
 python download_inference_resources.py --root-dir '../resources'
 ```
 
-## 2. MMEditing inference demo
+## 2. MMagic inference demo
 
 ### 2.1 Check supported tasks and models
 
 print all supported models for inference.
 
 ```shell
-python mmediting_inference_demo.py --print-supported-models
+python mmagic_inference_demo.py --print-supported-models
 ```
 
 print all supported tasks for inference.
 
 ```shell
-python mmediting_inference_demo.py --print-supported-tasks
+python mmagic_inference_demo.py --print-supported-tasks
 ```
 
 print all supported models for one task, take 'Image2Image' for example.
 
 ```shell
-python mmediting_inference_demo.py --print-task-supported-models 'Image2Image'
+python mmagic_inference_demo.py --print-task-supported-models 'Image2Image'
 ```
 
 ### 2.2 Perform inference with command line
 
-You can use the following commands to perform inference with a MMEdit model.
+You can use the following commands to perform inference with a MMagic model.
 
-Usage of python API can also be found in this [tutotial](./mmediting_inference_tutorial.ipynb).
+Usage of python API can also be found in this [tutotial](./mmagic_inference_tutorial.ipynb).
 
 ```shell
-python demo/mmediting_inference_demo.py \
+python demo/mmagic_inference_demo.py \
     [--img] \
     [--video] \
     [--label] \
@@ -104,7 +104,7 @@ Examples for each kind of task:
 #### 2.2.1 Conditional GANs
 
 ```shell
-python mmediting_inference_demo.py \
+python mmagic_inference_demo.py \
         --model-name biggan \
         --label 1 \
         --result-out-dir ../resources/output/conditional/demo_conditional_biggan_res.jpg
@@ -113,7 +113,7 @@ python mmediting_inference_demo.py \
 #### 2.2.2 Inpainting
 
 ```shell
-python mmediting_inference_demo.py \
+python mmagic_inference_demo.py \
         --model-name global_local  \
         --img ../resources/input/inpainting/celeba_test.png \
         --mask ../resources/input/inpainting/bbox_mask.png \
@@ -123,7 +123,7 @@ python mmediting_inference_demo.py \
 #### 2.2.3 Matting
 
 ```shell
-python mmediting_inference_demo.py \
+python mmagic_inference_demo.py \
         --model-name global_local  \
         --img ../resources/input/matting/GT05.jpg \
         --mask ../resources/input/matting/GT05_trimap.jpg \
@@ -133,7 +133,7 @@ python mmediting_inference_demo.py \
 #### 2.2.4 Image Super-resolution
 
 ```shell
-python mmediting_inference_demo.py \
+python mmagic_inference_demo.py \
         --model-name esrgan \
         --img ../resources/input/restoration/0901x2.png \
         --result-out-dir ../resources/output/restoration/demo_restoration_esrgan_res.png
@@ -142,7 +142,7 @@ python mmediting_inference_demo.py \
 #### 2.2.5 Image translation
 
 ```shell
-python mmediting_inference_demo.py \
+python mmagic_inference_demo.py \
         --model-name pix2pix \
         --img ../resources/input/translation/gt_mask_0.png \
         --result-out-dir ../resources/output/translation/demo_translation_pix2pix_res.png
@@ -151,7 +151,7 @@ python mmediting_inference_demo.py \
 #### 2.2.6 Unconditional GANs
 
 ```shell
-python mmediting_inference_demo.py \
+python mmagic_inference_demo.py \
         --model-name styleganv1 \
         --result-out-dir ../resources/output/unconditional/demo_unconditional_styleganv1_res.jpg
 ```
@@ -159,7 +159,7 @@ python mmediting_inference_demo.py \
 #### 2.2.7 Video interpolation
 
 ```shell
-python mmediting_inference_demo.py \
+python mmagic_inference_demo.py \
         --model-name flavr \
         --video ../resources/input/video_interpolation/b-3LLDhc4EU_000000_000010.mp4 \
         --result-out-dir ../resources/output/video_interpolation/demo_video_interpolation_flavr_res.mp4
@@ -168,7 +168,7 @@ python mmediting_inference_demo.py \
 #### 2.2.8 Video Super-Resolution
 
 ```shell
-python mmediting_inference_demo.py \
+python mmagic_inference_demo.py \
         --model-name edvr \
         --extra-parameters window_size=5 \
         --video ../resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
@@ -178,30 +178,16 @@ python mmediting_inference_demo.py \
 #### 2.2.9 Text-to-Image
 
 ```shell
-python mmediting_inference_demo.py \
-        --model-name disco \
-        --text 0=["clouds surround the mountains and Chinese palaces,sunshine,lake,overlook,overlook,unreal engine,light effect,Dream，Greg Rutkowski,James Gurney,artstation"] \
-        --result-out-dir ../resources/output/text2image/demo_text2image_disco_res.png
+python mmagic_inference_demo.py \
+        --model-name stable_diffusion \
+        --text "A panda is having dinner at KFC" \
+        --result-out-dir ../resources/output/text2image/demo_text2image_stable_diffusion_res.png
 ```
 
 #### 2.2.9 3D-aware Generation (EG3D)
 
 ```shell
-python demo/mmediting_inference_demo.py \
+python demo/mmagic_inference_demo.py \
     --model-name eg3d \
     --result-out-dir ../resources/output/eg3d-output
 ```
-
-## 3. Other demos
-
-These demos are duplicated with mmedting_inference_demo.py and may be removed in the future.
-
-- [colorization_demo.py](./colorization_demo.py)
-- [conditional_demo.py](./conditional_demo.py)
-- [inpainting_demo.py](./inpainting_demo.py)
-- [matting_demo.py](./matting_demo.py)
-- [restoration_demo.py](./restoration_demo.py)
-- [restoration_video_demo.py](./restoration_video_demo.py)
-- [translation_demo.py](./translation_demo.py)
-- [unconditional_demo.py](./unconditional_demo.py)
-- [video_interpolation_demo.py](./video_interpolation_demo.py)

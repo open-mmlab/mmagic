@@ -2,13 +2,13 @@
 import pytest
 import torch
 
-from mmedit.models.editors.ddpm.ddpm_scheduler import DDPMScheduler
+from mmagic.models.diffusion_schedulers.ddpm_scheduler import EditDDPMScheduler
 
 
 def test_ddpm():
     modelout = torch.rand((1, 8, 32, 32))
     sample = torch.rand((1, 4, 32, 32))
-    ddpm = DDPMScheduler(
+    ddpm = EditDDPMScheduler(
         num_train_timesteps=1000, variance_type='learned_range')
     result = ddpm.step(modelout, 980, sample)
     assert result['prev_sample'].shape == (1, 4, 32, 32)
@@ -32,11 +32,11 @@ def test_ddpm():
 
 
 def test_ddpm_init():
-    DDPMScheduler(trained_betas=1)
+    EditDDPMScheduler(trained_betas=1)
 
-    DDPMScheduler(beta_schedule='scaled_linear')
+    EditDDPMScheduler(beta_schedule='scaled_linear')
 
-    DDPMScheduler(beta_schedule='squaredcos_cap_v2')
+    EditDDPMScheduler(beta_schedule='squaredcos_cap_v2')
 
     with pytest.raises(Exception):
-        DDPMScheduler(beta_schedule='tem')
+        EditDDPMScheduler(beta_schedule='tem')
