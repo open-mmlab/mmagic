@@ -63,11 +63,16 @@ class MMagicInferencer:
         'styleganv3',
 
         # matting models
+        'dim',
+        'indexnet',
         'gca',
 
         # inpainting models
-        'global_local',
         'aot_gan',
+        'deepfillv1',
+        'deepfillv2',
+        'global_local',
+        'partial_conv',
 
         # translation models
         'pix2pix',

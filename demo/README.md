@@ -124,9 +124,9 @@ python mmagic_inference_demo.py \
 
 ```shell
 python mmagic_inference_demo.py \
-        --model-name global_local  \
+        --model-name gca  \
         --img ../resources/input/matting/GT05.jpg \
-        --mask ../resources/input/matting/GT05_trimap.jpg \
+        --trimap ../resources/input/matting/GT05_trimap.jpg \
         --result-out-dir ../resources/output/matting/demo_matting_gca_res.png
 ```
 
