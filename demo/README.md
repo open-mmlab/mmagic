@@ -167,9 +167,31 @@ python mmagic_inference_demo.py \
 
 #### 2.2.8 Video Super-Resolution
 
+BasicVSR / BasicVSR++ / IconVSR / RealBasicVSR
+
+```shell
+python mmagic_inference_demo.py \
+        --model-name basicvsr \
+        --video ../resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
+        --result-out-dir ../resources/output/video_restoration/demo_video_restoration_basicvsr_res.mp4
+```
+
+EDVR
+
 ```shell
 python mmagic_inference_demo.py \
         --model-name edvr \
+        --extra-parameters window_size=5 \
+        --video ../resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
+        --result-out-dir ../resources/output/video_restoration/demo_video_restoration_edvr_res.mp4
+```
+
+TDAN
+
+```shell
+python mmagic_inference_demo.py \
+        --model-name tdan \
+        --model-setting 2
         --extra-parameters window_size=5 \
         --video ../resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
         --result-out-dir ../resources/output/video_restoration/demo_video_restoration_edvr_res.mp4
