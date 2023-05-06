@@ -139,6 +139,14 @@ python mmagic_inference_demo.py \
         --result-out-dir ../resources/output/restoration/demo_restoration_esrgan_res.png
 ```
 
+```shell
+python mmagic_inference_demo.py \
+        --model-name ttsr \
+        --img ../resources/input/restoration/0901x2.png \
+        --ref ../resources/input/restoration/0901x2.png \
+        --result-out-dir ../resources/output/restoration/demo_restoration_ttsr_res.png
+```
+
 #### 2.2.5 Image translation
 
 ```shell
