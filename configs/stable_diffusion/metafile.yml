@@ -15,3 +15,22 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Image
+- Config: configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py
+  In Collection: Stable Diffusion
+  Name: stable-diffusion_ddim_denoisingunet-tomesd_5e-1
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
+  - Dataset: '-'
+    Metrics:
+      Size / Num images per prompt:
+        PSNR: 512.0
+        SSIM: 5.0
+    Task: Text2Image
+  - Dataset: '-'
+    Metrics:
+      Size / Num images per prompt:
+        PSNR: 512.0
+        SSIM: 5.0
+    Task: Text2Image

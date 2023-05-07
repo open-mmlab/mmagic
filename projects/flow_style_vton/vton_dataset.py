@@ -45,17 +45,15 @@ class AlignedDataset(Dataset):
     def __getitem__(self, index):
 
         I_path = os.path.join(self.im_name[index])
-        I = Image.open(I_path).convert('RGB')
+        img = Image.open(I_path).convert('RGB')
 
-        params = get_params(self.opt, I.size)
+        params = get_params(self.opt, img.size)
         transform = get_transform(self.opt, params)
         transform_E = get_transform(
             self.opt, params, method=Image.NEAREST, normalize=False)
 
-        I_tensor = transform(I)
-        #import ipdb; ipdb.set_trace()
+        I_tensor = transform(img)
         C_path = os.path.join(self.c_name[index])
-        #print(self.c_name[index])
         C = Image.open(C_path).convert('RGB')
         C_tensor = transform(C)
 

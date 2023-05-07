@@ -18,6 +18,7 @@ repos:
       - id: trailing-whitespace
         exclude: ^dicts/
       - id: check-yaml
+        exclude: ^projects/animated_drawings/configs/retarget/
       - id: end-of-file-fixer
         exclude: ^dicts/
       - id: requirements-txt-fixer

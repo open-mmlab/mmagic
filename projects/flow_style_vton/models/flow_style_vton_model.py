@@ -5,8 +5,8 @@ import torch.nn.functional as F
 from mmengine.model import BaseModel
 from mmengine.runner.checkpoint import _load_checkpoint
 
-from mmedit.registry import MODELS
-from mmedit.utils.typing import ForwardInputs
+from mmagic.registry import MODELS
+from mmagic.utils.typing import ForwardInputs
 
 
 @MODELS.register_module()
@@ -85,8 +85,8 @@ class FlowStyleVTON(BaseModel):
 def make_colorwheel():
     """Generates a color wheel for optical flow visualization as presented in:
 
-    Baker et al. "A Database and Evaluation Methodology for Optical Flow" (ICCV, 2007)
-        URL: http://vision.middlebury.edu/flow/flowEval-iccv07.pdf
+    Baker et al. "A Database and Evaluation Methodology for Optical Flow"
+    (ICCV, 2007) URL: http://vision.middlebury.edu/flow/flowEval-iccv07.pdf
     According to the C++ source code of Daniel Scharstein
     According to the Matlab source code of Deqing Sun
     """
@@ -133,11 +133,12 @@ class flow2color():
     #
     # Copyright (c) 2018 Tom Runia
     #
-    # Permission is hereby granted, free of charge, to any person obtaining a copy
-    # of this software and associated documentation files (the "Software"), to deal
-    # in the Software without restriction, including without limitation the rights
-    # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    # copies of the Software, and to permit persons to whom the Software is
+    # Permission is hereby granted, free of charge, to any person obtaining
+    # a copy of this software and associated documentation files
+    # (the "Software"), to deal in the Software without restriction,
+    # including without limitation the rights to use, copy, modify, merge,
+    # publish, distribute, sublicense, and/or sell copies of the Software,
+    # and to permit persons to whom the Software is
     # furnished to do so, subject to conditions.
     #
     # Author: Tom Runia
@@ -152,7 +153,8 @@ class flow2color():
 
         :param u: np.ndarray, input horizontal flow
         :param v: np.ndarray, input vertical flow
-        :param convert_to_bgr: bool, whether to change ordering and output BGR instead of RGB
+        :param convert_to_bgr: bool, whether to change ordering and output BGR
+         instead of RGB
         :return:
         """
         flow_image = np.zeros((u.shape[0], u.shape[1], 3), np.uint8)

@@ -124,9 +124,9 @@ python mmagic_inference_demo.py \
 
 ```shell
 python mmagic_inference_demo.py \
-        --model-name global_local  \
+        --model-name gca  \
         --img ../resources/input/matting/GT05.jpg \
-        --mask ../resources/input/matting/GT05_trimap.jpg \
+        --trimap ../resources/input/matting/GT05_trimap.jpg \
         --result-out-dir ../resources/output/matting/demo_matting_gca_res.png
 ```
 
@@ -137,6 +137,14 @@ python mmagic_inference_demo.py \
         --model-name esrgan \
         --img ../resources/input/restoration/0901x2.png \
         --result-out-dir ../resources/output/restoration/demo_restoration_esrgan_res.png
+```
+
+```shell
+python mmagic_inference_demo.py \
+        --model-name ttsr \
+        --img ../resources/input/restoration/0901x2.png \
+        --ref ../resources/input/restoration/0901x2.png \
+        --result-out-dir ../resources/output/restoration/demo_restoration_ttsr_res.png
 ```
 
 #### 2.2.5 Image translation
@@ -167,9 +175,31 @@ python mmagic_inference_demo.py \
 
 #### 2.2.8 Video Super-Resolution
 
+BasicVSR / BasicVSR++ / IconVSR / RealBasicVSR
+
+```shell
+python mmagic_inference_demo.py \
+        --model-name basicvsr \
+        --video ../resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
+        --result-out-dir ../resources/output/video_restoration/demo_video_restoration_basicvsr_res.mp4
+```
+
+EDVR
+
 ```shell
 python mmagic_inference_demo.py \
         --model-name edvr \
+        --extra-parameters window_size=5 \
+        --video ../resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
+        --result-out-dir ../resources/output/video_restoration/demo_video_restoration_edvr_res.mp4
+```
+
+TDAN
+
+```shell
+python mmagic_inference_demo.py \
+        --model-name tdan \
+        --model-setting 2
         --extra-parameters window_size=5 \
         --video ../resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
         --result-out-dir ../resources/output/video_restoration/demo_video_restoration_edvr_res.mp4

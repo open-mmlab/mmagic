@@ -3,13 +3,13 @@ from argparse import ArgumentParser
 
 import torch
 from mmengine.registry import init_default_scope
-from models import *
 from torch.utils.data import DataLoader
 from torchvision.utils import save_image
 from tqdm import tqdm
 from vton_dataset import AlignedDataset
 
-from mmedit.apis import init_model
+from mmagic.apis.inferencers.inference_functions import init_model
+from projects.flow_style_vton.models import FlowStyleVTON
 
 init_default_scope('mmedit')
 
@@ -27,9 +27,8 @@ parser.add_argument(
     '--resize_or_crop',
     type=str,
     default='scale_width',
-    help=
-    'scaling and cropping of images at load time [resize_and_crop|crop|scale_width|scale_width_and_crop]'
-)
+    help='scaling and cropping of images at load time \
+    [resize_and_crop|crop|scale_width|scale_width_and_crop]')
 parser.add_argument('--phase', type=str, default='test')
 parser.add_argument('--isTrain', default=False)
 parser.add_argument(
@@ -49,6 +48,7 @@ device = torch.device(
     f'cuda:{opt.gpu_id}' if torch.cuda.is_available() else 'cpu')
 # pretrained is set inside the config
 model = init_model(config).to(device).eval()
+assert isinstance(model, FlowStyleVTON)
 
 os.makedirs('our_t_results', exist_ok=True)
 os.makedirs('im_gar_flow_wg', exist_ok=True)

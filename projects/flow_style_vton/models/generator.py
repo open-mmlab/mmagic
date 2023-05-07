@@ -3,7 +3,7 @@ import os
 import torch
 import torch.nn as nn
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 @MODELS.register_module()
@@ -71,7 +71,7 @@ class ResidualBlock(nn.Module):
     def __init__(self, in_features=64, norm_layer=nn.BatchNorm2d):
         super(ResidualBlock, self).__init__()
         self.relu = nn.ReLU(True)
-        if norm_layer == None:
+        if norm_layer is None:
             self.block = nn.Sequential(
                 nn.Conv2d(in_features, in_features, 3, 1, 1, bias=False),
                 nn.ReLU(inplace=True),
@@ -131,7 +131,7 @@ class ResUnetSkipConnectionBlock(nn.Module):
 
         downrelu = nn.ReLU(True)
         uprelu = nn.ReLU(True)
-        if norm_layer != None:
+        if norm_layer is not None:
             downnorm = norm_layer(inner_nc)
             upnorm = norm_layer(outer_nc)
 
@@ -157,7 +157,7 @@ class ResUnetSkipConnectionBlock(nn.Module):
                 padding=1,
                 bias=use_bias)
             down = [downconv, downrelu] + res_downconv
-            if norm_layer == None:
+            if norm_layer is None:
                 up = [upsample, upconv, uprelu] + res_upconv
             else:
                 up = [upsample, upconv, upnorm, uprelu] + res_upconv
@@ -171,7 +171,7 @@ class ResUnetSkipConnectionBlock(nn.Module):
                 stride=1,
                 padding=1,
                 bias=use_bias)
-            if norm_layer == None:
+            if norm_layer is None:
                 down = [downconv, downrelu] + res_downconv
                 up = [upsample, upconv, uprelu] + res_upconv
             else:

@@ -41,9 +41,10 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 
 ## Pretrained models
 
-|                               Model                               | Dataset | Download |
-| :---------------------------------------------------------------: | :-----: | :------: |
-| [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py) |    -    |    -     |
+|                                        Model                                         | Dataset | Download |
+| :----------------------------------------------------------------------------------: | :-----: | :------: |
+|          [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py)           |    -    |    -     |
+| [stable_diffusion_v1.5_tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     |
 
 We use stable diffusion v1.5 weights. This model has several weights including vae, unet and clip.
 
@@ -82,6 +83,123 @@ image = StableDiffuser.infer(prompt)['samples'][0]
 image.save('robot.png')
 ```
 
+## Use ToMe to accelerate your stable diffusion model
+
+We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed based on [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` as shown in [stable_diffusion_v1.5_tomesd](stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py). The only requirement is `torch >= 1.12.1` in order to properly support `torch.Tensor.scatter_reduce()` functionality. Please do check it before running the demo.
+
+```python
+...
+model = dict(
+    type='StableDiffusion',
+    unet=unet,
+    vae=vae,
+    enable_xformers=False,
+    text_encoder=dict(
+        type='ClipWrapper',
+        clip_type='huggingface',
+        pretrained_model_name_or_path=stable_diffusion_v15_url,
+        subfolder='text_encoder'),
+    tokenizer=stable_diffusion_v15_url,
+    scheduler=diffusion_scheduler,
+    test_scheduler=diffusion_scheduler,
+    tomesd_cfg=dict(
+        ratio=0.5))
+```
+
+The detailed settings for `tomesd_cfg` are as follows:
+
+- `ratio (float)`: The ratio of tokens to merge. For example, 0.4 would reduce the total number of tokens by 40%.The maximum value for this is 1-(1/(`sx` * `sy`)). **By default, the max ratio is 0.75, usually \<= 0.5 is recommended.** Higher values result in more speed-up, but with more visual quality loss.
+- `max_downsample (int)`: Apply ToMe to layers with at most this amount of downsampling. E.g., 1 only applies to layers with no downsampling, while 8 applies to all layers. Should be chosen from 1, 2, 4, 8. **1, 2 are recommended.**
+- `sx, sy (int, int)`: The stride for computing dst sets. A higher stride means you can merge more tokens, **default setting of (2, 2) works well in most cases**. `sx` and `sy` do not need to divide image size.
+- `use_rand (bool)`: Whether or not to allow random perturbations when computing dst sets. By default: True, but if you're having weird artifacts you can try turning this off.
+- `merge_attn (bool)`: Whether or not to merge tokens for attention **(recommended)**.
+- `merge_crossattn (bool)`: Whether or not to merge tokens for cross attention **(not recommended)**.
+- `merge_mlp (bool)`: Whether or not to merge tokens for the mlp layers **(especially not recommended)**.
+
+For more details about the **tomesd** setting, please refer to [Token Merging for Stable Diffusion](https://arxiv.org/abs/2303.17604).
+
+Then following the code below, you can evaluate the speed-up performance on stable diffusion models or stable-diffusion-based models ([DreamBooth](../dreambooth/README.md), [ControlNet](../controlnet/README.md)).
+
+```python
+import time
+import numpy as np
+
+from mmengine import MODELS, Config
+from mmengine.registry import init_default_scope
+
+init_default_scope('mmagic')
+
+_device = 0
+work_dir = '/path/to/your/work_dir'
+config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py'
+config = Config.fromfile(config).copy()
+# # change the 'pretrained_model_path' if you have downloaded the weights manually
+# config.model.unet.from_pretrained = '/path/to/your/stable-diffusion-v1-5'
+# config.model.vae.from_pretrained = '/path/to/your/stable-diffusion-v1-5'
+
+# w/o tomesd
+config.model.tomesd_cfg = None
+StableDiffuser = MODELS.build(config.model).to(f'cuda:{_device}')
+prompt = 'A mecha robot in a favela in expressionist style'
+
+# inference time evaluation params
+size = 512
+ratios = [0.5, 0.75]
+samples_perprompt = 5
+
+t = time.time()
+for i in range(100//samples_perprompt):
+    image = StableDiffuser.infer(prompt, height=size, width=size, num_images_per_prompt=samples_perprompt)['samples'][0]
+    if i == 0:
+        image.save(f"{work_dir}/wo_tomesd.png")
+print(f"Generating 100 images with {samples_perprompt} images per prompt, without ToMe speed-up, time used : {time.time() - t}s")
+
+for ratio in ratios:
+    # w/ tomesd
+    config.model.tomesd_cfg = dict(ratio=ratio)
+    sd_model = MODELS.build(config.model).to(f'cuda:{_device}')
+
+    t = time.time()
+    for i in range(100//samples_perprompt):
+        image = sd_model.infer(prompt, height=size, width=size, num_images_per_prompt=samples_perprompt)['samples'][0]
+        if i == 0:
+            image.save(f"{work_dir}/w_tomesd_ratio_{ratio}.png")
+
+    print(f"Generating 100 images with {samples_perprompt} images per prompt, merging ratio {ratio}, time used : {time.time() - t}s")
+```
+
+Here are some inference performance comparisons running on **single RTX 3090** with `torch 2.0.0+cu118` as backends. The results are reasonable, when enabling `xformers`, the speed-up ratio is a little bit lower. But `tomesd` still effectively reduces the inference time. It is especially recommended that enable `tomesd` when the `image_size` and `num_images_per_prompt` are large, since the number of similar tokens are larger and `tomesd` can achieve better performance.
+
+|                                   Model                                    | Dataset | Download | xformer |            Ratio            | Size / Num images per prompt |                     Time (s)                      |
+| :------------------------------------------------------------------------: | :-----: | :------: | :-----: | :-------------------------: | :--------------------------: | :-----------------------------------------------: |
+| [stable_diffusion_v1.5-tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     |   w/o   | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 542.20 <br> 427.65 (↓21.1%) <br>  393.05 (↓27.5%) |
+| [stable_diffusion_v1.5-tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     |   w/    | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 541.64 <br> 428.53 (↓20.9%) <br>  396.38 (↓26.8%) |
+
+<table align="center">
+<thead>
+  <tr>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/49406546/234613951-43b94470-89ff-4edc-a2e2-bea9e7a8a566.png" width="400"/>
+  <br/>
+  <b> w/o ToMe </b>
+</div></td>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/49406546/234613969-213e3436-b73c-4b8e-82ce-b91492b44db3.png" width="400"/>
+  <br/>
+  <b> w/ ToMe Speed-up (token merge ratio=0.5) </b>
+</div></td>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/49406546/234613983-82fee9a3-05f7-4b1d-85dc-a507e85ecb31.png" width="400"/>
+  <br/>
+  <b> w/ ToMe Speed-up (token merge ratio=0.75) </b>
+</div></td>
+  </tr>
+</thead>
+</table>
+
 ## Comments
 
 Our codebase for the stable diffusion models builds heavily on [diffusers codebase](https://github.com/huggingface/diffusers) and the model weights are from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5).
@@ -98,5 +216,19 @@ Thanks for the efforts of the community!
       eprint={2112.10752},
       archivePrefix={arXiv},
       primaryClass={cs.CV}
+}
+
+@article{bolya2023tomesd,
+  title={Token Merging for Fast Stable Diffusion},
+  author={Bolya, Daniel and Hoffman, Judy},
+  journal={arXiv},
+  year={2023}
+}
+
+@inproceedings{bolya2023tome,
+  title={Token Merging: Your {ViT} but Faster},
+  author={Bolya, Daniel and Fu, Cheng-Yang and Dai, Xiaoliang and Zhang, Peizhao and Feichtenhofer, Christoph and Hoffman, Judy},
+  booktitle={International Conference on Learning Representations},
+  year={2023}
 }
 ```

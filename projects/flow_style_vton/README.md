@@ -2,6 +2,10 @@
 
 ## Description
 
+Awesome try-on desplays are like this:
+
+![image1](examples/000010_0.png)
+
 ```
 Author: @FerryHuang.
 

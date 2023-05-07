@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmedit.registry import MODELS
+from mmagic.registry import MODELS
 
 
 @MODELS.register_module()
@@ -21,7 +21,7 @@ class AFWM(nn.Module):
 
     def forward(self, cond_input, image_input):
 
-        #import ipdb; ipdb.set_trace()
+        # import ipdb; ipdb.set_trace()
         cond_pyramids = self.cond_FPN(
             self.cond_features(cond_input))  # maybe use nn.Sequential
         image_pyramids = self.image_FPN(self.image_features(image_input))
@@ -132,13 +132,9 @@ class ModulatedConv2d(nn.Module):
         self.weight = nn.Parameter(
             torch.Tensor(fout, fin, kernel_size, kernel_size))
         self.bias = nn.Parameter(torch.Tensor(1, fout, 1, 1))
-        #self.conv = F.conv2d
 
         if not normalize_mlp:
             self.mlp_class_std = EqualLinear(latent_dim, fin)
-
-        #self.blur = Blur(fout)
-
         if padding_type == 'reflect':
             self.padding = nn.ReflectionPad2d(padding_size)
         else:
@@ -165,9 +161,6 @@ class ModulatedConv2d(nn.Module):
                                  self.kernel_size)
 
         batch, _, height, width = input.shape
-        #input = input.view(1,-1,h,w)
-        #input = self.padding(input)
-        #out = self.conv(input, weight, groups=b).view(b, self.out_channels, h, w) + self.bias
 
         input = input.view(1, -1, height, width)
         input = self.padding(input)
@@ -324,8 +317,6 @@ class Styled_F_ConvBlock(nn.Module):
             seq1 = [padding_layer(1), conv1]
             self.conv1 = nn.Sequential(*seq1)
 
-        #self.actvn1 = activation
-
     def forward(self, input, latent=None):
         if self.modulated_conv:
             out = self.conv0(input, latent)
@@ -338,8 +329,6 @@ class Styled_F_ConvBlock(nn.Module):
             out = self.conv1(out, latent)
         else:
             out = self.conv1(out)
-
-        #out = self.actvn1(out) * self.actvn_gain
 
         return out
 
@@ -383,7 +372,6 @@ class DownSample(nn.Module):
 class FeatureEncoder(nn.Module):
 
     def __init__(self, in_channels, chns=[64, 128, 256, 256, 256]):
-        # in_channels = 3 for images, and is larger (e.g., 17+1+1) for agnositc representation
         super(FeatureEncoder, self).__init__()
         self.encoders = []
         for i, out_chns in enumerate(chns):
