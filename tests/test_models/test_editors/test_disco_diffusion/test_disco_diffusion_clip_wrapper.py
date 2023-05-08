@@ -81,9 +81,9 @@ def test_embedding_layer_with_fixes():
 
     tokenizer = TokenizerWrapper('openai/clip-vit-base-patch32')
     # 'Goodbye' in kiswahili
-    tokenizer.add_placeholder_tokens('kwaheri', num_vec_per_token=1)
+    tokenizer.add_placeholder_token('kwaheri', num_vec_per_token=1)
     # 'how much' in kiswahili
-    tokenizer.add_placeholder_tokens('ngapi', num_vec_per_token=4)
+    tokenizer.add_placeholder_token('ngapi', num_vec_per_token=4)
 
     # test add single embedding
     new_embedding = {

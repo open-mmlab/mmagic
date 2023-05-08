@@ -102,11 +102,11 @@ class TokenizerWrapper:
         start, end = token_ids[1], token_ids[-2] + 1
         return {'name': token, 'start': start, 'end': end}
 
-    def add_placeholder_tokens(self,
-                               placeholder_token: str,
-                               *args,
-                               num_vec_per_token: int = 1,
-                               **kwargs):
+    def add_placeholder_token(self,
+                              placeholder_token: str,
+                              *args,
+                              num_vec_per_token: int = 1,
+                              **kwargs):
         """Add placeholder tokens to the tokenizer.
 
         Args:
