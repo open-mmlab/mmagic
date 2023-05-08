@@ -79,7 +79,7 @@ class DreamBooth(StableDiffusion):
                  init_cfg: Optional[dict] = None):
 
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, enable_xformers, tomesd_cfg,
+                         test_scheduler, dtype, enable_xformers, tomesd_cfg,
                          data_preprocessor, init_cfg)
         self.num_class_images = num_class_images
         self.class_prior_prompt = class_prior_prompt
