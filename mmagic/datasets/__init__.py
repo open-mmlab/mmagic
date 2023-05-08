@@ -11,12 +11,24 @@ from .imagenet_dataset import ImageNet
 from .mscoco_dataset import MSCoCoDataset
 from .paired_image_dataset import PairedImageDataset
 from .singan_dataset import SinGANDataset
+from .textual_inversion_dataset import TextualInversionDataset
 from .unpaired_image_dataset import UnpairedImageDataset
 
 __all__ = [
-    'AdobeComp1kDataset', 'BasicImageDataset', 'BasicFramesDataset',
-    'BasicConditionalDataset', 'UnpairedImageDataset', 'PairedImageDataset',
-    'ImageNet', 'CIFAR10', 'GrowScaleImgDataset', 'SinGANDataset',
-    'MSCoCoDataset', 'ControlNetDataset', 'DreamBoothDataset',
-    'ControlNetDataset', 'SDFinetuneDataset'
+    'AdobeComp1kDataset',
+    'BasicImageDataset',
+    'BasicFramesDataset',
+    'BasicConditionalDataset',
+    'UnpairedImageDataset',
+    'PairedImageDataset',
+    'ImageNet',
+    'CIFAR10',
+    'GrowScaleImgDataset',
+    'SinGANDataset',
+    'MSCoCoDataset',
+    'ControlNetDataset',
+    'DreamBoothDataset',
+    'ControlNetDataset',
+    'SDFinetuneDataset',
+    'TextualInversionDataset',
 ]
