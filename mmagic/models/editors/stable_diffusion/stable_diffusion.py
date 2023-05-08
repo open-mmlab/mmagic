@@ -98,14 +98,17 @@ class StableDiffusion(BaseModel):
         self.tomesd_cfg = tomesd_cfg
         self.set_tomesd()
 
-    def set_xformers(self) -> nn.Module:
+    def set_xformers(self, module: Optional[nn.Module] = None) -> nn.Module:
         """Set xformers for the model.
 
         Returns:
             nn.Module: The model with xformers.
         """
         if self.enable_xformers:
-            set_xformers(self)
+            if module is None:
+                set_xformers(self)
+            else:
+                set_xformers(module)
 
     def set_tomesd(self) -> nn.Module:
         """Set ToMe for the stable diffusion model.
