@@ -43,6 +43,7 @@ class ControlStableDiffusion(StableDiffusion):
             module for diffusion scheduler in test stage (`self.infer`). If not
             passed, will use the same scheduler as `schedule`. Defaults to
             None.
+        dtype (str, optional): The dtype for the model. Defaults to 'fp16'.
         enable_xformers (bool, optional): Whether to use xformers.
             Defaults to True.
         data_preprocessor (dict, optional): The pre-process config of
@@ -60,15 +61,21 @@ class ControlStableDiffusion(StableDiffusion):
                  controlnet: ModelType,
                  scheduler: ModelType,
                  test_scheduler: Optional[ModelType] = None,
+                 dtype: str = 'fp32',
                  enable_xformers: bool = True,
                  tomesd_cfg: Optional[dict] = None,
                  data_preprocessor=dict(type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None):
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, enable_xformers, tomesd_cfg,
+                         test_scheduler, dtype, enable_xformers, tomesd_cfg,
                          data_preprocessor, init_cfg)
 
-        self.controlnet = build_module(controlnet, MODELS)
+        default_args = dict()
+        if dtype is not None:
+            default_args['dtype'] = dtype
+        self.controlnet = build_module(
+            controlnet, MODELS, default_args=default_args)
+        self.set_xformers(self.controlnet)
 
         self.vae.requires_grad_(False)
         self.text_encoder.requires_grad_(False)
