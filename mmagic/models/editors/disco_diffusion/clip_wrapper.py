@@ -185,7 +185,7 @@ class EmbeddingLayerWithFixes(nn.Module):
                 f'Found ids overlapping between embeddings \'{name1}\' '
                 f'and \'{name2}\'.')
 
-    def add_embeddings(self, embeddings: Optional[Union[dict, list[dict]]]):
+    def add_embeddings(self, embeddings: Optional[Union[dict, List[dict]]]):
         """Add external embeddings to this layer.
 
         Use case:
