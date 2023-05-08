@@ -11,8 +11,8 @@ from mmengine.model import BaseModel
 from mmengine.runner import set_random_seed
 from PIL import Image
 from tqdm.auto import tqdm
-from transformers import CLIPTokenizer
 
+from mmagic.models.archs import TokenizerWrapper
 from mmagic.models.utils import build_module, set_tomesd, set_xformers
 from mmagic.registry import DIFFUSION_SCHEDULERS, MODELS
 from mmagic.structures import DataSample
@@ -43,6 +43,8 @@ class StableDiffusion(BaseModel):
             module for diffusion scheduler in test stage (`self.infer`). If not
             passed, will use the same scheduler as `schedule`. Defaults to
             None.
+        dtype (str, optional): The dtype for the model This argument will not work
+            when dtype is defined for submodels. Defaults to None.
         enable_xformers (bool, optional): Whether to use xformers.
             Defaults to True.
         data_preprocessor (dict, optional): The pre-process config of
@@ -58,6 +60,7 @@ class StableDiffusion(BaseModel):
                  unet: ModelType,
                  scheduler: ModelType,
                  test_scheduler: Optional[ModelType] = None,
+                 dtype: Optional[str] = None,
                  enable_xformers: bool = True,
                  tomesd_cfg: Optional[dict] = None,
                  data_preprocessor: Optional[ModelType] = dict(
@@ -67,8 +70,12 @@ class StableDiffusion(BaseModel):
         # TODO: support `from_pretrained` for this class
         super().__init__(data_preprocessor, init_cfg)
 
-        self.vae = build_module(vae, MODELS)
-        self.unet = build_module(unet, MODELS)
+        default_args = dict()
+        if dtype is not None:
+            default_args['dtype'] = dtype
+        self.dtype = dtype
+        self.vae = build_module(vae, MODELS, default_args=default_args)
+        self.unet = build_module(unet, MODELS, default_args=default_args)
         self.scheduler = build_module(scheduler, DIFFUSION_SCHEDULERS)
         if test_scheduler is None:
             self.test_scheduler = deepcopy(self.scheduler)
@@ -76,13 +83,11 @@ class StableDiffusion(BaseModel):
             self.test_scheduler = build_module(test_scheduler,
                                                DIFFUSION_SCHEDULERS)
         self.text_encoder = build_module(text_encoder, MODELS)
-        if isinstance(tokenizer, nn.Module):
+        if not isinstance(tokenizer, str):
             self.tokenizer = tokenizer
         else:
             # NOTE: here we assume tokenizer is an string
-            # TODO: maybe support a tokenizer wrapper later
-            self.tokenizer = CLIPTokenizer.from_pretrained(
-                tokenizer, subfolder='tokenizer')
+            self.tokenizer = TokenizerWrapper(tokenizer, subfolder='tokenizer')
 
         self.unet_sample_size = self.unet.sample_size
         self.vae_scale_factor = 2**(len(self.vae.block_out_channels) - 1)
@@ -93,14 +98,17 @@ class StableDiffusion(BaseModel):
         self.tomesd_cfg = tomesd_cfg
         self.set_tomesd()
 
-    def set_xformers(self) -> nn.Module:
+    def set_xformers(self, module: Optional[nn.Module] = None) -> nn.Module:
         """Set xformers for the model.
 
         Returns:
             nn.Module: The model with xformers.
         """
         if self.enable_xformers:
-            set_xformers(self)
+            if module is None:
+                set_xformers(self)
+            else:
+                set_xformers(module)
 
     def set_tomesd(self) -> nn.Module:
         """Set ToMe for the stable diffusion model.
@@ -330,13 +338,15 @@ class StableDiffusion(BaseModel):
                 ' can only handle sequences up to'
                 f' {self.tokenizer.model_max_length} tokens: {removed_text}')
 
-        if hasattr(self.text_encoder.config, 'use_attention_mask'
-                   ) and self.text_encoder.config.use_attention_mask:
+        text_encoder = self.text_encoder.module if hasattr(
+            self.text_encoder, 'module') else self.text_encoder
+        if hasattr(text_encoder.config, 'use_attention_mask'
+                   ) and text_encoder.config.use_attention_mask:
             attention_mask = text_inputs.attention_mask.to(device)
         else:
             attention_mask = None
 
-        text_embeddings = self.text_encoder(
+        text_embeddings = text_encoder(
             text_input_ids.to(device),
             attention_mask=attention_mask,
         )
@@ -379,13 +389,13 @@ class StableDiffusion(BaseModel):
                 return_tensors='pt',
             )
 
-            if hasattr(self.text_encoder.config, 'use_attention_mask'
-                       ) and self.text_encoder.config.use_attention_mask:
+            if hasattr(text_encoder.config, 'use_attention_mask'
+                       ) and text_encoder.config.use_attention_mask:
                 attention_mask = uncond_input.attention_mask.to(device)
             else:
                 attention_mask = None
 
-            uncond_embeddings = self.text_encoder(
+            uncond_embeddings = text_encoder(
                 uncond_input.input_ids.to(device),
                 attention_mask=attention_mask,
             )
@@ -583,7 +593,6 @@ class StableDiffusion(BaseModel):
 
         optim_wrapper = optim_wrapper_dict['unet']
         with optim_wrapper.optim_context(self.unet):
-            # image = inputs['img']  # image for new concept
             image = inputs
             prompt = data_samples.prompt
             num_batches = image.shape[0]
