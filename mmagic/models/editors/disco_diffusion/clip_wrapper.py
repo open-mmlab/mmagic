@@ -114,14 +114,70 @@ class ClipWrapper(nn.Module):
 
         self.model.eval().requires_grad_(False)
 
+    def get_embedding_layer(self):
+        """Function to get embedding layer of the clip model.
+
+        Only support for CLIPTextModel currently.
+        """
+
+        if self.clip_type != 'huggingface':
+            print_log(
+                'Do not support \'get_embedding_layer\' for clip_type: '
+                f'\'{self.clip_type}\' currently.', 'current')
+            return None
+        if self.model.__class__.__name__ != 'CLIPTextModel':
+            print_log(
+                'Only support \'get_embedding_layer\' for '
+                'CLIPTextModel.', 'current')
+            return None
+
+        return self.model.text_model.embeddings.token_embedding
+
     def add_embedding(self, embeddings: Union[dict, List[dict]]):
         assert self.clip_type == 'huggingface', (
             'Only support add embedding for HuggingFace transformers.')
-        embedding_layer = self.model.embeddings
+        assert self.model.__class__.__name__ == 'CLIPTextModel', (
+            'Only support add embedding for \'CLIPTextModel\' (CLIP).')
+
+        embedding_layer = self.get_embedding_layer()
         if not isinstance(embedding_layer, EmbeddingLayerWithFixes):
             self.model.embeddings = EmbeddingLayerWithFixes(embedding_layer)
 
         self.model.embeddings.add_embedding(embeddings)
+
+    def set_only_embedding_trainable(self):
+        func_name = '\'set_only_embedding_trainable\''
+        assert self.clip_type == 'huggingface', (
+            f'Only support {func_name} for HuggingFace transformers.')
+        assert self.model.__class__.__name__ == 'CLIPTextModel', (
+            f'Only support {func_name} for \'CLIPTextModel\' (CLIP).')
+        self.model.requires_grad_(False)
+        embedding_layer = self.get_embedding_layer()
+        if isinstance(embedding_layer, EmbeddingLayerWithFixes):
+            embedding_layer.trainable_embeddings.requires_grad_(True)
+            print_log('Set only embedding trainable.', 'current')
+        else:
+            print_log(
+                'Do not found EmbeddingLayerWithFixes. '
+                f'{func_name} do nothing.', 'current')
+
+    def set_embedding_layer(self):
+        assert self.clip_type == 'huggingface', (
+            'Only support add embedding for HuggingFace transformers.')
+        assert self.model.__class__.__name__ == 'CLIPTextModel', (
+            'Only support add embedding for \'CLIPTextModel\' (CLIP).')
+        embedding_layer = self.get_embedding_layer()
+        if not isinstance(embedding_layer, EmbeddingLayerWithFixes):
+            self.model.text_model.embeddings.token_embedding = \
+                EmbeddingLayerWithFixes(embedding_layer)
+        print_log('Set embedding layer to EmbeddingLayerWithFixes', 'current')
+
+    def unset_embedding_layer(self):
+        wrapped_embedding_layer = self.model.embeddings
+        if isinstance(wrapped_embedding_layer, EmbeddingLayerWithFixes):
+            self.model.text_model.embeddings.token_embedding = \
+                wrapped_embedding_layer.wrapped
+        print_log('Unset embedding layer.', 'current')
 
     def forward(self, *args, **kwargs):
         """Forward function."""
@@ -148,14 +204,16 @@ class EmbeddingLayerWithFixes(nn.Module):
         self.wrapped = wrapped
         self.num_embeddings = wrapped.weight.shape[0]
 
-        if external_embeddings is None:
-            self.external_embeddings = []
-        elif isinstance(external_embeddings, dict):
-            self.external_embeddings = [external_embeddings]
-        else:
-            self.external_embeddings = external_embeddings
-        self.check_duplicate_names(self.external_embeddings)
-        self.check_ids_overlap(self.external_embeddings)
+        self.external_embeddings = []
+        if external_embeddings:
+            self.add_embeddings(external_embeddings)
+
+        self.trainable_embeddings = nn.ParameterDict()
+
+    @property
+    def weight(self):
+        """Get the weight of wrapped embedding layer."""
+        return self.wrapped.weight
 
     def check_duplicate_names(self, embeddings: List[dict]):
         """Check whether duplicate names exist in list of 'external
@@ -200,7 +258,8 @@ class EmbeddingLayerWithFixes(nn.Module):
         >>>     'name': 'ngapi',  # 'how much' in kiswahili
         >>>     'embedding': torch.ones(1, 15) * 4,
         >>>     'start': tokenizer.get_token_info('kwaheri')['start'],
-        >>>     'end': tokenizer.get_token_info('kwaheri')['end']
+        >>>     'end': tokenizer.get_token_info('kwaheri')['end'],
+        >>>     'trainable': False  # if True, will registry as a parameter
         >>> }
         >>> embedding_layer = nn.Embedding(10, 15)
         >>> embedding_layer_wrapper = EmbeddingLayerWithFixes(embedding_layer)
@@ -232,10 +291,27 @@ class EmbeddingLayerWithFixes(nn.Module):
         self.check_duplicate_names(self.external_embeddings)
         self.check_ids_overlap(self.external_embeddings)
 
+        # set for trainable
+        added_trainable_emb_info = []
+        for embedding in embeddings:
+            trainable = embedding.get('trainable', False)
+            if trainable:
+                name = embedding['name']
+                embedding['embedding'] = torch.nn.Parameter(
+                    embedding['embedding'])
+                self.trainable_embeddings[name] = embedding['embedding']
+                added_trainable_emb_info.append(name)
+
         added_emb_info = [emb['name'] for emb in embeddings]
         added_emb_info = ', '.join(added_emb_info)
         print_log(f'Successfully add external embeddings: {added_emb_info}.',
                   'current')
+
+        if added_trainable_emb_info:
+            added_trainable_emb_info = ', '.join(added_trainable_emb_info)
+            print_log(
+                'Successfully add trainable external embeddings: '
+                f'{added_trainable_emb_info}', 'current')
 
     def replace_input_ids(self, input_ids: torch.Tensor) -> torch.Tensor:
         """Replace external input ids to 0.
