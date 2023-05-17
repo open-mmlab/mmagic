@@ -70,9 +70,6 @@ samples = model.infer(
             classifier_scale=1.0,
             show_progress=True)['samples']
 
-for id in range(4):
-    save_image(samples[id], f"sample_g_{id}.png")
-
 # sampling without classifier guidance
 config = 'configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py'
 ckpt_path = 'https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth'  # noqa
@@ -84,13 +81,10 @@ model = MODELS.build(model_cfg).cuda().eval()
 samples = model.infer(
             init_image=None,
             batch_size=4,
-            num_inference_steps=25,
-            labels=333,
-            classifier_scale=1.0,
+            num_inference_steps=250,
+            labels=None,
+            classifier_scale=0.0,
             show_progress=True)['samples']
-
-for id in range(4):
-    save_image(samples[id], f"sample_{id}.png")
 ```
 
 **Test**
