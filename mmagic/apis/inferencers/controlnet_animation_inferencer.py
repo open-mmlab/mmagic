@@ -98,6 +98,7 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
                  strength=0.75,
                  num_inference_steps=20,
                  seed=1,
+                 output_fps=None,
                  **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
 
@@ -137,9 +138,15 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
         all_images = []
         if input_file_extension in VIDEO_EXTENSIONS:
             video_reader = mmcv.VideoReader(video)
+            input_fps = int(video_reader.fps)
+            if output_fps is None:
+                output_fps = input_fps
+            if output_fps > input_fps:
+                output_fps = input_fps
+            sample_rate = int(input_fps / output_fps)
 
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            video_writer = cv2.VideoWriter(save_path, fourcc, video_reader.fps,
+            video_writer = cv2.VideoWriter(save_path, fourcc, output_fps,
                                            (image_width, image_height))
             for frame in video_reader:
                 all_images.append(np.flip(frame, axis=2))
@@ -188,9 +195,13 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
 
         for ind in range(len(all_images)):
             if from_video:
+                if ind % sample_rate > 0:
+                    continue
                 image = PIL.Image.fromarray(all_images[ind])
             else:
                 image = load_image(all_images[ind])
+            print('processing frame ind ' + str(ind))
+
             image = image.resize((image_width, image_height))
             hed_image = self.hed(image, image_resolution=image_width)
 
