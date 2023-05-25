@@ -30,6 +30,10 @@ Table of contents:
 
 &#8195;      [2.2.9. Text-to-Image example](#229-text-to-image)
 
+&#8195;      [2.2.10. 3D-aware Generation example](#2210-3d-aware-generation)
+
+&#8195;      [2.2.11. Image Restoration example](#2211-image-restoration)
+
 [3. Other demos](#3-other-demos)
 
 ## 1. Download sample images or videos
@@ -214,10 +218,19 @@ python mmagic_inference_demo.py \
         --result-out-dir ../resources/output/text2image/demo_text2image_stable_diffusion_res.png
 ```
 
-#### 2.2.9 3D-aware Generation (EG3D)
+#### 2.2.10 3D-aware Generation
 
 ```shell
 python demo/mmagic_inference_demo.py \
     --model-name eg3d \
     --result-out-dir ../resources/output/eg3d-output
+```
+
+#### 2.2.11 Image Restoration
+
+```shell
+python mmagic_inference_demo.py \
+        --model-name nafnet \
+        --img ../resources/input/restoration/0901x2.png \
+        --result-out-dir ../resources/output/restoration/demo_restoration_nafnet_res.png
 ```

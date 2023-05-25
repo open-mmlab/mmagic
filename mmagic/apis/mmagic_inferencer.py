@@ -101,6 +101,11 @@ class MMagicInferencer:
         'basicvsr_pp',
         'real_basicvsr',
 
+        # image_restoration models
+        'nafnet',
+        'swinir',
+        'restormer',
+
         # text2image models
         'disco_diffusion',
         'stable_diffusion',
