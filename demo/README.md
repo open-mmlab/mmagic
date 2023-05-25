@@ -30,6 +30,8 @@ Table of contents:
 
 &#8195;      [2.2.9. Text-to-Image example](#229-text-to-image)
 
+&#8195;      [2.2.10. Image Restoration example](#2210-image-restoration)
+
 [3. Other demos](#3-other-demos)
 
 ## 1. Download sample images or videos
@@ -220,4 +222,13 @@ python mmagic_inference_demo.py \
 python demo/mmagic_inference_demo.py \
     --model-name eg3d \
     --result-out-dir ../resources/output/eg3d-output
+```
+
+#### 2.2.10 Image Restoration
+
+```shell
+python mmagic_inference_demo.py \
+        --model-name nafnet \
+        --img ../resources/input/restoration/0901x2.png \
+        --result-out-dir ../resources/output/restoration/demo_restoration_nafnet_res.png
 ```
