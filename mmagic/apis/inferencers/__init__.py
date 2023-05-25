@@ -86,8 +86,8 @@ class Inferencers:
             self.inferencer = ControlnetAnimationInferencer(config)
         elif self.task in [
                 'Image Restoration', 'Denoising, Deblurring, Deraining',
-                'Image Super-Resolution, Image denoising, JPEG compression \
-                    artifact reduction'
+                'Image Super-Resolution, Image denoising, JPEG compression '
+                'artifact reduction'
         ]:
             self.inferencer = ImageSuperResolutionInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
