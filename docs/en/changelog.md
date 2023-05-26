@@ -1,5 +1,28 @@
 # Changelog
 
+## v1.0.1 (26/05/2023)
+
+**New Features & Improvements**
+
+- Support tomesd for StableDiffusion speed-up. [#1801](https://github.com/open-mmlab/mmagic/pull/1801)
+- Support all inpainting/matting/image restoration models inferencer. [#1833](https://github.com/open-mmlab/mmagic/pull/1833), [#1873](https://github.com/open-mmlab/mmagic/pull/1873)
+- Support animated drawings at projects. [#1837](https://github.com/open-mmlab/mmagic/pull/1837)
+- Support Style-Based Global Appearance Flow for Virtual Try-On at projects. [#1786](https://github.com/open-mmlab/mmagic/pull/1786)
+- Support tokenizer wrapper and support EmbeddingLayerWithFixe. [#1846](https://github.com/open-mmlab/mmagic/pull/1846)
+
+**Bug Fixes**
+
+- Fix install requirements. [#1819](https://github.com/open-mmlab/mmagic/pull/1819)
+- Fix inst-colorization PackInputs. [#1828](https://github.com/open-mmlab/mmagic/pull/1828), [#1827](https://github.com/open-mmlab/mmagic/pull/1827)
+- Fix inferencer in pip-install. [#1875](https://github.com/open-mmlab/mmagic/pull/1875)
+
+**New Contributors**
+
+- @XDUWQ made their first contribution in https://github.com/open-mmlab/mmagic/pull/1830
+- @FerryHuang made their first contribution in https://github.com/open-mmlab/mmagic/pull/1786
+- @bobo0810 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1851
+- @jercylew made their first contribution in https://github.com/open-mmlab/mmagic/pull/1874
+
 ## v1.0.0 (25/04/2023)
 
 We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration).
