@@ -85,7 +85,7 @@ class StableDiffusion(BaseModel):
             ], ('dtype must be one of \'fp32\', \'fp16\', \'bf16\' or None.')
 
         self.vae = build_module(vae, MODELS, default_args=default_args)
-        self.unet = build_module(unet, MODELS, default_args=default_args)
+        self.unet = build_module(unet, MODELS)  # NOTE: initialize unet as fp32
         self.scheduler = build_module(scheduler, DIFFUSION_SCHEDULERS)
         if test_scheduler is None:
             self.test_scheduler = deepcopy(self.scheduler)
@@ -638,12 +638,10 @@ class StableDiffusion(BaseModel):
                                  f'{self.scheduler.config.prediction_type}')
 
             # NOTE: we train unet in fp32, convert to float manually
-            device_type = 'cuda' if torch.cuda.is_available() else 'cpu'
-            with torch.autocast(device_type=device_type, dtype=torch.float32):
-                model_output = self.unet(
-                    noisy_latents.float(),
-                    timesteps,
-                    encoder_hidden_states=encoder_hidden_states.float())
+            model_output = self.unet(
+                noisy_latents.float(),
+                timesteps,
+                encoder_hidden_states=encoder_hidden_states.float())
             model_pred = model_output['sample']
 
             loss_dict = dict()
