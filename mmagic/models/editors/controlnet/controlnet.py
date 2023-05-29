@@ -46,6 +46,9 @@ class ControlStableDiffusion(StableDiffusion):
         dtype (str, optional): The dtype for the model. Defaults to 'fp16'.
         enable_xformers (bool, optional): Whether to use xformers.
             Defaults to True.
+        noise_offset_weight (bool, optional): The weight of noise offset
+            introduced in https://www.crosslabs.org/blog/diffusion-with-offset-noise  # noqa
+            Defaults to 0.
         data_preprocessor (dict, optional): The pre-process config of
             :class:`BaseDataPreprocessor`. Defaults to
                 dict(type='DataPreprocessor').
@@ -63,12 +66,14 @@ class ControlStableDiffusion(StableDiffusion):
                  test_scheduler: Optional[ModelType] = None,
                  dtype: str = 'fp32',
                  enable_xformers: bool = True,
+                 noise_offset_weight: float = 0,
                  tomesd_cfg: Optional[dict] = None,
                  data_preprocessor=dict(type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None):
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, dtype, enable_xformers, tomesd_cfg,
-                         data_preprocessor, init_cfg)
+                         test_scheduler, dtype, enable_xformers,
+                         noise_offset_weight, tomesd_cfg, data_preprocessor,
+                         init_cfg)
 
         default_args = dict()
         if dtype is not None:
