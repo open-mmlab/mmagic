@@ -73,7 +73,17 @@ class StableDiffusion(BaseModel):
         default_args = dict()
         if dtype is not None:
             default_args['dtype'] = dtype
-        self.dtype = dtype
+
+        self.dtype = torch.float32
+        if dtype in ['float16', 'fp16', 'half']:
+            self.dtype = torch.float16
+        elif dtype == 'bf16':
+            self.dtype = torch.bfloat16
+        else:
+            assert dtype in [
+                'fp32', None
+            ], ('dtype must be one of \'fp32\', \'fp16\', \'bf16\' or None.')
+
         self.vae = build_module(vae, MODELS, default_args=default_args)
         self.unet = build_module(unet, MODELS, default_args=default_args)
         self.scheduler = build_module(scheduler, DIFFUSION_SCHEDULERS)
@@ -627,11 +637,13 @@ class StableDiffusion(BaseModel):
                 raise ValueError('Unknown prediction type '
                                  f'{self.scheduler.config.prediction_type}')
 
-            # NOTE: convert to float manually
-            model_output = self.unet(
-                noisy_latents.float(),
-                timesteps,
-                encoder_hidden_states=encoder_hidden_states.float())
+            # NOTE: we train unet in fp32, convert to float manually
+            device_type = 'cuda' if torch.cuda.is_available() else 'cpu'
+            with torch.autocast(device_type=device_type, dtype=torch.float32):
+                model_output = self.unet(
+                    noisy_latents.float(),
+                    timesteps,
+                    encoder_hidden_states=encoder_hidden_states.float())
             model_pred = model_output['sample']
 
             loss_dict = dict()

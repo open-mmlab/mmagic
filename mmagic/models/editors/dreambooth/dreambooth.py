@@ -287,10 +287,12 @@ class DreamBooth(StableDiffusion):
                                  f'{self.scheduler.config.prediction_type}')
 
             # NOTE: we train unet in fp32, convert to float manually
-            model_output = self.unet(
-                noisy_latents.float(),
-                timesteps,
-                encoder_hidden_states=encoder_hidden_states.float())
+            device_type = 'cuda' if torch.cuda.is_available() else 'cpu'
+            with torch.autocast(device_type=device_type, dtype=torch.float32):
+                model_output = self.unet(
+                    noisy_latents.float(),
+                    timesteps,
+                    encoder_hidden_states=encoder_hidden_states.float())
             model_pred = model_output['sample']
 
             loss_dict = dict()
