@@ -7,6 +7,7 @@ face-alignment
 facexlib
 lmdb
 lpips
+mediapipe
 mmcv>=2.0.0rc1
 mmengine
 numpy
@@ -19,3 +20,4 @@ opencv-python!=4.5.5.62,!=4.5.5.64
 Pillow
 resize_right
 tensorboard
+transformers>=4.27.4

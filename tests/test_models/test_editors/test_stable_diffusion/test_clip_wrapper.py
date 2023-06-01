@@ -48,7 +48,6 @@ def test_load_clip_submodels_transformers_none():
     )
     submodels = []
     with pytest.raises(ImportError):
-        # import pdb;pdb.set_trace();
         load_clip_submodels(init_cfg, submodels, True)
 
     sys.modules['transformers'] = transformer_location
