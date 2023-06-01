@@ -39,7 +39,6 @@ Diffusion models have recently been shown to generate high-quality synthetic ima
 | Glide  | 64x64            | [config](projects/glide/configs/glide_ddim-classifier-free_laion-64x64.py)  | [model](https://download.openmmlab.com/mmediting/glide/glide_laion-64x64-02afff47.pth)  |
 | Glide  | 64x64 -> 256x256 | [config](projects/glide/configs/glide_ddim-classifier-free_laion-64-256.py) | [model](https://download.openmmlab.com/mmediting/glide/glide_laion-64-256-02afff47.pth) |
 
-
 ## Quick Start
 
 You can run glide as follows:
