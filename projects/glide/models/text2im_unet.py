@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 from mmagic.models import DenoisingUnet
 from mmagic.registry import MODELS
@@ -9,15 +10,25 @@ from .glide_tokenizer import get_encoder
 
 @MODELS.register_module()
 class Text2ImUNet(DenoisingUnet):
-    """A UNetModel that conditions on text with an encoding transformer.
-    Expects an extra kwarg `tokens` of text.
+    """A UNetModel used in GLIDE that conditions on text with an encoding
+    transformer. Expects an extra kwarg `tokens` of text.
 
-    :param text_ctx: number of text tokens to expect.
-    :param xf_width: width of the transformer.
-    :param xf_layers: depth of the transformer.
-    :param xf_heads: heads in the transformer.
-    :param xf_final_ln: use a LayerNorm after the output layer.
-    :param tokenizer: the text tokenizer for sampling/vocab size.
+    Args:
+        text_ctx (int): Number of text tokens to expect.
+        xf_width (int): Width of the transformer.
+        xf_layers (int): Depth of the transformer.
+        xf_heads (int): Number of heads in the transformer.
+        xf_final_ln (bool): Whether to use a LayerNorm after the output layer.
+        tokenizer (callable, optional): Text tokenizer for sampling/vocab
+            size. Defaults to get_encoder().
+        cache_text_emb (bool, optional): Whether to cache text embeddings.
+            Defaults to False.
+        xf_ar (float, optional): Autoregressive weight for the transformer.
+            Defaults to 0.0.
+        xf_padding (bool, optional): Whether to use padding in the transformer.
+            Defaults to False.
+        share_unemb (bool, optional): Whether to share UNet embeddings.
+            Defaults to False.
     """
 
     def __init__(
@@ -45,8 +56,6 @@ class Text2ImUNet(DenoisingUnet):
             super().__init__(*args, **kwargs, encoder_channels=None)
         else:
             super().__init__(*args, **kwargs, encoder_channels=xf_width)
-
-        # del self.label_embedding
 
         if self.xf_width:
             self.transformer = Transformer(
@@ -76,18 +85,6 @@ class Text2ImUNet(DenoisingUnet):
 
         self.cache_text_emb = cache_text_emb
         self.cache = None
-
-    # def convert_to_fp16(self):
-    #     super().convert_to_fp16()
-    #     if self.xf_width:
-    #         self.transformer.apply(convert_module_to_f16)
-    #         self.transformer_proj.to(torch.float16)
-    #         self.token_embedding.to(torch.float16)
-    #         self.positional_embedding.to(torch.float16)
-    #         if self.xf_padding:
-    #             self.padding_embedding.to(torch.float16)
-    #         if self.xf_ar:
-    #             self.unemb.to(torch.float16)
 
     def get_text_emb(self, tokens, mask):
         assert tokens is not None
@@ -134,7 +131,6 @@ class Text2ImUNet(DenoisingUnet):
         elif torch.is_tensor(timesteps) and len(timesteps.shape) == 0:
             timesteps = timesteps[None].to(x.device)
 
-        # TODO not sure
         if timesteps.shape[0] != x.shape[0]:
             timesteps = timesteps.repeat(x.shape[0])
         emb = self.time_embedding(timesteps)
@@ -155,3 +151,29 @@ class Text2ImUNet(DenoisingUnet):
         h = h.type(x.dtype)
         h = self.out(h)
         return h
+
+
+@MODELS.register_module()
+class SuperResText2ImUNet(Text2ImUNet):
+    """A UNetModel that performs super-resolution.
+
+    Expects an extra kwarg `low_res` to condition on a low-resolution image.
+    """
+
+    def __init__(self, *args, **kwargs):
+        if 'in_channels' in kwargs:
+            kwargs = dict(kwargs)
+            kwargs['in_channels'] = kwargs['in_channels'] * 2
+        else:
+            args = list(args)
+            args[1] = args[1] * 2
+        super().__init__(*args, **kwargs)
+
+    def forward(self, x, timesteps, low_res=None, **kwargs):
+        _, _, new_height, new_width = x.shape
+        upsampled = F.interpolate(
+            low_res, (new_height, new_width),
+            mode='bilinear',
+            align_corners=False)
+        x = torch.cat([x, upsampled], dim=1)
+        return super().forward(x, timesteps, **kwargs)

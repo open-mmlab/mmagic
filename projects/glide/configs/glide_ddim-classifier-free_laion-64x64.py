@@ -28,7 +28,7 @@ model = dict(
         xf_padding=True,
     ),
     diffusion_scheduler=dict(
-        type='DDIMScheduler',
+        type='EditDDIMScheduler',
         variance_type='learned_range',
         beta_schedule='squaredcos_cap_v2'),
     use_fp16=False)
