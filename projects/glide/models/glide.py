@@ -12,9 +12,9 @@ from mmengine.optim import OptimWrapperDict
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from tqdm import tqdm
 
-from mmedit.registry import DIFFUSION_SCHEDULERS, MODELS
-from mmedit.structures import EditDataSample
-from mmedit.utils.typing import ForwardInputs, SampleList
+from mmagic.registry import DIFFUSION_SCHEDULERS, MODELS
+from mmagic.structures import DataSample
+from mmagic.utils.typing import ForwardInputs, SampleList
 
 ModelType = Union[Dict, nn.Module]
 
@@ -359,6 +359,7 @@ class Glide(BaseModel):
             batch_sample_list.append(gen_sample)
         return batch_sample_list
 
+    @torch.no_grad()
     def val_step(self, data: dict) -> SampleList:
         """Gets the generated image of given data.
 
@@ -377,6 +378,7 @@ class Glide(BaseModel):
         outputs = self(**data)
         return outputs
 
+    @torch.no_grad()
     def test_step(self, data: dict) -> SampleList:
         """Gets the generated image of given data. Same as :meth:`val_step`.
 
