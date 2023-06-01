@@ -69,7 +69,7 @@ class Glide(BaseModel):
                  classifier: Optional[dict] = None,
                  classifier_scale: float = 1.0,
                  data_preprocessor: Optional[ModelType] = dict(
-                     type='EditDataPreprocessor'),
+                     type='DataPreprocessor'),
                  pretrained_cfgs: Optional[dict] = None):
 
         super().__init__(data_preprocessor=data_preprocessor)
