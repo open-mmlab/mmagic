@@ -34,10 +34,10 @@ Diffusion models have recently been shown to generate high-quality synthetic ima
 
 **Laion**
 
-| Method | Resolution       | Config                                                                      | Weights                                                                                 |
-| ------ | ---------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Glide  | 64x64            | [config](projects/glide/configs/glide_ddim-classifier-free_laion-64x64.py)  | [model](https://download.openmmlab.com/mmediting/glide/glide_laion-64x64-02afff47.pth)  |
-| Glide  | 64x64 -> 256x256 | [config](projects/glide/configs/glide_ddim-classifier-free_laion-64-256.py) | [model](https://download.openmmlab.com/mmediting/glide/glide_laion-64-256-02afff47.pth) |
+| Method | Resolution       | Config                                                                      | Weights                                                                                    |
+| ------ | ---------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Glide  | 64x64            | [config](projects/glide/configs/glide_ddim-classifier-free_laion-64x64.py)  | [model](https://download.openmmlab.com/mmediting/glide/glide_laion-64x64-02afff47.pth)     |
+| Glide  | 64x64 -> 256x256 | [config](projects/glide/configs/glide_ddim-classifier-free_laion-64-256.py) | [model](https://download.openxlab.org.cn/models/mmediting/GLIDE/weight/glide_laion-64-256) |
 
 ## Quick Start
 
@@ -72,14 +72,14 @@ You can synthesis images with 256x256 resolution:
 ```python
 import torch
 from torchvision.utils import save_image
-from mmedit.apis import init_model
+from mmagic.apis import init_model
 from mmengine.registry import init_default_scope
 from projects.glide.models import *
 
-init_default_scope('mmedit')
+init_default_scope('mmagic')
 
 config = 'projects/glide/configs/glide_ddim-classifier-free_laion-64-256.py'
-ckpt = 'https://download.openmmlab.com/mmediting/glide/glide_laion-64-256-02afff47.pth'
+ckpt = 'https://download.openxlab.org.cn/models/mmediting/GLIDE/weight/glide_laion-64-256'
 model = init_model(config, ckpt).cuda().eval()
 prompt = "an oil painting of a corgi"
 
