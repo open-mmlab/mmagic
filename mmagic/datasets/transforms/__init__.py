@@ -1,4 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from mmcv import ToTensor
+
+from .albu_function import (AlbuCorruptFunction, AlbuNormalize,
+                             AlbuTransForms, PairedAlbuNormalize,
+                             PairedAlbuTransForms)
 from .alpha import GenerateSeg, GenerateSoftSeg
 from .aug_frames import MirrorSequence, TemporalReverse
 from .aug_pixel import (BinarizeImage, Clip, ColorJitter, RandomAffine,
@@ -46,5 +51,7 @@ __all__ = [
     'FormatTrimap', 'TransformTrimap', 'GenerateTrimap',
     'GenerateTrimapWithDistTransform', 'CompositeFg', 'RandomLoadResizeBg',
     'MergeFgAndBg', 'PerturbBg', 'RandomJitter', 'LoadPairedImageFromFile',
-    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'InstanceCrop'
+    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'InstanceCrop',
+    'AlbuCorruptFunction', 'AlbuNormalize', 'AlbuTransForms',
+    'PairedAlbuNormalize', 'PairedAlbuTransForms',
 ]

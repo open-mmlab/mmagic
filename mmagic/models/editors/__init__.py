@@ -9,6 +9,7 @@ from .controlnet import ControlStableDiffusion
 from .cyclegan import CycleGAN
 from .dcgan import DCGAN
 from .ddpm import DenoisingUnet
+from .deblurganv2 import (DeblurGanV2, FPNInception, FPNMobileNet, DoubleGan)
 from .deepfillv1 import (ContextualAttentionModule, ContextualAttentionNeck,
                          DeepFillDecoder, DeepFillEncoder, DeepFillRefiner,
                          DeepFillv1Discriminators, DeepFillv1Inpaintor)
@@ -88,5 +89,6 @@ __all__ = [
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DenoisingUnet',
     'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
-    'ControlStableDiffusion', 'DreamBooth'
+    'ControlStableDiffusion', 'DreamBooth', 'DeblurGanV2', 'FPNInception',
+    'FPNMobileNet', 'DoubleGan'
 ]

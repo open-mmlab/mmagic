@@ -1,0 +1,30 @@
+Collections:
+- Name: DEBLURGANV2
+  Paper:
+    Title: 'DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better'
+    URL: https://arxiv.org/abs/1908.03826
+  README: configs/deblurganv2/README.md
+  Task:
+  - Image Super-Resolution
+  Year: 2019
+Models:
+- Config: configs/deblurganv2/deblurganv2_fpn_inception.py
+  In Collection: DEBLURGANV2
+  Name: deblurganv2_fpn_inception
+  Results:
+  - Dataset: GOPRO
+    Metrics:
+      PSNR: 30.6428
+      SSIM: 0.8559
+    Task: Image Super-Resolution
+  Weights: https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth
+- Config: configs/deblurganv2/deblurganv2_fpn_mobilenet.py
+  In Collection: DEBLURGANV2
+  Name: deblurganv2_fpn_mobilenet
+  Results:
+  - Dataset: GOPRO
+    Metrics:
+      PSNR: 30.6428
+      SSIM: 0.8559
+    Task: Image Super-Resolution
+  Weights: https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth
