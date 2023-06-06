@@ -211,11 +211,46 @@ python mmagic_inference_demo.py \
 
 #### 2.2.9 Text-to-Image
 
+stable diffusion
+
 ```shell
 python mmagic_inference_demo.py \
         --model-name stable_diffusion \
         --text "A panda is having dinner at KFC" \
         --result-out-dir ../resources/output/text2image/demo_text2image_stable_diffusion_res.png
+```
+
+controlnet-canny
+
+```shell
+python mmagic_inference_demo.py \
+        --model-name controlnet \
+        --model-setting 1 \
+        --text "Room with blue walls and a yellow ceiling." \
+        --control 'https://user-images.githubusercontent.com/28132635/230297033-4f5c32df-365c-4cf4-8e4f-1b76a4cbb0b7.png' \
+        --result-out-dir demo_text2image_controlnet_canny_res.png
+```
+
+controlnet-pose
+
+```shell
+python mmagic_inference_demo.py \
+        --model-name controlnet \
+        --model-setting 2 \
+        --text "masterpiece, best quality, sky, black hair, skirt, sailor collar, looking at viewer, short hair, building, bangs, neckerchief, long sleeves, cloudy sky, power lines, shirt, cityscape, pleated skirt, scenery, blunt bangs, city, night, black sailor collar, closed mouth" \
+        --control 'https://user-images.githubusercontent.com/28132635/230380893-2eae68af-d610-4f7f-aa68-c2f22c2abf7e.png' \
+        --result-out-dir demo_text2image_controlnet_pose_res.png
+```
+
+controlnet-seg
+
+```shell
+python mmagic_inference_demo.py \
+        --model-name controlnet \
+        --model-setting 3 \
+        --text "black house, blue sky" \
+        --control 'https://github-production-user-asset-6210df.s3.amazonaws.com/49083766/243599897-553a4c46-c61d-46df-b820-59a49aaf6678.png' \
+        --result-out-dir demo_text2image_controlnet_seg_res.png
 ```
 
 #### 2.2.10 3D-aware Generation

@@ -8,6 +8,13 @@ Collections:
   - text2image
   Year: 2023
 Models:
+- Config: configs/controlnet/controlnet-1xb1-fill50k.py
+  In Collection: Control Net
+  Name: controlnet-1xb1-fill50k
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
 - Config: configs/controlnet/controlnet-canny.py
   In Collection: Control Net
   Name: controlnet-canny
@@ -16,14 +23,6 @@ Models:
     Metrics: {}
     Task: Text2Image
   Weights: https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_canny.pth
-- Config: configs/controlnet/controlnet-seg.py
-  In Collection: Control Net
-  Name: controlnet-seg
-  Results:
-  - Dataset: '-'
-    Metrics: {}
-    Task: Text2Image
-  Weights: https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_seg.pth
 - Config: configs/controlnet/controlnet-pose.py
   In Collection: Control Net
   Name: controlnet-pose
@@ -32,10 +31,11 @@ Models:
     Metrics: {}
     Task: Text2Image
   Weights: https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_openpose.pth
-- Config: configs/controlnet/controlnet-1xb1-fill50k.py
+- Config: configs/controlnet/controlnet-seg.py
   In Collection: Control Net
-  Name: controlnet-1xb1-fill50k
+  Name: controlnet-seg
   Results:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Image
+  Weights: https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_seg.pth
