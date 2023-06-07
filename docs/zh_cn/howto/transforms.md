@@ -540,6 +540,47 @@ pipeline = [
    </tbody>
 </table>
 
+### Albumentations
+
+MMagic 支持添加 [Albumentations](https://github.com/albumentations-team/albumentations) 库中的 transformation，请浏览 https://albumentations.ai/docs/getting_started/transforms_and_targets 获取更多 transformation 的信息。
+
+使用 Albumentations 的示例如下：
+
+```python
+albu_transforms = [
+   dict(
+         type='Resize',
+         height=100,
+         width=100,
+   ),
+   dict(
+         type='RandomFog',
+         p=0.5,
+   ),
+   dict(
+         type='RandomRain',
+         p=0.5
+   ),
+   dict(
+         type='RandomSnow',
+         p=0.5,
+   ),
+]
+pipeline = [
+   dict(
+         type='LoadImageFromFile',
+         key='img',
+         color_type='color',
+         channel_order='rgb',
+         imdecode_backend='cv2'),
+   dict(
+         type='Albumentations',
+         keys=['img'],
+         transforms=albu_transforms),
+   dict(type='PackInputs')
+]
+```
+
 ## 扩展和使用自定义流水线
 
 ### 一个简单的MyTransform示例
