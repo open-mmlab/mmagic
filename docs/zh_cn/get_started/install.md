@@ -8,7 +8,7 @@
     - [最佳实践](#最佳实践)
     - [自定义安装](#自定义安装)
       - [CUDA版本](#cuda版本)
-      - [不用MIM安装MMCV](#不用mim安装mmcv)
+      - [不使用MIM安装MMCV](#不使用mim安装mmcv)
       - [在Docker中使用MMagic](#在docker中使用mmagic)
       - [问题解决](#问题解决)
     - [使用多个MMagic版本开发](#使用多个mmagic版本开发)
@@ -22,7 +22,7 @@
 
 在本节中，我们将演示如何使用PyTorch准备环境。
 
-MMagic可以在Linux, Windows, 和macOS上运行。他要求：
+MMagic可以在Linux, Windows, 和macOS上运行。它要求：
 
 - Python >= 3.7
 - [PyTorch](https://pytorch.org/) >= 1.8
@@ -30,7 +30,7 @@ MMagic可以在Linux, Windows, 和macOS上运行。他要求：
 
 >
 
-如果您对PyTorch有经验并且已经安装了它，直接跳过这一部分，跳到[下一节](#最佳实践). 否则, 您可以按照以下步骤来准备环境。
+如果您对PyTorch有经验并且已经安装了它，直接跳过这一部分，跳到[下一节](#最佳实践)。否则, 您可以按照以下步骤来准备环境。
 
 **Step 0.**
 从[官方网站](https://docs.conda.io/en/latest/miniconda.html)下载和安装Miniconda.
@@ -44,7 +44,7 @@ conda activate mmagic
 ```
 
 **Step 2.**
-按照[官方说明](https://pytorch.org/get-started/locally/)安装PyTorch，e.g.
+按照[官方说明](https://pytorch.org/get-started/locally/)安装PyTorch，例如
 
 - 在GPU平台上：
 
@@ -60,14 +60,14 @@ conda activate mmagic
 
 ### 最佳实践
 
-**Step 0.** 使用[MIM](https://github.com/open-mmlab/mim)安装[MMCV](https://github.com/open-mmlab/mmcv).
+**Step 0.** 使用[MIM](https://github.com/open-mmlab/mim)安装[MMCV](https://github.com/open-mmlab/mmcv)。
 
 ```shell
 pip install -U openmim
 mim install 'mmcv>=2.0.0'
 ```
 
-**Step 1.** 安装[MMEngine](https://github.com/open-mmlab/mmengine).
+**Step 1.** 安装[MMEngine](https://github.com/open-mmlab/mmengine)。
 
 ```shell
 mim install 'mmengine'
@@ -85,7 +85,7 @@ pip install mmengine
 pip install git+https://github.com/open-mmlab/mmengine.git
 ```
 
-**Step 2.** 安装MMagic.
+**Step 2.** 安装MMagic。
 
 ```shell
 mim install 'mmagic'
@@ -97,7 +97,7 @@ mim install 'mmagic'
 pip install mmagic
 ```
 
-或者从源代码安装[MMagic](https://github.com/open-mmlab/mmagic).
+或者从源代码安装[MMagic](https://github.com/open-mmlab/mmagic)。
 
 ```shell
 git clone https://github.com/open-mmlab/mmagic.git
@@ -117,7 +117,7 @@ python -c "import mmagic; print(mmagic.__version__)"
 显示正确的版本号，则表示安装成功。
 
 ```{note}
-你可能想知道附加在`pip install`后面的`-e .`是什么意思.
+你可能想知道附加在`pip install`后面的`-e .`是什么意思。
 下面是说明:
 
 - `-e`表示[可编辑模式](https://pip.pypa.io/en/latest/cli/pip_install/#cmdoption-e).
@@ -144,16 +144,13 @@ python -c "import mmagic; print(mmagic.__version__)"
 
 **注意**
 如果遵循我们的最佳实践，安装CUDA runtime库就足够了，因为不会在本地编译CUDA代码。
-但是，如果您希望从源代码编译MMCV或开发其他CUDA算子，
-则需要从NVIDIA的[开发者网站](https://developer.nvidia.com/cuda-downloads)安装完整的CUDA工具包，其版本应与PyTorch的CUDA版本匹配。即，在 `conda install` 命令中指定的cudatoolkit版本。
+但是，如果您希望从源代码编译MMCV或开发其他CUDA算子，则需要从NVIDIA的[开发者网站](https://developer.nvidia.com/cuda-downloads)安装完整的CUDA工具包，其版本应与PyTorch的CUDA版本匹配。即，在 `conda install` 命令中指定的cudatoolkit版本。
 
-#### 不用MIM安装MMCV
+#### 不使用MIM安装MMCV
 
-MMCV包含c++和CUDA扩展，因此以一种复杂的方式依赖于PyTorch。
-MIM自动解决了这种依赖关系，并使安装更容易。然而，这并不是必须的。
+MMCV包含c++和CUDA扩展，因此以一种复杂的方式依赖于PyTorch。MIM自动解决了这种依赖关系，并使安装更容易。然而，这并不是必须的。
 
-要使用pip而不是MIM安装MMCV，请遵循[MMCV安装指南](https://mmcv.readthedocs.io/en/latest/get_started/installation.html)。
-这需要根据PyTorch版本及其CUDA版本手动指定find-url。
+要使用pip而不是MIM安装MMCV，请遵循[MMCV安装指南](https://mmcv.readthedocs.io/en/latest/get_started/installation.html)。这需要根据PyTorch版本及其CUDA版本手动指定find-url。
 
 例如，以下命令install mmcv-full是针对PyTorch 1.10.x和CUDA 11.3构建的。
 
@@ -163,7 +160,7 @@ pip install 'mmcv>=2.0.0' -f https://download.openmmlab.com/mmcv/dist/cu113/torc
 
 #### 在Docker中使用MMagic
 
-我们提供一个[Dockerfile](https://github.com/open-mmlab/mmagic/blob/main/docker/Dockerfile)来构建一个镜像。请确保您的[docker版本](https://docs.docker.com/engine/install/) >=19.03。
+我们提供一个[Dockerfile](https://github.com/open-mmlab/mmagic/blob/main/docker/Dockerfile)来构建一个镜像。请确保您的[docker版本](https://docs.docker.com/engine/install/)>=19.03。
 
 ```shell
 # 使用PyTorch 1.8, CUDA 11.1构建一个镜像
@@ -179,8 +176,7 @@ docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmagic/data mmagic
 
 #### 问题解决
 
-如果在安装过程中遇到问题，请先查看[FAQ](../faq.md)页面。
-如果找不到解决方案，可以在GitHub上[open an issue](https://github.com/open-mmlab/mmagic/issues/new/choose)。
+如果在安装过程中遇到问题，请先查看[FAQ](../faq.md)页面。如果找不到解决方案，可以在GitHub上[open an issue](https://github.com/open-mmlab/mmagic/issues/new/choose)。
 
 ### 使用多个MMagic版本开发
 
