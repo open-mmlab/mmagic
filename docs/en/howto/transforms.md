@@ -540,6 +540,47 @@ pipeline = [
    </tbody>
 </table>
 
+### Albumentations
+
+MMagic support adding custom transformations from [Albumentations](https://github.com/albumentations-team/albumentations) library. Please visit https://albumentations.ai/docs/getting_started/transforms_and_targets to get more information.
+
+An example of Albumentations's `transforms` is as followed:
+
+```python
+albu_transforms = [
+   dict(
+         type='Resize',
+         height=100,
+         width=100,
+   ),
+   dict(
+         type='RandomFog',
+         p=0.5,
+   ),
+   dict(
+         type='RandomRain',
+         p=0.5
+   ),
+   dict(
+         type='RandomSnow',
+         p=0.5,
+   ),
+]
+pipeline = [
+   dict(
+         type='LoadImageFromFile',
+         key='img',
+         color_type='color',
+         channel_order='rgb',
+         imdecode_backend='cv2'),
+   dict(
+         type='Albumentations',
+         keys=['img'],
+         transforms=albu_transforms),
+   dict(type='PackInputs')
+]
+```
+
 ## Extend and use custom pipelines
 
 ### A simple example of MyTransform
