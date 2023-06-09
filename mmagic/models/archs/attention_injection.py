@@ -23,7 +23,8 @@ class AttentionInjection(nn.Module):
     """
 
     def __init__(self,
-                 module: nn.Module):
+                 module: nn.Module,
+                 injection_weight=5):
         super().__init__()
         self.attention_status = AttentionStatus.READ
         self.style_cfgs = []
@@ -54,11 +55,9 @@ class AttentionInjection(nn.Module):
             self_attention_context = norm_hidden_states
             if attn_inject.attention_status == AttentionStatus.WRITE:
                 self.bank.append(self_attention_context.detach().clone())
-                # self.style_cfgs.append(attn_inject.current_style_fidelity)
             if attn_inject.attention_status == AttentionStatus.READ:
                 if len(self.bank) > 0:
-                    # style_cfg = sum(self.style_cfgs) / float(
-                    #     len(self.style_cfgs))
+                    self.bank = self.bank * injection_weight
                     attn_output = self.attn1(
                         norm_hidden_states,
                         encoder_hidden_states=torch.cat(
@@ -66,11 +65,7 @@ class AttentionInjection(nn.Module):
                     # attn_output = self.attn1(
                     #     norm_hidden_states,
                     #     encoder_hidden_states=self.bank[0])
-                    # self_attn1_c = self_attn1_uc.clone()
-                    # self_attn1 = style_cfg * self_attn1_c + \
-                    #     (1.0 - style_cfg) * self_attn1_uc
                 self.bank = []
-                self.style_cfgs = []
             if attn_output is None:
                 attn_output = self.attn1(norm_hidden_states)
 
@@ -121,7 +116,6 @@ class AttentionInjection(nn.Module):
             module.forward = transformer_forward_replacement.__get__(
                 module, BasicTransformerBlock)
             module.bank = []
-            module.style_cfgs = []
 
     def forward(self,
                 x: Tensor,

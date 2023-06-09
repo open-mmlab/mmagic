@@ -844,14 +844,11 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
                     torch.randn_like(ref_img_vae_latents),
                     t)
                 ref_img_vae_latents_model_input = torch.cat(
-                    [ref_img_vae_latents_t] * 2) if do_classifier_free_guidance \
-                    else ref_img_vae_latents_t
+                    [ref_img_vae_latents_t] * 2) if \
+                    do_classifier_free_guidance else ref_img_vae_latents_t
                 ref_img_vae_latents_model_input =  \
                     self.test_scheduler.scale_model_input(
                         ref_img_vae_latents_model_input, t)
-                # temp = self.decode_latents(ref_img_vae_latents_t)
-                # temp_img = self.output_to_pil(temp)
-                # temp_img[0].save('temp_' + str(t) + '.jpg')
 
             down_block_res_samples, mid_block_res_sample = self.controlnet(
                 latent_model_input,
