@@ -413,7 +413,7 @@ model = dict(
 最后，我们可以开始训练我们自己的模型:
 
 ```python
-python train.py configs/srcnn/srcnn_x4k915_g1_1000k_div2k.py
+python tools/train.py configs/srcnn/srcnn_x4k915_g1_1000k_div2k.py
 ```
 
 ## 一个DCGAN的例子
@@ -720,7 +720,7 @@ model = dict(
 最后，我们可以开始训练我们自己的模型:
 
 ```python
-python train.py configs/dcgan/dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
+python tools/train.py configs/dcgan/dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
 ```
 
 ## 参考文献

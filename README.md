@@ -122,12 +122,12 @@ Please refer to [migration documents](docs/en/migration/overview.md) to migrate 
 
 - [📖 Introduction](#-introduction)
 - [🙌 Contributing](#-contributing)
-- [🛠️ Installation](#%EF%B8%8F-installation)
+- [🛠️ Installation](#️-installation)
 - [📊 Model Zoo](#-model-zoo)
 - [🤝 Acknowledgement](#-acknowledgement)
-- [🖊️ Citation](#%EF%B8%8F-citation)
+- [🖊️ Citation](#️-citation)
 - [🎫 License](#-license)
-- [🏗️ ️OpenMMLab Family](#%EF%B8%8F-️openmmlab-family)
+- [🏗️ ️OpenMMLab Family](#️-️openmmlab-family)
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -371,7 +371,7 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
         <ul>
           <li><a href="configs/dim/README.md">DIM (CVPR'2017)</a></li>
           <li><a href="configs/indexnet/README.md">IndexNet (ICCV'2019)</a></li>
-          <li><a href="configs/mask2former">GCA (AAAI'2020)</a></li>
+          <li><a href="configs/gca/README.md">GCA (AAAI'2020)</a></li>
         </ul>
       </td>
       <td>
