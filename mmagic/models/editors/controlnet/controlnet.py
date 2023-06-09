@@ -19,6 +19,7 @@ from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 from ..stable_diffusion import StableDiffusion
 from .controlnet_utils import change_base_model
+from mmagic.models.archs import AttentionInjection
 
 ModelType = Union[Dict, nn.Module]
 
@@ -85,6 +86,8 @@ class ControlStableDiffusion(StableDiffusion):
         self.vae.requires_grad_(False)
         self.text_encoder.requires_grad_(False)
         self.unet.requires_grad_(False)
+
+        self.unet = AttentionInjection(self.unet)
 
     def init_weights(self):
         """Initialize the weights. Noted that this function will only be called
@@ -596,7 +599,8 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
                         dtype,
                         device,
                         generator=None,
-                        noise=None):
+                        noise=None,
+                        skip_add_noise=False):
         if not isinstance(image, (torch.Tensor, Image.Image, list)):
             raise ValueError(
                 f'`image` has to be of type `torch.Tensor`, '
@@ -687,7 +691,10 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
               generator: Optional[torch.Generator] = None,
               latents: Optional[torch.FloatTensor] = None,
               return_type='image',
-              show_progress=True):
+              show_progress=True,
+              reference_img: Union[torch.FloatTensor, Image.Image,
+                                   List[torch.FloatTensor],
+                                   List[Image.Image]] = None,):
         """Function invoked when calling the pipeline for generation.
 
         Args:
@@ -774,6 +781,10 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
         latent_image = self.prepare_latent_image(latent_image,
                                                  self.controlnet.dtype)
 
+        if reference_img is not None:
+            reference_img = self.prepare_latent_image(reference_img,
+                                                      self.controlnet.dtype)
+
         # 3. Encode input prompt
         text_embeddings = self._encode_prompt(prompt, device,
                                               num_images_per_prompt,
@@ -802,6 +813,17 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
             generator,
             noise=latents)
 
+        if reference_img is not None:
+            _, ref_img_vae_latents = self.prepare_latents(
+                reference_img,
+                latent_timestep,
+                batch_size,
+                num_images_per_prompt,
+                text_embeddings.dtype,
+                device,
+                generator,
+                noise=latents)
+
         # 6. Prepare extra step kwargs.
         extra_step_kwargs = self.prepare_test_scheduler_extra_step_kwargs(
             generator, eta)
@@ -815,6 +837,21 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
                 [latents] * 2) if do_classifier_free_guidance else latents
             latent_model_input = self.test_scheduler.scale_model_input(
                 latent_model_input, t)
+
+            if reference_img is not None:
+                ref_img_vae_latents_t = self.scheduler.add_noise(
+                    ref_img_vae_latents,
+                    torch.randn_like(ref_img_vae_latents),
+                    t)
+                ref_img_vae_latents_model_input = torch.cat(
+                    [ref_img_vae_latents_t] * 2) if do_classifier_free_guidance \
+                    else ref_img_vae_latents_t
+                ref_img_vae_latents_model_input =  \
+                    self.test_scheduler.scale_model_input(
+                        ref_img_vae_latents_model_input, t)
+                # temp = self.decode_latents(ref_img_vae_latents_t)
+                # temp_img = self.output_to_pil(temp)
+                # temp_img[0].save('temp_' + str(t) + '.jpg')
 
             down_block_res_samples, mid_block_res_sample = self.controlnet(
                 latent_model_input,
@@ -831,13 +868,23 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
             mid_block_res_sample *= controlnet_conditioning_scale
 
             # predict the noise residual
-            noise_pred = self.unet(
-                latent_model_input,
-                t,
-                encoder_hidden_states=text_embeddings,
-                down_block_additional_residuals=down_block_res_samples,
-                mid_block_additional_residual=mid_block_res_sample,
-            )['sample']
+            if reference_img is not None:
+                noise_pred = self.unet(
+                    latent_model_input,
+                    t,
+                    encoder_hidden_states=text_embeddings,
+                    down_block_additional_residuals=down_block_res_samples,
+                    mid_block_additional_residual=mid_block_res_sample,
+                    ref_x=ref_img_vae_latents_model_input
+                )['sample']
+            else:
+                noise_pred = self.unet(
+                    latent_model_input,
+                    t,
+                    encoder_hidden_states=text_embeddings,
+                    down_block_additional_residuals=down_block_res_samples,
+                    mid_block_additional_residual=mid_block_res_sample,
+                )['sample']
 
             # perform guidance
             if do_classifier_free_guidance:

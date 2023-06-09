@@ -25,6 +25,7 @@ from .tokenizer import TokenizerWrapper
 from .upsample import PixelShufflePack
 from .vgg import VGG16
 from .wrapper import DiffusersWrapper
+from .attention_injection import AttentionInjection
 
 
 def register_diffusers_models() -> List[str]:
@@ -74,5 +75,5 @@ __all__ = [
     'SimpleEncoderDecoder', 'MultiLayerDiscriminator', 'PatchDiscriminator',
     'VGG16', 'ResNet', 'AllGatherLayer', 'ResidualBlockNoBN', 'LoRAWrapper',
     'set_lora', 'set_lora_disable', 'set_lora_enable',
-    'set_only_lora_trainable', 'TokenizerWrapper'
+    'set_only_lora_trainable', 'TokenizerWrapper', 'AttentionInjection'
 ]
