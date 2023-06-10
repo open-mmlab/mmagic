@@ -5,7 +5,7 @@ MMagic provides 17 registry nodes to support using modules across projects.
 Each node is a child of the root registry in MMEngine.
 
 More details can be found at
-https://mmengine.readthedocs.io/en/latest/tutorials/registry.html.
+https://mmengine.readthedocs.io/en/latest/advanced_tutorials/registry.html.
 """
 
 from mmengine.registry import DATA_SAMPLERS as MMENGINE_DATA_SAMPLERS
