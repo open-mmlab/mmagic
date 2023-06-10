@@ -1,5 +1,6 @@
 av
 av==8.0.3; python_version < '3.7'
+Click  # required by mmagic/utils/io_utils.py
 controlnet_aux
 diffusers>=0.12.0
 einops
@@ -8,10 +9,9 @@ facexlib
 lmdb
 lpips
 mediapipe
-mmcv>=2.0.0rc1
-mmengine
 numpy
 opencv-python!=4.5.5.62,!=4.5.5.64
+pandas  # required by mmagic/models/editors/disco_diffusion/guider.py
 # MMCV depends opencv-python instead of headless, thus we install opencv-python
 # Due to a bug from upstream, we skip this two version
 # https://github.com/opencv/opencv-python/issues/602
