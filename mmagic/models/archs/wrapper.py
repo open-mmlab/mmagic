@@ -3,8 +3,18 @@ import os
 from logging import WARNING
 from typing import Any, List, Optional, Union
 
+import torch
 from mmengine import print_log
 from mmengine.model import BaseModule
+from torch import dtype as TORCH_DTYPE
+
+dtype_mapping = {
+    'float32': torch.float32,
+    'float16': torch.float16,
+    'fp32': torch.float32,
+    'fp16': torch.float16,
+    'half': torch.float16,
+}
 
 
 class DiffusersWrapper(BaseModule):
@@ -62,6 +72,7 @@ class DiffusersWrapper(BaseModule):
     def __init__(self,
                  from_pretrained: Optional[Union[str, os.PathLike]] = None,
                  from_config: Optional[Union[str, os.PathLike]] = None,
+                 dtype: Optional[Union[str, TORCH_DTYPE]] = None,
                  init_cfg: Union[dict, List[dict], None] = None,
                  *args,
                  **kwargs):
@@ -86,6 +97,15 @@ class DiffusersWrapper(BaseModule):
             self.model = module_cls(**_config)
         else:
             self.model = module_cls(*args, **kwargs)
+
+        if dtype is not None:
+            if isinstance(dtype, str):
+                assert dtype in dtype_mapping, (
+                    'Only support following dtype string: '
+                    f'{list(dtype_mapping.keys())}, but receive {dtype}.')
+                dtype = dtype_mapping[dtype]
+            self.model.to(dtype)
+            print_log(f'Set model dtype to \'{dtype}\'.', 'current')
 
         self.config = self.model.config
 

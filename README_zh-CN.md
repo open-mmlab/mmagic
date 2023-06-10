@@ -57,7 +57,13 @@
 
 ## 🚀 最新进展 <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### 最新的 [**MMagic v1.0.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.0) 版本已经在 \[25/04/2023\] 发布:
+### 最新的 [**MMagic v1.0.1**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.1) 版本已经在 \[26/05/2023\] 发布:
+
+- 支持 StableDiffusion tomesd 加速.
+- 支持所有 inpainting/matting/image restoration 模型的 inferencer.
+- 支持 animated drawings.
+- 支持 Style-Based Global Appearance Flow for Virtual Try-On.
+- 修复 pip install 时 inferencer 无法使用的问题.
 
 我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
 

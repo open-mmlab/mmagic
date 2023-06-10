@@ -3,10 +3,11 @@ av==8.0.3; python_version < '3.7'
 controlnet_aux
 diffusers>=0.12.0
 einops
-face-alignment
+face-alignment<=1.3.4
 facexlib
 lmdb
 lpips
+mediapipe
 mmcv>=2.0.0rc1
 mmengine
 numpy
