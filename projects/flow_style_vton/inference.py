@@ -11,7 +11,7 @@ from vton_dataset import AlignedDataset
 from mmagic.apis.inferencers.inference_functions import init_model
 from projects.flow_style_vton.models import FlowStyleVTON
 
-init_default_scope('mmedit')
+init_default_scope('mmagic')
 
 config = 'configs/flow_style_vton_PFAFN_epoch_101.py'
 
