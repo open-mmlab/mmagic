@@ -70,7 +70,8 @@ class ControlStableDiffusion(StableDiffusion):
                  noise_offset_weight: float = 0,
                  tomesd_cfg: Optional[dict] = None,
                  data_preprocessor=dict(type='DataPreprocessor'),
-                 init_cfg: Optional[dict] = None):
+                 init_cfg: Optional[dict] = None,
+                 attention_injection=False):
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
                          test_scheduler, dtype, enable_xformers,
                          noise_offset_weight, tomesd_cfg, data_preprocessor,
@@ -87,7 +88,8 @@ class ControlStableDiffusion(StableDiffusion):
         self.text_encoder.requires_grad_(False)
         self.unet.requires_grad_(False)
 
-        self.unet = AttentionInjection(self.unet)
+        if attention_injection:
+            self.unet = AttentionInjection(self.unet)
 
     def init_weights(self):
         """Initialize the weights. Noted that this function will only be called
@@ -599,8 +601,7 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
                         dtype,
                         device,
                         generator=None,
-                        noise=None,
-                        skip_add_noise=False):
+                        noise=None):
         if not isinstance(image, (torch.Tensor, Image.Image, list)):
             raise ValueError(
                 f'`image` has to be of type `torch.Tensor`, '

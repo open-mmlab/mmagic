@@ -77,8 +77,10 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
                  **kwargs) -> None:
         cfg = Config.fromfile(config)
         self.hed = HEDdetector.from_pretrained(cfg.control_detector)
-        self.pipe = MODELS.build(cfg.model).cuda()
         self.inference_method = cfg.inference_method
+        if self.inference_method == 'attention_injection':
+            cfg.model.attention_injection = True
+        self.pipe = MODELS.build(cfg.model).cuda()
 
         control_scheduler_cfg = dict(
             type=cfg.control_scheduler,
