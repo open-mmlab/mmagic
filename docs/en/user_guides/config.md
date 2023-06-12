@@ -481,7 +481,7 @@ custom_hooks = [
 ### Runtime config
 
 ```python
-default_scope = 'mmagic'  # The default registry scope to find modules. Refer to https://mmengine.readthedocs.io/en/latest/tutorials/registry.html
+default_scope = 'mmagic'  # The default registry scope to find modules. Refer to https://mmengine.readthedocs.io/en/latest/advanced_tutorials/registry.html
 
 # config for environment
 env_cfg = dict(
