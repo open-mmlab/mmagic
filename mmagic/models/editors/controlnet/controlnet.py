@@ -13,13 +13,13 @@ from PIL import Image
 from torch import Tensor
 from tqdm import tqdm
 
+from mmagic.models.archs import AttentionInjection
 from mmagic.models.utils import build_module
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 from ..stable_diffusion import StableDiffusion
 from .controlnet_utils import change_base_model
-from mmagic.models.archs import AttentionInjection
 
 ModelType = Union[Dict, nn.Module]
 
@@ -672,29 +672,30 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
         return image
 
     @torch.no_grad()
-    def infer(self,
-              prompt: Union[str, List[str]],
-              latent_image: Union[torch.FloatTensor, Image.Image,
-                                  List[torch.FloatTensor],
-                                  List[Image.Image]] = None,
-              latent_mask: torch.FloatTensor = None,
-              strength: float = 1.0,
-              height: Optional[int] = None,
-              width: Optional[int] = None,
-              control: Optional[Union[str, np.ndarray, torch.Tensor]] = None,
-              controlnet_conditioning_scale: float = 1.0,
-              num_inference_steps: int = 20,
-              guidance_scale: float = 7.5,
-              negative_prompt: Optional[Union[str, List[str]]] = None,
-              num_images_per_prompt: Optional[int] = 1,
-              eta: float = 0.0,
-              generator: Optional[torch.Generator] = None,
-              latents: Optional[torch.FloatTensor] = None,
-              return_type='image',
-              show_progress=True,
-              reference_img: Union[torch.FloatTensor, Image.Image,
-                                   List[torch.FloatTensor],
-                                   List[Image.Image]] = None,):
+    def infer(
+        self,
+        prompt: Union[str, List[str]],
+        latent_image: Union[torch.FloatTensor, Image.Image,
+                            List[torch.FloatTensor], List[Image.Image]] = None,
+        latent_mask: torch.FloatTensor = None,
+        strength: float = 1.0,
+        height: Optional[int] = None,
+        width: Optional[int] = None,
+        control: Optional[Union[str, np.ndarray, torch.Tensor]] = None,
+        controlnet_conditioning_scale: float = 1.0,
+        num_inference_steps: int = 20,
+        guidance_scale: float = 7.5,
+        negative_prompt: Optional[Union[str, List[str]]] = None,
+        num_images_per_prompt: Optional[int] = 1,
+        eta: float = 0.0,
+        generator: Optional[torch.Generator] = None,
+        latents: Optional[torch.FloatTensor] = None,
+        return_type='image',
+        show_progress=True,
+        reference_img: Union[torch.FloatTensor, Image.Image,
+                             List[torch.FloatTensor],
+                             List[Image.Image]] = None,
+    ):
         """Function invoked when calling the pipeline for generation.
 
         Args:
@@ -840,8 +841,7 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
 
             if reference_img is not None:
                 ref_img_vae_latents_t = self.scheduler.add_noise(
-                    ref_img_vae_latents,
-                    torch.randn_like(ref_img_vae_latents),
+                    ref_img_vae_latents, torch.randn_like(ref_img_vae_latents),
                     t)
                 ref_img_vae_latents_model_input = torch.cat(
                     [ref_img_vae_latents_t] * 2) if \
@@ -872,8 +872,7 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
                     encoder_hidden_states=text_embeddings,
                     down_block_additional_residuals=down_block_res_samples,
                     mid_block_additional_residual=mid_block_res_sample,
-                    ref_x=ref_img_vae_latents_model_input
-                )['sample']
+                    ref_x=ref_img_vae_latents_model_input)['sample']
             else:
                 noise_pred = self.unet(
                     latent_model_input,

@@ -207,14 +207,15 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
                 image = image.resize((image_width, image_height))
                 hed_image = self.hed(image, image_resolution=image_width)
 
-                concat_img = PIL.Image.new(
-                    'RGB', (image_width * 3, image_height))
+                concat_img = PIL.Image.new('RGB',
+                                           (image_width * 3, image_height))
                 concat_img.paste(last_result, (0, 0))
                 concat_img.paste(image, (image_width, 0))
                 concat_img.paste(first_result, (image_width * 2, 0))
 
-                concat_hed = PIL.Image.new(
-                    'RGB', (image_width * 3, image_height), 'black')
+                concat_hed = PIL.Image.new('RGB',
+                                           (image_width * 3, image_height),
+                                           'black')
                 concat_hed.paste(last_hed, (0, 0))
                 concat_hed.paste(hed_image, (image_width, 0))
                 concat_hed.paste(first_hed, (image_width * 2, 0))
@@ -225,7 +226,8 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
                     prompt=prompt,
                     negative_prompt=negative_prompt,
                     strength=strength,
-                    controlnet_conditioning_scale=controlnet_conditioning_scale,        # noqa
+                    controlnet_conditioning_scale=  # noqa
+                    controlnet_conditioning_scale,
                     num_inference_steps=num_inference_steps,
                     latents=init_noise_all_frame_cat,
                     latent_mask=latent_mask,
@@ -265,7 +267,8 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
                     prompt=prompt,
                     negative_prompt=negative_prompt,
                     strength=strength,
-                    controlnet_conditioning_scale=controlnet_conditioning_scale,        # noqa
+                    controlnet_conditioning_scale=  # noqa
+                    controlnet_conditioning_scale,
                     num_inference_steps=num_inference_steps,
                     latents=init_noise_all_frame)['samples'][0]
 
@@ -293,7 +296,8 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
                     prompt=prompt,
                     negative_prompt=negative_prompt,
                     strength=strength,
-                    controlnet_conditioning_scale=controlnet_conditioning_scale,        # noqa
+                    controlnet_conditioning_scale=  # noqa
+                    controlnet_conditioning_scale,
                     num_inference_steps=num_inference_steps,
                     latents=init_noise_all_frame,
                     reference_img=reference_img,

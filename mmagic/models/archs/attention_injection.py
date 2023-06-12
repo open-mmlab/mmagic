@@ -1,11 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from enum import Enum
+
 import torch
 import torch.nn as nn
-from torch import Tensor
-from enum import Enum
 from diffusers.models.attention import BasicTransformerBlock
+from torch import Tensor
 
-AttentionStatus = Enum('ATTENTION_STATUS', 'READ WRITE')
+AttentionStatus = Enum('ATTENTION_STATUS', 'READ WRITE DISABLE')
 
 
 def torch_dfs(model: torch.nn.Module):
@@ -22,9 +23,7 @@ class AttentionInjection(nn.Module):
         module (nn.Module): The module to be wrapped.
     """
 
-    def __init__(self,
-                 module: nn.Module,
-                 injection_weight=5):
+    def __init__(self, module: nn.Module, injection_weight=5):
         super().__init__()
         self.attention_status = AttentionStatus.READ
         self.style_cfgs = []
@@ -32,18 +31,19 @@ class AttentionInjection(nn.Module):
 
         attn_inject = self
 
-        def transformer_forward_replacement(self,
-                                            hidden_states,
-                                            encoder_hidden_states=None,
-                                            timestep=None,
-                                            attention_mask=None,
-                                            cross_attention_kwargs=None,
-                                            class_labels=None,
-                                            ):
+        def transformer_forward_replacement(
+            self,
+            hidden_states,
+            encoder_hidden_states=None,
+            timestep=None,
+            attention_mask=None,
+            cross_attention_kwargs=None,
+            class_labels=None,
+        ):
             if self.use_ada_layer_norm:
                 norm_hidden_states = self.norm1(hidden_states, timestep)
             elif self.use_ada_layer_norm_zero:
-                norm_hidden_states, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.norm1(      # noqa
+                norm_hidden_states, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.norm1(  # noqa
                     hidden_states,
                     timestep,
                     class_labels,
@@ -77,9 +77,8 @@ class AttentionInjection(nn.Module):
                 cross_attention_kwargs is not None else {}
             if self.attn2 is not None:
                 norm_hidden_states = (
-                    self.norm2(hidden_states, timestep) if
-                    self.use_ada_layer_norm else self.norm2(hidden_states)
-                )
+                    self.norm2(hidden_states, timestep)
+                    if self.use_ada_layer_norm else self.norm2(hidden_states))
 
                 # 2. Cross-Attention
                 attn_output = self.attn2(
@@ -108,8 +107,10 @@ class AttentionInjection(nn.Module):
 
         all_modules = torch_dfs(self.unet)
 
-        attn_modules = [module for module in all_modules
-                        if isinstance(module, BasicTransformerBlock)]
+        attn_modules = [
+            module for module in all_modules
+            if isinstance(module, BasicTransformerBlock)
+        ]
         for i, module in enumerate(attn_modules):
             if getattr(module, '_original_inner_forward', None) is None:
                 module._original_inner_forward = module.forward
@@ -138,14 +139,16 @@ class AttentionInjection(nn.Module):
                 ref_x,
                 t,
                 encoder_hidden_states=encoder_hidden_states,
-                down_block_additional_residuals=down_block_additional_residuals,  # noqa
+                down_block_additional_residuals=  # noqa
+                down_block_additional_residuals,
                 mid_block_additional_residual=mid_block_additional_residual)
         self.attention_status = AttentionStatus.READ
         output = self.unet(
             x,
             t,
             encoder_hidden_states=encoder_hidden_states,
-            down_block_additional_residuals=down_block_additional_residuals,  # noqa
+            down_block_additional_residuals=  # noqa
+            down_block_additional_residuals,
             mid_block_additional_residual=mid_block_additional_residual)
 
         return output

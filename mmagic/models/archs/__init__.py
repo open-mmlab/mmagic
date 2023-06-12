@@ -6,6 +6,7 @@ from typing import List
 from mmagic.utils import try_import
 from .all_gather_layer import AllGatherLayer
 from .aspp import ASPP
+from .attention_injection import AttentionInjection
 from .conv import *  # noqa: F401, F403
 from .downsample import pixel_unshuffle
 from .ensemble import SpatialTemporalEnsemble
@@ -25,7 +26,6 @@ from .tokenizer import TokenizerWrapper
 from .upsample import PixelShufflePack
 from .vgg import VGG16
 from .wrapper import DiffusersWrapper
-from .attention_injection import AttentionInjection
 
 
 def register_diffusers_models() -> List[str]:
