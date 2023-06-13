@@ -10,11 +10,14 @@
 
 <!-- [ABSTRACT] -->
 
-It is difficult to avoid video frame flickering when using stable diffusion to generate video frame by frame.
-Here we reproduce a method that effectively avoids video flickering, that is, using controlnet and multi-frame rendering.
-[ControlNet](https://github.com/lllyasviel/ControlNet) is a neural network structure to control diffusion models by adding extra conditions.
-[Multi-frame rendering](https://xanthius.itch.io/multi-frame-rendering-for-stablediffusion) is a community method to reduce flickering.
-We use controlnet with hed condition and stable diffusion img2img for multi-frame rendering.
+It is difficult to keep consistency and avoid video frame flickering when using stable diffusion to generate video frame by frame.
+Here we reproduce two methods that effectively avoid video flickering:
+
+1. Controlnet with multi-frame rendering.[ControlNet](https://github.com/lllyasviel/ControlNet) is a neural network structure to control diffusion models by adding extra conditions.
+   [Multi-frame rendering](https://xanthius.itch.io/multi-frame-rendering-for-stablediffusion) is a community method to reduce flickering.
+   We use controlnet with hed condition and stable diffusion img2img for multi-frame rendering.
+
+2. Controlnet with attention injection. Attention injection is widely used to generate the current frame from a reference image. There is an implementation in [sd-webui-controlnet](https://github.com/Mikubill/sd-webui-controlnet#reference-only-control) and we use some of their code to create the animation in this repo.
 
 ## Demos
 
