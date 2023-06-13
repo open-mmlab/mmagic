@@ -430,7 +430,7 @@ We also need to specify the training dataloader and testing dataloader according
 Finally we can start training our own model by：
 
 ```python
-python train.py configs/srcnn/srcnn_x4k915_g1_1000k_div2k.py
+python tools/train.py configs/srcnn/srcnn_x4k915_g1_1000k_div2k.py
 ```
 
 ## An example of DCGAN
@@ -738,7 +738,7 @@ We also need to specify the training dataloader and testing dataloader according
 Finally we can start training our own model by：
 
 ```python
-python train.py configs/dcgan/dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
+python tools/train.py configs/dcgan/dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
 ```
 
 ## References
