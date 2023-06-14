@@ -19,6 +19,7 @@ from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 from .inference_functions import calculate_grid_size
 
 imageio = try_import('imageio')
+imageio_ffmpeg = try_import('imageio-ffmpeg')
 
 
 class EG3DInferencer(BaseMMagicInferencer):
@@ -155,6 +156,9 @@ class EG3DInferencer(BaseMMagicInferencer):
         """
         if save_video:
             assert imageio is not None, (
+                'Please install imageio by \'pip install '
+                'imageio\' to save video.')
+            assert imageio_ffmpeg is not None, (
                 'Please install imageio-ffmpeg by \'pip install '
                 'imageio-ffmpeg\' to save video.')
 
