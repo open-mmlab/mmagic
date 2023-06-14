@@ -34,9 +34,10 @@ class AttentionInjection(nn.Module):
         def transformer_forward_replacement(
             self,
             hidden_states,
-            encoder_hidden_states=None,
-            timestep=None,
             attention_mask=None,
+            encoder_hidden_states=None,
+            encoder_attention_mask=None,
+            timestep=None,
             cross_attention_kwargs=None,
             class_labels=None,
         ):
@@ -84,7 +85,7 @@ class AttentionInjection(nn.Module):
                 attn_output = self.attn2(
                     norm_hidden_states,
                     encoder_hidden_states=encoder_hidden_states,
-                    attention_mask=attention_mask,
+                    attention_mask=encoder_attention_mask,
                     **cross_attention_kwargs,
                 )
                 hidden_states = attn_output + hidden_states
