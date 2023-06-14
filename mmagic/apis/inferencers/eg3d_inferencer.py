@@ -19,7 +19,7 @@ from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 from .inference_functions import calculate_grid_size
 
 imageio = try_import('imageio')
-imageio_ffmpeg = try_import('imageio-ffmpeg')
+imageio_ffmpeg = try_import('imageio_ffmpeg')
 
 
 class EG3DInferencer(BaseMMagicInferencer):
