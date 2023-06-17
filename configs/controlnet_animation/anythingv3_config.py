@@ -4,6 +4,9 @@ controlnet_hed_url = 'lllyasviel/sd-controlnet-hed'
 control_detector = 'lllyasviel/ControlNet'
 control_scheduler = 'UniPCMultistepScheduler'
 
+# method type : 'multi-frame rendering' or 'attention_injection'
+inference_method = 'attention_injection'
+
 model = dict(
     type='ControlStableDiffusionImg2Img',
     vae=dict(

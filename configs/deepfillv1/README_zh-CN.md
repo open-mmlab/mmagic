@@ -21,17 +21,17 @@
 
 <br/>
 
-**Places365-Challenge**
-
-|                       算法                        |  掩膜类型   | 分辨率  | 训练集容量 |    测试集     | l1 损失 |  PSNR  | SSIM  | GPU 信息 |                                         下载                                         |
-| :-----------------------------------------------: | :---------: | :-----: | :--------: | :-----------: | :-----: | :----: | :---: | :------: | :----------------------------------------------------------------------------------: |
-| [DeepFillv1](./deepfillv1_8xb2_places-256x256.py) | square bbox | 256x256 |   3500k    | Places365-val | 11.019  | 23.429 | 0.862 |    8     | [模型](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.log.json) |
-
 **CelebA-HQ**
 
 |                       算法                        |  掩膜类型   | 分辨率  | 训练集容量 |   测试集   | l1 损失 |  PSNR  | SSIM  | GPU 信息 |                                          下载                                           |
 | :-----------------------------------------------: | :---------: | :-----: | :--------: | :--------: | :-----: | :----: | :---: | :------: | :-------------------------------------------------------------------------------------: |
 | [DeepFillv1](./deepfillv1_4xb4_celeba-256x256.py) | square bbox | 256x256 |   1500k    | CelebA-val |  6.677  | 26.878 | 0.911 |    4     | [模型](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba_20200619-dd51a855.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba_20200619-dd51a855.log.json) |
+
+**Places365-Challenge**
+
+|                       算法                        |  掩膜类型   | 分辨率  | 训练集容量 |    测试集     | l1 损失 |  PSNR  | SSIM  | GPU 信息 |                                         下载                                         |
+| :-----------------------------------------------: | :---------: | :-----: | :--------: | :-----------: | :-----: | :----: | :---: | :------: | :----------------------------------------------------------------------------------: |
+| [DeepFillv1](./deepfillv1_8xb2_places-256x256.py) | square bbox | 256x256 |   3500k    | Places365-val | 11.019  | 23.429 | 0.862 |    8     | [模型](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth) \| [日志](https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.log.json) |
 
 ## 快速开始
 

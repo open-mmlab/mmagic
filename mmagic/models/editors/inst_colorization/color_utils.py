@@ -195,6 +195,8 @@ def get_colorization_data(data_raw, color_opt, num_points=None):
     Returns:
         results (dict): Output in add_color_patches_rand_gt
     """
+    if len(data_raw.shape) == 3:
+        data_raw = data_raw.unsqueeze(0)
     data = {}
     data_lab = rgb2lab(data_raw, color_opt)
     data['A'] = data_lab[:, [
