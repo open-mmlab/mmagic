@@ -14,7 +14,7 @@ test_pipeline = [
     dict(type='PackInputs')
 ]
 
-sidd_data_root = 'data/SIDD'
+sidd_data_root = 'data/SIDD/val/'
 sidd_dataloader = dict(
     num_workers=4,
     persistent_workers=False,
@@ -24,7 +24,8 @@ sidd_dataloader = dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='SIDD', task_name='denoising'),
         data_root=sidd_data_root,
-        data_prefix=dict(img='input', gt='groundtruth'),
+        data_prefix=dict(img='noisy', gt='gt'),
+        filename_tmpl=dict(gt='{}_GT', img='{}_NOISY'),
         pipeline=test_pipeline))
 sidd_evaluator = [
     dict(type='PSNR', prefix='SIDD'),

@@ -43,7 +43,7 @@ Models:
   In Collection: Restormer
   Name: restormer_official_gopro
   Results:
-  - Dataset: DatasetGoPro
+  - Dataset: GoPro
     Metrics:
       PSNR/SSIM (RGB):
         PSNR: 32.9295
