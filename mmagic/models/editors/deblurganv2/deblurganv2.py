@@ -172,12 +172,14 @@ class DeblurGanV2(BaseModel):
             return self.forward_tensor(inputs, data_samples, **kwargs)
 
         elif mode == 'predict':
-            h, w = inputs.shape[-2:]
+            # inputs = inputs[0]
+            # h, w = inputs.shape[-2:]
+            h, w = data_samples.ori_img_shape[0][0:2]
             #x = self._batch_to_array(inputs) * 255
             #x1, _ = self.normalize_fn(x, x)
             # inputs = inputs/2.0/255
-            normal_fn = T.Normalize(std=[0.5, 0.5, 0.5], mean=[0.5, 0.5, 0.5])
-            inputs = normal_fn(inputs)
+            # normal_fn = T.Normalize(std=[0.5, 0.5, 0.5], mean=[0.5, 0.5, 0.5])
+            # inputs = normal_fn(inputs)
             block_size = 32
             min_height = (h // block_size + 1) * block_size
             min_width = (w // block_size + 1) * block_size
@@ -186,7 +188,7 @@ class DeblurGanV2(BaseModel):
             # (inputs, mask), h, w = self._preprocess(inputs)
             predictions = self.forward_inference(inputs, data_samples,
                                                  **kwargs)
-            predictions.pred_img = predictions.pred_img[:, :, :h, :w]
+            predictions.pred_img = predictions.pred_img[:, :, :h, :w]*255
             predictions = self.convert_to_datasample(predictions, data_samples,
                                                      inputs)
             return predictions

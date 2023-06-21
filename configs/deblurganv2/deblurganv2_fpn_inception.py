@@ -20,10 +20,15 @@ model = dict(
     ),
     pixel_loss='perceptual',
     disc_loss='wgan-gp',
+    # data_preprocessor=dict(
+    #     type='DataPreprocessor',
+    #     mean=[0, 0, 0],
+    #     std=[255, 255, 255],
+    # )
     data_preprocessor=dict(
         type='DataPreprocessor',
-        mean=[0.5, 0.5, 0.5],
-        std=[255, 255, 255],
+        mean=[0]*3,
+        std=[1]*3,
     )
 )
 
@@ -72,6 +77,7 @@ train_pipeline = [
 val_pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
     dict(type='LoadImageFromFile', key='gt', channel_order='rgb'),
+    dict(type='PairedAlbuNormalize',lq_key='img',gt_key='gt',std=[0.5]*3,mean=[0.5]*3,max_pixel_value=255.0),
     dict(type='PackInputs')
 ]
 
@@ -79,6 +85,7 @@ test_pipeline = val_pipeline
 
 data_root = 'G:/github/DeblurGANv2/data/gopro'
 train_dataloader = dict(
+    batch_size=1000,
     num_workers=4,
     persistent_workers=False,
     sampler=dict(type='DefaultSampler', shuffle=False),
@@ -113,7 +120,7 @@ val_evaluator = dict(
     ])
 
 train_cfg = dict(
-    type='IterBasedTrainLoop', max_iters=10000, val_interval=100)
+    type='EpochBasedTrainLoop', max_iters=10, val_interval=1000)
 val_cfg = dict(type='MultiValLoop')
 test_cfg = dict(type='MultiValLoop')
 test_evaluator = val_evaluator
@@ -123,16 +130,16 @@ optim_wrapper = dict(
     constructor='MultiOptimWrapperConstructor',
     generator=dict(
         type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=0.0002, betas=(0.5, 0.999))),
+        optimizer=dict(type='Adam', lr=0.01, betas=(0.5, 0.999))),
     discriminator=dict(
         type='OptimWrapper',
-        optimizer=dict(type='Adam', lr=0.0002, betas=(0.5, 0.999))),
+        optimizer=dict(type='Adam', lr=0.01, betas=(0.5, 0.999))),
 )
 
 # learning policy
 param_scheduler = dict(
     type='LinearLrInterval',
-    interval=100,
+    interval=1000,
     by_epoch=False,
     start_factor=0.0002,
     end_factor=0,
@@ -142,7 +149,7 @@ param_scheduler = dict(
 default_hooks = dict(
     checkpoint=dict(
         type='CheckpointHook',
-        interval=10000,
+        interval=1000,
         save_optimizer=True,
         by_epoch=False,
         out_dir=save_dir,

@@ -135,9 +135,13 @@ class PairedAlbuNormalize(BaseTransform):
         self.normalize = albu.Compose([normalize], additional_targets={'target': 'image'})
 
     def transform(self, results):
-        r = self.normalize(image=results[self.lq_key], target=results[self.gt_key])
+        if self.gt_key not in results.keys():
+            r = self.normalize(image=results[self.lq_key])
+        else:
+            r = self.normalize(image=results[self.lq_key], target=results[self.gt_key])
+            results[self.gt_key] = r['target']
         results[self.lq_key] = r['image']
-        results[self.gt_key] = r['target']
+
         return results
 
     def __repr__(self):
