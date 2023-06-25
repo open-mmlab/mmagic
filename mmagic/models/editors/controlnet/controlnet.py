@@ -80,8 +80,10 @@ class ControlStableDiffusion(StableDiffusion):
         default_args = dict()
         if dtype is not None:
             default_args['dtype'] = dtype
-        self.controlnet = build_module(
-            controlnet, MODELS, default_args=default_args)
+
+        # NOTE: initialize controlnet as fp32
+        self.controlnet = build_module(controlnet, MODELS)
+        self._controlnet_ori_dtype = next(self.controlnet.parameters()).dtype
         self.set_xformers(self.controlnet)
 
         self.vae.requires_grad_(False)
@@ -366,6 +368,25 @@ class ControlStableDiffusion(StableDiffusion):
 
         return image
 
+    def train(self, mode: bool = True):
+        """Set train/eval mode.
+
+        Args:
+            mode (bool, optional): Whether set train mode. Defaults to True.
+        """
+        if mode:
+            self.controlnet.to(self._controlnet_ori_dtype)
+            print_log(
+                'Set ControlNetModel dtype to '
+                f'\'{self._controlnet_ori_dtype}\' in the train mode.',
+                'current')
+        else:
+            self.controlnet.to(self.dtype)
+            print_log(
+                f'Set ControlNetModel dtype to \'{self.dtype}\' '
+                'in the eval mode.', 'current')
+        return super().train(mode)
+
     @torch.no_grad()
     def infer(self,
               prompt: Union[str, List[str]],
@@ -448,6 +469,8 @@ class ControlStableDiffusion(StableDiffusion):
         # corresponds to doing no classifier free guidance.
         do_classifier_free_guidance = guidance_scale > 1.0
 
+        img_dtype = self.vae.module.dtype if hasattr(self.vae, 'module') \
+            else self.vae.dtype
         if is_model_wrapper(self.controlnet):
             control_dtype = self.controlnet.module.dtype
         else:
@@ -500,6 +523,9 @@ class ControlStableDiffusion(StableDiffusion):
             latent_model_input = self.test_scheduler.scale_model_input(
                 latent_model_input, t)
 
+            latent_model_input = latent_model_input.to(control_dtype)
+            text_embeddings = text_embeddings.to(control_dtype)
+
             down_block_res_samples, mid_block_res_sample = self.controlnet(
                 latent_model_input,
                 t,
@@ -534,7 +560,7 @@ class ControlStableDiffusion(StableDiffusion):
                     noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
 
         # 8. Post-processing
-        image = self.decode_latents(latents)
+        image = self.decode_latents(latents.to(img_dtype))
 
         if do_classifier_free_guidance:
             controls = torch.split(controls, controls.shape[0] // 2, dim=0)[0]

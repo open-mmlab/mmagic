@@ -6,6 +6,7 @@ from typing import Dict, List, Optional, Union
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine import print_log
 from mmengine.logging import MMLogger
 from mmengine.model import BaseModel
 from mmengine.runner import set_random_seed
@@ -90,6 +91,7 @@ class StableDiffusion(BaseModel):
 
         self.vae = build_module(vae, MODELS, default_args=default_args)
         self.unet = build_module(unet, MODELS)  # NOTE: initialize unet as fp32
+        self._unet_ori_dtype = next(self.unet.parameters()).dtype
         self.scheduler = build_module(scheduler, DIFFUSION_SCHEDULERS)
         if test_scheduler is None:
             self.test_scheduler = deepcopy(self.scheduler)
@@ -139,6 +141,23 @@ class StableDiffusion(BaseModel):
     @property
     def device(self):
         return next(self.parameters()).device
+
+    def train(self, mode: bool = True):
+        """Set train/eval mode.
+
+        Args:
+            mode (bool, optional): Whether set train mode. Defaults to True.
+        """
+        if mode:
+            self.unet.to(self._unet_ori_dtype)
+            print_log(
+                f'Set UNet dtype to \'{self._unet_ori_dtype}\' '
+                'in the train mode.', 'current')
+        else:
+            self.unet.to(self.dtype)
+            print_log(f'Set UNet dtype to \'{self.dtype}\' in the eval mode.',
+                      'current')
+        return super().train(mode)
 
     @torch.no_grad()
     def infer(self,
