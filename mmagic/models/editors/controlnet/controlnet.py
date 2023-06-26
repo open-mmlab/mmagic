@@ -83,7 +83,6 @@ class ControlStableDiffusion(StableDiffusion):
 
         # NOTE: initialize controlnet as fp32
         self.controlnet = build_module(controlnet, MODELS)
-        self._controlnet_ori_dtype = next(self.controlnet.parameters()).dtype
         self.set_xformers(self.controlnet)
 
         self.vae.requires_grad_(False)
@@ -203,6 +202,7 @@ class ControlStableDiffusion(StableDiffusion):
 
             num_batches = target.shape[0]
 
+            target = target.to(self.dtype)
             latents = self.vae.encode(target).latent_dist.sample()
             latents = latents * self.vae.config.scaling_factor
 
@@ -233,19 +233,20 @@ class ControlStableDiffusion(StableDiffusion):
                                  f'{self.scheduler.config.prediction_type}')
 
             # forward control
+            # NOTE: we train controlnet in fp32, convert to float manually
             down_block_res_samples, mid_block_res_sample = self.controlnet(
-                noisy_latents,
+                noisy_latents.float(),
                 timesteps,
-                encoder_hidden_states=encoder_hidden_states,
-                controlnet_cond=control,
+                encoder_hidden_states=encoder_hidden_states.float(),
+                controlnet_cond=control.float(),
                 return_dict=False,
             )
-
             # Predict the noise residual and compute loss
+            # NOTE: we train unet in fp32, convert to float manually
             model_output = self.unet(
-                noisy_latents,
+                noisy_latents.float(),
                 timesteps,
-                encoder_hidden_states=encoder_hidden_states,
+                encoder_hidden_states=encoder_hidden_states.float(),
                 down_block_additional_residuals=down_block_res_samples,
                 mid_block_additional_residual=mid_block_res_sample)
             model_pred = model_output['sample']
@@ -270,10 +271,19 @@ class ControlStableDiffusion(StableDiffusion):
         data = self.data_preprocessor(data)
         prompt = data['data_samples'].prompt
         control = data['inputs']['source']
+
+        unet_dtype = next(self.unet.parameters()).dtype
+        self.unet.to(self.dtype)
+        controlnet_dtype = next(self.controlnet.parameters()).dtype
+        self.controlnet.to(self.dtype)
+
         output = self.infer(
             prompt, control=((control + 1) / 2), return_type='tensor')
-
         samples = output['samples']
+
+        self.unet.to(unet_dtype)
+        self.controlnet.to(controlnet_dtype)
+
         samples = self.data_preprocessor.destruct(
             samples, data['data_samples'], key='target')
         control = self.data_preprocessor.destruct(
@@ -300,10 +310,19 @@ class ControlStableDiffusion(StableDiffusion):
         data = self.data_preprocessor(data)
         prompt = data['data_samples'].prompt
         control = data['inputs']['source']
+
+        unet_dtype = next(self.unet.parameters()).dtype
+        self.unet.to(self.dtype)
+        controlnet_dtype = next(self.controlnet.parameters()).dtype
+        self.controlnet.to(self.dtype)
+
         output = self.infer(
             prompt, control=((control + 1) / 2), return_type='tensor')
-
         samples = output['samples']
+
+        self.unet.to(unet_dtype)
+        self.controlnet.to(controlnet_dtype)
+
         samples = self.data_preprocessor.destruct(
             samples, data['data_samples'], key='target')
         control = self.data_preprocessor.destruct(
@@ -367,25 +386,6 @@ class ControlStableDiffusion(StableDiffusion):
         image = image.to(device=device, dtype=dtype)
 
         return image
-
-    def train(self, mode: bool = True):
-        """Set train/eval mode.
-
-        Args:
-            mode (bool, optional): Whether set train mode. Defaults to True.
-        """
-        if mode:
-            self.controlnet.to(self._controlnet_ori_dtype)
-            print_log(
-                'Set ControlNetModel dtype to '
-                f'\'{self._controlnet_ori_dtype}\' in the train mode.',
-                'current')
-        else:
-            self.controlnet.to(self.dtype)
-            print_log(
-                f'Set ControlNetModel dtype to \'{self.dtype}\' '
-                'in the eval mode.', 'current')
-        return super().train(mode)
 
     @torch.no_grad()
     def infer(self,
