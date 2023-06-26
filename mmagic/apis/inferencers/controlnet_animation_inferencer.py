@@ -80,7 +80,7 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
         self.inference_method = cfg.inference_method
         if self.inference_method == 'attention_injection':
             cfg.model.attention_injection = True
-        self.pipe = MODELS.build(cfg.model).cuda()
+        self.pipe = MODELS.build(cfg.model).cuda().eval()
 
         control_scheduler_cfg = dict(
             type=cfg.control_scheduler,
