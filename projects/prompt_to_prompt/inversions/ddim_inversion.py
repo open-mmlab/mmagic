@@ -37,7 +37,7 @@ class DDIMInversion:
         self.num_ddim_steps = kwargs.pop('num_ddim_steps', 50)
         self.guidance_scale = kwargs.pop('guidance_scale', 7.5)
         self.tokenizer = self.model.tokenizer
-        self.model.schdueler = scheduler
+        self.model.scheduler = scheduler
         self.model.scheduler.set_timesteps(self.num_ddim_steps)
         self.prompt = None
         self.context = None
