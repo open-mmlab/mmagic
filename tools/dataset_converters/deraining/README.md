@@ -36,7 +36,4 @@ mmagic
 |   ├── Test2800
 |   |   ├── input
 |   |   ├── target
-|   ├── Test100
-|   |   ├── input
-|   |   ├── target
 ```
