@@ -191,14 +191,8 @@ class DreamBooth(StableDiffusion):
             data_samples.split() * len(prompt)
             data_samples = DataSample.stack(data_samples.split() * len(prompt))
 
-        unet_dtype = next(self.unet.parameters()).dtype
-        self.unet.to(self.dtype)
-
         output = self.infer(prompt, return_type='tensor')
         samples = output['samples']
-
-        self.unet.to(unet_dtype)
-
         samples = self.data_preprocessor.destruct(samples, data_samples)
 
         out_data_sample = DataSample(fake_img=samples, prompt=prompt)
@@ -226,14 +220,8 @@ class DreamBooth(StableDiffusion):
             # construct a fake data_sample for destruct
             data_samples = DataSample.stack(data['data_samples'] * len(prompt))
 
-        unet_dtype = next(self.unet.parameters()).dtype
-        self.unet.to(self.dtype)
-
         output = self.infer(prompt, return_type='tensor')
         samples = output['samples']
-
-        self.unet.to(unet_dtype)
-
         samples = self.data_preprocessor.destruct(samples, data_samples)
 
         out_data_sample = DataSample(fake_img=samples, prompt=prompt)

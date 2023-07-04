@@ -39,7 +39,7 @@ def export_images(args):
             noisy_patch = torch.clamp(noisy_patch, 0,
                                       1).detach().permute(0, 2, 3,
                                                           1).squeeze(0)
-            save_path = osp.join(noisy_dir, '%04d_%02d.png' % (i + 1, k + 1))
+            save_path = osp.join(noisy_dir, f'val_{str(i*32+k)}_NOISY.png')
             cv2.imwrite(
                 save_path,
                 cv2.cvtColor(img_as_ubyte(noisy_patch), cv2.COLOR_RGB2BGR))
@@ -52,7 +52,7 @@ def export_images(args):
                 gt_images[i, k, :, :, :]).unsqueeze(0).permute(0, 3, 1, 2)
             gt_patch = torch.clamp(gt_patch, 0,
                                    1).detach().permute(0, 2, 3, 1).squeeze(0)
-            save_path = osp.join(gt_dir, '%04d_%02d.png' % (i + 1, k + 1))
+            save_path = osp.join(gt_dir, f'val_{str(i*32+k)}_GT.png')
             cv2.imwrite(
                 save_path,
                 cv2.cvtColor(img_as_ubyte(gt_patch), cv2.COLOR_RGB2BGR))

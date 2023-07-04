@@ -25,6 +25,4 @@ mmagic
 ├── configs
 ├── data
 |   ├── Classic5
-|   |   ├── input
-|   |   ├── target
 ```
