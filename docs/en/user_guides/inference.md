@@ -26,8 +26,8 @@ In this section, we will specify how to play with our pre-trained models.
 - [Tutorial 3: Inference with Pre-trained Models](#tutorial-3-inference-with-pre-trained-models)
   - [Prepare some images or videos for inference](#Prepare-some-images-or-videos-for-inference)
   - [Generative Models](#Generative-Models)
-    - [Unconditional Generative Adversarial Networks (GANs)](#Unconditional-Generative-Adversarial-Networks-(GANs))
-    - [Conditional Generative Adversarial Networks (GANs)](#Conditional-Generative-Adversarial-Networks-(GANs))
+    - [Unconditional Generative Adversarial Networks (GANs)](<#Unconditional-Generative-Adversarial-Networks-(GANs)>)
+    - [Conditional Generative Adversarial Networks (GANs)](<#Conditional-Generative-Adversarial-Networks-(GANs)>)
     - [Diffusion Models](#Diffusion-Models)
   - [Applications](#Applications)
     - [Text-to-Image](#Text-to-Image)
@@ -47,13 +47,14 @@ In this section, we will specify how to play with our pre-trained models.
 Please refer to our [tutorials](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_tutorial.ipynb) for details.
 
 ## Generative Models
+
 ### Unconditional Generative Adversarial Networks (GANs)
 
-  MMagic provides high-level APIs for sampling images with unconditional GANs. Unconditional GAN models do not need input, and output a image. We take 'styleganv1' as an example.
+MMagic provides high-level APIs for sampling images with unconditional GANs. Unconditional GAN models do not need input, and output a image. We take 'styleganv1' as an example.
 
 ```python
 import mmcv
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from mmagic.apis import MMagicInferencer
 
 # Create a MMagicInferencer instance and infer
@@ -76,7 +77,7 @@ MMagic provides high-level APIs for sampling images with conditional GANs. Condi
 
 ```python
 import mmcv
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from mmagic.apis import MMagicInferencer
 
 # Create a MMagicInferencer instance and infer
@@ -101,7 +102,7 @@ MMagic provides high-level APIs for sampling images with diffusion models. f
 
 ```python
 import mmcv
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from mmagic.apis import MMagicInferencer
 
 # Create a MMagicInferencer instance and infer
@@ -121,6 +122,7 @@ python demo/mmagic_inference_demo.py \
 ```
 
 ## Applications
+
 ### Text-to-Image
 
 Text-to-image models take text as input, and output a image. We take 'controlnet-canny' as an example.
@@ -170,7 +172,7 @@ MMagic provides high-level APIs for translating images by using image translatio
 
 ```python
 import mmcv
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from mmagic.apis import MMagicInferencer
 
 # Create a MMagicInferencer instance and infer
@@ -191,7 +193,7 @@ python demo/mmagic_inference_demo.py \
 
 ```python
 import mmcv
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from mmagic.apis import MMagicInferencer
 
 # Create a MMagicInferencer instance and infer
@@ -214,7 +216,7 @@ Image super resolution models take a image as input, and output a high resolutio
 
 ```python
 import mmcv
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from mmagic.apis import MMagicInferencer
 
 # Create a MMagicInferencer instance and infer
@@ -289,7 +291,7 @@ Inpaiting models take a masked image and mask pair as input, and output a inpain
 
 ```python
 import mmcv
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from mmagic.apis import MMagicInferencer
 
 img = './resources/input/inpainting/celeba_test.png'
@@ -317,7 +319,7 @@ Inpaiting models take a image and trimap pair as input, and output a alpha image
 
 ```python
 import mmcv
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from mmagic.apis import MMagicInferencer
 
 img = './resources/input/matting/GT05.jpg'
@@ -343,7 +345,7 @@ python demo/mmagic_inference_demo.py \
 
 ```python
 import mmcv
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from mmagic.apis import MMagicInferencer
 
 # Create a MMagicInferencer instance and infer
@@ -364,7 +366,7 @@ python demo/mmagic_inference_demo.py \
 
 ```python
 import mmcv
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from mmagic.apis import MMagicInferencer
 
 # Create a MMagicInferencer instance and infer
