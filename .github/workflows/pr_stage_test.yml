@@ -5,6 +5,9 @@ on:
     paths-ignore:
       - 'README.md'
       - 'README_zh-CN.md'
+      - '.owners.yml'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/*.md'
       - 'docs/**'
       - 'projects/**'
       - '.dev_scripts/**'
