@@ -16,6 +16,7 @@ from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 
 from .deblurganv2_util import get_pixel_loss, get_disc_loss
+# from .adversarial_trainer import GANFactory
 
 
 @MODELS.register_module()
@@ -50,6 +51,7 @@ class DeblurGanV2(BaseModel):
             'disc_repeat', 1)
         self.disc_init_steps = (0 if self.train_cfg is None else
                                 self.train_cfg.get('disc_init_steps', 0))
+        self.adv_lambda = 0.001
 
         self.register_buffer('step_counter', torch.tensor(0), False)
 
@@ -65,6 +67,11 @@ class DeblurGanV2(BaseModel):
             self.disc_loss = MODELS.build(disc_loss)
         elif isinstance(disc_loss, str):
             self.disc_loss = get_disc_loss(disc_loss)
+
+        self.disc_loss2 = copy.deepcopy(self.disc_loss)
+
+        # self.adv_trainer = GANFactory().get_adversarial_trainer(
+        #     self.discriminator.d_name, self.discriminator, self.disc_loss)
 
     @staticmethod
     def _array_to_batch(x):
@@ -113,6 +120,8 @@ class DeblurGanV2(BaseModel):
         mask = np.pad(mask, **pad_params)
 
         return map(self._array_to_batch, (x, mask)), h, w
+
+
 
     def forward(self,
                 inputs: torch.Tensor,
@@ -352,29 +361,20 @@ class DeblurGanV2(BaseModel):
             Dict[str, torch.Tensor]: A ``dict`` of tensor for logging.
         """
 
-        g_optim_wrapper = optim_wrapper['generator']
-        #data = self.data_preprocessor(data, True)
+        data = self.data_preprocessor(data, True)
         # data['inputs'] = [(data_inputs - 0.5) / 0.5 for data_inputs in data['inputs']]
         # for data_sample_item in data['data_samples']:
         #     data_sample_item.gt_img = (data_sample_item.gt_img - 0.5) / 0.5
         batch_inputs = data['inputs']
+
         data_samples = data['data_samples']
         batch_gt_data = self.extract_gt_data(data_samples)
 
         log_vars = dict()
 
+        g_optim_wrapper = optim_wrapper['generator']
         with g_optim_wrapper.optim_context(self):
             batch_outputs = self.forward_train(batch_inputs, data_samples)
-
-        if self.if_run_g():
-            set_requires_grad(self.discriminator, False)
-
-            log_vars_d = self.g_step_with_optim(
-                batch_outputs=batch_outputs,
-                batch_gt_data=batch_gt_data,
-                optim_wrapper=optim_wrapper)
-
-            log_vars.update(log_vars_d)
 
         if self.if_run_d():
             set_requires_grad(self.discriminator, True)
@@ -387,6 +387,18 @@ class DeblurGanV2(BaseModel):
                     optim_wrapper=optim_wrapper)
 
             log_vars.update(log_vars_d)
+
+        if self.if_run_g():
+            set_requires_grad(self.discriminator, False)
+
+            log_vars_d = self.g_step_with_optim(
+                batch_outputs=batch_outputs,
+                batch_gt_data=batch_gt_data,
+                optim_wrapper=optim_wrapper)
+
+            log_vars.update(log_vars_d)
+
+
 
         if 'loss' in log_vars:
             log_vars.pop('loss')
@@ -469,6 +481,31 @@ class DeblurGanV2(BaseModel):
 
         return losses
 
+    def g_step_double(self, batch_outputs: torch.Tensor, batch_gt_data: torch.Tensor):
+        """G step of GAN: Calculate losses of generator.
+
+        Args:
+            batch_outputs (Tensor): Batch output of generator.
+            batch_gt_data (Tensor): Batch GT data.
+
+        Returns:
+            dict: Dict of losses.
+        """
+
+        losses = dict()
+
+        # pix loss
+        if self.pixel_loss:
+            losses['loss_pix'] = self.pixel_loss(batch_outputs, batch_gt_data)
+
+        losses['loss_pix'] = losses['loss_pix']+self.adv_lambda * (
+                self.disc_loss.get_g_loss(self.discriminator.patch_gan,
+                                          batch_outputs, batch_gt_data
+                               ) + self.disc_loss2.get_g_loss(
+            self.discriminator.full_gan, batch_outputs, batch_gt_data)) / 2
+
+        return losses
+
     def d_step_real(self, batch_outputs, batch_gt_data: torch.Tensor):
         """Real part of D step.
 
@@ -507,8 +544,8 @@ class DeblurGanV2(BaseModel):
 
     def d_step_double(self, batch_outputs: torch.Tensor,
                       batch_gt_data: torch.Tensor):
-        loss_d_double = (self.disc_loss(self.discriminator.patch_gan, batch_outputs, batch_gt_data) + copy.deepcopy(
-            self.disc_loss)(self.discriminator.full_gan, batch_outputs, batch_gt_data)) / 2
+        loss_d_double = (self.disc_loss(self.discriminator.patch_gan, batch_outputs, batch_gt_data) +
+                         self.disc_loss2(self.discriminator.full_gan, batch_outputs, batch_gt_data)) / 2
         return loss_d_double
 
     def g_step_with_optim(self, batch_outputs: torch.Tensor,
@@ -527,12 +564,15 @@ class DeblurGanV2(BaseModel):
         """
 
         g_optim_wrapper = optim_wrapper['generator']
-
+        g_optim_wrapper.zero_grad()
         with g_optim_wrapper.optim_context(self):
-            losses_g = self.g_step(batch_outputs, batch_gt_data)
+            losses_g_double = self.g_step_double(batch_outputs, batch_gt_data)
 
-        parsed_losses_g, log_vars_g = self.parse_losses(losses_g)
-        g_optim_wrapper.update_params(parsed_losses_g)
+        parsed_losses_g, log_vars_g = self.parse_losses(losses_g_double)
+        loss_pix = g_optim_wrapper.scale_loss(parsed_losses_g)
+        g_optim_wrapper.backward(loss_pix)
+        g_optim_wrapper.step()
+        #g_optim_wrapper.update_params(parsed_losses_g)
 
         return log_vars_g
 
@@ -572,18 +612,17 @@ class DeblurGanV2(BaseModel):
         # loss_df = d_optim_wrapper.scale_loss(parsed_losses_df)
         # d_optim_wrapper.backward(loss_df)
 
+        d_optim_wrapper.zero_grad()
         with d_optim_wrapper.optim_context(self):
-            loss_d_double = self.d_step_double(batch_outputs, batch_gt_data)
+
+            loss_d_double = self.adv_lambda * self.d_step_double(batch_outputs, batch_gt_data)
 
         parsed_losses_df, log_vars_df = self.parse_losses(
             dict(loss_d_fake=loss_d_double))
         log_vars.update(log_vars_df)
         loss_df = d_optim_wrapper.scale_loss(parsed_losses_df)
-        d_optim_wrapper.backward(loss_df)
-
-        if d_optim_wrapper.should_update():
-            d_optim_wrapper.step()
-            d_optim_wrapper.zero_grad()
+        d_optim_wrapper.backward(loss_df,retain_graph=True)
+        d_optim_wrapper.step()
 
         return log_vars
 

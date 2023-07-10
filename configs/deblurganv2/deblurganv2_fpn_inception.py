@@ -46,31 +46,33 @@ train_pipeline = [
     #     direction='horizontal'),
     #dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     # dict(type='PairedRandomCrop', gt_patch_size=256),
-    dict(
-        type='Crop',
-        keys=['img', 'gt'],
-        crop_size=(256, 256),
-        random_crop=False),
-    # dict(type='PairedAlbuTransForms',
-    #      size=256,
-    #      keys=['img', 'gt']),
-    # dict(type='AlbuCorruptFunction',
-    #      keys=['img', 'gt'],
-    #      config=[
-    #          {
-    #              'name': 'cutout',
-    #              'prob': 0.5,
-    #              'num_holes': 3,
-    #              'max_h_size': 25,
-    #              'max_w_size': 25
-    #          },
-    #          {'name': 'jpeg', 'quality_lower': 70, 'quality_upper': 90},
-    #          {'name': 'motion_blur'},
-    #          {'name': 'median_blur'},
-    #          {'name': 'gamma'},
-    #          {'name': 'rgb_shift'},
-    #          {'name': 'hsv_shift'},
-    #          {'name': 'sharpen'}]),
+    # dict(
+    #     type='Crop',
+    #     keys=['img', 'gt'],
+    #     crop_size=(256, 256),
+    #     random_crop=False),
+    dict(type='PairedAlbuTransForms',
+         size=256,
+         lq_key='img',
+         gt_key='gt'),
+    dict(type='AlbuCorruptFunction',
+         keys=['img', 'gt'],
+         config=[
+             {
+                 'name': 'cutout',
+                 'prob': 0.5,
+                 'num_holes': 3,
+                 'max_h_size': 25,
+                 'max_w_size': 25
+             },
+             {'name': 'jpeg', 'quality_lower': 70, 'quality_upper': 90},
+             {'name': 'motion_blur'},
+             {'name': 'median_blur'},
+             {'name': 'gamma'},
+             {'name': 'rgb_shift'},
+             {'name': 'hsv_shift'},
+             {'name': 'sharpen'}]),
+    dict(type='PairedAlbuNormalize',lq_key='img',gt_key='gt',std=[0.5]*3,mean=[0.5]*3,max_pixel_value=255.0),
     dict(type='PackInputs')
 ]
 
@@ -83,16 +85,18 @@ val_pipeline = [
 
 test_pipeline = val_pipeline
 
-data_root = 'G:/github/DeblurGANv2/data/gopro'
+data_root = 'G:/github/DeblurGANv2/data/gopro/debug'
+#data_root = 'G:/github/DeblurGANv2/data/gopro'
+
 train_dataloader = dict(
-    batch_size=1000,
+    batch_size=1,
     num_workers=4,
     persistent_workers=False,
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root='G:/github/DeblurGANv2/data/gopro/debug',
+        data_root=data_root,
         data_prefix=dict(img='input', gt='target'),
         #ann_file='meta_info_gopro_train.txt',
         pipeline=train_pipeline))
@@ -105,7 +109,7 @@ val_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root='G:/github/DeblurGANv2/data/gopro/debug',
+        data_root=data_root,
         # ann_file='meta_info_gopro_test.txt',
         data_prefix=dict(img='input', gt='target'),
         pipeline=val_pipeline))
@@ -120,7 +124,7 @@ val_evaluator = dict(
     ])
 
 train_cfg = dict(
-    type='EpochBasedTrainLoop', max_iters=10, val_interval=1000)
+    type='EpochBasedTrainLoop', max_epochs=10, val_interval=1000)
 val_cfg = dict(type='MultiValLoop')
 test_cfg = dict(type='MultiValLoop')
 test_evaluator = val_evaluator
@@ -153,6 +157,7 @@ default_hooks = dict(
         save_optimizer=True,
         by_epoch=False,
         out_dir=save_dir,
+        save_best='auto',
     ),
     timer=dict(type='IterTimerHook'),
     logger=dict(type='LoggerHook', interval=100),
