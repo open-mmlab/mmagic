@@ -25,10 +25,9 @@ This project contains **Two inversion methods** and **One editing method**.
 
 ## From right to left: origin image, DDIM inversion, Null-text inversion
 
-<!-- [IMAGE] -->
 
 <center class="half">
-    <img src="assets/org.jpeg" width="200"/><img src="assets/ddim.jpeg" width="200"/><img src="assets/nulltext.jpeg" width="200"/>
+    <img src="https://github.com/FerryHuang/mmagic/assets/71176040/34d8a467-5378-41fb-83c6-b23c9dee8f0a" width="200"/><img src="https://github.com/FerryHuang/mmagic/assets/71176040/3d3814b4-7fb5-4232-a56f-fd7fef0ba28e" width="200"/><img src="https://github.com/FerryHuang/mmagic/assets/71176040/43008ed4-a5a3-4f81-ba9f-95d9e79e6a08" width="200"/>
 </center>
 
 ## Prompt-to-prompt Editing
@@ -36,25 +35,25 @@ This project contains **Two inversion methods** and **One editing method**.
 <div align="center">
   <b>cat -> dog</b>
   <br/>
-  <img src="assets/cat->dog.jpeg" width="500"/>
+  <img src="https://github.com/FerryHuang/mmagic/assets/71176040/f5d3fc0c-aa7b-4525-9364-365b254d51ca" width="500"/>
 </div>
 
 <div align="center">
   <b>spider man -> iron man(attention replace)</b>
   <br/>
-  <img src="assets/spider.jpeg" width="500"/>
+  <img src="https://github.com/FerryHuang/mmagic/assets/71176040/074adbc6-bd48-4c82-99aa-f322cf937f5a" width="500"/>
 </div>
 
 <div align="center">
   <b>Effel tower -> Effel tower at night (attention refine)</b>
   <br/>
-  <img src="assets/attention_refine.jpeg" width="500"/>
+  <img src="https://github.com/FerryHuang/mmagic/assets/71176040/f815dab3-b20c-4936-90e3-a060d3717e22" width="500"/>
 </div>
 
 <div align="center">
   <b>blossom sakura tree -> blossom(-3) sakura tree (attention reweight)</b>
   <br/>
-  <img src="assets/reweight.jpeg" width="500"/>
+  <img src="https://github.com/FerryHuang/mmagic/assets/71176040/5ef770b9-4f28-4ae7-84b0-6c15ea7450e9" width="500"/>
 </div>
 
 ## Quick Start
