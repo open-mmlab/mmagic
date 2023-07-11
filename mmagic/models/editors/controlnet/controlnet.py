@@ -319,8 +319,8 @@ class ControlStableDiffusion(StableDiffusion):
     def prepare_control(image: Tuple[Image.Image, List[Image.Image], Tensor,
                                      List[Tensor]], width: int, height: int,
                         batch_size: int, num_images_per_prompt: int,
-                        device: str, dtype: str, 
-                        stage: str='no-infer',) -> Tensor:
+                        device: str, dtype: str,
+                        stage: str = 'no-infer') -> Tensor:
         """A helper function to prepare single control images.
 
         Args:
@@ -332,6 +332,7 @@ class ControlStableDiffusion(StableDiffusion):
                 prompt.
             device (str): The device of the control.
             dtype (str): The dtype of the control.
+            stage(str): The stage of model.
 
         Returns:
             Tensor: The control in torch.tensor.
