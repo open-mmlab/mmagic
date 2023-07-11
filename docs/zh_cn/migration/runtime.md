@@ -13,7 +13,6 @@
 - 新字段 `visualizer`: 可视化工具是一个新设计。在 runner 中使用可视化器实例来处理结果和日志可视化并保存到不同的后端，例如 Local、TensorBoard 和 Wandb。
 - 新字段 `default_scope`: 所有注册器搜索 module 的起点。
 
-
 <table class="docutils">
 <thead>
   <tr>
