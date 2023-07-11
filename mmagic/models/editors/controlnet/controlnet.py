@@ -320,7 +320,8 @@ class ControlStableDiffusion(StableDiffusion):
                                      List[Tensor]], width: int, height: int,
                         batch_size: int, num_images_per_prompt: int,
                         device: str, dtype: str,
-                        stage: str = 'no-infer') -> Tensor:
+                        stage: str = 'no-infer'
+                       ) -> Tensor:
         """A helper function to prepare single control images.
 
         Args:
