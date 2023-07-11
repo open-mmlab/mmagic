@@ -48,29 +48,29 @@ workflow = [('train', 1)]  # Workflow for runner. [('train', 1)] means there is 
 <td valign="top">
 
 ```python
-default_hooks = dict(  # Used to build default hooks
-    checkpoint=dict(  # Config to set the checkpoint hook
+default_hooks = dict(  # 用来创建默认 hooks
+    checkpoint=dict(  # 设置 checkpoint hook 的配置
         type='CheckpointHook',
-        interval=5000,  # The save interval is 5000 iterations
+        interval=5000,  # 每 5000 iterations 保存
         save_optimizer=True,
-        by_epoch=False,  # Count by iterations
+        by_epoch=False,  # 通过 iterations 计数
         out_dir=save_dir,
     ),
     timer=dict(type='IterTimerHook'),
-    logger=dict(type='LoggerHook', interval=100),  # Config to register logger hook
+    logger=dict(type='LoggerHook', interval=100),  # 注册 logger hook 的配置
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
-default_scope = 'mmedit' # Used to set registries location
-env_cfg = dict(  # Parameters to setup distributed training, the port can also be set
+default_scope = 'mmedit' # 用来设置注册位置
+env_cfg = dict(  # 设置分布式训练的参数，还可以设置端口
     cudnn_benchmark=False,
     mp_cfg=dict(mp_start_method='fork', opencv_num_threads=4),
     dist_cfg=dict(backend='nccl'),
 )
-log_level = 'INFO'  # The level of logging
-log_processor = dict(type='LogProcessor', window_size=100, by_epoch=False)  # Used to build log processor
-load_from = None  # load models as a pre-trained model from a given path. This will not resume training.
-resume = False  # Resume checkpoints from a given path, the training will be resumed from the epoch when the checkpoint's is saved.
+log_level = 'INFO'  # 日志等级
+log_processor = dict(type='LogProcessor', window_size=100, by_epoch=False)  # 用来创建日志处理器
+load_from = None  # 从指定路径加载预训练模型，这不会恢复训练
+resume = False  # 从给定路径恢复检查点，训练将从保存检查点的epoch开始恢复
 ```
 
 </td>
