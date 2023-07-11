@@ -319,7 +319,8 @@ class ControlStableDiffusion(StableDiffusion):
     def prepare_control(image: Tuple[Image.Image, List[Image.Image], Tensor,
                                      List[Tensor]], width: int, height: int,
                         batch_size: int, num_images_per_prompt: int,
-                        device: str, dtype: str, stage: str = 'no-infer',) -> Tensor:
+                        device: str, dtype: str, 
+                        stage: str = 'no-infer',) -> Tensor:
         """A helper function to prepare single control images.
 
         Args:
@@ -351,9 +352,8 @@ class ControlStableDiffusion(StableDiffusion):
                 image = torch.from_numpy(image)
             elif isinstance(image[0], torch.Tensor):
                 image = torch.cat(image, dim=0)
-
+   
         image_batch_size = image.shape[0]
-        
         if stage == 'no-infer':
             if image_batch_size == 1:
                 repeat_by = batch_size
@@ -464,7 +464,7 @@ class ControlStableDiffusion(StableDiffusion):
             num_images_per_prompt,
             device,
             dtype=control_dtype,
-            stage = 'infer')
+            stage='infer')
         if do_classifier_free_guidance:
             controls = torch.cat([controls] * 2)
 
@@ -782,7 +782,7 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
             num_images_per_prompt,
             device,
             dtype=control_dtype,
-            stage = 'infer')
+            stage='infer')
         if do_classifier_free_guidance:
             controls = torch.cat([controls] * 2)
 
