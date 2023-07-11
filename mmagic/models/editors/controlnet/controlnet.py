@@ -319,7 +319,7 @@ class ControlStableDiffusion(StableDiffusion):
     def prepare_control(image: Tuple[Image.Image, List[Image.Image], Tensor,
                                      List[Tensor]], width: int, height: int,
                         batch_size: int, num_images_per_prompt: int,
-                        device: str, dtype: str) -> Tensor:
+                        device: str, dtype: str, stage: str = 'no-infer',) -> Tensor:
         """A helper function to prepare single control images.
 
         Args:
@@ -353,11 +353,14 @@ class ControlStableDiffusion(StableDiffusion):
                 image = torch.cat(image, dim=0)
 
         image_batch_size = image.shape[0]
-
-        if image_batch_size == 1:
-            repeat_by = batch_size
-        else:
-            # image batch size is the same as prompt batch size
+        
+        if stage == 'no-infer':
+            if image_batch_size == 1:
+                repeat_by = batch_size
+            else:
+                # image batch size is the same as prompt batch size
+                repeat_by = num_images_per_prompt
+        elif stage == 'infer':
             repeat_by = num_images_per_prompt
 
         image = image.repeat_interleave(repeat_by, dim=0)
@@ -381,7 +384,8 @@ class ControlStableDiffusion(StableDiffusion):
               generator: Optional[torch.Generator] = None,
               latents: Optional[torch.FloatTensor] = None,
               return_type='image',
-              show_progress=True):
+              show_progress=True
+              ):
         """Function invoked when calling the pipeline for generation.
 
         Args:
@@ -459,7 +463,8 @@ class ControlStableDiffusion(StableDiffusion):
             batch_size,
             num_images_per_prompt,
             device,
-            dtype=control_dtype)
+            dtype=control_dtype,
+            stage = 'infer')
         if do_classifier_free_guidance:
             controls = torch.cat([controls] * 2)
 
@@ -776,7 +781,8 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
             batch_size,
             num_images_per_prompt,
             device,
-            dtype=control_dtype)
+            dtype=control_dtype,
+            stage = 'infer')
         if do_classifier_free_guidance:
             controls = torch.cat([controls] * 2)
 
