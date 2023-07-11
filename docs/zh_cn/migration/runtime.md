@@ -24,23 +24,23 @@
 <td valign="top">
 
 ```python
-checkpoint_config = dict(  # Config to set the checkpoint hook, Refer to https://github.com/open-mmlab/mmcv/blob/master/mmcv/runner/hooks/checkpoint.py for implementation.
-    interval=5000,  # The save interval is 5000 iterations
-    save_optimizer=True,  # Also save optimizers
-    by_epoch=False)  # Count by iterations
-log_config = dict(  # Config to register logger hook
-    interval=100,  # Interval to print the log
+checkpoint_config = dict(  # 设置检查点 hook 的配置, 参考 https://github.com/open-mmlab/mmcv/blob/master/mmcv/runner/hooks/checkpoint.py 完成的
+    interval=5000,  # 保存间隔为 5000 次迭代
+    save_optimizer=True,  # 也保存优化器
+    by_epoch=False)  # 通过 iterations 计数
+log_config = dict(  # 注册日志 hook 的配置
+    interval=100,  # 打印日志的间隔
     hooks=[
-        dict(type='TextLoggerHook', by_epoch=False),  # The logger used to record the training process
-        dict(type='TensorboardLoggerHook'),  # The Tensorboard logger is also supported
+        dict(type='TextLoggerHook', by_epoch=False),  # logger 用来记录训练过程
+        dict(type='TensorboardLoggerHook'),  # 也支持 Tensorboard logger
     ])
-visual_config = None  # Visual config, we do not use it.
+visual_config = None  # 可视化配置，我们不使用它。
 # runtime settings
-dist_params = dict(backend='nccl')  # Parameters to setup distributed training, the port can also be set
-log_level = 'INFO'  # The level of logging
-load_from = None # load models as a pre-trained model from a given path. This will not resume training
-resume_from = None # Resume checkpoints from a given path, the training will be resumed from the iteration when the checkpoint's is saved
-workflow = [('train', 1)]  # Workflow for runner. [('train', 1)] means there is only one workflow and the workflow named 'train' is executed once. Keep this unchanged when training current matting models
+dist_params = dict(backend='nccl')  # 设置分布式训练的参数，还可以设置端口
+log_level = 'INFO'  # 日志等级
+load_from = None # 从指定路径加载预训练模型，这不会恢复训练
+resume_from = None # 从给定路径恢复检查点，训练将从保存检查点的epoch开始恢复
+workflow = [('train', 1)]  # Runner 的工作流程. [('train', 1)] 意味着只有一个工作流，并且名为“train”的工作流执行一次。 在训练当前的抠图模型时，请保持此项不变
 ```
 
 </td>
@@ -51,7 +51,7 @@ workflow = [('train', 1)]  # Workflow for runner. [('train', 1)] means there is 
 default_hooks = dict(  # 用来创建默认 hooks
     checkpoint=dict(  # 设置 checkpoint hook 的配置
         type='CheckpointHook',
-        interval=5000,  # 每 5000 iterations 保存
+        interval=5000,  # 保存间隔为5000次迭代
         save_optimizer=True,
         by_epoch=False,  # 通过 iterations 计数
         out_dir=save_dir,
