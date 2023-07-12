@@ -11,12 +11,12 @@
 }
 ```
 
-训练数据集可以从 [此处](https://drive.google.com/file/d/1UHjWZzLPGweA9ZczmV8lFSRcIxqiOVJw/) 下载。验证数据集可以从 [此处](https://drive.google.com/file/d/1Fw6Ey1R-nCHN9WEpxv0MnMqxij-ECQYJ/) 下载。测试数据集可以从 [此处](https://drive.google.com/file/d/11vfqV-lqousZTuAit1Qkqghiv_taY0KZ/) 下载。
+训练数据集可以从 [此处](https://drive.google.com/file/d/1UHjWZzLPGweA9ZczmV8lFSRcIxqiOVJw/) 下载。验证数据集可以从 [此处](https://drive.google.com/file/d/11vfqV-lqousZTuAit1Qkqghiv_taY0KZ/) 下载。
 
-测试数据集需要从 mat 文件中导出，为此，我们提供了一个脚本：
+验证数据集需要从 mat 文件中导出，为此，我们提供了一个脚本：
 
 ```shell
-python tools/dataset_converters/sidd/preprocess_sidd_test_dataset.py --data-root ./data/SIDD/test --out-dir ./data/SIDD/test
+python tools/dataset_converters/sidd/preprocess_sidd_test_dataset.py --data-root ./data/SIDD/val --out-dir ./data/SIDD/val
 ```
 
 文件目录结构应如下所示：
@@ -32,9 +32,8 @@ mmagic
 |   |   |   ├── gt
 |   |   |   ├── noisy
 |   |   ├── val
-|   |   |   ├── input_crops
-|   |   |   ├── target_crops
-|   |   ├── test
 |   |   |   ├── gt
 |   |   |   ├── noisy
+|   |   |   ├── ValidationNoisyBlocksSrgb.mat
+|   |   |   ├── ValidationGtBlocksSrgb.mat
 ```
