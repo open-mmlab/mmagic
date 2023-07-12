@@ -1,9 +1,9 @@
 # 评估与测试设置的迁移
 
-
 我们更新了 MMagic 1.x 中的评估设置，重要修改如下：
-- 评估字段被分为`val_evaluator`和`test_evaluator`， `interval`被移动到`train_cfg.val_interval`。
-- 评估指标从`test_cfg`移至`val_evaluator`和`test_evaluator`
+
+- 评估字段被分为 `val_evaluator` 和 `test_evaluator` ， `interval` 被移动到 `train_cfg.val_interval` 。
+- 评估指标从 `test_cfg` 移至 `val_evaluator` 和 `test_evaluator`
 
 <table class="docutils">
 <thead>
@@ -15,7 +15,7 @@
 <td valign="top">
 
 ```python
-train_cfg = None  # 训练配置字典变量设为None
+train_cfg = None  # 训练配置字典变量设为 None
 test_cfg = dict(  # 测试配置字典变量
     metrics=['PSNR'],  # 测试期间使用的指标 PSNR （峰值信噪比）
     crop_border=scale)  # 评估期间裁剪边框
@@ -23,7 +23,7 @@ test_cfg = dict(  # 测试配置字典变量
 evaluation = dict(  # 构建评估钩子的配置字典变量
     interval=5000,  # 评价间隔
     save_image=True,  # 评估期间保存图像
-    gpu_collect=True)  # 使用GPU收集
+    gpu_collect=True)  # 使用 GPU 收集
 ```
 
 </td>
@@ -51,7 +51,8 @@ test_cfg = dict(type='TestLoop')  # 测试循环类型的名称
 我们已将[MMGeneration 1.x](https://github.com/open-mmlab/mmgeneration/tree/1.x)合并到 MMagic 中.
 这里是关于 MMGeneration 的评估和测试设置的迁移。
 
-评估字段分为`val_evaluator`和`test_evaluator`，并且评估字段不再支持 `interval` 和 `save_best` 参数。 
+评估字段分为 `val_evaluator` 和 `test_evaluator` ，并且评估字段不再支持 `interval` 和 `save_best` 参数。
+
 - `interval` 移至 `train_cfg.val_interval`，请参阅[调度设置](./schedule.md)。
 - `save_best` 移至 `default_hooks.checkpoint.save_best`。
 
@@ -93,7 +94,7 @@ val_evaluator = dict(
             prefix='FID-Full-50k',
             fake_nums=50000,
             inception_style='StyleGAN',
-            sample_model='orig')
+            sample_model='orig'),
         dict(
             type='IS',
             prefix='IS-50k',
@@ -118,13 +119,13 @@ test_evaluator = val_evaluator
 </thead>
 </table>
 
-为了正确评估和测试模型，我们需要在`val_cfg` 和 `test_cfg`中设置特定的循环。
+为了正确评估和测试模型，我们需要在 `val_cfg` 和 `test_cfg` 中设置特定的循环。
 
 <table class="docutils">
 <thead>
   <tr>
-    <th> 0.x版本中的静态模型 </th>
-    <th> 1.x版本中的静态模型 </th>
+    <th> 0.x 版本中的静态模型 </th>
+    <th> 1.x 版本中的静态模型 </th>
 <tbody>
 <tr>
 <td valign="top">
