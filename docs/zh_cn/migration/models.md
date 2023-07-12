@@ -4,7 +4,7 @@
 
 - 删除 `pretrained` 字段.
 - 在模型设定中添加 `train_cfg` 和 `test_cfg` 字段.
-- 添加 `data_preprocessor` 字段. 归一化和颜色空间变换操作从datasets transforms流程中转到data_preprocessor.我们接下来会介绍data_preprocessor。
+- 添加 `data_preprocessor` 字段. 这里主要是将归一化和颜色空间转换操作从 `dataset transform` 流程中移动到 `data_preprocessor` 中. 我们接下来会介绍`data_preprocessor`.
 
 <table class="docutils">
 <thead>
@@ -65,6 +65,7 @@ model = dict(
 
 我们在 MMagic 1.x. 版本中对模型进行了重构，其中重要的改动如下所示：
 
-MMagic 1.x 中的 models 被重构为六个部分：archs、base_models、data_preprocessors、editors、diffusion_schedulers 和 losses。
-在 models 中添加了 data_preprocessor 模块。归一化和颜色空间转换操作从 dataset transform 流程中移动到 data_preprocessor 中。数据流从数据管道中输出后，先经过 data_preprocessor 模块的转换，然后再输入模型中。
-模型的更多详细信息请参见[模型指南](../howto/models.md)。
+MMagic 1.x 中的 `models` 被重构为六个部分：`archs`、`base_models`、`data_preprocessors`、`editors`、`diffusion_schedulers` 和 `losses`.
+
+在 `models` 中添加了 `data_preprocessor` 模块。这里主要是将归一化和颜色空间转换操作从 `dataset transform` 流程中移动到 `data_preprocessor` 中。此时，数据流经过数据预处理后，会先经过 `data_preprocessor` 模块的转换，然后再输入到模型中.
+模型的更多详细信息请参见[模型指南](../howto/models.md).
