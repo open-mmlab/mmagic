@@ -16,7 +16,7 @@
 <table class="docutils">
 <thead>
   <tr>
-    <th> Original </th>
+    <th> 原版本 </th>
     <th> New </th>
 <tbody>
 <tr>
