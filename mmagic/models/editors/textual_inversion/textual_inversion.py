@@ -29,6 +29,7 @@ class TextualInversion(StableDiffusion):
                  test_scheduler: Optional[ModelType] = None,
                  dtype: Optional[str] = None,
                  enable_xformers: bool = True,
+                 noise_offset_weight: float = 0,
                  tomesd_cfg: Optional[dict] = None,
                  initialize_token: Optional[str] = None,
                  num_vectors_per_token: int = 1,
@@ -38,8 +39,9 @@ class TextualInversion(StableDiffusion):
                  init_cfg: Optional[dict] = None):
 
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, dtype, enable_xformers, tomesd_cfg,
-                         data_preprocessor, init_cfg)
+                         test_scheduler, dtype, enable_xformers,
+                         noise_offset_weight, tomesd_cfg, data_preprocessor,
+                         init_cfg)
 
         self.val_prompts = val_prompts
         self.placeholder_token = placeholder_token
