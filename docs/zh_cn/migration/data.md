@@ -17,7 +17,7 @@
 <thead>
   <tr>
     <th> 原版本 </th>
-    <th> New </th>
+    <th> 新版本 </th>
 <tbody>
 <tr>
 <td valign="top">
