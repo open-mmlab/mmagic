@@ -41,7 +41,7 @@ train_pipeline = [  # Train pipeline
     dict(type='PairedRandomCrop', gt_patch_size=96),  # PairedRandomCrop
     dict(type='Flip',  # 翻转图片
         keys=['lq', 'gt'],  # 需要翻转的图片
-        flip_ratio=0.5,  # Flip ratio
+        flip_ratio=0.5,  # 翻转概率
         direction='horizontal'),  # Flip 方向
     dict(type='Flip',  # Flip 图片
         keys=['lq', 'gt'],  # 需要翻转的图片
