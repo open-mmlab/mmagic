@@ -36,7 +36,7 @@ train_pipeline = [  # Train pipeline
     dict(type='Normalize',  # normalize 图片的 augmentation pipeline
         keys=['lq', 'gt'],  # 需要 normalized 的图片
         mean=[0, 0, 0],  # 平均值
-        std=[1, 1, 1],  # Standard variance
+        std=[1, 1, 1],  # 标准差
         to_rgb=True),  # 是否转换到 rgb 通道
     dict(type='PairedRandomCrop', gt_patch_size=96),  # PairedRandomCrop
     dict(type='Flip',  # 翻转图片
