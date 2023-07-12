@@ -10,7 +10,7 @@
 
 在 MMagic 1.x 中我们更新了 data pipeline 的设置，有以下几个重要的修改：
 
-- 去除了 normalization 和 color space 转换的操作，这两部分移动到了 `data_preprocessor` 部分。
+- 去除了 `normalization` 和 `color space` 两种数据变换操作，并将它们移动到了 `data_preprocessor` 部分。
 - 原版本中格式化数据变换 pipeline 的 `Collect` 和 `ToTensor` 在新版本中被整合为 `PackInputs`。更多的细节可以在 [数据变换文档](../howto/transforms.md) 中查看。
 
 <table class="docutils">
