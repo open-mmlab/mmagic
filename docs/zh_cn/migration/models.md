@@ -67,6 +67,6 @@ model = dict(
 
 - MMagic 1.x 中的 `models` 被重构为六个部分：`archs`、`base_models`、`data_preprocessors`、`editors`、`diffusion_schedulers` 和 `losses`.
 
-- 在 `models` 中添加了 `data_preprocessor` 模块。这里主要是将归一化和颜色空间转换操作从 `dataset transform` 流程中移动到 `data_preprocessor` 中。此时，数据流经过数据预处理后，会先经过 `data_preprocessor` 模块的转换，然后再输入到模型中. 
+- 在 `models` 中添加了 `data_preprocessor` 模块。这里主要是将归一化和颜色空间转换操作从 `dataset transform` 流程中移动到 `data_preprocessor` 中.此时，数据流经过数据预处理后，会先经过 `data_preprocessor` 模块的转换，然后再输入到模型中.
 
 模型的更多详细信息请参见[模型指南](../howto/models.md).
