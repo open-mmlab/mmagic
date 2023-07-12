@@ -48,7 +48,6 @@ from .rdn import RDNNet
 from .real_basicvsr import RealBasicVSR, RealBasicVSRNet
 from .real_esrgan import RealESRGAN, UNetDiscriminatorWithSpectralNorm
 from .restormer import Restormer
-from .reversion import ReVersion
 from .sagan import SAGAN
 from .singan import SinGAN
 from .srcnn import SRCNNNet
@@ -90,5 +89,5 @@ __all__ = [
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DenoisingUnet',
     'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
-    'ControlStableDiffusion', 'DreamBooth', 'TextualInversion', 'ReVersion'
+    'ControlStableDiffusion', 'DreamBooth', 'TextualInversion'
 ]
