@@ -19,7 +19,7 @@ If this PR introduces a new feature, it is better to list some use cases here, a
 
 ## Checklist
 
-Submitting this pull request means that, 
+Submitting this pull request means that,
 
 **Before PR**:
 
