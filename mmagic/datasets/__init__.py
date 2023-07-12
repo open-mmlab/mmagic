@@ -10,7 +10,6 @@ from .grow_scale_image_dataset import GrowScaleImgDataset
 from .imagenet_dataset import ImageNet
 from .mscoco_dataset import MSCoCoDataset
 from .paired_image_dataset import PairedImageDataset
-from .reversion_dataset import ReVersionDataset
 from .singan_dataset import SinGANDataset
 from .textual_inversion_dataset import TextualInversionDataset
 from .unpaired_image_dataset import UnpairedImageDataset
@@ -20,6 +19,5 @@ __all__ = [
     'BasicConditionalDataset', 'UnpairedImageDataset', 'PairedImageDataset',
     'ImageNet', 'CIFAR10', 'GrowScaleImgDataset', 'SinGANDataset',
     'MSCoCoDataset', 'ControlNetDataset', 'DreamBoothDataset',
-    'ControlNetDataset', 'SDFinetuneDataset', 'TextualInversionDataset',
-    'ReVersionDataset'
+    'ControlNetDataset', 'SDFinetuneDataset', 'TextualInversionDataset'
 ]
