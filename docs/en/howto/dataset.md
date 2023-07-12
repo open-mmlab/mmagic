@@ -166,7 +166,7 @@ mmagic (root)
 │   │   │   ├── city
 │   │   │   │   ├── img1.png
 │   │   ├── meta_info_Vid4_GT.txt
-│   ├── places
+│   ├── vimeo-triplet
 │   │   ├── sequences
 |   |   |   ├── 00001
 │   │   │   │   ├── 0389
