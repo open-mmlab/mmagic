@@ -8,7 +8,7 @@
   - 如果 resume=True 且 load_from 为 None，则尝试从工作目录中的最新检查点恢复。
   - 如果 resume=False 且 load_from 不为None，则仅加载检查点，不恢复训练。
   - 如果 resume=False 且 load_from 为 None，则不加载也不恢复。
-- `dist_params` 字段现在是一个子字段 `env_cfg` 。 并且在 `env_cfg` 还有一些新的配置。
+- `dist_params` 字段现在是 `env_cfg` 的一个子字段。 并且在 `env_cfg` 还有一些新的配置。
 - `workflow` 相关功能已被删除。
 - 新字段 `visualizer`: 可视化工具是一个新设计。在 runner 中使用可视化器实例来处理结果和日志可视化并保存到不同的后端，例如 Local、TensorBoard 和 Wandb。
 - 新字段 `default_scope`: 所有注册器搜索 module 的起点。
