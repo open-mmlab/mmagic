@@ -18,6 +18,45 @@ ModelType = Union[Dict, nn.Module]
 
 @MODELS.register_module()
 class TextualInversion(StableDiffusion):
+    """Implementation of `An Image is Worth One Word: Personalizing Text-to-
+    Image Generation using Textual Inversion.
+
+    <https://arxiv.org/abs/2208.01618>`_ (Textual Inversion).
+
+    Args:
+        vae (Union[dict, nn.Module]): The config or module for VAE model.
+        text_encoder (Union[dict, nn.Module]): The config or module for text
+            encoder.
+        tokenizer (str): The **name** for CLIP tokenizer.
+        unet (Union[dict, nn.Module]): The config or module for Unet model.
+        schedule (Union[dict, nn.Module]): The config or module for diffusion
+            scheduler.
+        test_scheduler (Union[dict, nn.Module], optional): The config or
+            module for diffusion scheduler in test stage (`self.infer`). If not
+            passed, will use the same scheduler as `schedule`. Defaults to
+            None.
+        dtype (str, optional): The dtype for the model. Defaults to 'fp16'.
+        enable_xformers (bool, optional): Whether to use xformers.
+            Defaults to True.
+        noise_offset_weight (bool, optional): The weight of noise offset
+            introduced in https://www.crosslabs.org/blog/diffusion-with-offset-noise  # noqa
+            Defaults to 0.
+        tomesd_cfg (dict, optional): The config for TOMESD. Please refers to
+            https://github.com/dbolya/tomesd and
+            https://github.com/open-mmlab/mmagic/blob/main/mmagic/models/utils/tome_utils.py for detail.  # noqa
+            Defaults to None.
+        initialize_token (str, optional): The initialization token for textual
+            embedding to train. Defaults to None.
+        num_vefctor_per_token (int): The length of the learnable embedding.
+            Defaults to 1.
+        val_prompts (Union[str, List[str]], optional): The prompts for
+            validation. Defaults to None.
+        data_preprocessor (dict, optional): The pre-process config of
+            :class:`BaseDataPreprocessor`. Defaults to
+                dict(type='DataPreprocessor').
+        init_cfg (dict, optional): The weight initialized config for
+            :class:`BaseModule`. Defaults to None/
+    """
 
     def __init__(self,
                  placeholder_token: str,
