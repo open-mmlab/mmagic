@@ -51,7 +51,7 @@ def parse_args():
 
 def _tensor2img(img):
     img = img.permute(1, 2, 0)
-    img = ((img + 1) / 2 * 255).clamp(0, 255).to(torch.uint8)
+    img = img.clamp(0, 255).to(torch.uint8)
 
     return img.cpu().numpy()
 
