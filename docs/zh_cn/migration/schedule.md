@@ -1,11 +1,10 @@
-# 调度器的迁移（待更新）
-# Migration of Schedule Settings
+# 调度器的迁移
 
-We update schedule settings in MMagic 1.x. Important modifications are as following.
+我们更新了MMagic 1.x 中的调度器设置，重要修改如下:
 
-- Now we use `optim_wrapper` field to specify all configuration about the optimization process. And the `optimizer` is a sub field of `optim_wrapper` now.
-- The `lr_config` field is removed and we use new `param_scheduler` to replace it.
-- The `total_iters` field is moved to `train_cfg` as `max_iters`, `val_cfg` and `test_cfg`, which configure the loop in training, validation and test.
+- 现在我们使用 `optim_wrapper` 字段来指定关于优化过程的所有配置。`optimizer` 字段现在是 `optim_wrapper` 的一个子字段。
+- `lr_config` 字段被移除，我们使用新的 `param_scheduler` 来代替它。
+- `total_iters` 字段已移至 `train_cfg`，作为 `max_iters`、`val_cfg` 和 `test_cfg`，用于配置训练、验证和测试中的循环。
 
 <table class="docutils">
 <thead>
@@ -17,10 +16,10 @@ We update schedule settings in MMagic 1.x. Important modifications are as follow
 <td valign="top">
 
 ```python
-optimizers = dict(generator=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999)))  # Config used to build optimizer, support all the optimizers in PyTorch whose arguments are also the same as those in PyTorch
-total_iters = 300000 # Total training iters
-lr_config = dict( # Learning rate scheduler config used to register LrUpdater hook
-    policy='Step', by_epoch=False, step=[200000], gamma=0.5)  # The policy of scheduler
+optimizers = dict(generator=dict(type='Adam', lr=1e-4, betas=(0.9, 0.999)))   # 用于构建优化器的配置，支持 PyTorch 中的所有优化器，其参数与 PyTorch 中的参数相同。
+total_iters = 300000 # 总训练迭代次数
+lr_config = dict( # 用于注册 LrUpdater hook 的学习率调度器配置
+    policy='Step', by_epoch=False, step=[200000], gamma=0.5)  # 调度器的策略
 ```
 
 </td>
@@ -33,13 +32,13 @@ optim_wrapper = dict(
         type='OptimWrapper',
         optimizer=dict(type='Adam', lr=1e-4),
     )
-)  # Config used to build optimizer, support all the optimizers in PyTorch whose arguments are also the same as those in PyTorch.
-param_scheduler = dict(  # Config of learning policy
-    type='MultiStepLR', by_epoch=False, milestones=[200000], gamma=0.5)  # The policy of scheduler
+)  # 用于构建优化器的配置，支持 PyTorch 中的所有优化器，其参数与 PyTorch 中的参数相同。
+param_scheduler = dict(  # 学习策略的配置
+    type='MultiStepLR', by_epoch=False, milestones=[200000], gamma=0.5)  # 调度器的策略
 train_cfg = dict(
-    type='IterBasedTrainLoop', max_iters=300000, val_interval=5000)  # Config of train loop type
-val_cfg = dict(type='ValLoop')  # The name of validation loop type
-test_cfg = dict(type='TestLoop')  # The name of test loop type
+    type='IterBasedTrainLoop', max_iters=300000, val_interval=5000)  # 训练循环类型的配置
+val_cfg = dict(type='ValLoop')  # 验证循环类型的名称
+test_cfg = dict(type='TestLoop')  # 测试循环类型的名称
 ```
 
 </td>
