@@ -4,7 +4,7 @@
 
 - 现在我们使用 `optim_wrapper` 字段来指定关于优化过程的所有配置。`optimizer` 字段现在是 `optim_wrapper` 的一个子字段。
 - `lr_config` 字段被移除，我们使用新的 `param_scheduler` 来代替它。
-- `total_iters` 字段已移至 `train_cfg`，作为 `max_iters`、`val_cfg` 和 `test_cfg`，用于配置训练、验证和测试中的循环。
+- `total_iters` 字段已移至 `train_cfg`，作为 `max_iters`, `val_cfg` 和 `test_cfg`，用于配置训练、验证和测试中的循环。
 
 <table class="docutils">
 <thead>
