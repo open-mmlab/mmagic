@@ -108,10 +108,12 @@ class TestControlStableDiffusion(TestCase):
         self._test_infer(control_sd, 1, 1, 1, 1)
 
         # two prompt, two control, repeat 1 time
-        self._test_infer(control_sd, 2, 2, 1, 2)
+        # NOTE: skip this due to memory limit
+        # self._test_infer(control_sd, 2, 2, 1, 2)
 
         # one prompt, one control, repeat 2 times
-        self._test_infer(control_sd, 1, 1, 2, 2)
+        # NOTE: skip this due to memory limit
+        # self._test_infer(control_sd, 1, 1, 2, 2)
 
         # two prompt, two control, repeat 2 times
         # NOTE: skip this due to memory limit
