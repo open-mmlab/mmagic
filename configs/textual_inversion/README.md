@@ -26,7 +26,7 @@ Text-to-image models offer unprecedented freedom to guide creation through natur
 
 ## Quick Start
 
-1. Download [data](<>) and save to `data/`
+1. Download [data](https://drive.google.com/drive/folders/1fmJMs25nxS_rSNqS5hTcRdLem_YQXbq5) and save to `data/cat_toy`
 
 The file structure will be like this:
 
@@ -80,7 +80,7 @@ state_dict = process_state_dict(checkpoint['state_dict'])
 model = MODELS.build(cfg.model)
 model.load_state_dict(state_dict)
 
-model.cuda()
+model = model.cuda()
 with torch.no_grad():
     sample = model.infer('a <cat-toy> bag')['samples'][0]
 
