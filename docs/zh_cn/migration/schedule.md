@@ -47,4 +47,4 @@ test_cfg = dict(type='TestLoop')  # 测试循环类型的名称
 </thead>
 </table>
 
-> 有关调度器设置的更多详细信息可在[MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/migration/param_scheduler.md)。
+> 有关调度器设置的更多详细信息可在[MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/migration/param_scheduler.md) 中找到。
