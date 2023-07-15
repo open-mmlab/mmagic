@@ -334,7 +334,7 @@ class ControlStableDiffusion(StableDiffusion):
         Args:
             image (Tuple[Image.Image, List[Image.Image], Tensor, List[Tensor]]):  # noqa
                 The input image for control.
-            batch_size (int): The batch size of the control. The control will
+            batch_size (int): The number of the prompt. The control will
                 be repeated for `batch_size` times.
             num_images_per_prompt (int): The number images generate for one
                 prompt.
@@ -364,8 +364,11 @@ class ControlStableDiffusion(StableDiffusion):
         image_batch_size = image.shape[0]
 
         if image_batch_size == 1:
-            repeat_by = batch_size
+            repeat_by = batch_size * num_images_per_prompt
         else:
+            assert image_batch_size == batch_size, (
+                'The number of Control condition must be 1 or equal to the '
+                'number of prompt.')
             # image batch size is the same as prompt batch size
             repeat_by = num_images_per_prompt
 
