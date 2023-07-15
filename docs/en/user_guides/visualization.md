@@ -18,7 +18,7 @@ In this tutorial, we introduce the usage of the visualization functions provided
 
 ## Overview
 
-In MMagic, the visualization of the training or testing process requires the configuration of three components: VisualizationHook, Visualizer, and VisBackend.
+In MMagic, the visualization of the training or testing process requires the configuration of three components: `VisualizationHook`, `Visualizer`, and `VisBackend`.
 
 **VisualizationHook** fetches the visualization results of the model output in fixed intervals during training and passes them to Visualizer.
 **Visualizer** is responsible for converting the original visualization results into the desired type (png, gif, etc.) and then transferring them to **VisBackend** for storage or display.
@@ -263,7 +263,6 @@ MMagic supports a variety of different visualization backends, including:
 - Basic VisBackend of MMEngine: including LocalVisBackend, TensorboardVisBackend and WandbVisBackend. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/visualization.md) to learn more about them
 - VisBackend: Backend for **File System**. Save the visualization results to the corresponding position.
 - TensorboardVisBackend: Backend for **Tensorboard**. Send the visualization results to Tensorboard.
-- PaviVisBackend: Backend for **Pavi**. Send the visualization results to Tensorboard.
 - WandbVisBackend: Backend for **Wandb**. Send the visualization results to Tensorboard.
 
 One `Visualizer` object can have access to any number of VisBackends and users can access to the backend by their class name in their code.
