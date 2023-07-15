@@ -6,19 +6,26 @@
 
 - [教程6:可视化](#教程6:可视化)
   - [概述](#概述)
-    - [GAN的可视化配置](#GAN的可视化配置)
+    - [GAN的可视化配置](#gan的可视化配置)
     - [图像翻译模型的可视化配置](#图像翻译模型的可视化配置)
     - [扩散模型的可视化配置](#扩散模型的可视化配置)
     - [图像补全模型的可视化配置](#图像补全模型的可视化配置)
-    - [图像抠图模型的可视化配置](#图像抠图的可视化配置)
-    - [SISR/VSR/VFI等模型的可视化配置](#SISR/VSR/VFI等模型的可视化配置)
+    - [图像抠图模型的可视化配置](#图像抠图模型的可视化配置)
+    - [SISR/VSR/VFI等模型的可视化配置](#sisrvsrvfi等模型的可视化配置)
   - [可视化钩子](#可视化钩子)
   - [可视化器](#可视化器)
   - [可视化后端](#可视化后端)
+    - [在不同的存储后端可视化](#在不同的存储后端可视化)
 
 ## 概述
 
-在MMagic中，训练或测试过程的可视化需要配置三个组件:`VisualizationHook`、`Visualizer`和`VisBackend`。
+建议先学习 [设计文档](https://github.com/open-mmlab/mmengine/blob/main/docs/zh_cn/design/visualization.md) 里关于可视化的基本概念。
+
+在MMagic中，训练或测试过程的可视化需要配置三个组件:`VisualizationHook`、`Visualizer`和`VisBackend`, 如下图表展示了 `Visualizer` 和 `VisBackend` 的关系。
+
+<div align="center">
+<img src="https://user-images.githubusercontent.com/17425982/163327736-f7cb3b16-ef07-46bc-982a-3cc7495e6c82.png" width="800" />
+</div>
 
 **VisualizationHook** 在训练期间以固定的间隔获取模型输出的可视化结果，并将其传递给**Visualizer**。
 **Visualizer** 负责将原始可视化结果转换为所需的类型(png, gif等)，然后将其传输到**VisBackend**进行存储或显示。
@@ -254,7 +261,9 @@ visualizer = Visualizer.get_current_instance()
 通过这个界面，该接口将根据相应的`vis_mode`调用相应的绘图函数，以获得`np.ndarray`类型的可视化结果。
 然后调用`show`或`add_image`来直接显示结果或将可视化结果传递给预定义的`vis_backend`。
 
-- MMEngine的基本VisBackend包括`LocalVisBackend`、`TensorboardVisBackend`和`WandbVisBackend`。您可以关注[MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/visualization.md)了解更多有关它们的信息。
+## 可视化后端
+
+- MMEngine的基本VisBackend包括`LocalVisBackend`、`TensorboardVisBackend`和`WandbVisBackend`。您可以关注[MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/zh_cn/advanced_tutorials/visualization.md)了解更多有关它们的信息。
 - `VisBackend`: **File System**的后端。将可视化结果保存到相应位置。
 - `TensorboardVisBackend`: **Tensorboard**的后端。将可视化结果发送到Tensorboard。
 - `WandbVisBackend`: **Wandb**的后端。将可视化结果发送到Tensorboard。
@@ -297,4 +306,30 @@ visualizer = Visualizer.get_current_instance()
 
 local_vis_backend_1 = visualizer.get_backend('gen_vis_backend_1')
 local_vis_backend_2 = visualizer.get_backend('gen_vis_backend_2')
+```
+
+### 在不同的存储后端可视化
+
+如果想用不同的存储后端( Wandb, Tensorboard, 或者远程窗口里常规的后端)，像以下这样改配置文件的 `vis_backends` 就行了：
+
+**Local**
+
+```python
+vis_backends = [dict(type='LocalVisBackend')]
+```
+
+**Tensorboard**
+
+```python
+vis_backends = [dict(type='TensorboardVisBackend')]
+visualizer = dict(
+    type='ConcatImageVisualizer', vis_backends=vis_backends, name='visualizer')
+```
+
+**Wandb**
+
+```python
+vis_backends = [dict(type='WandbVisBackend', init_kwargs=dict(project={PROJECTS}, name={EXPNAME}))]
+visualizer = dict(
+    type='ConcatImageVisualizer', vis_backends=vis_backends, name='visualizer')
 ```

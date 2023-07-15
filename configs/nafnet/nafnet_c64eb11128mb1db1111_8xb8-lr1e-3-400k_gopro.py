@@ -110,6 +110,4 @@ default_hooks = dict(
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 
-visualizer = dict(bgr2rgb=False)
-
 randomness = dict(seed=10, diff_rank_seed=True)
