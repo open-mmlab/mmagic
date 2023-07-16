@@ -2,9 +2,10 @@
 import os
 from typing import Dict, List
 
+import mmcv
 import numpy as np
 from mmengine import mkdir_or_exist
-from PIL.Image import Image
+from PIL.Image import Image, fromarray
 from torchvision.utils import save_image
 
 from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
@@ -14,14 +15,14 @@ class Text2ImageInferencer(BaseMMagicInferencer):
     """inferencer that predicts with text2image models."""
 
     func_kwargs = dict(
-        preprocess=['text'],
+        preprocess=['text', 'control'],
         forward=[],
         visualize=['result_out_dir'],
         postprocess=[])
 
     extra_parameters = dict(height=None, width=None, seed=1)
 
-    def preprocess(self, text: InputsType) -> Dict:
+    def preprocess(self, text: InputsType, control: str = None) -> Dict:
         """Process the inputs into a model-feedable format.
 
         Args:
@@ -35,6 +36,12 @@ class Text2ImageInferencer(BaseMMagicInferencer):
             result['text_prompts'] = text
         else:
             result['prompt'] = text
+
+        if control:
+            control_img = mmcv.imread(control)
+            control_img = fromarray(control_img)
+            result['control'] = control_img
+            result.pop('seed', None)
 
         return result
 

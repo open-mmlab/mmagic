@@ -6,12 +6,12 @@ model = dict(
     type='ControlStableDiffusion',
     vae=dict(
         type='AutoencoderKL',
-        from_pretrained=stable_diffusion_v15_url,
+        from_pretrained='gsdf/Counterfeit-V2.5',
         subfolder='vae'),
     unet=dict(
         type='UNet2DConditionModel',
         subfolder='unet',
-        from_pretrained=stable_diffusion_v15_url),
+        from_pretrained='gsdf/Counterfeit-V2.5'),
     text_encoder=dict(
         type='ClipWrapper',
         clip_type='huggingface',
@@ -29,4 +29,4 @@ model = dict(
         from_pretrained=stable_diffusion_v15_url,
         subfolder='scheduler'),
     data_preprocessor=dict(type='DataPreprocessor'),
-    init_cfg=dict(type='init_from_unet'))
+    init_cfg=dict(type='convert_from_unet'))

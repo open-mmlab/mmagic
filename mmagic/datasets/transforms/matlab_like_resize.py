@@ -1,7 +1,7 @@
 # This code is referenced from matlab_imresize with modifications
 # Reference:
 # https://github.com/fatheral/matlab_imresize/blob/master/imresize.py
-# Original licence: Copyright (c) 2020 fatheral, under the MIT License.
+# Original license: Copyright (c) 2020 fatheral, under the MIT License.
 import numpy as np
 from mmcv.transforms import BaseTransform
 

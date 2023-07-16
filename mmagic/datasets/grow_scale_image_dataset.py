@@ -194,7 +194,7 @@ class GrowScaleImgDataset(BaseDataset):
 
         During training phase, if ``self.pipeline`` get ``None``,
         ``self._rand_another`` will be called until a valid image is fetched or
-         the maximum limit of refetech is reached.
+         the maximum limit of refetch is reached.
 
         Args:
             idx (int): The index of self.data_list.

@@ -2,6 +2,7 @@ docutils==0.16.0
 modelindex
 myst_parser
 -e git+https://github.com/open-mmlab/pytorch_sphinx_theme.git#egg=pytorch_sphinx_theme
+requests<=2.29.0
 sphinx==4.5.0
 sphinx-autoapi
 sphinx-copybutton

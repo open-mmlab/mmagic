@@ -5,7 +5,7 @@ import numpy as np
 
 
 def betas_for_alpha_bar(num_diffusion_timesteps, max_beta=0.999):
-    """Create a beta schedule that discretizes the given alpha_t_bar
+    """Create a beta schedule that discretized the given alpha_t_bar
     function, which defines the cumulative product of
     (1-beta) over time from t = [0,1].
 

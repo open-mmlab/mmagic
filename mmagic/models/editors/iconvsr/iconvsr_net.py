@@ -91,7 +91,7 @@ class IconVSRNet(BaseModule):
         self._raised_warning = False
 
     def spatial_padding(self, lrs):
-        """Apply pdding spatially.
+        """Apply padding spatially.
 
         Since the PCD module in EDVR requires that the resolution is a multiple
         of 4, we apply padding to the input LR images if their resolution is

@@ -10,11 +10,16 @@
 
 <!-- [ABSTRACT] -->
 
-It is difficult to avoid video frame flickering when using stable diffusion to generate video frame by frame.
-Here we reproduce a method that effectively avoids video flickering, that is, using controlnet and multi-frame rendering.
-[ControlNet](https://github.com/lllyasviel/ControlNet) is a neural network structure to control diffusion models by adding extra conditions.
+It is difficult to keep consistency and avoid video frame flickering when using stable diffusion to generate video frame by frame.
+Here we reproduce two methods that effectively avoid video flickering:
+
+**Controlnet with multi-frame rendering**. [ControlNet](https://github.com/lllyasviel/ControlNet) is a neural network structure to control diffusion models by adding extra conditions.
 [Multi-frame rendering](https://xanthius.itch.io/multi-frame-rendering-for-stablediffusion) is a community method to reduce flickering.
 We use controlnet with hed condition and stable diffusion img2img for multi-frame rendering.
+
+**Controlnet with attention injection**. Attention injection is widely used to generate the current frame from a reference image. There is an implementation in [sd-webui-controlnet](https://github.com/Mikubill/sd-webui-controlnet#reference-only-control) and we use some of their code to create the animation in this repo.
+
+You may need 40G GPU memory to run controlnet with multi-frame rendering and 10G GPU memory for controlnet with attention injection. If the config file is not changed, it defaults to using controlnet with attention injection.
 
 ## Demos
 
@@ -80,6 +85,26 @@ editor.infer(video=video, prompt=prompt, negative_prompt=negative_prompt, save_p
 ```python
 python demo/gradio_controlnet_animation.py
 ```
+
+### 3. Change config to use multi-frame rendering or attention injection.
+
+change "inference_method" in [anythingv3 config](./anythingv3_config.py)
+
+To use multi-frame rendering.
+
+```python
+inference_method = 'multi-frame rendering'
+```
+
+To use attention injection.
+
+```python
+inference_method = 'attention_injection'
+```
+
+## Play animation with SAM
+
+We also provide a demo to play controlnet animation with sam, for details, please see [OpenMMLab PlayGround](https://github.com/open-mmlab/playground/blob/main/mmediting_sam/README.md).
 
 ## Citation
 

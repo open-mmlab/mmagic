@@ -54,7 +54,7 @@ pipeline = [
         ])
 ]
 dataset = dict(
-    type='ControlDataset',
+    type='ControlNetDataset',
     data_root='./data/fill50k',
     ann_file='prompt.json',
     pipeline=pipeline)

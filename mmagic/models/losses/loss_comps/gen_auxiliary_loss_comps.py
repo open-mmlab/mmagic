@@ -12,7 +12,7 @@ from ..gan_loss import gen_path_regularizer
 class GeneratorPathRegularizerComps(nn.Module):
     """Generator Path Regularizer.
 
-    Path regularization is proposed in StyelGAN2, which can help the improve
+    Path regularization is proposed in StyleGAN2, which can help the improve
     the continuity of the latent space. More details can be found in:
     Analyzing and Improving the Image Quality of StyleGAN, CVPR2020.
 
@@ -60,7 +60,7 @@ class GeneratorPathRegularizerComps(nn.Module):
             Defaults to 0.01.
         pl_batch_size (int | None, optional): The batch size in calculating
             generator path. Once this argument is set, the ``num_batches`` will
-            be overridden with this argument and won't be affectted by
+            be overridden with this argument and won't be affected by
             ``pl_batch_shrink``. Defaults to None.
         sync_mean_buffer (bool, optional): Whether to sync mean path length
             across all of GPUs. Defaults to False.

@@ -5,15 +5,31 @@ If you wish to inspect the config file, you may run `python tools/misc/print_con
 
 You can learn about the usage of our config system according to the following tutorials.
 
-- [Modify config](#modify-config-through-script-arguments)
-- [Config file structure](#config-file-structure)
-- [Config name style](#config-name-style)
-- [An example of EDSR](#an-example-of-edsr)
-- [An example of StyleGAN2](#an-example-of-stylegan2)
-- [Other examples](#other-examples)
-  - [An example of config system for inpainting](#an-example-of-config-system-for-inpainting)
-  - [An example of config system for matting](#an-example-of-config-system-for-matting)
-  - [An example of config system for restoration](#an-example-of-config-system-for-restoration)
+- [Tutorial 1: Learn about Configs in MMagic](#tutorial-1-learn-about-configs-in-mmagic)
+  - [Modify config through script arguments](#modify-config-through-script-arguments)
+  - [Config file structure](#config-file-structure)
+  - [Config name style](#config-name-style)
+  - [An example of EDSR](#an-example-of-edsr)
+    - [Model config](#model-config)
+    - [Data config](#data-config)
+      - [Data pipeline](#data-pipeline)
+      - [Dataloader](#dataloader)
+    - [Evaluation config](#evaluation-config)
+    - [Training and testing config](#training-and-testing-config)
+    - [Optimization config](#optimization-config)
+    - [Hook config](#hook-config)
+    - [Runtime config](#runtime-config)
+  - [An example of StyleGAN2](#an-example-of-stylegan2)
+    - [Model config](#model-config-1)
+    - [Dataset and evaluator config](#dataset-and-evaluator-config)
+    - [Training and testing config](#training-and-testing-config-1)
+    - [Optimization config](#optimization-config-1)
+    - [Hook config](#hook-config-1)
+    - [Runtime config](#runtime-config-1)
+  - [Other examples](#other-examples)
+    - [An example of config system for inpainting](#an-example-of-config-system-for-inpainting)
+    - [An example of config system for matting](#an-example-of-config-system-for-matting)
+    - [An example of config system for restoration](#an-example-of-config-system-for-restoration)
 
 ## Modify config through script arguments
 
@@ -465,7 +481,7 @@ custom_hooks = [
 ### Runtime config
 
 ```python
-default_scope = 'mmagic'  # The default registry scope to find modules. Refer to https://mmengine.readthedocs.io/en/latest/tutorials/registry.html
+default_scope = 'mmagic'  # The default registry scope to find modules. Refer to https://mmengine.readthedocs.io/en/latest/advanced_tutorials/registry.html
 
 # config for environment
 env_cfg = dict(

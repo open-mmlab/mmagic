@@ -84,6 +84,13 @@ class Inferencers:
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['controlnet_animation']:
             self.inferencer = ControlnetAnimationInferencer(config)
+        elif self.task in [
+                'Image Restoration', 'Denoising, Deblurring, Deraining',
+                'Image Super-Resolution, Image denoising, JPEG compression '
+                'artifact reduction'
+        ]:
+            self.inferencer = ImageSuperResolutionInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
         else:
             raise ValueError(f'Unknown inferencer task: {self.task}')
 

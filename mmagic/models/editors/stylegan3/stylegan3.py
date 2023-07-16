@@ -23,7 +23,7 @@ ModelType = Union[Dict, nn.Module]
 
 @MODELS.register_module()
 class StyleGAN3(StyleGAN2):
-    """Impelmentation of `Alias-Free Generative Adversarial Networks`. # noqa.
+    """Implementation of `Alias-Free Generative Adversarial Networks`. # noqa.
 
     Paper link: https://nvlabs-fi-cdn.nvidia.com/stylegan3/stylegan3-paper.pdf # noqa
 
@@ -60,7 +60,7 @@ class StyleGAN3(StyleGAN2):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             SampleList: A list of ``DataSample`` contain generated results.
@@ -84,7 +84,7 @@ class StyleGAN3(StyleGAN2):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             SampleList: A list of ``DataSample`` contain generated results.

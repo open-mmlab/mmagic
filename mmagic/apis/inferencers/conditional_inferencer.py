@@ -61,7 +61,7 @@ class ConditionalInferencer(BaseMMagicInferencer):
         res_list = []
         res_list.extend([item.fake_img.data.cpu() for item in preds])
         results = torch.stack(res_list, dim=0)
-        results = (results[:, [2, 1, 0]] + 1.) / 2.
+        results = results[:, [2, 1, 0]] / 255.
 
         # save images
         if result_out_dir:

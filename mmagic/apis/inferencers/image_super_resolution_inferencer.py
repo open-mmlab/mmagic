@@ -7,7 +7,6 @@ import numpy as np
 import torch
 from mmengine import mkdir_or_exist
 from mmengine.dataset import Compose
-from mmengine.dataset.utils import default_collate as collate
 
 from mmagic.utils import tensor2img
 from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
@@ -27,14 +26,13 @@ class ImageSuperResolutionInferencer(BaseMMagicInferencer):
 
         Args:
             img(InputsType): Image to be restored by models.
-            ref(InputsType): Reference image for resoration models.
+            ref(InputsType): Reference image for restoration models.
                 Defaults to None.
 
         Returns:
             data(Dict): Results of preprocess.
         """
         cfg = self.model.cfg
-        device = next(self.model.parameters()).device  # model device
 
         # select the data pipeline
         if cfg.get('inference_pipeline', None):
@@ -63,31 +61,22 @@ class ImageSuperResolutionInferencer(BaseMMagicInferencer):
 
         # prepare data
         if ref:  # Ref-SR
-            data = dict(img_path=img, gt_path=ref)
+            data = dict(img_path=img, ref_path=ref)
         else:  # SISR
             data = dict(img_path=img)
         _data = test_pipeline(data)
 
         data = dict()
-        data_preprocessor = cfg['model']['data_preprocessor']
-        mean = torch.Tensor(data_preprocessor['mean']).view([3, 1, 1])
-        std = torch.Tensor(data_preprocessor['std']).view([3, 1, 1])
-        data['inputs'] = (_data['inputs'] - mean) / std
-        data = collate([data])
-
-        if ref:
-            data['data_samples'] = [_data['data_samples']]
-        if 'cuda' in str(device):
-            data['inputs'] = data['inputs'].cuda()
-            if ref:
-                data['data_samples'][0] = data['data_samples'][0].cuda()
+        data['inputs'] = [_data['inputs']]
+        data['data_samples'] = [_data['data_samples']]
 
         return data
 
     def forward(self, inputs: InputsType) -> PredType:
         """Forward the inputs to the model."""
+        inputs = self.model.data_preprocessor(inputs)
         with torch.no_grad():
-            result = self.model(mode='tensor', **inputs)
+            result = self.model(mode='predict', **inputs)
         return result
 
     def visualize(self,
@@ -105,7 +94,8 @@ class ImageSuperResolutionInferencer(BaseMMagicInferencer):
         Returns:
             List[np.ndarray]: Result of visualize
         """
-        results = tensor2img(preds[0])
+        result = preds[0].output.pred_img / 255.
+        results = tensor2img(result)[..., ::-1]
         if result_out_dir:
             mkdir_or_exist(os.path.dirname(result_out_dir))
             mmcv.imwrite(results, result_out_dir)

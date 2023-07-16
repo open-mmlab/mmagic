@@ -15,7 +15,7 @@ class SinusoidalPositionalEmbedding(nn.Module):
     https://github.com/pytorch/fairseq/blob/master/fairseq/modules/sinusoidal_positional_embedding.py # noqa
 
     Based on the original SPE in single dimension, we implement a 2D sinusoidal
-    positional encodding (SPE2d), as introduced in Positional Encoding as
+    positional encoding (SPE2d), as introduced in Positional Encoding as
     Spatial Inductive Bias in GANs, CVPR'2021.
 
     Args:
@@ -208,7 +208,7 @@ class CatersianGrid(nn.Module):
     The Catersian Grid is a common-used positional encoding in deep learning.
     In this implementation, we follow the convention of ``grid_sample`` in
     PyTorch. In other words, ``[-1, -1]`` denotes the left-top corner while
-    ``[1, 1]`` denotes the right-botton corner.
+    ``[1, 1]`` denotes the right-bottom corner.
     """
 
     def forward(self, x, **kwargs):

@@ -17,7 +17,7 @@ def register_all_modules(init_default_scope: bool = True) -> None:
             set to `mmagic`, and all registries will build modules from
             mmagic's registry node.
             To understand more about the registry, please refer
-            to https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/registry.md
+            to https://mmengine.readthedocs.io/en/latest/advanced_tutorials/registry.html
             Defaults to True.
     """  # noqa
     import mmagic.datasets  # noqa: F401,F403

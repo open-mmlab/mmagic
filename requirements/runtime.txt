@@ -1,20 +1,23 @@
 av
 av==8.0.3; python_version < '3.7'
+click  # required by mmagic/utils/io_utils.py
+controlnet_aux
 diffusers>=0.12.0
 einops
-face-alignment
+face-alignment<=1.3.4
 facexlib
 lmdb
 lpips
-mmcv>=2.0.0rc1
-mmengine
+mediapipe
 numpy
-opencv-python!=4.5.5.62,!=4.5.5.64
 # MMCV depends opencv-python instead of headless, thus we install opencv-python
 # Due to a bug from upstream, we skip this two version
 # https://github.com/opencv/opencv-python/issues/602
 # https://github.com/opencv/opencv/issues/21366
 # It seems to be fixed in https://github.com/opencv/opencv/pull/21382
+opencv-python!=4.5.5.62,!=4.5.5.64
+pandas  # required by mmagic/models/editors/disco_diffusion/guider.py
 Pillow
 resize_right
 tensorboard
+transformers>=4.27.4

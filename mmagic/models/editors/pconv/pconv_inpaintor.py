@@ -44,8 +44,8 @@ class PConvInpaintor(OneStageInpaintor):
 
         If `self.train_cfg.disc_step > 1`, the train step will contain multiple
         iterations for optimizing discriminator with different input data and
-        only one iteration for optimizing gerator after `disc_step` iterations
-        for discriminator.
+        only one iteration for optimizing generator after `disc_step`
+        iterations for discriminator.
 
         Args:
             data (List[dict]): Batch of data as input.

@@ -79,7 +79,7 @@ class SinGANMultiScaleDiscriminator(nn.Module):
         if prev_ch == curr_ch:
             self.blocks[curr_scale].load_state_dict(
                 self.blocks[curr_scale - 1].state_dict())
-            print_log('Successfully load pretrianed model from last scale.')
+            print_log('Successfully load pretrained model from last scale.')
         else:
             print_log('Cannot load pretrained model from last scale since'
                       f' prev_ch({prev_ch}) != curr_ch({curr_ch})')

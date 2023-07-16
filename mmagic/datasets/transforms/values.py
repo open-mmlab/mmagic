@@ -80,7 +80,7 @@ class SetValues(BaseTransform):
 
     - None
 
-    Added or Modifyed Keys:
+    Added or Modified Keys:
 
     - keys in the dictionary
 

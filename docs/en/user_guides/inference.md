@@ -1,356 +1,388 @@
 # Tutorial 3: Inference with pre-trained models
 
-MMagic provides APIs for you to easily play with state-of-the-art models on your own images or videos.
-Specifically, MMagic supports various fundamental generative models, including:
-unconditional Generative Adversarial Networks (GANs), conditional GANs, internal learning, diffusion models, etc.
+MMagic provides Hign-level APIs for you to easily play with state-of-the-art models on your own images or videos.
+
+In the new API, only two lines of code are needed to implement inference:
+
+```python
+from mmagic.apis import MMagicInferencer
+
+# Create a MMagicInferencer instance
+editor = MMagicInferencer('pix2pix')
+# Infer a image. Input image path and output image path is needed.
+results = editor.infer(img='../resources/input/translation/gt_mask_0.png', result_out_dir='../resources/output/translation/tutorial_translation_pix2pix_res.jpg')
+```
+
+MMagic supports various fundamental generative models, including:
+
+unconditional Generative Adversarial Networks (GANs), conditional GANs, diffusion models, etc.
+
 MMagic also supports various applications, including:
-image super-resolution, video super-resolution, video frame interpolation, image inpainting, image matting, image-to-image translation, etc.
+
+text-to-image, image-to-image translation, 3D-aware generation, image super-resolution, video super-resolution, video frame interpolation, image inpainting, image matting, image restoration, image colorization, image generation, etc.
 
 In this section, we will specify how to play with our pre-trained models.
 
 - [Tutorial 3: Inference with Pre-trained Models](#tutorial-3-inference-with-pre-trained-models)
-  - [Sample images with unconditional GANs](#sample-images-with-unconditional-gans)
-  - [Sample images with conditional GANs](#sample-images-with-conditional-gans)
-  - [Sample images with diffusion models](#sample-images-with-diffusion-models)
-  - [Run a demo of image inpainting](#run-a-demo-of-image-inpainting)
-  - [Run a demo of image matting](#run-a-demo-of-image-matting)
-  - [Run a demo of image super-resolution](#run-a-demo-of-image-super-resolution)
-  - [Run a demo of facial restoration](#run-a-demo-of-facial-restoration)
-  - [Run a demo of video super-resolution](#run-a-demo-of-video-super-resolution)
-  - [Run a demo of video frame interpolation](#run-a-demo-of-video-frame-interpolation)
-  - [Run a demo of image translation models](#run-a-demo-of-image-translation-models)
+  - [Prepare some images or videos for inference](#Prepare-some-images-or-videos-for-inference)
+  - [Generative Models](#Generative-Models)
+    - [Unconditional Generative Adversarial Networks (GANs)](<#Unconditional-Generative-Adversarial-Networks-(GANs)>)
+    - [Conditional Generative Adversarial Networks (GANs)](<#Conditional-Generative-Adversarial-Networks-(GANs)>)
+    - [Diffusion Models](#Diffusion-Models)
+  - [Applications](#Applications)
+    - [Text-to-Image](#Text-to-Image)
+    - [Image-to-image translation](#Image-to-image-translation)
+    - [3D-aware generation](#3D-aware-generation)
+    - [Image super-resolution](#Image-super-resolution)
+    - [Video super-resolution](#Video-super-resolution)
+    - [Video frame interpolation](Video-frame-interpolation)
+    - [Image inpainting](#Image-inpainting)
+    - [Image matting](#Image-matting)
+    - [Image restoration](#Image-restoration)
+    - [Image colorization](#Image-colorization)
+- [Previous Versions](#Previous-Versions)
 
-## Sample images with unconditional GANs
+## Prepare some images or videos for inference
 
-MMagic provides high-level APIs for sampling images with unconditional GANs. Here is an example of building StyleGAN2-256 and obtaining the synthesized images.
+Please refer to our [tutorials](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_tutorial.ipynb) for details.
 
-```python
-from mmagic.apis import init_model, sample_unconditional_model
+## Generative Models
 
-# Specify the path to model config and checkpoint file
-config_file = 'configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py'
-# you can download this checkpoint in advance and use a local file path.
-checkpoint_file = 'https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth'
+### Unconditional Generative Adversarial Networks (GANs)
 
-device = 'cuda:0'
-# init a generative model
-model = init_model(config_file, checkpoint_file, device=device)
-# sample images
-fake_imgs = sample_unconditional_model(model, 4)
-```
-
-Indeed, we have already provided a more friendly demo script to users. You can use [demo/unconditional_demo.py](../../../demo/unconditional_demo.py) with the following commands:
-
-```shell
-python demo/unconditional_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT} \
-    [--save-path ${SAVE_PATH}] \
-    [--device ${GPU_ID}]
-```
-
-Note that more arguments are also offered to customize your sampling procedure. Please use `python demo/unconditional_demo.py --help` to check more details.
-
-## Sample images with conditional GANs
-
-MMagic provides high-level APIs for sampling images with conditional GANs. Here is an example for building SAGAN-128 and obtaining the synthesized images.
+MMagic provides high-level APIs for sampling images with unconditional GANs. Unconditional GAN models do not need input, and output a image. We take 'styleganv1' as an example.
 
 ```python
-from mmagic.apis import init_model, sample_conditional_model
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
 
-# Specify the path to model config and checkpoint file
-config_file = 'configs/sagan/sagan_woReLUinplace-Glr1e-4_Dlr4e-4_noaug-ndisc1-8xb32-bigGAN-sch_imagenet1k-128x128.py'
-# you can download this checkpoint in advance and use a local file path.
-checkpoint_file = 'https://download.openmmlab.com/mmediting/sagan/sagan_128_woReLUinplace_noaug_bigGAN_imagenet1k_b32x8_Glr1e-4_Dlr-4e-4_ndisc1_20210818_210232-3f5686af.pth'
-
-device = 'cuda:0'
-# init a generative model
-model = init_model(config_file, checkpoint_file, device=device)
-# sample images with random label
-fake_imgs = sample_conditional_model(model, 4)
-
-# sample images with the same label
-fake_imgs = sample_conditional_model(model, 4, label=0)
-
-# sample images with specific labels
-fake_imgs = sample_conditional_model(model, 4, label=[0, 1, 2, 3])
+# Create a MMagicInferencer instance and infer
+result_out_dir = './resources/output/unconditional/tutorial_unconditional_styleganv1_res.png'
+editor = MMagicInferencer('styleganv1')
+results = editor.infer(result_out_dir=result_out_dir)
 ```
 
-Indeed, we have already provided a more friendly demo script to users. You can use [demo/conditional_demo.py](../../../demo/conditional_demo.py) with the following commands:
+Indeed, we have already provided a more friendly demo script to users. You can use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
 
 ```shell
-python demo/conditional_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT} \
-    [--label] ${LABEL} \
-    [--samples-per-classes] ${SAMPLES_PER_CLASSES} \
-    [--sample-all-classes] \
-    [--save-path ${SAVE_PATH}] \
-    [--device ${GPU_ID}]
+python demo/mmagic_inference_demo.py \
+        --model-name styleganv1 \
+        --result-out-dir demo_unconditional_styleganv1_res.jpg
 ```
 
-If `--label` is not passed, images with random labels would be generated.
-If `--label` is passed, we would generate `${SAMPLES_PER_CLASSES}` images for each input label.
-If `sample_all_classes` is set true in command line, `--label` would be ignored and the generator will output images for all categories.
+### Conditional Generative Adversarial Networks (GANs)
 
-Note that more arguments are also offered to customizing your sampling procedure. Please use `python demo/conditional_demo.py --help` to check more details.
-
-## Sample images with diffusion models
-
-MMagic provides high-level APIs for sampling images with diffusion models. Here is an example for building I-DDPM and obtaining the synthesized images.
+MMagic provides high-level APIs for sampling images with conditional GANs. Conditional GAN models take a label as input and output a image. We take 'biggan' as an example..
 
 ```python
-from mmagic.apis import init_model, sample_ddpm_model
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
 
-# Specify the path to model config and checkpoint file
-config_file = 'configs/improved_ddpm/ddpm_cosine-hybird-timestep-4k_16xb8-1500kiters_imagenet1k-64x64.py'
-# you can download this checkpoint in advance and use a local file path.
-checkpoint_file = 'https://download.openmmlab.com/mmediting/improved_ddpm/ddpm_cosine_hybird_timestep-4k_imagenet1k_64x64_b8x16_1500k_20220103_223919-b8f1a310.pth'
-device = 'cuda:0'
-# init a generative model
-model = init_model(config_file, checkpoint_file, device=device)
-# sample images
-fake_imgs = sample_ddpm_model(model, 4)
+# Create a MMagicInferencer instance and infer
+result_out_dir = './resources/output/conditional/tutorial_conditinal_biggan_res.jpg'
+editor = MMagicInferencer('biggan', model_setting=1)
+results = editor.infer(label=1, result_out_dir=result_out_dir)
 ```
 
-Indeed, we have already provided a more friendly demo script to users. You can use [demo/ddpm_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/ddpm_demo.py) with the following commands:
+Indeed, we have already provided a more friendly demo script to users. You can use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
 
 ```shell
-python demo/ddpm_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT} \
-    [--save-path ${SAVE_PATH}] \
-    [--device ${GPU_ID}]
+python demo/mmagic_inference_demo.py \
+        --model-name biggan \
+        --model-setting 1 \
+        --label 1 \
+        --result-out-dir demo_conditional_biggan_res.jpg
 ```
 
-Note that more arguments are also offered to customizing your sampling procedure. Please use `python demo/ddpm_demo.py --help` to check more details.
+### Diffusion Models
 
-## Run a demo of image inpainting
+MMagic provides high-level APIs for sampling images with diffusion models. f
 
-You can use the following commands to test images for inpainting.
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# Create a MMagicInferencer instance and infer
+editor = MMagicInferencer(model_name='stable_diffusion')
+text_prompts = 'A panda is having dinner at KFC'
+result_out_dir = './resources/output/text2image/tutorial_text2image_sd_res.png'
+editor.infer(text=text_prompts, result_out_dir=result_out_dir)
+```
+
+Use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
 
 ```shell
-python demo/inpainting_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${MASKED_IMAGE_FILE} \
-    ${MASK_FILE} \
-    ${SAVE_FILE} \
-    [--imshow] \
-    [--device ${GPU_ID}]
+python demo/mmagic_inference_demo.py \
+        --model-name stable_diffusion \
+        --text "A panda is having dinner at KFC" \
+        --result-out-dir demo_text2image_stable_diffusion_res.png
 ```
 
-If `--imshow` is specified, the demo will also show image with opencv. Examples:
+## Applications
+
+### Text-to-Image
+
+Text-to-image models take text as input, and output a image. We take 'controlnet-canny' as an example.
+
+```python
+import cv2
+import numpy as np
+import mmcv
+from mmengine import Config
+from PIL import Image
+
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
+
+register_all_modules()
+
+cfg = Config.fromfile('configs/controlnet/controlnet-canny.py')
+controlnet = MODELS.build(cfg.model).cuda()
+
+control_url = 'https://user-images.githubusercontent.com/28132635/230288866-99603172-04cb-47b3-8adb-d1aa532d1d2c.jpg'
+control_img = mmcv.imread(control_url)
+control = cv2.Canny(control_img, 100, 200)
+control = control[:, :, None]
+control = np.concatenate([control] * 3, axis=2)
+control = Image.fromarray(control)
+
+prompt = 'Room with blue walls and a yellow ceiling.'
+
+output_dict = controlnet.infer(prompt, control=control)
+samples = output_dict['samples']
+```
+
+Use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
 
 ```shell
-python demo/inpainting_demo.py \
-    configs/global_local/gl_256x256_8x12_celeba.py \
-    https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth \
-    tests/data/image/celeba_test.png \
-    tests/data/image/bbox_mask.png \
-    tests/data/pred/inpainting_celeba.png
+python demo/mmagic_inference_demo.py \
+        --model-name controlnet \
+        --model-setting 1 \
+        --text "Room with blue walls and a yellow ceiling." \
+        --control 'https://user-images.githubusercontent.com/28132635/230297033-4f5c32df-365c-4cf4-8e4f-1b76a4cbb0b7.png' \
+        --result-out-dir demo_text2image_controlnet_canny_res.png
 ```
 
-The predicted inpainting result will be saved in `tests/data/pred/inpainting_celeba.png`.
-
-## Run a demo of image matting
-
-You can use the following commands to test a pair of images and trimap.
-
-```shell
-python demo/matting_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${IMAGE_FILE} \
-    ${TRIMAP_FILE} \
-    ${SAVE_FILE} \
-    [--imshow] \
-    [--device ${GPU_ID}]
-```
-
-If `--imshow` is specified, the demo will also show image with opencv. Examples:
-
-```shell
-python demo/matting_demo.py \
-    configs/dim/dim_stage3_v16_pln_1x1_1000k_comp1k.py \
-    https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth \
-    tests/data/matting_dataset/merged/GT05.jpg \
-    tests/data/matting_dataset/trimap/GT05.png \
-    tests/data/pred/GT05.png
-```
-
-The predicted alpha matte will be saved in `tests/data/pred/GT05.png`.
-
-## Run a demo of image super-resolution
-
-You can use the following commands to test an image for restoration.
-
-```shell
-python demo/restoration_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${IMAGE_FILE} \
-    ${SAVE_FILE} \
-    [--imshow] \
-    [--device ${GPU_ID}] \
-    [--ref-path ${REF_PATH}]
-```
-
-If `--imshow` is specified, the demo will also show image with opencv. Examples:
-
-```shell
-python demo/restoration_demo.py \
-    configs/esrgan/esrgan_x4c64b23g32_g1_400k_div2k.py \
-    https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth \
-    tests/data/image/lq/baboon_x4.png \
-    demo/demo_out_baboon.png
-```
-
-You can test Ref-SR by providing `--ref-path`. Examples:
-
-```shell
-python demo/restoration_demo.py \
-    configs/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED.py \
-    https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth \
-    tests/data/frames/sequence/gt/sequence_1/00000000.png \
-    demo/demo_out.png \
-    --ref-path tests/data/frames/sequence/gt/sequence_1/00000001.png
-```
-
-## Run a demo of facial restoration
-
-You can use the following commands to test a face image for restoration.
-
-```shell
-python demo/restoration_face_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${IMAGE_FILE} \
-    ${SAVE_FILE} \
-    [--upscale-factor] \
-    [--face-size] \
-    [--imshow] \
-    [--device ${GPU_ID}]
-```
-
-If `--imshow` is specified, the demo will also show image with opencv. Examples:
-
-```shell
-python demo/restoration_face_demo.py \
-    configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py \
-    https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth \
-    tests/data/image/face/000001.png \
-    tests/data/pred/000001.png \
-    --upscale-factor 4
-```
-
-## Run a demo of video super-resolution
-
-You can use the following commands to test a video for restoration.
-
-```shell
-python demo/restoration_video_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${INPUT_DIR} \
-    ${OUTPUT_DIR} \
-    [--window-size=${WINDOW_SIZE}] \
-    [--device ${GPU_ID}]
-```
-
-It supports both the sliding-window framework and the recurrent framework. Examples:
-
-EDVR:
-
-```shell
-python demo/restoration_video_demo.py \
-    configs/edvr/edvrm_wotsa_x4_g8_600k_reds.py \
-    https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth \
-    data/Vid4/BIx4/calendar/ \
-    demo/output \
-    --window-size=5
-```
-
-BasicVSR:
-
-```shell
-python demo/restoration_video_demo.py \
-    configs/basicvsr/basicvsr_reds4.py \
-    https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth \
-    data/Vid4/BIx4/calendar/ \
-    demo/output
-```
-
-The restored video will be saved in `output/`.
-
-## Run a demo of video frame interpolation
-
-You can use the following commands to test a video for frame interpolation.
-
-```shell
-python demo/video_interpolation_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${INPUT_DIR} \
-    ${OUTPUT_DIR} \
-    [--fps-multiplier ${FPS_MULTIPLIER}] \
-    [--fps ${FPS}]
-```
-
-`${INPUT_DIR}` / `${OUTPUT_DIR}` can be a path of video file or the folder of a sequence of ordered images.
-If `${OUTPUT_DIR}` is a path of video file, its frame rate can be determined by the frame rate of input video and `fps_multiplier`, or be determined by `fps` directly (the former has higher priority). Examples:
-
-The frame rate of output video is determined by the frame rate of input video and `fps_multiplier`：
-
-```shell
-python demo/video_interpolation_demo.py \
-    configs/cain/cain_b5_g1b32_vimeo90k_triplet.py \
-    https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
-    tests/data/test_inference.mp4 \
-    tests/data/test_inference_vfi_out.mp4 \
-    --fps-multiplier 2.0
-```
-
-The frame rate of output video is determined by `fps`:
-
-```shell
-python demo/video_interpolation_demo.py \
-    configs/cain/cain_b5_g1b32_vimeo90k_triplet.py \
-    https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
-    tests/data/test_inference.mp4 \
-    tests/data/test_inference_vfi_out.mp4 \
-    --fps 60.0
-```
-
-## Run a demo of image translation models
+### Image-to-image translation
 
 MMagic provides high-level APIs for translating images by using image translation models. Here is an example of building Pix2Pix and obtaining the translated images.
 
 ```python
-from mmagic.apis import init_model, sample_img2img_model
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
 
-# Specify the path to model config and checkpoint file
-config_file = 'configs/pix2pix/pix2pix_vanilla-unet-bn_wo-jitter-flip-4xb1-190kiters_edges2shoes.py'
-# you can download this checkpoint in advance and use a local file path.
-checkpoint_file = 'https://download.openmmlab.com/mmediting/pix2pix/refactor/pix2pix_vanilla_unet_bn_wo_jitter_flip_1x4_186840_edges2shoes_convert-bgr_20210902_170902-0c828552.pth'
-# Specify the path to image you want to translate
-image_path = 'tests/data/paired/test/33_AB.jpg'
-device = 'cuda:0'
-# init a generative model
-model = init_model(config_file, checkpoint_file, device=device)
-# translate a single image
-translated_image = sample_img2img_model(model, image_path, target_domain='photo')
+# Create a MMagicInferencer instance and infer
+editor = MMagicInferencer('pix2pix')
+results = editor.infer(img=img_path, result_out_dir=result_out_dir)
 ```
 
-Indeed, we have already provided a more friendly demo script to users. You can use [demo/translation_demo.py](../../../demo/translation_demo.py) with the following commands:
+Use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
 
 ```shell
-python demo/translation_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT} \
-    ${IMAGE_PATH}
-    [--save-path ${SAVE_PATH}] \
-    [--device ${GPU_ID}]
+python demo/mmagic_inference_demo.py \
+        --model-name pix2pix \
+        --img ${IMAGE_PATH} \
+        --result-out-dir ${SAVE_PATH}
 ```
 
-Note that more customized arguments are also offered to customize your sampling procedure. Please use `python demo/translation_demo.py --help` to check more details.
+### 3D-aware generation
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# Create a MMagicInferencer instance and infer
+result_out_dir = './resources/output/eg3d-output'
+editor = MMagicInferencer('eg3d')
+results = editor.infer(result_out_dir=result_out_dir)
+```
+
+Use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
+
+```shell
+python demo/mmagic_inference_demo.py \
+    --model-name eg3d \
+    --result-out-dir ./resources/output/eg3d-output
+```
+
+### Image super-resolution
+
+Image super resolution models take a image as input, and output a high resolution image. We take 'esrgan' as an example.
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# Create a MMagicInferencer instance and infer
+img = './resources/input/restoration/0901x2.png'
+result_out_dir = './resources/output/restoration/tutorial_restoration_esrgan_res.png'
+editor = MMagicInferencer('esrgan')
+results = editor.infer(img=img, result_out_dir=result_out_dir)
+```
+
+Use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
+
+```shell
+python demo/mmagic_inference_demo.py \
+        --model-name esrgan \
+        --img ${IMAGE_PATH} \
+        --result-out-dir ${SAVE_PATH}
+```
+
+### Video super-resolution
+
+```python
+import os
+from mmagic.apis import MMagicInferencer
+from mmengine import mkdir_or_exist
+
+# Create a MMagicInferencer instance and infer
+video = './resources/input/video_interpolation/b-3LLDhc4EU_000000_000010.mp4'
+result_out_dir = './resources/output/video_super_resolution/tutorial_video_super_resolution_basicvsr_res.mp4'
+mkdir_or_exist(os.path.dirname(result_out_dir))
+editor = MMagicInferencer('basicvsr')
+results = editor.infer(video=video, result_out_dir=result_out_dir)
+```
+
+Use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
+
+```shell
+python demo/mmagic_inference_demo.py \
+        --model-name basicvsr \
+        --video ./resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
+        --result-out-dir ./resources/output/video_restoration/demo_video_restoration_basicvsr_res.mp4
+```
+
+### Video frame interpolation
+
+Video interpolation models take a video as input, and output a interpolated video. We take 'flavr' as an example.
+
+```python
+import os
+from mmagic.apis import MMagicInferencer
+from mmengine import mkdir_or_exist
+
+# Create a MMagicInferencer instance and infer
+video = './resources/input/video_interpolation/b-3LLDhc4EU_000000_000010.mp4'
+result_out_dir = './resources/output/video_interpolation/tutorial_video_interpolation_flavr_res.mp4'
+mkdir_or_exist(os.path.dirname(result_out_dir))
+editor = MMagicInferencer('flavr')
+results = editor.infer(video=video, result_out_dir=result_out_dir)
+```
+
+Use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
+
+```shell
+python demo/mmagic_inference_demo.py \
+        --model-name flavr \
+        --video ${VIDEO_PATH} \
+        --result-out-dir ${SAVE_PATH}
+```
+
+### Image inpainting
+
+Inpaiting models take a masked image and mask pair as input, and output a inpainted image. We take 'global_local' as an example.
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+img = './resources/input/inpainting/celeba_test.png'
+mask = './resources/input/inpainting/bbox_mask.png'
+
+# Create a MMagicInferencer instance and infer
+result_out_dir = './resources/output/inpainting/tutorial_inpainting_global_local_res.jpg'
+editor = MMagicInferencer('global_local', model_setting=1)
+results = editor.infer(img=img, mask=mask, result_out_dir=result_out_dir)
+```
+
+Use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
+
+```shell
+python demo/mmagic_inference_demo.py \
+        --model-name global_local  \
+        --img ./resources/input/inpainting/celeba_test.png \
+        --mask ./resources/input/inpainting/bbox_mask.png \
+        --result-out-dir ./resources/output/inpainting/demo_inpainting_global_local_res.jpg
+```
+
+### Image matting
+
+Inpaiting models take a image and trimap pair as input, and output a alpha image. We take 'gca' as an example.
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+img = './resources/input/matting/GT05.jpg'
+trimap = './resources/input/matting/GT05_trimap.jpg'
+
+# Create a MMagicInferencer instance and infer
+result_out_dir = './resources/output/matting/tutorial_matting_gca_res.png'
+editor = MMagicInferencer('gca')
+results = editor.infer(img=img, trimap=trimap, result_out_dir=result_out_dir)
+```
+
+Use [demo/mmagic_inference_demo.py](../../../demo/mmagic_inference_demo.py) with the following commands:
+
+```shell
+python demo/mmagic_inference_demo.py \
+        --model-name gca  \
+        --img ./resources/input/matting/GT05.jpg \
+        --trimap ./resources/input/matting/GT05_trimap.jpg \
+        --result-out-dir ./resources/output/matting/demo_matting_gca_res.png
+```
+
+### Image restoration
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# Create a MMagicInferencer instance and infer
+img = './resources/input/restoration/0901x2.png'
+result_out_dir = './resources/output/restoration/tutorial_restoration_nafnet_res.png'
+editor = MMagicInferencer('nafnet')
+results = editor.infer(img=img, result_out_dir=result_out_dir)
+```
+
+```shell
+python demo/mmagic_inference_demo.py \
+        --model-name nafnet \
+        --img ./resources/input/restoration/0901x2.png \
+        --result-out-dir ./resources/output/restoration/demo_restoration_nafnet_res.png
+```
+
+### Image colorization
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# Create a MMagicInferencer instance and infer
+img = 'https://github-production-user-asset-6210df.s3.amazonaws.com/49083766/245713512-de973677-2be8-4915-911f-fab90bb17c40.jpg'
+result_out_dir = './resources/output/colorization/tutorial_colorization_res.png'
+editor = MMagicInferencer('inst_colorization')
+results = editor.infer(img=img, result_out_dir=result_out_dir)
+```
+
+```shell
+python demo/mmagic_inference_demo.py \
+        --model-name inst_colorization \
+        --img https://github-production-user-asset-6210df.s3.amazonaws.com/49083766/245713512-de973677-2be8-4915-911f-fab90bb17c40.jpg \
+        --result-out-dir demo_colorization_res.png
+```
+
+# Previous Versions
+
+If you want to use deprecated demos, please use [MMagic v1.0.0rc7](https://github.com/open-mmlab/mmagic/tree/v1.0.0rc7) and reference the [old tutorial](https://github.com/open-mmlab/mmagic/blob/v1.0.0rc7/docs/en/user_guides/inference.md).

@@ -6,6 +6,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import cv2
 import mmcv
+import mmengine
 import numpy as np
 import torch
 from mmengine.dataset import Compose
@@ -109,6 +110,7 @@ class VideoInterpolationInferencer(BaseMMagicInferencer):
 
         # check if the output is a video
         output_file_extension = os.path.splitext(result_out_dir)[1]
+        mmengine.utils.mkdir_or_exist(osp.dirname(result_out_dir))
         if output_file_extension in VIDEO_EXTENSIONS:
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             target = cv2.VideoWriter(result_out_dir, fourcc, output_fps,
@@ -179,10 +181,11 @@ class VideoInterpolationInferencer(BaseMMagicInferencer):
                self.extra_parameters['end_idx']:
                 break
 
-        logger: MMLogger = MMLogger.get_current_instance()
-        logger.info(f'Output video is save at {result_out_dir}.')
         if to_video:
             target.release()
+
+        logger: MMLogger = MMLogger.get_current_instance()
+        logger.info(f'Output video is save at {result_out_dir}.')
 
         return {}
 

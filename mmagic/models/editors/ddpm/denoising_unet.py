@@ -780,7 +780,7 @@ class DenoisingUnet(BaseModule):
             to 0, this model will be degraded to an unconditional model.
             Defaults to 0.
         channels_cfg (list | dict[list], optional): Config for input channels
-            of the intermedia blocks. If list is passed, each element of the
+            of the intermediate blocks. If list is passed, each element of the
             list indicates the scale factor for the input channels of the
             current block with regard to the ``base_channels``. For block
             ``i``, the input and output channels should be
@@ -788,7 +788,7 @@ class DenoisingUnet(BaseModule):
             ``channels_cfg[i+1] * base_channels`` If dict is provided, the key
             of the dict should be the output scale and corresponding value
             should be a list to define channels. Default: Please refer to
-            ``_defualt_channels_cfg``.
+            ``_default_channels_cfg``.
         output_cfg (dict, optional): Config for output variables. Defaults to
             ``dict(mean='eps', var='learned_range')``.
         norm_cfg (dict, optional): The config for normalization layers.
@@ -821,7 +821,7 @@ class DenoisingUnet(BaseModule):
         attention_res (int | list[int], optional): Resolution of feature maps
             to apply attention operation. Defaults to ``[16, 8]``.
         pretrained (str | dict, optional): Path for the pretrained model or
-            dict containing information for pretained models whose necessary
+            dict containing information for pretrained models whose necessary
             key is 'ckpt_path'. Besides, you can also provide 'prefix' to load
             the generator part from the whole state dict.  Defaults to None.
     """
@@ -1161,7 +1161,7 @@ class DenoisingUnet(BaseModule):
         # By default samples have to be AT least a multiple of t
         # he overall upsampling factor.
         # The overall upsampling factor is equal
-        # to 2 ** (# num of upsampling layears).
+        # to 2 ** (# num of upsampling layers).
         # However, the upsampling interpolation output size
         # can be forced to fit any upsampling size
         # on the fly if necessary.

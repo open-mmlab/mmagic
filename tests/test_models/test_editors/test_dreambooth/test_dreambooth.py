@@ -122,7 +122,6 @@ class TestControlStableDiffusion(TestCase):
         dreambooth.infer = infer
 
     def test_train_step(self):
-        return
         dreambooth = self.dreambooth
         data = dict(
             inputs=[torch.ones([3, 64, 64])],

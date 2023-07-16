@@ -50,7 +50,7 @@ def load_inception(inception_args, metric):
 
     This function would try to load Inception under the guidance of 'type'
     given in `inception_args`, if not given, we would try best to load Tero's
-    ones. In detailly, we would first try to load the model from disk with
+    ones. In detail, we would first try to load the model from disk with
     the given 'inception_path', and then try to download the checkpoint from
     'inception_url'. If both method are failed, pytorch version of Inception
     would be loaded.
@@ -167,13 +167,13 @@ def get_inception_feat_cache_name_and_args(dataloader: DataLoader,
     """Get the name and meta info of the inception feature cache file
     corresponding to the input dataloader and metric.
 
-    The meta info includs
+    The meta info includes
     'data_root', 'data_prefix', 'meta_info' and 'pipeline' of the dataset, and
     'inception_style' and 'inception_args' of the metric. Then we calculate the
     hash value of the meta info dict with md5, and the name of the inception
     feature cache will be 'inception_feat_{HASH}.pkl'.
     Args:
-        datalaoder (Dataloader): The dataloader of real images.
+        dataloader (Dataloader): The dataloader of real images.
         metric (BaseMetric): The metric which needs inception features.
         real_nums (int): Number of images used to extract inception feature.
         capture_mean_cov (bool): Whether save the mean and covariance of
@@ -231,13 +231,13 @@ def get_vgg_feat_cache_name_and_args(dataloader: DataLoader,
     """Get the name and meta info of the vgg feature cache file corresponding
     to the input dataloader and metric.
 
-    The meta info includs 'data_root',
+    The meta info includes 'data_root',
     'data_prefix', 'meta_info' and 'pipeline' of the dataset, and
     'use_tero_scirpt' of the metric. Then we calculate the hash value of the
     meta info dict with md5, and the name of the vgg feature cache will be
     'vgg_feat_{HASH}.pkl'.
     Args:
-        datalaoder (Dataloader): The dataloader of real images.
+        dataloader (Dataloader): The dataloader of real images.
         metric (BaseMetric): The metric which needs inception features.
     Returns:
         Tuple[str, dict]: Filename and meta info dict of the inception feature
@@ -286,11 +286,11 @@ def prepare_inception_feat(dataloader: DataLoader,
       file. If cannot load, corresponding error will be raised.
     - If `metric.inception_pkl` is local path and file not exists, we will
       extract the inception feature manually and save to 'inception_pkl'.
-    - If `metric.inception_pkl` is not defined, we will extrace the inception
+    - If `metric.inception_pkl` is not defined, we will extract the inception
       feature and save it to default cache dir with default name.
 
     Args:
-        datalaoder (Dataloader): The dataloader of real images.
+        dataloader (Dataloader): The dataloader of real images.
         metric (BaseMetric): The metric which needs inception features.
         data_preprocessor (Optional[nn.Module]): Data preprocessor of the
             module. Used to preprocess the real images. If not passed, real
@@ -459,11 +459,11 @@ def prepare_vgg_feat(dataloader: DataLoader,
       file. If cannot load, corresponding error will be raised.
     - If `metric.vgg_pkl` is local path and file not exists, we will
       extract the vgg feature manually and save to 'vgg_pkl'.
-    - If `metric.vgg_pkl` is not defined, we will extrace the vgg
+    - If `metric.vgg_pkl` is not defined, we will extract the vgg
       feature and save it to default cache dir with default name.
 
     Args:
-        datalaoder (Dataloader): The dataloader of real images.
+        dataloader (Dataloader): The dataloader of real images.
         metric (BaseMetric): The metric which needs vgg features.
         data_preprocessor (Optional[nn.Module]): Data preprocessor of the
             module. Used to preprocess the real images. If not passed, real
@@ -481,7 +481,7 @@ def prepare_vgg_feat(dataloader: DataLoader,
                 vgg_state = pickle.load(file)
             print_log(
                 f'\'{metric.prefix}\' successful load VGG feature '
-                f'from \'{vgg_pkl}\'', 'currnet')
+                f'from \'{vgg_pkl}\'', 'current')
             return vgg_state['vgg_feat']
         elif vgg_pkl.startswith('s3'):
             try:

@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os
 import os.path as osp
 import warnings
 from typing import Dict, List, Optional, Union
@@ -63,11 +62,16 @@ class MMagicInferencer:
         'styleganv3',
 
         # matting models
+        'dim',
+        'indexnet',
         'gca',
 
         # inpainting models
-        'global_local',
         'aot_gan',
+        'deepfillv1',
+        'deepfillv2',
+        'global_local',
+        'partial_conv',
 
         # translation models
         'pix2pix',
@@ -96,7 +100,13 @@ class MMagicInferencer:
         'basicvsr_pp',
         'real_basicvsr',
 
+        # image_restoration models
+        'nafnet',
+        'swinir',
+        'restormer',
+
         # text2image models
+        'controlnet',
         'disco_diffusion',
         'stable_diffusion',
 
@@ -145,10 +155,17 @@ class MMagicInferencer:
                 setting_to_use = model_setting
             config_dir = cfgs['settings'][setting_to_use]['Config']
             config_dir = config_dir[config_dir.find('configs'):]
-            kwargs['config'] = os.path.join(
-                osp.dirname(__file__), '..', '..', config_dir)
+            if osp.exists(
+                    osp.join(osp.dirname(__file__), '..', '..', config_dir)):
+                kwargs['config'] = osp.join(
+                    osp.dirname(__file__), '..', '..', config_dir)
+            else:
+                kwargs['config'] = osp.join(
+                    osp.dirname(__file__), '..', '.mim', config_dir)
             if 'Weights' in cfgs['settings'][setting_to_use].keys():
                 kwargs['ckpt'] = cfgs['settings'][setting_to_use]['Weights']
+                if model_name == 'controlnet':
+                    kwargs['ckpt'] = None
 
         if model_config is not None:
             if kwargs.get('config', None) is not None:
@@ -223,9 +240,13 @@ class MMagicInferencer:
     @staticmethod
     def init_inference_supported_models_cfg() -> None:
         if not MMagicInferencer.inference_supported_models_cfg_inited:
-            all_cfgs_dir = osp.join(
-                osp.dirname(__file__), '..', '..', 'configs')
-
+            if osp.exists(
+                    osp.join(osp.dirname(__file__), '..', '..', 'configs')):
+                all_cfgs_dir = osp.join(
+                    osp.dirname(__file__), '..', '..', 'configs')
+            else:
+                all_cfgs_dir = osp.join(
+                    osp.dirname(__file__), '..', '.mim', 'configs')
             for model_name in MMagicInferencer.inference_supported_models:
                 meta_file_dir = osp.join(all_cfgs_dir, model_name,
                                          'metafile.yml')

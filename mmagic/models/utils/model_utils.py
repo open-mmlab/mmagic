@@ -14,6 +14,8 @@ from torch.nn import init
 
 from mmagic.structures import DataSample
 from mmagic.utils.typing import ForwardInputs
+from .tome_utils import (add_tome_cfg_hook, build_mmagic_tomesd_block,
+                         build_mmagic_wrapper_tomesd_block, isinstance_str)
 
 
 def default_init_weights(module, scale=1):
@@ -156,7 +158,7 @@ def get_valid_noise_size(noise_size: Optional[int],
     # get noise_size
     if noise_size is not None and model_noise_size is not None:
         assert noise_size == model_noise_size, (
-            'Input \'noise_size\' is unconsistency with '
+            'Input \'noise_size\' is inconsistent with '
             f'\'generator.noise_size\'. Receive \'{noise_size}\' and '
             f'\'{model_noise_size}\'.')
     else:
@@ -194,7 +196,7 @@ def get_valid_num_batches(batch_inputs: Optional[ForwardInputs] = None,
         if isinstance(batch_inputs, Tensor):
             return batch_inputs.shape[0]
 
-        # get num_batces from batch_inputs
+        # get num_batches from batch_inputs
         num_batches_dict = {
             k: v.shape[0]
             for k, v in batch_inputs.items() if isinstance(v, Tensor)
@@ -208,7 +210,7 @@ def get_valid_num_batches(batch_inputs: Optional[ForwardInputs] = None,
             assert all([
                 bz == num_batches_inputs for bz in num_batches_dict.values()
             ]), ('\'num_batches\' is inconsistency among the preprocessed '
-                 f'input. \'num_batches\' parsed resutls: {num_batches_dict}')
+                 f'input. \'num_batches\' parsed results: {num_batches_dict}')
         else:
             num_batches_inputs = None
     else:
@@ -282,7 +284,7 @@ def set_xformers(module: nn.Module, prefix: str = '') -> nn.Module:
         nn.Module: The module with xformers' efficient Attention.
     """
 
-    if not xformers_is_enable:
+    if not xformers_is_enable():
         print_log('Do not support Xformers. Please install Xformers first. '
                   'The program will run without Xformers.')
         return
@@ -299,3 +301,118 @@ def set_xformers(module: nn.Module, prefix: str = '') -> nn.Module:
             set_xformers(m, prefix=n)
 
     return module
+
+
+def set_tomesd(model: torch.nn.Module,
+               ratio: float = 0.5,
+               max_downsample: int = 1,
+               sx: int = 2,
+               sy: int = 2,
+               use_rand: bool = True,
+               merge_attn: bool = True,
+               merge_crossattn: bool = False,
+               merge_mlp: bool = False):
+    """Patches a stable diffusion model with ToMe. Apply this to the highest
+    level stable diffusion object.
+
+    Refer to: https://github.com/dbolya/tomesd/blob/main/tomesd/patch.py#L173 # noqa
+
+    Args:
+        model (torch.nn.Module): A top level Stable Diffusion module to patch in place.
+        ratio (float): The ratio of tokens to merge. I.e., 0.4 would reduce the total
+            number of tokens by 40%.The maximum value for this is 1-(1/(`sx` * `sy`)). By default,
+            the max ratio is 0.75 (usually <= 0.5 is recommended). Higher values result in more speed-up,
+            but with more visual quality loss.
+        max_downsample (int): Apply ToMe to layers with at most this amount of downsampling.
+            E.g., 1 only applies to layers with no downsampling, while 8 applies to all layers.
+            Should be chosen from [1, 2, 4, or 8]. 1 and 2 are recommended.
+        sx, sy (int, int): The stride for computing dst sets. A higher stride means you can merge
+            more tokens, default setting of (2, 2) works well in most cases.
+            `sx` and `sy` do not need to divide image size.
+        use_rand (bool): Whether or not to allow random perturbations when computing dst sets.
+            By default: True, but if you're having weird artifacts you can try turning this off.
+        merge_attn (bool): Whether or not to merge tokens for attention (recommended).
+        merge_crossattn (bool): Whether or not to merge tokens for cross attention (not recommended).
+        merge_mlp (bool): Whether or not to merge tokens for the mlp layers (particular not recommended).
+
+    Returns:
+        model (torch.nn.Module): Model patched by ToMe.
+    """
+
+    # Make sure the module is not currently patched
+    remove_tomesd(model)
+
+    is_mmagic = isinstance_str(model, 'StableDiffusion') or isinstance_str(
+        model, 'BaseModel')
+
+    if is_mmagic:
+        # Supports "StableDiffusion.unet" and "unet"
+        diffusion_model = model.unet if hasattr(model, 'unet') else model
+        if isinstance_str(diffusion_model, 'DenoisingUnet'):
+            is_wrapper = False
+        else:
+            is_wrapper = True
+    else:
+        if not hasattr(model, 'model') or not hasattr(model.model,
+                                                      'diffusion_model'):
+            # Provided model not supported
+            print('Expected a Stable Diffusion / Latent Diffusion model.')
+            raise RuntimeError('Provided model was not supported.')
+        diffusion_model = model.model.diffusion_model
+        # TODO: can support more diffusion models, like Stability AI
+        is_wrapper = None
+
+    diffusion_model._tome_info = {
+        'size': None,
+        'hooks': [],
+        'args': {
+            'ratio': ratio,
+            'max_downsample': max_downsample,
+            'sx': sx,
+            'sy': sy,
+            'use_rand': use_rand,
+            'merge_attn': merge_attn,
+            'merge_crossattn': merge_crossattn,
+            'merge_mlp': merge_mlp
+        }
+    }
+    add_tome_cfg_hook(diffusion_model)
+
+    for _, module in diffusion_model.named_modules():
+        if isinstance_str(module, 'BasicTransformerBlock'):
+            # TODO: can support more stable diffusion based models
+            if is_mmagic:
+                if is_wrapper is None:
+                    raise NotImplementedError(
+                        'Specific ToMe block not implemented')
+                elif not is_wrapper:
+                    make_tome_block_fn = build_mmagic_tomesd_block
+                elif is_wrapper:
+                    make_tome_block_fn = build_mmagic_wrapper_tomesd_block
+            else:
+                raise TypeError(
+                    'Currently `tome` only support *stable-diffusion* model!')
+            module.__class__ = make_tome_block_fn(module.__class__)
+            module._tome_info = diffusion_model._tome_info
+
+    return model
+
+
+def remove_tomesd(model: torch.nn.Module):
+    """Removes a patch from a ToMe Diffusion module if it was already patched.
+
+    Refer to: https://github.com/dbolya/tomesd/blob/main/tomesd/patch.py#L251 # noqa
+    """
+    # For mmagic Stable Diffusion models
+    model = model.unet if hasattr(model, 'unet') else model
+
+    for _, module in model.named_modules():
+        if hasattr(module, '_tome_info'):
+            for hook in module._tome_info['hooks']:
+                hook.remove()
+            module._tome_info['hooks'].clear()
+
+        if module.__class__.__name__ == 'ToMeBlock':
+            module.__class__ = module._parent
+
+    return model

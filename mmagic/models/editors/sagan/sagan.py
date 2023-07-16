@@ -19,7 +19,7 @@ TrainInput = Union[dict, Tensor]
 @MODELS.register_module('SNGAN')
 @MODELS.register_module()
 class SAGAN(BaseConditionalGAN):
-    """Impelmentation of `Self-Attention Generative Adversarial Networks`.
+    """Implementation of `Self-Attention Generative Adversarial Networks`.
 
     <https://arxiv.org/abs/1805.08318>`_ (SAGAN), `Spectral Normalization for
     Generative Adversarial Networks <https://arxiv.org/abs/1802.05957>`_

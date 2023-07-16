@@ -37,7 +37,7 @@ class EG3DRenderer(BaseModule):
             points per ray. Defaults to 64.
         depth_resolution_importance (int): Resolution of depth in hierarchical
             sampling. Defaults to 64.
-        clamp_mode (str): The clamp mode for density predicted by nerural
+        clamp_mode (str): The clamp mode for density predicted by neural
             renderer. Defaults to 'softplus'.
         white_back (bool): Whether render a white background. Defaults to True.
         projection_mode (str): The projection method to mapping coordinates of
@@ -312,7 +312,7 @@ class EG3DRenderer(BaseModule):
         In the original implementation, the mapping matrix is incorrect.
         Therefore we support users to define `projection_mode` to control
         projection behavior in the initialization function of
-        :class:`~EG3DRenderer`. If you want to run inference with the offifical
+        :class:`~EG3DRenderer`. If you want to run inference with the official
         pretrained model, please remember to set
         `projection_mode = 'official'`. More information please refer to
         https://github.com/NVlabs/eg3d/issues/67.
@@ -365,11 +365,11 @@ class EG3DRenderer(BaseModule):
                 (bz, NeRF_res * NeRF_res, N_depth, N_feat).
             densities_c (torch.Tensor): Coarse densities shape like
                 (bz, NeRF_res * NeRF_res, N_depth, 1).
-            depths_f (torch.Tensro): Fine depths shape like
+            depths_f (torch.Tensor): Fine depths shape like
                 (bz, NeRF_res * NeRF_res, N_depth_fine, 1).
             colors_f (torch.Tensor): Fine colors features shape like
                 (bz, NeRF_res * NeRF_res, N_depth_fine, N_feat).
-            densities_f (torch.Tensor): Fine densites shape like
+            densities_f (torch.Tensor): Fine densities shape like
                 (bz, NeRF_res * NeRF_res, N_depth_fine, 1).
 
         Returns:

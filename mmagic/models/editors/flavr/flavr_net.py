@@ -570,7 +570,7 @@ class BasicBlock(nn.Module):
 
 
 class SEGating(nn.Module):
-    """Gatting of SE attention.
+    """Gating of SE attention.
 
     Args:
         in_channels (int): Number of channels in the input feature map.

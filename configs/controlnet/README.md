@@ -26,10 +26,10 @@ This model has several weights including vae, unet and clip. You should download
 
 |                      Model                      | Dataset |                                             Download                                             |
 | :---------------------------------------------: | :-----: | :----------------------------------------------------------------------------------------------: |
-|    [ControlNet-Canny](./controlnet-canny.py)    |    -    |  [model](https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_canny.pth)   |
-| [ControlNet-Segmentation](./controlnet-seg.py)  |    -    |   [model](https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_seg.pth)    |
-|     [ControlNet-Pose](./controlnet-pose.py)     |    -    | [model](https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_openpose.pth) |
 | [ControlNet-Demo](./controlnet-1xb1-fill50k.py) |    -    |                                                -                                                 |
+|    [ControlNet-Canny](./controlnet-canny.py)    |    -    |  [model](https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_canny.pth)   |
+|     [ControlNet-Pose](./controlnet-pose.py)     |    -    | [model](https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_openpose.pth) |
+| [ControlNet-Segmentation](./controlnet-seg.py)  |    -    |   [model](https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_seg.pth)    |
 
 Noted that, [ControlNet-Demo](./controlnet-1xb1-demo_dataset.py) is a demo config to train ControlNet with toy dataset named Fill50K.
 
@@ -159,6 +159,35 @@ for idx, control in enumerate(controls):
 </thead>
 </table>
 
+### Using MMInferencer
+
+You can only use several lines of codes to play controlnet by MMagic!
+
+```python
+from mmagic.apis import MMagicInferencer
+
+# controlnet-canny
+controlnet_canny_inferencer = MMagicInferencer(model_name='controlnet', model_setting=1)
+text_prompts = 'Room with blue walls and a yellow ceiling.'
+control = 'https://user-images.githubusercontent.com/28132635/230297033-4f5c32df-365c-4cf4-8e4f-1b76a4cbb0b7.png'
+result_out_dir = 'controlnet_canny_res.png'
+controlnet_canny_inferencer.infer(text=text_prompts, control=control, result_out_dir=result_out_dir)
+
+# controlnet-pose
+controlnet_pose_inferencer = MMagicInferencer(model_name='controlnet', model_setting=2)
+text_prompts = 'masterpiece, best quality, sky, black hair, skirt, sailor collar, looking at viewer, short hair, building, bangs, neckerchief, long sleeves, cloudy sky, power lines, shirt, cityscape, pleated skirt, scenery, blunt bangs, city, night, black sailor collar, closed mouth'
+control = 'https://user-images.githubusercontent.com/28132635/230380893-2eae68af-d610-4f7f-aa68-c2f22c2abf7e.png'
+result_out_dir = 'controlnet_pose_res.png'
+controlnet_pose_inferencer.infer(text=text_prompts, control=control, result_out_dir=result_out_dir)
+
+# controlnet-seg
+controlnet_seg_inferencer = MMagicInferencer(model_name='controlnet', model_setting=3)
+text_prompts = 'black house, blue sky'
+control = 'https://github-production-user-asset-6210df.s3.amazonaws.com/49083766/243599897-553a4c46-c61d-46df-b820-59a49aaf6678.png'
+result_out_dir = 'controlnet_seg_res.png'
+controlnet_seg_inferencer.infer(text=text_prompts, control=control, result_out_dir=result_out_dir)
+```
+
 ## Train your own ControlNet!
 
 You can start training your own ControlNet with the toy dataset [Fill50K](https://huggingface.co/lllyasviel/ControlNet/blob/main/training/fill50k.zip) with the following command:
@@ -176,6 +205,21 @@ optim_wrapper = dict(controlnet=dict(optimizer=dict(type='AdamW', lr=1e-5)))
 optim_wrapper = dict(
     controlnet=dict(accumulative_counts=4, optimizer=dict(type='AdamW', lr=1e-5)))
 ```
+
+## Use ToMe to accelerate your training and inference
+
+We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed for stable-diffusion-based models referring to [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` in [ControlNet-Canny](./controlnet-canny.py). The only requirement is `torch >= 1.12.1` in order to properly support `torch.Tensor.scatter_reduce()` functionality. Please do check it before running the demo.
+
+```python
+model = dict(
+    type='ControlStableDiffusion',
+    ...
+    tomesd_cfg=dict(ratio=0.5),
+    ...
+    init_cfg=dict(type='init_from_unet'))
+```
+
+For more details, you can refer to [Stable Diffusion Acceleration](../stable_diffusion/README.md#use-tome-to-accelerate-your-stable-diffusion-model).
 
 ## Comments
 

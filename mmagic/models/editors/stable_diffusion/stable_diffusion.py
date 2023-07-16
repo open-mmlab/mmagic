@@ -6,14 +6,15 @@ from typing import Dict, List, Optional, Union
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine import print_log
 from mmengine.logging import MMLogger
 from mmengine.model import BaseModel
 from mmengine.runner import set_random_seed
 from PIL import Image
 from tqdm.auto import tqdm
-from transformers import CLIPTokenizer
 
-from mmagic.models.utils import build_module, set_xformers
+from mmagic.models.archs import TokenizerWrapper
+from mmagic.models.utils import build_module, set_tomesd, set_xformers
 from mmagic.registry import DIFFUSION_SCHEDULERS, MODELS
 from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
@@ -43,8 +44,13 @@ class StableDiffusion(BaseModel):
             module for diffusion scheduler in test stage (`self.infer`). If not
             passed, will use the same scheduler as `schedule`. Defaults to
             None.
+        dtype (str, optional): The dtype for the model This argument will not work
+            when dtype is defined for submodels. Defaults to None.
         enable_xformers (bool, optional): Whether to use xformers.
             Defaults to True.
+        noise_offset_weight (bool, optional): The weight of noise offset
+            introduced in https://www.crosslabs.org/blog/diffusion-with-offset-noise
+            Defaults to 0.
         data_preprocessor (dict, optional): The pre-process config of
             :class:`BaseDataPreprocessor`.
         init_cfg (dict, optional): The weight initialized config for
@@ -58,7 +64,10 @@ class StableDiffusion(BaseModel):
                  unet: ModelType,
                  scheduler: ModelType,
                  test_scheduler: Optional[ModelType] = None,
+                 dtype: Optional[str] = None,
                  enable_xformers: bool = True,
+                 noise_offset_weight: float = 0,
+                 tomesd_cfg: Optional[dict] = None,
                  data_preprocessor: Optional[ModelType] = dict(
                      type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None):
@@ -66,8 +75,24 @@ class StableDiffusion(BaseModel):
         # TODO: support `from_pretrained` for this class
         super().__init__(data_preprocessor, init_cfg)
 
-        self.vae = build_module(vae, MODELS)
-        self.unet = build_module(unet, MODELS)
+        default_args = dict()
+        if dtype is not None:
+            default_args['dtype'] = dtype
+
+        self.dtype = torch.float32
+        if dtype in ['float16', 'fp16', 'half']:
+            self.dtype = torch.float16
+        elif dtype == 'bf16':
+            self.dtype = torch.bfloat16
+        else:
+            assert dtype in [
+                'fp32', None
+            ], ('dtype must be one of \'fp32\', \'fp16\', \'bf16\' or None.')
+
+        self.vae = build_module(vae, MODELS, default_args=default_args)
+        self.unet = build_module(unet, MODELS)  # NOTE: initialize unet as fp32
+        self._unet_ori_dtype = next(self.unet.parameters()).dtype
+        print_log(f'Set UNet dtype to \'{self._unet_ori_dtype}\'.', 'current')
         self.scheduler = build_module(scheduler, DIFFUSION_SCHEDULERS)
         if test_scheduler is None:
             self.test_scheduler = deepcopy(self.scheduler)
@@ -75,32 +100,66 @@ class StableDiffusion(BaseModel):
             self.test_scheduler = build_module(test_scheduler,
                                                DIFFUSION_SCHEDULERS)
         self.text_encoder = build_module(text_encoder, MODELS)
-        if isinstance(tokenizer, nn.Module):
+        if not isinstance(tokenizer, str):
             self.tokenizer = tokenizer
         else:
             # NOTE: here we assume tokenizer is an string
-            # TODO: maybe support a tokenizer wrapper later
-            self.tokenizer = CLIPTokenizer.from_pretrained(
-                tokenizer, subfolder='tokenizer')
+            self.tokenizer = TokenizerWrapper(tokenizer, subfolder='tokenizer')
 
         self.unet_sample_size = self.unet.sample_size
         self.vae_scale_factor = 2**(len(self.vae.block_out_channels) - 1)
 
+        self.enable_noise_offset = noise_offset_weight > 0
+        self.noise_offset_weight = noise_offset_weight
+
         self.enable_xformers = enable_xformers
         self.set_xformers()
 
-    def set_xformers(self) -> nn.Module:
+        self.tomesd_cfg = tomesd_cfg
+        self.set_tomesd()
+
+    def set_xformers(self, module: Optional[nn.Module] = None) -> nn.Module:
         """Set xformers for the model.
 
         Returns:
             nn.Module: The model with xformers.
         """
         if self.enable_xformers:
-            set_xformers(self)
+            if module is None:
+                set_xformers(self)
+            else:
+                set_xformers(module)
+
+    def set_tomesd(self) -> nn.Module:
+        """Set ToMe for the stable diffusion model.
+
+        Returns:
+            nn.Module: The model with ToMe.
+        """
+        if self.tomesd_cfg is not None:
+            set_tomesd(self, **self.tomesd_cfg)
 
     @property
     def device(self):
         return next(self.parameters()).device
+
+    def train(self, mode: bool = True):
+        """Set train/eval mode.
+
+        Args:
+            mode (bool, optional): Whether set train mode. Defaults to True.
+        """
+        if mode:
+            if next(self.unet.parameters()).dtype != self._unet_ori_dtype:
+                print_log(
+                    f'Set UNet dtype to \'{self._unet_ori_dtype}\' '
+                    'in the train mode.', 'current')
+            self.unet.to(self._unet_ori_dtype)
+        else:
+            self.unet.to(self.dtype)
+            print_log(f'Set UNet dtype to \'{self.dtype}\' in the eval mode.',
+                      'current')
+        return super().train(mode)
 
     @torch.no_grad()
     def infer(self,
@@ -198,8 +257,8 @@ class StableDiffusion(BaseModel):
                                               negative_prompt)
 
         # 4. Prepare timesteps
-        self.scheduler.set_timesteps(num_inference_steps)
-        timesteps = self.scheduler.timesteps
+        self.test_scheduler.set_timesteps(num_inference_steps)
+        timesteps = self.test_scheduler.timesteps
 
         # 5. Prepare latent variables
         if hasattr(self.unet, 'module'):
@@ -228,7 +287,7 @@ class StableDiffusion(BaseModel):
             # expand the latents if we are doing classifier free guidance
             latent_model_input = torch.cat(
                 [latents] * 2) if do_classifier_free_guidance else latents
-            latent_model_input = self.scheduler.scale_model_input(
+            latent_model_input = self.test_scheduler.scale_model_input(
                 latent_model_input, t)
 
             latent_model_input = latent_model_input.to(latent_dtype)
@@ -245,7 +304,7 @@ class StableDiffusion(BaseModel):
                     noise_pred_text - noise_pred_uncond)
 
                 # compute the previous noisy sample x_t -> x_t-1
-                latents = self.scheduler.step(
+                latents = self.test_scheduler.step(
                     noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
 
         # 8. Post-processing
@@ -317,13 +376,15 @@ class StableDiffusion(BaseModel):
                 ' can only handle sequences up to'
                 f' {self.tokenizer.model_max_length} tokens: {removed_text}')
 
-        if hasattr(self.text_encoder.config, 'use_attention_mask'
-                   ) and self.text_encoder.config.use_attention_mask:
+        text_encoder = self.text_encoder.module if hasattr(
+            self.text_encoder, 'module') else self.text_encoder
+        if hasattr(text_encoder.config, 'use_attention_mask'
+                   ) and text_encoder.config.use_attention_mask:
             attention_mask = text_inputs.attention_mask.to(device)
         else:
             attention_mask = None
 
-        text_embeddings = self.text_encoder(
+        text_embeddings = text_encoder(
             text_input_ids.to(device),
             attention_mask=attention_mask,
         )
@@ -366,13 +427,13 @@ class StableDiffusion(BaseModel):
                 return_tensors='pt',
             )
 
-            if hasattr(self.text_encoder.config, 'use_attention_mask'
-                       ) and self.text_encoder.config.use_attention_mask:
+            if hasattr(text_encoder.config, 'use_attention_mask'
+                       ) and text_encoder.config.use_attention_mask:
                 attention_mask = uncond_input.attention_mask.to(device)
             else:
                 attention_mask = None
 
-            uncond_embeddings = self.text_encoder(
+            uncond_embeddings = text_encoder(
                 uncond_input.input_ids.to(device),
                 attention_mask=attention_mask,
             )
@@ -570,7 +631,6 @@ class StableDiffusion(BaseModel):
 
         optim_wrapper = optim_wrapper_dict['unet']
         with optim_wrapper.optim_context(self.unet):
-            # image = inputs['img']  # image for new concept
             image = inputs
             prompt = data_samples.prompt
             num_batches = image.shape[0]
@@ -580,6 +640,15 @@ class StableDiffusion(BaseModel):
             latents = latents * vae.config.scaling_factor
 
             noise = torch.randn_like(latents)
+
+            if self.enable_noise_offset:
+                noise = noise + self.noise_offset_weight * torch.randn(
+                    latents.shape[0],
+                    latents.shape[1],
+                    1,
+                    1,
+                    device=noise.device)
+
             timesteps = torch.randint(
                 0,
                 self.scheduler.num_train_timesteps, (num_batches, ),
@@ -605,7 +674,7 @@ class StableDiffusion(BaseModel):
                 raise ValueError('Unknown prediction type '
                                  f'{self.scheduler.config.prediction_type}')
 
-            # NOTE: convert to float manually
+            # NOTE: we train unet in fp32, convert to float manually
             model_output = self.unet(
                 noisy_latents.float(),
                 timesteps,

@@ -57,7 +57,13 @@ English | [简体中文](README_zh-CN.md)
 
 ## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### New release [**MMagic v1.0.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.0) \[25/04/2023\]:
+### New release [**MMagic v1.0.1**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.1) \[26/05/2023\]:
+
+- Support tomesd for StableDiffusion speed-up.
+- Support all inpainting/matting/image restoration models inferencer.
+- Support animated drawings.
+- Support Style-Based Global Appearance Flow for Virtual Try-On.
+- Fix inferencer in pip-install.
 
 We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration).
 
@@ -116,12 +122,12 @@ Please refer to [migration documents](docs/en/migration/overview.md) to migrate 
 
 - [📖 Introduction](#-introduction)
 - [🙌 Contributing](#-contributing)
-- [🛠️ Installation](#%EF%B8%8F-installation)
+- [🛠️ Installation](#️-installation)
 - [📊 Model Zoo](#-model-zoo)
 - [🤝 Acknowledgement](#-acknowledgement)
-- [🖊️ Citation](#%EF%B8%8F-citation)
+- [🖊️ Citation](#️-citation)
 - [🎫 License](#-license)
-- [🏗️ ️OpenMMLab Family](#%EF%B8%8F-️openmmlab-family)
+- [🏗️ ️OpenMMLab Family](#️-️openmmlab-family)
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -365,7 +371,7 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
         <ul>
           <li><a href="configs/dim/README.md">DIM (CVPR'2017)</a></li>
           <li><a href="configs/indexnet/README.md">IndexNet (ICCV'2019)</a></li>
-          <li><a href="configs/mask2former">GCA (AAAI'2020)</a></li>
+          <li><a href="configs/gca/README.md">GCA (AAAI'2020)</a></li>
         </ul>
       </td>
       <td>
@@ -376,6 +382,7 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
           <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
           <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
           <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
+          <li><a href="configs/controlnet_animation/README.md">ControlNet Animation (2023)</a></li>
         </ul>
       </td>
       <td>

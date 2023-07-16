@@ -51,6 +51,9 @@ class DreamBooth(StableDiffusion):
         dtype (str, optional): The dtype for the model. Defaults to 'fp16'.
         enable_xformers (bool, optional): Whether to use xformers.
             Defaults to True.
+        noise_offset_weight (bool, optional): The weight of noise offset
+            introduced in https://www.crosslabs.org/blog/diffusion-with-offset-noise  # noqa
+            Defaults to 0.
         data_preprocessor (dict, optional): The pre-process config of
             :class:`BaseDataPreprocessor`. Defaults to
                 dict(type='DataPreprocessor').
@@ -73,12 +76,15 @@ class DreamBooth(StableDiffusion):
                  finetune_text_encoder: bool = False,
                  dtype: str = 'fp16',
                  enable_xformers: bool = True,
+                 noise_offset_weight: float = 0,
+                 tomesd_cfg: Optional[dict] = None,
                  data_preprocessor: Optional[ModelType] = dict(
                      type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None):
 
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, enable_xformers, data_preprocessor,
+                         test_scheduler, dtype, enable_xformers,
+                         noise_offset_weight, tomesd_cfg, data_preprocessor,
                          init_cfg)
         self.num_class_images = num_class_images
         self.class_prior_prompt = class_prior_prompt
@@ -185,14 +191,8 @@ class DreamBooth(StableDiffusion):
             data_samples.split() * len(prompt)
             data_samples = DataSample.stack(data_samples.split() * len(prompt))
 
-        unet_dtype = next(self.unet.parameters()).dtype
-        self.unet.to(self.dtype)
-
         output = self.infer(prompt, return_type='tensor')
         samples = output['samples']
-
-        self.unet.to(unet_dtype)
-
         samples = self.data_preprocessor.destruct(samples, data_samples)
 
         out_data_sample = DataSample(fake_img=samples, prompt=prompt)
@@ -220,14 +220,8 @@ class DreamBooth(StableDiffusion):
             # construct a fake data_sample for destruct
             data_samples = DataSample.stack(data['data_samples'] * len(prompt))
 
-        unet_dtype = next(self.unet.parameters()).dtype
-        self.unet.to(self.dtype)
-
         output = self.infer(prompt, return_type='tensor')
         samples = output['samples']
-
-        self.unet.to(unet_dtype)
-
         samples = self.data_preprocessor.destruct(samples, data_samples)
 
         out_data_sample = DataSample(fake_img=samples, prompt=prompt)

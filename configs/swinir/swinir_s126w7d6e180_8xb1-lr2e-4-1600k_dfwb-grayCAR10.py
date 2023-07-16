@@ -101,13 +101,13 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         metainfo=dict(dataset_type='classic5', task_name='CAR'),
-        data_root=data_root + '/classic5',
+        data_root=data_root + '/Classic5',
         data_prefix=dict(img='', gt=''),
         pipeline=val_pipeline))
 
 val_evaluator = [
-    dict(type='PSNR', prefix='classic5'),
-    dict(type='SSIM', prefix='classic5'),
+    dict(type='PSNR', prefix='Classic5'),
+    dict(type='SSIM', prefix='Classic5'),
 ]
 
 train_cfg = dict(

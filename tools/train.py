@@ -101,7 +101,7 @@ def main():
     runner = Runner.from_cfg(cfg)
 
     print_colored_log(f'Working directory: {cfg.work_dir}')
-    print_colored_log(f'Log directiry: {runner._log_dir}')
+    print_colored_log(f'Log directory: {runner._log_dir}')
 
     # start training
     runner.train()
