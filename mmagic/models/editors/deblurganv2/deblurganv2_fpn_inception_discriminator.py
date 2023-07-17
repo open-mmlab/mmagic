@@ -7,6 +7,7 @@ from mmagic.registry import MODELS
 
 from .deblurganv2_util import get_norm_layer
 
+model_list = ['DoubleGan', '']
 
 # Defines the PatchGAN discriminator with the specified arguments.
 class NLayerDiscriminator(nn.Module):
@@ -146,7 +147,6 @@ def get_fullD(norm_layer):
     return model_d
 
 
-@MODELS.register_module()
 class DoubleGan(nn.Module):
     def __init__(self, norm_layer='instance', d_layers=3):
         super().__init__()
@@ -165,3 +165,13 @@ class DoubleGan(nn.Module):
         d_patch_gan_output = self.patch_gan(x)
         return [d_full_gan_output, d_patch_gan_output]
 
+
+@MODELS.register_module()
+class DeblurGanV2Discriminator:
+    def __new__(cls, model, *args, **kwargs):
+        if model == 'DoubleGan':
+            return DoubleGan(*args, **kwargs)
+        else:
+            raise Exception('Discriminator model {} not found, '
+                            'Please use the following models: '
+                            '{}'.format(model, model_list))
