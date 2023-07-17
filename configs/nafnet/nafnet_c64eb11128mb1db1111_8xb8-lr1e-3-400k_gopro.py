@@ -59,7 +59,6 @@ train_dataloader = dict(
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
         data_root='./data/gopro/train',
         data_prefix=dict(gt='sharp', img='blur'),
-        ann_file='meta_info_gopro_train.txt',
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -71,7 +70,6 @@ val_dataloader = dict(
         type=dataset_type,
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
         data_root='./data/gopro/test',
-        # ann_file='meta_info_gopro_test.txt',
         data_prefix=dict(gt='sharp', img='blur'),
         pipeline=val_pipeline))
 
@@ -111,7 +109,5 @@ default_hooks = dict(
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
-
-visualizer = dict(bgr2rgb=False)
 
 randomness = dict(seed=10, diff_rank_seed=True)

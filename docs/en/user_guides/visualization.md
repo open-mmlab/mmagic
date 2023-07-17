@@ -15,10 +15,17 @@ In this tutorial, we introduce the usage of the visualization functions provided
   - [Visualization Hook](#visualization-hook)
   - [Visualizer](#visualizer)
   - [VisBackend](#visbackend)
+    - [Use Different Storage Backends](#use-different-storage-backends)
 
 ## Overview
 
-In MMagic, the visualization of the training or testing process requires the configuration of three components: VisualizationHook, Visualizer, and VisBackend.
+It is recommended to learn the basic concept of visualization in design documentation.
+
+In MMagic, the visualization of the training or testing process requires the configuration of three components: `VisualizationHook`, `Visualizer`, and `VisBackend`, The diagram below shows the relationship between Visualizer and VisBackend,
+
+<div align="center">
+<img src="https://user-images.githubusercontent.com/17425982/163327736-f7cb3b16-ef07-46bc-982a-3cc7495e6c82.png" width="800" />
+</div>
 
 **VisualizationHook** fetches the visualization results of the model output in fixed intervals during training and passes them to Visualizer.
 **Visualizer** is responsible for converting the original visualization results into the desired type (png, gif, etc.) and then transferring them to **VisBackend** for storage or display.
@@ -263,7 +270,6 @@ MMagic supports a variety of different visualization backends, including:
 - Basic VisBackend of MMEngine: including LocalVisBackend, TensorboardVisBackend and WandbVisBackend. You can follow [MMEngine Documents](https://github.com/open-mmlab/mmengine/blob/main/docs/en/advanced_tutorials/visualization.md) to learn more about them
 - VisBackend: Backend for **File System**. Save the visualization results to the corresponding position.
 - TensorboardVisBackend: Backend for **Tensorboard**. Send the visualization results to Tensorboard.
-- PaviVisBackend: Backend for **Pavi**. Send the visualization results to Tensorboard.
 - WandbVisBackend: Backend for **Wandb**. Send the visualization results to Tensorboard.
 
 One `Visualizer` object can have access to any number of VisBackends and users can access to the backend by their class name in their code.
@@ -304,4 +310,28 @@ visualizer = Visualizer.get_current_instance()
 
 local_vis_backend_1 = visualizer.get_backend('gen_vis_backend_1')
 local_vis_backend_2 = visualizer.get_backend('gen_vis_backend_2')
+```
+
+### Visualize by Different Storage Backends
+
+If you want to use a different backend (Wandb, Tensorboard, or a custom backend with a remote window), just change the `vis_backends` in the config, as follows:
+
+**Local**
+
+```python
+vis_backends = [dict(type='LocalVisBackend')]
+```
+
+**Tensorboard**
+
+```python
+vis_backends = [dict(type='TensorboardVisBackend')]
+visualizer = dict(
+    type='ConcatImageVisualizer', vis_backends=vis_backends, name='visualizer')
+```
+
+```python
+vis_backends = [dict(type='WandbVisBackend')]
+visualizer = dict(
+    type='ConcatImageVisualizer', vis_backends=vis_backends, name='visualizer')
 ```
