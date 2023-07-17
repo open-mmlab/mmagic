@@ -7,7 +7,7 @@ from mmagic.registry import MODELS
 
 from .deblurganv2_util import get_norm_layer
 
-model_list = ['DoubleGan', '']
+model_list = ['DoubleGan', 'MultiScale', 'NoGan', 'PatchGan']
 
 # Defines the PatchGAN discriminator with the specified arguments.
 class NLayerDiscriminator(nn.Module):
@@ -166,11 +166,39 @@ class DoubleGan(nn.Module):
         return [d_full_gan_output, d_patch_gan_output]
 
 
+class PatchGan(nn.Module):
+    def __init__(self, norm_layer='instance', d_layers=3):
+        super().__init__()
+        self.patch_gan = NLayerDiscriminator(n_layers=d_layers,
+                                        norm_layer=get_norm_layer(norm_type=norm_layer),
+                                        use_sigmoid=False)
+
+    def forward(self, x):
+        d_patch_gan_output = self.patch_gan(x)
+        return d_patch_gan_output
+
+
+class MultiScale(nn.Module):
+    def __init__(self, norm_layer='instance', d_layers=3):
+        super().__init__()
+        self.model_d = MultiScaleDiscriminator(norm_layer=get_norm_layer(norm_type=norm_layer))
+
+    def forward(self, x):
+        result_d = self.model_d(x)
+        return result_d
+
+
 @MODELS.register_module()
 class DeblurGanV2Discriminator:
     def __new__(cls, model, *args, **kwargs):
         if model == 'DoubleGan':
             return DoubleGan(*args, **kwargs)
+        elif model == 'NoGan' or model == '':
+            return super().__new__(cls)
+        elif model == 'PatchGan':
+            return PatchGan(*args, **kwargs)
+        elif model == 'MultiScale':
+            return MultiScale(*args, **kwargs)
         else:
             raise Exception('Discriminator model {} not found, '
                             'Please use the following models: '
