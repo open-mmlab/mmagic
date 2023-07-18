@@ -54,11 +54,14 @@ class MSCoCoDataset(BasicConditionalDataset):
                  **kwargs):
         ann_file = os.path.join('annotations', 'captions_' + phase +
                                 f'{year}.json') if ann_file == '' else ann_file
-        self.image_prename = 'COCO_' + phase + f'{year}_'
+        self.year = year
+        assert self.year == 2014 or self.year == 2017, \
+            'Caption is only supported in 2014 or 2017.'
+        self.image_prename = ''
+        if self.year == 2014:
+            self.image_prename = 'COCO_' + phase + f'{year}_'
         self.phase = phase
         self.drop_rate = drop_caption_rate
-        self.year = year
-        assert self.year == 2014, 'We only support CoCo2014 now.'
 
         super().__init__(
             ann_file=ann_file,
@@ -93,7 +96,7 @@ class MSCoCoDataset(BasicConditionalDataset):
             info = {
                 'img_path':
                 img_path,
-                'gt_label':
+                'gt_prompt':
                 caption if (self.phase != 'train' or self.drop_rate < 1e-6
                             or random.random() >= self.drop_rate) else ''
             }
