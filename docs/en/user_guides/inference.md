@@ -383,6 +383,6 @@ python demo/mmagic_inference_demo.py \
         --result-out-dir demo_colorization_res.png
 ```
 
-# Previous Versions
+## Previous Versions
 
 If you want to use deprecated demos, please use [MMagic v1.0.0rc7](https://github.com/open-mmlab/mmagic/tree/v1.0.0rc7) and reference the [old tutorial](https://github.com/open-mmlab/mmagic/blob/v1.0.0rc7/docs/en/user_guides/inference.md).
