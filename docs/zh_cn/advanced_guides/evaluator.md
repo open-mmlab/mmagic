@@ -176,7 +176,7 @@ class MultiValLoop(BaseLoop):
             dataset_name_list.append(dataloader.dataset.__class__.__name__)
 ```
 
-runner首先会通过evaluator.prepare_metrics和evaluator.prepare_samplers两个方法来进行评测所需要的预处理工作和获取评测所需要的数据采样器；同时更新有采样器的采样总长度。由于mmagic的评测指标和数据集进行了分离，因此一些在评测时所需要的meta_info也需要进行保存并传递给评测器。
+runner首先会通过evaluator.prepare_metrics和evaluator.prepare_samplers两个方法来进行评测所需要的预处理工作和获取评测所需要的数据采样器；同时更新所有采样器的采样总长度。由于mmagic的评测指标和数据集进行了分离，因此一些在评测时所需要的meta_info也需要进行保存并传递给评测器。
 
 ```python
 class MultiValLoop(BaseLoop):
