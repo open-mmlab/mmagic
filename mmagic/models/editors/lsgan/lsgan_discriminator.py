@@ -2,12 +2,13 @@
 import numpy as np
 import torch.nn as nn
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 
 
 @MODELS.register_module()
-class LSGANDiscriminator(nn.Module):
+class LSGANDiscriminator(BaseModule):
     """Discriminator for LSGAN.
 
     Implementation Details for LSGAN architecture:

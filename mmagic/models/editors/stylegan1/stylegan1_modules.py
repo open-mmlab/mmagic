@@ -7,13 +7,14 @@ import torch
 import torch.nn as nn
 from mmcv.ops.fused_bias_leakyrelu import fused_bias_leakyrelu
 from mmcv.ops.upfirdn2d import upfirdn2d
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 from ..pggan import (EqualizedLRConvModule, EqualizedLRConvUpModule,
                      EqualizedLRLinearModule)
 
 
-class EqualLinearActModule(nn.Module):
+class EqualLinearActModule(BaseModule):
     """Equalized LR Linear Module with Activation Layer.
 
     This module is modified from ``EqualizedLRLinearModule`` defined in PGGAN.
@@ -92,7 +93,7 @@ class EqualLinearActModule(nn.Module):
         return x
 
 
-class NoiseInjection(nn.Module):
+class NoiseInjection(BaseModule):
     """Noise Injection Module.
 
     In StyleGAN2, they adopt this module to inject spatial random noise map in
@@ -130,7 +131,7 @@ class NoiseInjection(nn.Module):
         return image + self.weight.to(image.dtype) * noise
 
 
-class ConstantInput(nn.Module):
+class ConstantInput(BaseModule):
     """Constant Input.
 
     In StyleGAN2, they substitute the original head noise input with such a
@@ -180,7 +181,7 @@ def make_kernel(k):
     return k
 
 
-class Blur(nn.Module):
+class Blur(BaseModule):
     """Blur module.
 
     This module is adopted rightly after upsampling operation in StyleGAN2.
@@ -215,7 +216,7 @@ class Blur(nn.Module):
         return upfirdn2d(x, self.kernel.to(x.dtype), padding=self.pad)
 
 
-class AdaptiveInstanceNorm(nn.Module):
+class AdaptiveInstanceNorm(BaseModule):
     r"""Adaptive Instance Normalization Module.
 
     Ref: https://github.com/rosinality/style-based-gan-pytorch/blob/master/model.py  # noqa
@@ -253,7 +254,7 @@ class AdaptiveInstanceNorm(nn.Module):
         return out
 
 
-class StyleConv(nn.Module):
+class StyleConv(BaseModule):
 
     def __init__(self,
                  in_channels,
