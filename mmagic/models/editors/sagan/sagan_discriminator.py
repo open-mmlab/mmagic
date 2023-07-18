@@ -14,8 +14,8 @@ from torch.nn.utils import spectral_norm
 from mmagic.registry import MODELS
 
 
-@MODULES.register_module('SAGANDiscriminator')
-@MODULES.register_module()
+@MODELS.register_module('SAGANDiscriminator')
+@MODELS.register_module()
 class ProjDiscriminator(BaseModule):
     r"""Discriminator for SNGAN / Proj-GAN. The implementation is refer to
     https://github.com/pfnet-research/sngan_projection/tree/master/dis_models

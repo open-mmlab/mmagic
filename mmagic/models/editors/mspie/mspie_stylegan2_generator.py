@@ -18,7 +18,7 @@ from ..stylegan2 import ModulatedToRGB
 from .mspie_stylegan2_modules import ModulatedPEStyleConv
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MSStyleGANv2Generator(BaseModule):
     """StyleGAN2 Generator.
 

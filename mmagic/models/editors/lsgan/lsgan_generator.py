@@ -9,7 +9,7 @@ from mmagic.registry import MODELS
 from ...utils import get_module_device
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class LSGANGenerator(BaseModule):
     """Generator for LSGAN.
 

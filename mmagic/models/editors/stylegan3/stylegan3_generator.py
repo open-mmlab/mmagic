@@ -11,8 +11,8 @@ from ...utils import get_module_device
 from ..stylegan1 import get_mean_latent
 
 
-@MODULES.register_module('StyleGANv3Generator')
-@MODULES.register_module()
+@MODELS.register_module('StyleGANv3Generator')
+@MODELS.register_module()
 class StyleGAN3Generator(BaseModule):
     """StyleGAN3 Generator.
 

@@ -7,7 +7,7 @@ from mmengine.model import BaseModule
 from mmagic.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class LSGANDiscriminator(BaseModule):
     """Discriminator for LSGAN.
 

@@ -8,7 +8,7 @@ from ..stylegan1 import EqualLinearActModule
 from ..stylegan2 import ConvDownLayer, ModMBStddevLayer, ResBlock
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MSStyleGAN2Discriminator(BaseModule):
     """StyleGAN2 Discriminator.
 

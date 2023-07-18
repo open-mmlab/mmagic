@@ -12,7 +12,7 @@ from .pggan_modules import (EqualizedLRConvDownModule, EqualizedLRConvModule,
                             MiniBatchStddevLayer, PGGANDecisionHead)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class PGGANDiscriminator(BaseModule):
     """Discriminator for PGGAN.
 

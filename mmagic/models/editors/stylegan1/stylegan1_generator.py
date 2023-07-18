@@ -15,8 +15,8 @@ from .stylegan1_modules import EqualLinearActModule, StyleConv
 from .stylegan_utils import get_mean_latent, style_mixing
 
 
-@MODULES.register_module('StyleGANv1Generator')
-@MODULES.register_module()
+@MODELS.register_module('StyleGANv1Generator')
+@MODELS.register_module()
 class StyleGAN1Generator(BaseModule):
     """StyleGAN1 Generator.
 

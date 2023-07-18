@@ -6,8 +6,8 @@ from mmengine.model import BaseModule
 from mmagic.registry import MODELS
 
 
-@MODULES.register_module('SPE')
-@MODULES.register_module('SPE2d')
+@MODELS.register_module('SPE')
+@MODELS.register_module('SPE2d')
 class SinusoidalPositionalEmbedding(BaseModule):
     """Sinusoidal Positional Embedding 1D or 2D (SPE/SPE2d).
 
@@ -199,9 +199,9 @@ class SinusoidalPositionalEmbedding(BaseModule):
         return grid.to(x)
 
 
-@MODULES.register_module('CSG2d')
-@MODULES.register_module('CSG')
-@MODULES.register_module()
+@MODELS.register_module('CSG2d')
+@MODELS.register_module('CSG')
+@MODELS.register_module()
 class CatersianGrid(BaseModule):
     """Catersian Grid for 2d tensor.
 

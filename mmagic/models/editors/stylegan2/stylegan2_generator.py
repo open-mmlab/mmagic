@@ -17,8 +17,8 @@ from ..stylegan1 import (ConstantInput, EqualLinearActModule, get_mean_latent,
 from .stylegan2_modules import ModulatedStyleConv, ModulatedToRGB
 
 
-@MODULES.register_module('StyleGANv2Generator')
-@MODULES.register_module()
+@MODELS.register_module('StyleGANv2Generator')
+@MODELS.register_module()
 class StyleGAN2Generator(BaseModule):
     r"""StyleGAN2 Generator.
 

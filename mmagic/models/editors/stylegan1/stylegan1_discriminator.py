@@ -10,8 +10,8 @@ from ..pggan import (EqualizedLRConvDownModule, EqualizedLRConvModule,
 from .stylegan1_modules import Blur, EqualLinearActModule
 
 
-@MODULES.register_module('StyleGANv1Discriminator')
-@MODULES.register_module()
+@MODELS.register_module('StyleGANv1Discriminator')
+@MODELS.register_module()
 class StyleGAN1Discriminator(BaseModule):
     """StyleGAN1 Discriminator.
 

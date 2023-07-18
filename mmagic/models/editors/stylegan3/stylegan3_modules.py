@@ -128,7 +128,7 @@ class FullyConnectedLayer(BaseModule):
         return x
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MappingNetwork(BaseModule):
     """Style mapping network used in StyleGAN3. The main difference between it
     and styleganv1,v2 is that mean latent is registered as a buffer and dynamic
@@ -592,7 +592,7 @@ class SynthesisLayer(BaseModule):
         return torch.as_tensor(f, dtype=torch.float32)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SynthesisNetwork(BaseModule):
     """Synthesis network for stylegan3.
 

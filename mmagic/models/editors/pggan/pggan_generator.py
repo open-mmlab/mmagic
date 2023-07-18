@@ -12,7 +12,7 @@ from .pggan_modules import (EqualizedLRConvModule, EqualizedLRConvUpModule,
                             PGGANNoiseTo2DFeat)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class PGGANGenerator(BaseModule):
     """Generator for PGGAN.
 

@@ -15,7 +15,7 @@ from mmagic.models.editors.biggan.biggan_snmodule import SNEmbedding
 from mmagic.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SNGANGenResBlock(BaseModule):
     """ResBlock used in Generator of SNGAN / Proj-GAN.
 
@@ -212,7 +212,7 @@ class SNGANGenResBlock(BaseModule):
                                       f'\'{self.init_type}\'')
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SNGANDiscResBlock(BaseModule):
     """resblock used in discriminator of sngan / proj-gan.
 
@@ -365,7 +365,7 @@ class SNGANDiscResBlock(BaseModule):
                                       f'\'{self.init_type}\'')
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SNGANDiscHeadResBlock(BaseModule):
     """The first ResBlock used in discriminator of sngan / proj-gan. Compared
     to ``SNGANDisResBlock``, this module has a different forward order.
@@ -495,7 +495,7 @@ class SNGANDiscHeadResBlock(BaseModule):
                                       f'\'{self.init_type}\'')
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class SNConditionNorm(BaseModule):
     """Conditional Normalization for SNGAN / Proj-GAN. The implementation
     refers to.

@@ -18,8 +18,8 @@ from mmagic.models.utils import get_module_device
 from mmagic.registry import MODELS
 
 
-@MODULES.register_module('SAGANGenerator')
-@MODULES.register_module()
+@MODELS.register_module('SAGANGenerator')
+@MODELS.register_module()
 class SNGANGenerator(BaseModule):
     r"""Generator for SNGAN / Proj-GAN. The implementation refers to
     https://github.com/pfnet-research/sngan_projection/tree/master/gen_models

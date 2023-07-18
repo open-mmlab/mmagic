@@ -161,7 +161,7 @@ def pixel_norm(x, eps=1e-6):
     return x / (norm + eps)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class PixelNorm(BaseModule):
     """Pixel Normalization.
 
@@ -377,7 +377,7 @@ class EqualizedLRLinearModule(nn.Linear):
             nn.init.constant_(self.bias, 0.)
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class PGGANNoiseTo2DFeat(BaseModule):
 
     def __init__(self,
@@ -504,7 +504,7 @@ class PGGANDecisionHead(BaseModule):
         return x
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class MiniBatchStddevLayer(BaseModule):
     """Minibatch standard deviation.
 
