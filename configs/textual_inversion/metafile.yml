@@ -1,0 +1,18 @@
+Collections:
+- Name: Textual Inversion
+  Paper:
+    Title: 'An Image is Worth One Word: Personalizing Text-to-Image Generation using
+      Textual Inversion'
+    URL: https://arxiv.org/abs/2208.01618
+  README: configs/textual_inversion/README.md
+  Task:
+  - text2image
+  Year: 2022
+Models:
+- Config: configs/textual_inversion/textual_inversion.py
+  In Collection: Textual Inversion
+  Name: textual_inversion
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
