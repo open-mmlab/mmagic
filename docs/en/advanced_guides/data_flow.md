@@ -1,5 +1,3 @@
-# Data flow in MMagic \[Coming Soon!\]
+# Data flow in MMagic
 
-We're improving this documentation. Don't hesitate to join us!
-
-[Make a pull request](https://github.com/open-mmlab/mmagic/compare) or [discuss with us](https://github.com/open-mmlab/mmagic/discussions/1429)!
+In this chapter, we will introduce the dataflow and data format convention between the internal modules managed by the [Runner](https://mmengine.readthedocs.io/en/latest/tutorials/runner.html).
