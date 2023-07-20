@@ -147,6 +147,8 @@ Finally, this method will generate a sampler for each evaluation metric group an
 
 ## Evaluation process of an evaluator
 
+The implementation of evaluation process can be found in `mmagic.engine.runner.MultiValLoop.run` and `mmagic.engine.runner.MultiTestLoop.run`. Here we take `mmagic.engine.runner.MultiValLoop.run` as example.
+
 ```python
 class MultiValLoop(BaseLoop):
 	...
