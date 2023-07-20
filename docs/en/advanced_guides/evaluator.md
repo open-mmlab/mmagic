@@ -5,9 +5,9 @@
 In model validation and testing, it is usually necessary to quantitatively evaluate the accuracy of the model. In mmagic, the evaluation metrics and evaluators are implemented to accomplish this functionality.
 
 - Evaluation metrics are used to calculate specific model accuracy indicators based on test data and model prediction results. mmagic provides a variety of built-in metrics, which can be found in the metrics documentation. Additionally, metrics are decoupled from datasets and can be used for multiple datasets.
-- The evaluator is the top-level module for evaluation metrics and usually contains one or more metrics. The purpose of the evaluator is to perform necessary data format conversion and call evaluation metrics to calculate the model accuracy during model evaluation. The evaluator is typically built by an executor or a testing script, which are used for online evaluation and offline evaluation, respectively.
+- The evaluator is the top-level module for evaluation metrics and usually contains one or more metrics. The purpose of the evaluator is to perform necessary data format conversion and call evaluation metrics to calculate the model accuracy during model evaluation. The evaluator is typically built by a `Runner` or a testing script, which are used for online evaluation and offline evaluation, respectively.
 
-The evaluator in mmagic inherits from the evaluator in mmengine, and the basic usage is similar to the evaluator in mmengine. For specific information, you can refer to [Model Accuracy Evaluation](https://mmengine.readthedocs.io/zh_CN/latest/design/evaluation.html). However, different from other high-level vision tasks, the evaluation metrics for generative models often have multiple inputs. For example, the input for the Inception Score (IS) metric is only fake images and any number of real images, while the Perceptual Path Length (PPL) requires sampling from the latent space. To accommodate different evaluation metrics, mmagic introduces two important methods, "prepare_metrics" and "prepare_samplers," to meet the above requirements.
+The evaluator in MMagic inherits from that in MMEngine and has a similar basic usage. For specific information, you can refer to [Model Accuracy Evaluation](https://mmengine.readthedocs.io/en/latest/tutorials/evaluation.html). However, different from other high-level vision tasks, the evaluation metrics for generative models often have multiple inputs. For example, the input for the Inception Score (IS) metric is only fake images and any number of real images, while the Perceptual Path Length (PPL) requires sampling from the latent space. To accommodate different evaluation metrics, mmagic introduces two important methods, `prepare_metrics` and `prepare_samplers` to meet the above requirements.
 
 ## prepare_metrics
 
@@ -44,7 +44,7 @@ class Evaluator(Evaluator):
         self.is_ready = True
 ```
 
-The prepare_metrics method needs to be called before the evaluation starts. It is used to preprocess before evaluating each metric, and will sequentially call the prepare method of each metric in the evaluator to prepare any pre-calculated elements needed for that metric (such as features from hidden layers). Additionally, to avoid repeated calls, the evaluator.is_ready flag will be set to True after preprocessing for all metrics is completed.
+The `prepare_metrics` method needs to be called before the evaluation starts. It is used to preprocess before evaluating each metric, and will sequentially call the prepare method of each metric in the evaluator to prepare any pre-calculated elements needed for that metric (such as features from hidden layers). Additionally, to avoid repeated calls, the `evaluator.is_ready` flag will be set to True after preprocessing for all metrics is completed.
 
 ```python
 class GenMetric(BaseMetric):
@@ -64,7 +64,7 @@ class GenMetric(BaseMetric):
 
 ## prepare_samplers
 
-Different metrics require different inputs for generative models. For example, FID, KID, and IS only need the generated fake images, while PPL requires vectors from the latent space. Therefore, mmagic groups different evaluation metrics based on the type of input. One or more evaluation metrics in the same group share a data sampler. The sampler mode for each evaluation metric is determined by the SAMPLER_MODE attribute of that metric.
+Different metrics require different inputs for generative models. For example, FID, KID, and IS only need the generated fake images, while PPL requires vectors from the latent space. Therefore, mmagic groups different evaluation metrics based on the type of input. One or more evaluation metrics in the same group share a data sampler. The sampler mode for each evaluation metric is determined by the `SAMPLER_MODE` attribute of that metric.
 
 ```python
 class GenMetric(BaseMetric):
@@ -174,7 +174,7 @@ class MultiValLoop(BaseLoop):
             dataset_name_list.append(dataloader.dataset.__class__.__name__)
 ```
 
-First, the runner will perform preprocessing and obtain the necessary data samplers for evaluation using the "evaluator.prepare_metrics" and "evaluator.prepare_samplers" methods. It will also update the total length of samples obtained using the samplers. As the evaluation metrics and dataset in mmagic are separated, some meta_info required for evaluation also needs to be saved and passed to the evaluator.
+First, the runner will perform preprocessing and obtain the necessary data samplers for evaluation using the `evaluator.prepare_metric` and `evaluator.prepare_samplers` methods. It will also update the total length of samples obtained using the samplers. As the evaluation metrics and dataset in mmagic are separated, some meta_info required for evaluation also needs to be saved and passed to the evaluator.
 
 ```python
 class MultiValLoop(BaseLoop):
