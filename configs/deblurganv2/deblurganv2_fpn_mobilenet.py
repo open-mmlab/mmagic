@@ -143,7 +143,7 @@ train_dataloader = dict(
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
         data_root=data_root+'train',
         data_prefix=dict(img='input', gt='target'),
-        #ann_file='meta_info_gopro_train.txt',
+        # ann_file='meta_info_gopro_train.txt',
         pipeline=train_pipeline))
 
 val_dataloader = dict(
@@ -211,4 +211,3 @@ default_hooks = dict(
 # load_from = 'D:/pythonProject/DeblurGANv2/fpn_inception1.pth'
 load_from = 'G:/github/DeblurGANv2/fpn_inception1.pth'
 # load_from = '/HOME/scz0bbt/run/mmagic/fpn_inception.pth'
-
