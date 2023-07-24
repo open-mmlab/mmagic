@@ -37,9 +37,6 @@ class DeblurGanV2(BaseModel):
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
 
-        # self.normalize_fn = self.get_normalize()
-        # self.normalize_fn = T.Normalize(std=[0.5, 0.5, 0.5], mean=[0.5, 0.5, 0.5])
-        # self.normalize_fn = self._normalize_fn()
         self.epoch_num = 0
         self.warmup_num = warmup_num
         self.disc_steps = 1 if self.train_cfg is None else self.train_cfg.get(
@@ -69,54 +66,6 @@ class DeblurGanV2(BaseModel):
 
         # self.adv_trainer = GANFactory().get_adversarial_trainer(
         #     self.discriminator.d_name, self.discriminator, self.disc_loss)
-
-    # @staticmethod
-    # def _array_to_batch(x):
-    #     x = np.transpose(x, (2, 0, 1))
-    #     x = np.expand_dims(x, 0)
-    #     return torch.from_numpy(x)
-    #
-    # @staticmethod
-    # def _batch_to_array(x):
-    #     x = torch.squeeze(x, 0)
-    #     x = x.transpose(0, 2)
-    #     x = x.transpose(0, 1)
-    #     return x.cpu().numpy()
-    #
-    # def get_normalize(self):
-    #     normalize = albu.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
-    #     normalize = albu.Compose([normalize], additional_targets={'target': 'image'})
-    #
-    #     def process(a, b):
-    #         r = normalize(image=a, target=b)
-    #         return r['image'], r['target']
-    #
-    #     return process
-    #
-    # def _preprocess(self, x: torch.tensor, mask: Optional[np.ndarray] = None):
-    #
-    #     x = self._batch_to_array(x)*255
-    #     x, _ = self.normalize_fn(x, x)
-    #
-    #     if mask is None:
-    #         mask = np.ones_like(x, dtype=np.float32)
-    #     else:
-    #         mask = np.round(mask.astype('float32') / 255)
-    #
-    #     h, w, _ = x.shape
-    #     block_size = 32
-    #     min_height = (h // block_size + 1) * block_size
-    #     min_width = (w // block_size + 1) * block_size
-    #
-    #     pad_params = {'mode': 'constant',
-    #                   'constant_values': 0,
-    #                   'pad_width': ((0, min_height - h), (0, min_width - w), (0, 0))
-    #                   }
-    #
-    #     x = np.pad(x, **pad_params)
-    #     mask = np.pad(mask, **pad_params)
-    #
-    #     return map(self._array_to_batch, (x, mask)), h, w
 
     def forward(self,
                 inputs: torch.Tensor,
@@ -182,24 +131,16 @@ class DeblurGanV2(BaseModel):
                                                      inputs)
             return predictions
         elif mode == 'predict':
-            # inputs = inputs[0]
-            # h, w = inputs.shape[-2:]
             h, w = data_samples.ori_img_shape[0][0:2]
-            #x = self._batch_to_array(inputs) * 255
-            #x1, _ = self.normalize_fn(x, x)
-            # inputs = inputs/2.0/255
-            # normal_fn = T.Normalize(std=[0.5, 0.5, 0.5], mean=[0.5, 0.5, 0.5])
-            # inputs = normal_fn(inputs)
             block_size = 32
             min_height = (h // block_size + 1) * block_size
             min_width = (w // block_size + 1) * block_size
             pad = torch.nn.ZeroPad2d(
                 padding=(0, min_width - w, 0, min_height - h))
             inputs = pad(inputs)
-            # (inputs, mask), h, w = self._preprocess(inputs)
             predictions = self.forward_inference(inputs, data_samples,
                                                  **kwargs)
-            predictions.pred_img = predictions.pred_img[:, :, :h, :w]  #*255
+            predictions.pred_img = predictions.pred_img[:, :, :h, :w]
             predictions = self.convert_to_datasample(predictions, data_samples,
                                                      inputs)
             return predictions
@@ -256,7 +197,7 @@ class DeblurGanV2(BaseModel):
         if torch.cuda.is_available():
             inputs = inputs.cuda()
 
-        #feats = self.generator(img, **kwargs)
+        # feats = self.generator(img, **kwargs)
         feats = self.generator(inputs)
         # feats = (feats + 1) / 2.0
         return feats
@@ -366,9 +307,6 @@ class DeblurGanV2(BaseModel):
         """
 
         data = self.data_preprocessor(data, True)
-        # data['inputs'] = [(data_inputs - 0.5) / 0.5 for data_inputs in data['inputs']]
-        # for data_sample_item in data['data_samples']:
-        #     data_sample_item.gt_img = (data_sample_item.gt_img - 0.5) / 0.5
         batch_inputs = data['inputs']
 
         data_samples = data['data_samples']
@@ -411,80 +349,6 @@ class DeblurGanV2(BaseModel):
         self.step_counter += 1
 
         return log_vars
-
-    # def val_step(self, data):
-    #     data = self.data_preprocessor(data)
-    #     inputs_dict, data_samples = data['inputs'], data['data_samples']
-    #     outputs = self.forward_tensor(inputs_dict)
-    #
-    #     batch_sample_list = []
-    #     num_batches = next(iter(outputs)).shape[0]
-    #     for idx in range(len(outputs)):
-    #         gen_sample = DataSample()
-    #         if data_samples:
-    #             gen_sample.update(outputs[idx])
-    #         batch_sample_list.append({'output': gen_sample})
-    #     return batch_sample_list
-    #
-    # def test_step(self, data):
-    #     data = self.data_preprocessor(data)
-    #     inputs_dict, data_samples = data['inputs'], data['data_samples']
-    #     outputs = self.forward_tensor(inputs_dict)
-    #     return outputs
-    #
-    #     # batch_sample_list = []
-    #     # num_batches = next(iter(outputs.values())).shape[0]
-    #     # for idx in range(num_batches):
-    #     #     gen_sample = DataSample()
-    #     #     if data_samples:
-    #     #         gen_sample.update(data_samples[idx])
-    #     #     batch_sample_list.append(gen_sample)
-    #     # return batch_sample_list
-
-    # def if_run_g(self):
-    #     """Calculates whether need to run the generator step."""
-    #
-    #     return (self.step_counter % self.disc_steps == 0
-    #             and self.step_counter >= self.disc_init_steps)
-    #
-    # def if_run_d(self):
-    #     """Calculates whether need to run the discriminator step."""
-    #
-    #     return self.discriminator and self.gan_loss
-
-    # def g_step(self, batch_outputs: torch.Tensor, batch_gt_data: torch.Tensor):
-    #     """G step of GAN: Calculate losses of generator.
-    #
-    #     Args:
-    #         batch_outputs (Tensor): Batch output of generator.
-    #         batch_gt_data (Tensor): Batch GT data.
-    #
-    #     Returns:
-    #         dict: Dict of losses.
-    #     """
-    #
-    #     losses = dict()
-    #
-    #     # pix loss
-    #     if self.pixel_loss:
-    #         losses['loss_pix'] = self.pixel_loss(batch_outputs, batch_gt_data)
-    #
-    #     # perceptual loss
-    #     if self.perceptual_loss:
-    #         loss_percep, loss_style = self.perceptual_loss(
-    #             batch_outputs, batch_gt_data)
-    #         if loss_percep is not None:
-    #             losses['loss_perceptual'] = loss_percep
-    #         if loss_style is not None:
-    #             losses['loss_style'] = loss_style
-    #
-    #     # gan loss for generator
-    #     if self.gan_loss and self.discriminator:
-    #         fake_g_pred = self.discriminator(batch_outputs)
-    #         losses['loss_gan'] = self.gan_loss(
-    #             fake_g_pred, target_is_real=True, is_disc=False)
-    #
-    #     return losses
 
     def g_step_double(self, batch_outputs: torch.Tensor,
                       batch_gt_data: torch.Tensor):
@@ -581,7 +445,7 @@ class DeblurGanV2(BaseModel):
         loss_pix = g_optim_wrapper.scale_loss(parsed_losses_g)
         g_optim_wrapper.backward(loss_pix)
         g_optim_wrapper.step()
-        #g_optim_wrapper.update_params(parsed_losses_g)
+        # g_optim_wrapper.update_params(parsed_losses_g)
 
         return log_vars_g
 

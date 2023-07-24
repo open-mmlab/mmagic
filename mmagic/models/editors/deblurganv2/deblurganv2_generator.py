@@ -47,16 +47,16 @@ class ConvBlock(nn.Module):
 
 class FPN(nn.Module):
 
-    def __init__(self, norm_layer, num_filters=256):
+    def __init__(self, norm_layer, num_filter=256, pretrained='imagenet'):
         """Creates an `FPN` instance for feature extraction.
         Args:
-          num_filters: the number of filters in each output pyramid level
+          num_filter: the number of filters in each output pyramid level
           pretrained: use ImageNet pre-trained backbone feature extractor
         """
 
         super().__init__()
         self.inception = inceptionresnetv2(
-            num_classes=1000, pretrained='imagenet')
+            num_classes=1000, pretrained=pretrained)
 
         self.enc0 = self.inception.conv2d_1a
         self.enc1 = nn.Sequential(
@@ -77,23 +77,23 @@ class FPN(nn.Module):
         self.enc4 = nn.Sequential(
             self.inception.repeat_1,
             self.inception.mixed_7a,
-        )  #2080
+        )  # 2080
         self.td1 = nn.Sequential(
-            nn.Conv2d(num_filters, num_filters, kernel_size=3, padding=1),
-            norm_layer(num_filters), nn.ReLU(inplace=True))
+            nn.Conv2d(num_filter, num_filter, kernel_size=3, padding=1),
+            norm_layer(num_filter), nn.ReLU(inplace=True))
         self.td2 = nn.Sequential(
-            nn.Conv2d(num_filters, num_filters, kernel_size=3, padding=1),
-            norm_layer(num_filters), nn.ReLU(inplace=True))
+            nn.Conv2d(num_filter, num_filter, kernel_size=3, padding=1),
+            norm_layer(num_filter), nn.ReLU(inplace=True))
         self.td3 = nn.Sequential(
-            nn.Conv2d(num_filters, num_filters, kernel_size=3, padding=1),
-            norm_layer(num_filters), nn.ReLU(inplace=True))
+            nn.Conv2d(num_filter, num_filter, kernel_size=3, padding=1),
+            norm_layer(num_filter), nn.ReLU(inplace=True))
         self.pad = nn.ReflectionPad2d(1)
-        self.lateral4 = nn.Conv2d(2080, num_filters, kernel_size=1, bias=False)
-        self.lateral3 = nn.Conv2d(1088, num_filters, kernel_size=1, bias=False)
-        self.lateral2 = nn.Conv2d(192, num_filters, kernel_size=1, bias=False)
-        self.lateral1 = nn.Conv2d(64, num_filters, kernel_size=1, bias=False)
+        self.lateral4 = nn.Conv2d(2080, num_filter, kernel_size=1, bias=False)
+        self.lateral3 = nn.Conv2d(1088, num_filter, kernel_size=1, bias=False)
+        self.lateral2 = nn.Conv2d(192, num_filter, kernel_size=1, bias=False)
+        self.lateral1 = nn.Conv2d(64, num_filter, kernel_size=1, bias=False)
         self.lateral0 = nn.Conv2d(
-            32, num_filters // 2, kernel_size=1, bias=False)
+            32, num_filter // 2, kernel_size=1, bias=False)
 
         for param in self.inception.parameters():
             param.requires_grad = False
@@ -128,14 +128,14 @@ class FPN(nn.Module):
         map4 = lateral4
         map3 = self.td1(
             lateral3 +
-            nn.functional.upsample(map4, scale_factor=2, mode="nearest"))
+            nn.functional.upsample(map4, scale_factor=2, mode='nearest'))
         map2 = self.td2(
-            F.pad(lateral2, pad, "reflect") +
-            nn.functional.upsample(map3, scale_factor=2, mode="nearest"))
+            F.pad(lateral2, pad, 'reflect') +
+            nn.functional.upsample(map3, scale_factor=2, mode='nearest'))
         map1 = self.td3(
             lateral1 +
-            nn.functional.upsample(map2, scale_factor=2, mode="nearest"))
-        return F.pad(lateral0, pad1, "reflect"), map1, map2, map3, map4
+            nn.functional.upsample(map2, scale_factor=2, mode='nearest'))
+        return F.pad(lateral0, pad1, 'reflect'), map1, map2, map3, map4
 
 
 class FPNInception(nn.Module):
@@ -143,36 +143,36 @@ class FPNInception(nn.Module):
     def __init__(self,
                  norm_layer,
                  output_ch=3,
-                 num_filters=128,
-                 num_filters_fpn=256):
+                 num_filter=128,
+                 num_filter_fpn=256):
         super().__init__()
 
         # Feature Pyramid Network (FPN) with four feature maps of resolutions
         # 1/4, 1/8, 1/16, 1/32 and `num_filters` filters for all feature maps.
         norm_layer = get_norm_layer(norm_type=norm_layer)
-        self.fpn = FPN(num_filters=num_filters_fpn, norm_layer=norm_layer)
+        self.fpn = FPN(num_filters=num_filter_fpn, norm_layer=norm_layer)
 
         # The segmentation heads on top of the FPN
 
-        self.head1 = FPNHead(num_filters_fpn, num_filters, num_filters)
-        self.head2 = FPNHead(num_filters_fpn, num_filters, num_filters)
-        self.head3 = FPNHead(num_filters_fpn, num_filters, num_filters)
-        self.head4 = FPNHead(num_filters_fpn, num_filters, num_filters)
+        self.head1 = FPNHead(num_filter_fpn, num_filter, num_filter)
+        self.head2 = FPNHead(num_filter_fpn, num_filter, num_filter)
+        self.head3 = FPNHead(num_filter_fpn, num_filter, num_filter)
+        self.head4 = FPNHead(num_filter_fpn, num_filter, num_filter)
 
         self.smooth = nn.Sequential(
-            nn.Conv2d(4 * num_filters, num_filters, kernel_size=3, padding=1),
-            norm_layer(num_filters),
+            nn.Conv2d(4 * num_filter, num_filter, kernel_size=3, padding=1),
+            norm_layer(num_filter),
             nn.ReLU(),
         )
 
         self.smooth2 = nn.Sequential(
-            nn.Conv2d(num_filters, num_filters // 2, kernel_size=3, padding=1),
-            norm_layer(num_filters // 2),
+            nn.Conv2d(num_filter, num_filter // 2, kernel_size=3, padding=1),
+            norm_layer(num_filter // 2),
             nn.ReLU(),
         )
 
         self.final = nn.Conv2d(
-            num_filters // 2, output_ch, kernel_size=3, padding=1)
+            num_filter // 2, output_ch, kernel_size=3, padding=1)
 
     def unfreeze(self):
         self.fpn.unfreeze()
@@ -181,20 +181,20 @@ class FPNInception(nn.Module):
         map0, map1, map2, map3, map4 = self.fpn(x)
 
         map4 = nn.functional.upsample(
-            self.head4(map4), scale_factor=8, mode="nearest")
+            self.head4(map4), scale_factor=8, mode='nearest')
         map3 = nn.functional.upsample(
-            self.head3(map3), scale_factor=4, mode="nearest")
+            self.head3(map3), scale_factor=4, mode='nearest')
         map2 = nn.functional.upsample(
-            self.head2(map2), scale_factor=2, mode="nearest")
+            self.head2(map2), scale_factor=2, mode='nearest')
         map1 = nn.functional.upsample(
-            self.head1(map1), scale_factor=1, mode="nearest")
+            self.head1(map1), scale_factor=1, mode='nearest')
 
         smoothed = self.smooth(torch.cat([map4, map3, map2, map1], dim=1))
         smoothed = nn.functional.upsample(
-            smoothed, scale_factor=2, mode="nearest")
+            smoothed, scale_factor=2, mode='nearest')
         smoothed = self.smooth2(smoothed + map0)
         smoothed = nn.functional.upsample(
-            smoothed, scale_factor=2, mode="nearest")
+            smoothed, scale_factor=2, mode='nearest')
 
         final = self.final(smoothed)
         res = torch.tanh(final) + x
@@ -207,35 +207,35 @@ class FPNInceptionSimple(nn.Module):
     def __init__(self,
                  norm_layer,
                  output_ch=3,
-                 num_filters=128,
-                 num_filters_fpn=256):
+                 num_filter=128,
+                 num_filter_fpn=256):
         super().__init__()
 
         # Feature Pyramid Network (FPN) with four feature maps of resolutions
         # 1/4, 1/8, 1/16, 1/32 and `num_filters` filters for all feature maps.
-        self.fpn = FPN(num_filters=num_filters_fpn, norm_layer=norm_layer)
+        self.fpn = FPN(num_filters=num_filter_fpn, norm_layer=norm_layer)
 
         # The segmentation heads on top of the FPN
 
-        self.head1 = FPNHead(num_filters_fpn, num_filters, num_filters)
-        self.head2 = FPNHead(num_filters_fpn, num_filters, num_filters)
-        self.head3 = FPNHead(num_filters_fpn, num_filters, num_filters)
-        self.head4 = FPNHead(num_filters_fpn, num_filters, num_filters)
+        self.head1 = FPNHead(num_filter_fpn, num_filter, num_filter)
+        self.head2 = FPNHead(num_filter_fpn, num_filter, num_filter)
+        self.head3 = FPNHead(num_filter_fpn, num_filter, num_filter)
+        self.head4 = FPNHead(num_filter_fpn, num_filter, num_filter)
 
         self.smooth = nn.Sequential(
-            nn.Conv2d(4 * num_filters, num_filters, kernel_size=3, padding=1),
-            norm_layer(num_filters),
+            nn.Conv2d(4 * num_filter, num_filter, kernel_size=3, padding=1),
+            norm_layer(num_filter),
             nn.ReLU(),
         )
 
         self.smooth2 = nn.Sequential(
-            nn.Conv2d(num_filters, num_filters // 2, kernel_size=3, padding=1),
-            norm_layer(num_filters // 2),
+            nn.Conv2d(num_filter, num_filter // 2, kernel_size=3, padding=1),
+            norm_layer(num_filter // 2),
             nn.ReLU(),
         )
 
         self.final = nn.Conv2d(
-            num_filters // 2, output_ch, kernel_size=3, padding=1)
+            num_filter // 2, output_ch, kernel_size=3, padding=1)
 
     def unfreeze(self):
         self.fpn.unfreeze()
@@ -245,20 +245,20 @@ class FPNInceptionSimple(nn.Module):
         map0, map1, map2, map3, map4 = self.fpn(x)
 
         map4 = nn.functional.upsample(
-            self.head4(map4), scale_factor=8, mode="nearest")
+            self.head4(map4), scale_factor=8, mode='nearest')
         map3 = nn.functional.upsample(
-            self.head3(map3), scale_factor=4, mode="nearest")
+            self.head3(map3), scale_factor=4, mode='nearest')
         map2 = nn.functional.upsample(
-            self.head2(map2), scale_factor=2, mode="nearest")
+            self.head2(map2), scale_factor=2, mode='nearest')
         map1 = nn.functional.upsample(
-            self.head1(map1), scale_factor=1, mode="nearest")
+            self.head1(map1), scale_factor=1, mode='nearest')
 
         smoothed = self.smooth(torch.cat([map4, map3, map2, map1], dim=1))
         smoothed = nn.functional.upsample(
-            smoothed, scale_factor=2, mode="nearest")
+            smoothed, scale_factor=2, mode='nearest')
         smoothed = self.smooth2(smoothed + map0)
         smoothed = nn.functional.upsample(
-            smoothed, scale_factor=2, mode="nearest")
+            smoothed, scale_factor=2, mode='nearest')
 
         final = self.final(smoothed)
         res = torch.tanh(final) + x
@@ -322,20 +322,20 @@ class FPNDense(nn.Module):
         map0, map1, map2, map3, map4 = self.fpn(x)
 
         map4 = nn.functional.upsample(
-            self.head4(map4), scale_factor=8, mode="nearest")
+            self.head4(map4), scale_factor=8, mode='nearest')
         map3 = nn.functional.upsample(
-            self.head3(map3), scale_factor=4, mode="nearest")
+            self.head3(map3), scale_factor=4, mode='nearest')
         map2 = nn.functional.upsample(
-            self.head2(map2), scale_factor=2, mode="nearest")
+            self.head2(map2), scale_factor=2, mode='nearest')
         map1 = nn.functional.upsample(
-            self.head1(map1), scale_factor=1, mode="nearest")
+            self.head1(map1), scale_factor=1, mode='nearest')
 
         smoothed = self.smooth(torch.cat([map4, map3, map2, map1], dim=1))
         smoothed = nn.functional.upsample(
-            smoothed, scale_factor=2, mode="nearest")
+            smoothed, scale_factor=2, mode='nearest')
         smoothed = self.smooth2(smoothed + map0)
         smoothed = nn.functional.upsample(
-            smoothed, scale_factor=2, mode="nearest")
+            smoothed, scale_factor=2, mode='nearest')
 
         final = self.final(smoothed)
         return torch.tanh(final)
@@ -393,20 +393,20 @@ class FPNMobileNet(nn.Module):
         map0, map1, map2, map3, map4 = self.fpn(x)
 
         map4 = nn.functional.upsample(
-            self.head4(map4), scale_factor=8, mode="nearest")
+            self.head4(map4), scale_factor=8, mode='nearest')
         map3 = nn.functional.upsample(
-            self.head3(map3), scale_factor=4, mode="nearest")
+            self.head3(map3), scale_factor=4, mode='nearest')
         map2 = nn.functional.upsample(
-            self.head2(map2), scale_factor=2, mode="nearest")
+            self.head2(map2), scale_factor=2, mode='nearest')
         map1 = nn.functional.upsample(
-            self.head1(map1), scale_factor=1, mode="nearest")
+            self.head1(map1), scale_factor=1, mode='nearest')
 
         smoothed = self.smooth(torch.cat([map4, map3, map2, map1], dim=1))
         smoothed = nn.functional.upsample(
-            smoothed, scale_factor=2, mode="nearest")
+            smoothed, scale_factor=2, mode='nearest')
         smoothed = self.smooth2(smoothed + map0)
         smoothed = nn.functional.upsample(
-            smoothed, scale_factor=2, mode="nearest")
+            smoothed, scale_factor=2, mode='nearest')
 
         final = self.final(smoothed)
         res = torch.tanh(final) + x
@@ -583,15 +583,15 @@ class UNetSEResNext(nn.Module):
         bottom_channel_nr = 2048
 
         self.conv1 = self.encoder.layer0
-        #self.se_e1 = SCSEBlock(64)
+        # self.se_e1 = SCSEBlock(64)
         self.conv2 = self.encoder.layer1
-        #self.se_e2 = SCSEBlock(64 * 4)
+        # self.se_e2 = SCSEBlock(64 * 4)
         self.conv3 = self.encoder.layer2
-        #self.se_e3 = SCSEBlock(128 * 4)
+        # self.se_e3 = SCSEBlock(128 * 4)
         self.conv4 = self.encoder.layer3
-        #self.se_e4 = SCSEBlock(256 * 4)
+        # self.se_e4 = SCSEBlock(256 * 4)
         self.conv5 = self.encoder.layer4
-        #self.se_e5 = SCSEBlock(512 * 4)
+        # self.se_e5 = SCSEBlock(512 * 4)
 
         self.center = DecoderCenter(bottom_channel_nr, num_filters * 8 * 2,
                                     num_filters * 8, False)
@@ -599,45 +599,45 @@ class UNetSEResNext(nn.Module):
         self.dec5 = DecoderBlockV(bottom_channel_nr + num_filters * 8,
                                   num_filters * 8 * 2, num_filters * 2,
                                   is_deconv)
-        #self.se_d5 = SCSEBlock(num_filters * 2)
+        # self.se_d5 = SCSEBlock(num_filters * 2)
         self.dec4 = DecoderBlockV(bottom_channel_nr // 2 + num_filters * 2,
                                   num_filters * 8, num_filters * 2, is_deconv)
-        #self.se_d4 = SCSEBlock(num_filters * 2)
+        # self.se_d4 = SCSEBlock(num_filters * 2)
         self.dec3 = DecoderBlockV(bottom_channel_nr // 4 + num_filters * 2,
                                   num_filters * 4, num_filters * 2, is_deconv)
-        #self.se_d3 = SCSEBlock(num_filters * 2)
+        # self.se_d3 = SCSEBlock(num_filters * 2)
         self.dec2 = DecoderBlockV(bottom_channel_nr // 8 + num_filters * 2,
                                   num_filters * 2, num_filters * 2, is_deconv)
-        #self.se_d2 = SCSEBlock(num_filters * 2)
+        # self.se_d2 = SCSEBlock(num_filters * 2)
         self.dec1 = DecoderBlockV(num_filters * 2, num_filters,
                                   num_filters * 2, is_deconv)
-        #self.se_d1 = SCSEBlock(num_filters * 2)
+        # self.se_d1 = SCSEBlock(num_filters * 2)
         self.dec0 = ConvRelu(num_filters * 10, num_filters * 2)
         self.final = nn.Conv2d(num_filters * 2, num_classes, kernel_size=1)
 
     def forward(self, x):
         conv1 = self.conv1(x)
-        #conv1 = self.se_e1(conv1)
+        # conv1 = self.se_e1(conv1)
         conv2 = self.conv2(conv1)
-        #conv2 = self.se_e2(conv2)
+        # conv2 = self.se_e2(conv2)
         conv3 = self.conv3(conv2)
-        #conv3 = self.se_e3(conv3)
+        # conv3 = self.se_e3(conv3)
         conv4 = self.conv4(conv3)
-        #conv4 = self.se_e4(conv4)
+        # conv4 = self.se_e4(conv4)
         conv5 = self.conv5(conv4)
-        #conv5 = self.se_e5(conv5)
+        # conv5 = self.se_e5(conv5)
 
         center = self.center(conv5)
         dec5 = self.dec5(torch.cat([center, conv5], 1))
-        #dec5 = self.se_d5(dec5)
+        # dec5 = self.se_d5(dec5)
         dec4 = self.dec4(torch.cat([dec5, conv4], 1))
-        #dec4 = self.se_d4(dec4)
+        # dec4 = self.se_d4(dec4)
         dec3 = self.dec3(torch.cat([dec4, conv3], 1))
-        #dec3 = self.se_d3(dec3)
+        # dec3 = self.se_d3(dec3)
         dec2 = self.dec2(torch.cat([dec3, conv2], 1))
-        #dec2 = self.se_d2(dec2)
+        # dec2 = self.se_d2(dec2)
         dec1 = self.dec1(dec2)
-        #dec1 = self.se_d1(dec1)
+        # dec1 = self.se_d1(dec1)
 
         f = torch.cat((
             dec1,
@@ -699,8 +699,8 @@ class DecoderCenter(nn.Module):
 
         if is_deconv:
             """
-                Paramaters for Deconvolution were chosen to avoid artifacts, following
-                link https://distill.pub/2016/deconv-checkerboard/
+                Parameters for Deconvolution were chosen to avoid artifacts,
+                following link https://distill.pub/2016/deconv-checkerboard/
             """
 
             self.block = nn.Sequential(

@@ -21,8 +21,8 @@ __all__ = [
 pretrained_settings = {
     'senet154': {
         'imagenet': {
-            'url':
-            'http://data.lip6.fr/cadene/pretrainedmodels/senet154-c7b49a05.pth',
+            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/'
+            'senet154-c7b49a05.pth',
             'input_space': 'RGB',
             'input_size': [3, 224, 224],
             'input_range': [0, 1],
@@ -33,8 +33,8 @@ pretrained_settings = {
     },
     'se_resnet50': {
         'imagenet': {
-            'url':
-            'http://data.lip6.fr/cadene/pretrainedmodels/se_resnet50-ce0d4300.pth',
+            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/'
+            'se_resnet50-ce0d4300.pth',
             'input_space': 'RGB',
             'input_size': [3, 224, 224],
             'input_range': [0, 1],
@@ -45,8 +45,8 @@ pretrained_settings = {
     },
     'se_resnet101': {
         'imagenet': {
-            'url':
-            'http://data.lip6.fr/cadene/pretrainedmodels/se_resnet101-7e38fcc6.pth',
+            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/'
+            'se_resnet101-7e38fcc6.pth',
             'input_space': 'RGB',
             'input_size': [3, 224, 224],
             'input_range': [0, 1],
@@ -57,8 +57,8 @@ pretrained_settings = {
     },
     'se_resnet152': {
         'imagenet': {
-            'url':
-            'http://data.lip6.fr/cadene/pretrainedmodels/se_resnet152-d17c99b7.pth',
+            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/'
+            'se_resnet152-d17c99b7.pth',
             'input_space': 'RGB',
             'input_size': [3, 224, 224],
             'input_range': [0, 1],
@@ -69,8 +69,8 @@ pretrained_settings = {
     },
     'se_resnext50_32x4d': {
         'imagenet': {
-            'url':
-            'http://data.lip6.fr/cadene/pretrainedmodels/se_resnext50_32x4d-a260b3a4.pth',
+            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/'
+            'se_resnext50_32x4d-a260b3a4.pth',
             'input_space': 'RGB',
             'input_size': [3, 224, 224],
             'input_range': [0, 1],
@@ -81,8 +81,8 @@ pretrained_settings = {
     },
     'se_resnext101_32x4d': {
         'imagenet': {
-            'url':
-            'http://data.lip6.fr/cadene/pretrainedmodels/se_resnext101_32x4d-3b2fe3d8.pth',
+            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/'
+            'se_resnext101_32x4d-3b2fe3d8.pth',
             'input_space': 'RGB',
             'input_size': [3, 224, 224],
             'input_range': [0, 1],
@@ -759,11 +759,11 @@ class RelativisticDiscLossLS(nn.Module):
 
         # Real
         self.pred_real = net.forward(realB)
-        errG = (torch.mean(
-            (self.pred_real - torch.mean(self.fake_pool.query()) + 1)**2) +
-                torch.mean(
-                    (self.pred_fake - torch.mean(self.real_pool.query()) - 1)**
-                    2)) / 2
+        ex_pdata = torch.mean(
+            (self.pred_real - torch.mean(self.fake_pool.query()) + 1)**2)
+        ez_pz = torch.mean(
+            (self.pred_fake - torch.mean(self.real_pool.query()) - 1)**2)
+        errG = (ex_pdata + ez_pz) / 2
         return errG
 
     def get_loss(self, net, fakeB, realB):
@@ -878,7 +878,7 @@ def get_pixel_loss(loss_type):
         content_loss = ContentLoss()
         content_loss.initialize(nn.L1Loss())
     else:
-        raise ValueError("ContentLoss [%s] not recognized." % loss_type)
+        raise ValueError('ContentLoss [%s] not recognized.' % loss_type)
     return content_loss
 
 
@@ -894,5 +894,5 @@ def get_disc_loss(loss_type):
     elif loss_type == 'ragan-ls':
         disc_loss = RelativisticDiscLossLS()
     else:
-        raise ValueError("GAN Loss [%s] not recognized." % loss_type)
+        raise ValueError('GAN Loss [%s] not recognized.' % loss_type)
     return disc_loss

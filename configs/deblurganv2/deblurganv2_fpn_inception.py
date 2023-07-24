@@ -33,9 +33,6 @@ model = dict(
     )
 )
 
-# DistributedDataParallel
-#model_wrapper_cfg = dict(type='MMSeparateDistributedDataParallel')
-
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='LoadImageFromFile', key='gt'),
@@ -45,7 +42,7 @@ train_pipeline = [
     #     keys=['img', 'gt'],
     #     flip_ratio=0.5,
     #     direction='horizontal'),
-    #dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
+    # dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     # dict(type='PairedRandomCrop', gt_patch_size=256),
     # dict(
     #     type='Crop',
@@ -73,7 +70,6 @@ train_pipeline = [
              {'name': 'rgb_shift'},
              {'name': 'hsv_shift'},
              {'name': 'sharpen'}]),
-    # dict(type='PairedAlbuNormalize',lq_key='img',gt_key='gt',std=[0.5]*3,mean=[0.5]*3,max_pixel_value=255.0),
     dict(type='PackInputs')
 ]
 
@@ -86,7 +82,7 @@ val_pipeline = [
     #     keys=['img', 'gt'],
     #     flip_ratio=0.5,
     #     direction='horizontal'),
-    #dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
+    # dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
     # dict(type='PairedRandomCrop', gt_patch_size=256),
     # dict(
     #     type='Crop',
@@ -114,21 +110,18 @@ val_pipeline = [
              {'name': 'rgb_shift'},
              {'name': 'hsv_shift'},
              {'name': 'sharpen'}]),
-    # dict(type='PairedAlbuNormalize',lq_key='img',gt_key='gt',std=[0.5]*3,mean=[0.5]*3,max_pixel_value=255.0),
     dict(type='PackInputs')
 ]
 
 # val_pipeline = [
 #     dict(type='LoadImageFromFile', key='img'),
 #     dict(type='LoadImageFromFile', key='gt'),
-#     # dict(type='PairedAlbuNormalize',lq_key='img',gt_key='gt',std=[0.5]*3,mean=[0.5]*3,max_pixel_value=255.0),
 #     dict(type='PackInputs')
 # ]
 
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='LoadImageFromFile', key='gt'),
-    # dict(type='PairedAlbuNormalize',lq_key='img',gt_key='gt',std=[0.5]*3,mean=[0.5]*3,max_pixel_value=255.0),
     dict(type='PackInputs')
 ]
 
@@ -149,7 +142,7 @@ train_dataloader = dict(
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
         data_root=data_root+'train',
         data_prefix=dict(img='input', gt='target'),
-        #ann_file='meta_info_gopro_train.txt',
+        # ann_file='meta_info_gopro_train.txt',
         pipeline=train_pipeline))
 
 val_dataloader = dict(

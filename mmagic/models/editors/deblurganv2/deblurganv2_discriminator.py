@@ -211,15 +211,15 @@ class DoubleGan(nn.Module):
             n_layers=d_layers,
             norm_layer=get_norm_layer(norm_type=norm_layer),
             use_sigmoid=False)
-        #patch_gan = nn.DataParallel(patch_gan)
+        # patch_gan = nn.DataParallel(patch_gan)
         self.full_gan = get_fullD(norm_layer)
-        #full_gan = nn.DataParallel(full_gan)
-        #self.model_d = dict(patch=patch_gan, full=full_gan)
+        # full_gan = nn.DataParallel(full_gan)
+        # self.model_d = dict(patch=patch_gan, full=full_gan)
 
     def forward(self, x):
-        #d_full_gan = self.model_d['full'](x)
+        # d_full_gan = self.model_d['full'](x)
         d_full_gan_output = self.full_gan(x)
-        #d_patch_gan = self.model_d['patch'](x)
+        # d_patch_gan = self.model_d['patch'](x)
         d_patch_gan_output = self.patch_gan(x)
         return [d_full_gan_output, d_patch_gan_output]
 

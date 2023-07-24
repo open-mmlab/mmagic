@@ -1,5 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Dict, List, Optional
+from typing import List
 
 import albumentations as albu
 from mmcv.transforms import BaseTransform
