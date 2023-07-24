@@ -1,24 +1,25 @@
-﻿# DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better
+﻿# DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better(ICCV'2019)
 
 Code for this paper [DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better](https://arxiv.org/abs/1908.03826)
 
 Orest Kupyn, Tetiana Martyniuk, Junru Wu, Zhangyang Wang
 
-In ICCV 2019
+
+> **Task**: Image Super-Resolution
 
 <!-- [ALGORITHM] -->
 
 ## Overview
 
-We present a new end-to-end generative adversarial network (GAN) for single image motion deblurring, named 
-DeblurGAN-v2, which considerably boosts state-of-the-art deblurring efficiency, quality, and flexibility. DeblurGAN-v2 
-is based on a relativistic conditional GAN with a double-scale discriminator. For the first time, we introduce the 
-Feature Pyramid Network into deblurring, as a core building block in the generator of DeblurGAN-v2. It can flexibly 
-work with a wide range of backbones, to navigate the balance between performance and efficiency. The plug-in of 
+We present a new end-to-end generative adversarial network (GAN) for single image motion deblurring, named
+DeblurGAN-v2, which considerably boosts state-of-the-art deblurring efficiency, quality, and flexibility. DeblurGAN-v2
+is based on a relativistic conditional GAN with a double-scale discriminator. For the first time, we introduce the
+Feature Pyramid Network into deblurring, as a core building block in the generator of DeblurGAN-v2. It can flexibly
+work with a wide range of backbones, to navigate the balance between performance and efficiency. The plug-in of
 sophisticated backbones (e.g., Inception-ResNet-v2) can lead to solid state-of-the-art deblurring. Meanwhile,
-with light-weight backbones (e.g., MobileNet and its variants), DeblurGAN-v2 reaches 10-100 times faster than 
-the nearest competitors, while maintaining close to state-of-the-art results, implying the option of real-time 
-video deblurring. We demonstrate that DeblurGAN-v2 obtains very competitive performance on several popular 
+with light-weight backbones (e.g., MobileNet and its variants), DeblurGAN-v2 reaches 10-100 times faster than
+the nearest competitors, while maintaining close to state-of-the-art results, implying the option of real-time
+video deblurring. We demonstrate that DeblurGAN-v2 obtains very competitive performance on several popular
 benchmarks, in terms of deblurring quality (both objective and subjective), as well as efficiency. Besides,
 we show the architecture to be effective for general image restoration tasks too.
 
@@ -31,7 +32,7 @@ we show the architecture to be effective for general image restoration tasks too
 
 ## DeblurGAN-v2 Architecture
 
-![](./doc_images/pipeline.jpg)
+![](https://github.com/VITA-Group/doc_images/pipeline.jpg)
 
 ## Predict
 
@@ -93,10 +94,7 @@ The code was taken from <a href="">https://github.com/KupynOrest/RestoreGAN</a> 
 
 ## Citation
 
-If you use this code for your research, please cite our paper.
-
-```
-​```
+```bibtex
 @InProceedings{Kupyn_2019_ICCV,
 author = {Orest Kupyn and Tetiana Martyniuk and Junru Wu and Zhangyang Wang},
 title = {DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better},
@@ -104,5 +102,4 @@ booktitle = {The IEEE International Conference on Computer Vision (ICCV)},
 month = {Oct},
 year = {2019}
 }
-​```
 ```
