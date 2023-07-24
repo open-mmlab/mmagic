@@ -1,17 +1,25 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import functools
 
 import numpy as np
 import torch.nn as nn
 
 from mmagic.registry import MODELS
-
 from .deblurganv2_util import get_norm_layer
 
 model_list = ['DoubleGan', 'MultiScale', 'NoGan', 'PatchGan']
 
+
 # Defines the PatchGAN discriminator with the specified arguments.
 class NLayerDiscriminator(nn.Module):
-    def __init__(self, input_nc=3, ndf=64, n_layers=3, norm_layer=nn.BatchNorm2d, use_sigmoid=False, use_parallel=True):
+
+    def __init__(self,
+                 input_nc=3,
+                 ndf=64,
+                 n_layers=3,
+                 norm_layer=nn.BatchNorm2d,
+                 use_sigmoid=False,
+                 use_parallel=True):
         super(NLayerDiscriminator, self).__init__()
         self.use_parallel = use_parallel
         if type(norm_layer) == functools.partial:
@@ -20,7 +28,7 @@ class NLayerDiscriminator(nn.Module):
             use_bias = norm_layer == nn.InstanceNorm2d
 
         kw = 4
-        padw = int(np.ceil((kw-1)/2))
+        padw = int(np.ceil((kw - 1) / 2))
         sequence = [
             nn.Conv2d(input_nc, ndf, kernel_size=kw, stride=2, padding=padw),
             nn.LeakyReLU(0.2, True)
@@ -31,8 +39,13 @@ class NLayerDiscriminator(nn.Module):
             nf_mult_prev = nf_mult
             nf_mult = min(2**n, 8)
             sequence += [
-                nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult,
-                          kernel_size=kw, stride=2, padding=padw, bias=use_bias),
+                nn.Conv2d(
+                    ndf * nf_mult_prev,
+                    ndf * nf_mult,
+                    kernel_size=kw,
+                    stride=2,
+                    padding=padw,
+                    bias=use_bias),
                 norm_layer(ndf * nf_mult),
                 nn.LeakyReLU(0.2, True)
             ]
@@ -40,13 +53,21 @@ class NLayerDiscriminator(nn.Module):
         nf_mult_prev = nf_mult
         nf_mult = min(2**n_layers, 8)
         sequence += [
-            nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult,
-                      kernel_size=kw, stride=1, padding=padw, bias=use_bias),
+            nn.Conv2d(
+                ndf * nf_mult_prev,
+                ndf * nf_mult,
+                kernel_size=kw,
+                stride=1,
+                padding=padw,
+                bias=use_bias),
             norm_layer(ndf * nf_mult),
             nn.LeakyReLU(0.2, True)
         ]
 
-        sequence += [nn.Conv2d(ndf * nf_mult, 1, kernel_size=kw, stride=1, padding=padw)]
+        sequence += [
+            nn.Conv2d(
+                ndf * nf_mult, 1, kernel_size=kw, stride=1, padding=padw)
+        ]
 
         if use_sigmoid:
             sequence += [nn.Sigmoid()]
@@ -58,7 +79,13 @@ class NLayerDiscriminator(nn.Module):
 
 
 class DicsriminatorTail(nn.Module):
-    def __init__(self, nf_mult, n_layers, ndf=64, norm_layer=nn.BatchNorm2d, use_parallel=True):
+
+    def __init__(self,
+                 nf_mult,
+                 n_layers,
+                 ndf=64,
+                 norm_layer=nn.BatchNorm2d,
+                 use_parallel=True):
         super(DicsriminatorTail, self).__init__()
         self.use_parallel = use_parallel
         if type(norm_layer) == functools.partial:
@@ -67,18 +94,26 @@ class DicsriminatorTail(nn.Module):
             use_bias = norm_layer == nn.InstanceNorm2d
 
         kw = 4
-        padw = int(np.ceil((kw-1)/2))
+        padw = int(np.ceil((kw - 1) / 2))
 
         nf_mult_prev = nf_mult
         nf_mult = min(2**n_layers, 8)
         sequence = [
-            nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult,
-                      kernel_size=kw, stride=1, padding=padw, bias=use_bias),
+            nn.Conv2d(
+                ndf * nf_mult_prev,
+                ndf * nf_mult,
+                kernel_size=kw,
+                stride=1,
+                padding=padw,
+                bias=use_bias),
             norm_layer(ndf * nf_mult),
             nn.LeakyReLU(0.2, True)
         ]
 
-        sequence += [nn.Conv2d(ndf * nf_mult, 1, kernel_size=kw, stride=1, padding=padw)]
+        sequence += [
+            nn.Conv2d(
+                ndf * nf_mult, 1, kernel_size=kw, stride=1, padding=padw)
+        ]
 
         self.model = nn.Sequential(*sequence)
 
@@ -87,7 +122,12 @@ class DicsriminatorTail(nn.Module):
 
 
 class MultiScaleDiscriminator(nn.Module):
-    def __init__(self, input_nc=3, ndf=64, norm_layer=nn.BatchNorm2d, use_parallel=True):
+
+    def __init__(self,
+                 input_nc=3,
+                 ndf=64,
+                 norm_layer=nn.BatchNorm2d,
+                 use_parallel=True):
         super(MultiScaleDiscriminator, self).__init__()
         self.use_parallel = use_parallel
         if type(norm_layer) == functools.partial:
@@ -96,7 +136,7 @@ class MultiScaleDiscriminator(nn.Module):
             use_bias = norm_layer == nn.InstanceNorm2d
 
         kw = 4
-        padw = int(np.ceil((kw-1)/2))
+        padw = int(np.ceil((kw - 1) / 2))
         sequence = [
             nn.Conv2d(input_nc, ndf, kernel_size=kw, stride=2, padding=padw),
             nn.LeakyReLU(0.2, True)
@@ -107,8 +147,13 @@ class MultiScaleDiscriminator(nn.Module):
             nf_mult_prev = nf_mult
             nf_mult = min(2**n, 8)
             sequence += [
-                nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult,
-                          kernel_size=kw, stride=2, padding=padw, bias=use_bias),
+                nn.Conv2d(
+                    ndf * nf_mult_prev,
+                    ndf * nf_mult,
+                    kernel_size=kw,
+                    stride=2,
+                    padding=padw,
+                    bias=use_bias),
                 norm_layer(ndf * nf_mult),
                 nn.LeakyReLU(0.2, True)
             ]
@@ -119,15 +164,24 @@ class MultiScaleDiscriminator(nn.Module):
         nf_mult = 8
 
         self.scale_two = nn.Sequential(
-            nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult,
-                      kernel_size=kw, stride=2, padding=padw, bias=use_bias),
-            norm_layer(ndf * nf_mult),
+            nn.Conv2d(
+                ndf * nf_mult_prev,
+                ndf * nf_mult,
+                kernel_size=kw,
+                stride=2,
+                padding=padw,
+                bias=use_bias), norm_layer(ndf * nf_mult),
             nn.LeakyReLU(0.2, True))
         nf_mult_prev = nf_mult
         self.second_tail = DicsriminatorTail(nf_mult=nf_mult, n_layers=4)
         self.scale_three = nn.Sequential(
-            nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult, kernel_size=kw, stride=2, padding=padw, bias=use_bias),
-            norm_layer(ndf * nf_mult),
+            nn.Conv2d(
+                ndf * nf_mult_prev,
+                ndf * nf_mult,
+                kernel_size=kw,
+                stride=2,
+                padding=padw,
+                bias=use_bias), norm_layer(ndf * nf_mult),
             nn.LeakyReLU(0.2, True))
         self.third_tail = DicsriminatorTail(nf_mult=nf_mult, n_layers=5)
 
@@ -140,19 +194,23 @@ class MultiScaleDiscriminator(nn.Module):
         x = self.third_tail(x)
         return [x_1, x_2, x]
 
+
 def get_fullD(norm_layer):
-    model_d = NLayerDiscriminator(n_layers=5,
-                                  norm_layer=get_norm_layer(norm_type=norm_layer),
-                                  use_sigmoid=False)
+    model_d = NLayerDiscriminator(
+        n_layers=5,
+        norm_layer=get_norm_layer(norm_type=norm_layer),
+        use_sigmoid=False)
     return model_d
 
 
 class DoubleGan(nn.Module):
+
     def __init__(self, norm_layer='instance', d_layers=3):
         super().__init__()
-        self.patch_gan = NLayerDiscriminator(n_layers=d_layers,
-                                        norm_layer=get_norm_layer(norm_type=norm_layer),
-                                        use_sigmoid=False)
+        self.patch_gan = NLayerDiscriminator(
+            n_layers=d_layers,
+            norm_layer=get_norm_layer(norm_type=norm_layer),
+            use_sigmoid=False)
         #patch_gan = nn.DataParallel(patch_gan)
         self.full_gan = get_fullD(norm_layer)
         #full_gan = nn.DataParallel(full_gan)
@@ -167,11 +225,13 @@ class DoubleGan(nn.Module):
 
 
 class PatchGan(nn.Module):
+
     def __init__(self, norm_layer='instance', d_layers=3):
         super().__init__()
-        self.patch_gan = NLayerDiscriminator(n_layers=d_layers,
-                                        norm_layer=get_norm_layer(norm_type=norm_layer),
-                                        use_sigmoid=False)
+        self.patch_gan = NLayerDiscriminator(
+            n_layers=d_layers,
+            norm_layer=get_norm_layer(norm_type=norm_layer),
+            use_sigmoid=False)
 
     def forward(self, x):
         d_patch_gan_output = self.patch_gan(x)
@@ -179,9 +239,11 @@ class PatchGan(nn.Module):
 
 
 class MultiScale(nn.Module):
+
     def __init__(self, norm_layer='instance', d_layers=3):
         super().__init__()
-        self.model_d = MultiScaleDiscriminator(norm_layer=get_norm_layer(norm_type=norm_layer))
+        self.model_d = MultiScaleDiscriminator(
+            norm_layer=get_norm_layer(norm_type=norm_layer))
 
     def forward(self, x):
         result_d = self.model_d(x)
@@ -190,6 +252,7 @@ class MultiScale(nn.Module):
 
 @MODELS.register_module()
 class DeblurGanV2Discriminator:
+
     def __new__(cls, model, *args, **kwargs):
         if model == 'DoubleGan':
             return DoubleGan(*args, **kwargs)

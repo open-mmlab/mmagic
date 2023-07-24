@@ -1,8 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
 
 import albumentations as albu
-import numpy as np
 from mmcv.transforms import BaseTransform
 
 from mmagic.registry import TRANSFORMS
@@ -10,6 +9,7 @@ from mmagic.registry import TRANSFORMS
 
 @TRANSFORMS.register_module()
 class PairedAlbuTransForms(BaseTransform):
+
     def __init__(self,
                  size: int,
                  lq_key: str = 'img',
@@ -23,27 +23,35 @@ class PairedAlbuTransForms(BaseTransform):
         self.scope = scope
         self.crop = crop
         self.p = p
-        augs = {'weak': albu.Compose([albu.HorizontalFlip(), ], p=self.p),
-                'geometric':
-                    albu.OneOf([albu.HorizontalFlip(always_apply=True),
-                                albu.ShiftScaleRotate(always_apply=True),
-                                albu.Transpose(always_apply=True),
-                                albu.OpticalDistortion(always_apply=True),
-                                albu.ElasticTransform(always_apply=True), ],
-                               p=self.p)
-                }
+        augs = {
+            'weak':
+            albu.Compose([
+                albu.HorizontalFlip(),
+            ], p=self.p),
+            'geometric':
+            albu.OneOf([
+                albu.HorizontalFlip(always_apply=True),
+                albu.ShiftScaleRotate(always_apply=True),
+                albu.Transpose(always_apply=True),
+                albu.OpticalDistortion(always_apply=True),
+                albu.ElasticTransform(always_apply=True),
+            ],
+                       p=self.p)
+        }
         aug_fn = augs[self.scope]
-        crop_fn = {'random': albu.RandomCrop(self.size, self.size, always_apply=True),
-                   'center':
-                       albu.CenterCrop(self.size, self.size, always_apply=True)}[self.crop]
+        crop_fn = {
+            'random': albu.RandomCrop(self.size, self.size, always_apply=True),
+            'center': albu.CenterCrop(self.size, self.size, always_apply=True)
+        }[self.crop]
         pad = albu.PadIfNeeded(self.size, self.size)
 
         self.pipeline = albu.Compose([aug_fn, pad, crop_fn],
-                                additional_targets={'target': 'image'})
+                                     additional_targets={'target': 'image'})
 
     def transform(self, results):
 
-        r = self.pipeline(image=results[self.lq_key], target=results[self.gt_key])
+        r = self.pipeline(
+            image=results[self.lq_key], target=results[self.gt_key])
         results[self.lq_key] = r['image']
         results[self.gt_key] = r['target']
         return results
@@ -63,6 +71,7 @@ class PairedAlbuTransForms(BaseTransform):
 
 @TRANSFORMS.register_module()
 class AlbuTransForms(BaseTransform):
+
     def __init__(self,
                  size: int,
                  keys: List,
@@ -74,19 +83,26 @@ class AlbuTransForms(BaseTransform):
         self.scope = scope
         self.crop = crop
         self.p = p
-        augs = {'weak': albu.Compose([albu.HorizontalFlip(), ]),
-                'geometric':
-                    albu.OneOf([albu.HorizontalFlip(always_apply=True),
-                                albu.ShiftScaleRotate(always_apply=True),
-                                albu.Transpose(always_apply=True),
-                                albu.OpticalDistortion(always_apply=True),
-                                albu.ElasticTransform(always_apply=True), ],
-                               p=self.p)
-                }
+        augs = {
+            'weak':
+            albu.Compose([
+                albu.HorizontalFlip(),
+            ]),
+            'geometric':
+            albu.OneOf([
+                albu.HorizontalFlip(always_apply=True),
+                albu.ShiftScaleRotate(always_apply=True),
+                albu.Transpose(always_apply=True),
+                albu.OpticalDistortion(always_apply=True),
+                albu.ElasticTransform(always_apply=True),
+            ],
+                       p=self.p)
+        }
         aug_fn = augs[self.scope]
-        crop_fn = {'random': albu.RandomCrop(self.size, self.size, always_apply=True),
-                   'center':
-                       albu.CenterCrop(self.size, self.size, always_apply=True)}[self.crop]
+        crop_fn = {
+            'random': albu.RandomCrop(self.size, self.size, always_apply=True),
+            'center': albu.CenterCrop(self.size, self.size, always_apply=True)
+        }[self.crop]
         pad = albu.PadIfNeeded(self.size, self.size)
 
         self.pipeline = albu.Compose([aug_fn, pad, crop_fn])
@@ -112,6 +128,7 @@ class AlbuTransForms(BaseTransform):
 
 @TRANSFORMS.register_module()
 class PairedAlbuNormalize(BaseTransform):
+
     def __init__(self,
                  lq_key: str,
                  gt_key: str,
@@ -127,18 +144,21 @@ class PairedAlbuNormalize(BaseTransform):
         self.max_pixel_value = max_pixel_value
         self.always_apply = always_apply
         self.p = p
-        normalize = albu.Normalize(mean=self.mean,
-                                   std=self.std,
-                                   max_pixel_value=self.max_pixel_value,
-                                   always_apply=self.always_apply,
-                                   p=self.p)
-        self.normalize = albu.Compose([normalize], additional_targets={'target': 'image'})
+        normalize = albu.Normalize(
+            mean=self.mean,
+            std=self.std,
+            max_pixel_value=self.max_pixel_value,
+            always_apply=self.always_apply,
+            p=self.p)
+        self.normalize = albu.Compose([normalize],
+                                      additional_targets={'target': 'image'})
 
     def transform(self, results):
         if self.gt_key not in results.keys():
             r = self.normalize(image=results[self.lq_key])
         else:
-            r = self.normalize(image=results[self.lq_key], target=results[self.gt_key])
+            r = self.normalize(
+                image=results[self.lq_key], target=results[self.gt_key])
             results[self.gt_key] = r['target']
         results[self.lq_key] = r['image']
 
@@ -160,6 +180,7 @@ class PairedAlbuNormalize(BaseTransform):
 
 @TRANSFORMS.register_module()
 class AlbuNormalize(BaseTransform):
+
     def __init__(self,
                  keys: List,
                  mean=(0.5, 0.5, 0.5),
@@ -173,11 +194,12 @@ class AlbuNormalize(BaseTransform):
         self.max_pixel_value = max_pixel_value
         self.always_apply = always_apply
         self.p = p
-        normalize = albu.Normalize(mean=self.mean,
-                                   std=self.std,
-                                   max_pixel_value=self.max_pixel_value,
-                                   always_apply=self.always_apply,
-                                   p=self.p)
+        normalize = albu.Normalize(
+            mean=self.mean,
+            std=self.std,
+            max_pixel_value=self.max_pixel_value,
+            always_apply=self.always_apply,
+            p=self.p)
         self.normalize = albu.Compose([normalize])
 
     def transform(self, results):
@@ -223,10 +245,8 @@ def _resolve_aug_fn(name):
 
 @TRANSFORMS.register_module()
 class AlbuCorruptFunction(BaseTransform):
-    def __init__(self,
-                 keys: List[str],
-                 config: List[dict],
-                 p: float = 1.0):
+
+    def __init__(self, keys: List[str], config: List[dict], p: float = 1.0):
         self.keys = keys
         self.config = config
         self.p = p
@@ -252,4 +272,3 @@ class AlbuCorruptFunction(BaseTransform):
                      f'p={self.p}) ')
 
         return repr_str
-

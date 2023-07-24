@@ -1,26 +1,19 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import copy
-from typing import Optional, List, Union, Dict
+from typing import Dict, List, Optional, Union
 
-import albumentations as albu
-# import numpy as np
 import torch
-import torch.nn as nn
-from mmengine import MessageHub
 from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
-from mmengine.structures import PixelData
-from torchvision import transforms as T
 
-from ...utils import set_requires_grad
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
-
-from .deblurganv2_util import get_pixel_loss, get_disc_loss
-# from .adversarial_trainer import GANFactory
+from .deblurganv2_util import get_disc_loss, get_pixel_loss
 
 
 @MODELS.register_module()
 class DeblurGanV2(BaseModel):
+
     def __init__(self,
                  generator: dict,
                  discriminator: Optional[dict] = None,
@@ -33,7 +26,8 @@ class DeblurGanV2(BaseModel):
                  init_cfg: Optional[dict] = None,
                  data_preprocessor: Optional[dict] = None):
 
-        super().__init__(init_cfg=init_cfg, data_preprocessor=data_preprocessor)
+        super().__init__(
+            init_cfg=init_cfg, data_preprocessor=data_preprocessor)
         # generator
         self.generator = MODELS.build(generator)
 
@@ -124,8 +118,6 @@ class DeblurGanV2(BaseModel):
     #
     #     return map(self._array_to_batch, (x, mask)), h, w
 
-
-
     def forward(self,
                 inputs: torch.Tensor,
                 data_samples: Optional[List[DataSample]] = None,
@@ -201,12 +193,13 @@ class DeblurGanV2(BaseModel):
             block_size = 32
             min_height = (h // block_size + 1) * block_size
             min_width = (w // block_size + 1) * block_size
-            pad = torch.nn.ZeroPad2d(padding=(0, min_width-w, 0, min_height-h))
+            pad = torch.nn.ZeroPad2d(
+                padding=(0, min_width - w, 0, min_height - h))
             inputs = pad(inputs)
             # (inputs, mask), h, w = self._preprocess(inputs)
             predictions = self.forward_inference(inputs, data_samples,
                                                  **kwargs)
-            predictions.pred_img = predictions.pred_img[:, :, :h, :w]#*255
+            predictions.pred_img = predictions.pred_img[:, :, :h, :w]  #*255
             predictions = self.convert_to_datasample(predictions, data_samples,
                                                      inputs)
             return predictions
@@ -412,8 +405,6 @@ class DeblurGanV2(BaseModel):
 
         log_vars.update(log_vars_d)
 
-
-
         if 'loss' in log_vars:
             log_vars.pop('loss')
 
@@ -495,7 +486,8 @@ class DeblurGanV2(BaseModel):
     #
     #     return losses
 
-    def g_step_double(self, batch_outputs: torch.Tensor, batch_gt_data: torch.Tensor):
+    def g_step_double(self, batch_outputs: torch.Tensor,
+                      batch_gt_data: torch.Tensor):
         """G step of GAN: Calculate losses of generator.
 
         Args:
@@ -510,14 +502,14 @@ class DeblurGanV2(BaseModel):
 
         # pix loss
         if self.pixel_loss:
-            losses['loss_g_content'] = self.pixel_loss(batch_outputs, batch_gt_data)
+            losses['loss_g_content'] = self.pixel_loss(batch_outputs,
+                                                       batch_gt_data)
 
-        losses['loss_g_adv'] = self.adv_lambda * (
-                self.disc_loss.get_g_loss(self.discriminator.patch_gan,
-                                          batch_outputs, batch_gt_data
-                               ) + self.disc_loss2.get_g_loss(
-            self.discriminator.full_gan, batch_outputs, batch_gt_data)) / 2
-        losses['loss_g'] = losses['loss_g_content']+losses['loss_g_adv']
+        losses['loss_g_adv'] = self.adv_lambda * (self.disc_loss.get_g_loss(
+            self.discriminator.patch_gan, batch_outputs,
+            batch_gt_data) + self.disc_loss2.get_g_loss(
+                self.discriminator.full_gan, batch_outputs, batch_gt_data)) / 2
+        losses['loss_g'] = losses['loss_g_content'] + losses['loss_g_adv']
 
         return losses
 
@@ -559,8 +551,10 @@ class DeblurGanV2(BaseModel):
 
     def d_step_double(self, batch_outputs: torch.Tensor,
                       batch_gt_data: torch.Tensor):
-        loss_d_double = (self.disc_loss(self.discriminator.patch_gan, batch_outputs, batch_gt_data) +
-                         self.disc_loss2(self.discriminator.full_gan, batch_outputs, batch_gt_data)) / 2
+        loss_d_double = (self.disc_loss(self.discriminator.patch_gan,
+                                        batch_outputs, batch_gt_data) +
+                         self.disc_loss2(self.discriminator.full_gan,
+                                         batch_outputs, batch_gt_data)) / 2
         return loss_d_double
 
     def g_step_with_optim(self, batch_outputs: torch.Tensor,
@@ -630,13 +624,14 @@ class DeblurGanV2(BaseModel):
         d_optim_wrapper.zero_grad()
         with d_optim_wrapper.optim_context(self):
 
-            loss_d_double = self.adv_lambda * self.d_step_double(batch_outputs, batch_gt_data)
+            loss_d_double = self.adv_lambda * self.d_step_double(
+                batch_outputs, batch_gt_data)
 
         parsed_losses_df, log_vars_df = self.parse_losses(
             dict(loss_d=loss_d_double))
         log_vars.update(log_vars_df)
         loss_df = d_optim_wrapper.scale_loss(parsed_losses_df)
-        d_optim_wrapper.backward(loss_df,retain_graph=True)
+        d_optim_wrapper.backward(loss_df, retain_graph=True)
         d_optim_wrapper.step()
 
         return log_vars
