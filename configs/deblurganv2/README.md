@@ -1,59 +1,33 @@
 ﻿# DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better(ICCV'2019)
 
-Code for this paper [DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better](https://arxiv.org/abs/1908.03826)
-
-Orest Kupyn, Tetiana Martyniuk, Junru Wu, Zhangyang Wang
-
+> [DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better](https://arxiv.org/abs/1908.03826)
 
 > **Task**: Image Super-Resolution
 
 <!-- [ALGORITHM] -->
 
-## Overview
+## Abstract
 
-We present a new end-to-end generative adversarial network (GAN) for single image motion deblurring, named
-DeblurGAN-v2, which considerably boosts state-of-the-art deblurring efficiency, quality, and flexibility. DeblurGAN-v2
-is based on a relativistic conditional GAN with a double-scale discriminator. For the first time, we introduce the
-Feature Pyramid Network into deblurring, as a core building block in the generator of DeblurGAN-v2. It can flexibly
-work with a wide range of backbones, to navigate the balance between performance and efficiency. The plug-in of
-sophisticated backbones (e.g., Inception-ResNet-v2) can lead to solid state-of-the-art deblurring. Meanwhile,
-with light-weight backbones (e.g., MobileNet and its variants), DeblurGAN-v2 reaches 10-100 times faster than
-the nearest competitors, while maintaining close to state-of-the-art results, implying the option of real-time
-video deblurring. We demonstrate that DeblurGAN-v2 obtains very competitive performance on several popular
-benchmarks, in terms of deblurring quality (both objective and subjective), as well as efficiency. Besides,
-we show the architecture to be effective for general image restoration tasks too.
+<!-- [ABSTRACT] -->
 
-![](https://github.com/VITA-Group/doc_images/kohler_visual.png)
-![](https://github.com/VITA-Group/doc_images/restore_visual.png)
-![](https://github.com/VITA-Group/doc_images/gopro_table.png)
-![](https://github.com/VITA-Group/doc_images/lai_table.png)
-<!---![](https://github.com/VITA-Group/doc_images/dvd_table.png)-->
-<!---![](https://github.com/VITA-Group/doc_images/kohler_table.png)-->
+We present a new end-to-end generative adversarial network (GAN) for single image motion deblurring, named DeblurGAN-v2, which considerably boosts state-of-the-art deblurring efficiency, quality, and flexibility. DeblurGAN-v2 is based on a relativistic conditional GAN with a double-scale discriminator. For the first time, we introduce the Feature Pyramid Network into deblurring, as a core building block in the generator of DeblurGAN-v2. It can flexibly work with a wide range of backbones, to navigate the balance between performance and efficiency. The plug-in of sophisticated backbones (e.g., Inception-ResNet-v2) can lead to solid state-of-the-art deblurring. Meanwhile, with light-weight backbones (e.g., MobileNet and its variants), DeblurGAN-v2 reaches 10-100 times faster than the nearest competitors, while maintaining close to state-of-the-art results, implying the option of real-time video deblurring. We demonstrate that DeblurGAN-v2 obtains very competitive performance on several popular benchmarks, in terms of deblurring quality (both objective and subjective), as well as efficiency. Besides, we show the architecture to be effective for general image restoration tasks too.
 
-## DeblurGAN-v2 Architecture
+<!-- [IMAGE] -->
 
-![](https://github.com/VITA-Group/doc_images/pipeline.jpg)
+<div align=center>
+<img src="https://github.com/VITA-Group/doc_images/pipeline.jpg"/>
+</div>
 
-## Predict
+## Results and models
 
-```shell
-python mmagic/demo/mmagic_inference_demo.py \
-        --model-name deblurganv2 \
-        --model-comfig ../configs/deblurganv2/deblurganv2_fpn_inception.py \
-        --model-ckpt your_ckpt_path \
-        --img your_test_image_path \
-        --device cpu \
-        --result-out-dir ./out.png
-```
-
-## Datasets
-
-The datasets for training can be downloaded via the links below:
-- [DVD](https://drive.google.com/file/d/1bpj9pCcZR_6-AHb5aNnev5lILQbH8GMZ/view)
-- [GoPro](https://drive.google.com/file/d/1KStHiZn5TNm2mo3OLZLjnRvd0vVFCI0W/view)
-- [NFS](https://drive.google.com/file/d/1Ut7qbQOrsTZCUJA_mJLptRMipD8sJzjy/view)
-
-## Pre-trained models
+<div align="center">
+  <b> DEBLURGANV2 256x256</b>
+  <br/>
+  <img src="https://github.com/VITA-Group/doc_images/kohler_visual.png" width="800"/>
+  <img src="https://github.com/VITA-Group/doc_images/restore_visual.png" width="800"/>
+  <img src="https://github.com/VITA-Group/doc_images/gopro_table.png" width="800"/>
+  <img src="https://github.com/VITA-Group/doc_images/lai_table.png" width="800"/>
+</div>
 
 |                      Model                      |    Dataset     |      G Model      | D Model | PSNR/<br/>SSIM |                                        Download                                         |
 |:-----------------------------------------------:| :------------: |:-----------------:|:-------:|:---------:| :-------------------------------------------------------------------------------------: |
