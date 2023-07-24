@@ -10,11 +10,11 @@ assign:
   scedule:
     '*/1 * * * *'
   # assignees
-  # assignees:
-    # - LeoXing1996
-    # - zengyh1900
-    # - plyfager
-    # - liuwenran
-    # - Z-Fran
-    # - LeoXing1996
-    # - LeoXing1996
+  assignees:
+    - zengyh1900
+    - LeoXing1996
+    - liuwenran
+    - LeoXing1996
+    - liuwenran
+    - zengyh1900
+    - zengyh1900

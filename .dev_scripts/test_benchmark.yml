@@ -1,4 +1,18 @@
 cases:
+- name: controlnet-1xb1-fill50k
+  params:
+    config: configs/controlnet/controlnet-1xb1-fill50k.py
+    cpus_per_node: 16
+    gpus: 1
+    gpus_per_node: 1
+
+- name: dreambooth
+  params:
+    config: configs/dreambooth/dreambooth.py
+    cpus_per_node: 16
+    gpus: 1
+    gpus_per_node: 1
+
 - name: basicvsr-pp_c64n7_8xb1-600k_reds4
   params:
     checkpoint: basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
@@ -44,20 +58,20 @@ cases:
     metrics:
       FID-50k: 3.992
 
-- name: deepfillv1_256x256_8x2_places
+- name: deepfillv2_8xb2_celeba-256x256
   params:
-    checkpoint: deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
-    checkpoint_url: https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_8x2_places_20200619-c00a0e21.pth
-    config: configs/deepfillv1/deepfillv1_4xb4_celeba-256x256.py
+    checkpoint: deepfillv2_256x256_8x2_celeba_20200619-c96e5f12.pth
+    checkpoint_url: https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_celeba_20200619-c96e5f12.pth
+    config: configs/deepfillv2/deepfillv2_8xb2_celeba-256x256.py
     cpus_per_node: 16
     gpus: 8
     gpus_per_node: 8
   results:
-    dataset: Places365-val
+    dataset: CelebA-val
     metrics:
-      PSNR: 23.429
-      SSIM: 0.862
-      l1 error: 11.019
+      PSNR: 25.721
+      SSIM: 0.871
+      l1 error: 5.411
 
 - name: realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost
   params:
@@ -78,6 +92,6 @@ default_floating_range: 1.0
 model_floating_ranges: {}
 partition: mm_lol
 repo: mmagic
-branch: dev-1.x
+branch: test
 task_type: test
 third_part_libs: []

@@ -23,9 +23,9 @@ mmagic
 ├── data
 |   ├── GoPro
 |   |   ├── train
-|   |   |   ├── input
-|   |   |   ├── target
+|   |   |   ├── blur
+|   |   |   ├── sharp
 |   |   ├── test
-|   |   |   ├── input
-|   |   |   ├── target
+|   |   |   ├── blur
+|   |   |   ├── sharp
 ```

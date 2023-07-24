@@ -107,6 +107,7 @@ class MMagicInferencer:
         'restormer',
 
         # text2image models
+        'controlnet',
         'disco_diffusion',
         'stable_diffusion',
 
@@ -164,6 +165,8 @@ class MMagicInferencer:
                     osp.dirname(__file__), '..', '.mim', config_dir)
             if 'Weights' in cfgs['settings'][setting_to_use].keys():
                 kwargs['ckpt'] = cfgs['settings'][setting_to_use]['Weights']
+                if model_name == 'controlnet':
+                    kwargs['ckpt'] = None
 
         if model_config is not None:
             if kwargs.get('config', None) is not None:

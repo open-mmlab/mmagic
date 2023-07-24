@@ -29,8 +29,6 @@ class DreamBooth(StableDiffusion):
             encoder.
         tokenizer (str): The **name** for CLIP tokenizer.
         unet (Union[dict, nn.Module]): The config or module for Unet model.
-        controlnet (Union[dict, nn.Module]): The config or module for
-            ControlNet.
         schedule (Union[dict, nn.Module]): The config or module for diffusion
             scheduler.
         test_scheduler (Union[dict, nn.Module], optional): The config or
@@ -54,6 +52,10 @@ class DreamBooth(StableDiffusion):
         noise_offset_weight (bool, optional): The weight of noise offset
             introduced in https://www.crosslabs.org/blog/diffusion-with-offset-noise  # noqa
             Defaults to 0.
+        tomesd_cfg (dict, optional): The config for TOMESD. Please refers to
+            https://github.com/dbolya/tomesd and
+            https://github.com/open-mmlab/mmagic/blob/main/mmagic/models/utils/tome_utils.py for detail.  # noqa
+            Defaults to None.
         data_preprocessor (dict, optional): The pre-process config of
             :class:`BaseDataPreprocessor`. Defaults to
                 dict(type='DataPreprocessor').
@@ -191,14 +193,8 @@ class DreamBooth(StableDiffusion):
             data_samples.split() * len(prompt)
             data_samples = DataSample.stack(data_samples.split() * len(prompt))
 
-        unet_dtype = next(self.unet.parameters()).dtype
-        self.unet.to(self.dtype)
-
         output = self.infer(prompt, return_type='tensor')
         samples = output['samples']
-
-        self.unet.to(unet_dtype)
-
         samples = self.data_preprocessor.destruct(samples, data_samples)
 
         out_data_sample = DataSample(fake_img=samples, prompt=prompt)
@@ -226,14 +222,8 @@ class DreamBooth(StableDiffusion):
             # construct a fake data_sample for destruct
             data_samples = DataSample.stack(data['data_samples'] * len(prompt))
 
-        unet_dtype = next(self.unet.parameters()).dtype
-        self.unet.to(self.dtype)
-
         output = self.infer(prompt, return_type='tensor')
         samples = output['samples']
-
-        self.unet.to(unet_dtype)
-
         samples = self.data_preprocessor.destruct(samples, data_samples)
 
         out_data_sample = DataSample(fake_img=samples, prompt=prompt)

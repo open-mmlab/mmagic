@@ -3,13 +3,14 @@ import numpy as np
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 from ...utils import get_module_device
 
 
 @MODELS.register_module()
-class LSGANGenerator(nn.Module):
+class LSGANGenerator(BaseModule):
     """Generator for LSGAN.
 
     Implementation Details for LSGAN architecture:

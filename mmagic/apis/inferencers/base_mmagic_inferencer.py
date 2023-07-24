@@ -69,6 +69,9 @@ class BaseMMagicInferencer(BaseInferencer):
         model = MODELS.build(cfg.model)
         if ckpt is not None and ckpt != '':
             ckpt = load_checkpoint(model, ckpt, map_location='cpu')
+        if cfg.model.get(
+                'init_cfg') and cfg.model.init_cfg.type == 'convert_from_unet':
+            model.init_weights()
         model.cfg = cfg
         model.to(device)
         model.eval()
