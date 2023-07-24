@@ -14,17 +14,17 @@ Models:
   Results:
   - Dataset: GOPRO
     Metrics:
-      PSNR: 30.6428
-      SSIM: 0.8559
+      PSNR: 29.55
+      SSIM: 0.934
     Task: Image Super-Resolution
-  Weights: https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth
+  Weights: https://drive.google.com/uc?export=view&id=1UXcsRVW-6KF23_TNzxw-xC0SzaMfXOaR
 - Config: configs/deblurganv2/deblurganv2_fpn_mobilenet.py
   In Collection: DEBLURGANV2
   Name: deblurganv2_fpn_mobilenet
   Results:
   - Dataset: GOPRO
     Metrics:
-      PSNR: 30.6428
-      SSIM: 0.8559
+      PSNR: 28.17
+      SSIM: 0.925
     Task: Image Super-Resolution
-  Weights: https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth
+  Weights: https://drive.google.com/uc?export=view&id=1JhnT4BBeKBBSLqTo6UsJ13HeBXevarrU

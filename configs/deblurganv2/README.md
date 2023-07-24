@@ -55,42 +55,11 @@ The datasets for training can be downloaded via the links below:
 
 ## Pre-trained models
 
-<table align="center">
-    <tr>
-        <th>Dataset</th>
-        <th>G Model</th>
-        <th>D Model</th>
-        <th>Loss Type</th>
-        <th>PSNR/ SSIM</th>
-        <th>Link</th>
-    </tr>
-    <tr>
-        <td rowspan="3">GoPro Test Dataset</td>
-        <td>InceptionResNet-v2</td>
-        <td>double_gan</td>
-        <td>ragan-ls</td>
-        <td>29.55/ 0.934</td>
-        <td><a href="https://drive.google.com/uc?export=view&id=1UXcsRVW-6KF23_TNzxw-xC0SzaMfXOaR">fpn_inception.h5</a></td>
-    </tr>
-    <tr>
-        <td>MobileNet</td>
-        <td>double_gan</td>
-        <td>ragan-ls</td>
-        <td>28.17/ 0.925</td>
-        <td><a href="https://drive.google.com/uc?export=view&id=1JhnT4BBeKBBSLqTo6UsJ13HeBXevarrU">fpn_mobilenet.h5</a></td>
-    </tr>
-    <tr>
-        <td>MobileNet-DSC</td>
-        <td>double_gan</td>
-        <td>ragan-ls</td>
-        <td>28.03/ 0.922</td>
-        <td><a href=""></a></td>
-    </tr>
-</table>
+|                      Model                      |    Dataset     |      G Model      | D Model | PSNR/<br/>SSIM |                                        Download                                         |
+|:-----------------------------------------------:| :------------: |:-----------------:|:-------:|:---------:| :-------------------------------------------------------------------------------------: |
+| [fpn_inception](./deblurganv2_fpn_inception.py) | GoPro Test Dataset  | InceptionResNet-v2 |     double_gan    | 29.55/ 0.934 | [model](https://drive.google.com/uc?export=view&id=1UXcsRVW-6KF23_TNzxw-xC0SzaMfXOaR) \| [log]() |
+| [fpn_mobilenet](./deblurganv2_fpn_mobilenet.py) | GoPro Test Dataset | MobileNet|     double_gan    | 28.17/ 0.925 | [model](https://drive.google.com/uc?export=view&id=1JhnT4BBeKBBSLqTo6UsJ13HeBXevarrU) \| [log]() |
 
-## Parent Repository
-
-The code was taken from <a href="">https://github.com/KupynOrest/RestoreGAN</a> . This repository contains flexible pipelines for different Image Restoration tasks.
 
 ## Citation
 
