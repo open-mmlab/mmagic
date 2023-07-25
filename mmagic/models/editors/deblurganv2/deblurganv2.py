@@ -352,7 +352,7 @@ class DeblurGanV2(BaseModel):
 
     def g_step_double(self, batch_outputs: torch.Tensor,
                       batch_gt_data: torch.Tensor):
-        """G step of GAN: Calculate losses of generator.
+        """G step of DobuleGAN: Calculate losses of generator.
 
         Args:
             batch_outputs (Tensor): Batch output of generator.
@@ -415,6 +415,15 @@ class DeblurGanV2(BaseModel):
 
     def d_step_double(self, batch_outputs: torch.Tensor,
                       batch_gt_data: torch.Tensor):
+        """D step of DobuleGAN: Calculate losses of generator.
+
+        Args:
+            batch_outputs (Tensor): Batch output of generator.
+            batch_gt_data (Tensor): Batch GT data.
+
+        Returns:
+            dict: Dict of losses.
+        """
         loss_d_double = (self.disc_loss(self.discriminator.patch_gan,
                                         batch_outputs, batch_gt_data) +
                          self.disc_loss2(self.discriminator.full_gan,
