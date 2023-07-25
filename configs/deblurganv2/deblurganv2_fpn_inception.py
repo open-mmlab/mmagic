@@ -1,7 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-_base_ = [
-    '../_base_/default_runtime.py'
-]
+_base_ = ['../_base_/default_runtime.py']
 
 save_dir = './work_dir/'
 
@@ -28,10 +26,9 @@ model = dict(
     disc_loss='ragan-ls',
     data_preprocessor=dict(
         type='DataPreprocessor',
-        mean=[127.5]*3,
-        std=[127.5]*3,
-    )
-)
+        mean=[127.5] * 3,
+        std=[127.5] * 3,
+    ))
 
 train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
@@ -49,27 +46,33 @@ train_pipeline = [
     #     keys=['img', 'gt'],
     #     crop_size=(256, 256),
     #     random_crop=False),
-    dict(type='PairedAlbuTransForms',
-         size=256,
-         lq_key='img',
-         gt_key='gt'),
-    dict(type='AlbuCorruptFunction',
-         keys=['img'],
-         config=[
-             {
-                 'name': 'cutout',
-                 'prob': 0.5,
-                 'num_holes': 3,
-                 'max_h_size': 25,
-                 'max_w_size': 25
-             },
-             {'name': 'jpeg', 'quality_lower': 70, 'quality_upper': 90},
-             {'name': 'motion_blur'},
-             {'name': 'median_blur'},
-             {'name': 'gamma'},
-             {'name': 'rgb_shift'},
-             {'name': 'hsv_shift'},
-             {'name': 'sharpen'}]),
+    dict(type='PairedAlbuTransForms', size=256, lq_key='img', gt_key='gt'),
+    dict(
+        type='AlbuCorruptFunction',
+        keys=['img'],
+        config=[{
+            'name': 'cutout',
+            'prob': 0.5,
+            'num_holes': 3,
+            'max_h_size': 25,
+            'max_w_size': 25
+        }, {
+            'name': 'jpeg',
+            'quality_lower': 70,
+            'quality_upper': 90
+        }, {
+            'name': 'motion_blur'
+        }, {
+            'name': 'median_blur'
+        }, {
+            'name': 'gamma'
+        }, {
+            'name': 'rgb_shift'
+        }, {
+            'name': 'hsv_shift'
+        }, {
+            'name': 'sharpen'
+        }]),
     dict(type='PackInputs')
 ]
 
@@ -89,27 +92,33 @@ val_pipeline = [
     #     keys=['img', 'gt'],
     #     crop_size=(256, 256),
     #     random_crop=False),
-    dict(type='PairedAlbuTransForms',
-         size=256,
-         lq_key='img',
-         gt_key='gt'),
-    dict(type='AlbuCorruptFunction',
-         keys=['img'],
-         config=[
-             {
-                 'name': 'cutout',
-                 'prob': 0.5,
-                 'num_holes': 3,
-                 'max_h_size': 25,
-                 'max_w_size': 25
-             },
-             {'name': 'jpeg', 'quality_lower': 70, 'quality_upper': 90},
-             {'name': 'motion_blur'},
-             {'name': 'median_blur'},
-             {'name': 'gamma'},
-             {'name': 'rgb_shift'},
-             {'name': 'hsv_shift'},
-             {'name': 'sharpen'}]),
+    dict(type='PairedAlbuTransForms', size=256, lq_key='img', gt_key='gt'),
+    dict(
+        type='AlbuCorruptFunction',
+        keys=['img'],
+        config=[{
+            'name': 'cutout',
+            'prob': 0.5,
+            'num_holes': 3,
+            'max_h_size': 25,
+            'max_w_size': 25
+        }, {
+            'name': 'jpeg',
+            'quality_lower': 70,
+            'quality_upper': 90
+        }, {
+            'name': 'motion_blur'
+        }, {
+            'name': 'median_blur'
+        }, {
+            'name': 'gamma'
+        }, {
+            'name': 'rgb_shift'
+        }, {
+            'name': 'hsv_shift'
+        }, {
+            'name': 'sharpen'
+        }]),
     dict(type='PackInputs')
 ]
 
@@ -140,7 +149,7 @@ train_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root=data_root+'train',
+        data_root=data_root + 'train',
         data_prefix=dict(img='input', gt='target'),
         # ann_file='meta_info_gopro_train.txt',
         pipeline=train_pipeline))
@@ -153,7 +162,7 @@ val_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root=data_root+'test',
+        data_root=data_root + 'test',
         # ann_file='meta_info_gopro_test.txt',
         data_prefix=dict(img='input', gt='target'),
         pipeline=val_pipeline))
@@ -161,14 +170,12 @@ val_dataloader = dict(
 test_dataloader = val_dataloader
 
 val_evaluator = dict(
-    type='Evaluator',
-    metrics=[
+    type='Evaluator', metrics=[
         dict(type='PSNR'),
         dict(type='SSIM'),
     ])
 
-train_cfg = dict(
-    type='EpochBasedTrainLoop', max_epochs=100)
+train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=100)
 val_cfg = dict(type='MultiValLoop')
 test_cfg = dict(type='MultiValLoop')
 test_evaluator = val_evaluator
