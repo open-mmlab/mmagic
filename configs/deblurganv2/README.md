@@ -1,4 +1,4 @@
-﻿# DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better(ICCV'2019)
+# DeblurGAN-v2 (ICCV'2019)
 
 > [DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better](https://arxiv.org/abs/1908.03826)
 
@@ -15,25 +15,22 @@ We present a new end-to-end generative adversarial network (GAN) for single imag
 <!-- [IMAGE] -->
 
 <div align=center>
-<img src="https://github.com/VITA-Group/doc_images/pipeline.jpg"/>
+<img src="https://raw.githubusercontent.com/VITA-Group/DeblurGANv2/master/doc_images/pipeline.jpg"/>
 </div>
 
 ## Results and models
 
 <div align="center">
-  <b> DEBLURGANV2 256x256</b>
+  <b> DEBLURGANv2 256x256</b>
   <br/>
-  <img src="https://github.com/VITA-Group/doc_images/kohler_visual.png" width="800"/>
-  <img src="https://github.com/VITA-Group/doc_images/restore_visual.png" width="800"/>
-  <img src="https://github.com/VITA-Group/doc_images/gopro_table.png" width="800"/>
-  <img src="https://github.com/VITA-Group/doc_images/lai_table.png" width="800"/>
-</div>
+  <img src="https://raw.githubusercontent.com/VITA-Group/DeblurGANv2/master/doc_images/kohler_visual.png" width="800"/>
+  <img src="https://raw.githubusercontent.com/VITA-Group/DeblurGANv2/master/doc_images/restore_visual.png" width="800"/>
+ </div>
 
-|                      Model                      |    Dataset     |      G Model      | D Model | PSNR/<br/>SSIM |                                        Download                                         |
-|:-----------------------------------------------:| :------------: |:-----------------:|:-------:|:---------:| :-------------------------------------------------------------------------------------: |
-| [fpn_inception](./deblurganv2_fpn_inception.py) | GoPro Test Dataset  | InceptionResNet-v2 |     double_gan    | 29.55/ 0.934 | [model](https://drive.google.com/uc?export=view&id=1UXcsRVW-6KF23_TNzxw-xC0SzaMfXOaR) \| [log]() |
-| [fpn_mobilenet](./deblurganv2_fpn_mobilenet.py) | GoPro Test Dataset | MobileNet|     double_gan    | 28.17/ 0.925 | [model](https://drive.google.com/uc?export=view&id=1JhnT4BBeKBBSLqTo6UsJ13HeBXevarrU) \| [log]() |
-
+|                      Model                      |      Dataset       |      G Model       |  D Model   | PSNR/<br/>SSIM |                                           Download                                            |
+| :---------------------------------------------: | :----------------: | :----------------: | :--------: | :------------: | :-------------------------------------------------------------------------------------------: |
+| [fpn_inception](./deblurganv2_fpn_inception.py) | GoPro Test Dataset | InceptionResNet-v2 | double_gan |  29.55/ 0.934  | [model](https://drive.google.com/uc?export=view&id=1UXcsRVW-6KF23_TNzxw-xC0SzaMfXOaR) \\ [log](<>) |
+| [fpn_mobilenet](./deblurganv2_fpn_mobilenet.py) | GoPro Test Dataset |     MobileNet      | double_gan |  28.17/ 0.925  | [model](https://drive.google.com/uc?export=view&id=1JhnT4BBeKBBSLqTo6UsJ13HeBXevarrU) \\ [log](<>) |
 
 ## Citation
 

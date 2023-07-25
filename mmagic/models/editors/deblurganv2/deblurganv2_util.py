@@ -117,9 +117,7 @@ class SEModule(nn.Module):
 
 
 class Bottleneck(nn.Module):
-    """
-    Base class for bottlenecks that implements `forward()` method.
-    """
+    """Base class for bottlenecks that implements `forward()` method."""
 
     def forward(self, x):
         residual = x
@@ -145,9 +143,7 @@ class Bottleneck(nn.Module):
 
 
 class SEBottleneck(Bottleneck):
-    """
-    Bottleneck for SENet154.
-    """
+    """Bottleneck for SENet154."""
     expansion = 4
 
     def __init__(self,
@@ -177,10 +173,11 @@ class SEBottleneck(Bottleneck):
 
 
 class SEResNetBottleneck(Bottleneck):
-    """
-    ResNet bottleneck with a Squeeze-and-Excitation module. It follows Caffe
-    implementation and uses `stride=stride` in `conv1` and not in `conv2`
-    (the latter is used in the torchvision implementation of ResNet).
+    """ResNet bottleneck with a Squeeze-and-Excitation module.
+
+    It follows Caffe implementation and uses `stride=stride` in `conv1` and not
+    in `conv2` (the latter is used in the torchvision implementation of
+    ResNet).
     """
     expansion = 4
 
@@ -206,9 +203,7 @@ class SEResNetBottleneck(Bottleneck):
 
 
 class SEResNeXtBottleneck(Bottleneck):
-    """
-    ResNeXt bottleneck type C with a Squeeze-and-Excitation module.
-    """
+    """ResNeXt bottleneck type C with a Squeeze-and-Excitation module."""
     expansion = 4
 
     def __init__(self,

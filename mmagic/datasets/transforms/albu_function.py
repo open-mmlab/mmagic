@@ -49,7 +49,6 @@ class PairedAlbuTransForms(BaseTransform):
                                      additional_targets={'target': 'image'})
 
     def transform(self, results):
-
         r = self.pipeline(
             image=results[self.lq_key], target=results[self.gt_key])
         results[self.lq_key] = r['image']
@@ -57,7 +56,6 @@ class PairedAlbuTransForms(BaseTransform):
         return results
 
     def __repr__(self):
-
         repr_str = self.__class__.__name__
         repr_str += (f'(size={self.size}, '
                      f'lq_key={self.lq_key}, '
@@ -108,14 +106,12 @@ class AlbuTransForms(BaseTransform):
         self.pipeline = albu.Compose([aug_fn, pad, crop_fn])
 
     def transform(self, results):
-
         for key in self.keys:
             r = self.pipeline(image=results[key])
             results[key] = r['image']
         return results
 
     def __repr__(self):
-
         repr_str = self.__class__.__name__
         repr_str += (f'(size={self.size}, '
                      f'keys={self.keys}, '
@@ -165,7 +161,6 @@ class PairedAlbuNormalize(BaseTransform):
         return results
 
     def __repr__(self):
-
         repr_str = self.__class__.__name__
         repr_str += (f'(lq_key={self.lq_key}, '
                      f'gt_key={self.gt_key}, '
@@ -209,7 +204,6 @@ class AlbuNormalize(BaseTransform):
         return results
 
     def __repr__(self):
-
         repr_str = self.__class__.__name__
         repr_str += (f'(keys={self.keys}, '
                      f'mean={self.mean}, '
@@ -265,7 +259,6 @@ class AlbuCorruptFunction(BaseTransform):
         return results
 
     def __repr__(self):
-
         repr_str = self.__class__.__name__
         repr_str += (f'(keys={self.keys}, '
                      f'config={self.config}, '

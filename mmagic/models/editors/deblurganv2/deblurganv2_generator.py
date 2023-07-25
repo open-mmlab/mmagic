@@ -49,6 +49,7 @@ class FPN(nn.Module):
 
     def __init__(self, norm_layer, num_filter=256, pretrained='imagenet'):
         """Creates an `FPN` instance for feature extraction.
+
         Args:
           num_filter: the number of filters in each output pyramid level
           pretrained: use ImageNet pre-trained backbone feature extractor
@@ -241,7 +242,6 @@ class FPNInceptionSimple(nn.Module):
         self.fpn.unfreeze()
 
     def forward(self, x):
-
         map0, map1, map2, map3, map4 = self.fpn(x)
 
         map4 = nn.functional.upsample(
@@ -389,7 +389,6 @@ class FPNMobileNet(nn.Module):
         self.fpn.unfreeze()
 
     def forward(self, x):
-
         map0, map1, map2, map3, map4 = self.fpn(x)
 
         map4 = nn.functional.upsample(
@@ -698,10 +697,8 @@ class DecoderCenter(nn.Module):
         self.in_channels = in_channels
 
         if is_deconv:
-            """
-                Parameters for Deconvolution were chosen to avoid artifacts,
-                following link https://distill.pub/2016/deconv-checkerboard/
-            """
+            """Parameters for Deconvolution were chosen to avoid artifacts,
+            following link https://distill.pub/2016/deconv-checkerboard/"""
 
             self.block = nn.Sequential(
                 ConvRelu(in_channels, middle_channels),
@@ -725,7 +722,6 @@ class DecoderCenter(nn.Module):
 class DeblurGanV2Generator:
 
     def __new__(cls, model, *args, **kwargs):
-
         if model == 'FPNInception':
             return FPNInception(*args, **kwargs)
         elif model == 'UNetSEResNext':
