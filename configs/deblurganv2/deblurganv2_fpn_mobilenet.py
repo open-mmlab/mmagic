@@ -10,8 +10,8 @@ model = dict(
         model='FPNMobileNet',
         norm_layer='instance',
         output_ch=3,
-        num_filters=64,
-        num_filters_fpn=128,
+        num_filter=64,
+        num_filter_fpn=128,
         # pretrained='mobilenetv2.pth.tar', #训练用的权重 帮助模型更快收敛
     ),
     discriminator=dict(

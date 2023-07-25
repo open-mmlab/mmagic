@@ -10,8 +10,8 @@ model = dict(
         model='FPNInception',
         norm_layer='instance',
         output_ch=3,
-        num_filters=128,
-        num_filters_fpn=256,
+        num_filter=128,
+        num_filter_fpn=256,
     ),
     discriminator=dict(
         type='DeblurGanV2Discriminator',
