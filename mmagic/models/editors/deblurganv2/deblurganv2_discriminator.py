@@ -12,6 +12,7 @@ model_list = ['DoubleGan', 'MultiScale', 'NoGan', 'PatchGan']
 
 # Defines the PatchGAN discriminator with the specified arguments.
 class NLayerDiscriminator(nn.Module):
+    """Defines the PatchGAN discriminator with the specified arguments."""
 
     def __init__(self,
                  input_nc=3,
@@ -122,6 +123,8 @@ class DicsriminatorTail(nn.Module):
 
 
 class MultiScaleDiscriminator(nn.Module):
+    """Defines the MultiScale PatchGAN discriminator with the specified
+    arguments."""
 
     def __init__(self,
                  input_nc=3,
@@ -196,6 +199,11 @@ class MultiScaleDiscriminator(nn.Module):
 
 
 def get_fullD(norm_layer):
+    """Get a full gan discriminator.
+
+    Args:
+        norm_layer (Str): norm type
+    """
     model_d = NLayerDiscriminator(
         n_layers=5,
         norm_layer=get_norm_layer(norm_type=norm_layer),
@@ -204,6 +212,7 @@ def get_fullD(norm_layer):
 
 
 class DoubleGan(nn.Module):
+    """Get a discriminator with a patch gan and a full gan."""
 
     def __init__(self, norm_layer='instance', d_layers=3):
         super().__init__()
@@ -225,6 +234,7 @@ class DoubleGan(nn.Module):
 
 
 class PatchGan(nn.Module):
+    """A patch gan discriminator with the specified arguments."""
 
     def __init__(self, norm_layer='instance', d_layers=3):
         super().__init__()
@@ -239,6 +249,7 @@ class PatchGan(nn.Module):
 
 
 class MultiScale(nn.Module):
+    """A multiscale patch gan discriminator with the specified arguments."""
 
     def __init__(self, norm_layer='instance', d_layers=3):
         super().__init__()
@@ -252,6 +263,11 @@ class MultiScale(nn.Module):
 
 @MODELS.register_module()
 class DeblurGanV2Discriminator:
+    """Defines the discriminator for DeblurGanv2 with the specified arguments..
+
+    Args:
+        model (Str): Type of the discriminator model
+    """
 
     def __new__(cls, model, *args, **kwargs):
         if model == 'DoubleGan':
