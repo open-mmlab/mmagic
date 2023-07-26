@@ -1,9 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-"""Modified from https://github.com/mlomnitz/DiffJPEG.
-
-For images not divisible by 8
-https://dsp.stackexchange.com/questions/35339/jpeg-dct-padding/35343#35343
-"""
 import itertools
 
 import numpy as np
@@ -508,26 +503,3 @@ class DiffJPEG(nn.Module):
             y, cb, cr, (h + h_pad), (w + w_pad), factor=factor)
         recovered = recovered[:, :, 0:h, 0:w]
         return recovered
-
-
-if __name__ == '__main__':
-    import cv2
-    from basicsr.utils import img2tensor, tensor2img
-
-    img_gt = cv2.imread('test.png') / 255.
-
-    # -------------- cv2 -------------- #
-    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 20]
-    _, encimg = cv2.imencode('.jpg', img_gt * 255., encode_param)
-    img_lq = np.float32(cv2.imdecode(encimg, 1))
-    cv2.imwrite('cv2_JPEG_20.png', img_lq)
-
-    # -------------- DiffJPEG -------------- #
-    jpeger = DiffJPEG(differentiable=False).cuda()
-    img_gt = img2tensor(img_gt)
-    img_gt = torch.stack([img_gt, img_gt]).cuda()
-    quality = img_gt.new_tensor([20, 40])
-    out = jpeger(img_gt, quality=quality)
-
-    cv2.imwrite('pt_JPEG_20.png', tensor2img(out[0]))
-    cv2.imwrite('pt_JPEG_40.png', tensor2img(out[1]))

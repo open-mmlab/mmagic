@@ -9,8 +9,7 @@ import torch.nn.functional as F
 from basicsr.data.transforms import paired_random_crop
 from torchvision.transforms.functional_tensor import rgb_to_grayscale
 
-# undo
-from .basicsr_utils import DiffJPEG
+from .diffjpeg import DiffJPEG
 from .diffusionmodules import Decoder_Mix, Encoder
 from .distributions import DiagonalGaussianDistribution
 
