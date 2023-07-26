@@ -238,6 +238,7 @@ class Block8(nn.Module):
 
 
 class InceptionResNetV2(nn.Module):
+    """Define a inceptionresnetv2 model."""
 
     def __init__(self, num_classes=1001):
         super(InceptionResNetV2, self).__init__()
@@ -281,6 +282,11 @@ class InceptionResNetV2(nn.Module):
         self.last_linear = nn.Linear(1536, num_classes)
 
     def features(self, input):
+        """Get network features.
+
+        Args:
+            input (torch.tensor): You can directly input a ``torch.Tensor``.
+        """
         x = self.conv2d_1a(input)
         x = self.conv2d_2a(x)
         x = self.conv2d_2b(x)
@@ -299,6 +305,11 @@ class InceptionResNetV2(nn.Module):
         return x
 
     def logits(self, features):
+        """Get features logits.
+
+        Args:
+            features (torch.tensor): You can directly input a ``torch.Tensor``.
+        """
         x = self.avgpool_1a(features)
         x = x.view(x.size(0), -1)
         x = F.dropout(x, training=self.training)
@@ -306,6 +317,14 @@ class InceptionResNetV2(nn.Module):
         return x
 
     def forward(self, input):
+        """Forward function.
+
+        Args:
+            input (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         x = self.features(input)
         x = self.logits(x)
         return x
@@ -382,6 +401,7 @@ class ImagePool():
 
 
 class ContentLoss():
+    """Defined a criterion to calculator loss."""
 
     def initialize(self, loss):
         self.criterion = loss
@@ -394,6 +414,7 @@ class ContentLoss():
 
 
 class PerceptualLoss():
+    """Defined a criterion to calculator loss."""
 
     def contentFunc(self):
         conv_3_3_layer = 14
@@ -435,6 +456,7 @@ class PerceptualLoss():
 
 
 class GANLoss(nn.Module):
+    """Defined a GANLoss network to calculator loss."""
 
     def __init__(self,
                  use_l1=True,
@@ -477,6 +499,7 @@ class GANLoss(nn.Module):
 
 
 class DiscLoss(nn.Module):
+    """Defined a criterion to calculator loss."""
 
     def name(self):
         return 'DiscLoss'
@@ -488,7 +511,7 @@ class DiscLoss(nn.Module):
         self.fake_AB_pool = ImagePool(50)
 
     def get_g_loss(self, net, fakeB, realB):
-        # First, G(A) should fake the discriminator
+        """First, G(A) should fake the discriminator."""
         pred_fake = net.forward(fakeB)
         return self.criterionGAN(pred_fake, 1)
 
@@ -511,6 +534,7 @@ class DiscLoss(nn.Module):
 
 
 class RelativisticDiscLoss(nn.Module):
+    """Defined a criterion to calculator loss."""
 
     def name(self):
         return 'RelativisticDiscLoss'
@@ -524,7 +548,7 @@ class RelativisticDiscLoss(nn.Module):
         self.real_pool = ImagePool(50)
 
     def get_g_loss(self, net, fakeB, realB):
-        # First, G(A) should fake the discriminator
+        """First, G(A) should fake the discriminator."""
         self.pred_fake = net.forward(fakeB)
 
         # Real
@@ -559,6 +583,7 @@ class RelativisticDiscLoss(nn.Module):
 
 
 class RelativisticDiscLossLS(nn.Module):
+    """Defined a criterion to calculator loss."""
 
     def name(self):
         return 'RelativisticDiscLossLS'
@@ -572,7 +597,7 @@ class RelativisticDiscLossLS(nn.Module):
         self.real_pool = ImagePool(50)
 
     def get_g_loss(self, net, fakeB, realB):
-        # First, G(A) should fake the discriminator
+        """First, G(A) should fake the discriminator."""
         self.pred_fake = net.forward(fakeB)
 
         # Real
@@ -609,6 +634,7 @@ class RelativisticDiscLossLS(nn.Module):
 
 
 class DiscLossLS(DiscLoss):
+    """Defined a criterion to calculator loss."""
 
     def name(self):
         return 'DiscLossLS'
@@ -618,13 +644,19 @@ class DiscLossLS(DiscLoss):
         self.criterionGAN = GANLoss(use_l1=True)
 
     def get_g_loss(self, net, fakeB, realB):
+        """First, G(A) should fake the discriminator.
+
+        Get generator loss.
+        """
         return DiscLoss.get_g_loss(self, net, fakeB)
 
     def get_loss(self, net, fakeB, realB):
+        """Get discriminator loss."""
         return DiscLoss.get_loss(self, net, fakeB, realB)
 
 
 class DiscLossWGANGP(DiscLossLS):
+    """Defined a criterion to calculator loss."""
 
     def name(self):
         return 'DiscLossWGAN-GP'
@@ -634,7 +666,10 @@ class DiscLossWGANGP(DiscLossLS):
         self.LAMBDA = 10
 
     def get_g_loss(self, net, fakeB, realB):
-        # First, G(A) should fake the discriminator
+        """First, G(A) should fake the discriminator.
+
+        Get generator loss.
+        """
         self.D_fake = net.forward(fakeB)
         return -self.D_fake.mean()
 
@@ -674,6 +709,7 @@ class DiscLossWGANGP(DiscLossLS):
         return gradient_penalty
 
     def get_loss(self, net, fakeB, realB):
+        """Get discriminator loss."""
         self.D_fake = net.forward(fakeB.detach())
         self.D_fake = self.D_fake.mean()
 
