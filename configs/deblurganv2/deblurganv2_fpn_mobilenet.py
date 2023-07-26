@@ -216,5 +216,5 @@ default_hooks = dict(
 )
 
 # load_from = 'D:/pythonProject/DeblurGANv2/fpn_inception1.pth'
-load_from = 'G:/github/DeblurGANv2/fpn_inception1.pth'
+load_from = 'G:/github/DeblurGANv2/fpn_mobilenet.pth'
 # load_from = '/HOME/scz0bbt/run/mmagic/fpn_inception.pth'

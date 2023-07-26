@@ -18,6 +18,7 @@ model_list = [
 
 
 class FPNHead(nn.Module):
+    """Head for FPNInception,FPNInceptionSimple and FPNMobilenet."""
 
     def __init__(self, num_in, num_mid, num_out):
         super().__init__()
@@ -30,20 +31,6 @@ class FPNHead(nn.Module):
     def forward(self, x):
         x = nn.functional.relu(self.block0(x), inplace=True)
         x = nn.functional.relu(self.block1(x), inplace=True)
-        return x
-
-
-class ConvBlock(nn.Module):
-
-    def __init__(self, num_in, num_out, norm_layer):
-        super().__init__()
-
-        self.block = nn.Sequential(
-            nn.Conv2d(num_in, num_out, kernel_size=3, padding=1),
-            norm_layer(num_out), nn.ReLU(inplace=True))
-
-    def forward(self, x):
-        x = self.block(x)
         return x
 
 
@@ -142,6 +129,8 @@ class FPN_inception(nn.Module):
 
 
 class FPNInception(nn.Module):
+    """Feature Pyramid Network (FPN) with four feature maps of resolutions 1/4,
+    1/8, 1/16, 1/32 and `num_filter` filters for all feature maps."""
 
     def __init__(self,
                  norm_layer,
@@ -150,8 +139,6 @@ class FPNInception(nn.Module):
                  num_filter_fpn=256):
         super().__init__()
 
-        # Feature Pyramid Network (FPN) with four feature maps of resolutions
-        # 1/4, 1/8, 1/16, 1/32 and `num_filters` filters for all feature maps.
         norm_layer = get_norm_layer(norm_type=norm_layer)
         self.fpn = FPN_inception(
             num_filter=num_filter_fpn, norm_layer=norm_layer)
@@ -291,6 +278,8 @@ class FPN_inceptionsimple(nn.Module):
 
 
 class FPNInceptionSimple(nn.Module):
+    """Feature Pyramid Network (FPN) with four feature maps of resolutions 1/4,
+    1/8, 1/16, 1/32 and `num_filter` filters for all feature maps."""
 
     def __init__(self,
                  norm_layer,
@@ -299,8 +288,7 @@ class FPNInceptionSimple(nn.Module):
                  num_filter_fpn=256):
         super().__init__()
 
-        # Feature Pyramid Network (FPN) with four feature maps of resolutions
-        # 1/4, 1/8, 1/16, 1/32 and `num_filters` filters for all feature maps.
+        norm_layer = get_norm_layer(norm_type=norm_layer)
         self.fpn = FPN_inceptionsimple(
             num_filter=num_filter_fpn, norm_layer=norm_layer)
 
@@ -355,6 +343,7 @@ class FPNInceptionSimple(nn.Module):
 
 
 class FPNSegHead(nn.Module):
+    """Head for FPNDense."""
 
     def __init__(self, num_in, num_mid, num_out):
         super().__init__()
@@ -511,6 +500,68 @@ class InvertedResidual(nn.Module):
             return self.conv(x)
 
 
+class FPNDense(nn.Module):
+    """Feature Pyramid Network (FPN) with four feature maps of resolutions 1/4,
+    1/8, 1/16, 1/32 and `num_filter` filters for all feature maps."""
+
+    def __init__(self,
+                 output_ch=3,
+                 num_filter=128,
+                 num_filter_fpn=256,
+                 pretrained=True):
+        super().__init__()
+
+        self.fpn = FPN_dense(num_filter=num_filter_fpn, pretrained=pretrained)
+
+        # The segmentation heads on top of the FPN
+
+        self.head1 = FPNSegHead(num_filter_fpn, num_filter, num_filter)
+        self.head2 = FPNSegHead(num_filter_fpn, num_filter, num_filter)
+        self.head3 = FPNSegHead(num_filter_fpn, num_filter, num_filter)
+        self.head4 = FPNSegHead(num_filter_fpn, num_filter, num_filter)
+
+        self.smooth = nn.Sequential(
+            nn.Conv2d(4 * num_filter, num_filter, kernel_size=3, padding=1),
+            nn.BatchNorm2d(num_filter),
+            nn.ReLU(),
+        )
+
+        self.smooth2 = nn.Sequential(
+            nn.Conv2d(num_filter, num_filter // 2, kernel_size=3, padding=1),
+            nn.BatchNorm2d(num_filter // 2),
+            nn.ReLU(),
+        )
+
+        self.final = nn.Conv2d(
+            num_filter // 2, output_ch, kernel_size=3, padding=1)
+
+    def forward(self, x):
+        map0, map1, map2, map3, map4 = self.fpn(x)
+
+        map4 = nn.functional.upsample(
+            self.head4(map4), scale_factor=8, mode='nearest')
+        map3 = nn.functional.upsample(
+            self.head3(map3), scale_factor=4, mode='nearest')
+        map2 = nn.functional.upsample(
+            self.head2(map2), scale_factor=2, mode='nearest')
+        map1 = nn.functional.upsample(
+            self.head1(map1), scale_factor=1, mode='nearest')
+
+        smoothed = self.smooth(torch.cat([map4, map3, map2, map1], dim=1))
+        smoothed = nn.functional.upsample(
+            smoothed, scale_factor=2, mode='nearest')
+        smoothed = self.smooth2(smoothed + map0)
+        smoothed = nn.functional.upsample(
+            smoothed, scale_factor=2, mode='nearest')
+
+        final = self.final(smoothed)
+        return torch.tanh(final)
+
+    def unfreeze(self):
+        for param in self.fpn.parameters():
+            param.requires_grad = True
+
+
 class MobileNetV2(nn.Module):
 
     def __init__(self, n_class=1000, input_size=224, width_mult=1.):
@@ -581,69 +632,6 @@ class MobileNetV2(nn.Module):
                 n = m.weight.size(1)
                 m.weight.data.normal_(0, 0.01)
                 m.bias.data.zero_()
-
-
-class FPNDense(nn.Module):
-
-    def __init__(self,
-                 output_ch=3,
-                 num_filter=128,
-                 num_filter_fpn=256,
-                 pretrained=True):
-        super().__init__()
-
-        # Feature Pyramid Network (FPN) with four feature maps of resolutions
-        # 1/4, 1/8, 1/16, 1/32 and `num_filters` filters for all feature maps.
-
-        self.fpn = FPN_dense(num_filter=num_filter_fpn, pretrained=pretrained)
-
-        # The segmentation heads on top of the FPN
-
-        self.head1 = FPNSegHead(num_filter_fpn, num_filter, num_filter)
-        self.head2 = FPNSegHead(num_filter_fpn, num_filter, num_filter)
-        self.head3 = FPNSegHead(num_filter_fpn, num_filter, num_filter)
-        self.head4 = FPNSegHead(num_filter_fpn, num_filter, num_filter)
-
-        self.smooth = nn.Sequential(
-            nn.Conv2d(4 * num_filter, num_filter, kernel_size=3, padding=1),
-            nn.BatchNorm2d(num_filter),
-            nn.ReLU(),
-        )
-
-        self.smooth2 = nn.Sequential(
-            nn.Conv2d(num_filter, num_filter // 2, kernel_size=3, padding=1),
-            nn.BatchNorm2d(num_filter // 2),
-            nn.ReLU(),
-        )
-
-        self.final = nn.Conv2d(
-            num_filter // 2, output_ch, kernel_size=3, padding=1)
-
-    def forward(self, x):
-        map0, map1, map2, map3, map4 = self.fpn(x)
-
-        map4 = nn.functional.upsample(
-            self.head4(map4), scale_factor=8, mode='nearest')
-        map3 = nn.functional.upsample(
-            self.head3(map3), scale_factor=4, mode='nearest')
-        map2 = nn.functional.upsample(
-            self.head2(map2), scale_factor=2, mode='nearest')
-        map1 = nn.functional.upsample(
-            self.head1(map1), scale_factor=1, mode='nearest')
-
-        smoothed = self.smooth(torch.cat([map4, map3, map2, map1], dim=1))
-        smoothed = nn.functional.upsample(
-            smoothed, scale_factor=2, mode='nearest')
-        smoothed = self.smooth2(smoothed + map0)
-        smoothed = nn.functional.upsample(
-            smoothed, scale_factor=2, mode='nearest')
-
-        final = self.final(smoothed)
-        return torch.tanh(final)
-
-    def unfreeze(self):
-        for param in self.fpn.parameters():
-            param.requires_grad = True
 
 
 class FPN_mobilenet(nn.Module):
@@ -746,10 +734,10 @@ class FPNMobileNet(nn.Module):
 
         # Feature Pyramid Network (FPN) with four feature maps of resolutions
         # 1/4, 1/8, 1/16, 1/32 and `num_filters` filters for all feature maps.
-
+        norm_layer = get_norm_layer(norm_type=norm_layer)
         self.fpn = FPN_mobilenet(
-            num_filter=num_filter_fpn,
-            norm_layer=get_norm_layer(norm_type=norm_layer),
+            num_filters=num_filter_fpn,
+            norm_layer=norm_layer,
             pretrained=pretrained)
 
         # The segmentation heads on top of the FPN
@@ -803,6 +791,7 @@ class FPNMobileNet(nn.Module):
 
 
 class ResnetGenerator(nn.Module):
+    """Resnet generator for Deblurganv2."""
 
     def __init__(self,
                  input_nc=3,
@@ -939,15 +928,11 @@ class ResnetBlock(nn.Module):
         return out
 
 
-def conv3x3(in_, out):
-    return nn.Conv2d(in_, out, 3, padding=1)
-
-
 class ConvRelu(nn.Module):
 
     def __init__(self, in_, out):
         super(ConvRelu, self).__init__()
-        self.conv = conv3x3(in_, out)
+        self.conv = nn.Conv2d(in_, out, 3, padding=1)  # conv3x3
         self.activation = nn.ReLU(inplace=True)
 
     def forward(self, x):
@@ -957,6 +942,7 @@ class ConvRelu(nn.Module):
 
 
 class UNetSEResNext(nn.Module):
+    """UNetSEResNext generator for Deblurganv2."""
 
     def __init__(self,
                  num_classes=3,
@@ -1109,6 +1095,11 @@ class DecoderCenter(nn.Module):
 
 @MODELS.register_module()
 class DeblurGanV2Generator:
+    """Defines the generator for DeblurGanv2 with the specified arguments..
+
+    Args:
+        model (Str): Type of the generator  model
+    """
 
     def __new__(cls, model, *args, **kwargs):
         if model == 'FPNInception':

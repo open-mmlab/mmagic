@@ -834,6 +834,11 @@ def se_resnext101_32x4d(num_classes=1000, pretrained='imagenet'):
 
 
 def get_norm_layer(norm_type='instance'):
+    """Returns a norm layer of the specified type.
+
+    Args:
+        norm_type (Str): norm layer type
+    """
     if norm_type == 'batch':
         norm_layer = functools.partial(nn.BatchNorm2d, affine=True)
     elif norm_type == 'instance':
@@ -1184,6 +1189,11 @@ class DiscLossWGANGP(DiscLossLS):
 
 
 def get_pixel_loss(loss_type):
+    """Returns the loss of generator with the specified type.
+
+    Args:
+        loss_type (Str): loss type of generator
+    """
     if loss_type == 'perceptual':
         content_loss = PerceptualLoss()
         content_loss.initialize(nn.MSELoss())
@@ -1196,6 +1206,11 @@ def get_pixel_loss(loss_type):
 
 
 def get_disc_loss(loss_type):
+    """Returns the loss of discriminator with the specified type.
+
+    Args:
+        loss_type (Str): loss type of discriminator
+    """
     if loss_type == 'wgan-gp':
         disc_loss = DiscLossWGANGP()
     elif loss_type == 'lsgan':
