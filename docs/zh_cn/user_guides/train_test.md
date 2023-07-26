@@ -1,29 +1,29 @@
 # 教程 4：在MMagic环境下训练与测试
 
-在该部分中，您将学到如何在MMagic环境下完成训练与测试
+在该部分中，您将学到如何在MMagic环境下完成训练与测试。
 
 我们提供如下教程：
 
 - [预先准备](#预先准备)
 - [在MMagic中测试模型](#在MMagic中测试模型)
-  - [单个GPU测试](#单个GPU测试)
-  - [多个GPU测试](#多个GPU测试)
-  - [Slurm测试](#Slurm测试)
+  - [在单个GPU上测试](#在单个GPU上测试)
+  - [在多个GPU上测试](#在多个GPU上测试)
+  - [在Slurm上测试](#在Slurm上测试)
   - [使用特定指标进行测试](#使用特定指标进行测试)
 - [在MMagic中训练模型](#在MMagic中训练模型)
-  - [单个GPU训练](#单个GPU训练)
-  - [多个GPU训练](#多个GPU训练)
-  - [多个节点训练](#多个节点训练)
-  - [Slurm训练](#Slurm训练)
+  - [在单个GPU上训练](#在单个GPU上训练)
+  - [在多个GPU上训练](#在多个GPU上训练)
+  - [在多个节点上训练](#在多个节点上训练)
+  - [在Slurm上训练](#在Slurm上训练)
   - [使用特定的评估指标进行训练](#使用特定的评估指标进行训练)
 
 ## 预先准备
 
-使用者需要首先 [准备数据集](../user_guides/dataset_prepare.md) 从而能够在MMagic中训练和测试。
+用户需要首先 [准备数据集](../user_guides/dataset_prepare.md) 从而能够在MMagic环境中训练和测试。
 
 ## 在MMagic中测试模型
 
-### 单个GPU测试
+### 在单个GPU上测试
 
 您可以通过如下命令使用单个GPU来测试预训练模型。
 
@@ -37,7 +37,7 @@ python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE}
 python tools/test.py configs/example_config.py work_dirs/example_exp/example_model_20200202.pth
 ```
 
-### 多个GPU测试
+### 在多个GPU上测试
 
 MMagic支持使用多个GPU测试，能够极大地节约模型测试时间。
 可以通过如下命令使用多个GPU来测试预训练模型。
@@ -52,7 +52,7 @@ MMagic支持使用多个GPU测试，能够极大地节约模型测试时间。
 ./tools/dist_test.sh configs/example_config.py work_dirs/example_exp/example_model_20200202.pth
 ```
 
-### Slurm测试
+### 在Slurm上测试
 
 如果您在由 [slurm](https://slurm.schedmd.com/) 管理的集群上运行MMagic，可以使用脚本`slurm_test.sh`。（此脚本还支持单机测试。）
 
@@ -112,21 +112,21 @@ sh slurm_test.sh ${PLATFORM} ${JOBNAME} ${CONFIG_FILE} ${CKPT_FILE}
 
 MMagic支持多种训练方式:
 
-1. [单个GPU训练](#单个GPU训练)
-2. [单个GPU训练](#单个GPU训练)
-3. [多个节点训练](#多个节点训练)
-4. [Train with Slurm](#train-with-slurm)
+1. [在单个GPU上训练](#在单个GPU上训练)
+2. [在单个GPU上训练](#在单个GPU上训练)
+3. [在多个节点上训练](#在多个节点上训练)
+4. [在Slurm上训练](#在Slurm上训练)
 
 Specifically, all outputs (log files and checkpoints) will be saved to the working directory,
 which is specified by `work_dir` in the config file.
 
-### 单个GPU训练
+### 在单个GPU上训练
 
 ```shell
 CUDA_VISIBLE=0 python tools/train.py configs/example_config.py --work-dir work_dirs/example
 ```
 
-### 多个节点训练
+### 在多个节点上训练
 
 要在多台机器上启动分布式训练，这些机器可以通过IP访问，运行以下命令:
 
@@ -145,13 +145,13 @@ NNODES=2 NODE_RANK=1 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train
 为了提高网络通信速度，建议使用高速网络硬件，如Infiniband。
 请参考 [PyTorch docs](https://pytorch.org/docs/1.11/distributed.html#launch-utility) 以获取更多信息。
 
-### 多个GPU训练
+### 在多个GPU上训练
 
 ```shell
 ./tools/dist_train.sh ${CONFIG_FILE} ${GPU_NUM} [optional arguments]
 ```
 
-### Slurm训练
+### 在Slurm上训练
 
 如果您在由 [slurm](https://slurm.schedmd.com/) 管理的集群上运行MMagic，可以使用脚本`slurm_train.sh`。（此脚本还支持单机测试。）
 
@@ -209,6 +209,6 @@ val_cfg = dict(type='MultiValLoop')
 val_evaluator = dict(type='Evaluator', metrics=metrics)
 ```
 
-可以设置 `val_begin` 和 `val_interval` 调整何时开始验证和验证间隔。
+可以设置 `val_begin` 和 `val_interval` 来调整何时开始验证和验证间隔。
 
 有关指标的详细信息，请参考 [metrics' guide](./metrics.md).
