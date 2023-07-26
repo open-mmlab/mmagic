@@ -58,6 +58,14 @@ class BasicConv2d(nn.Module):
         self.relu = nn.ReLU(inplace=False)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         x = self.conv(x)
         x = self.bn(x)
         x = self.relu(x)
@@ -85,6 +93,14 @@ class Mixed_5b(nn.Module):
             BasicConv2d(192, 64, kernel_size=1, stride=1))
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         x0 = self.branch0(x)
         x1 = self.branch1(x)
         x2 = self.branch2(x)
@@ -115,6 +131,14 @@ class Block35(nn.Module):
         self.relu = nn.ReLU(inplace=False)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         x0 = self.branch0(x)
         x1 = self.branch1(x)
         x2 = self.branch2(x)
@@ -140,6 +164,14 @@ class Mixed_6a(nn.Module):
         self.branch2 = nn.MaxPool2d(3, stride=2)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         x0 = self.branch0(x)
         x1 = self.branch1(x)
         x2 = self.branch2(x)
@@ -167,6 +199,14 @@ class Block17(nn.Module):
         self.relu = nn.ReLU(inplace=False)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         x0 = self.branch0(x)
         x1 = self.branch1(x)
         out = torch.cat((x0, x1), 1)
@@ -197,6 +237,14 @@ class Mixed_7a(nn.Module):
         self.branch3 = nn.MaxPool2d(3, stride=2)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         x0 = self.branch0(x)
         x1 = self.branch1(x)
         x2 = self.branch2(x)
@@ -227,6 +275,14 @@ class Block8(nn.Module):
             self.relu = nn.ReLU(inplace=False)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         x0 = self.branch0(x)
         x1 = self.branch1(x)
         out = torch.cat((x0, x1), 1)
@@ -404,12 +460,15 @@ class ContentLoss():
     """Defined a criterion to calculator loss."""
 
     def initialize(self, loss):
+        """initialize the criterion."""
         self.criterion = loss
 
     def get_loss(self, fakeIm, realIm):
+        """Get generator loss."""
         return self.criterion(fakeIm, realIm)
 
     def __call__(self, fakeIm, realIm):
+        """Get generator loss."""
         return self.get_loss(fakeIm, realIm)
 
 
@@ -417,6 +476,7 @@ class PerceptualLoss():
     """Defined a criterion to calculator loss."""
 
     def contentFunc(self):
+        """Defined contentFunc."""
         conv_3_3_layer = 14
         cnn = models.vgg19(pretrained=True).features
         if torch.cuda.is_available():
@@ -434,6 +494,7 @@ class PerceptualLoss():
         return model
 
     def initialize(self, loss):
+        """Initialize criterion."""
         with torch.no_grad():
             self.criterion = loss
             self.contentFunc = self.contentFunc()
@@ -441,6 +502,7 @@ class PerceptualLoss():
                 mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
     def get_loss(self, fakeIm, realIm):
+        """Get generator loss."""
         fakeIm = (fakeIm + 1) / 2.0
         realIm = (realIm + 1) / 2.0
         fakeIm[0, :, :, :] = self.transform(fakeIm[0, :, :, :])
@@ -452,6 +514,7 @@ class PerceptualLoss():
         return 0.006 * torch.mean(loss) + 0.5 * nn.MSELoss()(fakeIm, realIm)
 
     def __call__(self, fakeIm, realIm):
+        """Get generator loss."""
         return self.get_loss(fakeIm, realIm)
 
 
@@ -494,6 +557,7 @@ class GANLoss(nn.Module):
         return target_tensor.cuda()
 
     def __call__(self, input, target_is_real):
+        """Get ganloss result."""
         target_tensor = self.get_target_tensor(input, target_is_real)
         return self.loss(input, target_tensor)
 
@@ -502,6 +566,7 @@ class DiscLoss(nn.Module):
     """Defined a criterion to calculator loss."""
 
     def name(self):
+        """return name of criterion."""
         return 'DiscLoss'
 
     def __init__(self):
@@ -530,6 +595,7 @@ class DiscLoss(nn.Module):
         return self.loss_D
 
     def __call__(self, net, fakeB, realB):
+        """Get discriminator loss."""
         return self.get_loss(net, fakeB, realB)
 
 
@@ -537,6 +603,7 @@ class RelativisticDiscLoss(nn.Module):
     """Defined a criterion to calculator loss."""
 
     def name(self):
+        """return name of criterion."""
         return 'RelativisticDiscLoss'
 
     def __init__(self):
@@ -579,6 +646,7 @@ class RelativisticDiscLoss(nn.Module):
         return self.loss_D
 
     def __call__(self, net, fakeB, realB):
+        """Get discriminator loss."""
         return self.get_loss(net, fakeB, realB)
 
 
@@ -586,6 +654,7 @@ class RelativisticDiscLossLS(nn.Module):
     """Defined a criterion to calculator loss."""
 
     def name(self):
+        """return name of criterion."""
         return 'RelativisticDiscLossLS'
 
     def __init__(self):
@@ -630,6 +699,7 @@ class RelativisticDiscLossLS(nn.Module):
         return self.loss_D
 
     def __call__(self, net, fakeB, realB):
+        """Get discriminator loss."""
         return self.get_loss(net, fakeB, realB)
 
 
@@ -637,6 +707,7 @@ class DiscLossLS(DiscLoss):
     """Defined a criterion to calculator loss."""
 
     def name(self):
+        """return name of criterion."""
         return 'DiscLossLS'
 
     def __init__(self):
@@ -659,6 +730,7 @@ class DiscLossWGANGP(DiscLossLS):
     """Defined a criterion to calculator loss."""
 
     def name(self):
+        """return name of criterion."""
         return 'DiscLossWGAN-GP'
 
     def __init__(self):

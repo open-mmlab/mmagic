@@ -76,6 +76,14 @@ class NLayerDiscriminator(nn.Module):
         self.model = nn.Sequential(*sequence)
 
     def forward(self, input):
+        """Forward function.
+
+        Args:
+            input (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         return self.model(input)
 
 
@@ -119,6 +127,14 @@ class DicsriminatorTail(nn.Module):
         self.model = nn.Sequential(*sequence)
 
     def forward(self, input):
+        """Forward function.
+
+        Args:
+            input (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         return self.model(input)
 
 
@@ -189,6 +205,14 @@ class MultiScaleDiscriminator(nn.Module):
         self.third_tail = DicsriminatorTail(nf_mult=nf_mult, n_layers=5)
 
     def forward(self, input):
+        """Forward function.
+
+        Args:
+            input (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         x = self.scale_one(input)
         x_1 = self.first_tail(x)
         x = self.scale_two(x)
@@ -226,6 +250,14 @@ class DoubleGan(nn.Module):
         # self.model_d = dict(patch=patch_gan, full=full_gan)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            List(torch.Tensor) : ``List(torch.tensor)`` will be returned.
+        """
         # d_full_gan = self.model_d['full'](x)
         d_full_gan_output = self.full_gan(x)
         # d_patch_gan = self.model_d['patch'](x)
@@ -244,6 +276,14 @@ class PatchGan(nn.Module):
             use_sigmoid=False)
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         d_patch_gan_output = self.patch_gan(x)
         return d_patch_gan_output
 
@@ -257,6 +297,14 @@ class MultiScale(nn.Module):
             norm_layer=get_norm_layer(norm_type=norm_layer))
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         result_d = self.model_d(x)
         return result_d
 
