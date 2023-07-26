@@ -312,6 +312,7 @@ class InceptionResNetV2(nn.Module):
 
 
 def inceptionresnetv2(num_classes=1000, pretrained='imagenet'):
+    """return a inceptionresnetv2 network."""
     if pretrained:
         settings = pretrained_settings['inceptionresnetv2'][pretrained]
         model = InceptionResNetV2(num_classes=1001)
@@ -492,9 +493,8 @@ class DiscLoss(nn.Module):
         return self.criterionGAN(pred_fake, 1)
 
     def get_loss(self, net, fakeB, realB):
-        # Fake
-        # stop backprop to the generator by detaching fake_B
-        # Generated Image Disc Output should be close to zero
+        """Fake stop backprop to the generator by detaching fake_B Generated
+        Image Disc Output should be close to zero."""
         self.pred_fake = net.forward(fakeB.detach())
         self.loss_D_fake = self.criterionGAN(self.pred_fake, 0)
 
@@ -536,9 +536,8 @@ class RelativisticDiscLoss(nn.Module):
         return errG
 
     def get_loss(self, net, fakeB, realB):
-        # Fake
-        # stop backprop to the generator by detaching fake_B
-        # Generated Image Disc Output should be close to zero
+        """Fake stop backprop to the generator by detaching fake_B Generated
+        Image Disc Output should be close to zero."""
         self.fake_B = fakeB.detach()
         self.real_B = realB
         self.pred_fake = net.forward(fakeB.detach())
@@ -586,9 +585,8 @@ class RelativisticDiscLossLS(nn.Module):
         return errG
 
     def get_loss(self, net, fakeB, realB):
-        # Fake
-        # stop backprop to the generator by detaching fake_B
-        # Generated Image Disc Output should be close to zero
+        """Fake stop backprop to the generator by detaching fake_B Generated
+        Image Disc Output should be close to zero."""
         self.fake_B = fakeB.detach()
         self.real_B = realB
         self.pred_fake = net.forward(fakeB.detach())
