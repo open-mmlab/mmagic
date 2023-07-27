@@ -5,18 +5,21 @@ from typing import Dict, List, Optional, Union
 import torch
 from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
+from torch import nn
 
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 from .deblurganv2_util import get_disc_loss, get_pixel_loss
+
+ModelType = Union[Dict, nn.Module]
 
 
 @MODELS.register_module()
 class DeblurGanV2(BaseModel):
 
     def __init__(self,
-                 generator: dict,
-                 discriminator: Optional[dict] = None,
+                 generator: ModelType,
+                 discriminator: Optional[ModelType] = None,
                  pixel_loss: Optional[Union[dict, str]] = None,
                  disc_loss: Optional[Union[dict, str]] = None,
                  adv_lambda: float = 0.001,
@@ -29,11 +32,17 @@ class DeblurGanV2(BaseModel):
         super().__init__(
             init_cfg=init_cfg, data_preprocessor=data_preprocessor)
         # generator
-        self.generator = MODELS.build(generator)
+        if isinstance(generator, dict):
+            self.generator = MODELS.build(generator)
+        else:
+            self.generator = generator
 
         # discriminator
         if discriminator:
-            self.discriminator = MODELS.build(discriminator)
+            if isinstance(generator, dict):
+                self.discriminator = MODELS.build(discriminator)
+            else:
+                self.discriminator = discriminator
         else:
             self.discriminator = None
 
@@ -64,8 +73,10 @@ class DeblurGanV2(BaseModel):
             self.disc_loss = MODELS.build(disc_loss)
         elif isinstance(disc_loss, str):
             self.disc_loss = get_disc_loss(disc_loss)
-
-        self.disc_loss2 = copy.deepcopy(self.disc_loss)
+        else:
+            self.disc_loss = None
+        if self.disc_loss:
+            self.disc_loss2 = copy.deepcopy(self.disc_loss)
 
         # self.adv_trainer = GANFactory().get_adversarial_trainer(
         #     self.discriminator.d_name, self.discriminator, self.disc_loss)

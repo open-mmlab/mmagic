@@ -39,21 +39,27 @@ class TestDeblurGanV2(TestCase):
             adv_lambda=0.001,
             warmup_num=3,
             disc_loss='wgan-gp',
-            data_preprocessor=dict(
-                type='DataPreprocessor',
-                mean=[127.5] * 3,
-                std=[127.5] * 3,
-            ))
+            data_preprocessor=DataPreprocessor())
+
+        self.assertIsInstance(gan, DeblurGanV2)
+        self.assertIsInstance(gan.data_preprocessor, DataPreprocessor)
+        self.assertIsInstance(gan.pixel_loss, PerceptualLoss)
+        self.assertIsInstance(gan.disc_loss, DiscLossWGANGP)
+
         gen_cfg = deepcopy(generator)
         disc_cfg = deepcopy(discriminator)
         gen = MODELS.build(gen_cfg)
         disc = MODELS.build(disc_cfg)
-        self.assertIsInstance(gan, DeblurGanV2)
-        self.assertIsInstance(gan.data_preprocessor, DataPreprocessor)
+        gan = DeblurGanV2(
+            generator=gen,
+            discriminator=disc,
+            pixel_loss='perceptual',
+            adv_lambda=0.001,
+            warmup_num=3,
+            disc_loss='wgan-gp',
+            data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.generator, gen)
         self.assertEqual(gan.discriminator, disc)
-        self.assertEqual(gan.pixel_loss, PerceptualLoss)
-        self.assertEqual(gan.disc_loss, DiscLossWGANGP)
 
         # test init without discriminator
         gan = DeblurGanV2(
@@ -71,27 +77,25 @@ class TestDeblurGanV2(TestCase):
             pixel_loss='perceptual',
             adv_lambda=0.001,
             warmup_num=3,
-            disc_loss='ragan-ls',
-            data_preprocessor=dict(
-                type='DataPreprocessor',
-                mean=[127.5] * 3,
-                std=[127.5] * 3,
-            ))
+            disc_loss='wgan-gp',
+            data_preprocessor=DataPreprocessor())
         # prepare messageHub
         message_hub.update_info('iter', 0)
         # prepare optimizer
-        gen_optim = Adam(gan.generator.parameters(), lr=0.0001)
+        gen_optim = Adam(
+            gan.generator.parameters(), lr=0.0001, betas=(0.5, 0.999))
         disc_optim = Adam(
             list(gan.discriminator.patch_gan.parameters()) +
-            list(gan.discriminator.full_gan.parameters),
-            lr=0.0001)
+            list(gan.discriminator.full_gan.parameters()),
+            lr=0.0001,
+            betas=(0.5, 0.999))
         optim_wrapper_dict = OptimWrapperDict(
             generator=OptimWrapper(gen_optim, accumulative_counts=accu_iter),
             discriminator=OptimWrapper(
                 disc_optim, accumulative_counts=accu_iter))
         # prepare inputs
         img = torch.randn(3, 256, 256)
-        data = dict(inputs=dict(), data_samples=[DataSample(gt_img=img)])
+        data = dict(inputs=[img], data_samples=[DataSample(gt_img=img)])
 
         # simulate train_loop here
         for idx in range(n_disc * accu_iter):
@@ -107,3 +111,8 @@ class TestDeblurGanV2(TestCase):
                 self.assertEqual(
                     log.keys(), set(['loss_g_content', 'loss_g_adv',
                                      'loss_g']))
+
+
+if __name__ == '__main__':
+    TestDeblurGanV2().test_init()
+    TestDeblurGanV2().test_train_step()
