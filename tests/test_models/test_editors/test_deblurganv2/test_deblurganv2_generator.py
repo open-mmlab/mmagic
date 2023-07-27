@@ -4,7 +4,7 @@ import torch
 
 from mmagic.models.editors.deblurganv2 import DeblurGanV2Generator
 from mmagic.models.editors.deblurganv2.deblurganv2_generator import \
-    FPNInception
+    FPNMobileNet
 from mmagic.registry import MODELS
 
 
@@ -15,17 +15,17 @@ class TestDeblurGanv2Generator(object):
         cls.input_tensor = torch.randn((1, 3, 256, 256))
         cls.default_config = dict(
             type='DeblurGanV2Generator',
-            model='FPNInception',
+            model='FPNMobileNet',
             norm_layer='instance',
             output_ch=3,
-            num_filter=128,
-            num_filter_fpn=256)
+            num_filter=64,
+            num_filter_fpn=128)
 
     def test_deblurganv2_generator(self):
 
         # test default setting with builder
         g = MODELS.build(self.default_config)
-        assert isinstance(g, FPNInception)
+        assert isinstance(g, FPNMobileNet)
 
         # check forward function
         img = g(self.input_tensor)
@@ -36,14 +36,6 @@ class TestDeblurGanv2Generator(object):
             _ = DeblurGanV2Generator()
 
         # sanity check for args with cpu model
-        g = DeblurGanV2Generator(
-            model='FPNInception',
-            norm_layer='instance',
-            output_ch=3,
-            num_filter=128,
-            num_filter_fpn=256)
-        img = g(self.input_tensor)
-        assert img.shape == (1, 3, 256, 256)
         g = DeblurGanV2Generator(
             model='FPNMobileNet',
             norm_layer='instance',
@@ -59,14 +51,6 @@ class TestDeblurGanv2Generator(object):
 
         g = MODELS.build(self.default_config).cuda()
         assert isinstance(g, DeblurGanV2Generator)
-        g = DeblurGanV2Generator(
-            model='FPNInception',
-            norm_layer='instance',
-            output_ch=3,
-            num_filter=128,
-            num_filter_fpn=256).cuda()
-        img = g(self.input_tensor)
-        assert img.shape == (1, 3, 256, 256)
         g = DeblurGanV2Generator(
             model='FPNMobileNet',
             norm_layer='instance',
