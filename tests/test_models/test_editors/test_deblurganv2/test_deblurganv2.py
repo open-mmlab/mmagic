@@ -111,8 +111,3 @@ class TestDeblurGanV2(TestCase):
                 self.assertEqual(
                     log.keys(), set(['loss_g_content', 'loss_g_adv',
                                      'loss_g']))
-
-
-if __name__ == '__main__':
-    TestDeblurGanV2().test_init()
-    TestDeblurGanV2().test_train_step()

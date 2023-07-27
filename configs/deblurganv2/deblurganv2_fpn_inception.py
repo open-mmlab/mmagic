@@ -20,10 +20,9 @@ model = dict(
         d_layers=3,
     ),
     pixel_loss='perceptual',
-    # disc_loss='wgan-gp',
+    disc_loss='wgan-gp',
     adv_lambda=0.001,
     warmup_num=3,
-    disc_loss='ragan-ls',
     data_preprocessor=dict(
         type='DataPreprocessor',
         mean=[127.5] * 3,
