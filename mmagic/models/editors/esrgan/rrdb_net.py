@@ -27,6 +27,7 @@ class RRDBNet(BaseModule):
         growth_channels (int): Channels for each growth. Default: 32.
         upscale_factor (int): Upsampling factor. Support x1, x2 and x4.
             Default: 4.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
     _supported_upscale_factors = [1, 2, 4]
 

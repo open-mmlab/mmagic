@@ -5,6 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
 from mmagic.models.utils import get_module_device
 from mmagic.registry import MODELS
@@ -12,7 +13,7 @@ from .wgan_gp_module import WGANNoiseTo2DFeat
 
 
 @MODELS.register_module()
-class WGANGPGenerator(nn.Module):
+class WGANGPGenerator(BaseModule):
     r"""Generator for WGANGP.
 
     Implementation Details for WGANGP generator the same as training
@@ -33,6 +34,7 @@ class WGANGPGenerator(nn.Module):
             module used in this generator. Defaults to None.
         upsample_cfg (dict, optional): Config for the upsampling operation.
             Defaults to None.
+        init_cfg (dict, optional): Initialization config dict.
     """
     _default_channels_per_scale = {
         '4': 512,
@@ -58,8 +60,9 @@ class WGANGPGenerator(nn.Module):
                  noise_size,
                  out_scale,
                  conv_module_cfg=None,
-                 upsample_cfg=None):
-        super().__init__()
+                 upsample_cfg=None,
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
         # set initial params
         self.noise_size = noise_size
         self.out_scale = out_scale

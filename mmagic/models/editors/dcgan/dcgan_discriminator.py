@@ -2,16 +2,14 @@
 import numpy as np
 import torch.nn as nn
 from mmcv.cnn import ConvModule
-from mmengine.logging import MMLogger
-from mmengine.model import normal_init
-from mmengine.runner import load_checkpoint
+from mmengine.model import BaseModule, normal_init, update_init_info
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 
 from mmagic.registry import MODELS
 
 
 @MODELS.register_module()
-class DCGANDiscriminator(nn.Module):
+class DCGANDiscriminator(BaseModule):
     """Discriminator for DCGAN.
 
     Implementation Details for DCGAN architecture:
@@ -39,6 +37,7 @@ class DCGANDiscriminator(nn.Module):
             layer. Defaults to ``dict(type='Tanh')``.
         pretrained (str, optional): Path for the pretrained model. Default to
             ``None``.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,
@@ -50,8 +49,8 @@ class DCGANDiscriminator(nn.Module):
                  default_norm_cfg=dict(type='BN'),
                  default_act_cfg=dict(type='LeakyReLU'),
                  out_act_cfg=None,
-                 pretrained=None):
-        super().__init__()
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
         self.input_scale = input_scale
         self.output_scale = output_scale
         self.out_channels = out_channels
@@ -93,8 +92,6 @@ class DCGANDiscriminator(nn.Module):
             norm_cfg=None,
             act_cfg=out_act_cfg)
 
-        self.init_weights(pretrained=pretrained)
-
     def forward(self, x):
         """Forward function.
 
@@ -112,25 +109,26 @@ class DCGANDiscriminator(nn.Module):
         # reshape to a flatten feature
         return x.view(n, -1)
 
-    def init_weights(self, pretrained=None):
+    def init_weights(self):
         """Init weights for models.
 
         We just use the initialization method proposed in the original paper.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Defaults to None.
         """
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif pretrained is None:
-            for m in self.modules():
-                if isinstance(m, (nn.Conv2d, nn.ConvTranspose2d)):
-                    normal_init(m, 0, 0.02)
-                elif isinstance(m, _BatchNorm):
-                    nn.init.normal_(m.weight.data)
-                    nn.init.constant_(m.bias.data, 0)
-        else:
-            raise TypeError('pretrained must be a str or None but'
-                            f' got {type(pretrained)} instead.')
+        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
+            super().init_weights()
+            return
+        for m in self.modules():
+            module_name = m.__class__.__name__
+            if isinstance(m, (nn.Conv2d, nn.ConvTranspose2d)):
+                normal_init(m, 0, 0.02)
+                init_info = (f'{module_name} belongs to (nn.Conv2d and '
+                             'nn.ConvTranspose2d), initialize by normal '
+                             'distribution with 0 mean and 0.02 std.')
+            elif isinstance(m, _BatchNorm):
+                nn.init.normal_(m.weight.data)
+                nn.init.constant_(m.bias.data, 0)
+                init_info = (f'{module_name} is BatchNorm, initialize weight '
+                             'by normal discribution with unit mean and zero '
+                             'std, and initialize bias as 0.')
+            # save init info
+            update_init_info(m, init_info)
