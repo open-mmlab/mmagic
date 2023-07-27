@@ -1,7 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import torch.nn as nn
-from mmengine.logging import MMLogger
-from mmengine.runner import load_checkpoint
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 from ...utils import generation_init_weights
@@ -9,7 +7,7 @@ from .pix2pix_modules import UnetSkipConnectionBlock
 
 
 @MODELS.register_module()
-class UnetGenerator(nn.Module):
+class UnetGenerator(BaseModule):
     """Construct the Unet-based generator from the innermost layer to the
     outermost layer, which is a recursive process.
 
@@ -38,7 +36,7 @@ class UnetGenerator(nn.Module):
                  norm_cfg=dict(type='BN'),
                  use_dropout=False,
                  init_cfg=dict(type='normal', gain=0.02)):
-        super().__init__()
+        super().__init__(init_cfg=init_cfg)
         # We use norm layers in the unet generator.
         assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
                                             f'got {type(norm_cfg)}')
@@ -106,7 +104,7 @@ class UnetGenerator(nn.Module):
         """
         return self.model(x)
 
-    def init_weights(self, pretrained=None, strict=True):
+    def init_weights(self):
         """Initialize weights for the model.
 
         Args:
@@ -115,12 +113,9 @@ class UnetGenerator(nn.Module):
             strict (bool, optional): Whether to allow different params for the
                 model and checkpoint. Default: True.
         """
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is None:
-            generation_init_weights(
-                self, init_type=self.init_type, init_gain=self.init_gain)
-        else:
-            raise TypeError("'pretrained' must be a str or None. "
-                            f'But received {type(pretrained)}.')
+        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
+            super().init_weights()
+            return
+        generation_init_weights(
+            self, init_type=self.init_type, init_gain=self.init_gain)
+        self._is_init = True
