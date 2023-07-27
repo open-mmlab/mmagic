@@ -32,7 +32,10 @@ class DeblurGanV2(BaseModel):
         self.generator = MODELS.build(generator)
 
         # discriminator
-        self.discriminator = MODELS.build(discriminator)
+        if discriminator:
+            self.discriminator = MODELS.build(discriminator)
+        else:
+            self.discriminator = None
 
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg

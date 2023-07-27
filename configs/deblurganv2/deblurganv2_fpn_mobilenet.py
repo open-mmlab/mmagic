@@ -14,12 +14,12 @@ model = dict(
         num_filter_fpn=128,
         # pretrained='mobilenetv2.pth.tar', #训练用的权重 帮助模型更快收敛
     ),
-    discriminator=dict(
-        type='DeblurGanV2Discriminator',
-        model='DoubleGan',
-        norm_layer='instance',
-        d_layers=3,
-    ),
+    # discriminator=dict(
+    #     type='DeblurGanV2Discriminator',
+    #     model='DoubleGan',
+    #     norm_layer='instance',
+    #     d_layers=3,
+    # ),
     pixel_loss='perceptual',
     # disc_loss='wgan-gp',
     adv_lambda=0.001,

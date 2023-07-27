@@ -437,6 +437,14 @@ class InvertedResidual(nn.Module):
             )
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         if self.use_res_connect:
             return x + self.conv(x)
         else:
