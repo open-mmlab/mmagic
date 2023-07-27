@@ -536,7 +536,7 @@ class StyleGAN2Generator(BaseModule):
         img = skip.to(torch.float32)
 
         if self.bgr2rgb:
-            img = torch.flip(img, dims=1)
+            img = torch.flip(img, dims=[1])
 
         if return_latents or return_noise:
             output_dict = dict(
