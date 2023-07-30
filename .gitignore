@@ -153,4 +153,3 @@ batchscript-*
 *.zip
 work_dir
 work_dir/
-work_dir/20230601_172701/vis_data/config.py
