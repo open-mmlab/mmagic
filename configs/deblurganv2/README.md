@@ -2,7 +2,7 @@
 
 > [DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better](https://arxiv.org/abs/1908.03826)
 
-> **Task**: Image Super-Resolution
+> **Task**: Deblurring
 
 <!-- [ALGORITHM] -->
 
