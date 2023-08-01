@@ -8,7 +8,7 @@ Collections:
   - controlnet_animation
   Year: 2023
 Models:
-- Config: configs/controlnet_animation/anythingv3_config.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/controlnet_animation/anythingv3_config.py
   In Collection: Controlnet Animation
   Name: anythingv3_config
   Results:

@@ -20,7 +20,7 @@ class UnconditionalInferencer(BaseMMagicInferencer):
         visualize=['result_out_dir'],
         postprocess=[])
 
-    extra_parameters = dict(num_batches=4, sample_model='orig')
+    extra_parameters = dict(num_batches=4, sample_model='orig', sample_kwargs=None, noise=None)
 
     def preprocess(self) -> Dict:
         """Process the inputs into a model-feedable format.
@@ -30,13 +30,16 @@ class UnconditionalInferencer(BaseMMagicInferencer):
         """
         num_batches = self.extra_parameters['num_batches']
         sample_model = self.extra_parameters['sample_model']
+        noise = self.extra_parameters['noise']
+        sample_kwargs = self.extra_parameters['sample_kwargs']
 
-        results = dict(num_batches=num_batches, sample_model=sample_model)
+        results = dict(num_batches=num_batches, sample_model=sample_model, sample_kwargs=sample_kwargs, noise=noise)
 
         return results
 
     def forward(self, inputs: InputsType) -> PredType:
         """Forward the inputs to the model."""
+        # import ipdb; ipdb.set_trace()
         return self.model(inputs)
 
     def visualize(self,
@@ -83,4 +86,6 @@ class UnconditionalInferencer(BaseMMagicInferencer):
         result = {}
         result['fake_img'] = data_sample.fake_img.data.cpu()
         result['noise'] = data_sample.noise.data.cpu()
+        result['latent'] = data_sample.latent
+        result['feats'] = data_sample.feats
         return result

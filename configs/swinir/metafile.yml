@@ -10,7 +10,7 @@ Collections:
   - jpeg compression artifact reduction
   Year: 2021
 Models:
-- Config: configs/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Name: swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k
   Results:
@@ -30,7 +30,7 @@ Models:
       SSIM: 0.9481
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k-ed2d419e.pth
-- Config: configs/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Name: swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k
   Results:
@@ -50,7 +50,7 @@ Models:
       SSIM: 0.8917
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k-926950f1.pth
-- Config: configs/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Name: swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k
   Results:
@@ -70,7 +70,7 @@ Models:
       SSIM: 0.8418
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k-88e4903d.pth
-- Config: configs/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
   In Collection: SwinIR
   Name: swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k
   Results:
@@ -90,7 +90,7 @@ Models:
       SSIM: 0.9488
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k-69e15fb6.pth
-- Config: configs/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
   In Collection: SwinIR
   Name: swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k
   Results:
@@ -110,7 +110,7 @@ Models:
       SSIM: 0.8939
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k-d6982f7b.pth
-- Config: configs/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
   In Collection: SwinIR
   Name: swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k
   Results:
@@ -130,7 +130,7 @@ Models:
       SSIM: 0.8451
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k-0502d775.pth
-- Config: configs/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Name: swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k
   Results:
@@ -150,7 +150,7 @@ Models:
       SSIM: 0.9459
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k-131d3f64.pth
-- Config: configs/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Name: swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k
   Results:
@@ -170,7 +170,7 @@ Models:
       SSIM: 0.8867
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k-309cb239.pth
-- Config: configs/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
   Name: swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k
   Results:
@@ -190,7 +190,7 @@ Models:
       SSIM: 0.8353
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k-d6622d03.pth
-- Config: configs/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Name: swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
   Results:
@@ -199,7 +199,7 @@ Models:
       NIQE: 5.7975
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-c6425057.pth
-- Config: configs/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Name: swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
   Results:
@@ -208,7 +208,7 @@ Models:
       NIQE: 7.2738
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-6f0c425f.pth
-- Config: configs/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Name: swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
   Results:
@@ -217,7 +217,7 @@ Models:
       NIQE: 5.2329
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-36960d18.pth
-- Config: configs/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Name: swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost
   Results:
@@ -226,7 +226,7 @@ Models:
       NIQE: 7.746
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-a016a72f.pth
-- Config: configs/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Name: swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost
   Results:
@@ -235,7 +235,7 @@ Models:
       NIQE: 5.1464
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-os-9f1599b5.pth
-- Config: configs/swinir/swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
   Name: swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost
   Results:
@@ -244,7 +244,7 @@ Models:
       NIQE: 7.6378
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-os-9f1599b5.pth
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15.py
   In Collection: SwinIR
   Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15
   Results:
@@ -261,7 +261,7 @@ Models:
       PSNR: 34.3424
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15-6782691b.pth
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25.py
   In Collection: SwinIR
   Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25
   Results:
@@ -278,7 +278,7 @@ Models:
       PSNR: 31.9493
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25-d0d8d4da.pth
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50.py
   In Collection: SwinIR
   Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50
   Results:
@@ -295,7 +295,7 @@ Models:
       PSNR: 28.6626
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50-54c9968a.pth
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15.py
   In Collection: SwinIR
   Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15
   Results:
@@ -316,7 +316,7 @@ Models:
       PSNR: 35.1836
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15-c74a2cee.pth
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25.py
   In Collection: SwinIR
   Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25
   Results:
@@ -337,7 +337,7 @@ Models:
       PSNR: 32.9458
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25-df2b1c0c.pth
-- Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50.py
   In Collection: SwinIR
   Name: swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50
   Results:
@@ -358,7 +358,7 @@ Models:
       PSNR: 29.8832
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50-e369874c.pth
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10.py
   In Collection: SwinIR
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10
   Results:
@@ -373,7 +373,7 @@ Models:
       SSIM: 0.8292
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10-da93c8e9.pth
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20.py
   In Collection: SwinIR
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20
   Results:
@@ -388,7 +388,7 @@ Models:
       SSIM: 0.8914
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20-d47367b1.pth
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30.py
   In Collection: SwinIR
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30
   Results:
@@ -403,7 +403,7 @@ Models:
       SSIM: 0.9179
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30-52c083cf.pth
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40.py
   In Collection: SwinIR
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40
   Results:
@@ -418,7 +418,7 @@ Models:
       SSIM: 0.9322
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40-803e8d9b.pth
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10.py
   In Collection: SwinIR
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10
   Results:
@@ -433,7 +433,7 @@ Models:
       SSIM: 0.8094
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10-09aafadc.pth
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20.py
   In Collection: SwinIR
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20
   Results:
@@ -448,7 +448,7 @@ Models:
       SSIM: 0.8745
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20-b8a42b5e.pth
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30.py
   In Collection: SwinIR
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30
   Results:
@@ -463,7 +463,7 @@ Models:
       SSIM: 0.9023
     Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30-e9fe6859.pth
-- Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40.py
   In Collection: SwinIR
   Name: swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40
   Results:

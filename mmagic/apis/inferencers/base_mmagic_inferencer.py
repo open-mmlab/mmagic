@@ -58,6 +58,7 @@ class BaseMMagicInferencer(BaseInferencer):
         super().__init__(config, ckpt, device)
 
         self._init_extra_parameters(extra_parameters)
+        print(extra_parameters)
         self.base_params = self._dispatch_kwargs(**kwargs)
         self.seed = seed
         set_random_seed(self.seed)
@@ -119,7 +120,7 @@ class BaseMMagicInferencer(BaseInferencer):
 
         return results
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def __call__(self, **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
 
@@ -128,7 +129,25 @@ class BaseMMagicInferencer(BaseInferencer):
 
         Returns:
             Union[Dict, List[Dict]]: Results of inference pipeline.
+       """
+        if 'infer_with_grad' in kwargs['extra_parameters'].keys():
+            if kwargs['extra_parameters']['infer_with_grad']:
+                results = self.base_call(**kwargs)
+        else:
+            with torch.no_grad():
+                results = self.base_call(**kwargs)
+        return results
+    
+    def base_call(self, **kwargs) -> Union[Dict, List[Dict]]:
+        """Call the inferencer.
+
+        Args:
+            kwargs: Keyword arguments for the inferencer.
+
+        Returns:
+            Union[Dict, List[Dict]]: Results of inference pipeline.
         """
+
         self._update_extra_parameters(**kwargs)
 
         params = self._dispatch_kwargs(**kwargs)

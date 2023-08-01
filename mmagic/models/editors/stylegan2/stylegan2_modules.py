@@ -226,7 +226,6 @@ class ModulatedConv2d(BaseModule):
 
     def forward(self, x, style, input_gain=None):
         n, c, h, w = x.shape
-
         weight = self.weight
         # Pre-normalize inputs to avoid FP16 overflow.
         # if x.dtype == torch.float16 and self.demodulate:
@@ -238,11 +237,10 @@ class ModulatedConv2d(BaseModule):
             )  # max_Ikk
             style = style / style.norm(
                 float('inf'), dim=1, keepdim=True)  # max_I
-
         with autocast(enabled=self.fp16_enabled):
             # process style code
             style = self.style_modulation(style).view(n, 1, c, 1,
-                                                      1) + self.style_bias
+                                                      1) + self.style_bias # 一致
             # combine weight and style
             weight = weight * style
             if self.demodulate:

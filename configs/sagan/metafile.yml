@@ -8,7 +8,7 @@ Collections:
   - conditional gans
   Year: 2019
 Models:
-- Config: configs/sagan/sagan_woReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/sagan/sagan_woReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32.py
   In Collection: SAGAN
   Name: sagan_woReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32
   Results:
@@ -29,7 +29,7 @@ Models:
       dist_step: 5.0
     Task: Conditional GANs
   Weights: https://download.openmmlab.com/mmediting/sagan/sagan_cifar10_32_lr2e-4_ndisc5_b64x1_woReUinplace_fid-iter480000_20210730_125449-d50568a4.pth
-- Config: configs/sagan/sagan_wReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/sagan/sagan_wReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32.py
   In Collection: SAGAN
   Name: sagan_wReLUinplace_lr2e-4-ndisc5-1xb64_cifar10-32x32
   Results:
@@ -50,7 +50,7 @@ Models:
       dist_step: 5.0
     Task: Conditional GANs
   Weights: https://download.openmmlab.com/mmediting/sagan/sagan_cifar10_32_lr2e-4_ndisc5_b64x1_wReLUinplace_fid-iter460000_20210730_125155-cbefb354.pth
-- Config: configs/sagan/sagan_woReLUinplace_Glr1e-4_Dlr4e-4_ndisc1-4xb64_imagenet1k-128x128.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/sagan/sagan_woReLUinplace_Glr1e-4_Dlr4e-4_ndisc1-4xb64_imagenet1k-128x128.py
   In Collection: SAGAN
   Name: sagan_woReLUinplace_Glr1e-4_Dlr4e-4_ndisc1-4xb64_imagenet1k-128x128
   Results:
@@ -71,7 +71,7 @@ Models:
       dist_step: 1.0
     Task: Conditional GANs
   Weights: https://download.openmmlab.com/mmediting/sagan/sagan_imagenet1k_128_Glr1e-4_Dlr4e-4_ndisc1_b32x4_woReLUinplace_fid-iter950000_20210730_163431-d7916963.pth
-- Config: configs/sagan/sagan_woReLUinplace-Glr1e-4_Dlr4e-4_noaug-ndisc1-8xb32-bigGAN-sch_imagenet1k-128x128.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/sagan/sagan_woReLUinplace-Glr1e-4_Dlr4e-4_noaug-ndisc1-8xb32-bigGAN-sch_imagenet1k-128x128.py
   In Collection: SAGAN
   Name: sagan_woReLUinplace-Glr1e-4_Dlr4e-4_noaug-ndisc1-8xb32-bigGAN-sch_imagenet1k-128x128
   Results:
@@ -92,7 +92,7 @@ Models:
       dist_step: 1.0
     Task: Conditional GANs
   Weights: https://download.openmmlab.com/mmediting/sagan/sagan_128_woReLUinplace_noaug_bigGAN_imagenet1k_b32x8_Glr1e-4_Dlr-4e-4_ndisc1_20210818_210232-3f5686af.pth
-- Config: configs/sagan/sagan_cvt-studioGAN_cifar10-32x32.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/sagan/sagan_cvt-studioGAN_cifar10-32x32.py
   In Collection: SAGAN
   Name: sagan_cvt-studioGAN_cifar10-32x32
   Results:
@@ -106,7 +106,7 @@ Models:
       n_disc: 5.0
     Task: Conditional GANs
   Weights: https://download.openmmlab.com/mmediting/sagan/sagan_32_cifar10_convert-studio-rgb_20210730_153321-080da7e2.pth
-- Config: configs/sagan/sagan_128_cvt_studioGAN.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/sagan/sagan_128_cvt_studioGAN.py
   In Collection: SAGAN
   Name: sagan_128_cvt_studioGAN
   Results:

@@ -8,7 +8,7 @@ Collections:
   - video super-resolution
   Year: 2022
 Models:
-- Config: configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/real_basicvsr/realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds.py
   In Collection: RealBasicVSR
   Name: realbasicvsr_c64b20-1x30x8_8xb1-lr5e-5-150k_reds
   Results:
@@ -20,7 +20,7 @@ Models:
       PI (Y): 3.8593
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/real_basicvsr/realbasicvsr_c64b20_1x30x8_lr5e-5_150k_reds_20211104-52f77c2c.pth
-- Config: configs/real_basicvsr/realbasicvsr_wogan-c64b20-2x30x8_8xb2-lr1e-4-300k_reds.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/real_basicvsr/realbasicvsr_wogan-c64b20-2x30x8_8xb2-lr1e-4-300k_reds.py
   In Collection: RealBasicVSR
   Name: realbasicvsr_wogan-c64b20-2x30x8_8xb2-lr1e-4-300k_reds
   Results:

@@ -8,7 +8,7 @@ Collections:
   - colorization
   Year: 2020
 Models:
-- Config: configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py
   In Collection: Instance-aware Image Colorization
   Name: inst-colorizatioon_full_official_cocostuff-256x256
   Results:

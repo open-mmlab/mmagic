@@ -9,7 +9,7 @@ Collections:
   - video super-resolution
   Year: 2019
 Models:
-- Config: configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/tof/tof_spynet-chair-wobn_1xb1_vimeo90k-triplet.py
   In Collection: TOFlow
   Name: tof_spynet-chair-wobn_1xb1_vimeo90k-triplet
   Results:
@@ -22,7 +22,7 @@ Models:
       SSIM: 0.9465
     Task: Video Interpolation, Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k_20220321-2fc9e258.pth
-- Config: configs/tof/tof_spynet-kitti-wobn_1xb1_vimeo90k-triplet.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/tof/tof_spynet-kitti-wobn_1xb1_vimeo90k-triplet.py
   In Collection: TOFlow
   Name: tof_spynet-kitti-wobn_1xb1_vimeo90k-triplet
   Results:
@@ -35,7 +35,7 @@ Models:
       SSIM: 0.9466
     Task: Video Interpolation, Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_kitti_nobn_1xb1_vimeo90k_20220321-3f7ca4cd.pth
-- Config: configs/tof/tof_spynet-sintel-wobn-clean_1xb1_vimeo90k-triplet.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/tof/tof_spynet-sintel-wobn-clean_1xb1_vimeo90k-triplet.py
   In Collection: TOFlow
   Name: tof_spynet-sintel-wobn-clean_1xb1_vimeo90k-triplet
   Results:
@@ -48,7 +48,7 @@ Models:
       SSIM: 0.9464
     Task: Video Interpolation, Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_sintel_clean_nobn_1xb1_vimeo90k_20220321-6e52a6fd.pth
-- Config: configs/tof/tof_spynet-sintel-wobn-final_1xb1_vimeo90k-triplet.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/tof/tof_spynet-sintel-wobn-final_1xb1_vimeo90k-triplet.py
   In Collection: TOFlow
   Name: tof_spynet-sintel-wobn-final_1xb1_vimeo90k-triplet
   Results:
@@ -61,7 +61,7 @@ Models:
       SSIM: 0.9465
     Task: Video Interpolation, Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_sintel_final_nobn_1xb1_vimeo90k_20220321-8ab70dbb.pth
-- Config: configs/tof/tof_spynet-pytoflow-wobn_1xb1_vimeo90k-triplet.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/tof/tof_spynet-pytoflow-wobn_1xb1_vimeo90k-triplet.py
   In Collection: TOFlow
   Name: tof_spynet-pytoflow-wobn_1xb1_vimeo90k-triplet
   Results:
@@ -74,7 +74,7 @@ Models:
       SSIM: 0.9467
     Task: Video Interpolation, Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_pytoflow_nobn_1xb1_vimeo90k_20220321-5f4b243e.pth
-- Config: configs/tof/tof_x4_official_vimeo90k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/tof/tof_x4_official_vimeo90k.py
   In Collection: TOFlow
   Name: tof_x4_official_vimeo90k
   Results:

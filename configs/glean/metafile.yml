@@ -8,7 +8,7 @@ Collections:
   - image super-resolution
   Year: 2021
 Models:
-- Config: configs/glean/glean_x8_2xb8_cat.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/glean/glean_x8_2xb8_cat.py
   In Collection: GLEAN
   Name: glean_x8_2xb8_cat
   Results:
@@ -17,7 +17,7 @@ Models:
       PSNR: 23.98
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_8x_20210614-d3ac8683.pth
-- Config: configs/glean/glean_x16_2xb8_ffhq.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/glean/glean_x16_2xb8_ffhq.py
   In Collection: GLEAN
   Name: glean_x16_2xb8_ffhq
   Results:
@@ -26,7 +26,7 @@ Models:
       PSNR: 26.91
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_ffhq_16x_20210527-61a3afad.pth
-- Config: configs/glean/glean_x16_2xb8_cat.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/glean/glean_x16_2xb8_cat.py
   In Collection: GLEAN
   Name: glean_x16_2xb8_cat
   Results:
@@ -35,7 +35,7 @@ Models:
       PSNR: 20.88
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_cat_16x_20210527-68912543.pth
-- Config: configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/glean/glean_in128out1024_4xb2-300k_ffhq-celeba-hq.py
   In Collection: GLEAN
   Name: glean_in128out1024_4xb2-300k_ffhq-celeba-hq
   Results:
@@ -44,21 +44,21 @@ Models:
       PSNR: 27.94
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth
-- Config: configs/glean/glean_x8-fp16_2xb8_cat.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/glean/glean_x8-fp16_2xb8_cat.py
   In Collection: GLEAN
   Name: glean_x8-fp16_2xb8_cat
   Results:
   - Dataset: LSUN-CAT
     Metrics: {}
     Task: Image Super-Resolution
-- Config: configs/glean/glean_x16-fp16_2xb8_ffhq.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/glean/glean_x16-fp16_2xb8_ffhq.py
   In Collection: GLEAN
   Name: glean_x16-fp16_2xb8_ffhq
   Results:
   - Dataset: FFHQ
     Metrics: {}
     Task: Image Super-Resolution
-- Config: configs/glean/glean_in128out1024-fp16_4xb2-300k_ffhq-celeba-hq.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/glean/glean_in128out1024-fp16_4xb2-300k_ffhq-celeba-hq.py
   In Collection: GLEAN
   Name: glean_in128out1024-fp16_4xb2-300k_ffhq-celeba-hq
   Results:

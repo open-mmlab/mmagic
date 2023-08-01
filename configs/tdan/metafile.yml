@@ -8,21 +8,21 @@ Collections:
   - video super-resolution
   Year: 2020
 Models:
-- Config: configs/tdan/tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bi.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/tdan/tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bi.py
   In Collection: TDAN
   Name: tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bi
   Results:
   - Dataset: '-'
     Metrics: {}
     Task: Video Super-Resolution
-- Config: configs/tdan/tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bd.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/tdan/tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bd.py
   In Collection: TDAN
   Name: tdan_x4_8xb16-lr1e-4-400k_vimeo90k-bd
   Results:
   - Dataset: '-'
     Metrics: {}
     Task: Video Super-Resolution
-- Config: configs/tdan/tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/tdan/tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi.py
   In Collection: TDAN
   Name: tdan_x4ft_8xb16-lr5e-5-400k_vimeo90k-bi
   Results:
@@ -47,7 +47,7 @@ Models:
       SSIM (Y): 0.842
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/tdan/tdan_vimeo90k_bix4_20210528-739979d9.pth
-- Config: configs/tdan/tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/tdan/tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd.py
   In Collection: TDAN
   Name: tdan_x4ft_8xb16-lr5e-5-800k_vimeo90k-bd
   Results:

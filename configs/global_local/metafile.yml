@@ -8,7 +8,7 @@ Collections:
   - inpainting
   Year: 2017
 Models:
-- Config: configs/global_local/gl_8xb12_places-256x256.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/global_local/gl_8xb12_places-256x256.py
   In Collection: Global&Local
   Name: gl_8xb12_places-256x256
   Results:
@@ -19,7 +19,7 @@ Models:
       l1 error: 11.164
     Task: Inpainting
   Weights: https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_places_20200619-52a040a8.pth
-- Config: configs/global_local/gl_8xb12_celeba-256x256.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/global_local/gl_8xb12_celeba-256x256.py
   In Collection: Global&Local
   Name: gl_8xb12_celeba-256x256
   Results:

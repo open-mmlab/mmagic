@@ -9,7 +9,7 @@ Collections:
   - video super-resolution
   Year: 2022
 Models:
-- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/basicvsr_pp/basicvsr-pp_c64n7_8xb1-600k_reds4.py
   In Collection: BasicVSR++
   Name: basicvsr-pp_c64n7_8xb1-600k_reds4
   Results:
@@ -44,7 +44,7 @@ Models:
       SSIM (Y): 0.9244
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_600k_reds4_20210217-db622b2f.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi.py
   In Collection: BasicVSR++
   Name: basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bi
   Results:
@@ -79,7 +79,7 @@ Models:
       SSIM (Y): 0.9195
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bi_20210305-4ef437e2.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/basicvsr_pp/basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd.py
   In Collection: BasicVSR++
   Name: basicvsr-pp_c64n7_4xb2-300k_vimeo90k-bd
   Results:
@@ -114,7 +114,7 @@ Models:
       SSIM (Y): 0.955
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c64n7_8x1_300k_vimeo90k_bd_20210305-ab315ab1.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-vsr.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-vsr.py
   In Collection: BasicVSR++
   Name: basicvsr-pp_c128n25_600k_ntire-vsr
   Results:
@@ -122,7 +122,7 @@ Models:
     Metrics: {}
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_vsr_20210311-1ff35292.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-decompress-track1.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-decompress-track1.py
   In Collection: BasicVSR++
   Name: basicvsr-pp_c128n25_600k_ntire-decompress-track1
   Results:
@@ -130,7 +130,7 @@ Models:
     Metrics: {}
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track1_20210223-7b2eba02.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-decompress-track2.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-decompress-track2.py
   In Collection: BasicVSR++
   Name: basicvsr-pp_c128n25_600k_ntire-decompress-track2
   Results:
@@ -138,7 +138,7 @@ Models:
     Metrics: {}
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr_plusplus/basicvsr_plusplus_c128n25_ntire_decompress_track2_20210314-eeae05e6.pth
-- Config: configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-decompress-track3.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/basicvsr_pp/basicvsr-pp_c128n25_600k_ntire-decompress-track3.py
   In Collection: BasicVSR++
   Name: basicvsr-pp_c128n25_600k_ntire-decompress-track3
   Results:

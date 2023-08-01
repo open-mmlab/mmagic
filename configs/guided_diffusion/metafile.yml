@@ -8,7 +8,7 @@ Collections:
   - image generation
   Year: 2021
 Models:
-- Config: configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/guided_diffusion/adm_ddim250_8xb32_imagenet-64x64.py
   In Collection: Guided Diffusion
   Name: adm_ddim250_8xb32_imagenet-64x64
   Results:
@@ -18,7 +18,7 @@ Models:
       Steps: 250.0
     Task: Image Generation
   Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-u-cvt-rgb_8xb32_imagenet-64x64-7ff0080b.pth
-- Config: configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-64x64.py
   In Collection: Guided Diffusion
   Name: adm-g_ddim25_8xb32_imagenet-64x64
   Results:
@@ -29,7 +29,7 @@ Models:
       Steps: 25.0
     Task: Image Generation
   Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-g_8xb32_imagenet-64x64-2c0fbeda.pth
-- Config: configs/guided_diffusion/adm_ddim250_8xb32_imagenet-256x256.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/guided_diffusion/adm_ddim250_8xb32_imagenet-256x256.py
   In Collection: Guided Diffusion
   Name: adm_ddim250_8xb32_imagenet-256x256
   Results:
@@ -38,7 +38,7 @@ Models:
       Steps: 250.0
     Task: Image Generation
   Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm_8xb32_imagenet-256x256-f94735fe.pth
-- Config: configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-256x256.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-256x256.py
   In Collection: Guided Diffusion
   Name: adm-g_ddim25_8xb32_imagenet-256x256
   Results:
@@ -48,7 +48,7 @@ Models:
       Steps: 25.0
     Task: Image Generation
   Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-g_8xb32_imagenet-256x256-aec3fc9f.pth
-- Config: configs/guided_diffusion/adm_ddim250_8xb32_imagenet-512x512.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/guided_diffusion/adm_ddim250_8xb32_imagenet-512x512.py
   In Collection: Guided Diffusion
   Name: adm_ddim250_8xb32_imagenet-512x512
   Results:
@@ -57,7 +57,7 @@ Models:
       Steps: 250.0
     Task: Image Generation
   Weights: https://download.openmmlab.com/mmediting/guided_diffusion/adm-u_8xb32_imagenet-512x512-60b381cb.pth
-- Config: configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-512x512.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/guided_diffusion/adm-g_ddim25_8xb32_imagenet-512x512.py
   In Collection: Guided Diffusion
   Name: adm-g_ddim25_8xb32_imagenet-512x512
   Results:

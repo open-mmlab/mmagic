@@ -8,7 +8,7 @@ Collections:
   - image super-resolution
   Year: 2018
 Models:
-- Config: configs/rdn/rdn_x4c64b16_1xb16-1000k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/rdn/rdn_x4c64b16_1xb16-1000k_div2k.py
   In Collection: RDN
   Name: rdn_x4c64b16_1xb16-1000k_div2k
   Results:
@@ -28,7 +28,7 @@ Models:
       SSIM: 0.8233
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x4c64b16_g1_1000k_div2k_20210419-3577d44f.pth
-- Config: configs/rdn/rdn_x3c64b16_1xb16-1000k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/rdn/rdn_x3c64b16_1xb16-1000k_div2k.py
   In Collection: RDN
   Name: rdn_x3c64b16_1xb16-1000k_div2k
   Results:
@@ -48,7 +48,7 @@ Models:
       SSIM: 0.8763
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/rdn/rdn_x3c64b16_g1_1000k_div2k_20210419-b93cb6aa.pth
-- Config: configs/rdn/rdn_x2c64b16_1xb16-1000k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/rdn/rdn_x2c64b16_1xb16-1000k_div2k.py
   In Collection: RDN
   Name: rdn_x2c64b16_1xb16-1000k_div2k
   Results:

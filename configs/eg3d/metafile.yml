@@ -8,7 +8,7 @@ Collections:
   - 3d-aware generation
   Year: 2022
 Models:
-- Config: configs/eg3d/eg3d_cvt-official-rgb_shapenet-128x128.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/eg3d/eg3d_cvt-official-rgb_shapenet-128x128.py
   In Collection: EG3D
   Name: eg3d_cvt-official-rgb_shapenet-128x128
   Results:
@@ -18,7 +18,7 @@ Models:
       FID50k-Camera: 5.2325
     Task: 3D-aware Generation
   Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_shapenet-128x128-85757f4d.pth
-- Config: configs/eg3d/eg3d_cvt-official-rgb_afhq-512x512.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/eg3d/eg3d_cvt-official-rgb_afhq-512x512.py
   In Collection: EG3D
   Name: eg3d_cvt-official-rgb_afhq-512x512
   Results:
@@ -28,7 +28,7 @@ Models:
       FID50k-Camera: 6.4213
     Task: 3D-aware Generation
   Weights: https://download.openmmlab.com/mmediting/eg3d/eg3d_cvt-official-rgb_afhq-512x512-ca1dd7c9.pth
-- Config: configs/eg3d/eg3d_cvt-official-rgb_ffhq-512x512.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/eg3d/eg3d_cvt-official-rgb_ffhq-512x512.py
   In Collection: EG3D
   Name: eg3d_cvt-official-rgb_ffhq-512x512
   Results:

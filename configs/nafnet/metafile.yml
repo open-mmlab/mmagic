@@ -8,7 +8,7 @@ Collections:
   - image restoration
   Year: 2022
 Models:
-- Config: configs/nafnet/nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/nafnet/nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd.py
   In Collection: NAFNet
   Name: nafnet_c64eb2248mb12db2222_8xb8-lr1e-3-400k_sidd
   Results:
@@ -19,7 +19,7 @@ Models:
       SSIM: 0.9253
     Task: Image Restoration
   Weights: https://download.openmmlab.com/mmediting/nafnet/NAFNet-SIDD-midc64.pth
-- Config: configs/nafnet/nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/nafnet/nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro.py
   In Collection: NAFNet
   Name: nafnet_c64eb11128mb1db1111_8xb8-lr1e-3-400k_gopro
   Results:

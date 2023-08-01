@@ -9,7 +9,7 @@ Collections:
   - image super-resolution
   Year: 2020
 Models:
-- Config: configs/dic/dic_x8c48b6_4xb2-150k_celeba-hq.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/dic/dic_x8c48b6_4xb2-150k_celeba-hq.py
   In Collection: DIC
   Name: dic_x8c48b6_4xb2-150k_celeba-hq
   Results:
@@ -19,7 +19,7 @@ Models:
       SSIM: 0.7422
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/dic/dic_x8c48b6_g4_150k_CelebAHQ_20210611-5d3439ca.pth
-- Config: configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/dic/dic_gan-x8c48b6_4xb2-500k_celeba-hq.py
   In Collection: DIC
   Name: dic_gan-x8c48b6_4xb2-500k_celeba-hq
   Results:

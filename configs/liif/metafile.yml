@@ -8,7 +8,7 @@ Collections:
   - image super-resolution
   Year: 2021
 Models:
-- Config: configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/liif/liif-edsr-norm_c64b16_1xb16-1000k_div2k.py
   In Collection: LIIF
   Name: liif-edsr-norm_c64b16_1xb16-1000k_div2k
   Results:
@@ -103,7 +103,7 @@ Models:
       SSIM: 0.5577
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/liif/liif_edsr_norm_c64b16_g1_1000k_div2k_20210715-ab7ce3fc.pth
-- Config: configs/liif/liif-rdn-norm_c64b16_1xb16-1000k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/liif/liif-rdn-norm_c64b16_1xb16-1000k_div2k.py
   In Collection: LIIF
   Name: liif-rdn-norm_c64b16_1xb16-1000k_div2k
   Results:

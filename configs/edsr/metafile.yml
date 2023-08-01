@@ -8,7 +8,7 @@ Collections:
   - image super-resolution
   Year: 2017
 Models:
-- Config: configs/edsr/edsr_x2c64b16_1xb16-300k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/edsr/edsr_x2c64b16_1xb16-300k_div2k.py
   In Collection: EDSR
   Name: edsr_x2c64b16_1xb16-300k_div2k
   Results:
@@ -28,7 +28,7 @@ Models:
       SSIM: 0.9352
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x2c64b16_1x16_300k_div2k_20200604-19fe95ea.pth
-- Config: configs/edsr/edsr_x3c64b16_1xb16-300k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/edsr/edsr_x3c64b16_1xb16-300k_div2k.py
   In Collection: EDSR
   Name: edsr_x3c64b16_1xb16-300k_div2k
   Results:
@@ -48,7 +48,7 @@ Models:
       SSIM: 0.8711
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/edsr/edsr_x3c64b16_1x16_300k_div2k_20200608-36d896f4.pth
-- Config: configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/edsr/edsr_x4c64b16_1xb16-300k_div2k.py
   In Collection: EDSR
   Name: edsr_x4c64b16_1xb16-300k_div2k
   Results:

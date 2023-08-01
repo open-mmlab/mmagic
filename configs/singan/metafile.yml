@@ -8,7 +8,7 @@ Collections:
   - internal learning
   Year: 2019
 Models:
-- Config: configs/singan/singan_balloons.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/singan/singan_balloons.py
   In Collection: SinGAN
   Name: singan_balloons
   Results:
@@ -17,7 +17,7 @@ Models:
       Num Scales: 8.0
     Task: Internal Learning
   Weights: https://download.openmmlab.com/mmediting/singan/singan_balloons_20210406_191047-8fcd94cf.pth
-- Config: configs/singan/singan_fish.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/singan/singan_fish.py
   In Collection: SinGAN
   Name: singan_fish
   Results:
@@ -26,7 +26,7 @@ Models:
       Num Scales: 10.0
     Task: Internal Learning
   Weights: https://download.openmmlab.com/mmediting/singan/singan_fis_20210406_201006-860d91b6.pth
-- Config: configs/singan/singan_bohemian.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/singan/singan_bohemian.py
   In Collection: SinGAN
   Name: singan_bohemian
   Results:

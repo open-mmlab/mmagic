@@ -8,14 +8,14 @@ Collections:
   - inpainting
   Year: 2018
 Models:
-- Config: configs/partial_conv/pconv_stage1_8xb12_places-256x256.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/partial_conv/pconv_stage1_8xb12_places-256x256.py
   In Collection: PConv
   Name: pconv_stage1_8xb12_places-256x256
   Results:
   - Dataset: Places365-val
     Metrics: {}
     Task: Inpainting
-- Config: configs/partial_conv/pconv_stage2_4xb2_places-256x256.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/partial_conv/pconv_stage2_4xb2_places-256x256.py
   In Collection: PConv
   Name: pconv_stage2_4xb2_places-256x256
   Results:
@@ -26,14 +26,14 @@ Models:
       l1 error: 8.776
     Task: Inpainting
   Weights: https://download.openmmlab.com/mmediting/inpainting/pconv/pconv_256x256_stage2_4x2_places_20200619-1ffed0e8.pth
-- Config: configs/partial_conv/pconv_stage1_8xb1_celeba-256x256.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/partial_conv/pconv_stage1_8xb1_celeba-256x256.py
   In Collection: PConv
   Name: pconv_stage1_8xb1_celeba-256x256
   Results:
   - Dataset: CelebA-val
     Metrics: {}
     Task: Inpainting
-- Config: configs/partial_conv/pconv_stage2_4xb2_celeba-256x256.py
+- Config: /data/sq/my_project/openmmlab/mmagic/configs/partial_conv/pconv_stage2_4xb2_celeba-256x256.py
   In Collection: PConv
   Name: pconv_stage2_4xb2_celeba-256x256
   Results:
