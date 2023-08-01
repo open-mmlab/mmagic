@@ -6,10 +6,12 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import cv2
 import mmcv
+import mmengine
 import numpy as np
 import torch
 from mmengine.dataset import Compose
 from mmengine.logging import MMLogger
+from mmengine.utils import ProgressBar
 
 from mmagic.utils import tensor2img
 from .base_mmagic_inferencer import (BaseMMagicInferencer, InputsType,
@@ -153,6 +155,8 @@ class VideoRestorationInferencer(BaseMMagicInferencer):
             List[np.ndarray]: Result of visualize
         """
         file_extension = os.path.splitext(result_out_dir)[1]
+        mmengine.utils.mkdir_or_exist(osp.dirname(result_out_dir))
+        prog_bar = ProgressBar(preds.size(1))
         if file_extension in VIDEO_EXTENSIONS:  # save as video
             h, w = preds.shape[-2:]
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -160,6 +164,7 @@ class VideoRestorationInferencer(BaseMMagicInferencer):
             for i in range(0, preds.size(1)):
                 img = tensor2img(preds[:, i, :, :, :])
                 video_writer.write(img.astype(np.uint8))
+                prog_bar.update()
             cv2.destroyAllWindows()
             video_writer.release()
         else:
@@ -170,8 +175,8 @@ class VideoRestorationInferencer(BaseMMagicInferencer):
                 output_i = tensor2img(output_i)
                 filename_tmpl = self.extra_parameters['filename_tmpl']
                 save_path_i = f'{result_out_dir}/{filename_tmpl.format(i)}'
-
                 mmcv.imwrite(output_i, save_path_i)
+                prog_bar.update()
 
         logger: MMLogger = MMLogger.get_current_instance()
         logger.info(f'Output video is save at {result_out_dir}.')

@@ -119,7 +119,7 @@ class MultiOptimWrapperConstructor:
             raise TypeError('optimizer_cfg should be a dict',
                             f'but got {type(optim_wrapper_cfg)}')
         assert paramwise_cfg is None, (
-            'parawise_cfg should be set in each optimizer separately')
+            'paramwise_cfg should be set in each optimizer separately')
         self.optim_cfg = optim_wrapper_cfg
 
         if 'modules' in optim_wrapper_cfg:

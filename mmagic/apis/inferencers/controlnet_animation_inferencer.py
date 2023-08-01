@@ -77,7 +77,10 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
                  **kwargs) -> None:
         cfg = Config.fromfile(config)
         self.hed = HEDdetector.from_pretrained(cfg.control_detector)
-        self.pipe = MODELS.build(cfg.model).cuda()
+        self.inference_method = cfg.inference_method
+        if self.inference_method == 'attention_injection':
+            cfg.model.attention_injection = True
+        self.pipe = MODELS.build(cfg.model).cuda().eval()
 
         control_scheduler_cfg = dict(
             type=cfg.control_scheduler,
@@ -98,6 +101,8 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
                  strength=0.75,
                  num_inference_steps=20,
                  seed=1,
+                 output_fps=None,
+                 reference_img=None,
                  **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
 
@@ -137,9 +142,15 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
         all_images = []
         if input_file_extension in VIDEO_EXTENSIONS:
             video_reader = mmcv.VideoReader(video)
+            input_fps = int(video_reader.fps)
+            if output_fps is None:
+                output_fps = input_fps
+            if output_fps > input_fps:
+                output_fps = input_fps
+            sample_rate = int(input_fps / output_fps)
 
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            video_writer = cv2.VideoWriter(save_path, fourcc, video_reader.fps,
+            video_writer = cv2.VideoWriter(save_path, fourcc, output_fps,
                                            (image_width, image_height))
             for frame in video_reader:
                 all_images.append(np.flip(frame, axis=2))
@@ -157,79 +168,151 @@ class ControlnetAnimationInferencer(BaseMMagicInferencer):
 
             from_video = False
 
-        # first result
-        image = None
-        if from_video:
-            image = PIL.Image.fromarray(all_images[0])
-        else:
-            image = load_image(all_images[0])
-        image = image.resize((image_width, image_height))
-        detect_resolution = min(image_width, image_height)
-        hed_image = self.hed(
-            image,
-            detect_resolution=detect_resolution,
-            image_resolution=detect_resolution)
-        hed_image = hed_image.resize((image_width, image_height))
-
-        result = self.pipe.infer(
-            control=hed_image,
-            latent_image=image,
-            prompt=prompt,
-            negative_prompt=negative_prompt,
-            strength=strength,
-            controlnet_conditioning_scale=controlnet_conditioning_scale,
-            num_inference_steps=num_inference_steps,
-            latents=init_noise_all_frame)['samples'][0]
-
-        first_result = result
-        first_hed = hed_image
-        last_result = result
-        last_hed = hed_image
-
-        for ind in range(len(all_images)):
+        if self.inference_method == 'multi-frame rendering':
+            # first result
             if from_video:
-                image = PIL.Image.fromarray(all_images[ind])
+                image = PIL.Image.fromarray(all_images[0])
             else:
-                image = load_image(all_images[ind])
+                image = load_image(all_images[0])
             image = image.resize((image_width, image_height))
-            hed_image = self.hed(image, image_resolution=image_width)
-
-            concat_img = PIL.Image.new('RGB', (image_width * 3, image_height))
-            concat_img.paste(last_result, (0, 0))
-            concat_img.paste(image, (image_width, 0))
-            concat_img.paste(first_result, (image_width * 2, 0))
-
-            concat_hed = PIL.Image.new('RGB', (image_width * 3, image_height),
-                                       'black')
-            concat_hed.paste(last_hed, (0, 0))
-            concat_hed.paste(hed_image, (image_width, 0))
-            concat_hed.paste(first_hed, (image_width * 2, 0))
+            detect_resolution = min(image_width, image_height)
+            hed_image = self.hed(
+                image,
+                detect_resolution=detect_resolution,
+                image_resolution=detect_resolution)
+            hed_image = hed_image.resize((image_width, image_height))
 
             result = self.pipe.infer(
-                control=concat_hed,
-                latent_image=concat_img,
+                control=hed_image,
+                latent_image=image,
                 prompt=prompt,
                 negative_prompt=negative_prompt,
                 strength=strength,
                 controlnet_conditioning_scale=controlnet_conditioning_scale,
                 num_inference_steps=num_inference_steps,
-                latents=init_noise_all_frame_cat,
-                latent_mask=latent_mask,
-            )['samples'][0]
-            result = result.crop(
-                (image_width, 0, image_width * 2, image_height))
+                latents=init_noise_all_frame)['samples'][0]
 
+            first_result = result
+            first_hed = hed_image
             last_result = result
             last_hed = hed_image
 
-            if from_video:
-                video_writer.write(np.flip(np.asarray(result), axis=2))
-            else:
-                frame_name = frame_files[ind].split('/')[-1]
-                save_name = os.path.join(save_path, frame_name)
-                result.save(save_name)
+            for ind in range(len(all_images)):
+                if from_video:
+                    if ind % sample_rate > 0:
+                        continue
+                    image = PIL.Image.fromarray(all_images[ind])
+                else:
+                    image = load_image(all_images[ind])
+                print('processing frame ind ' + str(ind))
 
-        if from_video:
-            video_writer.release()
+                image = image.resize((image_width, image_height))
+                hed_image = self.hed(image, image_resolution=image_width)
+
+                concat_img = PIL.Image.new('RGB',
+                                           (image_width * 3, image_height))
+                concat_img.paste(last_result, (0, 0))
+                concat_img.paste(image, (image_width, 0))
+                concat_img.paste(first_result, (image_width * 2, 0))
+
+                concat_hed = PIL.Image.new('RGB',
+                                           (image_width * 3, image_height),
+                                           'black')
+                concat_hed.paste(last_hed, (0, 0))
+                concat_hed.paste(hed_image, (image_width, 0))
+                concat_hed.paste(first_hed, (image_width * 2, 0))
+
+                result = self.pipe.infer(
+                    control=concat_hed,
+                    latent_image=concat_img,
+                    prompt=prompt,
+                    negative_prompt=negative_prompt,
+                    strength=strength,
+                    controlnet_conditioning_scale=  # noqa
+                    controlnet_conditioning_scale,
+                    num_inference_steps=num_inference_steps,
+                    latents=init_noise_all_frame_cat,
+                    latent_mask=latent_mask,
+                )['samples'][0]
+                result = result.crop(
+                    (image_width, 0, image_width * 2, image_height))
+
+                last_result = result
+                last_hed = hed_image
+
+                if from_video:
+                    video_writer.write(np.flip(np.asarray(result), axis=2))
+                else:
+                    frame_name = frame_files[ind].split('/')[-1]
+                    save_name = os.path.join(save_path, frame_name)
+                    result.save(save_name)
+
+            if from_video:
+                video_writer.release()
+        else:
+            if reference_img is None:
+                if from_video:
+                    image = PIL.Image.fromarray(all_images[0])
+                else:
+                    image = load_image(all_images[0])
+                image = image.resize((image_width, image_height))
+                detect_resolution = min(image_width, image_height)
+                hed_image = self.hed(
+                    image,
+                    detect_resolution=detect_resolution,
+                    image_resolution=detect_resolution)
+                hed_image = hed_image.resize((image_width, image_height))
+
+                result = self.pipe.infer(
+                    control=hed_image,
+                    latent_image=image,
+                    prompt=prompt,
+                    negative_prompt=negative_prompt,
+                    strength=strength,
+                    controlnet_conditioning_scale=  # noqa
+                    controlnet_conditioning_scale,
+                    num_inference_steps=num_inference_steps,
+                    latents=init_noise_all_frame)['samples'][0]
+
+                reference_img = result
+            else:
+                reference_img = load_image(reference_img)
+                reference_img = reference_img.resize(
+                    (image_width, image_height))
+
+            for ind in range(len(all_images)):
+                if from_video:
+                    if ind % sample_rate > 0:
+                        continue
+                    image = PIL.Image.fromarray(all_images[ind])
+                else:
+                    image = load_image(all_images[ind])
+                print('processing frame ind ' + str(ind))
+
+                image = image.resize((image_width, image_height))
+                hed_image = self.hed(image, image_resolution=image_width)
+
+                result = self.pipe.infer(
+                    control=hed_image,
+                    latent_image=image,
+                    prompt=prompt,
+                    negative_prompt=negative_prompt,
+                    strength=strength,
+                    controlnet_conditioning_scale=  # noqa
+                    controlnet_conditioning_scale,
+                    num_inference_steps=num_inference_steps,
+                    latents=init_noise_all_frame,
+                    reference_img=reference_img,
+                )['samples'][0]
+
+                if from_video:
+                    video_writer.write(np.flip(np.asarray(result), axis=2))
+                else:
+                    frame_name = frame_files[ind].split('/')[-1]
+                    save_name = os.path.join(save_path, frame_name)
+                    result.save(save_name)
+
+            if from_video:
+                video_writer.release()
 
         return save_path

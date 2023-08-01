@@ -19,6 +19,7 @@ from .base_mmagic_inferencer import BaseMMagicInferencer, InputsType, PredType
 from .inference_functions import calculate_grid_size
 
 imageio = try_import('imageio')
+imageio_ffmpeg = try_import('imageio_ffmpeg')
 
 
 class EG3DInferencer(BaseMMagicInferencer):
@@ -92,7 +93,7 @@ class EG3DInferencer(BaseMMagicInferencer):
             inputs (ForwardInputs): Model inputs. If data sample (the second
                 element of `inputs`) is not passed, will generate a sequence
                 of images corresponding to passed `interpolation` mode.
-            interpolation (str): The interplolation mode. Supported choices
+            interpolation (str): The interpolation mode. Supported choices
                 are 'both', 'conditioning', and 'camera'. Defaults to 'both'.
             num_images (int): The number of frames of interpolation.
                 Defaults to 500.
@@ -155,6 +156,9 @@ class EG3DInferencer(BaseMMagicInferencer):
         """
         if save_video:
             assert imageio is not None, (
+                'Please install imageio by \'pip install '
+                'imageio\' to save video.')
+            assert imageio_ffmpeg is not None, (
                 'Please install imageio-ffmpeg by \'pip install '
                 'imageio-ffmpeg\' to save video.')
 

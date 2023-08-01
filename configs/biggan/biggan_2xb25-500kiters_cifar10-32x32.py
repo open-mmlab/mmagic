@@ -24,9 +24,9 @@ model = dict(
         with_shared_embedding=False,
         sn_eps=1e-8,
         sn_style='torch',
-        init_type='N02',
         split_noise=False,
-        auto_sync_bn=False),
+        auto_sync_bn=False,
+        init_cfg=dict(type='N02')),
     discriminator=dict(
         type='BigGANDiscriminator',
         input_scale=32,
@@ -34,8 +34,8 @@ model = dict(
         base_channels=64,
         sn_eps=1e-8,
         sn_style='torch',
-        init_type='N02',
-        with_spectral_norm=True),
+        with_spectral_norm=True,
+        init_cfg=dict(type='N02')),
     generator_steps=1,
     discriminator_steps=4,
     ema_config=ema_config)

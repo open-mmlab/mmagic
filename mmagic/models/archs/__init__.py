@@ -6,6 +6,7 @@ from typing import List
 from mmagic.utils import try_import
 from .all_gather_layer import AllGatherLayer
 from .aspp import ASPP
+from .attention_injection import AttentionInjection
 from .conv import *  # noqa: F401, F403
 from .downsample import pixel_unshuffle
 from .ensemble import SpatialTemporalEnsemble
@@ -21,6 +22,7 @@ from .separable_conv_module import DepthwiseSeparableConvModule
 from .simple_encoder_decoder import SimpleEncoderDecoder
 from .smpatch_disc import SoftMaskPatchDiscriminator
 from .sr_backbone import ResidualBlockNoBN
+from .tokenizer import TokenizerWrapper
 from .upsample import PixelShufflePack
 from .vgg import VGG16
 from .wrapper import DiffusersWrapper
@@ -73,5 +75,5 @@ __all__ = [
     'SimpleEncoderDecoder', 'MultiLayerDiscriminator', 'PatchDiscriminator',
     'VGG16', 'ResNet', 'AllGatherLayer', 'ResidualBlockNoBN', 'LoRAWrapper',
     'set_lora', 'set_lora_disable', 'set_lora_enable',
-    'set_only_lora_trainable'
+    'set_only_lora_trainable', 'TokenizerWrapper', 'AttentionInjection'
 ]

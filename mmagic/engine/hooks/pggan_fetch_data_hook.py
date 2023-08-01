@@ -48,7 +48,7 @@ class PGGANFetchDataHook(Hook):
 
     def update_dataloader(self, dataloader: DataLoader,
                           curr_scale: int) -> Optional[DataLoader]:
-        """Updata the data loader.
+        """Update the data loader.
 
         Args:
             dataloader (DataLoader): The dataloader to be updated.

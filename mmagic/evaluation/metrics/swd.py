@@ -343,7 +343,7 @@ class SlicedWassersteinDistance(GenMetric):
         return results_collected
 
     def compute_metrics(self, results_fake, results_real) -> dict:
-        """Compulate the result of SWD metric.
+        """Compute the result of SWD metric.
 
         Args:
             fake_results (list): List of image feature of fake images.

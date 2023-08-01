@@ -14,7 +14,7 @@ test_pipeline = [
     dict(type='PackInputs')
 ]
 
-gopro_data_root = 'data/GoPro'
+gopro_data_root = 'data/gopro/test'
 gopro_dataloader = dict(
     num_workers=4,
     persistent_workers=False,
@@ -24,7 +24,7 @@ gopro_dataloader = dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='GoPro', task_name='deblurring'),
         data_root=gopro_data_root,
-        data_prefix=dict(img='input', gt='target'),
+        data_prefix=dict(img='blur', gt='sharp'),
         pipeline=test_pipeline))
 gopro_evaluator = [
     dict(type='PSNR', prefix='GoPro'),

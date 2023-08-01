@@ -10,7 +10,7 @@ There are two ways to use datasets for training and testing models in MMagic:
 
 The structure of this guide is as follows:
 
-- [Tutorial 2: Prepare Datasets](#tutorial-2-prepare-datasets)
+- [Tutorial 2: Prepare datasets](#tutorial-2-prepare-datasets)
   - [Download datasets](#download-datasets)
   - [Prepare datasets](#prepare-datasets)
   - [The overview of the datasets in MMagic](#the-overview-of-the-datasets-in-mmagic)

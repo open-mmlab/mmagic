@@ -125,7 +125,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
         2. `loss_config` is dict of scalar or string: Users will implement all
             loss calculations and use passed `loss_config` to control the
             weight or behavior of the loss calculation. Users will unpack and
-            use each field in this dict by themself.
+            use each field in this dict by themselves.
 
             loss_config = dict(gp_norm_mode='HWC', gp_loss_weight=10)
 
@@ -396,7 +396,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             SampleList: Generated image or image dict.
@@ -410,7 +410,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             List[DataSample]: Generated image or image dict.

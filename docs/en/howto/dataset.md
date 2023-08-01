@@ -2,10 +2,15 @@
 
 In this document, we will introduce the design of each datasets in MMagic and how users can design their own dataset.
 
-- [Prepare Your Own Datasets](#prepare-your-own-datasets)
+- [How to prepare your own datasets](#how-to-prepare-your-own-datasets)
   - [Supported Data Format](#supported-data-format)
     - [BasicImageDataset](#basicimagedataset)
     - [BasicFramesDataset](#basicframesdataset)
+    - [BasicConditonalDataset](#basicconditonaldataset)
+      - [1. Annotation file read by line (e.g., txt)](#1-annotation-file-read-by-line-eg-txt)
+      - [2. Dict-based annotation file (e.g., json):](#2-dict-based-annotation-file-eg-json)
+      - [3. Folder-based annotation (no annotation file need):](#3-folder-based-annotation-no-annotation-file-need)
+    - [ImageNet Dataset and CIFAR10 Dataset](#imagenet-dataset-and-cifar10-dataset)
     - [AdobeComp1kDataset](#adobecomp1kdataset)
     - [GrowScaleImgDataset](#growscaleimgdataset)
     - [SinGANDataset](#singandataset)
@@ -161,7 +166,7 @@ mmagic (root)
 │   │   │   ├── city
 │   │   │   │   ├── img1.png
 │   │   ├── meta_info_Vid4_GT.txt
-│   ├── places
+│   ├── vimeo-triplet
 │   │   ├── sequences
 |   |   |   ├── 00001
 │   │   │   │   ├── 0389
@@ -442,7 +447,7 @@ def __getitem__(self, index):
 
 ### PairedImageDataset
 
-`PairedImageDataset` is designed for translation models that needs paried training data (e.g., Pix2Pix).
+`PairedImageDataset` is designed for translation models that needs paired training data (e.g., Pix2Pix).
 The directory structure is shown below. Each image files are the concatenation of the image pair.
 
 ```

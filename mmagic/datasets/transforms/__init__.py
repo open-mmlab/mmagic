@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from .albumentations import Albumentations
 from .alpha import GenerateSeg, GenerateSoftSeg
 from .aug_frames import MirrorSequence, TemporalReverse
 from .aug_pixel import (BinarizeImage, Clip, ColorJitter, RandomAffine,
@@ -46,5 +47,6 @@ __all__ = [
     'FormatTrimap', 'TransformTrimap', 'GenerateTrimap',
     'GenerateTrimapWithDistTransform', 'CompositeFg', 'RandomLoadResizeBg',
     'MergeFgAndBg', 'PerturbBg', 'RandomJitter', 'LoadPairedImageFromFile',
-    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'InstanceCrop'
+    'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'InstanceCrop',
+    'Albumentations'
 ]

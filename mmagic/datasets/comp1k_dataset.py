@@ -75,8 +75,8 @@ class AdobeComp1kDataset(BaseDataset):
     def load_data_list(self) -> List[dict]:
         """Load annotations from an annotation file named as ``self.ann_file``
 
-        In order to be compoatible to both new and old annotation format,
-        we copy implementations from mmengine and do some modificatoins.
+        In order to be compatible to both new and old annotation format,
+        we copy implementations from mmengine and do some modifications.
 
         Returns:
             list[dict]: A list of annotation.

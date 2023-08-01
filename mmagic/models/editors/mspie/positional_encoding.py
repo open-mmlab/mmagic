@@ -1,21 +1,21 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import torch
-import torch.nn as nn
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 
 
 @MODELS.register_module('SPE')
 @MODELS.register_module('SPE2d')
-class SinusoidalPositionalEmbedding(nn.Module):
+class SinusoidalPositionalEmbedding(BaseModule):
     """Sinusoidal Positional Embedding 1D or 2D (SPE/SPE2d).
 
     This module is a modified from:
     https://github.com/pytorch/fairseq/blob/master/fairseq/modules/sinusoidal_positional_embedding.py # noqa
 
     Based on the original SPE in single dimension, we implement a 2D sinusoidal
-    positional encodding (SPE2d), as introduced in Positional Encoding as
+    positional encoding (SPE2d), as introduced in Positional Encoding as
     Spatial Inductive Bias in GANs, CVPR'2021.
 
     Args:
@@ -202,13 +202,13 @@ class SinusoidalPositionalEmbedding(nn.Module):
 @MODELS.register_module('CSG2d')
 @MODELS.register_module('CSG')
 @MODELS.register_module()
-class CatersianGrid(nn.Module):
+class CatersianGrid(BaseModule):
     """Catersian Grid for 2d tensor.
 
     The Catersian Grid is a common-used positional encoding in deep learning.
     In this implementation, we follow the convention of ``grid_sample`` in
     PyTorch. In other words, ``[-1, -1]`` denotes the left-top corner while
-    ``[1, 1]`` denotes the right-botton corner.
+    ``[1, 1]`` denotes the right-bottom corner.
     """
 
     def forward(self, x, **kwargs):

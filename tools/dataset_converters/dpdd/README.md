@@ -26,4 +26,8 @@ mmagic
 |   |   ├── inputR
 |   |   ├── inputC
 |   |   ├── target
+|   |   ├── indoor_labels.npy
+|   |   ├── indoor_labels.txt
+|   |   ├── outdoor_labels.npy
+|   |   ├── outdoor_labels.txt
 ```

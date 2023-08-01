@@ -20,9 +20,10 @@ generator = dict(
     with_shared_embedding=False,
     sn_eps=1e-8,
     sn_style='torch',
-    init_type='N02',
+    # init_type='N02',
     split_noise=False,
-    auto_sync_bn=False)
+    auto_sync_bn=False,
+    init_cfg=dict(type='N02'))
 discriminator = dict(
     type='BigGANDiscriminator',
     input_scale=32,
@@ -30,8 +31,9 @@ discriminator = dict(
     base_channels=64,
     sn_eps=1e-8,
     sn_style='torch',
-    init_type='N02',
-    with_spectral_norm=True)
+    # init_type='N02',
+    with_spectral_norm=True,
+    init_cfg=dict(type='N02'))
 
 
 class TestBigGAN(TestCase):
@@ -44,6 +46,7 @@ class TestBigGAN(TestCase):
             discriminator=discriminator,
             generator_steps=1,
             discriminator_steps=4)
+        gan.init_weights()
 
         self.assertIsInstance(gan, BigGAN)
         self.assertIsInstance(gan.data_preprocessor, DataPreprocessor)
@@ -94,6 +97,7 @@ class TestBigGAN(TestCase):
             discriminator=discriminator,
             data_preprocessor=DataPreprocessor(),
             discriminator_steps=n_disc)
+        gan.init_weights()
         # prepare messageHub
         message_hub.update_info('iter', 0)
         # prepare optimizer

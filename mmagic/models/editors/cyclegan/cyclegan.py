@@ -217,7 +217,7 @@ class CycleGAN(BaseTranslationModel):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             SampleList: A list of ``DataSample`` contain generated results.
@@ -257,7 +257,7 @@ class CycleGAN(BaseTranslationModel):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             SampleList: A list of ``DataSample`` contain generated results.

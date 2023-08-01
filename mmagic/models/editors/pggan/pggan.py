@@ -92,7 +92,7 @@ class ProgressiveGrowingGAN(BaseGAN):
 
         self.cum_nkimgs = np.cumsum(self.nkimgs)
         self.curr_stage = 0
-        # dirty walkround for avoiding optimizer bug in resuming
+        # dirty workaround for avoiding optimizer bug in resuming
         self.prev_stage = prev_stage
         # actually nkimgs shown at the end of per training stage
         self._actual_nkimgs = []

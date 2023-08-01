@@ -43,7 +43,7 @@ class GLInpaintor(OneStageInpaintor):
         )
 
     `iter_tc` and `iter_td` correspond to the notation :math:`T_C` and
-    :math:`T_D` of theoriginal paper.
+    :math:`T_D` of the original paper.
 
     Args:
         generator (dict): Config for encoder-decoder style generator.
@@ -53,7 +53,7 @@ class GLInpaintor(OneStageInpaintor):
         loss_disc_shift (dict): Config for discriminator shift loss.
         loss_composed_percep (dict): Config for perceptural and style loss with
             composed image as input.
-        loss_out_percep (dict): Config for perceptural and style loss with
+        loss_out_percep (dict): Config for perceptual and style loss with
             direct output as input.
         loss_l1_hole (dict): Config for l1 loss in the hole.
         loss_l1_valid (dict): Config for l1 loss in the valid region.
