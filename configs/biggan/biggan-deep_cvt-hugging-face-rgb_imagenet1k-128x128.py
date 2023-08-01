@@ -25,11 +25,11 @@ model = dict(
         with_shared_embedding=True,
         sn_eps=1e-6,
         sn_style='torch',
-        init_type='ortho',
         act_cfg=dict(type='ReLU', inplace=True),
         concat_noise=True,
         auto_sync_bn=False,
-        rgb2bgr=True),
+        rgb2bgr=True,
+        init_cfg=dict(type='ortho')),
     discriminator=dict(
         type='BigGANDeepDiscriminator',
         input_scale=128,
@@ -37,9 +37,9 @@ model = dict(
         base_channels=128,
         sn_eps=1e-6,
         sn_style='torch',
-        init_type='ortho',
         act_cfg=dict(type='ReLU', inplace=True),
-        with_spectral_norm=True))
+        with_spectral_norm=True,
+        init_cfg=dict(type='ortho')))
 
 train_cfg = train_dataloader = optim_wrapper = None
 

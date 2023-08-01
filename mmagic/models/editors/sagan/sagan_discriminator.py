@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from mmengine.logging import MMLogger
-from mmengine.model import xavier_init
+from mmengine.model import BaseModule, xavier_init
 from mmengine.runner import load_checkpoint
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from torch.nn.init import xavier_uniform_
@@ -16,7 +16,7 @@ from mmagic.registry import MODELS
 
 @MODELS.register_module('SAGANDiscriminator')
 @MODELS.register_module()
-class ProjDiscriminator(nn.Module):
+class ProjDiscriminator(BaseModule):
     r"""Discriminator for SNGAN / Proj-GAN. The implementation is refer to
     https://github.com/pfnet-research/sngan_projection/tree/master/dis_models
 

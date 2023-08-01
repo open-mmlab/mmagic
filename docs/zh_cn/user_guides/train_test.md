@@ -1,151 +1,214 @@
-# 教程 4：训练与测试（待更新）
+# 教程 4：在MMagic环境下训练与测试
 
-## 使用预训练模型进行推理
+在该部分中，您将学到如何在MMagic环境下完成训练与测试
 
-我们提供用于在完整数据集上进行预训练模型评估和特定任务图像演示的测试脚本。
+我们提供如下教程：
 
-### 测试一个预训练模型
+- [预先准备](#预先准备)
+- [在MMagic中测试模型](#在MMagic中测试模型)
+  - [在单个GPU上测试](#在单个GPU上测试)
+  - [在多个GPU上测试](#在多个GPU上测试)
+  - [在Slurm上测试](#在Slurm上测试)
+  - [使用特定指标进行测试](#使用特定指标进行测试)
+- [在MMagic中训练模型](#在MMagic中训练模型)
+  - [在单个GPU上训练](#在单个GPU上训练)
+  - [在多个GPU上训练](#在多个GPU上训练)
+  - [在多个节点上训练](#在多个节点上训练)
+  - [在Slurm上训练](#在Slurm上训练)
+  - [使用特定的评估指标进行训练](#使用特定的评估指标进行训练)
 
-MMagic 使用 `MMDistributedDataParallel` 实现 **分布式**测试。
+## 预先准备
 
-#### 在单/多个 GPU 上进行测试
+用户需要首先 [准备数据集](../user_guides/dataset_prepare.md) 从而能够在MMagic环境中训练和测试。
 
-您可以使用以下命令在单/多个 GPU 上测试预训练模型。
+## 在MMagic中测试模型
+
+### 在单个GPU上测试
+
+您可以通过如下命令使用单个GPU来测试预训练模型。
 
 ```shell
-# 单 GPU 测试
-python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [--save-path ${IMAGE_SAVE_PATH}]
-
-# 多 GPU 测试
-./tools/dist_test.sh ${CONFIG_FILE} ${CHECKPOINT_FILE} ${GPU_NUM} [--out ${RESULT_FILE}] [--save-path ${IMAGE_SAVE_PATH}]
+python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE}
 ```
 
-例如
+例如：
 
 ```shell
-# 单 GPU 测试
-python tools/test.py configs/example_config.py work_dirs/example_exp/example_model_20200202.pth --out work_dirs/example_exp/results.pkl
-
-# 多 GPU 测试
-./tools/dist_test.sh configs/example_config.py work_dirs/example_exp/example_model_20200202.pth --save-path work_dirs/example_exp/results/
+python tools/test.py configs/example_config.py work_dirs/example_exp/example_model_20200202.pth
 ```
 
-#### 在 slurm 上测试
+### 在多个GPU上测试
 
-如果您在使用 [slurm](https://slurm.schedmd.com/) 管理的集群上运行 MMagic，则可以使用脚本 `slurm_test.sh`。（此脚本也支持单机测试。）
+MMagic支持使用多个GPU测试，能够极大地节约模型测试时间。
+可以通过如下命令使用多个GPU来测试预训练模型。
+
+```shell
+./tools/dist_test.sh ${CONFIG_FILE} ${CHECKPOINT_FILE} ${GPU_NUM}
+```
+
+例如：
+
+```shell
+./tools/dist_test.sh configs/example_config.py work_dirs/example_exp/example_model_20200202.pth
+```
+
+### 在Slurm上测试
+
+如果您在由 [slurm](https://slurm.schedmd.com/) 管理的集群上运行MMagic，可以使用脚本`slurm_test.sh`。（此脚本还支持单机测试。）
 
 ```shell
 [GPUS=${GPUS}] ./tools/slurm_test.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${CHECKPOINT_FILE}
 ```
 
-以下是使用 8 个 GPU 在作业名称为 `test` 的 `dev` 分区上测试示例模型的例子。
+下面是一个使用8个GPU在“dev”分区上测试一个示例模型的例子，作业名称为“test”。
 
 ```shell
 GPUS=8 ./tools/slurm_test.sh dev test configs/example_config.py work_dirs/example_exp/example_model_20200202.pth
 ```
 
-您可以查看 [slurm_test.sh](https://github.com/open-mmlab/mmagic/blob/main/tools/slurm_test.sh) 以获取完整的参数和环境变量。
+您可以检查 [slurm_test.sh](../../../tools/slurm_test.sh) 以获取完整的参数和环境变量。
 
-#### 可选参数
+### 使用特定指标进行测试
 
-- `--out`: 以 pickle 格式指定输出结果的文件名。 如果没有给出，结果将不会保存到文件中。
-- `--save-path`: 指定存储编辑图像的路径。 如果没有给出，图像将不会被保存。
-- `--seed`: 测试期间的随机种子。 此参数用于固定某些任务中的结果，例如*修复*。
-- `--deterministic`: 与 `--seed` 相关，此参数决定是否为 CUDNN 后端设置确定性的选项。如果指定该参数，会将 `torch.backends.cudnn.deterministic` 设置为 `True`，将 `torch.backends.cudnn.benchmark` 设置为 `False`。
-- `--cfg-options`:  如果指明，这里的键值对将会被合并到配置文件中。
-
-注：目前，我们不使用像 [MMDetection](https://github.com/open-mmlab/mmdetection) 那样的 `--eval` 参数来指定评估指标。 评估指标在配置文件中给出（参见 [config.md](../user_guides/config.md)）。
-
-## 训练一个模型
-
-MMagic 使用 `MMDistributedDataParallel` 实现 **分布式**测试。
-
-所有输出（日志文件和模型权重文件）都将保存到工作目录中，工作目录由配置文件中的 `work_dir` 指定。
-
-默认情况下，我们在多次迭代后评估验证集上的模型，您可以通过在训练配置中添加 `interval` 参数来更改评估间隔。
+MMagic 提供各种评**估值指标**，例如：MS-SSIM、SWD、IS、FID、Precision&Recall、PPL、Equivarience、TransFID、TransIS等。
+我们在[tools/test.py](https://github.com/open-mmlab/mmagic/tree/main/tools/test.py)中为所有模型提供了统一的评估脚本。
+如果用户想用一些指标来评估他们的模型，你可以像这样将 `metrics` 添加到你的配置文件中:
 
 ```python
-evaluation = dict(interval=1e4, by_epoch=False)  # 每一万次迭代进行一次评估。
+# 在文件 configs/styleganv2/stylegan2_c2_ffhq_256_b4x8_800k.py 的末尾
+metrics = [
+    dict(
+        type='FrechetInceptionDistance',
+        prefix='FID-Full-50k',
+        fake_nums=50000,
+        inception_style='StyleGAN',
+        sample_model='ema'),
+    dict(type='PrecisionAndRecall', fake_nums=50000, prefix='PR-50K'),
+    dict(type='PerceptualPathLength', fake_nums=50000, prefix='ppl-w')
+]
 ```
 
-### 在单/多个 GPU 上训练
+如上所述, `metrics` 由多个指标字典组成。 每个指标包含 `type` 来表示其类别。 `fake_nums` 表示模型生成的图像数量。
+有些指标会输出一个结果字典，您也可以设置 `prefix` 来指定结果的前缀。
+如果将FID的前缀设置为 `FID-Full-50k`，则输出的示例可能是
+
+```bash
+FID-Full-50k/fid: 3.6561  FID-Full-50k/mean: 0.4263  FID-Full-50k/cov: 3.2298
+```
+
+然后用户可以使用下面的命令测试模型:
 
 ```shell
-./tools/dist_train.sh ${CONFIG_FILE} ${GPU_NUM} [optional arguments]
+bash tools/dist_test.sh ${CONFIG_FILE} ${CKPT_FILE}
 ```
 
-可选参数是：
+如果您在 slurm 环境中，请使用如下命令切换到 [tools/slurm_test.sh](https://github.com/open-mmlab/mmagic/tree/main/tools/slurm_test.sh)：
 
-- `--no-validate` (**不建议**): 默认情况下，代码库将在训练期间每 k 次迭代执行一次评估。若要禁用此行为，请使用 `--no-validate`。
-- `--work-dir ${WORK_DIR}`: 覆盖配置文件中指定的工作目录。
-- `--resume-from ${CHECKPOINT_FILE}`: 从已有的模型权重文件恢复。
-- `--cfg-options`:  如果指明，这里的键值对将会被合并到配置文件中。
+```shell
+sh slurm_test.sh ${PLATFORM} ${JOBNAME} ${CONFIG_FILE} ${CKPT_FILE}
+```
 
-`resume-from` 和 `load-from` 之间的区别：
-`resume-from` 加载模型权重和优化器状态，迭代也从指定的检查点继承。 它通常用于恢复意外中断的训练过程。
-`load-from` 只加载模型权重，训练迭代从 0 开始，通常用于微调。
+## 在MMagic中训练模型
 
-#### 使用多节点训练
+MMagic支持多种训练方式:
 
-如果您有多个计算节点，而且他们可以通过 IP 互相访问，可以使用以下命令启动分布式训练：
+1. [在单个GPU上训练](#在单个GPU上训练)
+2. [在单个GPU上训练](#在单个GPU上训练)
+3. [在多个节点上训练](#在多个节点上训练)
+4. [在Slurm上训练](#在Slurm上训练)
 
-在第一个节点：
+Specifically, all outputs (log files and checkpoints) will be saved to the working directory,
+which is specified by `work_dir` in the config file.
+
+### 在单个GPU上训练
+
+```shell
+CUDA_VISIBLE=0 python tools/train.py configs/example_config.py --work-dir work_dirs/example
+```
+
+### 在多个节点上训练
+
+要在多台机器上启动分布式训练，这些机器可以通过IP访问，运行以下命令:
+
+在第一台机器上:
 
 ```shell
 NNODES=2 NODE_RANK=0 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train.sh $CONFIG $GPUS
 ```
 
-在第二个节点：
+在第二台机器上:
 
 ```shell
 NNODES=2 NODE_RANK=1 PORT=$MASTER_PORT MASTER_ADDR=$MASTER_ADDR tools/dist_train.sh $CONFIG $GPUS
 ```
 
-为提高网络通信速度，推荐使用高速网络设备，如 Infiniband 等。
-更多信息可参照[PyTorch 文档](https://pytorch.org/docs/1.11/distributed.html#launch-utility).
+为了提高网络通信速度，建议使用高速网络硬件，如Infiniband。
+请参考 [PyTorch docs](https://pytorch.org/docs/1.11/distributed.html#launch-utility) 以获取更多信息。
 
-### 在 slurm 上训练
+### 在多个GPU上训练
 
-如果您在使用 [slurm](https://slurm.schedmd.com/) 管理的集群上运行 MMagic，则可以使用脚本 `slurm_train.sh`。（此脚本也支持单机训练。）
+```shell
+./tools/dist_train.sh ${CONFIG_FILE} ${GPU_NUM} [optional arguments]
+```
+
+### 在Slurm上训练
+
+如果您在由 [slurm](https://slurm.schedmd.com/) 管理的集群上运行MMagic，可以使用脚本`slurm_train.sh`。（此脚本还支持单机测试。）
 
 ```shell
 [GPUS=${GPUS}] ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${WORK_DIR}
 ```
 
-以下是使用 8 个 GPU 在 `dev` 分区上训练*修复*模型的示例。
+下面是一个使用8个gpu在dev分区上训练inpainting模型的示例。
 
 ```shell
 GPUS=8 ./tools/slurm_train.sh dev configs/inpainting/gl_places.py /nfs/xxxx/gl_places_256
 ```
 
-您可以查看 [slurm_train.sh](https://github.com/open-mmlab/mmagic/blob/main/tools/slurm_train.sh) 以获取完整的参数和环境变量。
+你可以在 [slurm_train.sh](https://github.com/open-mmlab/mmagic/blob/master/tools/slurm_train.sh) 上查阅完整参数和环境变量。
 
-### 在一台机器上启动多个作业
+### 可选参数
 
-如果您在一台机器上启动多个作业，例如，在具有 8 个 GPU 的机器上进行 2 个 4-GPU 训练的作业，您需要为每个作业指定不同的端口（默认为 29500）以避免通信冲突。
+- `--amp`：此参数用于固定精度训练。
+- `--resume`：此参数用于在训练中止时自动恢复。
 
-```shell
-CUDA_VISIBLE_DEVICES=0,1,2,3 PORT=29500 ./tools/dist_train.sh ${CONFIG_FILE} 4
-CUDA_VISIBLE_DEVICES=4,5,6,7 PORT=29501 ./tools/dist_train.sh ${CONFIG_FILE} 4
-```
+## 使用特定的评估指标进行训练
 
-如果您使用 Slurm 启动训练作业，则需要修改配置文件（通常是配置文件的倒数第 6 行）以设置不同的通信端口。
-
-在 `config1.py` 中,
+受益于 `mmengine`的 `Runner`，我们可以在训练过程中对模型进行简单的评估，如下所示。
 
 ```python
-dist_params = dict(backend='nccl', port=29500)
+# 定义指标
+metrics = [
+    dict(
+        type='FrechetInceptionDistance',
+        prefix='FID-Full-50k',
+        fake_nums=50000,
+        inception_style='StyleGAN')
+]
+
+# 定义dataloader
+val_dataloader = dict(
+    batch_size=128,
+    num_workers=8,
+    dataset=dict(
+        type='BasicImageDataset',
+        data_root='data/celeba-cropped/',
+        pipeline=[
+            dict(type='LoadImageFromFile', key='img'),
+            dict(type='Resize', scale=(64, 64)),
+            dict(type='PackInputs')
+        ]),
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    persistent_workers=True)
+
+# 定义 val interval
+train_cfg = dict(by_epoch=False, val_begin=1, val_interval=10000)
+
+# 定义 val loop 和 evaluator
+val_cfg = dict(type='MultiValLoop')
+val_evaluator = dict(type='Evaluator', metrics=metrics)
 ```
 
-在 `config2.py` 中,
+可以设置 `val_begin` 和 `val_interval` 来调整何时开始验证和验证间隔。
 
-```python
-dist_params = dict(backend='nccl', port=29501)
-```
-
-然后您可以使用 `config1.py` 和 `config2.py` 启动两个作业。
-
-```shell
-CUDA_VISIBLE_DEVICES=0,1,2,3 GPUS=4 ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} config1.py ${WORK_DIR}
-CUDA_VISIBLE_DEVICES=4,5,6,7 GPUS=4 ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} config2.py ${WORK_DIR}
-```
+有关指标的详细信息，请参考 [metrics' guide](./metrics.md).

@@ -4,13 +4,14 @@ from copy import deepcopy
 import numpy as np
 import torch.nn as nn
 from mmcv.cnn import ConvModule
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 from .wgan_gp_module import ConvLNModule, WGANDecisionHead
 
 
 @MODELS.register_module()
-class WGANGPDiscriminator(nn.Module):
+class WGANGPDiscriminator(BaseModule):
     r"""Discriminator for WGANGP.
 
     Implementation Details for WGANGP discriminator the same as training
@@ -28,6 +29,7 @@ class WGANGPDiscriminator(nn.Module):
         in_scale (int): The scale of the input image.
         conv_module_cfg (dict, optional): Config for the convolution module
             used in this discriminator. Defaults to None.
+        init_cfg (dict, optional): Initialization config dict.
     """
     _default_channels_per_scale = {
         '4': 512,
@@ -49,8 +51,12 @@ class WGANGPDiscriminator(nn.Module):
 
     _default_upsample_cfg = dict(type='nearest', scale_factor=2)
 
-    def __init__(self, in_channel, in_scale, conv_module_cfg=None):
-        super().__init__()
+    def __init__(self,
+                 in_channel,
+                 in_scale,
+                 conv_module_cfg=None,
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
         # set initial params
         self.in_channel = in_channel
         self.in_scale = in_scale

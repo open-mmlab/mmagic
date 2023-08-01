@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import numpy as np
 import torch.nn as nn
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 from ..stylegan1 import EqualLinearActModule
@@ -8,7 +9,7 @@ from ..stylegan2 import ConvDownLayer, ModMBStddevLayer, ResBlock
 
 
 @MODELS.register_module()
-class MSStyleGAN2Discriminator(nn.Module):
+class MSStyleGAN2Discriminator(BaseModule):
     """StyleGAN2 Discriminator.
 
     The architecture of this discriminator is proposed in StyleGAN2. More
