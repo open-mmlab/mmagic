@@ -47,7 +47,7 @@ def add_watermark_np(input_image_array, watermark_text="AI Generated"):
 
     # Initialize text image
     txt = Image.new('RGBA', image.size, (255, 255, 255, 0))
-    font = ImageFont.truetype('./my_code/arial.ttf', round(25/512*image.size[0]))
+    font = ImageFont.truetype('./demo/demo_DragGAN/arial.ttf', round(25/512*image.size[0]))
     d = ImageDraw.Draw(txt)
 
     text_width, text_height = font.getsize(watermark_text)
@@ -203,7 +203,7 @@ class Renderer:
         return x
 
     def init_network(self, res,
-        pkl             = None,
+        ckpt_pth        = None,
         w0_seed         = 0,
         w_load          = None,
         w_plus          = True,
@@ -215,27 +215,11 @@ class Renderer:
         **kwargs
         ):
         # Dig up network details.
-        # self.pkl = pkl
-        # G = self.get_network(pkl, 'G_ema')
         editor = MMagicInferencer('styleganv2', 
                           model_setting=6,
-                          model_ckpt='./my_code/new_ckpts/stylegan2_lions_512_pytorch_mmagic.pth',
+                          model_ckpt=ckpt_pth,
                           )
         self.editor = editor
-        # res.img_resolution = G.img_resolution
-        # res.num_ws = G.num_ws
-        # res.has_noise = any('noise_const' in name for name, _buf in G.synthesis.named_buffers())
-        # res.has_input_transform = (hasattr(G.synthesis, 'input') and hasattr(G.synthesis.input, 'transform'))
-
-        # Set input transform.
-        # if res.has_input_transform:
-        #     m = np.eye(3)
-        #     try:
-        #         if input_transform is not None:
-        #             m = np.linalg.inv(np.asarray(input_transform))
-        #     except np.linalg.LinAlgError:
-        #         res.error = CapturedException()
-        #     G.synthesis.input.transform.copy_(torch.from_numpy(m))
 
         # Generate random latents.
         self.w0_seed = w0_seed
@@ -243,20 +227,14 @@ class Renderer:
 
         if self.w_load is None:
             # Generate random latents.
-            # z = torch.from_numpy(np.random.RandomState(w0_seed).randn(1, 512)).to(self._device, dtype=self._dtype)
+            z = torch.from_numpy(np.random.RandomState(w0_seed).randn(1, 512)).to(torch.float32).requires_grad_(True)
 
             # Run mapping network.
-            # label = torch.zeros([1, G.c_dim], device=self._device)
-            # import ipdb; ipdb.set_trace()
-            z=torch.from_numpy(np.random.RandomState(w0_seed).randn(1, 512)).to(torch.float32).requires_grad_(True)
-            # import ipdb; ipdb.set_trace()
-            sample_kwargs = { 'truncation': 0.7, 'return_noise': True, 'return_features': True} # 才是forward函数所输入的参数
-            # sample_kwargs = { 'truncation': 0.7}
+            sample_kwargs = { 'truncation': trunc_psi, 'return_noise': True, 'return_features': True} 
             extra_parameters={'sample_kwargs': sample_kwargs, 'num_batches': 1, 'noise': z, 'sample_model': 'ema', 'infer_with_grad': True}
-
             results = self.editor.infer(extra_parameters=extra_parameters)
-            # import ipdb; ipdb.set_trace()
-            w = results[0]['latent'].unsqueeze(0)
+            
+            w = results[0]['latent'].unsqueeze(0) # [1, 16, n_dim]
         else:
             w = self.w_load.clone().to(self._device)
 
@@ -303,11 +281,10 @@ class Renderer:
         to_pil          = False,
         **kwargs
     ):
-        editor = self.editor
         ws = self.w
         if ws.dim() == 2:
             ws = ws.unsqueeze(1).repeat(1,6,1)
-        ws = torch.cat([ws[:,:6,:], self.w0[:,6:,:]], dim=1) # [1, 16, 512]
+        ws = torch.cat([ws[:,:6,:], self.w0[:,6:,:]], dim=1) # [1, 16, n_dim]
         if hasattr(self, 'points'):
             if len(points) != len(self.points):
                 reset = True
@@ -317,21 +294,13 @@ class Renderer:
         self.points = points
 
         # Run synthesis network.
-        # import ipdb; ipdb.set_trace()
-        # label = torch.zeros([1, G.c_dim], device=self._device)
-        # img, feat = G(ws, label, truncation_psi=trunc_psi, noise_mode=noise_mode, input_is_w=True, return_feature=True)
-        # import ipdb; ipdb.set_trace()
         sample_kwargs = {'truncation': 1, 'return_noise': True, 'return_features': True, 'input_is_latent': True} # 才是forward函数所输入的参数
-            # sample_kwargs = { 'truncation': 0.7}
         extra_parameters={'sample_kwargs': sample_kwargs, 'num_batches': 1, 'noise': ws[0][:1], 'sample_model': 'ema', 'infer_with_grad': True}
-
-        results = self.editor.infer(extra_parameters=extra_parameters) # x
-        img = results[0]['fake_img'].unsqueeze(0) / 127.5  - 1 # requires_grad=True
         
-        feat_5 = results[0]['feats'].unsqueeze(0) # 要让requires_grad=True
-        # h, w = G.img_resolution, G.img_resolution
-        # import ipdb; ipdb.set_trace()
-        h, w = 512, 512
+        results = self.editor.infer(extra_parameters=extra_parameters) 
+        img = results[0]['fake_img'].unsqueeze(0) / 127.5  - 1. # requires_grad==True
+        feat_5 = results[0]['feats'].unsqueeze(0) # requires_grad==True
+        h, w = img.shape[-1], img.shape[-2]
 
         if is_drag:
             X = torch.linspace(0, h, h)

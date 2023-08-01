@@ -36,7 +36,7 @@ The style-based GAN architecture (StyleGAN) yields state-of-the-art results in d
 | [stylegan2_c2_8xb4-800kiters_ffhq-256x256](./stylegan2_c2_8xb4-800kiters_ffhq-256x256.py) |    FFHQ     |  our training   | 3.992  |    69.012    |  40.417   | [model](https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth) |
 | [stylegan2_c2_8xb4_ffhq-1024x1024](./stylegan2_c2_8xb4_ffhq-1024x1024.py) |    FFHQ     |  our training   | 2.8185 |    68.236    |  49.583   | [model](https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth) |
 | [stylegan2_c2_8xb4_lsun-car-384x512](./stylegan2_c2_8xb4_lsun-car-384x512.py) |  LSUN_CAR   |  our training   | 2.4116 |    66.760    |  50.576   | [model](https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_lsun-car_384x512_b4x8_1800k_20210424_160929-fc9072ca.pth) |
-| [stylegan2_lion_512x512](./stylegan2_lion_512x512.py) |  FHQ   |  DragGAN   | 2.4116 |    0.0    |   0.0   | [model](./my_code/path_files/stylegan2_lions_512_pytorch.pth) |
+| [stylegan2_lion_512x512](./stylegan2_lion_512x512.py) |  FHQ   |  DragGAN   | 2.4116 |    0.0    |   0.0   | [model](./checkpoints/stylegan2_lions_512_pytorch.pth) |
 ## FP16 Support and Experiments
 
 Currently, we have supported FP16 training for StyleGAN2, and here are the results for the mixed-precision training. (Experiments for FFHQ1024 will come soon.)

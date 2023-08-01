@@ -510,7 +510,7 @@ class StyleGAN2Generator(BaseModule):
 
         if return_latent_only:
             return latent
-        # torch.save( latent, './my_code/latent.pt')
+
         feats = []
         with autocast(enabled=self.fp16_enabled):
             # 4x4 stage

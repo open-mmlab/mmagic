@@ -10,16 +10,16 @@ from PIL import Image
 
 import dnnlib
 import sys
-sys.path.append('./my_code')
+sys.path.append('./demo/demo_DragGAN')
 from gradio_utils import (ImageMask, draw_mask_on_image, draw_points_on_image,
                           get_latest_points_pair, get_valid_mask,
                           on_change_single_global_state)
 
-from render import Renderer, add_watermark_np
+from demo.demo_DragGAN.renderer import Renderer, add_watermark_np
 
 parser = ArgumentParser()
 parser.add_argument('--share', action='store_true',default='True')
-parser.add_argument('--cache-dir', type=str, default='./my_code/new_ckpts')
+parser.add_argument('--cache-dir', type=str, default='./checkpoints')
 parser.add_argument(
     "--listen",
     action="store_true",
@@ -77,7 +77,7 @@ def init_images(global_state):
 
     state['renderer'].init_network(
         state['generator_params'],  # res
-        None,  # pkl
+        os.path.join(cache_dir, state['pretrained_weight']),  # StyleGAN2 checkpoint path from Official DragGAN
         state['params']['seed'],  # w0_seed,
         None,  # w_load
         state['params']['latent_space'] == 'w+',  # w_plus

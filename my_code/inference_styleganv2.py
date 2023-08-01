@@ -17,7 +17,7 @@ extra_parameters={'sample_kwargs': sample_kwargs, 'num_batches': 1, 'noise': lat
 # editor = MMagicInferencer('styleganv2', model_config='', model_ckpt=, model_name=)
 editor = MMagicInferencer('styleganv2', 
                           model_setting=6,
-                          model_ckpt='./my_code/new_ckpts/stylegan2_lions_512_pytorch_mmagic.pth',
+                          model_ckpt='./checkpoints/stylegan2_lions_512_pytorch_mmagic.pth',
                           )
 # basegan: extra_parameters（最特殊的参数）
 results = editor.infer(result_out_dir=result_out_dir, extra_parameters=extra_parameters, infer_with_grad=True)
