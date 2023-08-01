@@ -16,13 +16,13 @@
 
 **回答3：** 您可以使用工具/数据中的脚本制作 LMDB 文件。更多详情请参见[数据集准备](https://github.com/sijiua/mmagic/blob/dev-1.x/docs/en/user_guides/dataset_prepare.md)教程。
 
-**问题4：** 为什么使用了 MMCV==xxx，但在导入 mmgen 时却出现了不兼容？
+**问题4：** 为什么使用了 MMCV==xxx，但在导入 mmagic 时却出现了不兼容？
 
-**回答4：** 这是因为 MMCV 和 MMGeneration 的版本不兼容。兼容的 MMGeneration 和 MMCV 版本如下所示。请选择正确的 MMCV 版本以避免安装问题。
+**回答4：** 这是因为 MMCV 和 MMagic 的版本不兼容。兼容的 MMagic 和 MMCV 版本如下所示。请选择正确的 MMCV 版本以避免安装问题。
 
-| MMGeneration 版本 |    MMCV 版本     |
-| :---------------: | :--------------: |
-|      master       | mmcv-full>=2.0.0 |
+| MMagic版本 |    MMCV 版本     |
+| :--------: | :--------------: |
+|   master   | mmcv-full>=2.0.0 |
 
 注意：如果已安装 mmcv，则需要先运行 pip uninstall mmcv。如果同时安装了 mmcv 和 mmcv-full，则会出现模块未找到错误（ModuleNotFoundError）。
 **问题5：** 如何忽略基本配置中的某些字段？
