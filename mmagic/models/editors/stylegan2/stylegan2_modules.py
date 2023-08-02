@@ -327,7 +327,8 @@ class ModulatedStyleConv(BaseModule):
                  style_mod_cfg=dict(bias_init=1.),
                  style_bias=0.,
                  fp16_enabled=False,
-                 conv_clamp=256):
+                 conv_clamp=256,
+                 fixed_noise=False):
         super().__init__()
 
         # add support for fp16
@@ -346,7 +347,7 @@ class ModulatedStyleConv(BaseModule):
             style_bias=style_bias,
             fp16_enabled=fp16_enabled)
 
-        self.noise_injector = NoiseInjection()
+        self.noise_injector = NoiseInjection(fixed_noise=fixed_noise)
         self.activate = _FusedBiasLeakyReLU(out_channels)
 
     def forward(self,
@@ -375,13 +376,13 @@ class ModulatedStyleConv(BaseModule):
             if add_noise:
                 if return_noise:
                     out, noise = self.noise_injector(
-                        out, noise=noise, return_noise=return_noise)
+                        out, noise=noise, return_noise=return_noise) # self.noise_injector.bias 0.0310
                 else:
-                    out = self.noise_injector(
+                    out = self.noise_injector( # 改变了一点
                         out, noise=noise, return_noise=return_noise)
 
             # TODO: FP16 in activate layers
-            out = self.activate(out)
+            out = self.activate(out) # 到最后结果 self.activate.bias
 
             if self.fp16_enabled:
                 out = torch.clamp(

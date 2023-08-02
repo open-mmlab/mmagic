@@ -17,7 +17,8 @@ ema_half_life = 10.  # G_smoothing_kimg
 model = dict(
     generator=dict(out_size=512,
                    update_mean_latent_with_ema=True,
-                   bgr2rgb=False),  # 我们应该在这里改model
+                   bgr2rgb=False,
+                   fixed_noise=True),  
     discriminator=dict(in_size=512), # useless
     ema_config=dict(
         type='ExponentialMovingAverage',

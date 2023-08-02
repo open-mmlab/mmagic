@@ -120,7 +120,8 @@ class StyleGAN2Generator(BaseModule):
                  num_fp16_scales=0,
                  fp16_enabled=False,
                  bgr2rgb=False,
-                 pretrained=None):
+                 pretrained=None,
+                 fixed_noise=False):
         super().__init__()
         self.out_size = out_size
         self.style_channels = style_channels
@@ -189,7 +190,8 @@ class StyleGAN2Generator(BaseModule):
             kernel_size=3,
             style_channels=style_channels,
             blur_kernel=blur_kernel,
-            fp16_enabled=fp16_enabled)
+            fp16_enabled=fp16_enabled,
+            fixed_noise=fixed_noise)
         self.to_rgb1 = ModulatedToRGB(
             self.channels[4],
             style_channels,
