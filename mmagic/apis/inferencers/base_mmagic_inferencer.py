@@ -130,9 +130,10 @@ class BaseMMagicInferencer(BaseInferencer):
         Returns:
             Union[Dict, List[Dict]]: Results of inference pipeline.
        """
-        if 'infer_with_grad' in kwargs['extra_parameters'].keys():
-            if kwargs['extra_parameters']['infer_with_grad']:
-                results = self.base_call(**kwargs)
+        if 'extra_parameters' in kwargs.keys():
+            if 'infer_with_grad' in kwargs['extra_parameters'].keys():
+                if kwargs['extra_parameters']['infer_with_grad']:
+                    results = self.base_call(**kwargs)
         else:
             with torch.no_grad():
                 results = self.base_call(**kwargs)

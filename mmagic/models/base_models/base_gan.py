@@ -349,16 +349,17 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 generator = self.generator_ema
             else:
                 generator = self.generator
-            if 'return_noise' in sample_kwargs.keys():
-                outputs = generator(noise, **sample_kwargs)
+            if sample_kwargs:
+                if 'return_noise' in sample_kwargs.keys():
+                    outputs = generator(noise, **sample_kwargs)
             else:
+                sample_kwargs = {}
                 outputs = generator(noise, return_noise=False, **sample_kwargs) # no need to be False all time
-            if isinstance(outputs, dict): # 是字典的话，直接返回
+            if isinstance(outputs, dict):
                 latent = outputs['latent']
                 feats = outputs['feats']
                 outputs = outputs['fake_img']
             # else:t
-            # import ipdb; ipdb.set_trace() # 为什么只能接受图像tensor输入呢？
             
             outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
@@ -369,9 +370,9 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 gen_sample.gt_img = inputs['img']
             gen_sample.fake_img = outputs
             gen_sample.noise = noise
-            # import ipdb; ipdb.set_trace()
-            gen_sample.latent = latent
-            gen_sample.feats = feats
+            if isinstance(outputs, dict):
+                gen_sample.latent = latent
+                gen_sample.feats = feats
             gen_sample.sample_kwargs = deepcopy(sample_kwargs)
             gen_sample.sample_model = sample_model
             batch_sample_list = gen_sample.split(allow_nonseq_value=True, )

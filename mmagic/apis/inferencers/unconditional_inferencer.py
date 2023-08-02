@@ -86,6 +86,8 @@ class UnconditionalInferencer(BaseMMagicInferencer):
         result = {}
         result['fake_img'] = data_sample.fake_img.data.cpu()
         result['noise'] = data_sample.noise.data.cpu()
-        result['latent'] = data_sample.latent
-        result['feats'] = data_sample.feats
+        if hasattr(data_sample, 'latent'):
+            result['latent'] = data_sample.latent
+        if hasattr(data_sample, 'feats'):
+            result['feats'] = data_sample.feats
         return result
