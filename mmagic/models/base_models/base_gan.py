@@ -370,8 +370,9 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 gen_sample.gt_img = inputs['img']
             gen_sample.fake_img = outputs
             gen_sample.noise = noise
-            if isinstance(outputs, dict):
+            if 'latent' in locals():
                 gen_sample.latent = latent
+            if 'feats' in locals():
                 gen_sample.feats = feats
             gen_sample.sample_kwargs = deepcopy(sample_kwargs)
             gen_sample.sample_model = sample_model
@@ -397,7 +398,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             gen_sample.noise = noise
             gen_sample.sample_kwargs = deepcopy(sample_kwargs)
             gen_sample.sample_model = 'ema/orig'
-            batch_sample_list = gen_sample.split(allow_nonseq_value=True) # 这一步出错
+            batch_sample_list = gen_sample.split(allow_nonseq_value=True)
 
         return batch_sample_list
 
