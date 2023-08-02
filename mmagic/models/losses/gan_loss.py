@@ -19,7 +19,7 @@ class GANLoss(nn.Module):
     """Define GAN loss.
 
     Args:
-        gan_type (str): Support 'vanilla', 'lsgan', 'wgan', 'hinge'.
+        gan_type (str): Support 'vanilla', 'lsgan', 'wgan', 'hinge', 'l1'.
         real_label_val (float): The value for real label. Default: 1.0.
         fake_label_val (float): The value for fake label. Default: 0.0.
         loss_weight (float): Loss weight. Default: 1.0.
@@ -48,6 +48,8 @@ class GANLoss(nn.Module):
             self.loss = self._wgan_loss
         elif self.gan_type == 'hinge':
             self.loss = nn.ReLU()
+        elif self.gan_type == 'l1':
+            self.loss = nn.L1Loss()
         else:
             raise NotImplementedError(
                 f'GAN type {self.gan_type} is not implemented.')

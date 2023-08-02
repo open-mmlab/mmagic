@@ -27,10 +27,56 @@ We present a new end-to-end generative adversarial network (GAN) for single imag
   <img src="https://raw.githubusercontent.com/VITA-Group/DeblurGANv2/master/doc_images/restore_visual.png" width="800"/>
  </div>
 
-|                      Model                      |      Dataset       |      G Model       |  D Model   | PSNR/<br/>SSIM |                                           Download                                            |
-| :---------------------------------------------: | :----------------: | :----------------: | :--------: | :------------: | :-------------------------------------------------------------------------------------------: |
-| [fpn_inception](./deblurganv2_fpn_inception.py) | GoPro Test Dataset | InceptionResNet-v2 | double_gan |  29.55/ 0.934  | [model](https://drive.google.com/uc?export=view&id=1UXcsRVW-6KF23_TNzxw-xC0SzaMfXOaR) \\ [log](<>) |
-| [fpn_mobilenet](./deblurganv2_fpn_mobilenet.py) | GoPro Test Dataset |     MobileNet      | double_gan |  28.17/ 0.925  | [model](https://drive.google.com/uc?export=view&id=1JhnT4BBeKBBSLqTo6UsJ13HeBXevarrU) \\ [log](<>) |
+|                           Model                            |      Dataset       |      G Model       |  D Model   | PSNR/<br/>SSIM |                                      Download                                      |
+| :--------------------------------------------------------: | :----------------: | :----------------: | :--------: | :------------: | :--------------------------------------------------------------------------------: |
+| [fpn_inception](./deblurganv2_fpn-inception_1xb1_gopro.py) | GoPro Test Dataset | InceptionResNet-v2 | double_gan |  29.55/ 0.934  | [model](https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception) \\ [log](<>) |
+| [fpn_mobilenet](./deblurganv2_fpn-mobilenet_1xb1_gopro.py) | GoPro Test Dataset |     MobileNet      | double_gan |  28.17/ 0.925  | [model](https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-mobilenet) \\ [log](<>) |
+
+## Quick Start
+
+**Train**
+
+<details>
+<summary>Train Instructions</summary>
+
+You can use the following commands to train a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu train
+CUDA_VISIBLE_DEVICES=-1 python tools/train.py configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py
+
+# single-gpu train
+python tools/train.py configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py
+
+# multi-gpu train
+./tools/dist_train.sh configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py 8
+```
+
+For more details, you can refer to **Train a model** part in [train_test.md](/docs/en/user_guides/train_test.md#Train-a-model-in-MMagic).
+
+</details>
+
+**Test**
+
+<details>
+<summary>Test Instructions</summary>
+
+You can use the following commands to test a model with cpu or single/multiple GPUs.
+
+```shell
+# cpu test
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception
+
+# single-gpu test
+python tools/test.py configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception
+
+# multi-gpu test
+./tools/dist_test.sh configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception 8
+```
+
+For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).
+
+</details>
 
 ## Citation
 

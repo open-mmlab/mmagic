@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from mmagic.registry import MODELS
 from .deblurganv2_util import MobileNetV2, get_norm_layer, inceptionresnetv2
 
-model_list = ['FPNInception', 'FPNMobileNet', 'FPNInceptionSimple']
+backbone_list = ['FPNInception', 'FPNMobileNet', 'FPNInceptionSimple']
 
 
 class FPNHead(nn.Module):
@@ -553,14 +553,14 @@ class DeblurGanV2Generator:
         model (Str): Type of the generator  model
     """
 
-    def __new__(cls, model, *args, **kwargs):
-        if model == 'FPNInception':
+    def __new__(cls, backbone, *args, **kwargs):
+        if backbone == 'FPNInception':
             return FPNInception(*args, **kwargs)
-        elif model == 'FPNMobileNet':
+        elif backbone == 'FPNMobileNet':
             return FPNMobileNet(*args, **kwargs)
-        elif model == 'FPNInceptionSimple':
+        elif backbone == 'FPNInceptionSimple':
             return FPNInceptionSimple(*args, **kwargs)
         else:
             raise Exception('Generator model {} not found, '
                             'Please use the following models: '
-                            '{}'.format(model, model_list))
+                            '{}'.format(backbone, backbone_list))

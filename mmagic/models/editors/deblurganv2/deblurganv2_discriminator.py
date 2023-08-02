@@ -7,10 +7,9 @@ import torch.nn as nn
 from mmagic.registry import MODELS
 from .deblurganv2_util import get_norm_layer
 
-model_list = ['DoubleGan', 'MultiScale', 'NoGan', 'PatchGan']
+backbone_list = ['DoubleGan', 'MultiScale', 'NoGan', 'PatchGan']
 
 
-# Defines the PatchGAN discriminator with the specified arguments.
 class NLayerDiscriminator(nn.Module):
     """Defines the PatchGAN discriminator with the specified arguments."""
 
@@ -244,10 +243,7 @@ class DoubleGan(nn.Module):
             n_layers=d_layers,
             norm_layer=get_norm_layer(norm_type=norm_layer),
             use_sigmoid=False)
-        # patch_gan = nn.DataParallel(patch_gan)
         self.full_gan = get_fullD(norm_layer)
-        # full_gan = nn.DataParallel(full_gan)
-        # self.model_d = dict(patch=patch_gan, full=full_gan)
 
     def forward(self, x):
         """Forward function.
@@ -317,16 +313,16 @@ class DeblurGanV2Discriminator:
         model (Str): Type of the discriminator model
     """
 
-    def __new__(cls, model, *args, **kwargs):
-        if model == 'DoubleGan':
+    def __new__(cls, backbone, *args, **kwargs):
+        if backbone == 'DoubleGan':
             return DoubleGan(*args, **kwargs)
-        elif model == 'NoGan' or model == '':
+        elif backbone == 'NoGan' or backbone == '':
             return super().__new__(cls)
-        elif model == 'PatchGan':
+        elif backbone == 'PatchGan':
             return PatchGan(*args, **kwargs)
-        elif model == 'MultiScale':
+        elif backbone == 'MultiScale':
             return MultiScale(*args, **kwargs)
         else:
             raise Exception('Discriminator model {} not found, '
                             'Please use the following models: '
-                            '{}'.format(model, model_list))
+                            '{}'.format(backbone, backbone_list))

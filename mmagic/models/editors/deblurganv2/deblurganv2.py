@@ -7,9 +7,9 @@ from mmengine.model import BaseModel
 from mmengine.optim import OptimWrapperDict
 from torch import nn
 
+from mmagic.models.losses import AdvLoss
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
-from .deblurganv2_util import get_disc_loss, get_pixel_loss
 
 ModelType = Union[Dict, nn.Module]
 
@@ -31,13 +31,11 @@ class DeblurGanV2(BaseModel):
 
         super().__init__(
             init_cfg=init_cfg, data_preprocessor=data_preprocessor)
-        # generator
         if isinstance(generator, dict):
             self.generator = MODELS.build(generator)
         else:
             self.generator = generator
 
-        # discriminator
         if discriminator:
             if isinstance(generator, dict):
                 self.discriminator = MODELS.build(discriminator)
@@ -51,35 +49,22 @@ class DeblurGanV2(BaseModel):
 
         self.epoch_num = 0
         self.warmup_num = warmup_num
-        self.disc_steps = 1 if self.train_cfg is None else self.train_cfg.get(
-            'disc_steps', 1)
-        self.disc_repeat = 1 if self.train_cfg is None else self.train_cfg.get(
-            'disc_repeat', 1)
-        self.disc_init_steps = (0 if self.train_cfg is None else
-                                self.train_cfg.get('disc_init_steps', 0))
+
         self.adv_lambda = adv_lambda
 
         self.register_buffer('step_counter', torch.tensor(0), False)
 
-        # loss
-        # self.gan_loss = None
-        # self.perceptual_loss = None
-        if isinstance(pixel_loss, dict):
-            self.pixel_loss = MODELS.build(pixel_loss)
-        elif isinstance(pixel_loss, str):
-            self.pixel_loss = get_pixel_loss(pixel_loss)
+        self.pixel_loss = MODELS.build(pixel_loss)
 
-        if isinstance(disc_loss, dict):
-            self.disc_loss = MODELS.build(disc_loss)
-        elif isinstance(disc_loss, str):
-            self.disc_loss = get_disc_loss(disc_loss)
+        if disc_loss:
+            if isinstance(disc_loss, dict):
+                self.disc_loss = MODELS.build(disc_loss)
+            else:
+                self.disc_loss = AdvLoss(disc_loss)
         else:
             self.disc_loss = None
-        if self.disc_loss:
+        if self.disc_loss and getattr(self.discriminator, 'full_gan', None):
             self.disc_loss2 = copy.deepcopy(self.disc_loss)
-
-        # self.adv_trainer = GANFactory().get_adversarial_trainer(
-        #     self.discriminator.d_name, self.discriminator, self.disc_loss)
 
     def forward(self,
                 inputs: torch.Tensor,
@@ -127,6 +112,9 @@ class DeblurGanV2(BaseModel):
 
                 - If ``mode == loss``, return a ``dict`` of loss tensor used
                   for backward and logging.
+                - If ``mode == val``, return a ``list`` of
+                  :obj:`BaseDataElement` for computing metric
+                  and getting inference result.
                 - If ``mode == predict``, return a ``list`` of
                   :obj:`BaseDataElement` for computing metric
                   and getting inference result.
@@ -183,7 +171,6 @@ class DeblurGanV2(BaseModel):
             destructed_input = self.data_preprocessor.destruct(
                 inputs, data_samples, 'img')
             data_samples.set_tensor_data({'input': destructed_input})
-        # split to list of data samples
         data_samples = data_samples.split()
         predictions = predictions.split()
 
@@ -210,10 +197,7 @@ class DeblurGanV2(BaseModel):
 
         if torch.cuda.is_available():
             inputs = inputs.cuda()
-
-        # feats = self.generator(img, **kwargs)
         feats = self.generator(inputs)
-        # feats = (feats + 1) / 2.0
         return feats
 
     def forward_inference(self,
@@ -235,8 +219,6 @@ class DeblurGanV2(BaseModel):
 
         feats = self.forward_tensor(inputs, data_samples, **kwargs)
         feats = self.data_preprocessor.destruct(feats, data_samples)
-
-        # create a stacked data sample here
         predictions = DataSample(pred_img=feats.cpu())
 
         return predictions
@@ -271,8 +253,7 @@ class DeblurGanV2(BaseModel):
             list: The predictions of given data.
         """
         data = self.data_preprocessor(data, False)
-        return self._run_forward(data, mode='val')  # type: ignore
-
+        return self._run_forward(data, mode='val')
         self.epoch_num += 1
 
     def test_step(self, data: Union[dict, tuple, list]) -> list:
@@ -285,7 +266,7 @@ class DeblurGanV2(BaseModel):
             list: The predictions of given data.
         """
         data = self.data_preprocessor(data, False)
-        return self._run_forward(data, mode='predict')  # type: ignore
+        return self._run_forward(data, mode='predict')
 
     def _run_forward(self, data: Union[dict, tuple, list],
                      mode: str) -> Union[Dict[str, torch.Tensor], list]:
@@ -335,20 +316,12 @@ class DeblurGanV2(BaseModel):
         with g_optim_wrapper.optim_context(self):
             batch_outputs = self.forward_train(batch_inputs, data_samples)
 
-        # if self.if_run_d() or True:
-        # set_requires_grad(self.discriminator, True)
-
-        for _ in range(self.disc_repeat):
-            # detach before function call to resolve PyTorch2.0 compile bug
-            log_vars_d = self.d_step_with_optim(
-                batch_outputs=batch_outputs.detach(),
-                batch_gt_data=batch_gt_data,
-                optim_wrapper=optim_wrapper)
+        log_vars_d = self.d_step_with_optim(
+            batch_outputs=batch_outputs.detach(),
+            batch_gt_data=batch_gt_data,
+            optim_wrapper=optim_wrapper)
 
         log_vars.update(log_vars_d)
-
-        # if self.if_run_g() or True:
-        # set_requires_grad(self.discriminator, False)
 
         log_vars_d = self.g_step_with_optim(
             batch_outputs=batch_outputs,
@@ -364,8 +337,7 @@ class DeblurGanV2(BaseModel):
 
         return log_vars
 
-    def g_step_double(self, batch_outputs: torch.Tensor,
-                      batch_gt_data: torch.Tensor):
+    def g_step(self, batch_outputs: torch.Tensor, batch_gt_data: torch.Tensor):
         """G step of DobuleGAN: Calculate losses of generator.
 
         Args:
@@ -377,58 +349,36 @@ class DeblurGanV2(BaseModel):
         """
 
         losses = dict()
+        loss_gx = self.pixel_loss(batch_outputs, batch_gt_data)
+        batch_outputs2 = ((batch_outputs + 1) / 2.0 -
+                          self.pixel_loss.vgg.mean) / self.pixel_loss.vgg.std
+        batch_gt_data2 = ((batch_gt_data + 1) / 2.0 -
+                          self.pixel_loss.vgg.mean) / self.pixel_loss.vgg.std
+        loss_gp = torch.nn.MSELoss()(batch_outputs2, batch_gt_data2)
+        losses['loss_g_content'] = 0.006 * loss_gx[0] + 0.5 * loss_gp
 
-        # pix loss
-        if self.pixel_loss:
-            losses['loss_g_content'] = self.pixel_loss(batch_outputs,
-                                                       batch_gt_data)
-
-        losses['loss_g_adv'] = self.adv_lambda * (self.disc_loss.get_g_loss(
-            self.discriminator.patch_gan, batch_outputs,
-            batch_gt_data) + self.disc_loss2.get_g_loss(
-                self.discriminator.full_gan, batch_outputs, batch_gt_data)) / 2
+        if getattr(self.discriminator, 'full_gan', None):
+            losses['loss_g_adv'] = self.adv_lambda * (self.disc_loss(
+                self.discriminator.patch_gan,
+                batch_outputs,
+                batch_gt_data,
+                model='generator') + self.disc_loss2(
+                    self.discriminator.full_gan,
+                    batch_outputs,
+                    batch_gt_data,
+                    model='generator')) / 2
+        else:
+            losses['loss_g_adv'] = self.adv_lambda * (
+                self.disc_loss(
+                    self.discriminator.patch_gan,
+                    batch_outputs,
+                    batch_gt_data,
+                    model='generator'))
         losses['loss_g'] = losses['loss_g_content'] + losses['loss_g_adv']
 
         return losses
 
-    # def d_step_real(self, batch_outputs, batch_gt_data: torch.Tensor):
-    #     """Real part of D step.
-    #
-    #     Args:
-    #         batch_outputs (Tensor): Batch output of generator.
-    #         batch_gt_data (Tensor): Batch GT data.
-    #
-    #     Returns:
-    #         Tensor: Real part of gan_loss for discriminator.
-    #     """
-    #
-    #     # real
-    #     real_d_pred = self.discriminator(batch_gt_data)
-    #     loss_d_real = self.gan_loss(
-    #         real_d_pred, target_is_real=True, is_disc=True)
-    #
-    #     return loss_d_real
-    #
-    # def d_step_fake(self, batch_outputs: torch.Tensor, batch_gt_data):
-    #     """Fake part of D step.
-    #
-    #     Args:
-    #         batch_outputs (Tensor): Batch output of generator.
-    #         batch_gt_data (Tensor): Batch GT data.
-    #
-    #     Returns:
-    #         Tensor: Fake part of gan_loss for discriminator.
-    #     """
-    #
-    #     # fake
-    #     fake_d_pred = self.discriminator(batch_outputs.detach())
-    #     loss_d_fake = self.gan_loss(
-    #         fake_d_pred, target_is_real=False, is_disc=True)
-    #
-    #     return loss_d_fake
-
-    def d_step_double(self, batch_outputs: torch.Tensor,
-                      batch_gt_data: torch.Tensor):
+    def d_step(self, batch_outputs: torch.Tensor, batch_gt_data: torch.Tensor):
         """D step of DobuleGAN: Calculate losses of generator.
 
         Args:
@@ -438,11 +388,15 @@ class DeblurGanV2(BaseModel):
         Returns:
             dict: Dict of losses.
         """
-        loss_d_double = (self.disc_loss(self.discriminator.patch_gan,
-                                        batch_outputs, batch_gt_data) +
-                         self.disc_loss2(self.discriminator.full_gan,
-                                         batch_outputs, batch_gt_data)) / 2
-        return loss_d_double
+        if getattr(self.discriminator, 'full_gan', None):
+            loss_d = (self.disc_loss(self.discriminator.patch_gan,
+                                     batch_outputs, batch_gt_data) +
+                      self.disc_loss2(self.discriminator.full_gan,
+                                      batch_outputs, batch_gt_data)) / 2
+        else:
+            loss_d = self.disc_loss(self.discriminator.patch_gan,
+                                    batch_outputs, batch_gt_data)
+        return loss_d
 
     def g_step_with_optim(self, batch_outputs: torch.Tensor,
                           batch_gt_data: torch.Tensor,
@@ -462,13 +416,12 @@ class DeblurGanV2(BaseModel):
         g_optim_wrapper = optim_wrapper['generator']
         g_optim_wrapper.zero_grad()
         with g_optim_wrapper.optim_context(self):
-            losses_g_double = self.g_step_double(batch_outputs, batch_gt_data)
+            losses_g_double = self.g_step(batch_outputs, batch_gt_data)
 
         parsed_losses_g, log_vars_g = self.parse_losses(losses_g_double)
         loss_pix = g_optim_wrapper.scale_loss(parsed_losses_g)
         g_optim_wrapper.backward(loss_pix)
         g_optim_wrapper.step()
-        # g_optim_wrapper.update_params(parsed_losses_g)
 
         return log_vars_g
 
@@ -489,29 +442,10 @@ class DeblurGanV2(BaseModel):
 
         log_vars = dict()
         d_optim_wrapper = optim_wrapper['discriminator']
-
-        # with d_optim_wrapper.optim_context(self):
-        #     loss_d_real = self.d_step_real(batch_outputs, batch_gt_data)
-        #
-        # parsed_losses_dr, log_vars_dr = self.parse_losses(
-        #     dict(loss_d_real=loss_d_real))
-        # log_vars.update(log_vars_dr)
-        # loss_dr = d_optim_wrapper.scale_loss(parsed_losses_dr)
-        # d_optim_wrapper.backward(loss_dr)
-
-        # with d_optim_wrapper.optim_context(self):
-        #     loss_d_fake = self.d_step_fake(batch_outputs, batch_gt_data)
-        #
-        # parsed_losses_df, log_vars_df = self.parse_losses(
-        #     dict(loss_d_fake=loss_d_fake))
-        # log_vars.update(log_vars_df)
-        # loss_df = d_optim_wrapper.scale_loss(parsed_losses_df)
-        # d_optim_wrapper.backward(loss_df)
-
         d_optim_wrapper.zero_grad()
         with d_optim_wrapper.optim_context(self):
 
-            loss_d_double = self.adv_lambda * self.d_step_double(
+            loss_d_double = self.adv_lambda * self.d_step(
                 batch_outputs, batch_gt_data)
 
         parsed_losses_df, log_vars_df = self.parse_losses(

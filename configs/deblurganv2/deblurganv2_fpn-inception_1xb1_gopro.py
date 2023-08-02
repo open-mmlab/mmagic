@@ -7,21 +7,21 @@ model = dict(
     type='DeblurGanV2',
     generator=dict(
         type='DeblurGanV2Generator',
-        model='FPNMobileNet',
+        backbone='FPNInception',
         norm_layer='instance',
         output_ch=3,
-        num_filter=64,
-        num_filter_fpn=128,
-        # pretrained='mobilenetv2.pth.tar', #训练用的权重 帮助模型更快收敛
+        num_filter=128,
+        num_filter_fpn=256,
     ),
     discriminator=dict(
         type='DeblurGanV2Discriminator',
-        model='DoubleGan',
+        backbone='DoubleGan',
         norm_layer='instance',
         d_layers=3,
     ),
-    pixel_loss='perceptual',
-    disc_loss='wgan-gp',
+    pixel_loss=dict(
+        type='PerceptualLoss', layer_weights={'14': 1}, criterion='mse'),
+    disc_loss=dict(type='AdvLoss', loss_type='ragan-ls'),
     adv_lambda=0.001,
     warmup_num=3,
     data_preprocessor=dict(
@@ -34,18 +34,6 @@ train_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='SetValues', dictionary=dict(scale=1)),
-    # dict(
-    #     type='Flip',
-    #     keys=['img', 'gt'],
-    #     flip_ratio=0.5,
-    #     direction='horizontal'),
-    # dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    # dict(type='PairedRandomCrop', gt_patch_size=256),
-    # dict(
-    #     type='Crop',
-    #     keys=['img', 'gt'],
-    #     crop_size=(256, 256),
-    #     random_crop=False),
     dict(type='PairedAlbuTransForms', size=256, lq_key='img', gt_key='gt'),
     dict(
         type='AlbuCorruptFunction',
@@ -80,18 +68,6 @@ val_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='SetValues', dictionary=dict(scale=1)),
-    # dict(
-    #     type='Flip',
-    #     keys=['img', 'gt'],
-    #     flip_ratio=0.5,
-    #     direction='horizontal'),
-    # dict(type='RandomTransposeHW', keys=['img', 'gt'], transpose_ratio=0.5),
-    # dict(type='PairedRandomCrop', gt_patch_size=256),
-    # dict(
-    #     type='Crop',
-    #     keys=['img', 'gt'],
-    #     crop_size=(256, 256),
-    #     random_crop=False),
     dict(type='PairedAlbuTransForms', size=256, lq_key='img', gt_key='gt'),
     dict(
         type='AlbuCorruptFunction',
@@ -122,24 +98,13 @@ val_pipeline = [
     dict(type='PackInputs')
 ]
 
-# val_pipeline = [
-#     dict(type='LoadImageFromFile', key='img'),
-#     dict(type='LoadImageFromFile', key='gt'),
-#     dict(type='PackInputs')
-# ]
-
 test_pipeline = [
     dict(type='LoadImageFromFile', key='img'),
     dict(type='LoadImageFromFile', key='gt'),
     dict(type='PackInputs')
 ]
 
-# test_pipeline = val_pipeline
-
-# data_root = '/HOME/scz0bbt/run/mmagic/data/GoPro/'
-# data_root = 'G:/github/DeblurGANv2/data/gopro/'
 data_root = 'G:/github/DeblurGANv2/data/gopro/debug/'
-# data_root = 'D:/gopro/debug/'
 
 train_dataloader = dict(
     batch_size=1,
@@ -167,7 +132,18 @@ val_dataloader = dict(
         data_prefix=dict(img='input', gt='target'),
         pipeline=val_pipeline))
 
-test_dataloader = val_dataloader
+test_dataloader = dict(
+    num_workers=4,
+    persistent_workers=False,
+    drop_last=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='BasicImageDataset',
+        metainfo=dict(dataset_type='gopro', task_name='deblur'),
+        data_root=data_root + 'test',
+        # ann_file='meta_info_gopro_test.txt',
+        data_prefix=dict(img='input', gt='target'),
+        pipeline=test_pipeline))
 
 val_evaluator = dict(
     type='Evaluator', metrics=[
@@ -177,7 +153,7 @@ val_evaluator = dict(
 
 train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=100)
 val_cfg = dict(type='MultiValLoop')
-test_cfg = dict(type='MultiValLoop')
+test_cfg = dict(type='MultiTestLoop')
 test_evaluator = val_evaluator
 
 # optimizer
@@ -214,6 +190,4 @@ default_hooks = dict(
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 
-# load_from = 'D:/pythonProject/DeblurGANv2/fpn_inception1.pth'
-load_from = 'G:/github/DeblurGANv2/fpn_mobilenet.pth'
-# load_from = '/HOME/scz0bbt/run/mmagic/fpn_inception.pth'
+load_from = 'G:/github/DeblurGANv2/fpn_inception1.pth'
