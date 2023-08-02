@@ -8,14 +8,14 @@ from mmengine.optim import OptimWrapper, OptimWrapperDict
 from torch.optim import Adam
 
 from mmagic.models import DataPreprocessor, DeblurGanV2
-from mmagic.models.editors.deblurganv2.deblurganv2_util import (DiscLossWGANGP,
-                                                                PerceptualLoss)
+from mmagic.models.losses import PerceptualLoss
+from mmagic.models.losses.adv_loss import DiscLossWGANGP
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 
 generator = dict(
     type='DeblurGanV2Generator',
-    model='FPNMobileNet',
+    backbone='FPNMobileNet',
     norm_layer='instance',
     output_ch=3,
     num_filter=64,
@@ -23,7 +23,7 @@ generator = dict(
 )
 discriminator = dict(
     type='DeblurGanV2Discriminator',
-    model='DoubleGan',
+    backbone='DoubleGan',
     norm_layer='instance',
     d_layers=3,
 )
@@ -35,10 +35,13 @@ class TestDeblurGanV2(TestCase):
         gan = DeblurGanV2(
             generator=generator,
             discriminator=discriminator,
-            pixel_loss='perceptual',
+            pixel_loss=dict(
+                type='PerceptualLoss',
+                layer_weights={'14': 1},
+                criterion='mse'),
             adv_lambda=0.001,
             warmup_num=3,
-            disc_loss='wgan-gp',
+            disc_loss=dict(type='AdvLoss', loss_type='wgan-gp'),
             data_preprocessor=DataPreprocessor())
 
         self.assertIsInstance(gan, DeblurGanV2)
@@ -53,10 +56,13 @@ class TestDeblurGanV2(TestCase):
         gan = DeblurGanV2(
             generator=gen,
             discriminator=disc,
-            pixel_loss='perceptual',
+            pixel_loss=dict(
+                type='PerceptualLoss',
+                layer_weights={'14': 1},
+                criterion='mse'),
             adv_lambda=0.001,
             warmup_num=3,
-            disc_loss='wgan-gp',
+            disc_loss=dict(type='AdvLoss', loss_type='wgan-gp'),
             data_preprocessor=DataPreprocessor())
         self.assertEqual(gan.generator, gen)
         self.assertEqual(gan.discriminator, disc)
@@ -74,10 +80,13 @@ class TestDeblurGanV2(TestCase):
         gan = DeblurGanV2(
             generator=generator,
             discriminator=discriminator,
-            pixel_loss='perceptual',
+            pixel_loss=dict(
+                type='PerceptualLoss',
+                layer_weights={'14': 1},
+                criterion='mse'),
             adv_lambda=0.001,
             warmup_num=3,
-            disc_loss='wgan-gp',
+            disc_loss=dict(type='AdvLoss', loss_type='wgan-gp'),
             data_preprocessor=DataPreprocessor())
         # prepare messageHub
         message_hub.update_info('iter', 0)

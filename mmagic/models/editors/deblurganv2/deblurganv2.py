@@ -54,7 +54,8 @@ class DeblurGanV2(BaseModel):
 
         self.register_buffer('step_counter', torch.tensor(0), False)
 
-        self.pixel_loss = MODELS.build(pixel_loss)
+        if pixel_loss:
+            self.pixel_loss = MODELS.build(pixel_loss)
 
         if disc_loss:
             if isinstance(disc_loss, dict):

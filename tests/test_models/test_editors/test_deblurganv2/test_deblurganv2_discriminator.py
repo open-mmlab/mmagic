@@ -15,7 +15,7 @@ class TestDeblurGanv2Discriminator(object):
         cls.input_tensor = torch.randn((1, 3, 256, 256))
         cls.default_config = dict(
             type='DeblurGanV2Discriminator',
-            model='DoubleGan',
+            backbone='DoubleGan',
             norm_layer='instance',
             d_layers=3)
 
@@ -33,7 +33,7 @@ class TestDeblurGanv2Discriminator(object):
 
         # sanity check for args with cpu model
         d = DeblurGanV2Discriminator(
-            model='DoubleGan', norm_layer='instance', d_layers=3)
+            backbone='DoubleGan', norm_layer='instance', d_layers=3)
         pred = d(torch.randn((1, 3, 256, 256)))
         assert d.full_gan
         assert d.patch_gan

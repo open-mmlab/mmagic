@@ -15,7 +15,7 @@ class TestDeblurGanv2Generator(object):
         cls.input_tensor = torch.randn((1, 3, 256, 256))
         cls.default_config = dict(
             type='DeblurGanV2Generator',
-            model='FPNMobileNet',
+            backbone='FPNMobileNet',
             norm_layer='instance',
             output_ch=3,
             num_filter=64,
@@ -37,7 +37,7 @@ class TestDeblurGanv2Generator(object):
 
         # sanity check for args with cpu model
         g = DeblurGanV2Generator(
-            model='FPNMobileNet',
+            backbone='FPNMobileNet',
             norm_layer='instance',
             output_ch=3,
             num_filter=64,
@@ -52,7 +52,7 @@ class TestDeblurGanv2Generator(object):
         g = MODELS.build(self.default_config).cuda()
         assert isinstance(g, DeblurGanV2Generator)
         g = DeblurGanV2Generator(
-            model='FPNMobileNet',
+            backbone='FPNMobileNet',
             norm_layer='instance',
             output_ch=3,
             num_filter=64,
