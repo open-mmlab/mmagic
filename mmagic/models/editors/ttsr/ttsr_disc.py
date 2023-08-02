@@ -12,10 +12,11 @@ class TTSRDiscriminator(BaseModule):
     Args:
         in_channels (int): Channel number of inputs. Default: 3.
         in_size (int): Size of input image. Default: 160.
+        init_cfg (dict, optional): Initialization config dict.
     """
 
-    def __init__(self, in_channels=3, in_size=160):
-        super().__init__()
+    def __init__(self, in_channels=3, in_size=160, init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
 
         self.body = nn.Sequential(
             nn.Conv2d(in_channels, 32, 3, 1, 1), nn.LeakyReLU(0.2),

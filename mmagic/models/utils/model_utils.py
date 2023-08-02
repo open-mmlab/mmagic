@@ -6,7 +6,8 @@ import torch
 import torch.nn as nn
 from mmengine import print_log
 from mmengine.model.weight_init import (constant_init, kaiming_init,
-                                        normal_init, xavier_init)
+                                        normal_init, update_init_info,
+                                        xavier_init)
 from mmengine.registry import Registry
 from mmengine.utils.dl_utils.parrots_wrapper import _BatchNorm
 from torch import Tensor
@@ -129,10 +130,18 @@ def generation_init_weights(module, init_type='normal', init_gain=0.02):
             else:
                 raise NotImplementedError(
                     f"Initialization method '{init_type}' is not implemented")
+            init_info = (f'Initialize {m.__class__.__name__} by \'init_type\' '
+                         f'{init_type}.')
         elif classname.find('BatchNorm2d') != -1:
             # BatchNorm Layer's weight is not a matrix;
             # only normal distribution applies.
             normal_init(m, 1.0, init_gain)
+            init_info = (f'{m.__class__.__name__} is BatchNorm2d, initialize '
+                         'by Norm initialization with mean=1, '
+                         f'std={init_gain}')
+
+        if hasattr(m, '_params_init_info'):
+            update_init_info(module, init_info)
 
     module.apply(init_func)
 

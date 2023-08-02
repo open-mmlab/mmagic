@@ -37,6 +37,7 @@ class TTSRNet(BaseModule):
             Default: (16, 16, 8, 4)
         res_scale (float): Used to scale the residual in residual block.
             Default: 1.
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,
@@ -45,8 +46,9 @@ class TTSRNet(BaseModule):
                  mid_channels=64,
                  texture_channels=64,
                  num_blocks=(16, 16, 8, 4),
-                 res_scale=1.0):
-        super().__init__()
+                 res_scale=1.0,
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
 
         self.texture_channels = texture_channels
 

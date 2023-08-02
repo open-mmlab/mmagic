@@ -41,6 +41,7 @@ class LSGANDiscriminator(BaseModule):
             ``dict(type='LeakyReLU', negative_slope=0.2)``.
         out_act_cfg (dict, optional): Activation config for the final output
             layer. Defaults to ``dict(type='Tanh')``.
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,
@@ -52,8 +53,9 @@ class LSGANDiscriminator(BaseModule):
                  conv_cfg=dict(type='Conv2d'),
                  default_norm_cfg=dict(type='BN'),
                  default_act_cfg=dict(type='LeakyReLU', negative_slope=0.2),
-                 out_act_cfg=None):
-        super().__init__()
+                 out_act_cfg=None,
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
         assert input_scale % output_scale == 0
         assert input_scale // output_scale >= 2
 

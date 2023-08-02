@@ -1,13 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
 
-import mmengine
 import torch
 import torch.nn as nn
-from mmengine.logging import MMLogger
-from mmengine.model import normal_init, xavier_init
-from mmengine.runner import load_checkpoint
-from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
+from mmengine.model import (BaseModule, normal_init, update_init_info,
+                            xavier_init)
 from torch.nn.utils import spectral_norm
 
 from mmagic.registry import MODELS
@@ -16,7 +13,7 @@ from .biggan_snmodule import SNEmbedding, SNLinear
 
 
 @MODELS.register_module()
-class BigGANDiscriminator(nn.Module):
+class BigGANDiscriminator(BaseModule):
     """BigGAN Discriminator. The implementation refers to
     https://github.com/ajbrock/BigGAN-PyTorch/blob/master/BigGAN.py # noqa.
 
@@ -62,8 +59,6 @@ class BigGANDiscriminator(nn.Module):
             will be adopted.
             If set to `torch`, implementation by `PyTorch` will be adopted.
             Defaults to `ajbrock`.
-        init_type (str, optional): The name of an initialization method:
-            ortho | N02 | xavier. Defaults to 'ortho'.
         act_cfg (dict, optional): Config for the activation layer.
             Defaults to dict(type='ReLU').
         with_spectral_norm (bool, optional): Whether to use spectral
@@ -72,10 +67,10 @@ class BigGANDiscriminator(nn.Module):
             Defaults to dict(type='BigGANDiscResBlock').
         arch_cfg (dict, optional): Config for the architecture of this
             discriminator. Defaults to None.
-        pretrained (str | dict, optional): Path for the pretrained model or
-            dict containing information for pretrained models whose necessary
-            key is 'ckpt_path'. Besides, you can also provide 'prefix' to load
-            the generator part from the whole state dict. Defaults to None.
+        init_cfg (dict, optional): Initialization config dict. If type is
+            `Pretrained`, the pretrain model will be loaded. Otherwise, type
+            will be parsed as the name of initialization method. Support values
+            are 'ortho', 'N02', 'xavier'. Defaults to dict(type='ortho').
     """
 
     def __init__(self,
@@ -86,13 +81,12 @@ class BigGANDiscriminator(nn.Module):
                  base_channels=96,
                  sn_eps=1e-6,
                  sn_style='ajbrock',
-                 init_type='ortho',
                  act_cfg=dict(type='ReLU'),
                  with_spectral_norm=True,
                  blocks_cfg=dict(type='BigGANDiscResBlock'),
                  arch_cfg=None,
-                 pretrained=None):
-        super().__init__()
+                 init_cfg=dict(type='ortho')):
+        super().__init__(init_cfg=init_cfg)
         self.num_classes = num_classes
         self.out_channels = out_channels
         self.input_scale = input_scale
@@ -152,7 +146,6 @@ class BigGANDiscriminator(nn.Module):
                         eps=sn_eps)
                 else:
                     raise NotImplementedError('sn style')
-        self.init_weights(pretrained=pretrained, init_type=init_type)
 
     def _get_default_arch_cfg(self, input_scale, in_channels, base_channels):
         assert input_scale in [32, 64, 128, 256, 512]
@@ -229,45 +222,28 @@ class BigGANDiscriminator(nn.Module):
             out = out + torch.sum(w_y * x0, dim=1, keepdim=True)
         return out
 
-    def init_weights(self, pretrained=None, init_type='ortho'):
-        """Init weights for models.
-
-        Args:
-            pretrained (str | dict, optional): Path for the pretrained model or
-                dict containing information for pretrained models whose
-                necessary key is 'ckpt_path'. Besides, you can also provide
-                'prefix' to load the generator part from the whole state dict.
-                Defaults to None.
-            init_type (str, optional): The name of an initialization method:
-                ortho | N02 | xavier. Defaults to 'ortho'.
-        """
-
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=False, logger=logger)
-        elif isinstance(pretrained, dict):
-            ckpt_path = pretrained.get('ckpt_path', None)
-            assert ckpt_path is not None
-            prefix = pretrained.get('prefix', '')
-            map_location = pretrained.get('map_location', 'cpu')
-            strict = pretrained.get('strict', True)
-            state_dict = _load_checkpoint_with_prefix(prefix, ckpt_path,
-                                                      map_location)
-            self.load_state_dict(state_dict, strict=strict)
-            mmengine.print_log(f'Load pretrained model from {ckpt_path}')
-        elif pretrained is None:
-            for m in self.modules():
-                if isinstance(m, (nn.Conv2d, nn.Linear, nn.Embedding)):
-                    if init_type == 'ortho':
-                        nn.init.orthogonal_(m.weight)
-                    elif init_type == 'N02':
-                        normal_init(m, 0.0, 0.02)
-                    elif init_type == 'xavier':
-                        xavier_init(m)
-                    else:
-                        raise NotImplementedError(
-                            f'{init_type} initialization \
-                            not supported now.')
-        else:
-            raise TypeError('pretrained must be a str or None but'
-                            f' got {type(pretrained)} instead.')
+    def init_weights(self):
+        """Init weights for models."""
+        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
+            super().init_weights()
+            return
+        for m in self.modules():
+            init_type = self.init_cfg['type']
+            module_name = m.__class__.__name__
+            if isinstance(m, (nn.Conv2d, nn.Linear, nn.Embedding)):
+                if init_type == 'ortho':
+                    nn.init.orthogonal_(m.weight)
+                elif init_type == 'N02':
+                    normal_init(m, 0.0, 0.02)
+                elif init_type == 'xavier':
+                    xavier_init(m)
+                else:
+                    raise NotImplementedError(
+                        f'{init_type} initialization not supported now.')
+                # save init info
+                init_info = (f'{module_name} belongs to (nn.Conv2d, '
+                             'nn.Linear, nn.Embedding), initialize by '
+                             f'\'init_type\' {init_type}')
+                if hasattr(m, '_params_init_info'):
+                    update_init_info(m, init_info)
+        self._is_init = True

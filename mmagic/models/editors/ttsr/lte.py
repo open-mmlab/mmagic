@@ -21,13 +21,15 @@ class LTE(BaseModule):
             Train: must load pretrained VGG.
             Eval: needn't load pretrained VGG, because we will load pretrained
             LTE.
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,
                  requires_grad=True,
                  pixel_range=1.,
-                 load_pretrained_vgg=True):
-        super().__init__()
+                 load_pretrained_vgg=True,
+                 init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
 
         vgg_mean = (0.485, 0.456, 0.406)
         vgg_std = (0.229 * pixel_range, 0.224 * pixel_range,
