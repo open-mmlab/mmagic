@@ -48,7 +48,6 @@ class TestDeblurGanV2(TestCase):
         self.assertIsInstance(gan.data_preprocessor, DataPreprocessor)
         self.assertIsInstance(gan.pixel_loss, PerceptualLoss)
         self.assertIsInstance(gan.disc_loss, DiscLossWGANGP)
-
         gen_cfg = deepcopy(generator)
         disc_cfg = deepcopy(discriminator)
         gen = MODELS.build(gen_cfg)
