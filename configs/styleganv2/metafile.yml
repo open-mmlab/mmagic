@@ -8,7 +8,7 @@ Collections:
   - unconditional gans
   Year: 2020
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
+- Config: configs/styleganv2/stylegan2_c2_8xb4_ffhq-1024x1024.py
   In Collection: StyleGANv2
   Name: stylegan2_c2_8xb4_ffhq-1024x1024
   Results:
@@ -25,7 +25,7 @@ Models:
       Recall50k: 49.583
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_1024_b4x8_20210407_150045-618c9024.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv2/stylegan2_c2_8xb4_lsun-car-384x512.py
+- Config: configs/styleganv2/stylegan2_c2_8xb4_lsun-car-384x512.py
   In Collection: StyleGANv2
   Name: stylegan2_c2_8xb4_lsun-car-384x512
   Results:
@@ -42,7 +42,7 @@ Models:
       Recall50k: 50.576
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_lsun-car_384x512_b4x8_1800k_20210424_160929-fc9072ca.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-horse-256x256.py
+- Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-horse-256x256.py
   In Collection: StyleGANv2
   Name: stylegan2_c2_8xb4-800kiters_lsun-horse-256x256
   Results:
@@ -50,7 +50,7 @@ Models:
     Metrics: {}
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-horse-config-f-official_20210327_173203-ef3e69ca.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-church-256x256.py
+- Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-church-256x256.py
   In Collection: StyleGANv2
   Name: stylegan2_c2_8xb4-800kiters_lsun-church-256x256
   Results:
@@ -58,7 +58,7 @@ Models:
     Metrics: {}
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-church-config-f-official_20210327_172657-1d42b7d1.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-cat-256x256.py
+- Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_lsun-cat-256x256.py
   In Collection: StyleGANv2
   Name: stylegan2_c2_8xb4-800kiters_lsun-cat-256x256
   Results:
@@ -66,7 +66,7 @@ Models:
     Metrics: {}
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan2/official_weights/stylegan2-cat-config-f-official_20210327_172444-15bc485b.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv2/stylegan2_c2_8xb4-800kiters_ffhq-256x256.py
+- Config: configs/styleganv2/stylegan2_c2_8xb4-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Name: stylegan2_c2_8xb4-800kiters_ffhq-256x256
   Results:
@@ -81,7 +81,7 @@ Models:
       FID50k: 3.992
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv2/stylegan2_lion_512x512.py
+- Config: configs/styleganv2/stylegan2_lion_512x512.py
   In Collection: StyleGANv2
   Name: stylegan2_lion_512x512
   Results:
@@ -92,7 +92,7 @@ Models:
       Recall50k: 0.0
     Task: Unconditional GANs
   Weights: ./checkpoints/stylegan2_lions_512_pytorch.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv2/stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256.py
+- Config: configs/styleganv2/stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Name: stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256
   Results:
@@ -101,7 +101,7 @@ Models:
       FID50k: 4.331
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_fp16_partial-GD_PL-no-scaler_ffhq_256_b4x8_800k_20210508_114854-dacbe4c9.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv2/stylegan2_c2-PL-R1_8xb4-fp16-globalG-partialD-no-scaler-800kiters_ffhq-256x256.py
+- Config: configs/styleganv2/stylegan2_c2-PL-R1_8xb4-fp16-globalG-partialD-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Name: stylegan2_c2-PL-R1_8xb4-fp16-globalG-partialD-no-scaler-800kiters_ffhq-256x256
   Results:
@@ -110,7 +110,7 @@ Models:
       FID50k: 4.362
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_fp16-globalG-partialD_PL-R1-no-scaler_ffhq_256_b4x8_800k_20210508_114930-ef8270d4.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv2/stylegan2_c2-PL-R1_8xb4-apex-fp16-no-scaler-800kiters_ffhq-256x256.py
+- Config: configs/styleganv2/stylegan2_c2-PL-R1_8xb4-apex-fp16-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Name: stylegan2_c2-PL-R1_8xb4-apex-fp16-no-scaler-800kiters_ffhq-256x256
   Results:

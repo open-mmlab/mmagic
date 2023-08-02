@@ -8,7 +8,7 @@ Collections:
   - inpainting
   Year: 2018
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/deepfillv1/deepfillv1_4xb4_celeba-256x256.py
+- Config: configs/deepfillv1/deepfillv1_4xb4_celeba-256x256.py
   In Collection: DeepFillv1
   Name: deepfillv1_4xb4_celeba-256x256
   Results:
@@ -19,7 +19,7 @@ Models:
       l1 error: 6.677
     Task: Inpainting
   Weights: https://download.openmmlab.com/mmediting/inpainting/deepfillv1/deepfillv1_256x256_4x4_celeba_20200619-dd51a855.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/deepfillv1/deepfillv1_8xb2_places-256x256.py
+- Config: configs/deepfillv1/deepfillv1_8xb2_places-256x256.py
   In Collection: DeepFillv1
   Name: deepfillv1_8xb2_places-256x256
   Results:

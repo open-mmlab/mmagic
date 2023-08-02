@@ -8,7 +8,7 @@ Collections:
   - video interpolation
   Year: 2020
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py
+- Config: configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py
   In Collection: CAIN
   Name: cain_g1b32_1xb5_vimeo90k-triplet
   Results:

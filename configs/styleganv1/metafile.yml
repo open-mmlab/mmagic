@@ -8,7 +8,7 @@ Collections:
   - unconditional gans
   Year: 2019
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv1/styleganv1_ffhq-256x256_8xb4-25Mimgs.py
+- Config: configs/styleganv1/styleganv1_ffhq-256x256_8xb4-25Mimgs.py
   In Collection: StyleGANv1
   Name: styleganv1_ffhq-256x256_8xb4-25Mimgs
   Results:
@@ -20,7 +20,7 @@ Models:
         SSIM: 27.05
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/styleganv1/styleganv1_ffhq_256_g8_25Mimg_20210407_161748-0094da86.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/styleganv1/styleganv1_ffhq-1024x1024_8xb4-25Mimgs.py
+- Config: configs/styleganv1/styleganv1_ffhq-1024x1024_8xb4-25Mimgs.py
   In Collection: StyleGANv1
   Name: styleganv1_ffhq-1024x1024_8xb4-25Mimgs
   Results:

@@ -20,7 +20,8 @@ class UnconditionalInferencer(BaseMMagicInferencer):
         visualize=['result_out_dir'],
         postprocess=[])
 
-    extra_parameters = dict(num_batches=4, sample_model='orig', sample_kwargs=None, noise=None)
+    extra_parameters = dict(
+        num_batches=4, sample_model='orig', sample_kwargs=None, noise=None)
 
     def preprocess(self) -> Dict:
         """Process the inputs into a model-feedable format.
@@ -33,7 +34,11 @@ class UnconditionalInferencer(BaseMMagicInferencer):
         noise = self.extra_parameters['noise']
         sample_kwargs = self.extra_parameters['sample_kwargs']
 
-        results = dict(num_batches=num_batches, sample_model=sample_model, sample_kwargs=sample_kwargs, noise=noise)
+        results = dict(
+            num_batches=num_batches,
+            sample_model=sample_model,
+            sample_kwargs=sample_kwargs,
+            noise=noise)
 
         return results
 

@@ -9,7 +9,7 @@ Collections:
   - image super-resolution
   Year: 2021
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py
+- Config: configs/real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py
   In Collection: Real-ESRGAN
   Name: realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost
   Results:
@@ -19,7 +19,7 @@ Models:
       SSIM: 0.8236
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/real_esrgan/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost_20210816-4ae3b5a4.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/real_esrgan/realesrgan_c64b23g32_4xb12-lr1e-4-400k_df2k-ost.py
+- Config: configs/real_esrgan/realesrgan_c64b23g32_4xb12-lr1e-4-400k_df2k-ost.py
   In Collection: Real-ESRGAN
   Name: realesrgan_c64b23g32_4xb12-lr1e-4-400k_df2k-ost
   Results:

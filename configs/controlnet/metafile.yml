@@ -8,14 +8,14 @@ Collections:
   - text2image
   Year: 2023
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/controlnet/controlnet-1xb1-fill50k.py
+- Config: configs/controlnet/controlnet-1xb1-fill50k.py
   In Collection: Control Net
   Name: controlnet-1xb1-fill50k
   Results:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Image
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/controlnet/controlnet-canny.py
+- Config: configs/controlnet/controlnet-canny.py
   In Collection: Control Net
   Name: controlnet-canny
   Results:
@@ -23,7 +23,7 @@ Models:
     Metrics: {}
     Task: Text2Image
   Weights: https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_canny.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/controlnet/controlnet-pose.py
+- Config: configs/controlnet/controlnet-pose.py
   In Collection: Control Net
   Name: controlnet-pose
   Results:
@@ -31,7 +31,7 @@ Models:
     Metrics: {}
     Task: Text2Image
   Weights: https://huggingface.co/lllyasviel/ControlNet/blob/main/models/control_sd15_openpose.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/controlnet/controlnet-seg.py
+- Config: configs/controlnet/controlnet-seg.py
   In Collection: Control Net
   Name: controlnet-seg
   Results:

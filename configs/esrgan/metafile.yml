@@ -8,7 +8,7 @@ Collections:
   - image super-resolution
   Year: 2018
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py
+- Config: configs/esrgan/esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k.py
   In Collection: ESRGAN
   Name: esrgan_psnr-x4c64b23g32_1xb16-1000k_div2k
   Results:
@@ -28,7 +28,7 @@ Models:
       SSIM: 0.8263
     Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_psnr_x4c64b23g32_1x16_1000k_div2k_20200420-bf5c993c.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py
+- Config: configs/esrgan/esrgan_x4c64b23g32_1xb16-400k_div2k.py
   In Collection: ESRGAN
   Name: esrgan_x4c64b23g32_1xb16-400k_div2k
   Results:

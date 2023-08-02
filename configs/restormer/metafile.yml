@@ -10,7 +10,7 @@ Collections:
   - deraining
   Year: 2022
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_rain13k.py
+- Config: configs/restormer/restormer_official_rain13k.py
   In Collection: Restormer
   Name: restormer_official_rain13k
   Results:
@@ -39,7 +39,7 @@ Models:
       SSIM (Y): 0.9451
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_rain13k-2be7b550.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_gopro.py
+- Config: configs/restormer/restormer_official_gopro.py
   In Collection: Restormer
   Name: restormer_official_gopro
   Results:
@@ -68,7 +68,7 @@ Models:
         SSIM: 0.9707
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_gopro-db7363a0.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_dpdd-single.py
+- Config: configs/restormer/restormer_official_dpdd-single.py
   In Collection: Restormer
   Name: restormer_official_dpdd-single
   Results:
@@ -91,7 +91,7 @@ Models:
       SSIM: 0.8166
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-single-6bc31582.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_dpdd-dual.py
+- Config: configs/restormer/restormer_official_dpdd-dual.py
   In Collection: Restormer
   Name: restormer_official_dpdd-dual
   Results:
@@ -114,7 +114,7 @@ Models:
       SSIM: 0.8346
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dpdd-dual-52c94c00.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_dfwb-gray-sigma15.py
+- Config: configs/restormer/restormer_official_dfwb-gray-sigma15.py
   In Collection: Restormer
   Name: restormer_official_dfwb-gray-sigma15
   Results:
@@ -155,7 +155,7 @@ Models:
       SSIM: 0.9409
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_dfwb-gray-sigma25.py
+- Config: configs/restormer/restormer_official_dfwb-gray-sigma25.py
   In Collection: Restormer
   Name: restormer_official_dfwb-gray-sigma25
   Results:
@@ -196,7 +196,7 @@ Models:
       SSIM: 0.9131
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_dfwb-gray-sigma50.py
+- Config: configs/restormer/restormer_official_dfwb-gray-sigma50.py
   In Collection: Restormer
   Name: restormer_official_dfwb-gray-sigma50
   Results:
@@ -237,7 +237,7 @@ Models:
       SSIM: 0.8571
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-gray-blind-5f094bcc.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_dfwb-color-sigma15.py
+- Config: configs/restormer/restormer_official_dfwb-color-sigma15.py
   In Collection: Restormer
   Name: restormer_official_dfwb-color-sigma15
   Results:
@@ -290,7 +290,7 @@ Models:
       SSIM (RGB): 1.0
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma15-012ceb71.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_dfwb-color-sigma25.py
+- Config: configs/restormer/restormer_official_dfwb-color-sigma25.py
   In Collection: Restormer
   Name: restormer_official_dfwb-color-sigma25
   Results:
@@ -343,7 +343,7 @@ Models:
       SSIM (RGB): 1.0
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma25-e307f222.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_dfwb-color-sigma50.py
+- Config: configs/restormer/restormer_official_dfwb-color-sigma50.py
   In Collection: Restormer
   Name: restormer_official_dfwb-color-sigma50
   Results:
@@ -396,7 +396,7 @@ Models:
       SSIM (RGB): 1.0
     Task: Denoising, Deblurring, Deraining
   Weights: https://download.openmmlab.com/mmediting/restormer/restormer_official_dfwb-color-sigma50-a991983d.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/restormer/restormer_official_sidd.py
+- Config: configs/restormer/restormer_official_sidd.py
   In Collection: Restormer
   Name: restormer_official_sidd
   Results:

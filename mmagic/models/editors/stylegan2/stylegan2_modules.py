@@ -239,8 +239,8 @@ class ModulatedConv2d(BaseModule):
                 float('inf'), dim=1, keepdim=True)  # max_I
         with autocast(enabled=self.fp16_enabled):
             # process style code
-            style = self.style_modulation(style).view(n, 1, c, 1,
-                                                      1) + self.style_bias # 一致
+            style = self.style_modulation(style).view(
+                n, 1, c, 1, 1) + self.style_bias  # 一致
             # combine weight and style
             weight = weight * style
             if self.demodulate:
@@ -376,13 +376,14 @@ class ModulatedStyleConv(BaseModule):
             if add_noise:
                 if return_noise:
                     out, noise = self.noise_injector(
-                        out, noise=noise, return_noise=return_noise) # self.noise_injector.bias 0.0310
+                        out, noise=noise, return_noise=return_noise
+                    )  # self.noise_injector.bias 0.0310
                 else:
-                    out = self.noise_injector( # 改变了一点
+                    out = self.noise_injector(  # 改变了一点
                         out, noise=noise, return_noise=return_noise)
 
             # TODO: FP16 in activate layers
-            out = self.activate(out) # 到最后结果 self.activate.bias
+            out = self.activate(out)  # 到最后结果 self.activate.bias
 
             if self.fp16_enabled:
                 out = torch.clamp(

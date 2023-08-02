@@ -8,20 +8,20 @@
 
 import sys
 import traceback
+
+import matplotlib.cm
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
 import torch
 import torch.fft
-import torch.nn as nn
 import torch.nn.functional as F
-import matplotlib.cm
-import dnnlib
-import legacy # pylint: disable=import-error
+from PIL import Image, ImageDraw, ImageFont
+
+from demo.demo_DragGAN.gradio_utils.utils import EasyDict
 from mmagic.apis import MMagicInferencer
 
-#----------------------------------------------------------------------------
 
 class CapturedException(Exception):
+
     def __init__(self, msg=None):
         if msg is None:
             _type, value, _traceback = sys.exc_info()
@@ -33,26 +33,39 @@ class CapturedException(Exception):
         assert isinstance(msg, str)
         super().__init__(msg)
 
-#----------------------------------------------------------------------------
+
+'''
+----------------------------------------------------------------------------
+'''
+
 
 class CaptureSuccess(Exception):
+
     def __init__(self, out):
         super().__init__()
         self.out = out
 
-#----------------------------------------------------------------------------
 
-def add_watermark_np(input_image_array, watermark_text="AI Generated"):
-    image = Image.fromarray(np.uint8(input_image_array)).convert("RGBA")
+'''
+----------------------------------------------------------------------------
+'''
+
+
+def add_watermark_np(input_image_array, watermark_text='AI Generated'):
+    image = Image.fromarray(np.uint8(input_image_array)).convert('RGBA')
 
     # Initialize text image
     txt = Image.new('RGBA', image.size, (255, 255, 255, 0))
-    font = ImageFont.truetype('./demo/demo_DragGAN/arial.ttf', round(25/512*image.size[0]))
+    font = ImageFont.truetype('./demo/demo_DragGAN/arial.ttf',
+                              round(25 / 512 * image.size[0]))
     d = ImageDraw.Draw(txt)
 
     text_width, text_height = font.getsize(watermark_text)
-    text_position = (image.size[0] - text_width - 10, image.size[1] - text_height - 10)
-    text_color = (255, 255, 255, 128)  # white color with the alpha channel set to semi-transparent
+    text_position = (image.size[0] - text_width - 10,
+                     image.size[1] - text_height - 10)
+    text_color = (
+        255, 255, 255, 128
+    )  # white color with the alpha channel set to semi-transparent
 
     # Draw the text onto the text canvas
     d.text(text_position, watermark_text, font=font, fill=text_color)
@@ -62,22 +75,24 @@ def add_watermark_np(input_image_array, watermark_text="AI Generated"):
     watermarked_array = np.array(watermarked)
     return watermarked_array
 
-#----------------------------------------------------------------------------
 
 class Renderer:
+
     def __init__(self, disable_timing=False):
-        self._device        = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
-        self._dtype         = torch.float32 if self._device.type == 'mps' else torch.float64
-        self._pkl_data      = dict()    # {pkl: dict | CapturedException, ...}
-        self._networks      = dict()    # {cache_key: torch.nn.Module, ...}
-        self._pinned_bufs   = dict()    # {(shape, dtype): torch.Tensor, ...}
-        self._cmaps         = dict()    # {name: torch.Tensor, ...}
-        self._is_timing     = False
+        self._device = torch.device('cuda' if torch.cuda.is_available(
+        ) else 'mps' if torch.backends.mps.is_available() else 'cpu')
+        self._dtype = torch.float32 \
+            if self._device.type == 'mps' else torch.float64
+        self._pkl_data = dict()  # {pkl: dict | CapturedException, ...}
+        self._networks = dict()  # {cache_key: torch.nn.Module, ...}
+        self._pinned_bufs = dict()  # {(shape, dtype): torch.Tensor, ...}
+        self._cmaps = dict()  # {name: torch.Tensor, ...}
+        self._is_timing = False
         if not disable_timing:
-            self._start_event   = torch.cuda.Event(enable_timing=True)
-            self._end_event     = torch.cuda.Event(enable_timing=True)
+            self._start_event = torch.cuda.Event(enable_timing=True)
+            self._end_event = torch.cuda.Event(enable_timing=True)
         self._disable_timing = disable_timing
-        self._net_layers    = dict()    # {cache_key: [dnnlib.EasyDict, ...], ...}
+        self._net_layers = dict()  # {cache_key: [dnnlib.EasyDict, ...], ...}
 
     def render(self, **args):
         if self._disable_timing:
@@ -85,7 +100,7 @@ class Renderer:
         else:
             self._start_event.record(torch.cuda.current_stream(self._device))
             self._is_timing = True
-        res = dnnlib.EasyDict()
+        res = EasyDict()
         try:
             init_net = False
             if not hasattr(self, 'G'):
@@ -108,7 +123,7 @@ class Renderer:
             if init_net:
                 self.init_network(res, **args)
             self._render_drag_impl(res, **args)
-        except:
+        except CapturedException:
             res.error = CapturedException()
         if not self._disable_timing:
             self._end_event.record(torch.cuda.current_stream(self._device))
@@ -123,7 +138,8 @@ class Renderer:
 
         if self._is_timing and not self._disable_timing:
             self._end_event.synchronize()
-            res.render_time = self._start_event.elapsed_time(self._end_event) * 1e-3
+            res.render_time = self._start_event.elapsed_time(
+                self._end_event) * 1e-3
             self._is_timing = False
         return res
 
@@ -132,10 +148,8 @@ class Renderer:
         if data is None:
             print(f'Loading "{pkl}"... ', end='', flush=True)
             try:
-                with dnnlib.util.open_url(pkl, verbose=False) as f:
-                    data = legacy.load_network_pkl(f)
                 print('Done.')
-            except:
+            except CapturedException:
                 data = CapturedException()
                 print('Failed!')
             self._pkl_data[pkl] = data
@@ -144,28 +158,30 @@ class Renderer:
             raise data
 
         orig_net = data[key]
-        cache_key = (orig_net, self._device, tuple(sorted(tweak_kwargs.items())))
+        cache_key = (orig_net, self._device,
+                     tuple(sorted(tweak_kwargs.items())))
         net = self._networks.get(cache_key, None)
         if net is None:
             try:
                 if 'stylegan2' in pkl:
                     from training.networks_stylegan2 import Generator
-                elif 'stylegan3' in pkl:
-                    from training.networks_stylegan3 import Generator
-                elif 'stylegan_human' in pkl:
-                    from stylegan_human.training_scripts.sg2.training.networks import Generator
                 else:
                     raise NameError('Cannot infer model type from pkl name!')
 
                 print(data[key].init_args)
                 print(data[key].init_kwargs)
                 if 'stylegan_human' in pkl:
-                    net = Generator(*data[key].init_args, **data[key].init_kwargs, square=False, padding=True)
+                    net = Generator(
+                        *data[key].init_args,
+                        **data[key].init_kwargs,
+                        square=False,
+                        padding=True)
                 else:
-                    net = Generator(*data[key].init_args, **data[key].init_kwargs)
+                    net = Generator(*data[key].init_args,
+                                    **data[key].init_kwargs)
                 net.load_state_dict(data[key].state_dict())
                 net.to(self._device)
-            except:
+            except CapturedException:
                 net = CapturedException()
             self._networks[cache_key] = net
             self._ignore_timing()
@@ -202,23 +218,24 @@ class Renderer:
         x = torch.nn.functional.embedding(x, cmap)
         return x
 
-    def init_network(self, res,
-        ckpt_pth        = None,
-        w0_seed         = 0,
-        w_load          = None,
-        w_plus          = True,
-        noise_mode      = 'const',
-        trunc_psi       = 0.7,
-        trunc_cutoff    = None,
-        input_transform = None,
-        lr              = 0.001,
-        **kwargs
-        ):
+    def init_network(self,
+                     res,
+                     ckpt_pth=None,
+                     w0_seed=0,
+                     w_load=None,
+                     w_plus=True,
+                     noise_mode='const',
+                     trunc_psi=0.7,
+                     trunc_cutoff=None,
+                     input_transform=None,
+                     lr=0.001,
+                     **kwargs):
         # Dig up network details.
-        editor = MMagicInferencer('styleganv2', 
-                          model_setting=6,
-                          model_ckpt=ckpt_pth,
-                          )
+        editor = MMagicInferencer(
+            'styleganv2',
+            model_setting=6,
+            model_ckpt=ckpt_pth,
+        )
         self.editor = editor
 
         # Generate random latents.
@@ -227,14 +244,25 @@ class Renderer:
 
         if self.w_load is None:
             # Generate random latents.
-            z = torch.from_numpy(np.random.RandomState(w0_seed).randn(1, 512)).to(torch.float32).requires_grad_(True)
+            z = torch.from_numpy(np.random.RandomState(w0_seed).randn(
+                1, 512)).to(torch.float32).requires_grad_(True)
 
             # Run mapping network.
-            sample_kwargs = { 'truncation': trunc_psi, 'return_noise': True, 'return_features': True} 
-            extra_parameters={'sample_kwargs': sample_kwargs, 'num_batches': 1, 'noise': z, 'sample_model': 'ema', 'infer_with_grad': True}
+            sample_kwargs = {
+                'truncation': trunc_psi,
+                'return_noise': True,
+                'return_features': True
+            }
+            extra_parameters = {
+                'sample_kwargs': sample_kwargs,
+                'num_batches': 1,
+                'noise': z,
+                'sample_model': 'ema',
+                'infer_with_grad': True
+            }
             results = self.editor.infer(extra_parameters=extra_parameters)
-            
-            w = results[0]['latent'].unsqueeze(0) # [1, 16, n_dim]
+
+            w = results[0]['latent'].unsqueeze(0)  # [1, 16, n_dim]
         else:
             w = self.w_load.clone().to(self._device)
 
@@ -257,34 +285,35 @@ class Renderer:
         print(f'Rebuild optimizer with lr: {lr}')
         print('    Remain feat_refs and points0_pt')
 
-    def _render_drag_impl(self, res,
-        points          = [],
-        targets         = [],
-        mask            = None,
-        lambda_mask     = 10,
-        reg             = 0,
-        feature_idx     = 5,
-        r1              = 3,
-        r2              = 12,
-        random_seed     = 0,
-        noise_mode      = 'const',
-        trunc_psi       = 0.7,
-        force_fp32      = False,
-        layer_name      = None,
-        sel_channels    = 3,
-        base_channel    = 0,
-        img_scale_db    = 0,
-        img_normalize   = False,
-        untransform     = False,
-        is_drag         = False,
-        reset           = False,
-        to_pil          = False,
-        **kwargs
-    ):
+    def _render_drag_impl(self,
+                          res,
+                          points=[],
+                          targets=[],
+                          mask=None,
+                          lambda_mask=10,
+                          reg=0,
+                          feature_idx=5,
+                          r1=3,
+                          r2=12,
+                          random_seed=0,
+                          noise_mode='const',
+                          trunc_psi=0.7,
+                          force_fp32=False,
+                          layer_name=None,
+                          sel_channels=3,
+                          base_channel=0,
+                          img_scale_db=0,
+                          img_normalize=False,
+                          untransform=False,
+                          is_drag=False,
+                          reset=False,
+                          to_pil=False,
+                          **kwargs):
         ws = self.w
         if ws.dim() == 2:
-            ws = ws.unsqueeze(1).repeat(1,6,1)
-        ws = torch.cat([ws[:,:6,:], self.w0[:,6:,:]], dim=1) # [1, 16, n_dim]
+            ws = ws.unsqueeze(1).repeat(1, 6, 1)
+        ws = torch.cat([ws[:, :6, :], self.w0[:, 6:, :]],
+                       dim=1)  # [1, 16, n_dim]
         if hasattr(self, 'points'):
             if len(points) != len(self.points):
                 reset = True
@@ -294,12 +323,24 @@ class Renderer:
         self.points = points
 
         # Run synthesis network.
-        sample_kwargs = {'truncation': 1, 'return_noise': True, 'return_features': True, 'input_is_latent': True} # 才是forward函数所输入的参数
-        extra_parameters={'sample_kwargs': sample_kwargs, 'num_batches': 1, 'noise': ws[0][:1], 'sample_model': 'ema', 'infer_with_grad': True}
-        
-        results = self.editor.infer(extra_parameters=extra_parameters) 
-        img = results[0]['fake_img'].unsqueeze(0) / 127.5  - 1. # requires_grad==True
-        feat_5 = results[0]['feats'].unsqueeze(0) # requires_grad==True
+        sample_kwargs = {
+            'truncation': 1,
+            'return_noise': True,
+            'return_features': True,
+            'input_is_latent': True
+        }  # 才是forward函数所输入的参数
+        extra_parameters = {
+            'sample_kwargs': sample_kwargs,
+            'num_batches': 1,
+            'noise': ws[0][:1],
+            'sample_model': 'ema',
+            'infer_with_grad': True
+        }
+
+        results = self.editor.infer(extra_parameters=extra_parameters)
+        img = results[0]['fake_img'].unsqueeze(
+            0) / 127.5 - 1.  # requires_grad==True
+        feat_5 = results[0]['feats'].unsqueeze(0)  # requires_grad==True
         h, w = img.shape[-1], img.shape[-2]
 
         if is_drag:
@@ -308,12 +349,14 @@ class Renderer:
             xx, yy = torch.meshgrid(X, Y)
             feat_resize = F.interpolate(feat_5, [h, w], mode='bilinear')
             if self.feat_refs is None:
-                self.feat0_resize = F.interpolate(feat_5.detach(), [h, w], mode='bilinear')
+                self.feat0_resize = F.interpolate(
+                    feat_5.detach(), [h, w], mode='bilinear')
                 self.feat_refs = []
                 for point in points:
                     py, px = round(point[0]), round(point[1])
-                    self.feat_refs.append(self.feat0_resize[:,:,py,px])
-                self.points0_pt = torch.Tensor(points).unsqueeze(0).to(self._device) # 1, N, 2
+                    self.feat_refs.append(self.feat0_resize[:, :, py, px])
+                self.points0_pt = torch.Tensor(points).unsqueeze(0).to(
+                    self._device)  # 1, N, 2
 
             # Point tracking with feature matching
             with torch.no_grad():
@@ -323,11 +366,16 @@ class Renderer:
                     down = min(point[0] + r + 1, h)
                     left = max(point[1] - r, 0)
                     right = min(point[1] + r + 1, w)
-                    feat_patch = feat_resize[:,:,up:down,left:right]
-                    L2 = torch.linalg.norm(feat_patch - self.feat_refs[j].reshape(1,-1,1,1), dim=1)
-                    _, idx = torch.min(L2.view(1,-1), -1)
+                    feat_patch = feat_resize[:, :, up:down, left:right]
+                    L2 = torch.linalg.norm(
+                        feat_patch - self.feat_refs[j].reshape(1, -1, 1, 1),
+                        dim=1)
+                    _, idx = torch.min(L2.view(1, -1), -1)
                     width = right - left
-                    point = [idx.item() // width + up, idx.item() % width + left]
+                    point = [
+                        idx.item() // width + up,
+                        idx.item() % width + left
+                    ]
                     points[j] = point
 
             res.points = [[point[0], point[1]] for point in points]
@@ -336,24 +384,32 @@ class Renderer:
             loss_motion = 0
             res.stop = True
             for j, point in enumerate(points):
-                direction = torch.Tensor([targets[j][1] - point[1], targets[j][0] - point[0]])
+                direction = torch.Tensor(
+                    [targets[j][1] - point[1], targets[j][0] - point[0]])
                 if torch.linalg.norm(direction) > max(2 / 512 * h, 2):
                     res.stop = False
                 if torch.linalg.norm(direction) > 1:
-                    distance = ((xx.to(self._device) - point[0])**2 + (yy.to(self._device) - point[1])**2)**0.5
+                    distance = ((xx.to(self._device) - point[0])**2 +
+                                (yy.to(self._device) - point[1])**2)**0.5
                     relis, reljs = torch.where(distance < round(r1 / 512 * h))
-                    direction = direction / (torch.linalg.norm(direction) + 1e-7)
-                    gridh = (relis-direction[1]) / (h-1) * 2 - 1
-                    gridw = (reljs-direction[0]) / (w-1) * 2 - 1
-                    grid = torch.stack([gridw,gridh], dim=-1).unsqueeze(0).unsqueeze(0)
-                    target = F.grid_sample(feat_resize.float(), grid, align_corners=True).squeeze(2)
-                    loss_motion += F.l1_loss(feat_resize[:,:,relis,reljs], target.detach())
+                    direction = direction / (
+                        torch.linalg.norm(direction) + 1e-7)
+                    gridh = (relis - direction[1]) / (h - 1) * 2 - 1
+                    gridw = (reljs - direction[0]) / (w - 1) * 2 - 1
+                    grid = torch.stack([gridw, gridh],
+                                       dim=-1).unsqueeze(0).unsqueeze(0)
+                    target = F.grid_sample(
+                        feat_resize.float(), grid,
+                        align_corners=True).squeeze(2)
+                    loss_motion += F.l1_loss(feat_resize[:, :, relis, reljs],
+                                             target.detach())
 
             loss = loss_motion
             if mask is not None:
                 if mask.min() == 0 and mask.max() == 1:
                     mask_usq = mask.to(self._device).unsqueeze(0).unsqueeze(0)
-                    loss_fix = F.l1_loss(feat_resize * mask_usq, self.feat0_resize * mask_usq)
+                    loss_fix = F.l1_loss(feat_resize * mask_usq,
+                                         self.feat0_resize * mask_usq)
                     loss += lambda_mask * loss_fix
 
             loss += reg * F.l1_loss(ws, self.w0)  # latent code regularization
@@ -366,14 +422,14 @@ class Renderer:
         # Scale and convert to uint8.
         img = img[0]
         if img_normalize:
-            img = img / img.norm(float('inf'), dim=[1,2], keepdim=True).clip(1e-8, 1e8)
-        img = img * (10 ** (img_scale_db / 20))
-        img = (img * 127.5 + 128).clamp(0, 255).to(torch.uint8).permute(1, 2, 0)
+            img = img / img.norm(
+                float('inf'), dim=[1, 2], keepdim=True).clip(1e-8, 1e8)
+        img = img * (10**(img_scale_db / 20))
+        img = (img * 127.5 + 128).clamp(0,
+                                        255).to(torch.uint8).permute(1, 2, 0)
         if to_pil:
             from PIL import Image
             img = img.cpu().numpy()
             img = Image.fromarray(img)
         res.image = img
         res.w = ws.detach().cpu().numpy()
-
-#----------------------------------------------------------------------------

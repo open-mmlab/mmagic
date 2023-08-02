@@ -8,14 +8,14 @@ Collections:
   - text2image
   Year: 2022
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py
+- Config: configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py
   In Collection: Stable Diffusion
   Name: stable-diffusion_ddim_denoisingunet
   Results:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Image
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py
+- Config: configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py
   In Collection: Stable Diffusion
   Name: stable-diffusion_ddim_denoisingunet-tomesd_5e-1
   Results:

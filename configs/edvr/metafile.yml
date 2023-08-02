@@ -8,7 +8,7 @@ Collections:
   - video super-resolution
   Year: 2019
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/edvr/edvrm_wotsa_8xb4-600k_reds.py
+- Config: configs/edvr/edvrm_wotsa_8xb4-600k_reds.py
   In Collection: EDVR
   Name: edvrm_wotsa_8xb4-600k_reds
   Results:
@@ -18,7 +18,7 @@ Models:
       SSIM: 0.8664
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/edvr/edvrm_8xb4-600k_reds.py
+- Config: configs/edvr/edvrm_8xb4-600k_reds.py
   In Collection: EDVR
   Name: edvrm_8xb4-600k_reds
   Results:
@@ -28,7 +28,7 @@ Models:
       SSIM: 0.8684
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_x4_8x4_600k_reds_20210625-e29b71b5.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/edvr/edvrl_wotsa-c128b40_8xb8-lr2e-4-600k_reds4.py
+- Config: configs/edvr/edvrl_wotsa-c128b40_8xb8-lr2e-4-600k_reds4.py
   In Collection: EDVR
   Name: edvrl_wotsa-c128b40_8xb8-lr2e-4-600k_reds4
   Results:
@@ -38,7 +38,7 @@ Models:
       SSIM: 0.8784
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/edvr/edvrl_wotsa_c128b40_8x8_lr2e-4_600k_reds4_20211228-d895a769.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/edvr/edvrl_c128b40_8xb8-lr2e-4-600k_reds4.py
+- Config: configs/edvr/edvrl_c128b40_8xb8-lr2e-4-600k_reds4.py
   In Collection: EDVR
   Name: edvrl_c128b40_8xb8-lr2e-4-600k_reds4
   Results:

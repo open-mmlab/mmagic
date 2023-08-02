@@ -9,7 +9,7 @@ Collections:
   - inpainting
   Year: 2021
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py
+- Config: configs/aot_gan/aot-gan_smpgan_4xb4_places-512x512.py
   In Collection: AOT-GAN
   Name: aot-gan_smpgan_4xb4_places-512x512
   Results:

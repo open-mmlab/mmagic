@@ -354,13 +354,15 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                     outputs = generator(noise, **sample_kwargs)
             else:
                 sample_kwargs = {}
-                outputs = generator(noise, return_noise=False, **sample_kwargs) # no need to be False all time
+                outputs = generator(
+                    noise, return_noise=False,
+                    **sample_kwargs)  # no need to be False all time
             if isinstance(outputs, dict):
                 latent = outputs['latent']
                 feats = outputs['feats']
                 outputs = outputs['fake_img']
             # else:t
-            
+
             outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
             gen_sample = DataSample()

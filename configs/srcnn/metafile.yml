@@ -8,7 +8,7 @@ Collections:
   - image super-resolution
   Year: 2015
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/srcnn/srcnn_x4k915_1xb16-1000k_div2k.py
+- Config: configs/srcnn/srcnn_x4k915_1xb16-1000k_div2k.py
   In Collection: SRCNN
   Name: srcnn_x4k915_1xb16-1000k_div2k
   Results:

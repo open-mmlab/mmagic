@@ -399,12 +399,11 @@ class StyleGAN2Generator(BaseModule):
                 containing more data.
         """
         # device = styles.device
-        # styles = torch.from_numpy(np.random.RandomState(0).randn(1, 512)).to(device).to(torch.float32)
         input_dim = self.style_channels if input_is_latent else self.noise_size
         # receive noise and conduct sanity check.
         if isinstance(styles, torch.Tensor):
             assert styles.shape[1] == input_dim
-            styles = [styles] # this
+            styles = [styles]  # this
         elif mmengine.is_seq_of(styles, torch.Tensor):
             for t in styles:
                 assert t.shape[-1] == input_dim
@@ -523,7 +522,7 @@ class StyleGAN2Generator(BaseModule):
                 out,
                 latent[:, 0],
                 noise=injected_noise[0],
-                add_noise=add_noise) # 特征有略微差异
+                add_noise=add_noise)  # 特征有略微差异
             feats.append(out)
             skip = self.to_rgb1(out, latent[:, 1])
 
@@ -565,6 +564,6 @@ class StyleGAN2Generator(BaseModule):
                 latent=latent,
                 inject_index=inject_index,
                 noise_batch=noise_batch)
-            return output_dict   
+            return output_dict
 
         return img

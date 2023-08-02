@@ -9,7 +9,7 @@ Collections:
   - video super-resolution
   Year: 2021
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/basicvsr/basicvsr_2xb4_reds4.py
+- Config: configs/basicvsr/basicvsr_2xb4_reds4.py
   In Collection: BasicVSR
   Name: basicvsr_2xb4_reds4
   Results:
@@ -44,7 +44,7 @@ Models:
       SSIM (Y): 0.7455
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/basicvsr/basicvsr_2xb4_vimeo90k-bi.py
+- Config: configs/basicvsr/basicvsr_2xb4_vimeo90k-bi.py
   In Collection: BasicVSR
   Name: basicvsr_2xb4_vimeo90k-bi
   Results:
@@ -79,7 +79,7 @@ Models:
       SSIM (Y): 0.7636
     Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_vimeo90k_bi_20210409-d2d8f760.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/basicvsr/basicvsr_2xb4_vimeo90k-bd.py
+- Config: configs/basicvsr/basicvsr_2xb4_vimeo90k-bd.py
   In Collection: BasicVSR
   Name: basicvsr_2xb4_vimeo90k-bd
   Results:

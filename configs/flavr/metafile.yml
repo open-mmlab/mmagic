@@ -8,7 +8,7 @@ Collections:
   - video interpolation
   Year: 2020
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py
+- Config: configs/flavr/flavr_in4out1_8xb4_vimeo90k-septuplet.py
   In Collection: FLAVR
   Name: flavr_in4out1_8xb4_vimeo90k-septuplet
   Results:

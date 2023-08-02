@@ -8,7 +8,7 @@ Collections:
   - unconditional gans
   Year: 2021
 Models:
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/stylegan2_c2_8xb3-1100kiters_ffhq-256x256.py
+- Config: configs/positional_encoding_in_gans/stylegan2_c2_8xb3-1100kiters_ffhq-256x256.py
   In Collection: Positional Encoding in GANs
   Name: stylegan2_c2_8xb3-1100kiters_ffhq-256x256
   Results:
@@ -28,7 +28,7 @@ Models:
       Scales: 256.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/stylegan2_c2_config-a_ffhq_256x256_b3x8_1100k_20210406_145127-71d9634b.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/stylegan2_c2_8xb3-1100kiters_ffhq-512x512.py
+- Config: configs/positional_encoding_in_gans/stylegan2_c2_8xb3-1100kiters_ffhq-512x512.py
   In Collection: Positional Encoding in GANs
   Name: stylegan2_c2_8xb3-1100kiters_ffhq-512x512
   Results:
@@ -48,7 +48,7 @@ Models:
       Scales: 512.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/stylegan2_c2_config-b_ffhq_512x512_b3x8_1100k_20210406_145142-e85e5cf4.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-c_c2_8xb3-1100kiters_ffhq-256-512.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-c_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-c_c2_8xb3-1100kiters_ffhq-256-512
   Results:
@@ -66,7 +66,7 @@ Models:
       Recall10k: 55.77
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-c_ffhq_256-512_b3x8_1100k_20210406_144824-9f43b07d.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-d_c2_8xb3-1100kiters_ffhq-256-512.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-d_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-d_c2_8xb3-1100kiters_ffhq-256-512
   Results:
@@ -84,7 +84,7 @@ Models:
       Recall10k: 56.16
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-d_ffhq_256-512_b3x8_1100k_20210406_144840-dbefacf6.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-e_c2_8xb3-1100kiters_ffhq-256-512.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-e_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-e_c2_8xb3-1100kiters_ffhq-256-512
   Results:
@@ -102,7 +102,7 @@ Models:
       Recall10k: 56.88
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-e_ffhq_256-512_b3x8_1100k_20210406_144906-98d5a42a.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-512.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-512
   Results:
@@ -120,7 +120,7 @@ Models:
       Recall10k: 57.32
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-f_ffhq_256-512_b3x8_1100k_20210406_144927-4f4d5391.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-g_c1_8xb3-1100kiters_ffhq-256-512.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-g_c1_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-g_c1_8xb3-1100kiters_ffhq-256-512
   Results:
@@ -138,7 +138,7 @@ Models:
       Recall10k: 56.45
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c1_config-g_ffhq_256-512_b3x8_1100k_20210406_144758-2df61752.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-h_c2_8xb3-1100kiters_ffhq-256-512.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-h_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-h_c2_8xb3-1100kiters_ffhq-256-512
   Results:
@@ -156,7 +156,7 @@ Models:
       Recall10k: 54.35
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-h_ffhq_256-512_b3x8_1100k_20210406_145006-84cf3f48.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-i_c2_8xb3-1100kiters_ffhq-256-512.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-i_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-i_c2_8xb3-1100kiters_ffhq-256-512
   Results:
@@ -174,7 +174,7 @@ Models:
       Recall10k: 54.71
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-i_ffhq_256-512_b3x8_1100k_20210406_145023-c2b0accf.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-j_c2_8xb3-1100kiters_ffhq-256-512.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-j_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-j_c2_8xb3-1100kiters_ffhq-256-512
   Results:
@@ -192,7 +192,7 @@ Models:
       Recall10k: 54.63
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-j_ffhq_256-512_b3x8_1100k_20210406_145044-c407481b.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-k_c2_8xb3-1100kiters_ffhq-256-512.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-k_c2_8xb3-1100kiters_ffhq-256-512.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-k_c2_8xb3-1100kiters_ffhq-256-512
   Results:
@@ -210,7 +210,7 @@ Models:
       Recall10k: 51.07
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-k_ffhq_256-512_b3x8_1100k_20210406_145105-6d8cc39f.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-896.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-896.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-f_c2_8xb3-1100kiters_ffhq-256-896
   Results:
@@ -228,7 +228,7 @@ Models:
       Recall10k: 50.29
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c2_config-f_ffhq_256-896_b3x8_1100k_20210406_144943-6c18ad5d.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c1_8xb2-1600kiters_ffhq-256-1024.py
+- Config: configs/positional_encoding_in_gans/mspie-stylegan2-config-f_c1_8xb2-1600kiters_ffhq-256-1024.py
   In Collection: Positional Encoding in GANs
   Name: mspie-stylegan2-config-f_c1_8xb2-1600kiters_ffhq-256-1024
   Results:
@@ -246,7 +246,7 @@ Models:
       Recall10k: 49.92
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/mspie-stylegan2_c1_config-f_ffhq_256-1024_b2x8_1600k_20210406_144716-81cbdc96.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/singan_interp-pad_balloons.py
+- Config: configs/positional_encoding_in_gans/singan_interp-pad_balloons.py
   In Collection: Positional Encoding in GANs
   Name: singan_interp-pad_balloons
   Results:
@@ -255,7 +255,7 @@ Models:
       Num Scales: 8.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_interp-pad_balloons_20210406_180014-96f51555.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/singan_interp-pad_disc-nobn_balloons.py
+- Config: configs/positional_encoding_in_gans/singan_interp-pad_disc-nobn_balloons.py
   In Collection: Positional Encoding in GANs
   Name: singan_interp-pad_disc-nobn_balloons
   Results:
@@ -264,7 +264,7 @@ Models:
       Num Scales: 8.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_interp-pad_disc-nobn_balloons_20210406_180059-7d63e65d.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/singan_interp-pad_disc-nobn_fish.py
+- Config: configs/positional_encoding_in_gans/singan_interp-pad_disc-nobn_fish.py
   In Collection: Positional Encoding in GANs
   Name: singan_interp-pad_disc-nobn_fish
   Results:
@@ -273,7 +273,7 @@ Models:
       Num Scales: 10.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_interp-pad_disc-nobn_fis_20210406_175720-9428517a.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/singan-csg_fish.py
+- Config: configs/positional_encoding_in_gans/singan-csg_fish.py
   In Collection: Positional Encoding in GANs
   Name: singan-csg_fish
   Results:
@@ -282,7 +282,7 @@ Models:
       Num Scales: 10.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_csg_fis_20210406_175532-f0ec7b61.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/singan-csg_bohemian.py
+- Config: configs/positional_encoding_in_gans/singan-csg_bohemian.py
   In Collection: Positional Encoding in GANs
   Name: singan-csg_bohemian
   Results:
@@ -291,7 +291,7 @@ Models:
       Num Scales: 10.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_csg_bohemian_20210407_195455-5ed56db2.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/singan_spe-dim4_fish.py
+- Config: configs/positional_encoding_in_gans/singan_spe-dim4_fish.py
   In Collection: Positional Encoding in GANs
   Name: singan_spe-dim4_fish
   Results:
@@ -300,7 +300,7 @@ Models:
       Num Scales: 10.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_spe-dim4_fish_20210406_175933-f483a7e3.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/singan_spe-dim4_bohemian.py
+- Config: configs/positional_encoding_in_gans/singan_spe-dim4_bohemian.py
   In Collection: Positional Encoding in GANs
   Name: singan_spe-dim4_bohemian
   Results:
@@ -309,7 +309,7 @@ Models:
       Num Scales: 10.0
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/pe_in_gans/singan_spe-dim4_bohemian_20210406_175820-6e484a35.pth
-- Config: /data/sq/my_project/openmmlab/mmagic/configs/positional_encoding_in_gans/singan_spe-dim8_bohemian.py
+- Config: configs/positional_encoding_in_gans/singan_spe-dim8_bohemian.py
   In Collection: Positional Encoding in GANs
   Name: singan_spe-dim8_bohemian
   Results:
