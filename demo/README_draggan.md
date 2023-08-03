@@ -11,5 +11,5 @@ First, put your checkpoint path in `./checkpoints`, *e.g.* `./checkpoints/styleg
 Then, try on the script:
 
 ```
-python demo/demo_DragGAN/gradio_draggan.py
+python demo/gradio_draggan.py
 ```
