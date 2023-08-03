@@ -10,13 +10,14 @@ import sys
 import traceback
 
 import matplotlib.cm
+import matplotlib.font_manager
 import numpy as np
 import torch
 import torch.fft
 import torch.nn.functional as F
 from PIL import Image, ImageDraw, ImageFont
 
-from demo.demo_DragGAN.gradio_utils.utils import EasyDict
+from demo.utils.gradio_utils.utils import EasyDict
 from mmagic.apis import MMagicInferencer
 
 
@@ -56,8 +57,10 @@ def add_watermark_np(input_image_array, watermark_text='AI Generated'):
 
     # Initialize text image
     txt = Image.new('RGBA', image.size, (255, 255, 255, 0))
-    font = ImageFont.truetype('./demo/demo_DragGAN/arial.ttf',
-                              round(25 / 512 * image.size[0]))
+    ttf_pth = matplotlib.font_manager.findSystemFonts(
+        fontpaths=None, fontext='ttf')[-1]
+
+    font = ImageFont.truetype(ttf_pth, round(25 / 512 * image.size[0]))
     d = ImageDraw.Draw(txt)
 
     text_width, text_height = font.getsize(watermark_text)

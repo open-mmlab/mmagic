@@ -9,13 +9,11 @@ import numpy as np
 import torch
 from PIL import Image
 
-from demo.demo_DragGAN.gradio_utils import (EasyDict, ImageMask,
-                                            draw_mask_on_image,
-                                            draw_points_on_image,
-                                            get_latest_points_pair,
-                                            get_valid_mask,
-                                            on_change_single_global_state)
-from demo.demo_DragGAN.renderer import Renderer, add_watermark_np
+from demo.utils.gradio_utils import (EasyDict, ImageMask, draw_mask_on_image,
+                                     draw_points_on_image,
+                                     get_latest_points_pair, get_valid_mask,
+                                     on_change_single_global_state)
+from demo.utils.renderer import Renderer, add_watermark_np
 
 parser = ArgumentParser()
 parser.add_argument('--share', action='store_true', default='True')
