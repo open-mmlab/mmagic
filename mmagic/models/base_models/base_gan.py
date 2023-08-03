@@ -352,6 +352,10 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
             if sample_kwargs:
                 if 'return_noise' in sample_kwargs.keys():
                     outputs = generator(noise, **sample_kwargs)
+                else:
+                    outputs = generator(
+                        noise, return_noise=False,
+                        **sample_kwargs)  # yapf: disable
             else:
                 sample_kwargs = {}
                 outputs = generator(
