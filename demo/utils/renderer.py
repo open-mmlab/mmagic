@@ -17,7 +17,7 @@ import torch.fft
 import torch.nn.functional as F
 from PIL import Image, ImageDraw, ImageFont
 
-from demo.utils.gradio_utils.utils import EasyDict
+from demo.utils.gradio_utils import EasyDict
 from mmagic.apis import MMagicInferencer
 
 
