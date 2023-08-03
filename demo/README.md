@@ -283,3 +283,15 @@ python demo/mmagic_inference_demo.py \
     --model-name eg3d \
     --result-out-dir ./resources/output/eg3d-output
 ```
+
+## 3. Gradio demo
+
+## 3.1 DragGAN
+
+First, put your checkpoint path in `./checkpoints`, *e.g.* `./checkpoints/stylegan2_lions_512_pytorch_mmagic.pth`
+
+Then, try on the script:
+
+```
+python demo/gradio_draggan.py
+```
