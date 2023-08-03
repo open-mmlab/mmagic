@@ -141,7 +141,6 @@ class DataPreprocessor(ImgDataPreprocessor):
     @staticmethod
     def _parse_channel_index(inputs) -> int:
         """Parse channel index of inputs."""
-        # import ipdb; ipdb.set_trace()
         channel_index_mapping = {2: 1, 3: 0, 4: 1, 5: 2}
         if isinstance(inputs, dict):
             ndim = inputs['fake_img'].ndim

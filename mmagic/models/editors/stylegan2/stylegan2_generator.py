@@ -403,7 +403,7 @@ class StyleGAN2Generator(BaseModule):
         # receive noise and conduct sanity check.
         if isinstance(styles, torch.Tensor):
             assert styles.shape[1] == input_dim
-            styles = [styles]  # this
+            styles = [styles]
         elif mmengine.is_seq_of(styles, torch.Tensor):
             for t in styles:
                 assert t.shape[-1] == input_dim
@@ -522,7 +522,7 @@ class StyleGAN2Generator(BaseModule):
                 out,
                 latent[:, 0],
                 noise=injected_noise[0],
-                add_noise=add_noise)  # 特征有略微差异
+                add_noise=add_noise)
             feats.append(out)
             skip = self.to_rgb1(out, latent[:, 1])
 

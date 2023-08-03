@@ -328,7 +328,7 @@ class Renderer:
             'return_noise': True,
             'return_features': True,
             'input_is_latent': True
-        }  # 才是forward函数所输入的参数
+        }
         extra_parameters = {
             'sample_kwargs': sample_kwargs,
             'num_batches': 1,

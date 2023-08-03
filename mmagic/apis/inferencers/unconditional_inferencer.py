@@ -44,7 +44,6 @@ class UnconditionalInferencer(BaseMMagicInferencer):
 
     def forward(self, inputs: InputsType) -> PredType:
         """Forward the inputs to the model."""
-        # import ipdb; ipdb.set_trace()
         return self.model(inputs)
 
     def visualize(self,
