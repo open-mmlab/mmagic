@@ -1,12 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
-from mmagic.models.editors.stable_diffusion.vae import AutoencoderKL
+from mmagic.models.editors.stablesr.vqgan import AutoencoderKL_Resi
 
 
 def test_vq_encode():
     input = torch.rand((2, 3, 512, 512))
-    vae = AutoencoderKL(
+    vae = AutoencoderKL_Resi(
         latent_channels=4,
         down_block_types=('DownEncoderBlock2D', 'DownEncoderBlock2D',
                           'DownEncoderBlock2D', 'DownEncoderBlock2D'),

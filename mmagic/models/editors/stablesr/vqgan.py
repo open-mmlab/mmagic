@@ -1,6 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
-from typing import Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import mmengine
 import numpy as np
@@ -12,6 +12,7 @@ from mmengine.utils.dl_utils import TORCH_VERSION
 from mmengine.utils.version_utils import digit_version
 
 from mmagic.registry import MODELS
+from .fusion_block import Fuse_sft_block_RRDB
 
 
 class Downsample2D(nn.Module):
@@ -556,14 +557,20 @@ class DownEncoderBlock2D(nn.Module):
         else:
             self.downsamplers = None
 
-    def forward(self, hidden_states):
+    def forward(self, hidden_states, return_feat=False):
         """forward with hidden states."""
         for resnet in self.resnets:
             hidden_states = resnet(hidden_states, temb=None)
 
+        if return_feat:
+            mid_hidden_states = hidden_states
+
         if self.downsamplers is not None:
             for downsampler in self.downsamplers:
                 hidden_states = downsampler(hidden_states)
+
+        if return_feat:
+            return hidden_states, mid_hidden_states
 
         return hidden_states
 
@@ -643,14 +650,16 @@ class Encoder(nn.Module):
         self.conv_out = nn.Conv2d(
             block_out_channels[-1], conv_out_channels, 3, padding=1)
 
-    def forward(self, x):
+    def forward(self, x, return_feat=False):
         """encoder forward."""
         sample = x
         sample = self.conv_in(sample)
 
-        # down
+        # downsampling
+        fea_list = []
         for down_block in self.down_blocks:
-            sample = down_block(sample)
+            sample, before_down_feat = down_block(sample, return_feat)
+            fea_list.append(before_down_feat)
 
         # middle
         sample = self.mid_block(sample)
@@ -660,31 +669,39 @@ class Encoder(nn.Module):
         sample = self.conv_act(sample)
         sample = self.conv_out(sample)
 
+        if return_feat:
+            return sample, fea_list
+
         return sample
 
 
 class UpDecoderBlock2D(nn.Module):
     """construct up decoder block."""
 
-    def __init__(
-        self,
-        in_channels: int,
-        out_channels: int,
-        dropout: float = 0.0,
-        num_layers: int = 1,
-        resnet_eps: float = 1e-6,
-        resnet_time_scale_shift: str = 'default',
-        resnet_act_fn: str = 'swish',
-        resnet_groups: int = 32,
-        resnet_pre_norm: bool = True,
-        output_scale_factor=1.0,
-        add_upsample=True,
-    ):
+    def __init__(self,
+                 in_channels: int,
+                 out_channels: int,
+                 dropout: float = 0.0,
+                 num_layers: int = 1,
+                 resnet_eps: float = 1e-6,
+                 resnet_time_scale_shift: str = 'default',
+                 resnet_act_fn: str = 'swish',
+                 resnet_groups: int = 32,
+                 resnet_pre_norm: bool = True,
+                 output_scale_factor=1.0,
+                 add_upsample=True,
+                 num_fuse_block=2):
         super().__init__()
         resnets = []
 
         for i in range(num_layers):
             input_channels = in_channels if i == 0 else out_channels
+
+            fuse_layer = Fuse_sft_block_RRDB(
+                in_ch=out_channels,
+                out_ch=out_channels,
+                num_block=num_fuse_block)
+            setattr(self, 'fusion_layer_{}'.format(i), fuse_layer)
 
             resnets.append(
                 ResnetBlock2D(
@@ -710,10 +727,15 @@ class UpDecoderBlock2D(nn.Module):
         else:
             self.upsamplers = None
 
-    def forward(self, hidden_states):
+    def forward(self, hidden_states, enc_fea):
         """forward hidden states."""
         for resnet in self.resnets:
             hidden_states = resnet(hidden_states, temb=None)
+
+        # unchanged
+        # if i_level != self.num_resolutions-1 and i_level != 0:
+        #     cur_fuse_layer = getattr(self, 'fusion_layer_{}'.format(i_level))
+        #     h = cur_fuse_layer(enc_fea[i_level-1], h, self.fusion_w)
 
         if self.upsamplers is not None:
             for upsampler in self.upsamplers:
@@ -816,6 +838,107 @@ class Decoder(nn.Module):
         return sample
 
 
+class Decoder_MIX(nn.Module):
+    """construct decoder in vae."""
+
+    def __init__(self,
+                 in_channels=3,
+                 out_channels=3,
+                 up_block_types=('UpDecoderBlock2D', ),
+                 block_out_channels=(64, ),
+                 layers_per_block=2,
+                 norm_num_groups=32,
+                 act_fn='silu',
+                 num_fuse_block=2,
+                 fusion_w=1.0):
+        super().__init__()
+        self.fusion_w = fusion_w
+        self.layers_per_block = layers_per_block
+
+        self.conv_in = nn.Conv2d(
+            in_channels,
+            block_out_channels[-1],
+            kernel_size=3,
+            stride=1,
+            padding=1)
+
+        self.mid_block = None
+        self.up_blocks = nn.ModuleList([])
+
+        # mid
+        self.mid_block = UNetMidBlock2D(
+            in_channels=block_out_channels[-1],
+            resnet_eps=1e-6,
+            resnet_act_fn=act_fn,
+            output_scale_factor=1,
+            resnet_time_scale_shift='default',
+            attn_num_head_channels=None,
+            resnet_groups=norm_num_groups,
+            temb_channels=None,
+        )
+
+        # up
+        reversed_block_out_channels = list(reversed(block_out_channels))
+        output_channel = reversed_block_out_channels[0]
+        for i, up_block_type in enumerate(up_block_types):
+            prev_output_channel = output_channel
+            output_channel = reversed_block_out_channels[i]
+
+            is_final_block = i == len(block_out_channels) - 1
+
+            # TODO
+            if i in [1, 2]:
+                num_fuse_block = num_fuse_block
+            else:
+                num_fuse_block = 0
+
+            up_block = UpDecoderBlock2D(
+                num_layers=self.layers_per_block + 1,
+                in_channels=prev_output_channel,
+                out_channels=output_channel,
+                add_upsample=not is_final_block,
+                resnet_eps=1e-6,
+                resnet_act_fn=act_fn,
+                resnet_groups=norm_num_groups,
+                num_fuse_block=num_fuse_block)
+            self.up_blocks.append(up_block)
+            prev_output_channel = output_channel
+
+        # out
+        self.conv_norm_out = nn.GroupNorm(
+            num_channels=block_out_channels[0],
+            num_groups=norm_num_groups,
+            eps=1e-6)
+        if digit_version(TORCH_VERSION) > digit_version('1.6.0'):
+            self.conv_act = nn.SiLU()
+        else:
+            mmengine.print_log('\'SiLU\' is not supported for '
+                               f'torch < 1.6.0, found \'{torch.version}\'.'
+                               'Use ReLu instead but result maybe wrong')
+            self.conv_act = nn.ReLU()
+        self.conv_out = nn.Conv2d(
+            block_out_channels[0], out_channels, 3, padding=1)
+
+    def forward(self, z):
+        """decoder forward."""
+        sample = z
+        sample = self.conv_in(sample)
+
+        # middle
+        sample = self.mid_block(sample)
+
+        # up
+        for up_block in self.up_blocks:
+            sample = up_block(sample)
+
+        # post-process
+        sample = self.conv_norm_out(sample)
+        sample = self.conv_act(sample)
+        sample = self.conv_out(sample)
+
+        return sample
+
+
 class DiagonalGaussianDistribution(object):
     """Calculate diagonal gaussian distribution."""
 
@@ -876,8 +999,8 @@ class DiagonalGaussianDistribution(object):
         return self.mean
 
 
-@MODELS.register_module('EditAutoencoderKL')
-class AutoencoderKL(nn.Module):
+@MODELS.register_module('EditAutoencoderKL_Resi')
+class AutoencoderKL_Resi(nn.Module):
     r"""Variational Autoencoder (VAE) model with KL loss
     from the paper Auto-Encoding Variational Bayes by Diederik P. Kingma
     and Max Welling.
@@ -932,7 +1055,17 @@ class AutoencoderKL(nn.Module):
         )
 
         # pass init params to Decoder
-        self.decoder = Decoder(
+        # self.decoder = Decoder(
+        #     in_channels=latent_channels,
+        #     out_channels=out_channels,
+        #     up_block_types=up_block_types,
+        #     block_out_channels=block_out_channels,
+        #     layers_per_block=layers_per_block,
+        #     norm_num_groups=norm_num_groups,
+        #     act_fn=act_fn,
+        # )
+
+        self.decoder = Decoder_MIX(
             in_channels=latent_channels,
             out_channels=out_channels,
             up_block_types=up_block_types,
@@ -940,7 +1073,8 @@ class AutoencoderKL(nn.Module):
             layers_per_block=layers_per_block,
             norm_num_groups=norm_num_groups,
             act_fn=act_fn,
-        )
+            num_fuse_block=2,
+            fusion_w=1.0)
 
         self.quant_conv = torch.nn.Conv2d(2 * latent_channels,
                                           2 * latent_channels, 1)
@@ -952,22 +1086,32 @@ class AutoencoderKL(nn.Module):
         """The data type of the parameters of VAE."""
         return next(self.parameters()).dtype
 
-    def encode(self, x: torch.FloatTensor, return_dict: bool = True) -> Dict:
+    def encode(self,
+               x: torch.FloatTensor,
+               return_feat: bool = False,
+               return_dict: bool = True) -> Dict:
         """encode input."""
-        h = self.encoder(x)
+        if return_feat:
+            h, enc_fea_lq = self.encoder(x, return_feat)
+        else:
+            h, _ = self.encoder(x, return_feat)
         moments = self.quant_conv(h)
         posterior = DiagonalGaussianDistribution(moments)
 
         if not return_dict:
             return (posterior, )
 
+        if return_feat:
+            return Dict(latent_dist=posterior), enc_fea_lq
+
         return Dict(latent_dist=posterior)
 
-    def decode(self, z: torch.FloatTensor, return_dict: bool = True) \
+    def decode(self, z: torch.FloatTensor,
+               enc_fea: List[torch.FloatTensor], return_dict: bool = True) \
             -> Union[Dict, torch.FloatTensor]:
         """decode z."""
         z = self.post_quant_conv(z)
-        dec = self.decoder(z)
+        dec = self.decoder(z, enc_fea)
 
         if not return_dict:
             return (dec, )
