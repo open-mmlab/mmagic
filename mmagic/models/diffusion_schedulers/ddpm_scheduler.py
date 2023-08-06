@@ -17,8 +17,8 @@ class EditDDPMScheduler:
                  beta_end: float = 0.02,
                  beta_schedule: str = 'linear',
                  trained_betas: Optional[Union[np.array, list]] = None,
-                 variance_type='fixed_small',
-                 clip_sample=True):
+                 variance_type: str = 'fixed_small',
+                 clip_sample: bool = True):
         """```EditDDPMScheduler``` support the diffusion and reverse process
         formulated in https://arxiv.org/abs/2006.11239.
 
@@ -46,6 +46,8 @@ class EditDDPMScheduler:
                 original image (x0) to [-1, 1]. Defaults to True.
         """
         self.num_train_timesteps = num_train_timesteps
+        self.variance_type = variance_type
+        self.clip_sample = clip_sample
         if trained_betas is not None:
             self.betas = np.asarray(trained_betas)
         elif beta_schedule == 'linear':
@@ -74,11 +76,8 @@ class EditDDPMScheduler:
         self.num_inference_steps = None
         self.timesteps = np.arange(0, num_train_timesteps)[::-1].copy()
 
-        self.variance_type = variance_type
-        self.clip_sample = clip_sample
-
-    def set_timesteps(self, num_inference_steps):
-        """set timesteps."""
+    def set_timesteps(self, num_inference_steps, offset=0):
+        """set time steps."""
 
         num_inference_steps = min(self.num_train_timesteps,
                                   num_inference_steps)
@@ -86,6 +85,7 @@ class EditDDPMScheduler:
         self.timesteps = np.arange(
             0, self.num_train_timesteps,
             self.num_train_timesteps // self.num_inference_steps)[::-1].copy()
+        self.timesteps += offset
 
     def _get_variance(self, t, predicted_variance=None, variance_type=None):
         """get variance."""
@@ -133,13 +133,12 @@ class EditDDPMScheduler:
              model_output: torch.FloatTensor,
              timestep: int,
              sample: torch.FloatTensor,
-             predict_epsilon=True,
+             predict_epsilon: bool = True,
              cond_fn=None,
              cond_kwargs={},
              generator=None):
-
+        """step forward."""
         t = timestep
-        """step forward"""
 
         if model_output.shape[1] == sample.shape[
                 1] * 2 and self.variance_type in ['learned', 'learned_range']:

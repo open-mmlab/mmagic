@@ -1,10 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 
+from mmagic.models.editors.stable_diffusion.vae import AutoencoderKL
 from mmagic.models.editors.stablesr.vqgan import AutoencoderKL_Resi
 
 
-def test_vq_encode():
+def test_vqmodel():
     input = torch.rand((2, 3, 512, 512))
     vae = AutoencoderKL_Resi(
         latent_channels=4,
@@ -21,4 +22,23 @@ def test_vq_encode():
 
     samples = torch.rand((2, 4, 64, 64))
     x_sample = vae.decode(samples, enc_fea_lq[1:3])
-    assert x_sample.shape == (2, 3, 512, 512)
+    assert x_sample.sample.shape == (2, 3, 512, 512)
+
+
+def test_vaemodel():
+    input = torch.rand((1, 3, 32, 32))
+    vae = AutoencoderKL(
+        act_fn='silu',
+        block_out_channels=[128],
+        down_block_types=['DownEncoderBlock2D'],
+        in_channels=3,
+        latent_channels=4,
+        layers_per_block=1,
+        norm_num_groups=32,
+        out_channels=3,
+        sample_size=128,
+        up_block_types=[
+            'UpDecoderBlock2D',
+        ])
+    output = vae.forward(input)
+    assert output['sample'].shape == (1, 3, 32, 32)

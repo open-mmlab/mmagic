@@ -678,30 +678,38 @@ class Encoder(nn.Module):
 class UpDecoderBlock2D(nn.Module):
     """construct up decoder block."""
 
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 dropout: float = 0.0,
-                 num_layers: int = 1,
-                 resnet_eps: float = 1e-6,
-                 resnet_time_scale_shift: str = 'default',
-                 resnet_act_fn: str = 'swish',
-                 resnet_groups: int = 32,
-                 resnet_pre_norm: bool = True,
-                 output_scale_factor=1.0,
-                 add_upsample=True,
-                 num_fuse_block=2):
+    def __init__(
+        self,
+        in_channels: int,
+        out_channels: int,
+        index: int,
+        fusion_w: int,
+        dropout: float = 0.0,
+        num_layers: int = 1,
+        resnet_eps: float = 1e-6,
+        resnet_time_scale_shift: str = 'default',
+        resnet_act_fn: str = 'swish',
+        resnet_groups: int = 32,
+        resnet_pre_norm: bool = True,
+        output_scale_factor=1.0,
+        add_upsample=True,
+        num_fuse_block=2,
+    ):
         super().__init__()
         resnets = []
+
+        self.index = index
+        self.fusion_w = fusion_w
 
         for i in range(num_layers):
             input_channels = in_channels if i == 0 else out_channels
 
-            fuse_layer = Fuse_sft_block_RRDB(
-                in_ch=out_channels,
-                out_ch=out_channels,
-                num_block=num_fuse_block)
-            setattr(self, 'fusion_layer_{}'.format(i), fuse_layer)
+            if num_fuse_block != 0:
+                fuse_layer = Fuse_sft_block_RRDB(
+                    in_ch=out_channels,
+                    out_ch=out_channels,
+                    num_block=num_fuse_block)
+                setattr(self, 'fusion_layer_{}'.format(index), fuse_layer)
 
             resnets.append(
                 ResnetBlock2D(
@@ -733,9 +741,12 @@ class UpDecoderBlock2D(nn.Module):
             hidden_states = resnet(hidden_states, temb=None)
 
         # unchanged
-        # if i_level != self.num_resolutions-1 and i_level != 0:
-        #     cur_fuse_layer = getattr(self, 'fusion_layer_{}'.format(i_level))
-        #     h = cur_fuse_layer(enc_fea[i_level-1], h, self.fusion_w)
+        # TODO: `2 - i_level`
+        i_level = self.index
+        if i_level in [1, 2]:
+            cur_fuse_layer = getattr(self, 'fusion_layer_{}'.format(i_level))
+            hidden_states = cur_fuse_layer(enc_fea[2 - i_level], hidden_states,
+                                           self.fusion_w)
 
         if self.upsamplers is not None:
             for upsampler in self.upsamplers:
@@ -888,7 +899,7 @@ class Decoder_MIX(nn.Module):
 
             # TODO
             if i in [1, 2]:
-                num_fuse_block = num_fuse_block
+                num_fuse_block = 2
             else:
                 num_fuse_block = 0
 
@@ -900,7 +911,9 @@ class Decoder_MIX(nn.Module):
                 resnet_eps=1e-6,
                 resnet_act_fn=act_fn,
                 resnet_groups=norm_num_groups,
-                num_fuse_block=num_fuse_block)
+                num_fuse_block=num_fuse_block,
+                index=i,
+                fusion_w=self.fusion_w)
             self.up_blocks.append(up_block)
             prev_output_channel = output_channel
 
@@ -919,17 +932,17 @@ class Decoder_MIX(nn.Module):
         self.conv_out = nn.Conv2d(
             block_out_channels[0], out_channels, 3, padding=1)
 
-    def forward(self, z):
+    def forward(self, z, enc_fea):
         """decoder forward."""
         sample = z
         sample = self.conv_in(sample)
 
         # middle
-        sample = self.mid_block(sample)
+        sample = self.mid_block(sample)  # 2,512,64,64
 
-        # up
+        # upsampling
         for up_block in self.up_blocks:
-            sample = up_block(sample)
+            sample = up_block(sample, enc_fea)
 
         # post-process
         sample = self.conv_norm_out(sample)

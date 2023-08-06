@@ -10,34 +10,32 @@ from mmagic.registry import DIFFUSION_SCHEDULERS
 
 @DIFFUSION_SCHEDULERS.register_module()
 class EditDDIMScheduler:
-    """```EditDDIMScheduler``` support the diffusion and reverse process
-    formulated in https://arxiv.org/abs/2010.02502.
 
-    The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddim.py. # noqa
-    The difference is that we ensemble gradient-guided sampling in step function.
+    def __init__(self,
+                 num_train_timesteps: int = 1000,
+                 beta_start: float = 0.0001,
+                 beta_end: float = 0.02,
+                 beta_schedule: str = 'linear',
+                 variance_type: str = 'learned_range',
+                 timestep_values=None,
+                 clip_sample: bool = True,
+                 set_alpha_to_one=True):
+        """```EditDDIMScheduler``` support the diffusion and reverse process
+        formulated in https://arxiv.org/abs/2010.02502.
 
-    Args:
-        num_train_timesteps (int, optional): _description_. Defaults to 1000.
-        beta_start (float, optional): _description_. Defaults to 0.0001.
-        beta_end (float, optional): _description_. Defaults to 0.02.
-        beta_schedule (str, optional): _description_. Defaults to "linear".
-        variance_type (str, optional): _description_. Defaults to 'learned_range'.
-        timestep_values (_type_, optional): _description_. Defaults to None.
-        clip_sample (bool, optional): _description_. Defaults to True.
-        set_alpha_to_one (bool, optional): _description_. Defaults to True.
-    """
+        The code is heavily influenced by https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_ddim.py. # noqa
+        The difference is that we ensemble gradient-guided sampling in step function.
 
-    def __init__(
-        self,
-        num_train_timesteps=1000,
-        beta_start=0.0001,
-        beta_end=0.02,
-        beta_schedule='linear',
-        variance_type='learned_range',
-        timestep_values=None,
-        clip_sample=True,
-        set_alpha_to_one=True,
-    ):
+        Args:
+            num_train_timesteps (int, optional): _description_. Defaults to 1000.
+            beta_start (float, optional): _description_. Defaults to 0.0001.
+            beta_end (float, optional): _description_. Defaults to 0.02.
+            beta_schedule (str, optional): _description_. Defaults to "linear".
+            variance_type (str, optional): _description_. Defaults to 'learned_range'.
+            timestep_values (_type_, optional): _description_. Defaults to None.
+            clip_sample (bool, optional): _description_. Defaults to True.
+            set_alpha_to_one (bool, optional): _description_. Defaults to True.
+        """
         self.num_train_timesteps = num_train_timesteps
         self.beta_start = beta_start
         self.beta_end = beta_end
@@ -93,22 +91,6 @@ class EditDDIMScheduler:
             self.num_train_timesteps // self.num_inference_steps)[::-1].copy()
         self.timesteps += offset
 
-    def scale_model_input(self,
-                          sample: torch.FloatTensor,
-                          timestep: Optional[int] = None) -> torch.FloatTensor:
-        """Ensures interchangeability with schedulers that need to scale the
-        denoising model input depending on the current timestep.
-
-        Args:
-            sample (`torch.FloatTensor`): input sample
-            timestep (`int`, optional): current timestep
-
-        Returns:
-            `torch.FloatTensor`: scaled input sample
-        """
-
-        return sample
-
     def _get_variance(self, timestep, prev_timestep):
         """get variance."""
 
@@ -121,17 +103,15 @@ class EditDDIMScheduler:
                     beta_prod_t) * (1 - alpha_prod_t / alpha_prod_t_prev)
         return variance
 
-    def step(
-        self,
-        model_output: Union[torch.FloatTensor, np.ndarray],
-        timestep: int,
-        sample: Union[torch.FloatTensor, np.ndarray],
-        cond_fn=None,
-        cond_kwargs={},
-        eta: float = 0.0,
-        use_clipped_model_output: bool = False,
-        generator=None,
-    ):
+    def step(self,
+             model_output: Union[torch.FloatTensor, np.ndarray],
+             timestep: int,
+             sample: Union[torch.FloatTensor, np.ndarray],
+             cond_fn=None,
+             cond_kwargs={},
+             eta: float = 0.0,
+             use_clipped_model_output: bool = False,
+             generator=None):
         """step forward."""
 
         output = {}
@@ -254,6 +234,22 @@ class EditDDIMScheduler:
             sqrt_alpha_prod * original_samples +
             sqrt_one_minus_alpha_prod * noise)
         return noisy_samples
+
+    def scale_model_input(self,
+                          sample: torch.FloatTensor,
+                          timestep: Optional[int] = None) -> torch.FloatTensor:
+        """Ensures interchangeability with schedulers that need to scale the
+        denoising model input depending on the current timestep.
+
+        Args:
+            sample (`torch.FloatTensor`): input sample
+            timestep (`int`, optional): current timestep
+
+        Returns:
+            `torch.FloatTensor`: scaled input sample
+        """
+
+        return sample
 
     def __len__(self):
         return self.num_train_timesteps

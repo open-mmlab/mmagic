@@ -53,6 +53,7 @@ from .singan import SinGAN
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
 from .stable_diffusion import StableDiffusion
+from .stablesr import LatentDiffusion
 from .stylegan1 import StyleGAN1
 from .stylegan2 import StyleGAN2
 from .stylegan3 import StyleGAN3, StyleGAN3Generator
@@ -88,5 +89,5 @@ __all__ = [
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DenoisingUnet',
     'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
-    'ControlStableDiffusion', 'DreamBooth'
+    'ControlStableDiffusion', 'DreamBooth', 'LatentDiffusion'
 ]

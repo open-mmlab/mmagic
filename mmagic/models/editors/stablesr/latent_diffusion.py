@@ -24,7 +24,7 @@ logger = MMLogger.get_current_instance()
 ModelType = Union[Dict, nn.Module]
 
 
-@MODELS.register_module('sd')
+@MODELS.register_module('ld')
 @MODELS.register_module()
 class LatentDiffusion(BaseModel):
     """Class for Stable Diffusion. Refers to https://github.com/Stability-
@@ -99,7 +99,10 @@ class LatentDiffusion(BaseModel):
         else:
             self.test_scheduler = build_module(test_scheduler,
                                                DIFFUSION_SCHEDULERS)
+
         self.text_encoder = build_module(text_encoder, MODELS)
+
+        # ForzenOpenClipEmbedding
         if not isinstance(tokenizer, str):
             self.tokenizer = tokenizer
         else:
