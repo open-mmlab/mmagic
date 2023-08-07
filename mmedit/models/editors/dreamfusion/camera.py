@@ -5,11 +5,10 @@ from typing import Optional, Tuple, Union
 
 import numpy as np
 import torch
-from mmengine.utils import digit_version
-from mmengine.utils.dl_utils import TORCH_VERSION
-
 from mmedit.models.utils import normalize_vecs
 from mmedit.registry import MODULES
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 
 DeviceType = Optional[Union[str, int]]
 VectorType = Optional[Union[list, torch.Tensor]]

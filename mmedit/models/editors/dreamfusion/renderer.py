@@ -3,17 +3,17 @@ from typing import Any, Optional, Tuple, Union
 
 import torch
 import torch.nn.functional as F
-from mmengine import print_log
-from mmengine.model import BaseModule
-from mmengine.utils import digit_version
-from mmengine.utils.dl_utils import TORCH_VERSION
-
 # TODO: move these utils to mmedit.models.utils folder
 from mmedit.models.editors.eg3d.eg3d_utils import (get_ray_limits_box,
                                                    inverse_transform_sampling,
                                                    linspace_batch)
 from mmedit.models.utils import normalize_vecs
 from mmedit.registry import MODULES
+from mmengine import print_log
+from mmengine.model import BaseModule
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
+
 from .vanilla_nerf import NeRFNetwork
 
 

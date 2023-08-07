@@ -1,7 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn.functional as F
-
 from mmedit.models.editors.stable_diffusion import StableDiffusion
 from mmedit.registry import MODULES
 

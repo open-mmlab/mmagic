@@ -1,9 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from copy import deepcopy
 
-from torch.utils.data import Dataset
-
 from mmedit.registry import DATASETS
+from torch.utils.data import Dataset
 
 
 @DATASETS.register_module()

@@ -3,10 +3,10 @@ from typing import Optional
 
 import torch
 import torch.nn as nn
-from mmengine.model import BaseModule
-
 from mmedit.models.utils import normalize_vecs
 from mmedit.registry import MODULES
+from mmengine.model import BaseModule
+
 from .activate import trunc_exp
 
 # from .utils import auto_batchicy

@@ -3,13 +3,12 @@ from copy import deepcopy
 from typing import Optional, Tuple
 
 import torch
-from mmengine.model import BaseModel
-from mmengine.utils import ProgressBar
-from torch import Tensor
-
 from mmedit.models.editors.eg3d.ray_sampler import sample_rays
 from mmedit.registry import MODELS, MODULES
 from mmedit.structures import EditDataSample, PixelData
+from mmengine.model import BaseModel
+from mmengine.utils import ProgressBar
+from torch import Tensor
 
 
 @MODELS.register_module()

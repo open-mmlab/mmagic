@@ -1,10 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import random
 
+from mmedit.registry import HOOKS
 from mmengine.hooks import Hook
 from mmengine.model import is_model_wrapper
-
-from mmedit.registry import HOOKS
 
 
 @HOOKS.register_module()
