@@ -268,7 +268,7 @@ class ADAStyleGAN2Discriminator(StyleGAN2Discriminator):
 
 
 @MODELS.register_module()
-class ADAAug(nn.Module):
+class ADAAug(BaseModule):
     """Data Augmentation Module for Adaptive Discriminator augmentation.
 
     Args:

@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from abc import ABCMeta
+from collections import defaultdict
 from copy import deepcopy
 from typing import List, Optional
 
@@ -82,28 +83,44 @@ class BaseTranslationModel(BaseModel, metaclass=ABCMeta):
             self.discriminators = None
 
         self.loss_config = dict() if loss_config is None else loss_config
-        self.init_weights()
 
-    def init_weights(self, pretrained=None):
-        """Initialize weights for the model.
+    def init_weights(self):
+        """Initialize weights for the module dict.
 
         Args:
             pretrained (str, optional): Path for pretrained weights. If given
                 None, pretrained weights will not be loaded. Default: None.
         """
+        self._params_init_info = defaultdict(dict)
+
+        for _, param in self.named_parameters():
+            self._params_init_info[param][
+                'init_info'] = f'The value is the same before and ' \
+                                f'after calling `init_weights` ' \
+                                f'of {self.__class__.__name__} '
+            mean = param.data.mean().cpu()
+            self._params_init_info[param]['tmp_mean_value'] = mean
+
         for domain in self._reachable_domains:
             if is_model_wrapper(self.generators):
-                self.generators.module[domain].init_weights(
-                    pretrained=pretrained)
+                gen = self.generators.module[domain]
             else:
-                self.generators[domain].init_weights(pretrained=pretrained)
+                gen = self.generators[domain]
+            gen._params_init_info = self._params_init_info
+            gen.init_weights()
+
             if self.discriminators is not None:
                 if is_model_wrapper(self.discriminators):
-                    self.discriminators.module[domain].init_weights(
-                        pretrained=pretrained)
+                    disc = self.discriminators.module[domain]
                 else:
-                    self.discriminators[domain].init_weights(
-                        pretrained=pretrained)
+                    disc = self.discriminators[domain]
+                disc._params_init_info = self._params_init_info
+                disc.init_weights()
+
+        super()._dump_init_info()
+        for m in self.modules():
+            if hasattr(m, '_params_init_info'):
+                del m._params_init_info
 
     def get_module(self, module):
         """Get `nn.ModuleDict` to fit the `MMDistributedDataParallel`

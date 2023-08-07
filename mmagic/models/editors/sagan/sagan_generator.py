@@ -8,7 +8,7 @@ from mmcv.cnn import ConvModule
 from mmengine import is_list_of
 from mmengine.dist import is_distributed
 from mmengine.logging import MMLogger
-from mmengine.model import constant_init, xavier_init
+from mmengine.model import BaseModule, constant_init, xavier_init
 from mmengine.runner import load_checkpoint
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 from torch.nn.init import xavier_uniform_
@@ -20,7 +20,7 @@ from mmagic.registry import MODELS
 
 @MODELS.register_module('SAGANGenerator')
 @MODELS.register_module()
-class SNGANGenerator(nn.Module):
+class SNGANGenerator(BaseModule):
     r"""Generator for SNGAN / Proj-GAN. The implementation refers to
     https://github.com/pfnet-research/sngan_projection/tree/master/gen_models
 
