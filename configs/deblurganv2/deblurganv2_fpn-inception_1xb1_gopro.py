@@ -128,7 +128,6 @@ val_dataloader = dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
         data_root=data_root + 'test',
-        # ann_file='meta_info_gopro_test.txt',
         data_prefix=dict(img='input', gt='target'),
         pipeline=val_pipeline))
 
