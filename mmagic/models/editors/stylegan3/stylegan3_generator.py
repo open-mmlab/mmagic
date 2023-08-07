@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import mmengine
 import torch
-import torch.nn as nn
+from mmengine.model import BaseModule
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 
 from mmagic.registry import MODELS
@@ -13,7 +13,7 @@ from ..stylegan1 import get_mean_latent
 
 @MODELS.register_module('StyleGANv3Generator')
 @MODELS.register_module()
-class StyleGAN3Generator(nn.Module):
+class StyleGAN3Generator(BaseModule):
     """StyleGAN3 Generator.
 
     In StyleGAN3, we make several changes to StyleGANv2's generator which

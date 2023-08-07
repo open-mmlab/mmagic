@@ -1,13 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 
 
 @MODELS.register_module()
-class SearchTransformer(nn.Module):
+class SearchTransformer(BaseModule):
     """Search texture reference by transformer.
 
     Include relevance embedding, hard-attention and soft-attention.

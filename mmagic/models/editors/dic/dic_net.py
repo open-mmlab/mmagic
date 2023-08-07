@@ -32,6 +32,7 @@ class DICNet(BaseModule):
         prelu_init (float): `init` of PReLU. Default: 0.2
         num_heatmaps (int): Number of heatmaps. Default: 5
         num_fusion_blocks (int): Number of fusion blocks. Default: 7
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
 
     def __init__(self,
@@ -46,9 +47,10 @@ class DICNet(BaseModule):
                  detach_attention=False,
                  prelu_init=0.2,
                  num_heatmaps=5,
-                 num_fusion_blocks=7):
+                 num_fusion_blocks=7,
+                 init_cfg=None):
 
-        super().__init__()
+        super().__init__(init_cfg=init_cfg)
 
         self.num_steps = num_steps
         self.detach_attention = detach_attention

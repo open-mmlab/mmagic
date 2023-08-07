@@ -5,6 +5,7 @@ import mmengine
 import numpy as np
 import torch
 import torch.nn as nn
+from mmengine.model import BaseModule
 from mmengine.runner.amp import autocast
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 
@@ -18,7 +19,7 @@ from .stylegan2_modules import ModulatedStyleConv, ModulatedToRGB
 
 @MODELS.register_module('StyleGANv2Generator')
 @MODELS.register_module()
-class StyleGAN2Generator(nn.Module):
+class StyleGAN2Generator(BaseModule):
     r"""StyleGAN2 Generator.
 
     In StyleGAN2, we use a static architecture composing of a style mapping
@@ -535,7 +536,7 @@ class StyleGAN2Generator(nn.Module):
         img = skip.to(torch.float32)
 
         if self.bgr2rgb:
-            img = torch.flip(img, dims=1)
+            img = torch.flip(img, dims=[1])
 
         if return_latents or return_noise:
             output_dict = dict(

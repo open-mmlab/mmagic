@@ -4,6 +4,7 @@ from copy import deepcopy
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
 try:
     from mmcv.ops import conv2d, conv_transpose2d
@@ -18,7 +19,7 @@ from ..stylegan1 import Blur, EqualLinearActModule, NoiseInjection
 from ..stylegan2.stylegan2_modules import _FusedBiasLeakyReLU
 
 
-class ModulatedPEConv2d(nn.Module):
+class ModulatedPEConv2d(BaseModule):
     r"""Modulated Conv2d in StyleGANv2 with Positional Encoding (PE).
 
     This module is modified from the ``ModulatedConv2d`` in StyleGAN2 to
@@ -203,7 +204,7 @@ class ModulatedPEConv2d(nn.Module):
         return x
 
 
-class ModulatedPEStyleConv(nn.Module):
+class ModulatedPEStyleConv(BaseModule):
     """Modulated Style Convolution with Positional Encoding.
 
     This module is modified from the ``ModulatedStyleConv`` in StyleGAN2 to

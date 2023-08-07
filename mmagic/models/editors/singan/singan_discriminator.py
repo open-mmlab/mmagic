@@ -2,13 +2,14 @@
 import numpy as np
 import torch.nn as nn
 from mmengine import print_log
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 from .singan_modules import DiscriminatorBlock
 
 
 @MODELS.register_module()
-class SinGANMultiScaleDiscriminator(nn.Module):
+class SinGANMultiScaleDiscriminator(BaseModule):
     """Multi-Scale Discriminator used in SinGAN.
 
     More details can be found in: Singan: Learning a Generative Model from a
@@ -29,6 +30,7 @@ class SinGANMultiScaleDiscriminator(nn.Module):
             layers in the generator block. Defaults to 32.
         min_feat_channels (int, optional): Minimum channels for the feature
             maps in the generator block. Defaults to 32.
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,
@@ -39,8 +41,9 @@ class SinGANMultiScaleDiscriminator(nn.Module):
                  num_layers=5,
                  base_channels=32,
                  min_feat_channels=32,
+                 init_cfg=None,
                  **kwargs):
-        super().__init__()
+        super().__init__(init_cfg=init_cfg)
         self.blocks = nn.ModuleList()
         for scale in range(num_scales + 1):
             base_ch = min(base_channels * pow(2, int(np.floor(scale / 4))),

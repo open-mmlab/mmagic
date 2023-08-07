@@ -13,4 +13,4 @@ imageio-ffmpeg==0.4.4
 interrogate
 mmdet >= 3.0.0
 pytest
-transformers
+transformers>=4.27.4
