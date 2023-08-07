@@ -3,29 +3,23 @@ from typing import Any, Optional, Tuple, Union
 
 import torch
 import torch.nn.functional as F
-# TODO: move these utils to mmedit.models.utils folder
-from mmedit.models.editors.eg3d.eg3d_utils import (get_ray_limits_box,
-                                                   inverse_transform_sampling,
-                                                   linspace_batch)
-from mmedit.models.utils import normalize_vecs
-from mmedit.registry import MODULES
 from mmengine import print_log
 from mmengine.model import BaseModule
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
+# TODO: move these utils to mmedit.models.utils folder
+from mmagic.models.editors.eg3d.eg3d_utils import (get_ray_limits_box,
+                                                   inverse_transform_sampling,
+                                                   linspace_batch)
+from mmagic.models.utils import normalize_vecs
+from mmagic.registry import MODELS
 from .vanilla_nerf import NeRFNetwork
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class DreamFusionRenderer(BaseModule):
-    """Renderer for EG3D. This class samples render points on each input ray
-    and interpolate the triplane feature corresponding to the points'
-    coordinates. Then, predict each point's RGB feature and density (sigma) by
-    a neural network and calculate the RGB feature of each ray by integration.
-    Different from typical NeRF models, the decoder of EG3DRenderer takes
-    triplane feature of each points as input instead of positional encoding of
-    the coordinates.
+    """
 
     Args:
         decoder_cfg (dict): The config to build neural renderer.

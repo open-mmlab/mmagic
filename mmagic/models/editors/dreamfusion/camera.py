@@ -5,10 +5,11 @@ from typing import Optional, Tuple, Union
 
 import numpy as np
 import torch
-from mmedit.models.utils import normalize_vecs
-from mmedit.registry import MODULES
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
+
+from mmagic.models.utils import normalize_vecs
+from mmagic.registry import MODELS
 
 DeviceType = Optional[Union[str, int]]
 VectorType = Optional[Union[list, torch.Tensor]]
@@ -35,7 +36,7 @@ def get_view_direction(thetas, phis, overhead, front):
     return res
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class DreamFusionCamera(object):
 
     def __init__(self,

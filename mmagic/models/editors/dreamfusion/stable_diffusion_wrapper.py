@@ -1,11 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn.functional as F
-from mmedit.models.editors.stable_diffusion import StableDiffusion
-from mmedit.registry import MODULES
+
+from mmagic.models.editors.stable_diffusion import StableDiffusion
+from mmagic.registry import MODELS
 
 
-@MODULES.register_module()
+@MODELS.register_module()
 class StableDiffusionWrapper(StableDiffusion):
     """Stable diffusion wrapper for dreamfusion."""
 

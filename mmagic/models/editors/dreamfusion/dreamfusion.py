@@ -3,12 +3,13 @@ from copy import deepcopy
 from typing import Optional, Tuple
 
 import torch
-from mmedit.models.editors.eg3d.ray_sampler import sample_rays
-from mmedit.registry import MODELS, MODULES
-from mmedit.structures import EditDataSample, PixelData
 from mmengine.model import BaseModel
 from mmengine.utils import ProgressBar
 from torch import Tensor
+
+from mmagic.models.editors.eg3d.ray_sampler import sample_rays
+from mmagic.registry import MODELS
+from mmagic.structures import EditDataSample, PixelData
 
 
 @MODELS.register_module()
@@ -29,9 +30,9 @@ class DreamFusion(BaseModel):
                  loss_config=dict()):
         super().__init__(data_preprocessor)
         # NOTE: dreamfusion do not need data preprocessor
-        self.diffusion = MODULES.build(diffusion)
-        self.renderer = MODULES.build(renderer)
-        self.camera = MODULES.build(camera)
+        self.diffusion = MODELS.build(diffusion)
+        self.renderer = MODELS.build(renderer)
+        self.camera = MODELS.build(camera)
 
         self.guidance_scale = guidance_scale
         self.text = text

@@ -3,10 +3,10 @@ from typing import Optional
 
 import torch
 import torch.nn as nn
-from mmedit.models.utils import normalize_vecs
-from mmedit.registry import MODULES
 from mmengine.model import BaseModule
 
+from mmagic.models.utils import normalize_vecs
+from mmagic.registry import MODELS
 from .activate import trunc_exp
 
 # from .utils import auto_batchicy
@@ -170,7 +170,7 @@ class VanillaMLP(BaseModule):
         return self.net(x)
 
 
-@MODULES.register_module('VanillaNeRF')
+@MODELS.register_module('VanillaNeRF')
 class NeRFNetwork(BaseModule):
 
     # TODO: optim n_freq and max_freq_log2
