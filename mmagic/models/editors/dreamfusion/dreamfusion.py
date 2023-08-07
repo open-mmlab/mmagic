@@ -9,7 +9,7 @@ from torch import Tensor
 
 from mmagic.models.editors.eg3d.ray_sampler import sample_rays
 from mmagic.registry import MODELS
-from mmagic.structures import EditDataSample, PixelData
+from mmagic.structures import DataSample
 
 
 @MODELS.register_module()
@@ -137,9 +137,10 @@ class DreamFusion(BaseModel):
         pred_depth = (pred_depth - depth.min()) / (depth.max() - depth.min())
 
         output = [
-            EditDataSample(
-                fake_img=PixelData(data=pred_rgb[0]),
-                depth=PixelData(data=pred_depth[0]))
+            DataSample(
+                # fake_img=PixelData(data=pred_rgb[0]),
+                fake_img=pred_rgb[0],
+                depth=pred_depth[0])
         ]
 
         return output
