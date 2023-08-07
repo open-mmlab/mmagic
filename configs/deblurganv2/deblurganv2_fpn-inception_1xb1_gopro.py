@@ -104,7 +104,7 @@ test_pipeline = [
     dict(type='PackInputs')
 ]
 
-data_root = 'G:/github/DeblurGANv2/data/gopro/debug/'
+data_root = 'data/gopro'
 
 train_dataloader = dict(
     batch_size=1,
