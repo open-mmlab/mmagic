@@ -18,6 +18,7 @@ from .dic import (DIC, DICNet, FeedbackBlock, FeedbackBlockCustom,
 from .dim import DIM
 from .disco_diffusion import ClipWrapper, DiscoDiffusion
 from .dreambooth import DreamBooth
+from .dreamfusion import DreamFusion
 from .edsr import EDSRNet
 from .edvr import EDVR, EDVRNet
 from .eg3d import EG3D
@@ -89,5 +90,5 @@ __all__ = [
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DenoisingUnet',
     'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
-    'ControlStableDiffusion', 'DreamBooth', 'TextualInversion'
+    'ControlStableDiffusion', 'DreamBooth', 'TextualInversion', 'DreamFusion'
 ]

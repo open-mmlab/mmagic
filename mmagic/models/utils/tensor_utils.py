@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from typing import Optional
+
 import torch
 
 
@@ -38,14 +40,24 @@ def get_unknown_tensor(trimap, unknown_value=128 / 255):
     return weight
 
 
-def normalize_vecs(vectors: torch.Tensor) -> torch.Tensor:
+def normalize_vecs(vectors: torch.Tensor,
+                   clamp_eps: Optional[float] = None) -> torch.Tensor:
     """Normalize vector with it's lengths at the last dimension. If `vector` is
     two-dimension tensor, this function is same as L2 normalization.
 
     Args:
         vector (torch.Tensor): Vectors to be normalized.
+        eps (float, optional): If passed, the min value will be clamped to
+            this value before calculate the square root. Defaults to None.
 
     Returns:
         torch.Tensor: Vectors after normalization.
     """
-    return vectors / (torch.norm(vectors, dim=-1, keepdim=True))
+    if clamp_eps is None:
+        return vectors / (torch.norm(vectors, dim=-1, keepdim=True))
+    assert clamp_eps >= 0, (
+        f'\'clamp_eps\' must not less than 0. But receive \'{clamp_eps}\'.')
+
+    return vectors / torch.sqrt(
+        torch.clamp(
+            torch.sum(vectors * vectors, -1, keepdim=True), min=clamp_eps))
