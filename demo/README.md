@@ -40,7 +40,7 @@ Table of contents:
 
 &#8195;    [3.1. Gradio demo](#31-gradio-demo)
 
-&#8195;      [3.1.1. DragGAN](#311-draggan-demo)
+&#8195;      [3.1.1. DragGAN](#311-draggan)
 
 
 ## 1. Download sample images or videos
