@@ -60,6 +60,7 @@ from .swinir import SwinIRNet
 from .tdan import TDAN, TDANNet
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
+from .vico import ViCo
 from .wgan_gp import WGANGP
 
 __all__ = [
@@ -88,5 +89,5 @@ __all__ = [
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DenoisingUnet',
     'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
-    'ControlStableDiffusion', 'DreamBooth'
+    'ControlStableDiffusion', 'DreamBooth', 'ViCo'
 ]

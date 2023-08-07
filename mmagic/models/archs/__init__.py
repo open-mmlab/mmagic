@@ -25,6 +25,7 @@ from .sr_backbone import ResidualBlockNoBN
 from .tokenizer import TokenizerWrapper
 from .upsample import PixelShufflePack
 from .vgg import VGG16
+from .vico import set_vico_modules
 from .wrapper import DiffusersWrapper
 
 
@@ -74,6 +75,6 @@ __all__ = [
     'SpatialTemporalEnsemble', 'SoftMaskPatchDiscriminator',
     'SimpleEncoderDecoder', 'MultiLayerDiscriminator', 'PatchDiscriminator',
     'VGG16', 'ResNet', 'AllGatherLayer', 'ResidualBlockNoBN', 'LoRAWrapper',
-    'set_lora', 'set_lora_disable', 'set_lora_enable',
+    'set_lora', 'set_lora_disable', 'set_lora_enable', 'set_vico_modules',
     'set_only_lora_trainable', 'TokenizerWrapper', 'AttentionInjection'
 ]
