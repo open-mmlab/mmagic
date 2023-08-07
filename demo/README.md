@@ -38,6 +38,11 @@ Table of contents:
 
 [3. Other demos](#3-other-demos)
 
+&#8195;    [3.1. Gradio demo](#31-gradio-demo)
+
+&#8195;      [3.1.1. Draggan demo](#311-draggan-demo)
+
+
 ## 1. Download sample images or videos
 
 We prepared some images and videos for you to run demo with. After MMagic is well installed, you could use demos in this folder to infer these data.
@@ -284,14 +289,14 @@ python demo/mmagic_inference_demo.py \
     --result-out-dir ./resources/output/eg3d-output
 ```
 
-## 3. Gradio demo
+## 3. Other demos
 
-## 3.1 DragGAN
-
+## 3.1 gradio demo
+#### 3.1.1 DragGAN
 First, put your checkpoint path in `./checkpoints`, *e.g.* `./checkpoints/stylegan2_lions_512_pytorch_mmagic.pth`
 
 Then, try on the script:
 
-```
+```shell
 python demo/gradio_draggan.py
 ```
