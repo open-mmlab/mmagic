@@ -53,6 +53,7 @@ class MMagicInferencer:
 
         # unconditional models
         'dcgan',
+        'deblurganv2',
         'wgan-gp',
         'lsgan',
         'ggan',
