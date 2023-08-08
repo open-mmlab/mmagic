@@ -11,8 +11,9 @@ from torch.utils import model_zoo
 pretrained_settings = {
     'inceptionresnetv2': {
         'imagenet': {
-            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/'
-            'inceptionresnetv2-520b38e4.pth',
+            'url':
+            'https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/'
+            'weight/inceptionresnetv2-520b38e4.pth',
             'input_space': 'RGB',
             'input_size': [3, 299, 299],
             'input_range': [0, 1],
@@ -21,8 +22,9 @@ pretrained_settings = {
             'num_classes': 1000
         },
         'imagenet+background': {
-            'url': 'http://data.lip6.fr/cadene/pretrainedmodels/'
-            'inceptionresnetv2-520b38e4.pth',
+            'url':
+            'https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/'
+            'weight/inceptionresnetv2-520b38e4.pth',
             'input_space': 'RGB',
             'input_size': [3, 299, 299],
             'input_range': [0, 1],

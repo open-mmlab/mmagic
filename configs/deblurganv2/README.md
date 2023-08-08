@@ -29,8 +29,8 @@ We present a new end-to-end generative adversarial network (GAN) for single imag
 
 |                           Model                            |      Dataset       |      G Model       |  D Model   | PSNR/<br/>SSIM |                                      Download                                      |
 | :--------------------------------------------------------: | :----------------: | :----------------: | :--------: | :------------: | :--------------------------------------------------------------------------------: |
-| [fpn_inception](./deblurganv2_fpn-inception_1xb1_gopro.py) | GoPro Test Dataset | InceptionResNet-v2 | double_gan |  29.55/ 0.934  | [model](https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception) \\ [log](<>) |
-| [fpn_mobilenet](./deblurganv2_fpn-mobilenet_1xb1_gopro.py) | GoPro Test Dataset |     MobileNet      | double_gan |  28.17/ 0.925  | [model](https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-mobilenet) \\ [log](<>) |
+| [fpn_inception](./deblurganv2_fpn-inception_1xb1_gopro.py) | GoPro Test Dataset | InceptionResNet-v2 | double_gan |  29.55/ 0.934  | [model](https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception.pth) \\ [log](<>) |
+| [fpn_mobilenet](./deblurganv2_fpn-mobilenet_1xb1_gopro.py) | GoPro Test Dataset |     MobileNet      | double_gan |  28.17/ 0.925  | [model](https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-mobilenet.pth) \\ [log](<>) |
 
 ## Quick Start
 
@@ -65,13 +65,13 @@ You can use the following commands to test a model with cpu or single/multiple G
 
 ```shell
 # cpu test
-CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception
+CUDA_VISIBLE_DEVICES=-1 python tools/test.py configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception.pth
 
 # single-gpu test
-python tools/test.py configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception
+python tools/test.py configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception.pth
 
 # multi-gpu test
-./tools/dist_test.sh configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception 8
+./tools/dist_test.sh configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception.pth 8
 ```
 
 For more details, you can refer to **Test a pre-trained model** part in [train_test.md](/docs/en/user_guides/train_test.md#Test-a-pre-trained-model-in-MMagic).

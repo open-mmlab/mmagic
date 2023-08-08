@@ -114,7 +114,7 @@ train_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root=data_root + 'train',
+        data_root=data_root + '/train',
         data_prefix=dict(img='input', gt='target'),
         pipeline=train_pipeline))
 
@@ -126,7 +126,7 @@ val_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root=data_root + 'test',
+        data_root=data_root + '/test',
         data_prefix=dict(img='input', gt='target'),
         pipeline=val_pipeline))
 
@@ -138,7 +138,7 @@ test_dataloader = dict(
     dataset=dict(
         type='BasicImageDataset',
         metainfo=dict(dataset_type='gopro', task_name='deblur'),
-        data_root=data_root + 'test',
+        data_root=data_root + '/test',
         data_prefix=dict(img='input', gt='target'),
         pipeline=test_pipeline))
 
@@ -187,4 +187,5 @@ default_hooks = dict(
     sampler_seed=dict(type='DistSamplerSeedHook'),
 )
 
-load_from = 'G:/github/DeblurGANv2/fpn_mobilenet.pth'
+load_from = 'https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/'\
+            'weight/DeblurGANv2_fpn-mobilenet.pth'

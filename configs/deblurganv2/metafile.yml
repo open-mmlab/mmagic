@@ -18,7 +18,7 @@ Models:
         PSNR: 29.55
         SSIM: 0.934
     Task: Deblurring
-  Weights: https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception
+  Weights: https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception.pth
 - Config: configs/deblurganv2/deblurganv2_fpn-mobilenet_1xb1_gopro.py
   In Collection: DeblurGAN-v2
   Name: deblurganv2_fpn-mobilenet_1xb1_gopro
@@ -29,4 +29,4 @@ Models:
         PSNR: 28.17
         SSIM: 0.925
     Task: Deblurring
-  Weights: https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-mobilenet
+  Weights: https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-mobilenet.pth
