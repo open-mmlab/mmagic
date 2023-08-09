@@ -151,3 +151,5 @@ batchscript-*
 *.png
 *.jpg
 *.zip
+work_dir
+work_dir/
