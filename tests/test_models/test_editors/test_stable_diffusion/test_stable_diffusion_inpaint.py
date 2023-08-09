@@ -101,8 +101,8 @@ def test_stable_diffusion():
     StableDiffuser.tokenizer = dummy_tokenizer()
     StableDiffuser.text_encoder = dummy_text_encoder()
 
-    image = torch.randn((1, 3, 64, 64))
-    mask = torch.randn((1, 3, 64, 64))
+    image = torch.clip(torch.randn((1, 3, 64, 64)), -1, 1)
+    mask = torch.clip(torch.randn((1, 3, 64, 64)), -1, 1)
 
     with pytest.raises(Exception):
         StableDiffuser.infer('temp', image, mask, height=31, width=31)
