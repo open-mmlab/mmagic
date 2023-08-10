@@ -21,6 +21,7 @@ unet = dict(
     cross_attention_dim=768,
     num_heads=2,
     in_channels=9,
+    out_channels=4,
     layers_per_block=1,
     down_block_types=['CrossAttnDownBlock2D', 'DownBlock2D'],
     up_block_types=['UpBlock2D', 'CrossAttnUpBlock2D'],
@@ -100,9 +101,18 @@ def test_stable_diffusion():
     StableDiffuser = MODELS.build(Config(model))
     StableDiffuser.tokenizer = dummy_tokenizer()
     StableDiffuser.text_encoder = dummy_text_encoder()
+    config = getattr(StableDiffuser.vae, 'config', None)
+    if config is None:
+
+        class DummyConfig:
+            pass
+
+        config = DummyConfig()
+        setattr(config, 'scaling_factor', 1.2)
+        setattr(StableDiffuser.vae, 'config', config)
 
     image = torch.clip(torch.randn((1, 3, 64, 64)), -1, 1)
-    mask = torch.clip(torch.randn((1, 3, 64, 64)), 0, 1)
+    mask = torch.clip(torch.randn((1, 1, 64, 64)), 0, 1)
 
     with pytest.raises(Exception):
         StableDiffuser.infer('temp', image, mask, height=31, width=31)

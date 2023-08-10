@@ -138,11 +138,11 @@ class StableDiffusionInpaint(StableDiffusion):
 
         # 6. Prepare latent variables
         if hasattr(self.unet, 'module'):
-            num_channels_latents = self.vae.module.in_channels
-            num_channels_unet = self.unet.module.config.in_channels
+            num_channels_latents = self.vae.module.latent_channels
+            num_channels_unet = self.unet.module.in_channels
         else:
-            num_channels_latents = self.vae.config.latent_channels
-            num_channels_unet = self.unet.config.in_channels
+            num_channels_latents = self.vae.latent_channels
+            num_channels_unet = self.unet.in_channels
         latents = self.prepare_latents(
             batch_size * num_images_per_prompt,
             num_channels_latents,
@@ -175,11 +175,11 @@ class StableDiffusionInpaint(StableDiffusion):
             num_channels_masked_image = masked_image_latents.shape[1]
             total_channels = num_channels_latents + \
                 num_channels_masked_image + num_channels_mask
-            if total_channels != self.unet.config.in_channels:
+            if total_channels != self.unet.in_channels:
                 raise ValueError(
                     'Incorrect configuration settings! The config of '
                     f'`pipeline.unet`: {self.unet.config} expects'
-                    f' {self.unet.config.in_channels} but received '
+                    f' {self.unet.in_channels} but received '
                     f'`num_channels_latents`: {num_channels_latents} +'
                     f' `num_channels_mask`: {num_channels_mask} + '
                     '`num_channels_masked_image`: '
