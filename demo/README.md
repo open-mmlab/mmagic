@@ -42,7 +42,6 @@ Table of contents:
 
 &#8195;      [3.1.1. DragGAN](#311-draggan)
 
-
 ## 1. Download sample images or videos
 
 We prepared some images and videos for you to run demo with. After MMagic is well installed, you could use demos in this folder to infer these data.
@@ -292,7 +291,9 @@ python demo/mmagic_inference_demo.py \
 ## 3. Other demos
 
 ## 3.1 gradio demo
+
 #### 3.1.1 DragGAN
+
 First, put your checkpoint path in `./checkpoints`, *e.g.* `./checkpoints/stylegan2_lions_512_pytorch_mmagic.pth`
 
 Then, try on the script:
