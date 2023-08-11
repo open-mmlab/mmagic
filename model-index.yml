@@ -8,6 +8,7 @@ Import:
 - configs/controlnet_animation/metafile.yml
 - configs/cyclegan/metafile.yml
 - configs/dcgan/metafile.yml
+- configs/deblurganv2/metafile.yml
 - configs/deepfillv1/metafile.yml
 - configs/deepfillv2/metafile.yml
 - configs/dic/metafile.yml
