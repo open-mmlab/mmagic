@@ -9,7 +9,7 @@ from mmagic.utils import register_all_modules
 register_all_modules()
 
 
-def test_base_mmagic_inferencer():
+def test_base_mmedit_inferencer():
     with pytest.raises(Exception):
         BaseMMagicInferencer(1, None)
 

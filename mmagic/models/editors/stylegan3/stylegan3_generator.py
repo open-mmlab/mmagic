@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import mmengine
 import torch
-import torch.nn as nn
+from mmengine.model import BaseModule
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 
 from mmagic.registry import MODELS
@@ -13,11 +13,11 @@ from ..stylegan1 import get_mean_latent
 
 @MODELS.register_module('StyleGANv3Generator')
 @MODELS.register_module()
-class StyleGAN3Generator(nn.Module):
+class StyleGAN3Generator(BaseModule):
     """StyleGAN3 Generator.
 
     In StyleGAN3, we make several changes to StyleGANv2's generator which
-    include transformed fourier features, filtered nonlinearities and
+    include transformed fourier features, filtered nonlinearity and
     non-critical sampling, etc. More details can be found in: Alias-Free
     Generative Adversarial Networks NeurIPS'2021.
 
@@ -34,7 +34,7 @@ class StyleGAN3Generator(nn.Module):
                 weights whose output channels order is `rgb`. You can set
                 this argument to True to use the weights.
         pretrained (str | dict, optional): Path for the pretrained model or
-            dict containing information for pretained models whose necessary
+            dict containing information for pretrained models whose necessary
             key is 'ckpt_path'. Besides, you can also provide 'prefix' to load
             the generator part from the whole state dict. Defaults to None.
         synthesis_cfg (dict, optional): Config for synthesis network. Defaults
@@ -182,7 +182,7 @@ class StyleGAN3Generator(nn.Module):
 
     def get_training_kwargs(self, phase):
         """Get training kwargs. In StyleGANv3, we enable fp16, and update
-        mangitude ema during training of discriminator. This function is used
+        magnitude ema during training of discriminator. This function is used
         to pass related arguments.
 
         Args:

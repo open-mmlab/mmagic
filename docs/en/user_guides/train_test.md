@@ -4,17 +4,19 @@ In this section, we introduce how to test and train models in MMagic.
 
 In this section, we provide the following guides:
 
-- [Prerequisite](#prerequisite)
-- [Test a model in MMagic](#test-a-model-in-mmagic)
-  - [Test with a single GPUs](#test-with-a-single-gpus)
-  - [Test with multiple GPUs](#test-with-multiple-gpus)
-  - [Test with Slurm](#test-with-slurm)
-  - [Test with specific metrics](#test-with-specific-metrics)
-- [Train a model in MMagic](#train-a-model-in-mmagic)
-  - [Train with a single GPU](#train-with-a-single-gpu)
-  - [Train with multiple GPUs](#train-with-multiple-gpus)
-  - [Train with multiple nodes](#train-with-multiple-nodes)
-  - [Train with Slurm](#train-with-slurm)
+- [Tutorial 4: Train and test in MMagic](#tutorial-4-train-and-test-in-mmagic)
+  - [Prerequisite](#prerequisite)
+  - [Test a model in MMagic](#test-a-model-in-mmagic)
+    - [Test with a single GPUs](#test-with-a-single-gpus)
+    - [Test with multiple GPUs](#test-with-multiple-gpus)
+    - [Test with Slurm](#test-with-slurm)
+    - [Test with specific metrics](#test-with-specific-metrics)
+  - [Train a model in MMagic](#train-a-model-in-mmagic)
+    - [Train with a single GPU](#train-with-a-single-gpu)
+    - [Train with multiple nodes](#train-with-multiple-nodes)
+    - [Train with multiple GPUs](#train-with-multiple-gpus)
+    - [Train with Slurm](#train-with-slurm)
+    - [Optional arguments](#optional-arguments)
   - [Train with specific evaluation metrics](#train-with-specific-evaluation-metrics)
 
 ## Prerequisite

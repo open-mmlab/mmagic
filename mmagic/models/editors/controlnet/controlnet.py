@@ -13,6 +13,7 @@ from PIL import Image
 from torch import Tensor
 from tqdm import tqdm
 
+from mmagic.models.archs import AttentionInjection
 from mmagic.models.utils import build_module
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
@@ -43,8 +44,12 @@ class ControlStableDiffusion(StableDiffusion):
             module for diffusion scheduler in test stage (`self.infer`). If not
             passed, will use the same scheduler as `schedule`. Defaults to
             None.
+        dtype (str, optional): The dtype for the model. Defaults to 'fp16'.
         enable_xformers (bool, optional): Whether to use xformers.
             Defaults to True.
+        noise_offset_weight (bool, optional): The weight of noise offset
+            introduced in https://www.crosslabs.org/blog/diffusion-with-offset-noise  # noqa
+            Defaults to 0.
         data_preprocessor (dict, optional): The pre-process config of
             :class:`BaseDataPreprocessor`. Defaults to
                 dict(type='DataPreprocessor').
@@ -60,18 +65,36 @@ class ControlStableDiffusion(StableDiffusion):
                  controlnet: ModelType,
                  scheduler: ModelType,
                  test_scheduler: Optional[ModelType] = None,
+                 dtype: str = 'fp32',
                  enable_xformers: bool = True,
+                 noise_offset_weight: float = 0,
+                 tomesd_cfg: Optional[dict] = None,
                  data_preprocessor=dict(type='DataPreprocessor'),
-                 init_cfg: Optional[dict] = None):
+                 init_cfg: Optional[dict] = None,
+                 attention_injection=False):
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, enable_xformers, data_preprocessor,
+                         test_scheduler, dtype, enable_xformers,
+                         noise_offset_weight, tomesd_cfg, data_preprocessor,
                          init_cfg)
 
+        default_args = dict()
+        if dtype is not None:
+            default_args['dtype'] = dtype
+
+        # NOTE: initialize controlnet as fp32
         self.controlnet = build_module(controlnet, MODELS)
+        self._controlnet_ori_dtype = next(self.controlnet.parameters()).dtype
+        print_log(
+            'Set ControlNetModel dtype to '
+            f'\'{self._controlnet_ori_dtype}\'.', 'current')
+        self.set_xformers(self.controlnet)
 
         self.vae.requires_grad_(False)
         self.text_encoder.requires_grad_(False)
         self.unet.requires_grad_(False)
+
+        if attention_injection:
+            self.unet = AttentionInjection(self.unet)
 
     def init_weights(self):
         """Initialize the weights. Noted that this function will only be called
@@ -183,6 +206,7 @@ class ControlStableDiffusion(StableDiffusion):
 
             num_batches = target.shape[0]
 
+            target = target.to(self.dtype)
             latents = self.vae.encode(target).latent_dist.sample()
             latents = latents * self.vae.config.scaling_factor
 
@@ -213,19 +237,20 @@ class ControlStableDiffusion(StableDiffusion):
                                  f'{self.scheduler.config.prediction_type}')
 
             # forward control
+            # NOTE: we train controlnet in fp32, convert to float manually
             down_block_res_samples, mid_block_res_sample = self.controlnet(
-                noisy_latents,
+                noisy_latents.float(),
                 timesteps,
-                encoder_hidden_states=encoder_hidden_states,
-                controlnet_cond=control,
+                encoder_hidden_states=encoder_hidden_states.float(),
+                controlnet_cond=control.float(),
                 return_dict=False,
             )
-
             # Predict the noise residual and compute loss
+            # NOTE: we train unet in fp32, convert to float manually
             model_output = self.unet(
-                noisy_latents,
+                noisy_latents.float(),
                 timesteps,
-                encoder_hidden_states=encoder_hidden_states,
+                encoder_hidden_states=encoder_hidden_states.float(),
                 down_block_additional_residuals=down_block_res_samples,
                 mid_block_additional_residual=mid_block_res_sample)
             model_pred = model_output['sample']
@@ -250,10 +275,11 @@ class ControlStableDiffusion(StableDiffusion):
         data = self.data_preprocessor(data)
         prompt = data['data_samples'].prompt
         control = data['inputs']['source']
+
         output = self.infer(
             prompt, control=((control + 1) / 2), return_type='tensor')
-
         samples = output['samples']
+
         samples = self.data_preprocessor.destruct(
             samples, data['data_samples'], key='target')
         control = self.data_preprocessor.destruct(
@@ -280,10 +306,11 @@ class ControlStableDiffusion(StableDiffusion):
         data = self.data_preprocessor(data)
         prompt = data['data_samples'].prompt
         control = data['inputs']['source']
+
         output = self.infer(
             prompt, control=((control + 1) / 2), return_type='tensor')
-
         samples = output['samples']
+
         samples = self.data_preprocessor.destruct(
             samples, data['data_samples'], key='target')
         control = self.data_preprocessor.destruct(
@@ -307,7 +334,7 @@ class ControlStableDiffusion(StableDiffusion):
         Args:
             image (Tuple[Image.Image, List[Image.Image], Tensor, List[Tensor]]):  # noqa
                 The input image for control.
-            batch_size (int): The batch size of the control. The control will
+            batch_size (int): The number of the prompt. The control will
                 be repeated for `batch_size` times.
             num_images_per_prompt (int): The number images generate for one
                 prompt.
@@ -337,8 +364,11 @@ class ControlStableDiffusion(StableDiffusion):
         image_batch_size = image.shape[0]
 
         if image_batch_size == 1:
-            repeat_by = batch_size
+            repeat_by = batch_size * num_images_per_prompt
         else:
+            assert image_batch_size == batch_size, (
+                'The number of Control condition must be 1 or equal to the '
+                'number of prompt.')
             # image batch size is the same as prompt batch size
             repeat_by = num_images_per_prompt
 
@@ -347,6 +377,27 @@ class ControlStableDiffusion(StableDiffusion):
         image = image.to(device=device, dtype=dtype)
 
         return image
+
+    def train(self, mode: bool = True):
+        """Set train/eval mode.
+
+        Args:
+            mode (bool, optional): Whether set train mode. Defaults to True.
+        """
+        if mode:
+            if next(self.controlnet.parameters()
+                    ).dtype != self._controlnet_ori_dtype:
+                print_log(
+                    'Set ControlNetModel dtype to '
+                    f'\'{self._controlnet_ori_dtype}\' in the train mode.',
+                    'current')
+            self.controlnet.to(self._controlnet_ori_dtype)
+        else:
+            self.controlnet.to(self.dtype)
+            print_log(
+                f'Set ControlNetModel dtype to \'{self.dtype}\' '
+                'in the eval mode.', 'current')
+        return super().train(mode)
 
     @torch.no_grad()
     def infer(self,
@@ -430,6 +481,8 @@ class ControlStableDiffusion(StableDiffusion):
         # corresponds to doing no classifier free guidance.
         do_classifier_free_guidance = guidance_scale > 1.0
 
+        img_dtype = self.vae.module.dtype if hasattr(self.vae, 'module') \
+            else self.vae.dtype
         if is_model_wrapper(self.controlnet):
             control_dtype = self.controlnet.module.dtype
         else:
@@ -482,6 +535,9 @@ class ControlStableDiffusion(StableDiffusion):
             latent_model_input = self.test_scheduler.scale_model_input(
                 latent_model_input, t)
 
+            latent_model_input = latent_model_input.to(control_dtype)
+            text_embeddings = text_embeddings.to(control_dtype)
+
             down_block_res_samples, mid_block_res_sample = self.controlnet(
                 latent_model_input,
                 t,
@@ -516,7 +572,7 @@ class ControlStableDiffusion(StableDiffusion):
                     noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
 
         # 8. Post-processing
-        image = self.decode_latents(latents)
+        image = self.decode_latents(latents.to(img_dtype))
 
         if do_classifier_free_guidance:
             controls = torch.split(controls, controls.shape[0] // 2, dim=0)[0]
@@ -655,26 +711,30 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
         return image
 
     @torch.no_grad()
-    def infer(self,
-              prompt: Union[str, List[str]],
-              latent_image: Union[torch.FloatTensor, Image.Image,
-                                  List[torch.FloatTensor],
-                                  List[Image.Image]] = None,
-              latent_mask: torch.FloatTensor = None,
-              strength: float = 1.0,
-              height: Optional[int] = None,
-              width: Optional[int] = None,
-              control: Optional[Union[str, np.ndarray, torch.Tensor]] = None,
-              controlnet_conditioning_scale: float = 1.0,
-              num_inference_steps: int = 20,
-              guidance_scale: float = 7.5,
-              negative_prompt: Optional[Union[str, List[str]]] = None,
-              num_images_per_prompt: Optional[int] = 1,
-              eta: float = 0.0,
-              generator: Optional[torch.Generator] = None,
-              latents: Optional[torch.FloatTensor] = None,
-              return_type='image',
-              show_progress=True):
+    def infer(
+        self,
+        prompt: Union[str, List[str]],
+        latent_image: Union[torch.FloatTensor, Image.Image,
+                            List[torch.FloatTensor], List[Image.Image]] = None,
+        latent_mask: torch.FloatTensor = None,
+        strength: float = 1.0,
+        height: Optional[int] = None,
+        width: Optional[int] = None,
+        control: Optional[Union[str, np.ndarray, torch.Tensor]] = None,
+        controlnet_conditioning_scale: float = 1.0,
+        num_inference_steps: int = 20,
+        guidance_scale: float = 7.5,
+        negative_prompt: Optional[Union[str, List[str]]] = None,
+        num_images_per_prompt: Optional[int] = 1,
+        eta: float = 0.0,
+        generator: Optional[torch.Generator] = None,
+        latents: Optional[torch.FloatTensor] = None,
+        return_type='image',
+        show_progress=True,
+        reference_img: Union[torch.FloatTensor, Image.Image,
+                             List[torch.FloatTensor],
+                             List[Image.Image]] = None,
+    ):
         """Function invoked when calling the pipeline for generation.
 
         Args:
@@ -743,6 +803,8 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
         # corresponds to doing no classifier free guidance.
         do_classifier_free_guidance = guidance_scale > 1.0
 
+        img_dtype = self.vae.module.dtype if hasattr(
+            self.vae, 'module') else self.vae.dtype
         if is_model_wrapper(self.controlnet):
             control_dtype = self.controlnet.module.dtype
         else:
@@ -761,11 +823,16 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
         latent_image = self.prepare_latent_image(latent_image,
                                                  self.controlnet.dtype)
 
+        if reference_img is not None:
+            reference_img = self.prepare_latent_image(reference_img,
+                                                      self.controlnet.dtype)
+
         # 3. Encode input prompt
         text_embeddings = self._encode_prompt(prompt, device,
                                               num_images_per_prompt,
                                               do_classifier_free_guidance,
                                               negative_prompt)
+        text_embeddings = text_embeddings.to(control_dtype)
 
         # 4. Prepare timesteps
         # self.scheduler.set_timesteps(num_inference_steps, device=device)
@@ -789,6 +856,17 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
             generator,
             noise=latents)
 
+        if reference_img is not None:
+            _, ref_img_vae_latents = self.prepare_latents(
+                reference_img,
+                latent_timestep,
+                batch_size,
+                num_images_per_prompt,
+                text_embeddings.dtype,
+                device,
+                generator,
+                noise=latents)
+
         # 6. Prepare extra step kwargs.
         extra_step_kwargs = self.prepare_test_scheduler_extra_step_kwargs(
             generator, eta)
@@ -802,6 +880,21 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
                 [latents] * 2) if do_classifier_free_guidance else latents
             latent_model_input = self.test_scheduler.scale_model_input(
                 latent_model_input, t)
+
+            latent_model_input = latent_model_input.to(control_dtype)
+
+            if reference_img is not None:
+                ref_img_vae_latents_t = self.scheduler.add_noise(
+                    ref_img_vae_latents, torch.randn_like(ref_img_vae_latents),
+                    t)
+                ref_img_vae_latents_model_input = torch.cat(
+                    [ref_img_vae_latents_t] * 2) if \
+                    do_classifier_free_guidance else ref_img_vae_latents_t
+                ref_img_vae_latents_model_input =  \
+                    self.test_scheduler.scale_model_input(
+                        ref_img_vae_latents_model_input, t)
+                ref_img_vae_latents_model_input = \
+                    ref_img_vae_latents_model_input.to(control_dtype)
 
             down_block_res_samples, mid_block_res_sample = self.controlnet(
                 latent_model_input,
@@ -818,13 +911,22 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
             mid_block_res_sample *= controlnet_conditioning_scale
 
             # predict the noise residual
-            noise_pred = self.unet(
-                latent_model_input,
-                t,
-                encoder_hidden_states=text_embeddings,
-                down_block_additional_residuals=down_block_res_samples,
-                mid_block_additional_residual=mid_block_res_sample,
-            )['sample']
+            if reference_img is not None:
+                noise_pred = self.unet(
+                    latent_model_input,
+                    t,
+                    encoder_hidden_states=text_embeddings,
+                    down_block_additional_residuals=down_block_res_samples,
+                    mid_block_additional_residual=mid_block_res_sample,
+                    ref_x=ref_img_vae_latents_model_input)['sample']
+            else:
+                noise_pred = self.unet(
+                    latent_model_input,
+                    t,
+                    encoder_hidden_states=text_embeddings,
+                    down_block_additional_residuals=down_block_res_samples,
+                    mid_block_additional_residual=mid_block_res_sample,
+                )['sample']
 
             # perform guidance
             if do_classifier_free_guidance:
@@ -841,7 +943,7 @@ class ControlStableDiffusionImg2Img(ControlStableDiffusion):
                 vae_encode_latents * (1.0 - latent_mask)
 
         # 8. Post-processing
-        image = self.decode_latents(latents)
+        image = self.decode_latents(latents.to(img_dtype))
 
         if do_classifier_free_guidance:
             controls = torch.split(controls, controls.shape[0] // 2, dim=0)[0]

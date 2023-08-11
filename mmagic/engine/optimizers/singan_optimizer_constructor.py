@@ -12,7 +12,7 @@ class SinGANOptimWrapperConstructor:
     """OptimizerConstructor for SinGAN models. Set optimizers for each
     submodule of SinGAN. All submodule must be contained in a
     :class:`torch.nn.ModuleList` named 'blocks'. And we access each submodule
-    by `MODEL.blocks[SCALE]`, where `MODLE` is generator or discriminator, and
+    by `MODEL.blocks[SCALE]`, where `MODEL` is generator or discriminator, and
     the scale is the index of the resolution scale.
 
     More detail about the resolution scale and naming rule please refers to
@@ -60,7 +60,7 @@ class SinGANOptimWrapperConstructor:
             raise TypeError('optimizer_cfg should be a dict',
                             f'but got {type(optim_wrapper_cfg)}')
         assert paramwise_cfg is None, (
-            'parawise_cfg should be set in each optimizer separately')
+            'paramwise_cfg should be set in each optimizer separately')
         self.optim_cfg = optim_wrapper_cfg
         self.constructors = {}
         for key, cfg in self.optim_cfg.items():

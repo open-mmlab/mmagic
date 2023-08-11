@@ -11,10 +11,10 @@ assign:
     '*/1 * * * *'
   # assignees
   assignees:
-    - LeoXing1996
     - zengyh1900
-    - plyfager
+    - LeoXing1996
     - liuwenran
-    - Z-Fran
     - LeoXing1996
-    - LeoXing1996
+    - liuwenran
+    - zengyh1900
+    - zengyh1900

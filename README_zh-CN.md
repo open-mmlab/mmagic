@@ -2,6 +2,10 @@
   <img src="docs/zh_cn/_static/image/mmagic-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
+    <font size="10"><b>M</b>ultimodal <b>A</b>dvanced, <b>G</b>enerative, and <b>I</b>ntelligent <b>C</b>reation (MMagic [em'mædʒɪk])</font>
+  </div>
+  <div>&nbsp;</div>
+  <div align="center">
     <b><font size="5">OpenMMLab 官网</font></b>
     <sup>
       <a href="https://openmmlab.com">
@@ -53,11 +57,17 @@
 
 ## 🚀 最新进展 <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### 最新的 [**MMagic v1.0.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.0) 版本已经在 \[25/04/2023\] 发布:
+### 最新的 [**MMagic v1.0.1**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.1) 版本已经在 \[26/05/2023\] 发布:
+
+- 支持 StableDiffusion tomesd 加速.
+- 支持所有 inpainting/matting/image restoration 模型的 inferencer.
+- 支持 animated drawings.
+- 支持 Style-Based Global Appearance Flow for Virtual Try-On.
+- 修复 pip install 时 inferencer 无法使用的问题.
 
 我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
 
-经过 OpenMMLab 2.0 框架的迭代更新以及与 MMGeneration 的合并，MMEditing 已经成为了一个支持基于 GAN 和 CNN 的底层视觉算法的强大工具。而今天，MMEditing 将拥抱 Diffusion Model（扩散模型），正式更名为 **MMagic**（**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation），转化为更为先进、全面的 AIGC 开源算法库。MMagic 将为广大研究者与 AIGC 爱好者们提供更加快捷灵活的实验支持，助力你的 AIGC 探索之旅。
+经过 OpenMMLab 2.0 框架的迭代更新以及与 MMGeneration 的合并，MMEditing 已经成为了一个支持基于 GAN 和 CNN 的底层视觉算法的强大工具。而今天，MMEditing 将更加拥抱生成式 AI（Generative AI），正式更名为 **MMagic**（**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation），致力于打造更先进、更全面的 AIGC 开源算法库。MMagic 将为广大研究者与 AIGC 爱好者们提供更加快捷灵活的实验支持，助力你的 AIGC 探索之旅。
 
 以下是此次版本发布的重点新功能:
 
@@ -108,14 +118,14 @@
 
 ## 📄 目录
 
-- [📖 介绍](#📖-介绍)
-- [🙌 参与贡献](#🙌-参与贡献)
-- [🛠️ 安装](#🛠️-安装)
-- [📊 模型库](#📊-模型库)
-- [🤝 致谢](#🤝-致谢)
-- [🖊️ 引用](#🖊️-引用)
-- [🎫 许可证](#🎫-许可证)
-- [🏗️ ️OpenMMLab 的其他项目](#🏗️-️openmmlab-的其他项目)
+- [📖 介绍](#-介绍)
+- [🙌 参与贡献](#-参与贡献)
+- [🛠️ 安装](#%EF%B8%8F-安装)
+- [📊 模型库](#-模型库)
+- [🤝 致谢](#-致谢)
+- [🖊️ 引用](#%EF%B8%8F-引用)
+- [🎫 许可证](#-许可证)
+- [🏗️ ️OpenMMLab 的其他项目](#%EF%B8%8F-️openmmlab-的其他项目)
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 
@@ -186,6 +196,16 @@ python -c "import mmagic; print(mmagic.__version__)"
 ```
 
 **开始使用**
+
+成功安装 MMagic 后，你可以很容易地上手使用 MMagic！仅需几行代码，你就可以使用 MMagic 完成文本生成图像！
+
+```python
+from mmagic.apis import MMagicInferencer
+sd_inferencer = MMagicInferencer(model_name='stable_diffusion')
+text_prompts = 'A panda is having dinner at KFC'
+result_out_dir = 'output/sd_res.png'
+sd_inferencer.infer(text=text_prompts, result_out_dir=result_out_dir)
+```
 
 请参考[快速运行](docs/zh_cn/get_started/quick_run.md)和[推理演示](docs/zh_cn/user_guides/inference.md)获取 MMagic 的基本用法。
 
@@ -353,12 +373,13 @@ pip3 install -e .
       </td>
       <td>
         <ul>
-          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
-          <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
-          <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
-          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
-          <li><a href="configs/guided_diffusion/README.md">Guided Diffusion (NeurIPS'2021)</a></li>
           <li><a href="projects/glide/configs/README.md">GLIDE (NeurIPS'2021)</a></li>
+          <li><a href="configs/guided_diffusion/README.md">Guided Diffusion (NeurIPS'2021)</a></li>
+          <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
+          <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
+          <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
+          <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
+          <li><a href="configs/controlnet_animation/README.md">ControlNet Animation (2023)</a></li>
         </ul>
       </td>
       <td>

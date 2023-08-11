@@ -23,7 +23,7 @@ class TriplaneGenerator(BaseModule):
     * A neural renderer to sample and render low-resolution 2D feature and
       image from generated triplane feature
     * A super resolution module to upsample low-resolution image to
-      high-resolition one
+      high-resolution one
 
     Args:
         out_size (int): The resolution of the generated 2D image.
@@ -229,7 +229,7 @@ class TriplaneGenerator(BaseModule):
         depth_image = depth_samples.permute(0, 2,
                                             1).reshape(batch_size, 1, H, W)
 
-        # Run superresolution to get final image
+        # Run super resolution to get final image
         rgb_image = feature_image[:, :3]
         sr_image = self.sr_model(
             rgb_image, feature_image, styles, add_noise=self.sr_add_noise)

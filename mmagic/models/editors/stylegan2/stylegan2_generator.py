@@ -5,6 +5,7 @@ import mmengine
 import numpy as np
 import torch
 import torch.nn as nn
+from mmengine.model import BaseModule
 from mmengine.runner.amp import autocast
 from mmengine.runner.checkpoint import _load_checkpoint_with_prefix
 
@@ -18,7 +19,7 @@ from .stylegan2_modules import ModulatedStyleConv, ModulatedToRGB
 
 @MODELS.register_module('StyleGANv2Generator')
 @MODELS.register_module()
-class StyleGAN2Generator(nn.Module):
+class StyleGAN2Generator(BaseModule):
     r"""StyleGAN2 Generator.
 
     In StyleGAN2, we use a static architecture composing of a style mapping
@@ -74,7 +75,7 @@ class StyleGAN2Generator(nn.Module):
         lr_mlp (float, optional): The learning rate for the style mapping
             layer. Defaults to 0.01.
         default_style_mode (str, optional): The default mode of style mixing.
-            In training, we defaultly adopt mixing style mode. However, in the
+            In training, we adopt mixing style mode in default. However, in the
             evaluation, we use 'single' style mode. `['mix', 'single']` are
             currently supported. Defaults to 'mix'.
         eval_style_mode (str, optional): The evaluation mode of style mixing.
@@ -93,7 +94,7 @@ class StyleGAN2Generator(nn.Module):
         fp16_enabled (bool, optional): Whether to use fp16 training in this
             module. If this flag is `True`, the whole module will be wrapped
             with ``auto_fp16``. Defaults to False.
-        pretrained (dict | None, optional): Information for pretained models.
+        pretrained (dict | None, optional): Information for pretrained models.
             The necessary key is 'ckpt_path'. Besides, you can also provide
             'prefix' to load the generator part from the whole state dict.
             Defaults to None.
@@ -119,7 +120,8 @@ class StyleGAN2Generator(nn.Module):
                  num_fp16_scales=0,
                  fp16_enabled=False,
                  bgr2rgb=False,
-                 pretrained=None):
+                 pretrained=None,
+                 fixed_noise=False):
         super().__init__()
         self.out_size = out_size
         self.style_channels = style_channels
@@ -188,7 +190,8 @@ class StyleGAN2Generator(nn.Module):
             kernel_size=3,
             style_channels=style_channels,
             blur_kernel=blur_kernel,
-            fp16_enabled=fp16_enabled)
+            fp16_enabled=fp16_enabled,
+            fixed_noise=fixed_noise)
         self.to_rgb1 = ModulatedToRGB(
             self.channels[4],
             style_channels,
@@ -209,7 +212,7 @@ class StyleGAN2Generator(nn.Module):
             blk_out_channels_ = self.channels[2**i]
 
             # If `fp16_enabled` is True, all of layers will be run in auto
-            # FP16. In the case of `num_fp16_sacles` > 0, only partial
+            # FP16. In the case of `num_fp16_scales` > 0, only partial
             # layers will be run in fp16.
             _use_fp16 = (self.log_size - i) < num_fp16_scales or fp16_enabled
 
@@ -347,7 +350,10 @@ class StyleGAN2Generator(nn.Module):
                 injected_noise=None,
                 add_noise=True,
                 randomize_noise=True,
-                update_ws=False):
+                update_ws=False,
+                return_features=False,
+                feat_idx=5,
+                return_latent_only=False):
         """Forward function.
 
         This function has been integrated with the truncation trick. Please
@@ -386,12 +392,13 @@ class StyleGAN2Generator(nn.Module):
                 with the buffered noise tensor injected to the style conv
                 block. Defaults to True.
             update_ws (bool): Whether update latent code with EMA. Only work
-                when `w_avg` is registeried. Defaults to False.
+                when `w_avg` is registered. Defaults to False.
 
         Returns:
             torch.Tensor | dict: Generated image tensor or dictionary \
                 containing more data.
         """
+        # device = styles.device
         input_dim = self.style_channels if input_is_latent else self.noise_size
         # receive noise and conduct sanity check.
         if isinstance(styles, torch.Tensor):
@@ -436,9 +443,9 @@ class StyleGAN2Generator(nn.Module):
                 embedding = self.embed(label)
                 # NOTE: If conditional input is passed, do norm for cond
                 # embedding and noise input respectively
-                # do pixel_norm (2nd_momuent_norm) to cond embedding
+                # do pixel_norm (2nd_moment_norm) to cond embedding
                 embedding = self.pixel_norm(embedding)
-                # do pixel_norm (2nd_momuent_norm) to noise input
+                # do pixel_norm (2nd_moment_norm) to noise input
                 styles = [self.pixel_norm(s) for s in styles]
 
             styles_list = []
@@ -502,6 +509,10 @@ class StyleGAN2Generator(nn.Module):
 
             latent = torch.cat([latent, latent2], 1)
 
+        if return_latent_only:
+            return latent
+
+        feats = []
         with autocast(enabled=self.fp16_enabled):
             # 4x4 stage
             out = self.constant_input(latent)
@@ -512,6 +523,7 @@ class StyleGAN2Generator(nn.Module):
                 latent[:, 0],
                 noise=injected_noise[0],
                 add_noise=add_noise)
+            feats.append(out)
             skip = self.to_rgb1(out, latent[:, 1])
 
             _index = 1
@@ -527,17 +539,26 @@ class StyleGAN2Generator(nn.Module):
                     latent[:, _index + 1],
                     noise=noise2,
                     add_noise=add_noise)
+                feats.append(out)
                 skip = to_rgb(out, latent[:, _index + 2], skip)
                 _index += 2
 
         # make sure the output image is torch.float32 to avoid RunTime Error
         # in other modules
         img = skip.to(torch.float32)
-
         if self.bgr2rgb:
-            img = torch.flip(img, dims=1)
+            img = torch.flip(img, dims=[1])
 
         if return_latents or return_noise:
+            if return_features:
+                output_dict = dict(
+                    fake_img=img,
+                    latent=latent,
+                    inject_index=inject_index,
+                    noise_batch=noise_batch,
+                    feats=feats[feat_idx])
+                return output_dict
+
             output_dict = dict(
                 fake_img=img,
                 latent=latent,

@@ -1,5 +1,28 @@
 # Changelog
 
+## v1.0.1 (26/05/2023)
+
+**New Features & Improvements**
+
+- Support tomesd for StableDiffusion speed-up. [#1801](https://github.com/open-mmlab/mmagic/pull/1801)
+- Support all inpainting/matting/image restoration models inferencer. [#1833](https://github.com/open-mmlab/mmagic/pull/1833), [#1873](https://github.com/open-mmlab/mmagic/pull/1873)
+- Support animated drawings at projects. [#1837](https://github.com/open-mmlab/mmagic/pull/1837)
+- Support Style-Based Global Appearance Flow for Virtual Try-On at projects. [#1786](https://github.com/open-mmlab/mmagic/pull/1786)
+- Support tokenizer wrapper and support EmbeddingLayerWithFixe. [#1846](https://github.com/open-mmlab/mmagic/pull/1846)
+
+**Bug Fixes**
+
+- Fix install requirements. [#1819](https://github.com/open-mmlab/mmagic/pull/1819)
+- Fix inst-colorization PackInputs. [#1828](https://github.com/open-mmlab/mmagic/pull/1828), [#1827](https://github.com/open-mmlab/mmagic/pull/1827)
+- Fix inferencer in pip-install. [#1875](https://github.com/open-mmlab/mmagic/pull/1875)
+
+**New Contributors**
+
+- @XDUWQ made their first contribution in https://github.com/open-mmlab/mmagic/pull/1830
+- @FerryHuang made their first contribution in https://github.com/open-mmlab/mmagic/pull/1786
+- @bobo0810 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1851
+- @jercylew made their first contribution in https://github.com/open-mmlab/mmagic/pull/1874
+
 ## v1.0.0 (25/04/2023)
 
 We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration).
@@ -8,9 +31,9 @@ We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEd
 
 Since its inception, MMEditing has been the preferred algorithm library for many super-resolution, editing, and generation tasks, helping research teams win more than 10 top international competitions and supporting over 100 GitHub ecosystem projects. After iterative updates with OpenMMLab 2.0 framework and merged with MMGeneration, MMEditing has become a powerful tool that supports low-level algorithms based on both GAN and CNN.
 
-Today, MMEditing embraces the Diffusion Model and transforms into a more advanced and comprehensive AIGC toolkit: **MMagic** (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation).
+Today, MMEditing embraces Generative AI and transforms into a more advanced and comprehensive AIGC toolkit: **MMagic** (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation).
 
-In MMagic, we have supports 53+ models in multiple tasks such as fine-tuning for stable diffusion, text-to-image, image and video restoration, super-resolution, editing and generation. With excellent training and experiment management support from [MMEngine](https://github.com/open-mmlab/mmengine), MMagic will provide more agile and flexible experimental support for researchers and AIGC enthusiasts, and help you on your AIGC exploration journey. With MMagic, experience more magic in generation! Let's open a new era beyond editing together. More than Editing, Unlock the Magic!
+In MMagic, we have supported 53+ models in multiple tasks such as fine-tuning for stable diffusion, text-to-image, image and video restoration, super-resolution, editing and generation. With excellent training and experiment management support from [MMEngine](https://github.com/open-mmlab/mmengine), MMagic will provide more agile and flexible experimental support for researchers and AIGC enthusiasts, and help you on your AIGC exploration journey. With MMagic, experience more magic in generation! Let's open a new era beyond editing together. More than Editing, Unlock the Magic!
 
 **Highlights**
 
@@ -51,15 +74,15 @@ For the Diffusion Model, we provide the following "magic" :
 
 - Support video generation based on MultiFrame Render.
   MMagic supports the generation of long videos in various styles through ControlNet and MultiFrame Render.
-  prompt key words: a handsome man, silver hair, smiling, play basketball
+  prompt keywords: a handsome man, silver hair, smiling, play basketball
 
   https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4
 
-  prompt key words: a girl, black hair, white pants, smiling, play basketball
+  prompt keywords: a girl, black hair, white pants, smiling, play basketball
 
   https://user-images.githubusercontent.com/49083766/233559964-bd5127bd-52f6-44b6-a089-9d7adfbc2430.mp4
 
-  prompt key words: a handsome man
+  prompt keywords: a handsome man
 
   https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4
 
@@ -74,7 +97,7 @@ For the Diffusion Model, we provide the following "magic" :
 
 To improve your "spellcasting" efficiency, we have made the following adjustments to the "magic circuit":
 
-- By using MMEngine and MMCV of OpenMMLab 2.0 framework, We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different module. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs.
+- By using MMEngine and MMCV of OpenMMLab 2.0 framework, We decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs.
 - Support for 33+ algorithms accelerated by Pytorch 2.0.
 - Refactor DataSample to support the combination and splitting of batch dimensions.
 - Refactor DataPreprocessor and unify the data format for various tasks during training and inference.

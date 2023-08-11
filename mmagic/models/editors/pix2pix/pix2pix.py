@@ -170,7 +170,7 @@ class Pix2Pix(BaseTranslationModel):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             List[DataSample]: Generated image or image dict.
@@ -200,10 +200,10 @@ class Pix2Pix(BaseTranslationModel):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
-            List[DataSampleenerated image or image dict.
+            List[DataSample]: Generated image or image dict.
         """
         data = self.data_preprocessor(data)
         inputs_dict, data_samples = data['inputs'], data['data_samples']

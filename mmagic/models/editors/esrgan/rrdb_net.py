@@ -27,6 +27,7 @@ class RRDBNet(BaseModule):
         growth_channels (int): Channels for each growth. Default: 32.
         upscale_factor (int): Upsampling factor. Support x1, x2 and x4.
             Default: 4.
+        init_cfg (dict, optional): Initialization config dict. Default: None.
     """
     _supported_upscale_factors = [1, 2, 4]
 
@@ -151,7 +152,7 @@ class ResidualDenseBlock(nn.Module):
         x3 = self.lrelu(self.conv3(torch.cat((x, x1, x2), 1)))
         x4 = self.lrelu(self.conv4(torch.cat((x, x1, x2, x3), 1)))
         x5 = self.conv5(torch.cat((x, x1, x2, x3, x4), 1))
-        # Emperically, we use 0.2 to scale the residual for better performance
+        # Empirically, we use 0.2 to scale the residual for better performance
         return x5 * 0.2 + x
 
 
@@ -183,5 +184,5 @@ class RRDB(nn.Module):
         out = self.rdb1(x)
         out = self.rdb2(out)
         out = self.rdb3(out)
-        # Emperically, we use 0.2 to scale the residual for better performance
+        # Empirically, we use 0.2 to scale the residual for better performance
         return out * 0.2 + x

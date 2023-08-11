@@ -188,7 +188,7 @@ def evaluate(pred_root, gt_root, trimap_root, verbose, nproc):
         gt_root (str): Path to the ground truth alpha matte folder.
         trimap_root (str): Path to the predicted alpha matte folder.
         verbose (bool): Whether print result for each predicted alpha matte.
-        nproc (int): number of processers.
+        nproc (int): number of processes.
     """
 
     images = sorted(mmengine.scandir(pred_root))
@@ -243,7 +243,7 @@ def parse_args():
         action='store_true',
         help='Whether print result for each predicted alpha matte')
     parser.add_argument(
-        '--nproc', type=int, default=4, help='number of processers')
+        '--nproc', type=int, default=4, help='number of processes')
     return parser.parse_args()
 
 

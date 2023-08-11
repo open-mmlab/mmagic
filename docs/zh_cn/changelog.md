@@ -1,5 +1,21 @@
 # 变更日志
 
+## v1.0.1 (26/05/2023)
+
+**新功能和改进**
+
+- 支持 StableDiffusion tomesd 加速. [#1801](https://github.com/open-mmlab/mmagic/pull/1801)
+- 支持所有 inpainting/matting/image restoration 模型的 inferencer. [#1833](https://github.com/open-mmlab/mmagic/pull/1833), [#1873](https://github.com/open-mmlab/mmagic/pull/1873)
+- 支持 animated drawings. [#1837](https://github.com/open-mmlab/mmagic/pull/1837)
+- 支持 Style-Based Global Appearance Flow for Virtual Try-On at projects. [#1786](https://github.com/open-mmlab/mmagic/pull/1786)
+- 支持 tokenizer wrapper 和 EmbeddingLayerWithFixe. [#1846](https://github.com/open-mmlab/mmagic/pull/1846)
+
+**Bug 修复**
+
+- 修复安装依赖. [#1819](https://github.com/open-mmlab/mmagic/pull/1819)
+- 修复 inst-colorization PackInputs. [#1828](https://github.com/open-mmlab/mmagic/pull/1828), [#1827](https://github.com/open-mmlab/mmagic/pull/1827)
+- 修复 pip install 时 inferencer 无法使用的问题. [#1875](https://github.com/open-mmlab/mmagic/pull/1875)
+
 ## v1.0.0 (25/04/2023)
 
 我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
@@ -8,7 +24,7 @@
 
 自从 MMEditing 诞生以来，它一直是许多图像超分辨率、编辑和生成任务的首选算法库，帮助多个研究团队取得 10 余 项国际顶级赛事的胜利，支撑了 100 多个 GitHub 生态项目。经过 OpenMMLab 2.0 框架的迭代更新以及与 MMGeneration 的合并，MMEditing 已经成为了一个支持基于 GAN 和 CNN 的底层视觉算法的强大工具。
 
-而今天，MMEditing 将拥抱 Diffusion Model（扩散模型），正式更名为 **MMagic**（**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation），转化为更为先进、全面的 AIGC 开源算法库。
+而今天，MMEditing 将更加拥抱生成式 AI（Generative AI），正式更名为 **MMagic**（**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation），致力于打造更先进、更全面的 AIGC 开源算法库。
 
 在 MMagic 中，我们已经支持了 53+ 模型，分布于 Stable Diffusion 的微调、图文生成、图像及视频修复、超分辨率、编辑和生成等多种任务。配合 [MMEngine](https://github.com/open-mmlab/mmengine) 出色的训练与实验管理支持，MMagic 将为广大研究者与 AIGC 爱好者们提供更加快捷灵活的实验支持，助力你的 AIGC 探索之旅。使用 MMagic，体验更多生成的魔力！让我们一起开启超越编辑的新纪元！ More than Editing, Unlock the Magic!
 
@@ -51,15 +67,15 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 - 支持基于 MultiFrame Render 的视频生成.
   MMagic 支持通过 ControlNet 与多帧渲染法实现长视频的生成。
-  prompt key words: a handsome man, silver hair, smiling, play basketball
+  prompt keywords: a handsome man, silver hair, smiling, play basketball
 
   https://user-images.githubusercontent.com/12782558/227149757-fd054d32-554f-45d5-9f09-319184866d85.mp4
 
-  prompt key words: a girl, black hair, white pants, smiling, play basketball
+  prompt keywords: a girl, black hair, white pants, smiling, play basketball
 
   https://user-images.githubusercontent.com/49083766/233559964-bd5127bd-52f6-44b6-a089-9d7adfbc2430.mp4
 
-  prompt key words: a handsome man
+  prompt keywords: a handsome man
 
   https://user-images.githubusercontent.com/12782558/227152129-d70d5f76-a6fc-4d23-97d1-a94abd08f95a.mp4
 

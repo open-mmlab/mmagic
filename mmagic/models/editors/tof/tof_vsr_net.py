@@ -28,8 +28,8 @@ class TOFlowVSRNet(BaseModule):
             train from scratch. Default: False
     """
 
-    def __init__(self, adapt_official_weights=False):
-        super().__init__()
+    def __init__(self, adapt_official_weights=False, init_cfg=None):
+        super().__init__(init_cfg=init_cfg)
 
         self.adapt_official_weights = adapt_official_weights
         self.ref_idx = 0 if adapt_official_weights else 3

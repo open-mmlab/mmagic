@@ -53,7 +53,7 @@ class IterTimerHook(BaseIterTimerHook):
         self.t = time.time()
         window_size = runner.log_processor.window_size
         # Calculate eta every `window_size` iterations. Since test and val
-        # loop will not update runner.iter, use `every_n_innter_iters`to check
+        # loop will not update runner.iter, use `every_n_inner_iters`to check
         # the interval.
         if self.every_n_inner_iters(batch_idx, window_size):
             iter_time = message_hub.get_scalar(f'{mode}/time').mean(

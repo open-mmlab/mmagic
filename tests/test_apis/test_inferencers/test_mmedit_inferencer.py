@@ -9,7 +9,7 @@ from mmagic.utils import register_all_modules
 register_all_modules()
 
 
-def test_mmagic_inferencer():
+def test_mmedit_inferencer():
     with pytest.raises(Exception) as e_info:
         inferencer_instance = Inferencers('colorization', ['error_type'], None)
 

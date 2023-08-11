@@ -5,7 +5,7 @@ import numpy as np
 import torch.nn as nn
 from mmcv.cnn import build_norm_layer
 from mmengine.dist import is_distributed
-from mmengine.model import constant_init, xavier_init
+from mmengine.model import BaseModule, constant_init, xavier_init
 from torch import Tensor
 from torch.nn.init import xavier_uniform_
 from torch.nn.utils import spectral_norm
@@ -16,7 +16,7 @@ from mmagic.registry import MODELS
 
 
 @MODELS.register_module()
-class SNGANGenResBlock(nn.Module):
+class SNGANGenResBlock(BaseModule):
     """ResBlock used in Generator of SNGAN / Proj-GAN.
 
     Args:
@@ -213,7 +213,7 @@ class SNGANGenResBlock(nn.Module):
 
 
 @MODELS.register_module()
-class SNGANDiscResBlock(nn.Module):
+class SNGANDiscResBlock(BaseModule):
     """resblock used in discriminator of sngan / proj-gan.
 
     args:
@@ -366,7 +366,7 @@ class SNGANDiscResBlock(nn.Module):
 
 
 @MODELS.register_module()
-class SNGANDiscHeadResBlock(nn.Module):
+class SNGANDiscHeadResBlock(BaseModule):
     """The first ResBlock used in discriminator of sngan / proj-gan. Compared
     to ``SNGANDisResBlock``, this module has a different forward order.
 
@@ -496,7 +496,7 @@ class SNGANDiscHeadResBlock(nn.Module):
 
 
 @MODELS.register_module()
-class SNConditionNorm(nn.Module):
+class SNConditionNorm(BaseModule):
     """Conditional Normalization for SNGAN / Proj-GAN. The implementation
     refers to.
 

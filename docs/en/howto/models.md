@@ -5,16 +5,17 @@ In this section, you will learn how to design your own models.
 
 The structure of this guide are as follows:
 
-- [Overview of models in MMagic](#overview-of-models-in-mmagic)
-- [An example of SRCNN](#an-example-of-srcnn)
-  - [Define the network of SRCNN](#step-1-define-the-network-of-srcnn)
-  - [Define the model of SRCNN](#step-2-define-the-model-of-srcnn)
-  - [Start training SRCNN](#step-3-start-training-srcnn)
-- [An example of DCGAN](#an-example-of-dcgan)
-  - [Define the network of DCGAN](#step-1-define-the-network-of-dcgan)
-  - [Define the model of DCGAN](#step-2-design-the-model-of-dcgan)
-  - [Start training DCGAN](#step-3-start-training-dcgan)
-- [References](#references)
+- [How to design your own models](#how-to-design-your-own-models)
+  - [Overview of models in MMagic](#overview-of-models-in-mmagic)
+  - [An example of SRCNN](#an-example-of-srcnn)
+    - [Step 1: Define the network of SRCNN](#step-1-define-the-network-of-srcnn)
+    - [Step 2: Define the model of SRCNN](#step-2-define-the-model-of-srcnn)
+    - [Step 3: Start training SRCNN](#step-3-start-training-srcnn)
+  - [An example of DCGAN](#an-example-of-dcgan)
+    - [Step 1: Define the network of DCGAN](#step-1-define-the-network-of-dcgan)
+    - [Step 2: Design the model of DCGAN](#step-2-design-the-model-of-dcgan)
+    - [Step 3: Start training DCGAN](#step-3-start-training-dcgan)
+  - [References](#references)
 
 ## Overview of models in MMagic
 
@@ -429,7 +430,7 @@ We also need to specify the training dataloader and testing dataloader according
 Finally we can start training our own model by：
 
 ```python
-python train.py configs/srcnn/srcnn_x4k915_g1_1000k_div2k.py
+python tools/train.py configs/srcnn/srcnn_x4k915_g1_1000k_div2k.py
 ```
 
 ## An example of DCGAN
@@ -737,7 +738,7 @@ We also need to specify the training dataloader and testing dataloader according
 Finally we can start training our own model by：
 
 ```python
-python train.py configs/dcgan/dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
+python tools/train.py configs/dcgan/dcgan_1xb128-5epoches_lsun-bedroom-64x64.py
 ```
 
 ## References

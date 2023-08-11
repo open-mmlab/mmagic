@@ -20,17 +20,17 @@ We present a generative image inpainting system to complete images with free-for
 
 ## Results and models
 
-**Places365-Challenge**
-
-|                       Model                       | Mask Type | Resolution | Train Iters |    Dataset    | l1 error |  PSNR  | SSIM  | Training Resources |                                Download                                 |
-| :-----------------------------------------------: | :-------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :----------------: | :---------------------------------------------------------------------: |
-| [DeepFillv2](./deepfillv2_8xb2_places-256x256.py) | free-form |  256x256   |    100k     | Places365-val |  8.635   | 22.398 | 0.815 |         8          | [model](https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_places_20200619-10d15793.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_places_20200619-10d15793.log.json) |
-
 **CelebA-HQ**
 
 |                       Model                       | Mask Type | Resolution | Train Iters |  Dataset   | l1 error |  PSNR  | SSIM  | Training Resources |                                  Download                                  |
 | :-----------------------------------------------: | :-------: | :--------: | :---------: | :--------: | :------: | :----: | :---: | :----------------: | :------------------------------------------------------------------------: |
 | [DeepFillv2](./deepfillv2_8xb2_celeba-256x256.py) | free-form |  256x256   |     20k     | CelebA-val |  5.411   | 25.721 | 0.871 |         8          | [model](https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_celeba_20200619-c96e5f12.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_celeba_20200619-c96e5f12.log.json) |
+
+**Places365-Challenge**
+
+|                       Model                       | Mask Type | Resolution | Train Iters |    Dataset    | l1 error |  PSNR  | SSIM  | Training Resources |                                Download                                 |
+| :-----------------------------------------------: | :-------: | :--------: | :---------: | :-----------: | :------: | :----: | :---: | :----------------: | :---------------------------------------------------------------------: |
+| [DeepFillv2](./deepfillv2_8xb2_places-256x256.py) | free-form |  256x256   |    100k     | Places365-val |  8.635   | 22.398 | 0.815 |         8          | [model](https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_places_20200619-10d15793.pth) \| [log](https://download.openmmlab.com/mmediting/inpainting/deepfillv2/deepfillv2_256x256_8x2_places_20200619-10d15793.log.json) |
 
 ## Quick Start
 

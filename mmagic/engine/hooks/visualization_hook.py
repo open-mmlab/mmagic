@@ -230,7 +230,7 @@ class VisualizationHook(Hook):
     @master_only
     def after_test_iter(self, runner: Runner, batch_idx: int, data_batch: dict,
                         outputs):
-        """Visualize samples after test iteraiton.
+        """Visualize samples after test iteration.
 
         Args:
             runner (Runner): The runner of the training process.
@@ -299,7 +299,7 @@ class VisualizationHook(Hook):
         """Visualize samples.
 
         Args:
-            runner (Runner): The runner conatians model to visualize.
+            runner (Runner): The runner contains model to visualize.
             batch_idx (int): The index of the current batch in loop.
             data_batch (dict): Data from dataloader.
                 Defaults to None.

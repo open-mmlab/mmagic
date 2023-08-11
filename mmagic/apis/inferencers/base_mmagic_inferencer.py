@@ -58,6 +58,7 @@ class BaseMMagicInferencer(BaseInferencer):
         super().__init__(config, ckpt, device)
 
         self._init_extra_parameters(extra_parameters)
+        print(extra_parameters)
         self.base_params = self._dispatch_kwargs(**kwargs)
         self.seed = seed
         set_random_seed(self.seed)
@@ -69,6 +70,9 @@ class BaseMMagicInferencer(BaseInferencer):
         model = MODELS.build(cfg.model)
         if ckpt is not None and ckpt != '':
             ckpt = load_checkpoint(model, ckpt, map_location='cpu')
+        if cfg.model.get(
+                'init_cfg') and cfg.model.init_cfg.type == 'convert_from_unet':
+            model.init_weights()
         model.cfg = cfg
         model.to(device)
         model.eval()
@@ -116,7 +120,7 @@ class BaseMMagicInferencer(BaseInferencer):
 
         return results
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def __call__(self, **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
 
@@ -126,6 +130,25 @@ class BaseMMagicInferencer(BaseInferencer):
         Returns:
             Union[Dict, List[Dict]]: Results of inference pipeline.
         """
+        if 'extra_parameters' in kwargs.keys():
+            if 'infer_with_grad' in kwargs['extra_parameters'].keys():
+                if kwargs['extra_parameters']['infer_with_grad']:
+                    results = self.base_call(**kwargs)
+        else:
+            with torch.no_grad():
+                results = self.base_call(**kwargs)
+        return results
+
+    def base_call(self, **kwargs) -> Union[Dict, List[Dict]]:
+        """Call the inferencer.
+
+        Args:
+            kwargs: Keyword arguments for the inferencer.
+
+        Returns:
+            Union[Dict, List[Dict]]: Results of inference pipeline.
+        """
+
         self._update_extra_parameters(**kwargs)
 
         params = self._dispatch_kwargs(**kwargs)

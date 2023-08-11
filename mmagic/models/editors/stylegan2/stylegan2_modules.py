@@ -7,6 +7,7 @@ from mmcv.ops.fused_bias_leakyrelu import (FusedBiasLeakyReLU,
                                            fused_bias_leakyrelu)
 from mmcv.ops.upfirdn2d import upfirdn2d
 from mmengine.dist import get_dist_info
+from mmengine.model import BaseModule
 from mmengine.runner.amp import autocast
 
 from mmagic.models.archs import AllGatherLayer
@@ -39,7 +40,7 @@ class _FusedBiasLeakyReLU(FusedBiasLeakyReLU):
                                     self.negative_slope, self.scale)
 
 
-class UpsampleUpFIRDn(nn.Module):
+class UpsampleUpFIRDn(BaseModule):
     """UpFIRDn for Upsampling.
 
     This module is used in the ``to_rgb`` layers in StyleGAN2 for upsampling
@@ -83,7 +84,7 @@ class UpsampleUpFIRDn(nn.Module):
         return out
 
 
-class DownsampleUpFIRDn(nn.Module):
+class DownsampleUpFIRDn(BaseModule):
     """UpFIRDn for Downsampling.
 
     This module is mentioned in StyleGAN2 for dowampling the feature maps.
@@ -126,7 +127,7 @@ class DownsampleUpFIRDn(nn.Module):
         return out
 
 
-class ModulatedConv2d(nn.Module):
+class ModulatedConv2d(BaseModule):
     r"""Modulated Conv2d in StyleGANv2.
 
     This module implements the modulated convolution layers proposed in
@@ -225,7 +226,6 @@ class ModulatedConv2d(nn.Module):
 
     def forward(self, x, style, input_gain=None):
         n, c, h, w = x.shape
-
         weight = self.weight
         # Pre-normalize inputs to avoid FP16 overflow.
         # if x.dtype == torch.float16 and self.demodulate:
@@ -237,7 +237,6 @@ class ModulatedConv2d(nn.Module):
             )  # max_Ikk
             style = style / style.norm(
                 float('inf'), dim=1, keepdim=True)  # max_I
-
         with autocast(enabled=self.fp16_enabled):
             # process style code
             style = self.style_modulation(style).view(n, 1, c, 1,
@@ -286,7 +285,7 @@ class ModulatedConv2d(nn.Module):
         return x
 
 
-class ModulatedStyleConv(nn.Module):
+class ModulatedStyleConv(BaseModule):
     """Modulated Style Convolution.
 
     In this module, we integrate the modulated conv2d, noise injector and
@@ -328,7 +327,8 @@ class ModulatedStyleConv(nn.Module):
                  style_mod_cfg=dict(bias_init=1.),
                  style_bias=0.,
                  fp16_enabled=False,
-                 conv_clamp=256):
+                 conv_clamp=256,
+                 fixed_noise=False):
         super().__init__()
 
         # add support for fp16
@@ -347,7 +347,7 @@ class ModulatedStyleConv(nn.Module):
             style_bias=style_bias,
             fp16_enabled=fp16_enabled)
 
-        self.noise_injector = NoiseInjection()
+        self.noise_injector = NoiseInjection(fixed_noise=fixed_noise)
         self.activate = _FusedBiasLeakyReLU(out_channels)
 
     def forward(self,
@@ -383,7 +383,6 @@ class ModulatedStyleConv(nn.Module):
 
             # TODO: FP16 in activate layers
             out = self.activate(out)
-
             if self.fp16_enabled:
                 out = torch.clamp(
                     out, min=-self.conv_clamp, max=self.conv_clamp)
@@ -394,7 +393,7 @@ class ModulatedStyleConv(nn.Module):
         return out
 
 
-class ModulatedToRGB(nn.Module):
+class ModulatedToRGB(BaseModule):
     """To RGB layer.
 
     This module is designed to output image tensor in StyleGAN2.
@@ -564,7 +563,7 @@ class ConvDownLayer(nn.Sequential):
         return x
 
 
-class ResBlock(nn.Module):
+class ResBlock(BaseModule):
     """Residual block used in the discriminator of StyleGAN2.
 
     Args:
@@ -638,7 +637,7 @@ class ResBlock(nn.Module):
         return out
 
 
-class ModMBStddevLayer(nn.Module):
+class ModMBStddevLayer(BaseModule):
     """Modified MiniBatch Stddev Layer.
 
     This layer is modified from ``MiniBatchStddevLayer`` used in PGGAN. In

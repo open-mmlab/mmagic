@@ -1,8 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch.nn as nn
 from mmcv.cnn import ConvModule
-from mmengine.logging import MMLogger
-from mmengine.runner import load_checkpoint
+from mmengine.model import BaseModule
 
 from mmagic.models.utils import generation_init_weights
 from mmagic.registry import MODELS
@@ -10,7 +9,7 @@ from .cyclegan_modules import ResidualBlockWithDropout
 
 
 @MODELS.register_module()
-class ResnetGenerator(nn.Module):
+class ResnetGenerator(BaseModule):
     """Construct a Resnet-based generator that consists of residual blocks
     between a few downsampling/upsampling operations.
 
@@ -40,7 +39,7 @@ class ResnetGenerator(nn.Module):
                  num_blocks=9,
                  padding_mode='reflect',
                  init_cfg=dict(type='normal', gain=0.02)):
-        super().__init__()
+        super().__init__(init_cfg=init_cfg)
         assert num_blocks >= 0, ('Number of residual blocks must be '
                                  f'non-negative, but got {num_blocks}.')
         assert isinstance(norm_cfg, dict), ("'norm_cfg' should be dict, but"
@@ -132,21 +131,11 @@ class ResnetGenerator(nn.Module):
         """
         return self.model(x)
 
-    def init_weights(self, pretrained=None, strict=True):
-        """Initialize weights for the model.
-
-        Args:
-            pretrained (str, optional): Path for pretrained weights. If given
-                None, pretrained weights will not be loaded. Default: None.
-            strict (bool, optional): Whether to allow different params for the
-                model and checkpoint. Default: True.
-        """
-        if isinstance(pretrained, str):
-            logger = MMLogger.get_current_instance()
-            load_checkpoint(self, pretrained, strict=strict, logger=logger)
-        elif pretrained is None:
-            generation_init_weights(
-                self, init_type=self.init_type, init_gain=self.init_gain)
-        else:
-            raise TypeError("'pretrained' must be a str or None. "
-                            f'But received {type(pretrained)}.')
+    def init_weights(self):
+        """Initialize weights for the model."""
+        if self.init_cfg is not None and self.init_cfg['type'] == 'Pretrained':
+            super().init_weights()
+            return
+        generation_init_weights(
+            self, init_type=self.init_type, init_gain=self.init_gain)
+        self._is_init = True

@@ -37,10 +37,11 @@ The file structure will be like this:
 ```text
 data
 └── dreambooth
-    ├── alvan-nee-Id1DBHv4fbg-unsplash.jpeg
-    ├── alvan-nee-bQaAJCbNq3g-unsplash.jpeg
-    ├── alvan-nee-brFsZ7qszSY-unsplash.jpeg
-    └── alvan-nee-eoqnr8ikwFE-unsplash.jpeg
+    └──imgs
+       ├── alvan-nee-Id1DBHv4fbg-unsplash.jpeg
+       ├── alvan-nee-bQaAJCbNq3g-unsplash.jpeg
+       ├── alvan-nee-brFsZ7qszSY-unsplash.jpeg
+       └── alvan-nee-eoqnr8ikwFE-unsplash.jpeg
 ```
 
 2. Start training with the following command:
@@ -48,7 +49,7 @@ data
 ```bash
 bash tools/dist_train.sh configs/dreambooth/dreambooth.py 1
 # or
-bash tools/dist_train.sh configs/dreambooth/dreambooth_lora.py 1
+bash tools/dist_train.sh configs/dreambooth/dreambooth-lora.py 1
 ```
 
 <table align="center">
@@ -69,6 +70,21 @@ bash tools/dist_train.sh configs/dreambooth/dreambooth_lora.py 1
     <td>
 </thead>
 </table>
+
+## Use ToMe to accelerate your training and inference
+
+We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed for stable-diffusion-based models referring to [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` in [DreamBooth](./dreambooth.py). The only requirement is `torch >= 1.12.1` in order to properly support `torch.Tensor.scatter_reduce()` functionality. Please do check it before running the demo.
+
+```python
+model = dict(
+    type='DreamBooth',
+    ...
+    tomesd_cfg=dict(ratio=0.5),
+    ...
+    val_prompts=val_prompts)
+```
+
+For more details, you can refer to [Stable Diffusion Acceleration](../stable_diffusion/README.md#use-tome-to-accelerate-your-stable-diffusion-model).
 
 ## Comments
 

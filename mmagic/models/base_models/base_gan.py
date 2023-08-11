@@ -125,7 +125,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
         2. `loss_config` is dict of scalar or string: Users will implement all
             loss calculations and use passed `loss_config` to control the
             weight or behavior of the loss calculation. Users will unpack and
-            use each field in this dict by themself.
+            use each field in this dict by themselves.
 
             loss_config = dict(gp_norm_mode='HWC', gp_loss_weight=10)
 
@@ -349,7 +349,24 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 generator = self.generator_ema
             else:
                 generator = self.generator
-            outputs = generator(noise, return_noise=False, **sample_kwargs)
+            if sample_kwargs:
+                if 'return_noise' in sample_kwargs.keys():
+                    outputs = generator(noise, **sample_kwargs)
+                else:
+                    outputs = generator(
+                        noise, return_noise=False,
+                        **sample_kwargs)  # yapf: disable
+            else:
+                sample_kwargs = {}
+                outputs = generator(
+                    noise, return_noise=False,
+                    **sample_kwargs)  # no need to be False all time
+            if isinstance(outputs, dict):
+                latent = outputs['latent']
+                feats = outputs['feats']
+                outputs = outputs['fake_img']
+            # else:t
+
             outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
             gen_sample = DataSample()
@@ -359,6 +376,10 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 gen_sample.gt_img = inputs['img']
             gen_sample.fake_img = outputs
             gen_sample.noise = noise
+            if 'latent' in locals():
+                gen_sample.latent = latent
+            if 'feats' in locals():
+                gen_sample.feats = feats
             gen_sample.sample_kwargs = deepcopy(sample_kwargs)
             gen_sample.sample_model = sample_model
             batch_sample_list = gen_sample.split(allow_nonseq_value=True, )
@@ -396,7 +417,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             SampleList: Generated image or image dict.
@@ -410,7 +431,7 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
 
         Args:
             data (dict): Data sampled from metric specific
-                sampler. More detials in `Metrics` and `Evaluator`.
+                sampler. More details in `Metrics` and `Evaluator`.
 
         Returns:
             List[DataSample]: Generated image or image dict.

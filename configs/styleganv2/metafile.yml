@@ -81,6 +81,17 @@ Models:
       FID50k: 3.992
     Task: Unconditional GANs
   Weights: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
+- Config: configs/styleganv2/stylegan2_lion_512x512.py
+  In Collection: StyleGANv2
+  Name: stylegan2_lion_512x512
+  Results:
+  - Dataset: FHQ
+    Metrics:
+      FID50k: 2.4116
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: Unconditional GANs
+  Weights: ./checkpoints/stylegan2_lions_512_pytorch.pth
 - Config: configs/styleganv2/stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Name: stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256

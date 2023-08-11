@@ -58,6 +58,7 @@ from .stylegan2 import StyleGAN2
 from .stylegan3 import StyleGAN3, StyleGAN3Generator
 from .swinir import SwinIRNet
 from .tdan import TDAN, TDANNet
+from .textual_inversion import TextualInversion
 from .tof import TOFlowVFINet, TOFlowVSRNet, ToFResBlock
 from .ttsr import LTE, TTSR, SearchTransformer, TTSRDiscriminator, TTSRNet
 from .wgan_gp import WGANGP
@@ -88,5 +89,5 @@ __all__ = [
     'StyleGAN3Generator', 'InstColorization', 'NAFBaseline',
     'NAFBaselineLocal', 'NAFNet', 'NAFNetLocal', 'DenoisingUnet',
     'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
-    'ControlStableDiffusion', 'DreamBooth'
+    'ControlStableDiffusion', 'DreamBooth', 'TextualInversion'
 ]

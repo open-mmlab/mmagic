@@ -2,11 +2,13 @@
 
 Welcome to MMagic! In this section, you will know about
 
-- [What is MMagic?](#what-is-mmagic)
-- [Why should I use MMagic?](#why-should-i-use-mmagic)
-- [Get started](#get-started)
-- [User guides](#user-guides)
-- [Advanced guides](#advanced-guides)
+- [Overview](#overview)
+  - [What is MMagic?](#what-is-mmagic)
+  - [Why should I use MMagic?](#why-should-i-use-mmagic)
+  - [Get started](#get-started)
+  - [User guides](#user-guides)
+    - [Advanced guides](#advanced-guides)
+    - [How to](#how-to)
 
 ## What is MMagic?
 
@@ -58,7 +60,7 @@ MMagic supports various applications, including:
 
 - **Efficient Framework**
 
-  By using MMEngine and MMCV of OpenMMLab 2.0 framework, MMagic decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different module. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs. With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
+  By using MMEngine and MMCV of OpenMMLab 2.0 framework, MMagic decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs. With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
 
 ## Get started
 

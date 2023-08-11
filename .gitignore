@@ -127,7 +127,6 @@ demo/*.png
 out/*.png
 tests/data/out
 resources/
-
 # Pytorch
 *.pth
 
@@ -147,3 +146,7 @@ resources/
 # Slurm
 batchscript-*
 *.out
+
+*.png
+*.jpg
+*.zip
