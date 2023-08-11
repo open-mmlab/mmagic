@@ -86,7 +86,7 @@ image.save('robot.png')
 
 To inpaint an image, you could run the following codes.
 
-```
+```python
 import mmcv
 from mmengine import MODELS, Config
 from mmengine.registry import init_default_scope

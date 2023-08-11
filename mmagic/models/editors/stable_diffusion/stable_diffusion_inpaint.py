@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+# Copyright 2023 The HuggingFace Team. All rights reserved.
 from typing import Dict, List, Optional, Union
 
 import numpy as np
