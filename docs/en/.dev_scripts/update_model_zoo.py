@@ -13,7 +13,7 @@ TARGET_ROOT = Path(__file__).absolute().parents[1] / 'model_zoo'
 
 def write_file(file, content):
     os.makedirs(osp.dirname(file), exist_ok=True)
-    with open(file, 'w') as f:
+    with open(file, 'w', encoding='utf-8') as f:
         f.write(content)
 
 
@@ -103,7 +103,7 @@ def update_model_zoo():
         for m in models:
             if m.readme not in readme:
                 readme.add(m.readme)
-                with open(MMAGIC_ROOT / m.readme, 'r') as f:
+                with open(MMAGIC_ROOT / m.readme, 'r', encoding='utf-8') as f:
                     c = f.read()
                 content += c.replace('# ', '## ')
         overview = (f'# {task}\n\n'

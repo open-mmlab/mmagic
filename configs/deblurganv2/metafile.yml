@@ -1,0 +1,32 @@
+Collections:
+- Name: DeblurGAN-v2
+  Paper:
+    Title: 'DeblurGAN-v2: Deblurring (Orders-of-Magnitude) Faster and Better'
+    URL: https://arxiv.org/abs/1908.03826
+  README: configs/deblurganv2/README.md
+  Task:
+  - deblurring
+  Year: 2019
+Models:
+- Config: configs/deblurganv2/deblurganv2_fpn-inception_1xb1_gopro.py
+  In Collection: DeblurGAN-v2
+  Name: deblurganv2_fpn-inception_1xb1_gopro
+  Results:
+  - Dataset: GoProTestDataset
+    Metrics:
+      PSNR/<br/>SSIM:
+        PSNR: 29.55
+        SSIM: 0.934
+    Task: Deblurring
+  Weights: https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-inception.pth
+- Config: configs/deblurganv2/deblurganv2_fpn-mobilenet_1xb1_gopro.py
+  In Collection: DeblurGAN-v2
+  Name: deblurganv2_fpn-mobilenet_1xb1_gopro
+  Results:
+  - Dataset: GoProTestDataset
+    Metrics:
+      PSNR/<br/>SSIM:
+        PSNR: 28.17
+        SSIM: 0.925
+    Task: Deblurring
+  Weights: https://download.openxlab.org.cn/models/xiaomile/DeblurGANv2/weight/DeblurGANv2_fpn-mobilenet.pth
