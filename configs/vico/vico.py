@@ -71,7 +71,7 @@ model = dict(
 
 train_cfg = dict(max_iters=400)
 
-parawise_cfg = dict(
+paramwise_cfg = dict(
     custom_keys={
         '.*image_cross_attention': dict(lr_mult=2e-3),
         '.*trainable_embeddings': dict(lr_mult=1.0)
@@ -79,7 +79,7 @@ parawise_cfg = dict(
 optim_wrapper = dict(
     # modules='.*image_cross_attention|.*trainable_embeddings',
     optimizer=dict(type='AdamW', lr=5e-3, weight_decay=0.01),
-    parawise_cfg=parawise_cfg,
+    paramwise_cfg=paramwise_cfg,
     accumulative_counts=1)
 
 # optim_wrapper = {
