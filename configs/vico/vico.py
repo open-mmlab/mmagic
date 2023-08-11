@@ -78,6 +78,7 @@ paramwise_cfg = dict(
     })
 optim_wrapper = dict(
     optimizer=dict(type='AdamW', lr=5e-3, weight_decay=0.01),
+    constructor='DefaultOptimWrapperConstructor',
     paramwise_cfg=paramwise_cfg,
     accumulative_counts=1)
 
