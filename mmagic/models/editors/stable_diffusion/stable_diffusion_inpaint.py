@@ -24,7 +24,13 @@ ModelType = Union[Dict, nn.Module]
 class StableDiffusionInpaint(StableDiffusion):
 
     def __init__(self, *args, **kwargs):
-        # TODO: support `from_pretrained` for this class
+        """Initializes the current class using the same parameters as its
+        parent, StableDiffusion.
+
+        This constructor is primarily a pass-through to the parent class's
+        constructor. All arguments and keyword arguments provided are directly
+        passed to the parent class, StableDiffusion.
+        """
         super().__init__(*args, **kwargs)
 
     @torch.no_grad()
@@ -248,6 +254,9 @@ class StableDiffusionInpaint(StableDiffusion):
         """prepare latents for diffusion to run in latent space.
 
         Args:
+            mask (torch.Tensor): The mask to apply to the image, i.e. regions
+                to inpaint.
+            image (torch.Tensor): The image to be masked.
             batch_size (int): batch size.
             num_channels_latents (int): latent channel nums.
             height (int): image height.
@@ -258,6 +267,8 @@ class StableDiffusionInpaint(StableDiffusion):
                 generator for random functions, defaults to None.
             latents (torch.Tensor):
                 Pre-generated noisy latents, defaults to None.
+            do_classifier_free_guidance (bool): Whether to apply
+                classifier-free guidance.
 
         Return:
             latents (torch.Tensor): prepared latents.
@@ -311,40 +322,76 @@ class StableDiffusionInpaint(StableDiffusion):
 
     @torch.no_grad()
     def val_step(self, data: dict) -> SampleList:
+        """Performs a validation step on the provided data.
+
+        This method is decorated with `torch.no_grad()` which indicates no
+        gradients will be computed during the operations. This ensures
+        efficient memory usage during testing.
+
+        Args:
+            data (dict): Dictionary containing input data for testing.
+
+        Returns:
+            SampleList: List of samples processed during the testing step.
+
+        Raises:
+            NotImplementedError: This method has not been implemented.
+        """
         raise NotImplementedError
 
     @torch.no_grad()
     def test_step(self, data: dict) -> SampleList:
+        """Performs a testing step on the provided data.
+
+        This method is decorated with `torch.no_grad()` which indicates no
+        gradients will be computed during the operations. This ensures
+        efficient memory usage during testing.
+
+        Args:
+            data (dict): Dictionary containing input data for testing.
+
+        Returns:
+            SampleList: List of samples processed during the testing step.
+
+        Raises:
+            NotImplementedError: This method has not been implemented.
+        """
         raise NotImplementedError
 
     def train_step(self, data, optim_wrapper_dict):
+        """Performs a training step on the provided data.
+
+        Args:
+            data: Input data for training.
+            optim_wrapper_dict: Dictionary containing optimizer wrappers
+                which may contain optimizers, schedulers, etc. required
+                for the training step.
+
+        Raises:
+            NotImplementedError: This method has not been implemented.
+        """
         raise NotImplementedError
 
 
-def prepare_mask_and_masked_image(image,
-                                  mask,
-                                  height,
-                                  width,
+def prepare_mask_and_masked_image(image: torch.Tensor,
+                                  mask: torch.Tensor,
+                                  height: int = 512,
+                                  width: int = 512,
                                   return_image: bool = False):
     """Prepare latents for diffusion to run in latent space.
 
     Args:
+        image (torch.Tensor): The image to be masked.
         mask (torch.Tensor): The mask to apply to the image, i.e. regions
             to inpaint.
-        masked_image (torch.Tensor): The image with mask applied.
-        batch_size (int): Batch size.
-        num_channels_latents (int): Latent channel numbers.
         height (int): Image height.
         width (int): Image width.
-        dtype (torch.dtype): Float type.
-        device (torch.device): Torch device.
-        generator (torch.Generator, *optional*): Generator for random
-            functions.
-        do_classifier_free_guidance (bool): Whether to apply
-            classifier-free guidance.
+        return_image (bool): Whether to return the original image.
+            Default to `False`.
 
     Returns:
-        latents (torch.Tensor): Prepared latents.
+        mask (torch.Tensor): A binary mask image.
+        masked_image (torch.Tensor): An image that applied mask.
     """
 
     if image is None:

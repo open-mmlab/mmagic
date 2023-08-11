@@ -84,6 +84,40 @@ image = StableDiffuser.infer(prompt)['samples'][0]
 image.save('robot.png')
 ```
 
+To inpaint an image, you could run the following codes.
+
+```
+import mmcv
+from mmengine import MODELS, Config
+from mmengine.registry import init_default_scope
+from PIL import Image
+
+init_default_scope('mmagic')
+
+config = 'configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-inpaint.py'
+config = Config.fromfile(config).copy()
+# change the 'pretrained_model_path' if you have downloaded the weights manually
+# config.model.unet.from_pretrained = '/path/to/your/stable-diffusion-inpainting'
+# config.model.vae.from_pretrained = '/path/to/your/stable-diffusion-inpainting'
+
+StableDiffuser = MODELS.build(config.model)
+prompt = 'a mecha robot sitting on a bench'
+
+img_url = 'https://raw.githubusercontent.com/CompVis/latent-diffusion/main/data/inpainting_examples/overture-creations-5sI6fQgYIuo.png'  # noqa
+mask_url = 'https://raw.githubusercontent.com/CompVis/latent-diffusion/main/data/inpainting_examples/overture-creations-5sI6fQgYIuo_mask.png'  # noqa
+
+image = Image.fromarray(mmcv.imread(img_url, channel_order='rgb'))
+mask = Image.fromarray(mmcv.imread(mask_url)).convert('L')
+StableDiffuser = StableDiffuser.to('cuda')
+
+image = StableDiffuser.infer(
+    prompt,
+    image,
+    mask
+)['samples'][0]
+image.save('inpaint.png')
+```
+
 ## Use ToMe to accelerate your stable diffusion model
 
 We support **[tomesd](https://github.com/dbolya/tomesd)** now! It is developed based on [ToMe](https://github.com/facebookresearch/ToMe), an efficient ViT speed-up tool based on token merging. To work on with **tomesd** in `mmagic`, you just need to add `tomesd_cfg` to `model` as shown in [stable_diffusion_v1.5_tomesd](stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py). The only requirement is `torch >= 1.12.1` in order to properly support `torch.Tensor.scatter_reduce()` functionality. Please do check it before running the demo.
