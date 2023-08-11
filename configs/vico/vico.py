@@ -77,31 +77,9 @@ paramwise_cfg = dict(
         '.*trainable_embeddings': dict(lr_mult=1.0)
     })
 optim_wrapper = dict(
-    # modules='.*image_cross_attention|.*trainable_embeddings',
     optimizer=dict(type='AdamW', lr=5e-3, weight_decay=0.01),
     paramwise_cfg=paramwise_cfg,
     accumulative_counts=1)
-
-# optim_wrapper = {
-#     ".*image_cross_attention": {
-#         'type': 'OptimWrapper',
-#         'optimizer': {
-#             'type': 'AdamW',
-#             'lr': 1e-5,
-#             'betas': (0.9, 0.99),
-#             'weight_decay': 0.01
-#         }
-#     },
-#     ".*trainable_embeddings": {
-#         'type': 'OptimWrapper',
-#         'optimizer': {
-#             'type': 'AdamW',
-#             'lr': 0.005,
-#             'betas': (0.9, 0.99),
-#             'weight_decay': 0.01
-#         }
-#     }
-# }
 
 pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
