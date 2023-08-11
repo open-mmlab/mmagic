@@ -2,7 +2,7 @@
 
 > [Stable Diffusion](https://github.com/CompVis/stable-diffusion)
 
-> **Task**: Text2Image
+> **Task**: Text2Image, Inpainting
 
 <!-- [ALGORITHM] -->
 
@@ -45,6 +45,7 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 | :----------------------------------------------------------------------------------: | :-----: | :------: |
 |          [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py)           |    -    |    -     |
 | [stable_diffusion_v1.5_tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     |
+|  [stable_diffusion_v1.5_inpaint](./stable-diffusion_ddim_denoisingunet-inpaint.py)   |    -    |    -     |
 
 We use stable diffusion v1.5 weights. This model has several weights including vae, unet and clip.
 
