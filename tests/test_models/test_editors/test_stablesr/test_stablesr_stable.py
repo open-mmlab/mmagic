@@ -87,9 +87,9 @@ model = dict(
     tokenizer=dummy_text_encoder())
 
 
-@pytest.mark.skipif(
-    'win' in platform.system().lower(),
-    reason='skip on windows due to limited RAM.')
+# @pytest.mark.skipif(
+#     'win' in platform.system().lower(),
+#     reason='skip on windows due to limited RAM.')
 def test_stable_diffusion():
     # init
     LatentDiffusion = MODELS.build(Config(model))

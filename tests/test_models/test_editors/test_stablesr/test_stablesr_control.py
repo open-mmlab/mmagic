@@ -24,7 +24,7 @@ register_all_modules()
 
 stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 config = dict(
-    type='ControlStableDiffusion',
+    type='ControlLatentDiffusion',
     vae=dict(type='AutoencoderKL', sample_size=64),
     unet=dict(
         sample_size=64,
@@ -58,10 +58,10 @@ config = dict(
     init_cfg=dict(type='init_from_unet'))
 
 
-@pytest.mark.skipif(
-    'win' in platform.system().lower(),
-    reason='skip on windows due to limited RAM.')
-class TestControlStableDiffusion(TestCase):
+# @pytest.mark.skipif(
+#     'win' in platform.system().lower(),
+#     reason='skip on windows due to limited RAM.')
+class TestControlLatentDiffusion(TestCase):
 
     def setUp(self):
         # mock SiLU
