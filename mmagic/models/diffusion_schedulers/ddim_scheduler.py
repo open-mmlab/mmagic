@@ -230,6 +230,11 @@ class EditDDIMScheduler:
 
         sqrt_alpha_prod = self.alphas_cumprod[timesteps]**0.5
         sqrt_one_minus_alpha_prod = (1 - self.alphas_cumprod[timesteps])**0.5
+
+        if not isinstance(sqrt_alpha_prod, float):
+            sqrt_alpha_prod = float(sqrt_alpha_prod)
+        if not isinstance(sqrt_one_minus_alpha_prod, float):
+            sqrt_one_minus_alpha_prod = float(sqrt_one_minus_alpha_prod)
         noisy_samples = (
             sqrt_alpha_prod * original_samples +
             sqrt_one_minus_alpha_prod * noise)

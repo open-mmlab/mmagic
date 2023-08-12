@@ -5,6 +5,8 @@ from .latent_diffusion_control import ControlLatentDiffusion
 from .vqgan import AutoencoderKL_Resi
 
 __all__ = [
-    'Fuse_sft_block_RRDB', 'AutoencoderKL_Resi', 'LatentDiffusion',
-    'ControlLatentDiffusion'
+    'Fuse_sft_block_RRDB',
+    'AutoencoderKL_Resi',
+    'LatentDiffusion',
+    'ControlLatentDiffusion',
 ]

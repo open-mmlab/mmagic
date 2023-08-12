@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 import pytest
 import torch
 import torch.nn as nn
+from addict import Dict
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
@@ -22,10 +23,48 @@ ckpt_path = osp.join(test_dir, 'configs', 'ckpt')
 
 register_all_modules()
 
+
+class dummy_tokenizer(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+        self.model_max_length = 0
+
+    def __call__(self,
+                 prompt,
+                 padding='max_length',
+                 max_length=0,
+                 truncation=False,
+                 return_tensors='pt'):
+        text_inputs = Dict()
+        text_inputs['input_ids'] = torch.ones([1, 77])
+        text_inputs['attention_mask'] = torch.ones([1, 77])
+        return text_inputs
+
+
+class dummy_text_encoder(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+        self.config = None
+
+    def __call__(self, x, attention_mask):
+        result = torch.rand([1, 77, 768])
+        return [result]
+
+
 stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 config = dict(
     type='ControlLatentDiffusion',
-    vae=dict(type='AutoencoderKL', sample_size=64),
+    vae=dict(
+        type='EditAutoencoderKL_Resi',
+        latent_channels=4,
+        down_block_types=('DownEncoderBlock2D', 'DownEncoderBlock2D',
+                          'DownEncoderBlock2D', 'DownEncoderBlock2D'),
+        up_block_types=('UpDecoderBlock2D', 'UpDecoderBlock2D',
+                        'UpDecoderBlock2D', 'UpDecoderBlock2D'),
+        block_out_channels=(128, 256, 512, 512),
+        layers_per_block=2),
     unet=dict(
         sample_size=64,
         type='UNet2DConditionModel',
@@ -45,22 +84,40 @@ config = dict(
         # from_pretrained=controlnet_canny_rul
         from_config=config_path  # train from scratch
     ),
+    # scheduler=dict(
+    #     type='DDPMScheduler',
+    #     from_pretrained=stable_diffusion_v15_url,
+    #     subfolder='scheduler'),
     scheduler=dict(
-        type='DDPMScheduler',
-        from_pretrained=stable_diffusion_v15_url,
-        subfolder='scheduler'),
+        type='EditDDIMScheduler',
+        variance_type='learned_range',
+        beta_end=0.012,
+        beta_schedule='scaled_linear',
+        beta_start=0.00085,
+        num_train_timesteps=1000,
+        set_alpha_to_one=False,
+        clip_sample=False),
+    # test_scheduler=dict(
+    #     type='DDIMScheduler',
+    #     from_pretrained=stable_diffusion_v15_url,
+    #     subfolder='scheduler'),
     test_scheduler=dict(
-        type='DDIMScheduler',
-        from_pretrained=stable_diffusion_v15_url,
-        subfolder='scheduler'),
+        type='EditDDIMScheduler',
+        variance_type='learned_range',
+        beta_end=0.012,
+        beta_schedule='scaled_linear',
+        beta_start=0.00085,
+        num_train_timesteps=1000,
+        set_alpha_to_one=False,
+        clip_sample=False),
     data_preprocessor=dict(type='DataPreprocessor'),
     enable_xformers=False,
     init_cfg=dict(type='init_from_unet'))
 
 
-# @pytest.mark.skipif(
-#     'win' in platform.system().lower(),
-#     reason='skip on windows due to limited RAM.')
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 class TestControlLatentDiffusion(TestCase):
 
     def setUp(self):
@@ -69,6 +126,8 @@ class TestControlLatentDiffusion(TestCase):
             from mmagic.models.editors.ddpm.denoising_unet import SiLU
             torch.nn.SiLU = SiLU
         control_sd = MODELS.build(config)
+        control_sd.tokenizer = dummy_tokenizer()
+        control_sd.text_encoder = dummy_text_encoder()
         assert not any([p.requires_grad for p in control_sd.vae.parameters()])
         assert not any(
             [p.requires_grad for p in control_sd.text_encoder.parameters()])
@@ -91,6 +150,8 @@ class TestControlLatentDiffusion(TestCase):
         control_sd.init_weights()
 
     def test_infer(self):
+        #
+        # pytest tests/test_models/test_editors/test_stablesr/test_stablesr_control.py
         control_sd = self.control_sd
 
         def mock_encode_prompt(prompt, do_classifier_free_guidance,
@@ -104,8 +165,27 @@ class TestControlLatentDiffusion(TestCase):
         encode_prompt = control_sd._encode_prompt
         control_sd._encode_prompt = mock_encode_prompt
 
+        # class ControlLatentDiffusionImg2Img
+
         # one prompt, one control, repeat 1 time
-        self._test_infer(control_sd, 1, 1, 1, 1)
+        latent_image = torch.rand(2, 3, 512, 512)
+        self._test_image_infer(control_sd, latent_image, 1, 1, 1, 1)
+
+        # class ControlLatentDiffusion
+
+        # one prompt, one control, repeat 1 time
+        # self._test_infer(control_sd, 1, 1, 1, 1)
+
+        # 5. latents torch.Size([1, 4, 64, 64])
+        # text_embeddings torch.Size([2, 5, 16])
+        # controls torch.Size([2, 3, 64, 64])
+
+        # 7. Denoising loop (timesteps)
+        # mid_block_res_sample torch.Size([2, 32, 64, 64])
+        # noise_pred torch.Size([2, 4, 64, 64])
+
+        # 8. Post-processing torch.Size([1, 4, 64, 64])
+        # image = self.decode_latents(latents.to(img_dtype)) -> torch.Size([1, 3, 64, 64])
 
         # two prompt, two control, repeat 1 time
         # NOTE: skip this due to memory limit
@@ -121,6 +201,23 @@ class TestControlLatentDiffusion(TestCase):
 
         control_sd._encode_prompt = encode_prompt
 
+    def _test_image_infer(self, control_sd, latent_image, num_prompt,
+                          num_control, num_repeat, tar_shape):
+        prompt = ''
+        control = torch.ones([1, 3, 64, 64])
+
+        result = control_sd.infer(
+            prompt=[prompt] * num_prompt,
+            latent_image=latent_image,
+            control=[control] * num_control,
+            height=64,
+            width=64,
+            num_images_per_prompt=num_repeat,
+            num_inference_steps=1,
+            return_type='numpy')
+        # assert result['samples'].shape == (tar_shape, 3, 64, 64)
+
+    """
     def _test_infer(self, control_sd, num_prompt, num_control, num_repeat,
                     tar_shape):
         prompt = ''
@@ -224,3 +321,4 @@ class TestControlLatentDiffusion(TestCase):
         control_sd.text_encoder = mock_text_encoder()
 
         control_sd.train_step(data, optim_wrapper)
+    """

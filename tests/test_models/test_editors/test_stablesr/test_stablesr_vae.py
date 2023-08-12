@@ -14,8 +14,8 @@ def test_vqmodel():
         up_block_types=('UpDecoderBlock2D', 'UpDecoderBlock2D',
                         'UpDecoderBlock2D', 'UpDecoderBlock2D'),
         block_out_channels=(128, 256, 512, 512),
-        layers_per_block=2,
-    )
+        layers_per_block=2)
+
     _, enc_fea_lq = vae.encode(input, return_feat=True)
     assert enc_fea_lq[1].shape == (2, 256, 256, 256)
     assert enc_fea_lq[2].shape == (2, 512, 128, 128)
