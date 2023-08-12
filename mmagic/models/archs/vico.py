@@ -21,12 +21,11 @@ class ViCoCrossAttnProcessor:
         batch_size, sequence_length, _ = hidden_states.shape
         attention_mask = attn.prepare_attention_mask(
             attention_mask, sequence_length, batch_size=batch_size)
-        # head_size = attn.heads
-        # attention_mask = repeat(attention_mask, 'b j -> (b h) () j', h=head_size)
 
         query = attn.to_q(hidden_states)
 
-        encoder_hidden_states = encoder_hidden_states if encoder_hidden_states is not None else hidden_states
+        encoder_hidden_states = encoder_hidden_states \
+            if encoder_hidden_states is not None else hidden_states
         key = attn.to_k(encoder_hidden_states)
         value = attn.to_v(encoder_hidden_states)
 
@@ -58,12 +57,6 @@ def replace_cross_attention(unet):
 
 @dataclass
 class ViCoTransformer2DModelOutput(BaseOutput):
-    """
-    Args:
-        sample (`torch.FloatTensor` of shape `(batch_size, num_channels, height, width)` or `(batch size, num_vector_embeds - 1, num_latent_pixels)` if [`Transformer2DModel`] is discrete):
-            Hidden states conditioned on `encoder_hidden_states` input. If discrete, returns probability distributions
-            for the unnoised latent pixels.
-    """
 
     sample: torch.FloatTensor
     loss_reg: torch.FloatTensor
@@ -72,7 +65,7 @@ class ViCoTransformer2DModelOutput(BaseOutput):
 def otsu(mask_in):
     # normalize
     mask_norm = (mask_in - mask_in.min(-1, keepdim=True)[0]) / \
-    (mask_in.max(-1, keepdim=True)[0] - mask_in.min(-1, keepdim=True)[0])
+        (mask_in.max(-1, keepdim=True)[0] - mask_in.min(-1, keepdim=True)[0])
 
     bs = mask_in.shape[0]
     h = mask_in.shape[1]
@@ -142,43 +135,6 @@ class ViCoTransformer2D(nn.Module):
         encoder_attention_mask: Optional[torch.Tensor] = None,
         return_dict: bool = True,
     ):
-        """
-        Args:
-            hidden_states ( When discrete, `torch.LongTensor` of shape `(batch size, num latent pixels)`.
-                When continuous, `torch.FloatTensor` of shape `(batch size, channel, height, width)`): Input
-                hidden_states
-            encoder_hidden_states ( `torch.FloatTensor` of shape `(batch size, sequence len, embed dims)`, *optional*):
-                Conditional embeddings for cross attention layer. If not given, cross-attention defaults to
-                self-attention.
-            timestep ( `torch.LongTensor`, *optional*):
-                Optional timestep to be applied as an embedding in AdaLayerNorm's. Used to indicate denoising step.
-            class_labels ( `torch.LongTensor` of shape `(batch size, num classes)`, *optional*):
-                Optional class labels to be applied as an embedding in AdaLayerZeroNorm. Used to indicate class labels
-                conditioning.
-            encoder_attention_mask ( `torch.Tensor`, *optional* ).
-                Cross-attention mask, applied to encoder_hidden_states. Two formats supported:
-                    Mask `(batch, sequence_length)` True = keep, False = discard. Bias `(batch, 1, sequence_length)` 0
-                    = keep, -10000 = discard.
-                If ndim == 2: will be interpreted as a mask, then converted into a bias consistent with the format
-                above. This bias will be added to the cross-attention scores.
-            return_dict (`bool`, *optional*, defaults to `True`):
-                Whether or not to return a [`models.unet_2d_condition.UNet2DConditionOutput`] instead of a plain tuple.
-
-        Returns:
-            [`~models.transformer_2d.Transformer2DModelOutput`] or `tuple`:
-            [`~models.transformer_2d.Transformer2DModelOutput`] if `return_dict` is True, otherwise a `tuple`. When
-            returning a tuple, the first element is the sample tensor.
-        """
-        # ensure attention_mask is a bias, and give it a singleton query_tokens dimension.
-        #   we may have done this conversion already, e.g. if we came here via UNet2DConditionModel#forward.
-        #   we can tell by counting dims; if ndim == 2: it's a mask rather than a bias.
-        # expects mask of shape:
-        #   [batch, key_tokens]
-        # adds singleton query_tokens dimension:
-        #   [batch,                    1, key_tokens]
-        # this helps to broadcast it as a bias over attention scores, which will be in one of the following shapes:
-        #   [batch,  heads, query_tokens, key_tokens] (e.g. torch sdp attn)
-        #   [batch * heads, query_tokens, key_tokens] (e.g. xformers or classic attn)
         if attention_mask is not None and attention_mask.ndim == 2:
             # assume that mask is expressed as:
             #   (1 = keep,      0 = discard)
@@ -188,8 +144,8 @@ class ViCoTransformer2D(nn.Module):
                 1 - attention_mask.to(hidden_states.dtype)) * -10000.0
             attention_mask = attention_mask.unsqueeze(1)
 
-        # convert encoder_attention_mask to a bias the same way we do for attention_mask
-        if encoder_attention_mask is not None and encoder_attention_mask.ndim == 2:
+        if encoder_attention_mask is not None and (encoder_attention_mask.ndim
+                                                   == 2):
             encoder_attention_mask = (
                 1 - encoder_attention_mask.to(hidden_states.dtype)) * -10000.0
             encoder_attention_mask = encoder_attention_mask.unsqueeze(1)
@@ -250,9 +206,8 @@ class ViCoTransformer2D(nn.Module):
                 if mask.dim() == 2:
                     mask = mask.unsqueeze(1)
 
-                hidden_states, image_reference = hidden_states[:batch //
-                                                               2], hidden_states[
-                                                                   batch // 2:]
+                hidden_states, image_reference = hidden_states[:batch // 2], \
+                    hidden_states[batch // 2:]
                 hidden_states = self.image_cross_attention(
                     hidden_states,
                     attention_mask=attention_mask,
@@ -354,7 +309,8 @@ class ViCoCrossAttnDownBlock2D(ViCoBlockWrapper):
         for resnet, attn in zip(self.org_module.resnets,
                                 self.org_module.attentions):
             attn: ViCoTransformer2D
-            if self.org_module.training and self.org_module.gradient_checkpointing:
+            if self.org_module.training and (
+                    self.org_module.gradient_checkpointing):
 
                 def create_custom_forward(module, return_dict=None):
 
@@ -469,7 +425,8 @@ class ViCoCrossAttnUpBlock2D(ViCoBlockWrapper):
             hidden_states = torch.cat([hidden_states, res_hidden_states],
                                       dim=1)
 
-            if self.org_module.training and self.org_module.gradient_checkpointing:
+            if self.org_module.training and (
+                    self.org_module.gradient_checkpointing):
 
                 def create_custom_forward(module, return_dict=None):
 
@@ -546,53 +503,14 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
         encoder_attention_mask: Optional[torch.Tensor] = None,
         return_dict: bool = True,
     ) -> Union[UNet2DConditionOutput, Tuple]:
-        r"""
-        Args:
-            sample (`torch.FloatTensor`): (batch, channel, height, width) noisy inputs tensor
-            timestep (`torch.FloatTensor` or `float` or `int`): (batch) timesteps
-            encoder_hidden_states (`torch.FloatTensor`): (batch, sequence_length, feature_dim) encoder hidden states
-            encoder_attention_mask (`torch.Tensor`):
-                (batch, sequence_length) cross-attention mask, applied to encoder_hidden_states. True = keep, False =
-                discard. Mask will be converted into a bias, which adds large negative values to attention scores
-                corresponding to "discard" tokens.
-            return_dict (`bool`, *optional*, defaults to `True`):
-                Whether or not to return a [`models.unet_2d_condition.UNet2DConditionOutput`] instead of a plain tuple.
-            cross_attention_kwargs (`dict`, *optional*):
-                A kwargs dictionary that if specified is passed along to the `AttentionProcessor` as defined under
-                `self.processor` in
-                [diffusers.cross_attention](https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/cross_attention.py).
-            added_cond_kwargs (`dict`, *optional*):
-                A kwargs dictionary that if specified includes additional conditions that can be used for additional time
-                embeddings or encoder hidden states projections. See the configurations `encoder_hid_dim_type` and
-                `addition_embed_type` for more information.
 
-        Returns:
-            [`~models.unet_2d_condition.UNet2DConditionOutput`] or `tuple`:
-            [`~models.unet_2d_condition.UNet2DConditionOutput`] if `return_dict` is True, otherwise a `tuple`. When
-            returning a tuple, the first element is the sample tensor.
-        """
-        # By default samples have to be AT least a multiple of the overall upsampling factor.
-        # The overall upsampling factor is equal to 2 ** (# num of upsampling layers).
-        # However, the upsampling interpolation output size can be forced to fit any upsampling size
-        # on the fly if necessary.
         default_overall_up_factor = 2**self.org_module.num_upsamplers
-
-        # upsample size should be forwarded when sample is not a multiple of `default_overall_up_factor`
         forward_upsample_size = False
         upsample_size = None
 
         if any(s % default_overall_up_factor != 0 for s in sample.shape[-2:]):
-            # logger.info("Forward upsample size to force interpolation output size.")
             forward_upsample_size = True
 
-        # ensure attention_mask is a bias, and give it a singleton query_tokens dimension
-        # expects mask of shape:
-        #   [batch, key_tokens]
-        # adds singleton query_tokens dimension:
-        #   [batch,                    1, key_tokens]
-        # this helps to broadcast it as a bias over attention scores, which will be in one of the following shapes:
-        #   [batch,  heads, query_tokens, key_tokens] (e.g. torch sdp attn)
-        #   [batch * heads, query_tokens, key_tokens] (e.g. xformers or classic attn)
         if attention_mask is not None:
             # assume that mask is expressed as:
             #   (1 = keep,      0 = discard)
@@ -601,7 +519,6 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
             attention_mask = (1 - attention_mask.to(sample.dtype)) * -10000.0
             attention_mask = attention_mask.unsqueeze(1)
 
-        # convert encoder_attention_mask to a bias the same way we do for attention_mask
         if encoder_attention_mask is not None:
             encoder_attention_mask = (
                 1 - encoder_attention_mask.to(sample.dtype)) * -10000.0
@@ -614,8 +531,6 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
         # 1. time
         timesteps = timestep
         if not torch.is_tensor(timesteps):
-            # TODO: this requires sync between CPU and GPU. So try to pass timesteps as tensors if you can
-            # This would be a good case for the `match` statement (Python 3.10+)
             is_mps = sample.device.type == 'mps'
             if isinstance(timestep, float):
                 dtype = torch.float32 if is_mps else torch.float64
@@ -627,29 +542,19 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
         elif len(timesteps.shape) == 0:
             timesteps = timesteps[None].to(sample.device)
 
-        # broadcast to batch dimension in a way that's compatible with ONNX/Core ML
-
-
         t_emb = self.org_module.time_proj(timesteps)
 
-        # `Timesteps` does not contain any weights and will always return f32 tensors
-        # but time_embedding might actually be running in fp16. so we need to cast here.
-        # there might be better ways to encapsulate this.
         t_emb = t_emb.to(dtype=sample.dtype)
 
         emb = self.org_module.time_embedding(t_emb, timestep_cond)
 
         if self.org_module.class_embedding is not None:
             if class_labels is None:
-                raise ValueError(
-                    'class_labels should be provided when num_class_embeds > 0'
-                )
+                raise ValueError('class_labels should be provided \
+                    when num_class_embeds > 0')
 
             if self.org_module.config.class_embed_type == 'timestep':
                 class_labels = self.org_module.time_proj(class_labels)
-
-                # `Timesteps` does not contain any weights and will always return f32 tensors
-                # there might be better ways to encapsulate this.
                 class_labels = class_labels.to(dtype=sample.dtype)
 
             class_emb = self.org_module.class_embedding(class_labels).to(
@@ -667,8 +572,10 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
             # Kadinsky 2.1 - style
             if 'image_embeds' not in added_cond_kwargs:
                 raise ValueError(
-                    f"{self.org_module.__class__} has the config param `addition_embed_type` set to 'text_image' which requires the keyword argument `image_embeds` to be passed in `added_cond_kwargs`"
-                )
+                    f"{self.org_module.__class__} has the config param \
+                    `addition_embed_type` set to 'text_image' which \
+                    requires the keyword argument `image_embeds` \
+                    to be passed in `added_cond_kwargs`")
 
             image_embs = added_cond_kwargs.get('image_embeds')
             text_embs = added_cond_kwargs.get('text_embeds',
@@ -680,15 +587,20 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
         if self.org_module.time_embed_act is not None:
             emb = self.org_module.time_embed_act(emb)
 
-        if self.org_module.encoder_hid_proj is not None and self.org_module.config.encoder_hid_dim_type == 'text_proj':
+        if self.org_module.encoder_hid_proj is not None and (
+                self.org_module.config.encoder_hid_dim_type == 'text_proj'):
             encoder_hidden_states = self.org_module.encoder_hid_proj(
                 encoder_hidden_states)
-        elif self.org_module.encoder_hid_proj is not None and self.org_module.config.encoder_hid_dim_type == 'text_image_proj':
+        elif self.org_module.encoder_hid_proj is not None and (
+                self.org_module.config.encoder_hid_dim_type
+                == 'text_image_proj'):
             # Kadinsky 2.1 - style
             if 'image_embeds' not in added_cond_kwargs:
                 raise ValueError(
-                    f"{self.org_module.__class__} has the config param `encoder_hid_dim_type` set to 'text_image_proj' which requires the keyword argument `image_embeds` to be passed in  `added_conditions`"
-                )
+                    f"{self.org_module.__class__} has the config param \
+                        `encoder_hid_dim_type` set to 'text_image_proj' which \
+                        requires the keyword argument `image_embeds` to be \
+                        passed in  `added_conditions`")
 
             image_embeds = added_cond_kwargs.get('image_embeds')
             encoder_hidden_states = self.org_module.encoder_hid_proj(
@@ -726,7 +638,8 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
 
             for down_block_res_sample, down_block_additional_residual in zip(
                     down_block_res_samples, down_block_additional_residuals):
-                down_block_res_sample = down_block_res_sample + down_block_additional_residual
+                down_block_res_sample = down_block_res_sample + \
+                    down_block_additional_residual
                 new_down_block_res_samples = new_down_block_res_samples + (
                     down_block_res_sample, )
 

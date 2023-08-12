@@ -5,8 +5,6 @@ from typing import Any, Callable, List, Union
 
 from mmengine import FileClient
 from mmengine.dataset import BaseDataset
-from PIL import Image
-from torchvision import transforms
 
 from mmagic.registry import DATASETS
 

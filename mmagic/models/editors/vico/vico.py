@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import random
-from copy import deepcopy
 from typing import Dict, List, Optional, Union
 
 import numpy as np
@@ -128,9 +126,10 @@ class ViCo(StableDiffusion):
     def set_only_imca_trainable(self):
         for _, layer in self.unet.named_modules():
             if layer.__class__.__name__ == 'ViCoTransformer2D':
-               if hasattr(layer, 'image_cross_attention'):
+                if hasattr(layer, 'image_cross_attention'):
                     layer.image_cross_attention.train()
-                    for name, param in layer.image_cross_attention.named_parameters():
+                    for name, param in (
+                            layer.image_cross_attention.named_parameters()):
                         param.requires_grad = True
 
     def add_tokens(self,
@@ -235,11 +234,13 @@ class ViCo(StableDiffusion):
                 image_ref = image_ref.convert('RGB')
             img = np.array(image_ref).astype(np.uint8)
             image_ref = Image.fromarray(img)
-            image_ref = image_ref.resize((height, width), resample=Image.BILINEAR)
+            image_ref = image_ref.resize((height, width),
+                                         resample=Image.BILINEAR)
 
             image_ref = np.array(image_ref).astype(np.uint8)
             image_ref = (image_ref / 127.5 - 1.0).astype(np.float32)
-            image_ref = torch.from_numpy(image_ref).permute(2, 0, 1).unsqueeze(0)
+            image_ref = torch.from_numpy(image_ref).permute(2, 0,
+                                                            1).unsqueeze(0)
 
         return image_ref
 
@@ -294,7 +295,8 @@ class ViCo(StableDiffusion):
             # TODO fix hard code
             clip_eot_token_id = 49407
             endoftext_idx = (torch.arange(input_ids.shape[0]),
-                             (input_ids==clip_eot_token_id).nonzero(as_tuple=False)[0, 1])
+                             (input_ids == clip_eot_token_id).nonzero(
+                                 as_tuple=False)[0, 1])
             placeholder_position = [placeholder_idx, endoftext_idx]
 
             encoder_hidden_states = self.text_encoder(input_ids)[0]
@@ -429,19 +431,20 @@ class ViCo(StableDiffusion):
             num_images_per_prompt * [self.placeholder],
             max_length=self.tokenizer.model_max_length,
             return_tensors='pt',
-            padding="max_length",
+            padding='max_length',
             truncation=True)['input_ids']
         input_ids = self.tokenizer(
             num_images_per_prompt * prompt,
             max_length=self.tokenizer.model_max_length,
             return_tensors='pt',
-            padding="max_length",
+            padding='max_length',
             truncation=True)['input_ids']
         ph_tok = ph_tokens[0, 1]
         # TODO fix hard code
         clip_eot_token_id = 49407
         endoftext_idx = (torch.arange(input_ids.shape[0]),
-                        torch.nonzero(input_ids==clip_eot_token_id)[: batch_size, 1])
+                         torch.nonzero(
+                             input_ids == clip_eot_token_id)[:batch_size, 1])
         placeholder_idx = torch.where(input_ids == ph_tok)
         if self.placeholder in prompt[0]:
             ph_pos = [placeholder_idx, endoftext_idx]
@@ -467,11 +470,16 @@ class ViCo(StableDiffusion):
             generator,
             latents,
         )
-        image_reference = self.prepare_reference(image_reference, height, width,)
+        image_reference = self.prepare_reference(
+            image_reference,
+            height,
+            width,
+        )
         image_reference = self.vae.encode(
-            image_reference.to(dtype=img_dtype, device=device)
-            ).latent_dist.sample()
-        image_reference = image_reference.expand(batch_size * num_images_per_prompt, -1, -1, -1)
+            image_reference.to(dtype=img_dtype,
+                               device=device)).latent_dist.sample()
+        image_reference = image_reference.expand(
+            batch_size * num_images_per_prompt, -1, -1, -1)
         image_reference = image_reference * self.vae.config.scaling_factor
 
         # 6. Prepare extra step kwargs.
@@ -514,7 +522,8 @@ class ViCo(StableDiffusion):
                 # compute the previous noisy sample x_t -> x_t-1
                 latents_to_denoise = latents[0:1]
                 latents = self.test_scheduler.step(
-                    noise_pred, t, latents_to_denoise, **extra_step_kwargs)['prev_sample']
+                    noise_pred, t, latents_to_denoise,
+                    **extra_step_kwargs)['prev_sample']
 
         # 8. Post-processing
         image = self.decode_latents(latents.to(img_dtype))
