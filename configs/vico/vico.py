@@ -1,16 +1,14 @@
 _base_ = '../_base_/gen_default_runtime.py'
 
+randomness = dict(seed=2023, diff_rank_seed=True)
+# dtype="fp32"
 # config for model
-stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
-
-# val_prompts = [
-#     'a sks dog in basket', 'a sks dog on the mountain',
-#     'a sks dog beside a swimming pool', 'a sks dog on the desk',
-#     'a sleeping sks dog', 'a screaming sks dog', 'a man in the garden'
-# ]
+stable_diffusion_v15_url = '/home/huangtianrui/local_sd'
 
 data_root = './data/vico'
-concept_dir = 'wooden_pot'
+concept_dir = 'dog7'
+
+# 1 for using image cross
 image_cross_layers = [
     # down blocks (2x transformer block) * (3x down blocks) = 6
     0,
@@ -34,7 +32,14 @@ image_cross_layers = [
 ]
 reg_loss_weight: float = 5e-4
 placeholder: str = 'S*'
-initialize_token: str = 'pot'
+val_prompts = [
+    'a photo of a S* on the grass', 'a bright of of a S*',
+    'a S*', 'a S* on sofa'
+]
+# val_prompts = [
+#     'a photo of a S*'
+# ]
+initialize_token: str = 'dog'
 num_vectors_per_token: int = 1
 
 model = dict(
@@ -61,26 +66,29 @@ model = dict(
         type='DDIMScheduler',
         from_pretrained=stable_diffusion_v15_url,
         subfolder='scheduler'),
+    # dtype=dtype,
     data_preprocessor=dict(type='DataPreprocessor', data_keys=None),
     image_cross_layers=image_cross_layers,
     reg_loss_weight=reg_loss_weight,
     placeholder=placeholder,
     initialize_token=initialize_token,
     num_vectors_per_token=num_vectors_per_token,
+    val_prompts=val_prompts
 )
 
-train_cfg = dict(max_iters=400)
+train_cfg = dict(max_iters=500)
 
 paramwise_cfg = dict(
     custom_keys={
-        '.*image_cross_attention': dict(lr_mult=2e-3),
-        '.*trainable_embeddings': dict(lr_mult=1.0)
+        'image_cross_attention': dict(lr_mult=2e-3),
+        'trainable_embeddings': dict(lr_mult=1.0)
     })
 optim_wrapper = dict(
-    optimizer=dict(type='AdamW', lr=5e-3, weight_decay=0.01),
+    optimizer=dict(type='AdamW', lr=0.005, weight_decay=0.01),
     constructor='DefaultOptimWrapperConstructor',
     paramwise_cfg=paramwise_cfg,
     accumulative_counts=1)
+
 
 pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
@@ -98,7 +106,6 @@ pipeline = [
 dataset = dict(
     type='ViCoDataset',
     data_root=data_root,
-    # TODO: rename to instance
     concept_dir=concept_dir,
     placeholder=placeholder,
     pipeline=pipeline)
@@ -107,7 +114,7 @@ train_dataloader = dict(
     num_workers=16,
     sampler=dict(type='InfiniteSampler', shuffle=True),
     persistent_workers=True,
-    batch_size=4)
+    batch_size=1)
 val_cfg = val_evaluator = val_dataloader = None
 test_cfg = test_evaluator = test_dataloader = None
 

@@ -628,8 +628,7 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
             timesteps = timesteps[None].to(sample.device)
 
         # broadcast to batch dimension in a way that's compatible with ONNX/Core ML
-        # timesteps = timesteps.expand(sample.shape[0])
-        timesteps = timesteps.expand(2)
+
 
         t_emb = self.org_module.time_proj(timesteps)
 
@@ -795,9 +794,9 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
         return ViCoUNet2DConditionOutput(sample=sample, loss_reg=loss_reg_all)
 
 
-# TODO set flexible layer choose
 def set_vico_modules(unet, image_cross_layers):
 
+    # replace transformer2d blocks
     replace_transformer2d(unet, image_cross_layers)
 
     # replace cross attention layer

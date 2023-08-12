@@ -126,11 +126,12 @@ class ViCo(StableDiffusion):
         set_vico_modules(self.unet, have_image_cross_attention)
 
     def set_only_imca_trainable(self):
-        for name, layer in self.unet.named_modules():
-            if name == 'image_cross_attention':
-                layer.train()
-                for param in layer.parameters():
-                    param.requires_grad = True
+        for _, layer in self.unet.named_modules():
+            if layer.__class__.__name__ == 'ViCoTransformer2D':
+               if hasattr(layer, 'image_cross_attention'):
+                    layer.image_cross_attention.train()
+                    for name, param in layer.image_cross_attention.named_parameters():
+                        param.requires_grad = True
 
     def add_tokens(self,
                    placeholder_token: str,
@@ -226,18 +227,20 @@ class ViCo(StableDiffusion):
         return data_sample_list
 
     def prepare_reference(self,
-                          image_ref: Image.Image,
+                          image_ref: Union[Image.Image, torch.Tensor],
                           height: Optional[int] = 512,
                           width: Optional[int] = 512):
-        if not image_ref.mode == 'RGB':
-            image_ref = image_ref.convert('RGB')
-        img = np.array(image_ref).astype(np.uint8)
-        image_ref = Image.fromarray(img)
-        image_ref = image_ref.resize((height, width), resample=Image.BILINEAR)
+        if isinstance(image_ref, Image.Image):
+            if not image_ref.mode == 'RGB':
+                image_ref = image_ref.convert('RGB')
+            img = np.array(image_ref).astype(np.uint8)
+            image_ref = Image.fromarray(img)
+            image_ref = image_ref.resize((height, width), resample=Image.BILINEAR)
 
-        image_ref = np.array(image_ref).astype(np.uint8)
-        image_ref = (image_ref / 127.5 - 1.0).astype(np.float32)
-        image_ref = torch.from_numpy(image_ref).permute(2, 0, 1).unsqueeze(0)
+            image_ref = np.array(image_ref).astype(np.uint8)
+            image_ref = (image_ref / 127.5 - 1.0).astype(np.float32)
+            image_ref = torch.from_numpy(image_ref).permute(2, 0, 1).unsqueeze(0)
+
         return image_ref
 
     def train_step(self, data, optim_wrapper):
@@ -288,8 +291,10 @@ class ViCo(StableDiffusion):
                 truncation=True)['input_ids'].to(self.device)
             ph_tok = ph_tokens[0, 1]
             placeholder_idx = torch.where(input_ids == ph_tok)
+            # TODO fix hard code
+            clip_eot_token_id = 49407
             endoftext_idx = (torch.arange(input_ids.shape[0]),
-                             input_ids.argmax(dim=-1))
+                             (input_ids==clip_eot_token_id).nonzero(as_tuple=False)[0, 1])
             placeholder_position = [placeholder_idx, endoftext_idx]
 
             encoder_hidden_states = self.text_encoder(input_ids)[0]
@@ -417,23 +422,28 @@ class ViCo(StableDiffusion):
                                               num_images_per_prompt,
                                               do_classifier_free_guidance,
                                               negative_prompt)
+        uncond_embeddings, text_embeddings = text_embeddings.chunk(2)
+        uncond_embeddings = torch.cat([uncond_embeddings] * 2)
+        text_embeddings = torch.cat([text_embeddings] * 2)
         ph_tokens = self.tokenizer(
             num_images_per_prompt * [self.placeholder],
             max_length=self.tokenizer.model_max_length,
             return_tensors='pt',
-            padding='max_length',
-            truncation=True)['input_ids'].to(self.device)
+            padding="max_length",
+            truncation=True)['input_ids']
         input_ids = self.tokenizer(
-            num_images_per_prompt * [prompt],
+            num_images_per_prompt * prompt,
             max_length=self.tokenizer.model_max_length,
             return_tensors='pt',
-            padding='max_length',
-            truncation=True)['input_ids'].to(self.device)
+            padding="max_length",
+            truncation=True)['input_ids']
         ph_tok = ph_tokens[0, 1]
-        placeholder_idx = torch.where(input_ids == ph_tok)
+        # TODO fix hard code
+        clip_eot_token_id = 49407
         endoftext_idx = (torch.arange(input_ids.shape[0]),
-                         input_ids.argmax(dim=-1))
-        if '*' in prompt:
+                        torch.nonzero(input_ids==clip_eot_token_id)[: batch_size, 1])
+        placeholder_idx = torch.where(input_ids == ph_tok)
+        if self.placeholder in prompt[0]:
             ph_pos = [placeholder_idx, endoftext_idx]
         else:
             ph_pos = [endoftext_idx, endoftext_idx]
@@ -457,44 +467,54 @@ class ViCo(StableDiffusion):
             generator,
             latents,
         )
-        image_reference = self.prepare_reference(image_reference, height,
-                                                 width)
-        image_reference = image_reference.repeat(
-            batch_size * num_images_per_prompt, 1, 1, 1)
-        latents = torch.cat([latents, image_reference], dim=0)
+        image_reference = self.prepare_reference(image_reference, height, width,)
+        image_reference = self.vae.encode(
+            image_reference.to(dtype=img_dtype, device=device)
+            ).latent_dist.sample()
+        image_reference = image_reference.expand(batch_size * num_images_per_prompt, -1, -1, -1)
+        image_reference = image_reference * self.vae.config.scaling_factor
 
         # 6. Prepare extra step kwargs.
         # TODO: Logic should ideally just be moved out of the pipeline
         extra_step_kwargs = self.prepare_extra_step_kwargs(generator, eta)
 
         # 7. Denoising loop
+        # TODO check if one forward can work
         if show_progress:
             timesteps = tqdm(timesteps)
         for i, t in enumerate(timesteps):
             # expand the latents if we are doing classifier free guidance
-            latent_model_input = torch.cat(
-                [latents] * 2) if do_classifier_free_guidance else latents
+            # latent_model_input = torch.cat(
+            #     [latents] * 2) if do_classifier_free_guidance else latents
+            latents = torch.cat([latents, image_reference], dim=0)
             latent_model_input = self.test_scheduler.scale_model_input(
-                latent_model_input, t)
-
+                latents, t)
             latent_model_input = latent_model_input.to(latent_dtype)
             text_embeddings = text_embeddings.to(latent_dtype)
+            uncond_embeddings = uncond_embeddings.to(latent_dtype)
             # predict the noise residual
-            noise_pred = self.unet(
+
+            noise_pred_uncond = self.unet(
+                latent_model_input,
+                t,
+                encoder_hidden_states=uncond_embeddings,
+                placeholder_position=ph_pos)['sample'][:batch_size]
+            noise_pred_text = self.unet(
                 latent_model_input,
                 t,
                 encoder_hidden_states=text_embeddings,
-                placeholder_position=ph_pos)['sample']
+                placeholder_position=ph_pos)['sample'][:batch_size]
 
             # perform guidance
             if do_classifier_free_guidance:
-                noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)
+                # noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)
                 noise_pred = noise_pred_uncond + guidance_scale * (
                     noise_pred_text - noise_pred_uncond)
 
                 # compute the previous noisy sample x_t -> x_t-1
+                latents_to_denoise = latents[0:1]
                 latents = self.test_scheduler.step(
-                    noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
+                    noise_pred, t, latents_to_denoise, **extra_step_kwargs)['prev_sample']
 
         # 8. Post-processing
         image = self.decode_latents(latents.to(img_dtype))
