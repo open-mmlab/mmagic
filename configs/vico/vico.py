@@ -33,12 +33,8 @@ image_cross_layers = [
 reg_loss_weight: float = 5e-4
 placeholder: str = 'S*'
 val_prompts = [
-    'a photo of a S* on the grass', 'a bright of of a S*',
-    'a S*', 'a S* on sofa'
+    'a photo of a S*'
 ]
-# val_prompts = [
-#     'a photo of a S*'
-# ]
 initialize_token: str = 'dog'
 num_vectors_per_token: int = 1
 
