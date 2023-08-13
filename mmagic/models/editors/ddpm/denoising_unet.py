@@ -759,6 +759,9 @@ class DenoisingUnet(BaseModule):
         image_size (int | list[int]): The size of image to denoise.
         in_channels (int, optional): The input channels of the input image.
             Defaults as ``3``.
+        out_channels (int, optional): The output channels of the output
+            prediction. Defaults as ``None`` for automaticaaly assigned by
+            ``var_mode``.
         base_channels (int, optional): The basic channel number of the
             generator. The other layers contain channels based on this number.
             Defaults to ``128``.
@@ -837,6 +840,7 @@ class DenoisingUnet(BaseModule):
     def __init__(self,
                  image_size,
                  in_channels=3,
+                 out_channels=None,
                  base_channels=128,
                  resblocks_per_downsample=3,
                  num_timesteps=1000,
@@ -886,8 +890,9 @@ class DenoisingUnet(BaseModule):
         self.in_channels = in_channels
 
         # double output_channels to output mean and var at same time
-        out_channels = in_channels if 'FIXED' in self.var_mode.upper() \
-            else 2 * in_channels
+        if out_channels is None:
+            out_channels = in_channels if 'FIXED' in self.var_mode.upper() \
+                else 2 * in_channels
         self.out_channels = out_channels
 
         # check type of image_size

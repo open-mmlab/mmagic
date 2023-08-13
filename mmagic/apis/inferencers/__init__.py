@@ -87,7 +87,7 @@ class Inferencers:
         elif self.task in [
                 'Image Restoration', 'Denoising, Deblurring, Deraining',
                 'Image Super-Resolution, Image denoising, JPEG compression '
-                'artifact reduction'
+                'artifact reduction', 'Deblurring'
         ]:
             self.inferencer = ImageSuperResolutionInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
