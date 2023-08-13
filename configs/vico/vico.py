@@ -69,8 +69,7 @@ model = dict(
     placeholder=placeholder,
     initialize_token=initialize_token,
     num_vectors_per_token=num_vectors_per_token,
-    val_prompts=val_prompts
-)
+    val_prompts=val_prompts)
 
 train_cfg = dict(max_iters=500)
 
@@ -84,7 +83,6 @@ optim_wrapper = dict(
     constructor='DefaultOptimWrapperConstructor',
     paramwise_cfg=paramwise_cfg,
     accumulative_counts=1)
-
 
 pipeline = [
     dict(type='LoadImageFromFile', key='img', channel_order='rgb'),
