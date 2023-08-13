@@ -9,6 +9,10 @@ from mmagic.registry import TRANSFORMS
 
 @TRANSFORMS.register_module()
 class PairedAlbuTransForms(BaseTransform):
+    """PairedAlbuTransForms augmentation.
+
+    Apply the same AlbuTransforms augmentation to paired images.
+    """
 
     def __init__(self,
                  size: int,
@@ -49,6 +53,15 @@ class PairedAlbuTransForms(BaseTransform):
                                      additional_targets={'target': 'image'})
 
     def transform(self, results):
+        """processing input results according to `self.pipeline`.
+
+        Args:
+            results (dict): contains the processed data
+            through the transform pipeline.
+
+        Returns:
+            results: the processed data.
+        """
         r = self.pipeline(
             image=results[self.lq_key], target=results[self.gt_key])
         results[self.lq_key] = r['image']
@@ -69,6 +82,10 @@ class PairedAlbuTransForms(BaseTransform):
 
 @TRANSFORMS.register_module()
 class AlbuTransForms(BaseTransform):
+    """AlbuTransForms augmentation.
+
+    Apply the same AlbuTransForms augmentation to the input images.
+    """
 
     def __init__(self,
                  size: int,
@@ -106,6 +123,15 @@ class AlbuTransForms(BaseTransform):
         self.pipeline = albu.Compose([aug_fn, pad, crop_fn])
 
     def transform(self, results):
+        """processing input results according to `self.pipeline`.
+
+        Args:
+            results (dict): contains the processed data
+            through the transform pipeline.
+
+        Returns:
+            results: the processed data.
+        """
         for key in self.keys:
             r = self.pipeline(image=results[key])
             results[key] = r['image']
@@ -124,6 +150,10 @@ class AlbuTransForms(BaseTransform):
 
 @TRANSFORMS.register_module()
 class PairedAlbuNormalize(BaseTransform):
+    """PairedAlbuNormalize augmentation.
+
+    Apply the same AlbuNormalize augmentation to the paired images.
+    """
 
     def __init__(self,
                  lq_key: str,
@@ -150,6 +180,15 @@ class PairedAlbuNormalize(BaseTransform):
                                       additional_targets={'target': 'image'})
 
     def transform(self, results):
+        """processing input results according to `self.normalize`.
+
+        Args:
+            results (dict): contains the processed data
+            through the transform pipeline.
+
+        Returns:
+            results: the processed data.
+        """
         if self.gt_key not in results.keys():
             r = self.normalize(image=results[self.lq_key])
         else:
@@ -175,6 +214,10 @@ class PairedAlbuNormalize(BaseTransform):
 
 @TRANSFORMS.register_module()
 class AlbuNormalize(BaseTransform):
+    """AlbuNormalize augmentation.
+
+    Apply the same AlbuNormalize augmentation to the input images.
+    """
 
     def __init__(self,
                  keys: List,
@@ -198,6 +241,15 @@ class AlbuNormalize(BaseTransform):
         self.normalize = albu.Compose([normalize])
 
     def transform(self, results):
+        """processing input results according to `self.normalize`.
+
+        Args:
+            results (dict): contains the processed data
+            through the transform pipeline.
+
+        Returns:
+            results: the processed data.
+        """
         for key in self.keys:
             r = self.normalize(image=results[key])
             results[key] = r['image']
@@ -239,6 +291,10 @@ def _resolve_aug_fn(name):
 
 @TRANSFORMS.register_module()
 class AlbuCorruptFunction(BaseTransform):
+    """AlbuCorruptFunction augmentation.
+
+    Apply the same AlbuCorruptFunction augmentation to the input images.
+    """
 
     def __init__(self, keys: List[str], config: List[dict], p: float = 1.0):
         self.keys = keys
@@ -254,6 +310,15 @@ class AlbuCorruptFunction(BaseTransform):
         self.augs = albu.OneOf(augs, p=self.p)
 
     def transform(self, results):
+        """processing input results according to `self.augs`.
+
+        Args:
+            results (dict): contains the processed data
+            through the transform pipeline.
+
+        Returns:
+            results: the processed data.
+        """
         for key in self.keys:
             results[key] = self.augs(image=results[key])['image']
         return results
