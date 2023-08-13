@@ -24,6 +24,8 @@ Personalized text-to-image generation using diffusion models has recently been p
 | :----------------------------------------------------------------------------: | :-----: | :------: |
 |                         [ViCo](./vico.py)                          |    -    |    -     |
 
+## Pretrained Models
+To Do
 ## Quick Start
 
 1. Download [data](https://drive.google.com/drive/folders/1m8TCsY-C1tIOflHtWnFzTbw2C6dq67mC) and save to `data/vico/`
