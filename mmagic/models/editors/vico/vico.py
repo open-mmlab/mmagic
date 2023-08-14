@@ -443,8 +443,9 @@ class ViCo(StableDiffusion):
         # TODO fix hard code
         clip_eot_token_id = 49407
         endoftext_idx = (torch.arange(input_ids.shape[0]),
-                         torch.nonzero(
-                             input_ids == clip_eot_token_id)[:batch_size, 1])
+            torch.nonzero(
+            input_ids == clip_eot_token_id
+            )[:batch_size, 1].repeat(num_images_per_prompt))
         placeholder_idx = torch.where(input_ids == ph_tok)
         if self.placeholder in prompt[0]:
             ph_pos = [placeholder_idx, endoftext_idx]
@@ -506,12 +507,12 @@ class ViCo(StableDiffusion):
                 latent_model_input,
                 t,
                 encoder_hidden_states=uncond_embeddings,
-                placeholder_position=ph_pos)['sample'][:batch_size]
+                placeholder_position=ph_pos)['sample'][:batch_size * num_images_per_prompt]
             noise_pred_text = self.unet(
                 latent_model_input,
                 t,
                 encoder_hidden_states=text_embeddings,
-                placeholder_position=ph_pos)['sample'][:batch_size]
+                placeholder_position=ph_pos)['sample'][:batch_size * num_images_per_prompt]
 
             # perform guidance
             if do_classifier_free_guidance:
@@ -520,7 +521,7 @@ class ViCo(StableDiffusion):
                     noise_pred_text - noise_pred_uncond)
 
                 # compute the previous noisy sample x_t -> x_t-1
-                latents_to_denoise = latents[0:1]
+                latents_to_denoise = latents[:batch_size * num_images_per_prompt, ...]
                 latents = self.test_scheduler.step(
                     noise_pred, t, latents_to_denoise,
                     **extra_step_kwargs)['prev_sample']
