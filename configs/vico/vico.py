@@ -3,7 +3,7 @@ _base_ = '../_base_/gen_default_runtime.py'
 randomness = dict(seed=2023, diff_rank_seed=True)
 # dtype="fp32"
 # config for model
-stable_diffusion_v15_url = '/home/huangtianrui/local_sd'
+stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 
 data_root = './data/vico'
 concept_dir = 'dog7'
