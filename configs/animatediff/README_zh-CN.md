@@ -2,43 +2,61 @@
 
 > [AnimateDiff: Animate Your Personalized Text-to-Image Diffusion Models without Specific Tuning](https://arxiv.org/abs/2307.04725)
 
-> **Task**: Text2Video
+> **任务**: 视频生成, 扩散模型
 
 <!-- [ALGORITHM] -->
 
-## Abstract
+## 摘要
 
 <!-- [ABSTRACT] -->
 
-With the advance of text-to-image models (e.g., Stable Diffusion) and corresponding personalization techniques such as DreamBooth and LoRA, everyone can manifest their imagination into high-quality images at an affordable cost. Subsequently, there is a great demand for image animation techniques to further combine generated static images with motion dynamics. In this report, we propose a practical framework to animate most of the existing personalized text-to-image models once and for all, saving efforts in model-specific tuning. At the core of the proposed framework is to insert a newly initialized motion modeling module into the frozen text-to-image model and train it on video clips to distill reasonable motion priors. Once trained, by simply injecting this motion modeling module, all personalized versions derived from the same base T2I readily become text-driven models that produce diverse and personalized animated images. We conduct our evaluation on several public representative personalized text-to-image models across anime pictures and realistic photographs, and demonstrate that our proposed framework helps these models generate temporally smooth animation clips while preserving the domain and diversity of their outputs.
+随着文本到图像模型（例如，稳定扩散）和相应的个性化技术（例如，LoRA和DreamBooth）的进步，每个人都有可能以较低的成本将他们的想象力展现在高质量的图像中。在这个项目中，我们提出了一个有效的框架（AnimateDiff），可以一次性为大多数现有的个性化文本到图像模型制作动画，从而节省了特定模型调整的工作量。
+
+拟议框架的核心是将新初始化的运动建模模块附加到基于冻结的文本到图像模型中，并在此后在视频剪辑上对其进行训练，以便事先提炼出合理的运动。一旦经过培训，只需注入此运动建模模块，所有来自同一基础的个性化版本都很容易成为文本驱动模型，可以生成多样化和个性化的动画图像。
 
 <!-- [IMAGE] -->
 
-<div align=center>
-<img src="https://user-images.githubusercontent.com/28132635/230302421-a9107d03-92d3-44b1-91b4-fde4ad2725d4.png">
-</div>
+TODO... Add Image
 
-## Pretrained models
+## 模型与结果
 
-We use Stable Diffusion's weights provided by HuggingFace Diffusers. You do not have to download the weights manually. If you use Diffusers wrapper, the weights will be downloaded automatically.
+我们使用HuggingFace提供的Stable Diffusion权重。如果您使用Diffusers wrapper，您不必手动下载权重，其将自动下载。
 
-This model has several weights including vae, unet and clip. You should download the weights from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and change the 'pretrained_model_path' in config to the weights dir.
+<!-- SKIP THIS TABLE -->
 
-|                Model                | Dataset |                        Download                        |
-| :---------------------------------: | :-----: | :----------------------------------------------------: |
-| [ToonYou](./animatediff_ToonYou.py) |    -    | [model](https://civitai.com/api/download/models/78775) |
+|  模型   |     下载     |
+| :-----: | :----------: |
+| ToonYou | Coming soon! |
+
+## 待办列表
+
+- [x] 整体pipeline完成
+- [x] 支持xformer显存优化，目前可以在13G显存下输出16帧512\*512视频
+- \[\] 优化512\*512视频质量
+- \[\] 支持以图生成视频
+- \[\] 完成Gradio部署
+- \[\] 训练SD XL基础上的Motion Module
+- \[\] 支持更快的采样器(plms，dpm-solver等)
+
+我们很欢迎社区用户支持这些项目和任何其他有趣的工作!
 
 ## Quick Start
 
+运行以下代码，你可以使用文本生成图像。
+
 Running the following codes, you can get a text-generated image.
 
-1. Download [ToonYou](https://civitai.com/api/download/models/78775) and MotionModule checkpoint
+1. 下载 [ToonYou](https://civitai.com/api/download/models/78775) 和 MotionModule 权重
 
 ```bash
-wget
+#!/bin/bash
+
+gdown 1RqkQuGPaCO5sGZ6V6KZ-jUWmsRu48Kdq -O models/Motion_Module/
+gdown 1ql0g_Ys4UCz2RnokYlBjyOYPbttbIpbu -O models/Motion_Module/
+wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --content-disposition --no-check-certificate
 ```
 
-2. Modify the config file in `configs/animatediff/animatediff_ToonYou.py`
+2. 修改 `configs/animatediff/animatediff_ToonYou.py` 配置文件中的权重路径
 
 ```python
 
@@ -52,7 +70,7 @@ wget
         guidance_scale=7.5))
 ```
 
-3. Enjoy Text2Video world
+3. 享受AnimateDiff视频生成吧！
 
 ```python
 import cv2
@@ -114,10 +132,6 @@ save_videos_grid(samples, f"{savedir}/sample.gif", n_rows=4)
 
 
 ```
-
-### Using MMInferencer
-
-Ongoing...
 
 ## Citation
 
