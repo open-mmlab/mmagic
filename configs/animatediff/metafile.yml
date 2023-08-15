@@ -1,0 +1,11 @@
+Collections:
+- Name: AnimateDiff
+  Paper:
+    Title: 'AnimateDiff: Animate Your Personalized Text-to-Image Diffusion Models
+      without Specific Tuning'
+    URL: https://arxiv.org/abs/2307.04725
+  README: configs/animatediff/README.md
+  Task:
+  - text2video
+  Year: 2023
+Models:
