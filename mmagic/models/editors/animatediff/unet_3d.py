@@ -1,9 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-# Adapted from https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/unet_2d_condition.py
+# Adapted from https://github.com/huggingface/diffusers/
+# blob/main/src/diffusers/models/unet_2d_condition.py
 
 import json
 import os
-import pdb
 from dataclasses import dataclass
 from typing import List, Optional, Tuple, Union
 
@@ -13,7 +13,7 @@ import torch.utils.checkpoint
 from diffusers.configuration_utils import ConfigMixin, register_to_config
 from diffusers.models.embeddings import TimestepEmbedding, Timesteps
 from diffusers.models.modeling_utils import ModelMixin
-from diffusers.utils import BaseOutput, logging
+from diffusers.utils import BaseOutput
 from mmengine.logging import MMLogger
 
 from mmagic.registry import MODELS
@@ -275,22 +275,28 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
                 f'### Temporal Module Parameters: {sum(params) / 1e6} M')
         # TODO: support initialize without pretrained model
         else:
-            raise TypeError('from_pretrained must be a str  but'
-                            f' got None instead.')
+            raise TypeError('from_pretrained must be a str  but \
+                            got None instead.')
 
     def set_attention_slice(self, slice_size):
         r"""
         Enable sliced attention computation.
 
-        When this option is enabled, the attention module will split the input tensor in slices, to compute attention
-        in several steps. This is useful to save some memory in exchange for a small speed decrease.
+        When this option is enabled, the attention module will
+        split the input tensor in slices, to compute attention
+        in several steps. This is useful to save some memory
+        in exchange for a small speed decrease.
 
         Args:
-            slice_size (`str` or `int` or `list(int)`, *optional*, defaults to `"auto"`):
-                When `"auto"`, halves the input to the attention heads, so attention will be computed in two steps. If
-                `"max"`, maxium amount of memory will be saved by running only one slice at a time. If a number is
-                provided, uses as many slices as `attention_head_dim // slice_size`. In this case, `attention_head_dim`
-                must be a multiple of `slice_size`.
+            slice_size (`str` or `int` or `list(int)`, *optional*,
+                defaults to `"auto"`):
+                When `"auto"`, halves the input to the attention heads,
+                so attention will be computed in two steps. If
+                `"max"`, maximum amount of memory will be saved by
+                running only one slice at a time. If a number is
+                provided, uses as many slices as
+                `attention_head_dim // slice_size`. In this case,
+                `attention_head_dim' must be a multiple of `slice_size`.
         """
         sliceable_head_dims = []
 
@@ -320,9 +326,10 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
 
         if len(slice_size) != len(sliceable_head_dims):
             raise ValueError(
-                f'You have provided {len(slice_size)}, but {self.config} has {len(sliceable_head_dims)} different'
-                f' attention layers. Make sure to match `len(slice_size)` to be {len(sliceable_head_dims)}.'
-            )
+                f'You have provided {len(slice_size)}, but '
+                f'{self.config} has {len(sliceable_head_dims)} different'
+                f' attention layers. Make sure to match '
+                f'`len(slice_size)` to be {len(sliceable_head_dims)}.')
 
         for i in range(len(slice_size)):
             size = slice_size[i]
@@ -362,24 +369,33 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
     ) -> Union[UNet3DConditionOutput, Tuple]:
         r"""
         Args:
-            sample (`torch.FloatTensor`): (batch, channel, height, width) noisy inputs tensor
-            timestep (`torch.FloatTensor` or `float` or `int`): (batch) timesteps
-            encoder_hidden_states (`torch.FloatTensor`): (batch, sequence_length, feature_dim) encoder hidden states
+            sample (`torch.FloatTensor`): (batch, channel, height, width)
+            noisy inputs tensor
+            timestep (`torch.FloatTensor` or `float` or `int`):
+            (batch) timesteps
+            encoder_hidden_states (`torch.FloatTensor`):
+            (batch, sequence_length, feature_dim) encoder hidden states
             return_dict (`bool`, *optional*, defaults to `True`):
-                Whether or not to return a [`models.unet_2d_condition.UNet2DConditionOutput`] instead of a plain tuple.
+                Whether or not to return a
+                [`models.unet_2d_condition.UNet2DConditionOutput`]
+                instead of a plain tuple.
 
         Returns:
             [`~models.unet_2d_condition.UNet2DConditionOutput`] or `tuple`:
-            [`~models.unet_2d_condition.UNet2DConditionOutput`] if `return_dict` is True, otherwise a `tuple`. When
+            [`~models.unet_2d_condition.UNet2DConditionOutput`]
+            if `return_dict` is True, otherwise a `tuple`. When
             returning a tuple, the first element is the sample tensor.
         """
-        # By default samples have to be AT least a multiple of the overall upsampling factor.
-        # The overall upsampling factor is equal to 2 ** (# num of upsampling layears).
-        # However, the upsampling interpolation output size can be forced to fit any upsampling size
+        # By default samples have to be AT least a multiple of the
+        # overall upsampling factor. he overall upsampling factor is equal
+        # T to 2 ** (# num of upsampling layears).
+        # However, the upsampling interpolation output size
+        # can be forced to fit any upsampling size
         # on the fly if necessary.
         default_overall_up_factor = 2**self.num_upsamplers
 
-        # upsample size should be forwarded when sample is not a multiple of `default_overall_up_factor`
+        # upsample size should be forwarded when sample is
+        # not a multiple of `default_overall_up_factor`
         forward_upsample_size = False
         upsample_size = None
 
@@ -400,7 +416,8 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
         # time
         timesteps = timestep
         if not torch.is_tensor(timesteps):
-            # This would be a good case for the `match` statement (Python 3.10+)
+            # This would be a good case for the `match`
+            # statement (Python 3.10+)
             is_mps = sample.device.type == 'mps'
             if isinstance(timestep, float):
                 dtype = torch.float32 if is_mps else torch.float64
@@ -412,13 +429,16 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
         elif len(timesteps.shape) == 0:
             timesteps = timesteps[None].to(sample.device)
 
-        # broadcast to batch dimension in a way that's compatible with ONNX/Core ML
+        # broadcast to batch dimension in a way
+        # that's compatible with ONNX/Core ML
         timesteps = timesteps.expand(sample.shape[0])
 
         t_emb = self.time_proj(timesteps)
 
-        # timesteps does not contain any weights and will always return f32 tensors
-        # but time_embedding might actually be running in fp16. so we need to cast here.
+        # timesteps does not contain any weights and will
+        # always return f32 tensors
+        # but time_embedding might actually be running in fp16.
+        # so we need to cast here.
         # there might be better ways to encapsulate this.
         t_emb = t_emb.to(dtype=self.dtype)
         emb = self.time_embedding(t_emb)
@@ -514,9 +534,8 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
         if subfolder is not None:
             pretrained_model_path = os.path.join(pretrained_model_path,
                                                  subfolder)
-        logger.info(
-            f"loaded temporal unet's pretrained weights from {pretrained_model_path} ..."
-        )
+        logger.info(f"loaded temporal unet's pretrained weights \
+                from {pretrained_model_path} ...")
 
         config_file = os.path.join(pretrained_model_path, 'config.json')
         if not os.path.isfile(config_file):

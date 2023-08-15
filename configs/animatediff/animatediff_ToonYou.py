@@ -57,7 +57,7 @@ model = dict(
     ),
     dream_booth_lora_cfg=dict(
         type='ToonYou',
-        path=
-        '/home/wangrunqi/AnimateDiff/models/DreamBooth_LoRA/toonyou_beta3.safetensors',
+        path='/home/wangrunqi/AnimateDiff/models/' +
+        'DreamBooth_LoRA/toonyou_beta3.safetensors',
         steps=25,
         guidance_scale=7.5))

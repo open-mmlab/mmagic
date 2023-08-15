@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-# Adapted from https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/unet_2d_blocks.py
+# Adapted from https://github.com/huggingface/diffusers/blob/
+# main/src/diffusers/models/unet_2d_blocks.py
 
 import torch
 from torch import nn
@@ -53,9 +54,8 @@ def get_down_block(
         )
     elif down_block_type == 'CrossAttnDownBlock3D':
         if cross_attention_dim is None:
-            raise ValueError(
-                'cross_attention_dim must be specified for CrossAttnDownBlock3D'
-            )
+            raise ValueError('cross_attention_dim must be specified \
+                            for CrossAttnDownBlock3D')
         return CrossAttnDownBlock3D(
             num_layers=num_layers,
             in_channels=in_channels,
@@ -207,6 +207,7 @@ class UNetMidBlock3DCrossAttn(nn.Module):
         for _ in range(num_layers):
             if dual_cross_attention:
                 raise NotImplementedError
+            cfa = unet_use_cross_frame_attention
             attentions.append(
                 Transformer3DModel(
                     attn_num_head_channels,
@@ -217,8 +218,7 @@ class UNetMidBlock3DCrossAttn(nn.Module):
                     norm_num_groups=resnet_groups,
                     use_linear_projection=use_linear_projection,
                     upcast_attention=upcast_attention,
-                    unet_use_cross_frame_attention=
-                    unet_use_cross_frame_attention,
+                    unet_use_cross_frame_attention=cfa,
                     unet_use_temporal_attention=unet_use_temporal_attention,
                 ))
             motion_modules.append(
@@ -321,6 +321,7 @@ class CrossAttnDownBlock3D(nn.Module):
                 ))
             if dual_cross_attention:
                 raise NotImplementedError
+            cfa = unet_use_cross_frame_attention
             attentions.append(
                 Transformer3DModel(
                     attn_num_head_channels,
@@ -332,8 +333,7 @@ class CrossAttnDownBlock3D(nn.Module):
                     use_linear_projection=use_linear_projection,
                     only_cross_attention=only_cross_attention,
                     upcast_attention=upcast_attention,
-                    unet_use_cross_frame_attention=
-                    unet_use_cross_frame_attention,
+                    unet_use_cross_frame_attention=cfa,
                     unet_use_temporal_attention=unet_use_temporal_attention,
                 ))
             motion_modules.append(
@@ -564,7 +564,8 @@ class CrossAttnUpBlock3D(nn.Module):
         for i in range(num_layers):
             res_skip_channels = in_channels if (i == num_layers -
                                                 1) else out_channels
-            resnet_in_channels = prev_output_channel if i == 0 else out_channels
+            resnet_in_channels = prev_output_channel if i == 0 \
+                else out_channels
 
             resnets.append(
                 ResnetBlock3D(
@@ -581,6 +582,7 @@ class CrossAttnUpBlock3D(nn.Module):
                 ))
             if dual_cross_attention:
                 raise NotImplementedError
+            cfa = unet_use_cross_frame_attention
             attentions.append(
                 Transformer3DModel(
                     attn_num_head_channels,
@@ -592,8 +594,7 @@ class CrossAttnUpBlock3D(nn.Module):
                     use_linear_projection=use_linear_projection,
                     only_cross_attention=only_cross_attention,
                     upcast_attention=upcast_attention,
-                    unet_use_cross_frame_attention=
-                    unet_use_cross_frame_attention,
+                    unet_use_cross_frame_attention=cfa,
                     unet_use_temporal_attention=unet_use_temporal_attention,
                 ))
             motion_modules.append(
@@ -707,7 +708,8 @@ class UpBlock3D(nn.Module):
         for i in range(num_layers):
             res_skip_channels = in_channels if (i == num_layers -
                                                 1) else out_channels
-            resnet_in_channels = prev_output_channel if i == 0 else out_channels
+            resnet_in_channels = prev_output_channel if i == 0 \
+                else out_channels
 
             resnets.append(
                 ResnetBlock3D(

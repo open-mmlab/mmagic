@@ -24,6 +24,9 @@ We use Stable Diffusion's weights provided by HuggingFace Diffusers. You do not 
 
 This model has several weights including vae, unet and clip. You should download the weights from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and change the 'pretrained_model_path' in config to the weights dir.
 
+|                Model                | Dataset |                        Download                        |
+| :---------------------------------: | :-----: | :----------------------------------------------------: |
+| [ToonYou](./animatediff_ToonYou.py) |    -    | [model](https://civitai.com/api/download/models/78775) |
 
 ## Quick Start
 
@@ -113,7 +116,6 @@ save_videos_grid(samples, f"{savedir}/sample.gif", n_rows=4)
 ### Using MMInferencer
 
 Ongoing...
-
 
 ## Citation
 

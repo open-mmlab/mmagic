@@ -1,4 +1,5 @@
 Import:
+- configs/animatediff/metafile.yml
 - configs/aot_gan/metafile.yml
 - configs/basicvsr/metafile.yml
 - configs/basicvsr_pp/metafile.yml

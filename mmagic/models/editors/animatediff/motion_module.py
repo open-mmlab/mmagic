@@ -58,7 +58,7 @@ class VanillaTemporalModule(nn.Module):
         zero_initialize=True,
     ):
         super().__init__()
-
+        temp_pos_max_len = temporal_position_encoding_max_len
         self.temporal_transformer = TemporalTransformer3DModel(
             in_channels=in_channels,
             num_attention_heads=num_attention_heads,
@@ -68,8 +68,7 @@ class VanillaTemporalModule(nn.Module):
             attention_block_types=attention_block_types,
             cross_frame_attention_mode=cross_frame_attention_mode,
             temporal_position_encoding=temporal_position_encoding,
-            temporal_position_encoding_max_len=
-            temporal_position_encoding_max_len,
+            temporal_position_encoding_max_len=temp_pos_max_len,
         )
 
         if zero_initialize:
@@ -123,7 +122,7 @@ class TemporalTransformer3DModel(nn.Module):
             eps=1e-6,
             affine=True)
         self.proj_in = nn.Linear(in_channels, inner_dim)
-
+        temp_pos_max_len = temporal_position_encoding_max_len
         self.transformer_blocks = nn.ModuleList([
             TemporalTransformerBlock(
                 dim=inner_dim,
@@ -138,8 +137,7 @@ class TemporalTransformer3DModel(nn.Module):
                 upcast_attention=upcast_attention,
                 cross_frame_attention_mode=cross_frame_attention_mode,
                 temporal_position_encoding=temporal_position_encoding,
-                temporal_position_encoding_max_len=
-                temporal_position_encoding_max_len,
+                temporal_position_encoding_max_len=temp_pos_max_len,
             ) for d in range(num_layers)
         ])
         self.proj_out = nn.Linear(inner_dim, in_channels)
@@ -149,7 +147,8 @@ class TemporalTransformer3DModel(nn.Module):
                 encoder_hidden_states=None,
                 attention_mask=None):
         assert hidden_states.dim(
-        ) == 5, f'Expected hidden_states to have ndim=5, but got ndim={hidden_states.dim()}.'
+        ) == 5, f'{"Expected hidden_states to have ndim=5, "}'
+        f'but got ndim={hidden_states.dim()}.'
         video_length = hidden_states.shape[2]
         hidden_states = rearrange(hidden_states, 'b c f h w -> (b f) c h w')
 
@@ -206,7 +205,7 @@ class TemporalTransformerBlock(nn.Module):
 
         attention_blocks = []
         norms = []
-
+        temp_pos_max_len = temporal_position_encoding_max_len
         for block_name in attention_block_types:
             attention_blocks.append(
                 VersatileAttention(
@@ -221,8 +220,7 @@ class TemporalTransformerBlock(nn.Module):
                     upcast_attention=upcast_attention,
                     cross_frame_attention_mode=cross_frame_attention_mode,
                     temporal_position_encoding=temporal_position_encoding,
-                    temporal_position_encoding_max_len=
-                    temporal_position_encoding_max_len,
+                    temporal_position_encoding_max_len=temp_pos_max_len,
                 ))
             norms.append(nn.LayerNorm(dim))
 
@@ -296,7 +294,8 @@ class VersatileAttention(CrossAttention):
         self._use_memory_efficient_attention_xformers = True
 
     def extra_repr(self):
-        return f'(Module Info) Attention_Mode: {self.attention_mode}, Is_Cross_Attention: {self.is_cross_attention}'
+        return f'(Module Info) Attention_Mode: {self.attention_mode},\
+            Is_Cross_Attention: {self.is_cross_attention}'
 
     def reshape_heads_to_batch_dim(self, tensor):
         batch_size, seq_len, dim = tensor.shape
@@ -361,7 +360,8 @@ class VersatileAttention(CrossAttention):
         if self.added_kv_proj_dim is not None:
             raise NotImplementedError
 
-        encoder_hidden_states = encoder_hidden_states if encoder_hidden_states is not None else hidden_states
+        encoder_hidden_states = encoder_hidden_states \
+            if encoder_hidden_states is not None else hidden_states
         key = self.to_k(encoder_hidden_states)
         value = self.to_v(encoder_hidden_states)
 
@@ -380,7 +380,8 @@ class VersatileAttention(CrossAttention):
         if self._use_memory_efficient_attention_xformers:
             hidden_states = self._memory_efficient_attention_xformers(
                 query, key, value, attention_mask)
-            # Some versions of xformers return output in fp32, cast it back to the dtype of the input
+            # Some versions of xformers return output in fp32,
+            # cast it back to the dtype of the input
             hidden_states = hidden_states.to(query.dtype)
         else:
             if self._slice_size is None or query.shape[

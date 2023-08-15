@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-# Adapted from https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/resnet.py
+# Adapted from https://github.com/huggingface/diffusers/blob/main/
+# src/diffusers/models/resnet.py
 
 import torch
 import torch.nn as nn
@@ -34,7 +35,6 @@ class Upsample3D(nn.Module):
         self.use_conv_transpose = use_conv_transpose
         self.name = name
 
-        conv = None
         if use_conv_transpose:
             raise NotImplementedError
         elif use_conv:
@@ -47,12 +47,14 @@ class Upsample3D(nn.Module):
         if self.use_conv_transpose:
             raise NotImplementedError
 
-        # Cast to float32 to as 'upsample_nearest2d_out_frame' op does not support bfloat16
+        # Cast to float32 to as 'upsample_nearest2d_out_frame'
+        # op does not support bfloat16
         dtype = hidden_states.dtype
         if dtype == torch.bfloat16:
             hidden_states = hidden_states.to(torch.float32)
 
-        # upsample_nearest_nhwc fails with large batch sizes. see https://github.com/huggingface/diffusers/issues/984
+        # upsample_nearest_nhwc fails with large batch sizes.
+        # see https://github.com/huggingface/diffusers/issues/984
         if hidden_states.shape[0] >= 64:
             hidden_states = hidden_states.contiguous()
 
@@ -160,9 +162,8 @@ class ResnetBlock3D(nn.Module):
             elif self.time_embedding_norm == 'scale_shift':
                 time_emb_proj_out_channels = out_channels * 2
             else:
-                raise ValueError(
-                    f'unknown time_embedding_norm : {self.time_embedding_norm} '
-                )
+                raise ValueError(f'unknown time_embedding_norm : '
+                                 f'{self.time_embedding_norm} ')
 
             self.time_emb_proj = torch.nn.Linear(temb_channels,
                                                  time_emb_proj_out_channels)
@@ -185,7 +186,8 @@ class ResnetBlock3D(nn.Module):
         elif non_linearity == 'silu':
             self.nonlinearity = nn.SiLU()
 
-        self.use_in_shortcut = self.in_channels != self.out_channels if use_in_shortcut is None else use_in_shortcut
+        self.use_in_shortcut = self.in_channels != self.out_channels \
+            if use_in_shortcut is None else use_in_shortcut
 
         self.conv_shortcut = None
         if self.use_in_shortcut:

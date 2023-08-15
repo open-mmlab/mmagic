@@ -9,3 +9,11 @@ Collections:
   - text2video
   Year: 2023
 Models:
+- Config: configs/animatediff/animatediff_ToonYou.py
+  In Collection: AnimateDiff
+  Name: animatediff_ToonYou
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://civitai.com/api/download/models/78775

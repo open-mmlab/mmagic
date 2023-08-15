@@ -1,17 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import inspect
-import random
 from copy import deepcopy
 from typing import Dict, List, Optional, Union
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from einops import rearrange
 from mmengine import print_log
 from mmengine.logging import MMLogger
-from mmengine.model import BaseModel, is_model_wrapper
-from mmengine.runner import set_random_seed
+from mmengine.model import BaseModel
 from safetensors import safe_open
 from tqdm import tqdm
 
@@ -114,7 +111,9 @@ class AnimateDiff(BaseModel):
         print_log(f'Set UNet dtype to \'{self._unet_ori_dtype}\'.', 'current')
         motion_module_state_dict = torch.load(
             motion_module_cfg['path'], map_location='cpu')
-        # if "global_step" in motion_module_state_dict: func_args.update({"global_step": motion_module_state_dict["global_step"]})
+        # if "global_step" in motion_module_state_dict:
+        # func_args.update({"global_step":
+        # motion_module_state_dict["global_step"]})
         missing, unexpected = self.unet.load_state_dict(
             motion_module_state_dict, strict=False)
         assert len(unexpected) == 0
@@ -215,7 +214,8 @@ class AnimateDiff(BaseModel):
             removed_text = self.tokenizer.batch_decode(
                 untruncated_ids[:, self.tokenizer.model_max_length - 1:-1])
             logger.warning(
-                'The following part of your input was truncated because CLIP can only handle sequences up to'
+                'The following part of your input was truncated '
+                f'because CLIP can only handle sequences up to'
                 f' {self.tokenizer.model_max_length} tokens: {removed_text}')
 
         text_encoder = self.text_encoder.module if hasattr(
@@ -232,7 +232,8 @@ class AnimateDiff(BaseModel):
         )
         text_embeddings = text_embeddings[0]
 
-        # duplicate text embeddings for each generation per prompt, using mps friendly method
+        # duplicate text embeddings for each generation
+        # per prompt, using mps friendly method
         bs_embed, seq_len, _ = text_embeddings.shape
         text_embeddings = text_embeddings.repeat(1, num_videos_per_prompt, 1)
         text_embeddings = text_embeddings.view(
@@ -245,14 +246,17 @@ class AnimateDiff(BaseModel):
                 uncond_tokens = [''] * batch_size
             elif type(prompt) is not type(negative_prompt):
                 raise TypeError(
-                    f'`negative_prompt` should be the same type to `prompt`, but got {type(negative_prompt)} !='
+                    f'`negative_prompt` should be the same type '
+                    f'to `prompt`, but got {type(negative_prompt)} !='
                     f' {type(prompt)}.')
             elif isinstance(negative_prompt, str):
                 uncond_tokens = [negative_prompt]
             elif batch_size != len(negative_prompt):
                 raise ValueError(
-                    f'`negative_prompt`: {negative_prompt} has batch size {len(negative_prompt)}, but `prompt`:'
-                    f' {prompt} has batch size {batch_size}. Please make sure that passed `negative_prompt` matches'
+                    f'`negative_prompt`: {negative_prompt} has '
+                    f'batch size {len(negative_prompt)}, but `prompt`:'
+                    f' {prompt} has batch size {batch_size}. Please '
+                    f'make sure that passed `negative_prompt` matches'
                     ' the batch size of `prompt`.')
             else:
                 uncond_tokens = negative_prompt
@@ -278,7 +282,8 @@ class AnimateDiff(BaseModel):
             )
             uncond_embeddings = uncond_embeddings[0]
 
-            # duplicate unconditional embeddings for each generation per prompt, using mps friendly method
+            # duplicate unconditional embeddings for each generation
+            # per prompt, using mps friendly method
             seq_len = uncond_embeddings.shape[1]
             uncond_embeddings = uncond_embeddings.repeat(
                 1, num_videos_per_prompt, 1)
@@ -286,8 +291,8 @@ class AnimateDiff(BaseModel):
                 batch_size * num_videos_per_prompt, seq_len, -1)
 
             # For classifier free guidance, we need to do two forward passes.
-            # Here we concatenate the unconditional and text embeddings into a single batch
-            # to avoid doing two forward passes
+            # Here we concatenate the unconditional and text embeddings
+            # into a single batch to avoid doing two forward passes
             text_embeddings = torch.cat([uncond_embeddings, text_embeddings])
 
         return text_embeddings
@@ -304,13 +309,16 @@ class AnimateDiff(BaseModel):
         video = torch.cat(video)
         video = rearrange(video, '(b f) c h w -> b c f h w', f=video_length)
         video = (video / 2 + 0.5).clamp(0, 1)
-        # we always cast to float32 as this does not cause significant overhead and is compatible with bfloa16
+        # we always cast to float32 as this does not cause significant
+        # overhead and is compatible with bfloa16
         video = video.cpu().float().numpy()
         return video
 
     def prepare_extra_step_kwargs(self, generator, eta):
-        # prepare extra kwargs for the scheduler step, since not all schedulers have the same signature
-        # eta (η) is only used with the DDIMScheduler, it will be ignored for other schedulers.
+        # prepare extra kwargs for the scheduler step, since not all
+        # schedulers have the same signature
+        # eta (η) is only used with the DDIMScheduler, it will
+        # be ignored for other schedulers.
         # eta corresponds to η in DDIM paper: https://arxiv.org/abs/2010.02502
         # and should be between [0, 1]
         accepts_eta = 'eta' in set(
@@ -328,20 +336,20 @@ class AnimateDiff(BaseModel):
 
     def check_inputs(self, prompt, height, width):
         if not isinstance(prompt, str) and not isinstance(prompt, list):
-            raise ValueError(
-                f'`prompt` has to be of type `str` or `list` but is {type(prompt)}'
-            )
+            raise ValueError(f'`prompt` has to be of type `str`'
+                             f' or `list` but is {type(prompt)}')
 
         if height % 8 != 0 or width % 8 != 0:
-            raise ValueError(
-                f'`height` and `width` have to be divisible by 8 but are {height} and {width}.'
-            )
+            raise ValueError(f'`height` and `width` have to be divisible'
+                             f' by 8 but are {height} and {width}.')
 
         # if (callback_steps is None) or (
-        #     callback_steps is not None and (not isinstance(callback_steps, int) or callback_steps <= 0)
+        #     callback_steps is not None and (not isinstance(callback_steps,
+        #       int) or callback_steps <= 0)
         # ):
         #     raise ValueError(
-        #         f"`callback_steps` has to be a positive integer but is {callback_steps} of type"
+        #         f"`callback_steps` has to be a positive integer but
+        #         is {callback_steps} of type"
         #         f" {type(callback_steps)}."
         #     )
 
@@ -351,7 +359,8 @@ class AnimateDiff(BaseModel):
                      LORA_PREFIX_TEXT_ENCODER='lora_te',
                      alpha=0.6):
         # load base model
-        # pipeline = StableDiffusionPipeline.from_pretrained(base_model_path, torch_dtype=torch.float32)
+        # pipeline = StableDiffusionPipeline.from_pretrained(base_model_path,
+        # torch_dtype=torch.float32)
 
         # load LoRA weight from .safetensors
         # state_dict = load_file(checkpoint_path)
@@ -360,7 +369,8 @@ class AnimateDiff(BaseModel):
 
         # directly update weight in diffusers model
         for key in state_dict:
-            # it is suggested to print out the key, it usually will be something like below
+            # it is suggested to print out the key, it usually
+            # will be something like below
             # "lora_te_text_model_encoder_layers_0_self_attn_k_proj.lora_down.weight"
 
             # as we have set the alpha beforehand, so just skip
@@ -444,9 +454,10 @@ class AnimateDiff(BaseModel):
                  width // self.vae_scale_factor)
         if isinstance(generator, list) and len(generator) != batch_size:
             raise ValueError(
-                f'You have passed a list of generators of length {len(generator)}, but requested an effective batch'
-                f' size of {batch_size}. Make sure the batch size matches the length of the generators.'
-            )
+                f'You have passed a list of generators of length '
+                f'{len(generator)}, but requested an effective batch'
+                f' size of {batch_size}. Make sure the batch size matches the'
+                f' length of the generators.')
         if latents is None:
             rand_device = 'cpu' if device.type == 'mps' else device
 
@@ -469,12 +480,12 @@ class AnimateDiff(BaseModel):
                     dtype=dtype).to(device)
         else:
             if latents.shape != shape:
-                raise ValueError(
-                    f'Unexpected latents shape, got {latents.shape}, expected {shape}'
-                )
+                raise ValueError(f'Unexpected latents shape, got '
+                                 f'{latents.shape}, expected {shape}')
             latents = latents.to(device)
 
-        # scale the initial noise by the standard deviation required by the scheduler
+        # scale the initial noise by the standard deviation
+        # required by the scheduler
         latents = latents * self.scheduler.init_noise_sigma
         return latents
 
@@ -629,18 +640,19 @@ class AnimateDiff(BaseModel):
             dict: A dict containing the generated video
         """
         assert return_type in ['image', 'tensor', 'numpy']
-        # breakpoint()
+
         # 0. Default height and width to unet
         height = height or self.unet_sample_size * self.vae_scale_factor
         width = width or self.unet_sample_size * self.vae_scale_factor
-
-        if seed != -1: torch.manual_seed(seed)
+        if seed != -1:
+            torch.manual_seed(seed)
         print_log(f'current seed: {torch.initial_seed()}')
         print_log(f'sampling {prompt} ...')
-        # set_random_seed(seed=seed)
+
         # 1. Check inputs. Raise error if not correct
+
         self.check_inputs(prompt, height,
-                          width)  # NOTE aligned with origion repo
+                          width)  # NOTE: aligned with origin repo
 
         # 2. Define call parameters
         batch_size = 1
@@ -657,7 +669,7 @@ class AnimateDiff(BaseModel):
         # corresponds to doing no classifier free guidance.
         do_classifier_free_guidance = guidance_scale > 1.0
         video_dtype = self.vae.module.dtype if hasattr(self.vae, 'module') \
-        else self.vae.dtype
+            else self.vae.dtype
 
         # 3. Encode input prompt
 
@@ -667,7 +679,7 @@ class AnimateDiff(BaseModel):
                 negative_prompt, list) else [negative_prompt] * batch_size
         text_embeddings = self._encode_prompt(
             prompt, device, num_videos_per_prompt, do_classifier_free_guidance,
-            negative_prompt)  # NOTE aligned with origion repo
+            negative_prompt)  # NOTE aligned with origin repo
 
         # 4. Prepare timesteps
         # self.scheduler.set_timesteps(num_inference_steps, device=device)
@@ -687,7 +699,7 @@ class AnimateDiff(BaseModel):
             device,
             generator,
             latents,
-        )  # NOTE aligned with origion repo
+        )  # NOTE aligned with origin repo
         latents_dtype = latents.dtype
 
         # 6. Prepare extra step kwargs.
