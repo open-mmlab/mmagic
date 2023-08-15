@@ -14,10 +14,6 @@ With the advance of text-to-image models (e.g., Stable Diffusion) and correspond
 
 <!-- [IMAGE] -->
 
-<div align=center>
-<img src="https://user-images.githubusercontent.com/28132635/230302421-a9107d03-92d3-44b1-91b4-fde4ad2725d4.png">
-</div>
-
 ## Pretrained models
 
 We use Stable Diffusion's weights provided by HuggingFace Diffusers. You do not have to download the weights manually. If you use Diffusers wrapper, the weights will be downloaded automatically.
@@ -35,7 +31,11 @@ Running the following codes, you can get a text-generated image.
 1. Download [ToonYou](https://civitai.com/api/download/models/78775) and MotionModule checkpoint
 
 ```bash
-wget
+#!/bin/bash
+
+gdown 1RqkQuGPaCO5sGZ6V6KZ-jUWmsRu48Kdq -O models/Motion_Module/
+gdown 1ql0g_Ys4UCz2RnokYlBjyOYPbttbIpbu -O models/Motion_Module/
+wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --content-disposition --no-check-certificate
 ```
 
 2. Modify the config file in `configs/animatediff/animatediff_ToonYou.py`
