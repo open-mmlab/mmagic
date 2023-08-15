@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmengine.logging import MMLogger
+from mmengine.model import BaseModule
 from mmengine.runner import load_state_dict
 
 from mmagic.registry import MODELS
@@ -13,7 +14,7 @@ from .singan_modules import GeneratorBlock
 
 
 @MODELS.register_module()
-class SinGANMultiScaleGenerator(nn.Module):
+class SinGANMultiScaleGenerator(BaseModule):
     """Multi-Scale Generator used in SinGAN.
 
     More details can be found in: Singan: Learning a Generative Model from a
@@ -43,6 +44,7 @@ class SinGANMultiScaleGenerator(nn.Module):
             maps in the generator block. Defaults to 32.
         out_act_cfg (dict | None, optional): Configs for output activation
             layer. Defaults to dict(type='Tanh').
+        init_cfg (dict, optional): Initialization config dict.
     """
 
     def __init__(self,
@@ -55,8 +57,9 @@ class SinGANMultiScaleGenerator(nn.Module):
                  base_channels=32,
                  min_feat_channels=32,
                  out_act_cfg=dict(type='Tanh'),
+                 init_cfg=None,
                  **kwargs):
-        super().__init__()
+        super().__init__(init_cfg=init_cfg)
 
         self.pad_head = int((kernel_size - 1) / 2 * num_layers)
         self.blocks = nn.ModuleList()

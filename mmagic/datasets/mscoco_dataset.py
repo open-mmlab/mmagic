@@ -35,6 +35,9 @@ class MSCoCoDataset(BasicConditionalDataset):
             the dataset is needed, which is not necessary to load annotation
             file. ``Basedataset`` can skip load annotations to save time by set
             ``lazy_init=False``. Defaults to False.
+        caption_style (str): If you want to add a style description for each
+            caption, you can set caption_style to your style prompt. For
+            example, 'realistic style'. Defaults to empty str.
         **kwargs: Other keyword arguments in :class:`BaseDataset`.
     """
     METAINFO = dict(dataset_type='text_image_dataset', task_name='editing')
@@ -51,6 +54,7 @@ class MSCoCoDataset(BasicConditionalDataset):
                                               '.bmp', '.pgm', '.tif'),
                  lazy_init: bool = False,
                  classes: Union[str, Sequence[str], None] = None,
+                 caption_style: str = '',
                  **kwargs):
         ann_file = os.path.join('annotations', 'captions_' + phase +
                                 f'{year}.json') if ann_file == '' else ann_file
@@ -62,6 +66,7 @@ class MSCoCoDataset(BasicConditionalDataset):
             self.image_prename = 'COCO_' + phase + f'{year}_'
         self.phase = phase
         self.drop_rate = drop_caption_rate
+        self.caption_style = caption_style
 
         super().__init__(
             ann_file=ann_file,
@@ -93,6 +98,8 @@ class MSCoCoDataset(BasicConditionalDataset):
                 os.path.join(self.phase + str(self.year), image_name),
                 self.img_prefix)
             caption = item['caption'].lower()
+            if self.caption_style != '':
+                caption = caption + ' ' + self.caption_style
             info = {
                 'img_path':
                 img_path,

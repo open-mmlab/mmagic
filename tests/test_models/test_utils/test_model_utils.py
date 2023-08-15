@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
+from collections import defaultdict
 
 import pytest
 import torch
@@ -36,6 +37,20 @@ def test_generation_init_weights():
 
     # BatchNorm2d
     module = nn.BatchNorm2d(3)
+    module_tmp = copy.deepcopy(module)
+    generation_init_weights(module, init_type='normal', init_gain=0.02)
+    assert not torch.equal(module.weight.data, module_tmp.weight.data)
+
+    # test update init info
+    module = nn.BatchNorm2d(3)
+    module._params_init_info = defaultdict(dict)
+    for name, param in module.named_parameters():
+        module._params_init_info[param][
+            'init_info'] = f'The value is the same before and ' \
+                            f'after calling `init_weights` ' \
+                            f'of {module.__class__.__name__} '
+        module._params_init_info[param]['tmp_mean_value'] = param.data.mean(
+        ).cpu()
     module_tmp = copy.deepcopy(module)
     generation_init_weights(module, init_type='normal', init_gain=0.02)
     assert not torch.equal(module.weight.data, module_tmp.weight.data)

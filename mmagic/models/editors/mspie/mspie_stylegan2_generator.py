@@ -7,6 +7,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from mmengine.model import BaseModule
 
 from mmagic.registry import MODELS
 from ...utils import get_module_device
@@ -18,7 +19,7 @@ from .mspie_stylegan2_modules import ModulatedPEStyleConv
 
 
 @MODELS.register_module()
-class MSStyleGANv2Generator(nn.Module):
+class MSStyleGANv2Generator(BaseModule):
     """StyleGAN2 Generator.
 
     In StyleGAN2, we use a static architecture composing of a style mapping

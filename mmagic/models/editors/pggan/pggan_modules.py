@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn.bricks import ConvModule, build_norm_layer
-from mmengine.model import normal_init
+from mmengine.model import BaseModule, normal_init
 from torch.nn.init import _calculate_correct_fan
 
 from mmagic.models.archs import AllGatherLayer
@@ -162,7 +162,7 @@ def pixel_norm(x, eps=1e-6):
 
 
 @MODELS.register_module()
-class PixelNorm(nn.Module):
+class PixelNorm(BaseModule):
     """Pixel Normalization.
 
     This module is proposed in:
@@ -378,7 +378,7 @@ class EqualizedLRLinearModule(nn.Linear):
 
 
 @MODELS.register_module()
-class PGGANNoiseTo2DFeat(nn.Module):
+class PGGANNoiseTo2DFeat(BaseModule):
 
     def __init__(self,
                  noise_size,
@@ -440,7 +440,7 @@ class PGGANNoiseTo2DFeat(nn.Module):
         return x
 
 
-class PGGANDecisionHead(nn.Module):
+class PGGANDecisionHead(BaseModule):
 
     def __init__(self,
                  in_channels,
@@ -505,7 +505,7 @@ class PGGANDecisionHead(nn.Module):
 
 
 @MODELS.register_module()
-class MiniBatchStddevLayer(nn.Module):
+class MiniBatchStddevLayer(BaseModule):
     """Minibatch standard deviation.
 
     Args:

@@ -113,26 +113,30 @@ class TestBigGANGenerator(object):
         res = g(None, None, num_batches=3)
         assert res.shape == (3, 3, 128, 128)
 
+        # test init --> ortho
+        cfg = deepcopy(self.default_config)
+        cfg.update(dict(init_cfg=dict(type='ortho')))
+        g = MODELS.build(cfg)
+        g.init_weights()
+
         # test init --> N02
         cfg = deepcopy(self.default_config)
-        cfg.update(init_type='N02')
+        cfg.update(dict(init_cfg=dict(type='N02')))
         g = MODELS.build(cfg)
+        g.init_weights()
 
         # test init --> xavier
         cfg = deepcopy(self.default_config)
-        cfg.update(init_type='xavier')
+        cfg.update(dict(init_cfg=dict(type='xavier')))
         g = MODELS.build(cfg)
+        g.init_weights()
 
         # test init --> raise error
         cfg = deepcopy(self.default_config)
-        cfg.update(init_type='dont know')
+        cfg.update(dict(init_cfg=dict(type='dont know')))
         with pytest.raises(NotImplementedError):
             g = MODELS.build(cfg)
-
-        cfg = deepcopy(self.default_config)
-        cfg.update(pretrained=1234)
-        with pytest.raises(TypeError):
-            g = MODELS.build(cfg)
+            g.init_weights()
 
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_biggan_generator_cuda(self):
@@ -222,3 +226,9 @@ class TestBigGANGenerator(object):
         g = MODELS.build(cfg)
         res = g(None, None, num_batches=3)
         assert res.shape == (3, 3, 128, 128)
+
+        # test init --> ortho
+        cfg = deepcopy(self.default_config)
+        cfg.update(dict(init_cfg=dict(type='ortho')))
+        g = MODELS.build(cfg)
+        g.init_weights()
