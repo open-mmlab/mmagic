@@ -98,8 +98,10 @@ class FrechetInceptionDistance(GenerativeMetric):
         inception_feat_dict = prepare_inception_feat(
             dataloader, self, module.data_preprocessor, capture_mean_cov=True)
         if is_main_process():
-            self.real_mean = inception_feat_dict['real_mean']
-            self.real_cov = inception_feat_dict['real_cov']
+            # self.real_mean = inception_feat_dict['real_mean']
+            # self.real_cov = inception_feat_dict['real_cov']
+            self.real_mean = inception_feat_dict['mu']
+            self.real_cov = inception_feat_dict['sigma']
 
     def _load_inception(self, inception_style: str,
                         inception_path: Optional[str]
