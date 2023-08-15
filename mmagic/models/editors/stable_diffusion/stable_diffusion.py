@@ -612,11 +612,12 @@ class StableDiffusion(BaseModel):
         data_samples = data['data_samples']
         prompt = data_samples.prompt
 
-        output = self.infer(prompt, return_type='tensor')
+        output = self.infer(prompt, return_type='tensor', height=256, width=256)
         samples = output['samples']
 
         samples = self.data_preprocessor.destruct(samples, data_samples)
-        gt_img = self.data_preprocessor.destruct(data['inputs'], data_samples)
+        # gt_img = self.data_preprocessor.destruct(data['inputs'], data_samples)
+        gt_img = ['temp']
 
         out_data_sample = DataSample(
             fake_img=samples, gt_img=gt_img, prompt=prompt)

@@ -302,10 +302,21 @@ class GenerativeMetric(GenMetric):
                     data_sample_list.append(data_sample)
                 return data_sample_list
 
+            def get_cond_prompt(self) -> List[DataSample]:
+                data_sample_list = []
+                for _ in range(self.batch_size):
+                    data_sample = DataSample()
+                    cond = self.dataset.get_data_info(self.idx)['gt_prompt']
+                    data_sample.set_gt_prompt(cond)
+                    data_sample_list.append(data_sample)
+                    self.idx += 1
+                return data_sample_list
+
             def __next__(self) -> dict:
-                if self.idx > self.max_length:
+                if self.idx > self.max_length - self.batch_size or \
+                        self.idx > len(self.dataset) - self.batch_size:
                     raise StopIteration
-                self.idx += batch_size
+                # self.idx += batch_size
 
                 output_dict = dict(
                     inputs=dict(
@@ -314,7 +325,7 @@ class GenerativeMetric(GenMetric):
                         sample_kwargs=self.sample_kwargs))
 
                 if self.need_cond:
-                    output_dict['data_samples'] = self.get_cond()
+                    output_dict['data_samples'] = self.get_cond_prompt()
 
                 return output_dict
 
