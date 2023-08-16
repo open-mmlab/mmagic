@@ -9,12 +9,11 @@ from mmengine.runner import set_random_seed
 from PIL import Image
 from tqdm.auto import tqdm
 
-# from mmagic.models.archs import set_lora
-from mmagic.models.archs import set_vico_modules
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
 from ..stable_diffusion.stable_diffusion import StableDiffusion
+from .vico_utils import set_vico_modules
 
 ModelType = Union[Dict, nn.Module]
 
@@ -207,15 +206,17 @@ class ViCo(StableDiffusion):
         Returns:
             SampleList: Generated image or image dict.
         """
+        data = self.data_preprocessor(data)
+        image_reference = data['inputs']['img_ref']
+        data_samples = data['data_samples']
+
         if self.val_prompts is None:
-            data = self.data_preprocessor(data)
-            image_reference = data['inputs']['img_ref']
-            data_samples = data['data_samples']
             prompt = data_samples.prompt
         else:
             prompt = self.val_prompts
             # construct a fake data_sample for destruct
-            data_samples = DataSample.stack(data['data_samples'] * len(prompt))
+            data_samples.split() * len(prompt)
+            data_samples = DataSample.stack(data_samples.split() * len(prompt))
 
         output = self.infer(prompt, image_reference, return_type='tensor')
         samples = output['samples']

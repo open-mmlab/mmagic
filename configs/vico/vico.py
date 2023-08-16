@@ -98,10 +98,12 @@ pipeline = [
         ])
 ]
 dataset = dict(
-    type='ViCoDataset',
+    type='TextualInversionDataset',
     data_root=data_root,
     concept_dir=concept_dir,
     placeholder=placeholder,
+    template="data/vico/imagenet_templates_small.txt",
+    with_image_reference=True,
     pipeline=pipeline)
 train_dataloader = dict(
     dataset=dataset,
