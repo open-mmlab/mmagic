@@ -138,9 +138,7 @@ class TestViCo(TestCase):
                     img=torch.ones([3, 64, 64]),
                     img_ref=torch.ones([3, 64, 64]))
             ],
-            data_samples=[
-                DataSample(prompt='a photo of S*')
-            ])
+            data_samples=[DataSample(prompt='a photo of S*')])
 
         def mock_encode_prompt(*args, **kwargs):
             return torch.randn(2, 5, 16)  # 2 for cfg
@@ -167,9 +165,7 @@ class TestViCo(TestCase):
                     img=torch.ones([3, 64, 64]),
                     img_ref=torch.ones([3, 64, 64]))
             ],
-            data_samples=[
-                DataSample(prompt='a photo of S*')
-            ])
+            data_samples=[DataSample(prompt='a photo of S*')])
 
         def mock_encode_prompt(*args, **kwargs):
             return torch.randn(2, 5, 16)  # 2 for cfg
@@ -196,9 +192,7 @@ class TestViCo(TestCase):
                     img=torch.ones([3, 64, 64]),
                     img_ref=torch.ones([3, 64, 64]))
             ],
-            data_samples=[
-                DataSample(prompt='a photo of S*')
-            ])
+            data_samples=[DataSample(prompt='a photo of S*')])
 
         optimizer = MagicMock()
         update_params = MagicMock()

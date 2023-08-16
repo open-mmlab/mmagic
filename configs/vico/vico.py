@@ -32,9 +32,7 @@ image_cross_layers = [
 ]
 reg_loss_weight: float = 5e-4
 placeholder: str = 'S*'
-val_prompts = [
-    'a photo of a S*'
-]
+val_prompts = ['a photo of a S*']
 initialize_token: str = 'dog'
 num_vectors_per_token: int = 1
 
@@ -102,7 +100,7 @@ dataset = dict(
     data_root=data_root,
     concept_dir=concept_dir,
     placeholder=placeholder,
-    template="data/vico/imagenet_templates_small.txt",
+    template='data/vico/imagenet_templates_small.txt',
     with_image_reference=True,
     pipeline=pipeline)
 train_dataloader = dict(
