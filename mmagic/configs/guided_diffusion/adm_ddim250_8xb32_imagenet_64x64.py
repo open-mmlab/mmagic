@@ -1,17 +1,18 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from mmengine.config import read_base
 
 with read_base():
     from .._base_.datasets.imagenet_64 import *
     from .._base_.gen_default_runtime import *
 
-from mmagic.models.editors.guided_diffusion import AblatedDiffusionModel
-from mmagic.models.data_preprocessors.data_preprocessor import DataPreprocessor
-from mmagic.models.editors.ddpm.denoising_unet import DenoisingUnet
-from mmagic.models.editors.ddpm.denoising_unet import MultiHeadAttentionBlock
-from mmagic.models.diffusion_schedulers.ddim_scheduler import EditDDIMScheduler
 from mmagic.evaluation.metrics import FrechetInceptionDistance
+from mmagic.models.data_preprocessors.data_preprocessor import DataPreprocessor
+from mmagic.models.diffusion_schedulers.ddim_scheduler import EditDDIMScheduler
+from mmagic.models.editors.ddpm.denoising_unet import (DenoisingUnet,
+                                                       MultiHeadAttentionBlock)
+from mmagic.models.editors.guided_diffusion import AblatedDiffusionModel
 
-model=dict(
+model = dict(
     type=AblatedDiffusionModel,
     data_preprocessor=dict(type=DataPreprocessor),
     unet=dict(

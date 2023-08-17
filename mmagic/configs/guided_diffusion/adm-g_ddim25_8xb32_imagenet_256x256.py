@@ -1,26 +1,28 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from mmengine.config import read_base
 
 with read_base():
     from .adm_ddim250_8xb32_imagenet_256x256 import *
 
-from mmagic.models.editors.guided_diffusion.classifier import EncoderUNetModel
 from mmagic.evaluation.metrics import FrechetInceptionDistance
+from mmagic.models.editors.guided_diffusion.classifier import EncoderUNetModel
 
-model.update(dict(
-    classifier=dict(
-        type=EncoderUNetModel,
-        image_size=256,
-        in_channels=3,
-        model_channels=128,
-        out_channels=1000,
-        num_res_blocks=2,
-        attention_resolutions=(8, 16, 32),
-        channel_mult=(1, 1, 2, 2, 4, 4),
-        use_fp16=False,
-        num_head_channels=64,
-        use_scale_shift_norm=True,
-        resblock_updown=True,
-        pool='attention')))
+model.update(
+    dict(
+        classifier=dict(
+            type=EncoderUNetModel,
+            image_size=256,
+            in_channels=3,
+            model_channels=128,
+            out_channels=1000,
+            num_res_blocks=2,
+            attention_resolutions=(8, 16, 32),
+            channel_mult=(1, 1, 2, 2, 4, 4),
+            use_fp16=False,
+            num_head_channels=64,
+            use_scale_shift_norm=True,
+            resblock_updown=True,
+            pool='attention')))
 
 metrics = [
     dict(

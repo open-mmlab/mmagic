@@ -1,13 +1,15 @@
-from mmagic.datasets.imagenet_dataset import ImageNet
-from mmagic.datasets.transforms.loading import LoadImageFromFile
-# from mmcv.transforms.loading import LoadImageFromFile
-# from mmcv.transforms.loading import LoadImageFromFile
-from mmagic.datasets.transforms.crop import RandomCropLongEdge
-from mmagic.datasets.transforms.crop import CenterCropLongEdge
-from mmagic.datasets.transforms.aug_shape import Resize 
-from mmagic.datasets.transforms.aug_shape import Flip
-from mmagic.datasets.transforms.formatting import PackInputs
+# Copyright (c) OpenMMLab. All rights reserved.
 from mmengine.dataset.sampler import DefaultSampler
+
+from mmagic.datasets.imagenet_dataset import ImageNet
+from mmagic.datasets.transforms.aug_shape import Flip, Resize
+# from mmcv.transforms.loading import LoadImageFromFile
+# from mmcv.transforms.loading import LoadImageFromFile
+from mmagic.datasets.transforms.crop import (CenterCropLongEdge,
+                                             RandomCropLongEdge)
+from mmagic.datasets.transforms.formatting import PackInputs
+from mmagic.datasets.transforms.loading import LoadImageFromFile
+
 # dataset settings
 dataset_type = ImageNet
 

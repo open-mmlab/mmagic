@@ -1,14 +1,17 @@
-from mmagic.engine.hooks.iter_time_hook import IterTimerHook
-from mmengine.hooks.logger_hook import LoggerHook
+# Copyright (c) OpenMMLab. All rights reserved.
+from mmengine.evaluator.evaluator import Evaluator
 from mmengine.hooks.checkpoint_hook import CheckpointHook
+from mmengine.hooks.logger_hook import LoggerHook
+from mmengine.model.wrappers.seperate_distributed import \
+    MMSeparateDistributedDataParallel
+
+from mmagic.engine.hooks.iter_time_hook import IterTimerHook
+from mmagic.engine.optimizers.multi_optimizer_constructor import \
+    MultiOptimWrapperConstructor
 from mmagic.engine.runner.log_processor import LogProcessor
-from mmengine.model.wrappers.seperate_distributed import MMSeparateDistributedDataParallel
+from mmagic.engine.runner.multi_loops import MultiTestLoop, MultiValLoop
 from mmagic.visualization.vis_backend import VisBackend
 from mmagic.visualization.visualizer import Visualizer
-from mmagic.engine.runner.multi_loops import MultiValLoop
-from mmagic.engine.runner.multi_loops import MultiTestLoop
-from mmengine.evaluator.evaluator import Evaluator
-from mmagic.engine.optimizers.multi_optimizer_constructor import MultiOptimWrapperConstructor
 
 default_scope = 'mmagic'
 
