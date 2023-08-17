@@ -72,7 +72,10 @@ def init_model(config, checkpoint=None, device='cuda:0'):
     # config.test_cfg.metrics = None
     delete_cfg(config.model, 'init_cfg')
 
-    init_default_scope(config.get('default_scope', 'mmagic'))
+    # init_default_scope(config.get('default_scope', 'mmagic'))
+    scope = config.get('default_scope', 'mmagic')
+    if scope is not None:
+        init_default_scope(scope)
 
     model = MODELS.build(config.model)
 
