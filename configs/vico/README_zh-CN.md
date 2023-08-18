@@ -2,15 +2,15 @@
 
 > [ViCo: Detail-Preserving Visual Condition for Personalized Text-to-Image Generation](https://arxiv.org/abs/2208.12242)
 
-> **Task**: Text2Image
+> **Task**: 文本图像生成
 
 <!-- [ALGORITHM] -->
 
-## Abstract
+## 摘要
 
 <!-- [ABSTRACT] -->
 
-Personalized text-to-image generation using diffusion models has recently been proposed and attracted lots of attention. Given a handful of images containing a novel concept (e.g., a unique toy), we aim to tune the generative model to capture fine visual details of the novel concept and generate photorealistic images following a text condition. We present a plug-in method, named ViCo, for fast and lightweight personalized generation. Specifically, we propose an image attention module to condition the diffusion process on the patch-wise visual semantics. We introduce an attention-based object mask that comes almost at no cost from the attention module. In addition, we design a simple regularization based on the intrinsic properties of text-image attention maps to alleviate the common overfitting degradation. Unlike many existing models, our method does not finetune any parameters of the original diffusion model. This allows more flexible and transferable model deployment. With only light parameter training (~6% of the diffusion U-Net), our method achieves comparable or even better performance than all state-of-the-art models both qualitatively and quantitatively.
+最近，个性化文本到图像生成使用扩散模型的方法被提出，并引起了广泛关注。给定包含新概念（例如独特的玩具）的少量图像，我们旨在调整生成模型，以捕捉新概念的精细视觉细节，并根据文本条件生成逼真的图像。我们提出了一种名为ViCo的插件方法，用于快速轻量级个性化生成。具体而言，我们提出了一个图像注意力模块，以对基于补丁的视觉语义进行扩散过程的条件建模。我们引入了一种基于注意力模块的对象蒙版，几乎没有额外计算成本。此外，我们设计了一个简单的正则化方法，基于文本-图像注意力图的内在属性，以减轻常见的过拟合退化问题。与许多现有模型不同，我们的方法不对原始扩散模型的任何参数进行微调。这使得模型的部署更加灵活和可转移。通过仅进行轻量级参数训练（约为扩散U-Net的6%），我们的方法在质量和数量上都达到了与所有最先进模型相当甚至更好的性能。
 
 <!-- [IMAGE] -->
 
@@ -18,18 +18,18 @@ Personalized text-to-image generation using diffusion models has recently been p
 <img src="https://github.com/haoosz/ViCo/assets/71176040/0ee95a57-fecf-4bba-bc64-eda46e5cc6d1">
 </div>
 
-## Configs
+## 模型结构
 
-|                                     Model                                      | Dataset | Download |
+|                                     模型                                      | 数据集 | 下载 |
 | :----------------------------------------------------------------------------: | :-----: | :------: |
-|                         [ViCo](./vico.py)                          |    -    |    -     |
+|                         [ViCo](./vico.py)                          |    [textual_inversion_dataset](mmagic/datasets/textual_inversion_dataset.py)    |    -     |
 
 ## Quick Start
 
-1. Download [data](https://drive.google.com/drive/folders/1m8TCsY-C1tIOflHtWnFzTbw2C6dq67mC) and [templates](https://drive.google.com/drive/folders/1SpByLKECISmj5fhkaicT4yrsyqqpWL_T) 
+1. 下载 [数据集](https://drive.google.com/drive/folders/1m8TCsY-C1tIOflHtWnFzTbw2C6dq67mC) 和 [模板](https://drive.google.com/drive/folders/1SpByLKECISmj5fhkaicT4yrsyqqpWL_T) 
 and save to `data/vico/`
 
-The file structure will be like this:
+文件夹结构应如下:
 
 ```text
 data
@@ -47,21 +47,21 @@ data
     ...
     └──imagenet_templates_small.txt
 ```
-2. Customize your config
+2. 自定义你自己的config文件
 ```
-# Only need to care about these
+# 请关注以下需自定义的内容
 
-# which concept you want to customize
+# 设置concept文件夹名
 concept_dir = 'dog7'
 
-# the new token to denote the concept
+# 设置代表这个concept的新字符
 placeholder: str = 'S*'
 
-# better to be the superclass of concept
+# 初始化字符，最好是设置这个concept所属的类别
 initialize_token: str = 'dog'
 ```
 
-3. Start training with the following command:
+3. 使用以下命令进行**训练**:
 
 ```bash
 # 4 GPUS
@@ -69,7 +69,7 @@ bash tools/dist_train.sh configs/vico/vico.py 4
 # 1 GPU
 python tools/train.py configs/vico/vico.py
 ```
-4. Use the [pretrained checkpoins](https://drive.google.com/drive/folders/1GQGVzzOP2IgEfsQ-6ii6o2DqElnFThHM) to inference
+4. 使用 [预训练的权重](https://drive.google.com/drive/folders/1GQGVzzOP2IgEfsQ-6ii6o2DqElnFThHM) 进行**推理**
 
 ```python
 import torch
@@ -96,8 +96,7 @@ with torch.no_grad():
 output.save("infer.png")
 ```
 
-5. (Optional) If you want to use the weight trained by the
-commands at step3, here are codes to extract the trained parameters, then you can infer with it like step4
+5. (可选) 如果你想使用第3步训练得到的checkpoint进行推理，可以先使用以下脚本将训练过的参数提取出来（文件大小会轻量很多），再使用第4步进行推理
 
 ```python
 def extract_vico_parameters(state_dict):
@@ -112,6 +111,7 @@ checkpoint = torch.load("work_dirs/vico/iter_400.pth")
 new_checkpoint = extract_vico_parameters(checkpoint['state_dict'])
 torch.save(new_checkpoint, "work_dirs/vico/dog.pth")
 ```
+
 <table align="center">
 <thead>
   <tr>
