@@ -13,7 +13,6 @@ from .paired_image_dataset import PairedImageDataset
 from .singan_dataset import SinGANDataset
 from .textual_inversion_dataset import TextualInversionDataset
 from .unpaired_image_dataset import UnpairedImageDataset
-from .vico_dataset import ViCoDataset
 
 __all__ = [
     'AdobeComp1kDataset', 'BasicImageDataset', 'BasicFramesDataset',
