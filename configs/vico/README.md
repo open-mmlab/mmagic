@@ -1,6 +1,6 @@
 # ViCo (2023)
 
-> [ViCo: Detail-Preserving Visual Condition for Personalized Text-to-Image Generation](https://arxiv.org/abs/2208.12242)
+> [ViCo: Detail-Preserving Visual Condition for Personalized Text-to-Image Generation](https://arxiv.org/abs/2306.00971)
 
 > **Task**: Text2Image
 
@@ -20,14 +20,14 @@ Personalized text-to-image generation using diffusion models has recently been p
 
 ## Configs
 
-|                                     Model                                      | Dataset | Download |
-| :----------------------------------------------------------------------------: | :-----: | :------: |
-|                         [ViCo](./vico.py)                          |    -    |    -     |
+|       Model       | Dataset | Download |
+| :---------------: | :-----: | :------: |
+| [ViCo](./vico.py) |    -    |    -     |
 
 ## Quick Start
 
-1. Download [data](https://drive.google.com/drive/folders/1m8TCsY-C1tIOflHtWnFzTbw2C6dq67mC) and [templates](https://drive.google.com/drive/folders/1SpByLKECISmj5fhkaicT4yrsyqqpWL_T) 
-and save to `data/vico/`
+1. Download [data](https://drive.google.com/drive/folders/1m8TCsY-C1tIOflHtWnFzTbw2C6dq67mC) and [templates](https://drive.google.com/drive/folders/1SpByLKECISmj5fhkaicT4yrsyqqpWL_T)
+   and save to `data/vico/`
 
 The file structure will be like this:
 
@@ -47,7 +47,9 @@ data
     ...
     └──imagenet_templates_small.txt
 ```
+
 2. Customize your config
+
 ```
 # Only need to care about these
 
@@ -69,6 +71,7 @@ bash tools/dist_train.sh configs/vico/vico.py 4
 # 1 GPU
 python tools/train.py configs/vico/vico.py
 ```
+
 4. Use the [pretrained checkpoins](https://drive.google.com/drive/folders/1GQGVzzOP2IgEfsQ-6ii6o2DqElnFThHM) to inference
 
 ```python
@@ -97,7 +100,7 @@ output.save("infer.png")
 ```
 
 5. (Optional) If you want to use the weight trained by the
-commands at step3, here are codes to extract the trained parameters, then you can infer with it like step4
+   commands at step3, here are codes to extract the trained parameters, then you can infer with it like step4
 
 ```python
 def extract_vico_parameters(state_dict):
@@ -112,6 +115,7 @@ checkpoint = torch.load("work_dirs/vico/iter_400.pth")
 new_checkpoint = extract_vico_parameters(checkpoint['state_dict'])
 torch.save(new_checkpoint, "work_dirs/vico/dog.pth")
 ```
+
 <table align="center">
 <thead>
   <tr>

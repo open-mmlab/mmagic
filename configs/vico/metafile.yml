@@ -1,7 +1,8 @@
 Collections:
 - Name: ViCo
   Paper:
-    Title: 'ViCo: Detail-Preserving Visual Condition for Personalized Text-to-Image Generation'
+    Title: 'ViCo: Detail-Preserving Visual Condition for Personalized Text-to-Image
+      Generation'
     URL: https://arxiv.org/abs/2306.00971
   README: configs/vico/README.md
   Task:

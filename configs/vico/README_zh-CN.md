@@ -1,6 +1,6 @@
 # ViCo (2023)
 
-> [ViCo: Detail-Preserving Visual Condition for Personalized Text-to-Image Generation](https://arxiv.org/abs/2208.12242)
+> [ViCo: Detail-Preserving Visual Condition for Personalized Text-to-Image Generation](https://arxiv.org/abs/2306.00971)
 
 > **Task**: 文本图像生成
 
@@ -20,14 +20,14 @@
 
 ## 模型结构
 
-|                                     模型                                      | 数据集 | 下载 |
-| :----------------------------------------------------------------------------: | :-----: | :------: |
-|                         [ViCo](./vico.py)                          |    [textual_inversion_dataset](mmagic/datasets/textual_inversion_dataset.py)    |    -     |
+|       模型        |                                  数据集                                   | 下载 |
+| :---------------: | :-----------------------------------------------------------------------: | :--: |
+| [ViCo](./vico.py) | [textual_inversion_dataset](mmagic/datasets/textual_inversion_dataset.py) |  -   |
 
 ## Quick Start
 
-1. 下载 [数据集](https://drive.google.com/drive/folders/1m8TCsY-C1tIOflHtWnFzTbw2C6dq67mC) 和 [模板](https://drive.google.com/drive/folders/1SpByLKECISmj5fhkaicT4yrsyqqpWL_T) 
-and save to `data/vico/`
+1. 下载 [数据集](https://drive.google.com/drive/folders/1m8TCsY-C1tIOflHtWnFzTbw2C6dq67mC) 和 [模板](https://drive.google.com/drive/folders/1SpByLKECISmj5fhkaicT4yrsyqqpWL_T)
+   and save to `data/vico/`
 
 文件夹结构应如下:
 
@@ -47,7 +47,9 @@ data
     ...
     └──imagenet_templates_small.txt
 ```
+
 2. 自定义你自己的config文件
+
 ```
 # 请关注以下需自定义的内容
 
@@ -69,6 +71,7 @@ bash tools/dist_train.sh configs/vico/vico.py 4
 # 1 GPU
 python tools/train.py configs/vico/vico.py
 ```
+
 4. 使用 [预训练的权重](https://drive.google.com/drive/folders/1GQGVzzOP2IgEfsQ-6ii6o2DqElnFThHM) 进行**推理**
 
 ```python
