@@ -21,7 +21,7 @@ ckpt_path = osp.join(test_dir, 'configs', 'ckpt')
 
 register_all_modules()
 
-stable_diffusion_v15_url = '/home/huangtianrui/local_sd'
+stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 val_prompts = ['a photo of S*']
 image_cross_layers = [
     # down blocks (2x transformer block) * (3x down blocks) = 6
