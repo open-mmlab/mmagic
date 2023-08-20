@@ -27,12 +27,14 @@ logger = MMLogger.get_current_instance()
 
 @dataclass
 class UNet3DConditionOutput(BaseOutput):
+    """Output of UNet3DCondtion."""
     sample: torch.FloatTensor
 
 
 @MODELS.register_module()
 class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
     _supports_gradient_checkpointing = True
+    """ Implementation of UNet3DConditionMotionModel"""
 
     @register_to_config
     def __init__(
@@ -301,6 +303,7 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
         sliceable_head_dims = []
 
         def fn_recursive_retrieve_slicable_dims(module: torch.nn.Module):
+            """set attention slice recursively."""
             if hasattr(module, 'set_attention_slice'):
                 sliceable_head_dims.append(module.sliceable_head_dim)
 
@@ -343,6 +346,8 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
         # gets the message
         def fn_recursive_set_attention_slice(module: torch.nn.Module,
                                              slice_size: List[int]):
+            """set attention slice recursively."""
+
             if hasattr(module, 'set_attention_slice'):
                 module.set_attention_slice(slice_size.pop())
 
@@ -354,6 +359,7 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
             fn_recursive_set_attention_slice(module, reversed_slice_size)
 
     def _set_gradient_checkpointing(self, module, value=False):
+        """set gradient checkpoint."""
         if isinstance(module, (CrossAttnDownBlock3D, DownBlock3D,
                                CrossAttnUpBlock3D, UpBlock3D)):
             module.gradient_checkpointing = value
@@ -377,12 +383,12 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
             (batch, sequence_length, feature_dim) encoder hidden states
             return_dict (`bool`, *optional*, defaults to `True`):
                 Whether or not to return a
-                [`models.unet_2d_condition.UNet2DConditionOutput`]
+                [`UNet3DConditionOutput`]
                 instead of a plain tuple.
 
         Returns:
-            [`~models.unet_2d_condition.UNet2DConditionOutput`] or `tuple`:
-            [`~models.unet_2d_condition.UNet2DConditionOutput`]
+            [`UNet3DConditionOutput`] or `tuple`:
+            [`UNet3DConditionOutput`]
             if `return_dict` is True, otherwise a `tuple`. When
             returning a tuple, the first element is the sample tensor.
         """
@@ -531,6 +537,7 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
                            pretrained_model_path,
                            subfolder=None,
                            unet_additional_kwargs=None):
+        """a class method for initialization."""
         if subfolder is not None:
             pretrained_model_path = os.path.join(pretrained_model_path,
                                                  subfolder)

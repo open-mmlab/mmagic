@@ -19,10 +19,15 @@ from torch import nn
 
 @dataclass
 class Transformer3DModelOutput(BaseOutput):
+    """Output of Transformer3DModel."""
     sample: torch.FloatTensor
 
 
 if is_xformers_available():
+    """Check xformer.
+
+    If available use xformers to save memory
+    """
     import xformers
     import xformers.ops
 else:
@@ -30,6 +35,67 @@ else:
 
 
 class Transformer3DModel(ModelMixin, ConfigMixin):
+    """Transformer model for image-like data. Takes either discrete (classes of
+    vector embeddings) or continuous (actual embeddings) inputs.
+
+    When input is continuous: First, project the input
+     (aka embedding) and reshape to b, t, d. Then apply standard
+    transformer action. Finally, reshape to image.
+
+    When input is discrete: First, input (classes of latent pixels)
+     is converted to embeddings and has positional
+    embeddings applied, see `ImagePositionalEmbeddings`.
+    Then apply standard transformer action. Finally, predict
+    classes of unnoised image.
+
+    Note that it is assumed one of the input classes is
+    the masked latent pixel. The predicted classes of the unnoised
+    image do not contain a prediction for the masked pixel as
+    the unnoised image cannot be masked.
+
+    Args:
+        num_attention_heads (`int`, *optional*, defaults to 16):
+            The number of heads to use for multi-head attention.
+        attention_head_dim (`int`, *optional*, defaults to 88):
+            The number of channels in each head.
+        in_channels (`int`, *optional*):
+            Pass if the input is continuous.
+            The number of channels in the input and output.
+        num_layers (`int`, *optional*, defaults to 1):
+            The number of layers of Transformer blocks to use.
+        dropout (`float`, *optional*, defaults to 0.1):
+            The dropout probability to use.
+        norm_num_groups (int):
+            Norm group num, defaults to 32.
+        cross_attention_dim (`int`, *optional*):
+            The number of context dimensions to use.
+        attention_bias (`bool`, *optional*):
+            Configure if the TransformerBlocks' attention should contain
+            a bias parameter.
+        sample_size (`int`, *optional*):
+            Pass if the input is discrete. The width of the latent images.
+            Note that this is fixed at training time as it is used for
+            learning a number of position embeddings. See
+            `ImagePositionalEmbeddings`.
+        num_vector_embeds (`int`, *optional*):
+            Pass if the input is discrete. The number of classes of
+            the vector embeddings of the latent pixels.
+            Includes the class for the masked latent pixel.
+        activation_fn (`str`, *optional*, defaults to `"geglu"`):
+            Activation function to be used in feed-forward.
+        use_linear_projection (bool):
+            Whether to use linear projection, defaults to False.
+        only_cross_attention (bool):
+            whether only use cross attention, defaults to False.
+            unet_use_temporal_attention (bool):
+            whether use temporal attention, defaults to False.
+        upcast_attention (bool):
+            whether use upcast attention, defaults to False.
+        unet_use_cross_frame_attention (bool):
+            whether use cross frame attention, defaults to False.
+        unet_use_temporal_attention (bool):
+            whether use temporal attention, defaults to False.
+    """
 
     @register_to_config
     def __init__(
@@ -100,6 +166,32 @@ class Transformer3DModel(ModelMixin, ConfigMixin):
                 encoder_hidden_states=None,
                 timestep=None,
                 return_dict: bool = True):
+        """forward function.
+
+        Args:
+            hidden_states ( When discrete, `torch.LongTensor`
+                of shape `(batch size, num latent pixels)`.
+                When continuous, `torch.FloatTensor` of shape `
+                (batch size, channel, height, width)`): Input
+                hidden_states
+            encoder_hidden_states ( `torch.LongTensor` of shape
+                `(batch size, context dim)`, *optional*):
+                Conditional embeddings for cross attention layer.
+                If not given, cross-attention defaults to
+                self-attention.
+            timestep ( `torch.long`, *optional*):
+                Optional timestep to be applied as an embedding
+                in AdaLayerNorm's. Used to indicate denoising step.
+            return_dict (`bool`, *optional*, defaults to `True`):
+                Whether or not to return a
+                [`Transformer3DModelOutput`]
+                instead of a plain tuple.
+
+        Returns:
+            Dict if `return_dict` is True, otherwise a `tuple`.
+            When returning a tuple, the first element is the sample
+            tensor.
+        """
         # Input
         assert hidden_states.dim(
         ) == 5, f'{"Expected hidden_states to have ndim=5, "}'
@@ -156,6 +248,30 @@ class Transformer3DModel(ModelMixin, ConfigMixin):
 
 
 class BasicTransformerBlock(nn.Module):
+    """A basic Transformer block.
+
+    Args:
+        dim (int): The number of channels in the input and output.
+        num_attention_heads (int): The number of heads to use for
+         multi-head attention.
+        attention_head_dim (int): The number of channels in each head.
+        dropout (float, *optional*, defaults to 0.0):
+            The dropout probability to use.
+        cross_attention_dim (int, *optional*):
+            The size of the context vector for cross attention.
+        activation_fn (`str`, *optional*, defaults to `"geglu"`):
+            Activation function to be used in feed-forward.
+        attention_bias (bool, *optional*, defaults to `False`):
+            Configure if the attentions should contain a bias parameter.
+        only_cross_attention (bool, defaults to False):
+            whether to use cross attention only.
+        upcast_attention (bool):
+            whether use upcast attention, defaults to False.
+        unet_use_cross_frame_attention (bool):
+            whether use cross frame attention, defaults to False.
+        unet_use_temporal_attention (bool):
+            whether use temporal attention, defaults to False.
+    """
 
     def __init__(
         self,
@@ -194,6 +310,8 @@ class BasicTransformerBlock(nn.Module):
             #     upcast_attention=upcast_attention,
             # )
         else:
+            # TODO: Check whether replace this with models.editors
+            # .ddpm.attention.CrossAttention
             self.attn1 = CrossAttention(
                 query_dim=dim,
                 heads=num_attention_heads,
@@ -254,6 +372,7 @@ class BasicTransformerBlock(nn.Module):
                 timestep=None,
                 attention_mask=None,
                 video_length=None):
+        """forward with hidden states, context and timestep."""
         # SparseCausal-Attention
         norm_hidden_states = (
             self.norm1(hidden_states, timestep)

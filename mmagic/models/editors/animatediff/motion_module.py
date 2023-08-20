@@ -14,7 +14,7 @@ from torch import nn
 
 
 def zero_module(module):
-    # Zero out the parameters of a module and return it.
+    """Zero out the parameters of a module and return it."""
     for p in module.parameters():
         p.detach().zero_()
     return module
@@ -22,6 +22,7 @@ def zero_module(module):
 
 @dataclass
 class TemporalTransformer3DModelOutput(BaseOutput):
+    """Output of TemporalTransformer3DModel."""
     sample: torch.FloatTensor
 
 
@@ -34,6 +35,7 @@ else:
 
 def get_motion_module(in_channels, motion_module_type: str,
                       motion_module_kwargs: dict):
+    """Get motion module."""
     if motion_module_type == 'Vanilla':
         return VanillaTemporalModule(
             in_channels=in_channels,
@@ -44,6 +46,7 @@ def get_motion_module(in_channels, motion_module_type: str,
 
 
 class VanillaTemporalModule(nn.Module):
+    """Module which uses transformer to handle 3d motion."""
 
     def __init__(
         self,
@@ -81,6 +84,7 @@ class VanillaTemporalModule(nn.Module):
                 encoder_hidden_states,
                 attention_mask=None,
                 anchor_frame_idx=None):
+        """forward with sample."""
         hidden_states = input_tensor
         hidden_states = self.temporal_transformer(hidden_states,
                                                   encoder_hidden_states,
@@ -91,6 +95,7 @@ class VanillaTemporalModule(nn.Module):
 
 
 class TemporalTransformer3DModel(nn.Module):
+    """Module which uses implement 3D Transformer."""
 
     def __init__(
         self,
@@ -146,6 +151,9 @@ class TemporalTransformer3DModel(nn.Module):
                 hidden_states,
                 encoder_hidden_states=None,
                 attention_mask=None):
+        """forward with hidden states, encoder_hidden_states and
+        attention_mask."""
+
         assert hidden_states.dim(
         ) == 5, f'{"Expected hidden_states to have ndim=5, "}'
         f'but got ndim={hidden_states.dim()}.'
@@ -181,6 +189,7 @@ class TemporalTransformer3DModel(nn.Module):
 
 
 class TemporalTransformerBlock(nn.Module):
+    """Module which is a component of Temporal 3D Transformer."""
 
     def __init__(
         self,
@@ -236,6 +245,8 @@ class TemporalTransformerBlock(nn.Module):
                 encoder_hidden_states=None,
                 attention_mask=None,
                 video_length=None):
+        """forward with hidden states, encoder_hidden_states and
+        attention_mask."""
         for attention_block, norm in zip(self.attention_blocks, self.norms):
             norm_hidden_states = norm(hidden_states)
             hidden_states = attention_block(
@@ -252,6 +263,7 @@ class TemporalTransformerBlock(nn.Module):
 
 
 class PositionalEncoding(nn.Module):
+    """a implementation of PositionEncoding."""
 
     def __init__(self, d_model, dropout=0., max_len=24):
         super().__init__()
@@ -265,11 +277,13 @@ class PositionalEncoding(nn.Module):
         self.register_buffer('pe', pe)
 
     def forward(self, x):
+        """forward function."""
         x = x + self.pe[:, :x.size(1)]
         return self.dropout(x)
 
 
 class VersatileAttention(CrossAttention):
+    """a implementation of VersatileAttention."""
 
     def __init__(self,
                  attention_mode=None,
@@ -294,10 +308,12 @@ class VersatileAttention(CrossAttention):
         self._use_memory_efficient_attention_xformers = True
 
     def extra_repr(self):
+        """return module information."""
         return f'(Module Info) Attention_Mode: {self.attention_mode},\
             Is_Cross_Attention: {self.is_cross_attention}'
 
     def reshape_heads_to_batch_dim(self, tensor):
+        """reshape heads num to batch dim."""
         batch_size, seq_len, dim = tensor.shape
         head_size = self.heads
         tensor = tensor.reshape(batch_size, seq_len, head_size,
@@ -307,6 +323,7 @@ class VersatileAttention(CrossAttention):
         return tensor
 
     def reshape_batch_dim_to_heads(self, tensor):
+        """reshape batch dim to heads num."""
         batch_size, seq_len, dim = tensor.shape
         head_size = self.heads
         tensor = tensor.reshape(batch_size // head_size, head_size, seq_len,
@@ -317,6 +334,7 @@ class VersatileAttention(CrossAttention):
 
     def _memory_efficient_attention_xformers(self, query, key, value,
                                              attention_mask):
+        """use xformers to save memory."""
         # TODO attention_mask
         query = query.contiguous()
         key = key.contiguous()
@@ -331,6 +349,8 @@ class VersatileAttention(CrossAttention):
                 encoder_hidden_states=None,
                 attention_mask=None,
                 video_length=None):
+        """forward with hidden states, encoder_hidden_states and
+        attention_mask."""
         batch_size, sequence_length, _ = hidden_states.shape
 
         if self.attention_mode == 'Temporal':

@@ -34,6 +34,8 @@ def get_down_block(
     motion_module_type=None,
     motion_module_kwargs=None,
 ):
+    """get unet down path block."""
+
     down_block_type = down_block_type[7:] if down_block_type.startswith(
         'UNetRes') else down_block_type
     if down_block_type == 'DownBlock3D':
@@ -106,6 +108,8 @@ def get_up_block(
     motion_module_type=None,
     motion_module_kwargs=None,
 ):
+    """get unet up path block."""
+
     up_block_type = up_block_type[7:] if up_block_type.startswith(
         'UNetRes') else up_block_type
     if up_block_type == 'UpBlock3D':
@@ -155,6 +159,7 @@ def get_up_block(
 
 
 class UNetMidBlock3DCrossAttn(nn.Module):
+    """3D unet mid block built by cross attention."""
 
     def __init__(
         self,
@@ -250,6 +255,8 @@ class UNetMidBlock3DCrossAttn(nn.Module):
                 temb=None,
                 encoder_hidden_states=None,
                 attention_mask=None):
+        """forward with hidden states."""
+
         hidden_states = self.resnets[0](hidden_states, temb)
         for attn, resnet, motion_module in zip(self.attentions,
                                                self.resnets[1:],
@@ -268,6 +275,7 @@ class UNetMidBlock3DCrossAttn(nn.Module):
 
 
 class CrossAttnDownBlock3D(nn.Module):
+    """Down block built by 3D cross attention."""
 
     def __init__(
         self,
@@ -366,6 +374,8 @@ class CrossAttnDownBlock3D(nn.Module):
                 temb=None,
                 encoder_hidden_states=None,
                 attention_mask=None):
+        """forward with hidden states."""
+
         output_states = ()
 
         for resnet, attn, motion_module in zip(self.resnets, self.attentions,
@@ -420,6 +430,7 @@ class CrossAttnDownBlock3D(nn.Module):
 
 
 class DownBlock3D(nn.Module):
+    """Down block built by 3D resnet."""
 
     def __init__(
         self,
@@ -484,6 +495,8 @@ class DownBlock3D(nn.Module):
         self.gradient_checkpointing = False
 
     def forward(self, hidden_states, temb=None, encoder_hidden_states=None):
+        """forward with hidden states."""
+
         output_states = ()
 
         for resnet, motion_module in zip(self.resnets, self.motion_modules):
@@ -525,6 +538,7 @@ class DownBlock3D(nn.Module):
 
 
 class CrossAttnUpBlock3D(nn.Module):
+    """Up block built by 3D cross attention."""
 
     def __init__(
         self,
@@ -627,6 +641,8 @@ class CrossAttnUpBlock3D(nn.Module):
         upsample_size=None,
         attention_mask=None,
     ):
+        """forward with hidden states and res hidden states."""
+
         for resnet, attn, motion_module in zip(self.resnets, self.attentions,
                                                self.motion_modules):
             # pop res hidden states
@@ -681,6 +697,7 @@ class CrossAttnUpBlock3D(nn.Module):
 
 
 class UpBlock3D(nn.Module):
+    """Up block built by 3D resnet."""
 
     def __init__(
         self,
@@ -752,6 +769,8 @@ class UpBlock3D(nn.Module):
         upsample_size=None,
         encoder_hidden_states=None,
     ):
+        """forward with hidden states and res hidden states."""
+
         for resnet, motion_module in zip(self.resnets, self.motion_modules):
             # pop res hidden states
             res_hidden_states = res_hidden_states_tuple[-1]

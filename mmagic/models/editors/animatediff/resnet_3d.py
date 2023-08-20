@@ -9,8 +9,10 @@ from einops import rearrange
 
 
 class InflatedConv3d(nn.Conv2d):
+    """An implementation of InflatedConv3d."""
 
     def forward(self, x):
+        """forward function."""
         video_length = x.shape[2]
 
         x = rearrange(x, 'b c f h w -> (b f) c h w')
@@ -21,6 +23,14 @@ class InflatedConv3d(nn.Conv2d):
 
 
 class Upsample3D(nn.Module):
+    """An 3D upsampling layer with an optional convolution.
+
+    Args:
+        channels (int): channels in the inputs and outputs.
+        use_conv (bool): a bool determining if a convolution is applied.
+        use_conv_transpose (bool): whether to use conv transpose.
+        out_channels (int): output channels.
+    """
 
     def __init__(self,
                  channels,
@@ -42,6 +52,7 @@ class Upsample3D(nn.Module):
                 self.channels, self.out_channels, 3, padding=1)
 
     def forward(self, hidden_states, output_size=None):
+        """forward with hidden states."""
         assert hidden_states.shape[1] == self.channels
 
         if self.use_conv_transpose:
@@ -82,6 +93,14 @@ class Upsample3D(nn.Module):
 
 
 class Downsample3D(nn.Module):
+    """A 3D downsampling layer with an optional convolution.
+
+    Args:
+        channels (int): channels in the inputs and outputs.
+        use_conv (bool): a bool determining if a convolution is applied.
+        out_channels (int): output channels
+        padding (int): padding num
+    """
 
     def __init__(self,
                  channels,
@@ -108,6 +127,7 @@ class Downsample3D(nn.Module):
             raise NotImplementedError
 
     def forward(self, hidden_states):
+        """forward with hidden states."""
         assert hidden_states.shape[1] == self.channels
         if self.use_conv and self.padding == 0:
             raise NotImplementedError
@@ -119,6 +139,23 @@ class Downsample3D(nn.Module):
 
 
 class ResnetBlock3D(nn.Module):
+    """3D resnet block support down sample and up sample.
+
+    Args:
+        in_channels (int): input channels.
+        out_channels (int): output channels.
+        conv_shortcut (bool): whether to use conv shortcut.
+        dropout (float): dropout rate.
+        temb_channels (int): time embedding channels.
+        groups (int): conv groups.
+        groups_out (int): conv out groups.
+        pre_norm (bool): whether to norm before conv. Todo: remove.
+        eps (float): eps for groupnorm.
+        non_linearity (str): non linearity type.
+        time_embedding_norm (str): time embedding norm type.
+        output_scale_factor (float): factor to scale input and output.
+        use_in_shortcut (bool): whether to use conv in shortcut.
+    """
 
     def __init__(
         self,
@@ -195,6 +232,7 @@ class ResnetBlock3D(nn.Module):
                 in_channels, out_channels, kernel_size=1, stride=1, padding=0)
 
     def forward(self, input_tensor, temb):
+        """forward with hidden states and time embeddings."""
         hidden_states = input_tensor
 
         hidden_states = self.norm1(hidden_states)
@@ -230,7 +268,9 @@ class ResnetBlock3D(nn.Module):
 
 
 class Mish(torch.nn.Module):
+    """Mish activation function."""
 
     def forward(self, hidden_states):
+        """forward with hidden states."""
         return hidden_states * torch.tanh(
             torch.nn.functional.softplus(hidden_states))

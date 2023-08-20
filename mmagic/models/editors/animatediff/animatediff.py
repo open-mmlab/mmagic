@@ -192,10 +192,12 @@ class AnimateDiff(BaseModel):
 
     @property
     def device(self):
+        """Set device for the model."""
         return next(self.parameters()).device
 
     def _encode_prompt(self, prompt, device, num_videos_per_prompt,
                        do_classifier_free_guidance, negative_prompt):
+        """Encodes the prompt into text encoder hidden states."""
         batch_size = len(prompt) if isinstance(prompt, list) else 1
 
         text_inputs = self.tokenizer(
@@ -298,6 +300,7 @@ class AnimateDiff(BaseModel):
         return text_embeddings
 
     def decode_latents(self, latents):
+        """latents decoder."""
         video_length = latents.shape[2]
         latents = 1 / 0.18215 * latents
         latents = rearrange(latents, 'b c f h w -> (b f) c h w')
@@ -315,12 +318,16 @@ class AnimateDiff(BaseModel):
         return video
 
     def prepare_extra_step_kwargs(self, generator, eta):
+        """Prepare extra kwargs for the scheduler step, since not all
+        schedulers have the same signature eta (η) is only used with the
+        DDIMScheduler, it will be ignored for other schedulers."""
         # prepare extra kwargs for the scheduler step, since not all
         # schedulers have the same signature
         # eta (η) is only used with the DDIMScheduler, it will
         # be ignored for other schedulers.
         # eta corresponds to η in DDIM paper: https://arxiv.org/abs/2010.02502
         # and should be between [0, 1]
+
         accepts_eta = 'eta' in set(
             inspect.signature(self.scheduler.step).parameters.keys())
         extra_step_kwargs = {}
@@ -335,6 +342,10 @@ class AnimateDiff(BaseModel):
         return extra_step_kwargs
 
     def check_inputs(self, prompt, height, width):
+        """Check inputs.
+
+        Raise error if not correct
+        """
         if not isinstance(prompt, str) and not isinstance(prompt, list):
             raise ValueError(f'`prompt` has to be of type `str`'
                              f' or `list` but is {type(prompt)}')
@@ -358,6 +369,21 @@ class AnimateDiff(BaseModel):
                      LORA_PREFIX_UNET='lora_unet',
                      LORA_PREFIX_TEXT_ENCODER='lora_te',
                      alpha=0.6):
+        """ Convert lora for unet and text_encoder
+            TODO: use this function to convert lora
+
+        Args:
+            state_dict (_type_): _description_
+            LORA_PREFIX_UNET (str, optional):
+            _description_. Defaults to 'lora_unet'.
+            LORA_PREFIX_TEXT_ENCODER (str, optional):
+            _description_. Defaults to 'lora_te'.
+            alpha (float, optional): _description_. Defaults to 0.6.
+
+        Returns:
+            TODO: check each output type
+            _type_: unet && text_encoder
+        """
         # load base model
         # pipeline = StableDiffusionPipeline.from_pretrained(base_model_path,
         # torch_dtype=torch.float32)
@@ -427,17 +453,9 @@ class AnimateDiff(BaseModel):
             # update visited list
             for item in pair_keys:
                 visited.append(item)
+
         return self.unet, self.text_encoder
 
-    # def prepare_latents(self,
-    #                     image,
-    #                     timestep,
-    #                     batch_size,
-    #                     num_images_per_prompt,
-    #                     dtype,
-    #                     device,
-    #                     generator=None,
-    #                     noise=None):
     def prepare_latents(self,
                         batch_size,
                         num_channels_latents,
@@ -448,6 +466,7 @@ class AnimateDiff(BaseModel):
                         device,
                         generator,
                         latents=None):
+        """Prepare latent variables."""
         # breakpoint()
         shape = (batch_size, num_channels_latents, video_length,
                  height // self.vae_scale_factor,
