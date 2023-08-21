@@ -918,6 +918,7 @@ class AutoencoderKL(nn.Module):
         super().__init__()
 
         self.block_out_channels = block_out_channels
+        self.latent_channels = latent_channels
 
         # pass init params to Encoder
         self.encoder = Encoder(

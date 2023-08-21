@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from .adv_loss import AdvLoss
 from .clip_loss import CLIPLoss
 from .composition_loss import (CharbonnierCompLoss, L1CompositionLoss,
                                MSECompositionLoss)
@@ -28,5 +29,5 @@ __all__ = [
     'CLIPLoss', 'CLIPLossComps', 'DiscShiftLossComps', 'FaceIdLossComps',
     'GANLossComps', 'GeneratorPathRegularizerComps',
     'GradientPenaltyLossComps', 'R1GradientPenaltyComps', 'disc_shift_loss',
-    'tv_loss', 'PSNRLoss'
+    'tv_loss', 'PSNRLoss', 'AdvLoss'
 ]
