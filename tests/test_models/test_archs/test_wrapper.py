@@ -20,19 +20,6 @@ ckpt_path = osp.join(test_dir, 'configs', 'ckpt')
 register_all_modules()
 
 
-def mock_torch_device():
-    if digit_version(TORCH_VERSION) < digit_version('2.0.0'):
-
-        def mock_fn(device):
-            _orig_device_fn = torch.device
-            if device == 'meta':
-                return MagicMock()
-            else:
-                return _orig_device_fn(device)
-
-        torch.device = mock_fn
-
-
 class TestWrapper(TestCase):
 
     def test_build(self):
@@ -40,8 +27,18 @@ class TestWrapper(TestCase):
         if digit_version(TORCH_VERSION) <= digit_version('1.6.0'):
             from mmagic.models.editors.ddpm.denoising_unet import SiLU
             torch.nn.SiLU = SiLU
+
         # mock torch.device for pt<2.0.0
-        mock_torch_device()
+        _orig_device_fn = torch.device
+        if digit_version(TORCH_VERSION) < digit_version('2.0.0'):
+
+            def mock_fn(device):
+                if device == 'meta':
+                    return _orig_device_fn('cpu')
+                else:
+                    return _orig_device_fn(device)
+
+            torch.device = mock_fn
 
         # 1. test from config
         model = MODELS.build(
@@ -124,3 +121,5 @@ class TestWrapper(TestCase):
         model.registrer_buffer('buffer', 123)
         called_args, _ = register_buffer_mock.call_args
         self.assertEqual(called_args, ('buffer', 123))
+
+        torch.device = _orig_device_fn
