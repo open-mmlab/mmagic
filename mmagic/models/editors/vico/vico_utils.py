@@ -12,9 +12,8 @@ from diffusers.utils import BaseOutput, is_torch_version
 
 
 class ViCoCrossAttnProcessor:
-    """
-    Processor for implementing attention for the ViCo method.
-    """
+    """Processor for implementing attention for the ViCo method."""
+
     def __call__(self,
                  attn: Attention,
                  hidden_states,
@@ -51,9 +50,7 @@ class ViCoCrossAttnProcessor:
 
 
 def replace_cross_attention(unet):
-    """
-    Replace Cross Attention processor in UNet.
-    """
+    """Replace Cross Attention processor in UNet."""
     for name, module in unet.named_modules():
         name: str
         if name.endswith('attn2'):
@@ -62,17 +59,13 @@ def replace_cross_attention(unet):
 
 @dataclass
 class ViCoTransformer2DModelOutput(BaseOutput):
-    """
-    Output for ViCoTransformer2DModel
-    """
+    """Output for ViCoTransformer2DModel."""
     sample: torch.FloatTensor
     loss_reg: torch.FloatTensor
 
 
 def otsu(mask_in):
-    """
-    Apply otsu for mask.
-    """
+    """Apply otsu for mask."""
     # normalize
     mask_norm = (mask_in - mask_in.min(-1, keepdim=True)[0]) / \
         (mask_in.max(-1, keepdim=True)[0] - mask_in.min(-1, keepdim=True)[0])
@@ -106,14 +99,14 @@ def otsu(mask_in):
 
 
 class ViCoTransformer2D(nn.Module):
-    """
-    New ViCo-Transformer2D to replace the original Transformer2D model.
+    """New ViCo-Transformer2D to replace the original Transformer2D model.
 
     Args:
         org_transformer2d (Transformer2DModel): Original Transformer2DModel.
         have_image_cross (bool): Flag indicating if the model has
         image_cross_attention module
     """
+
     def __init__(self, org_transformer2d: Transformer2DModel,
                  have_image_cross) -> None:
         super().__init__()
@@ -289,9 +282,8 @@ class ViCoTransformer2D(nn.Module):
 
 def replace_transformer2d(module: nn.Module,
                           have_image_cross: Dict[str, List[bool]]):
-    """
-    Replace the the Transformer2DModel in UNet.
-    
+    """Replace the the Transformer2DModel in UNet.
+
     Args:
         module (nn.Module): Parent module of Transformer2D.
         have_image_cross (List): List of flag indicating which
@@ -505,17 +497,14 @@ class ViCoCrossAttnUpBlock2D(ViCoBlockWrapper):
 
 
 class ViCoUNet2DConditionOutput(BaseOutput):
-    """
-    Output for ViCoUNet2DConditionModel
-    """
+    """Output for ViCoUNet2DConditionModel."""
     sample: torch.FloatTensor
     loss_reg: torch.FloatTensor
 
 
 class ViCoUNet2DConditionModel(ViCoBlockWrapper):
-    """
-    UNet2DConditionModel for ViCo Method.
-    """
+    """UNet2DConditionModel for ViCo Method."""
+
     def forward(
         self,
         sample: torch.FloatTensor,
@@ -737,9 +726,7 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
 
 
 def set_vico_modules(unet, image_cross_layers):
-    """
-    Set all modules for ViCo method after the UNet initialized normally.
-    """
+    """Set all modules for ViCo method after the UNet initialized normally."""
     # replace transformer2d blocks
     replace_transformer2d(unet, image_cross_layers)
 
