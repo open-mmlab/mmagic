@@ -23,14 +23,15 @@ class TextualInversionDataset(BaseDataset):
         pipeline (list[dict | callable]): A sequence of data transforms.
     """
 
-    def __init__(self,
-                 data_root: str,
-                 concept_dir: str,
-                 placeholder: str,
-                 template: str,
-                 # used for vico training 
-                 with_image_reference: bool,
-                 pipeline: List[Union[dict, Callable]] = []):
+    def __init__(
+            self,
+            data_root: str,
+            concept_dir: str,
+            placeholder: str,
+            template: str,
+            # used for vico training
+            with_image_reference: bool,
+            pipeline: List[Union[dict, Callable]] = []):
 
         data_prefix = dict(img_path=concept_dir)
 
@@ -41,7 +42,7 @@ class TextualInversionDataset(BaseDataset):
             with open(template, 'r') as file:
                 self.template = file.readlines()
         self.with_image_reference = with_image_reference
-    
+
         super().__init__(
             data_root=data_root, data_prefix=data_prefix, pipeline=pipeline)
 
@@ -79,8 +80,8 @@ class TextualInversionDataset(BaseDataset):
             img_dir = osp.abspath(img_dir)
             data_names = list(
                 file_client.list_dir_or_file(img_dir, list_dir=False))
-            image_ref_path = file_client.join_path(
-                img_dir, data_names[choice(numbers)])
+            image_ref_path = file_client.join_path(img_dir,
+                                                   data_names[choice(numbers)])
             data_info['img_ref_path'] = image_ref_path
 
         # load random template
