@@ -28,18 +28,6 @@ class TestWrapper(TestCase):
             from mmagic.models.editors.ddpm.denoising_unet import SiLU
             torch.nn.SiLU = SiLU
 
-        # mock torch.device for pt<2.0.0
-        _orig_device_fn = torch.device
-        if digit_version(TORCH_VERSION) < digit_version('2.0.0'):
-
-            def mock_fn(device):
-                if device == 'meta':
-                    return _orig_device_fn('cpu')
-                else:
-                    return _orig_device_fn(device)
-
-            torch.device = mock_fn
-
         # 1. test from config
         model = MODELS.build(
             dict(type='ControlNetModel', from_config=config_path))
@@ -121,5 +109,3 @@ class TestWrapper(TestCase):
         model.registrer_buffer('buffer', 123)
         called_args, _ = register_buffer_mock.call_args
         self.assertEqual(called_args, ('buffer', 123))
-
-        torch.device = _orig_device_fn
