@@ -86,8 +86,10 @@ config = dict(
 
 
 @pytest.mark.skipif(
-    'win' in platform.system().lower(),
-    reason='skip on windows due to limited RAM.')
+    'win' in platform.system().lower() or 
+    digit_version(TORCH_VERSION) <= digit_version('1.8.1'),
+    reason='skip on windows due to limited RAM'
+    'and get_submodule requires torch >= 1.9.0')
 class TestViCo(TestCase):
 
     def setUp(self):
@@ -110,11 +112,18 @@ class TestViCo(TestCase):
                 batch_size *= 2
             return torch.randn(batch_size, 5, 16)  # 2 for cfg
 
+        def mock_infer(prompt, *args, **kwargs):
+            length = len(prompt)
+            return dict(samples=torch.randn(length, 3, 64, 64))
+
         encode_prompt = vico._encode_prompt
+        infer = vico.infer
         vico._encode_prompt = mock_encode_prompt
+        vico.infer = mock_infer
 
         self._test_infer(vico, 1, 1)
         vico._encode_prompt = encode_prompt
+        vico.infer = infer
 
     def _test_infer(self, vico, num_prompt, num_repeat):
         prompt = ''
@@ -185,7 +194,7 @@ class TestViCo(TestCase):
         vico.infer = infer
 
     def test_train_step(self):
-        dreambooth = self.vico
+        vico = self.vico
         data = dict(
             inputs=[
                 dict(
@@ -207,6 +216,6 @@ class TestViCo(TestCase):
             def forward(self, *args, **kwargs):
                 return [torch.randn(1, 5, 16)]
 
-        dreambooth.text_encoder = mock_text_encoder()
+        vico.text_encoder = mock_text_encoder()
 
-        dreambooth.train_step(data, optim_wrapper)
+        vico.train_step(data, optim_wrapper)
