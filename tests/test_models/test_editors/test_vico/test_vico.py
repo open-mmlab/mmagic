@@ -86,7 +86,7 @@ config = dict(
 
 
 @pytest.mark.skipif(
-    'win' in platform.system().lower() or 
+    'win' in platform.system().lower() or
     digit_version(TORCH_VERSION) <= digit_version('1.8.1'),
     reason='skip on windows due to limited RAM'
     'and get_submodule requires torch >= 1.9.0')
