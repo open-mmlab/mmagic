@@ -10,6 +10,7 @@ from mmengine.dataset import DefaultSampler
 from mmagic.datasets import BasicConditionalDataset
 from mmagic.datasets.transforms import LoadImageFromFile, PackInputs
 from mmagic.engine import VisualizationHook
+from mmagic.evaluation.metrics import FrechetInceptionDistance
 from mmagic.models.data_preprocessors import DataPreprocessor
 from mmagic.models.editors.eg3d import EG3D, GaussianCamera, TriplaneGenerator
 
@@ -56,14 +57,14 @@ val_cfg = val_dataloader = val_evaluator = None
 inception_pkl = './work_dirs/inception_pkl/eg3d_ffhq_512.pkl'
 metrics = [
     dict(
-        type='FID-Full',
+        type=FrechetInceptionDistance,
         prefix='FID-Full',
         fake_nums=50000,
         inception_pkl=inception_pkl,
         need_cond_input=True,
         sample_model='orig'),
     dict(
-        type='FID-Full',
+        type=FrechetInceptionDistance,
         prefix='FID-Random-Camera',
         fake_nums=50000,
         inception_pkl=inception_pkl,
