@@ -63,7 +63,7 @@ jobs:
             pip install -U openmim
             mim install 'mmcv >= 2.0.0'
             pip install -r requirements/tests.txt
-            pip install scipy==1.9.3
+            pip install scipy==1.7.2
       - run:
           name: Build and install
           command: |
@@ -107,7 +107,7 @@ jobs:
             docker exec mmagic pip install -U openmim
             docker exec mmagic mim install 'mmcv >= 2.0.0'
             docker exec mmagic pip install -r requirements/tests.txt
-            docker exec mmagic pip install 'scipy == 1.9.3'
+            docker exec mmagic pip install 'scipy == 1.7.2'
       - run:
           name: Build and install
           command: |
