@@ -121,12 +121,13 @@ def parse_md(md_file):
     year = int(re.sub('[^0-9]', '', year))
     collection_name = name.strip()
     task_line = lines[4]
-    task = task_line.strip().split(':')[-1].strip()
+    model_task = task_line.strip().split(':')[-1].strip()
+    model_task_list = model_task.lower().split(', ')
 
     collection.name = collection_name
     collection.readme = readme
     collection.data['Year'] = year
-    collection.data['Task'] = task.lower().split(', ')
+    collection.data['Task'] = model_task_list
     collection_meta.architecture = [collection_name]
 
     i = 0
@@ -149,6 +150,10 @@ def parse_md(md_file):
                 dataset_idx = cols.index('Dataset')
                 download_idx = cols.index('Download')
                 used_metrics = collate_metrics(cols)
+                if 'Task' in cols:
+                    task_idx = cols.index('Task')
+                else:
+                    task_idx = None
             except Exception:
                 raise ValueError(
                     f'required fields: Model, Dataset, Download '
@@ -195,6 +200,15 @@ def parse_md(md_file):
                             metrics[metric_name] = dict(PSNR=PSNR, SSIM=SSIM)
                         except ValueError:
                             pass
+
+                task = model_task if task_idx is None else line[
+                    task_idx].strip()
+                assert ',' not in task, (
+                    f'Find "," in "task" field of "{md_file}" (line {j}). '
+                    'Please check your readme carefully.')
+                assert task.lower() in model_task_list, (
+                    f'Task "{task}" not in "{model_task_list}" in "{md_file}" '
+                    f'(line {j}). Please check your readme carefully.')
 
                 result = Result(task=task, dataset=dataset, metrics=metrics)
                 if model.results is None:

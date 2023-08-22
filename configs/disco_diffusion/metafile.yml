@@ -15,7 +15,7 @@ Models:
   Results:
   - Dataset: ImageNet
     Metrics: {}
-    Task: Text2Image, Image2Image
+    Task: Text2Image
   Weights: https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u_finetuned_imagenet-512x512-ab471d70.pth
 - Config: configs/disco_diffusion/disco-diffusion_adm-u-finetuned_imagenet-256x256.py
   In Collection: Disco Diffusion
@@ -23,7 +23,7 @@ Models:
   Results:
   - Dataset: ImageNet
     Metrics: {}
-    Task: Text2Image, Image2Image
+    Task: Text2Image
   Weights: <>
 - Config: configs/disco_diffusion/disco-diffusion_portrait-generator-v001.py
   In Collection: Disco Diffusion
@@ -31,5 +31,5 @@ Models:
   Results:
   - Dataset: unknown
     Metrics: {}
-    Task: Text2Image, Image2Image
+    Task: Text2Image
   Weights: https://download.openmmlab.com/mmediting/synthesizers/disco/adm-u-cvt-rgb_portrait-v001-f4a3f3bc.pth
