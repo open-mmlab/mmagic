@@ -1,0 +1,22 @@
+Collections:
+- Metadata:
+    Architecture:
+    - CAIN
+  Name: CAIN
+  Paper:
+  - https://aaai.org/ojs/index.php/AAAI/article/view/6693/6547
+  README: configs/video_interpolators/cain/README.md
+Models:
+- Config: configs/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet.py
+  In Collection: CAIN
+  Metadata:
+    Training Data: VIMEO90K
+  Name: cain_b5_g1b32_vimeo90k_triplet
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      vimeo-90k-triplet:
+        PSNR: 34.601
+        SSIM: 0.9578
+    Task: Video_interpolators
+  Weights: https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_g1b32_vimeo90k_triplet_20220530-3520b00c.pth

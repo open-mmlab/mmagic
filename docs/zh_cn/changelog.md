@@ -1,6 +1,185 @@
 # 变更日志
 
+<<<<<<< HEAD
 ## v1.0.1 (26/05/2023)
+=======
+## v0.16.1 (24/02/2023)
+
+**新特性和改进**
+
+- 支持新评价指标 FID 和 KID。 [#775](https://github.com/open-mmlab/mmediting/pull/775)
+- 支持 ResidualBlockNoBN 模块设置 `groups` 参数。 [#1510](https://github.com/open-mmlab/mmediting/pull/1510)
+
+**Bug 修复**
+
+- 修复 TTSR 配置文件的 Bug。 [#1435](https://github.com/open-mmlab/mmediting/pull/1435)
+- 修复 RealESRGAN 测试数据集配置。 [#1489](https://github.com/open-mmlab/mmediting/pull/1489)
+- 修复训练脚本储存 config 文件的功能。 [#1584](https://github.com/open-mmlab/mmediting/pull/1584)
+- 修复 `pixel-unshuffle` 模块动态输入导出 ONNX 的Bug。 [#1637](https://github.com/open-mmlab/mmediting/pull/1637)
+
+**贡献者**
+
+一共有 10 位开发者对本次发布做出贡献。感谢 @LeoXing1996, @Z-Fran, @zengyh1900, @liuky74, @KKIEEK, @zeakey, @Sqhttwl, @yhna940, @gihwan-kim, @vansin。
+
+## v0.16.0 (31/10/2022)
+
+**接口变更**
+
+`VisualizationHook` 即将废弃，建议用户使用 `MMEditVisualizationHook`。(#1375)
+
+<table align="center">
+  <thead>
+      <tr align='center'>
+          <td>旧版本</td>
+          <td>新版本</td>
+      </tr>
+  </thead>
+  <tbody><tr valign='top'>
+  <th>
+
+```python
+visual_config = dict(  # 构建可视化钩子的配置
+  type='VisualizationHook',
+  output_dir='visual',
+  interval=1000,
+  res_name_list=[
+      'gt_img', 'masked_img', 'fake_res', 'fake_img', 'fake_gt_local'
+  ],
+)
+```
+
+</th>
+  <th>
+
+```python
+visual_config = dict(  # 构建可视化钩子的配置
+  type='MMEditVisualizationHook',
+  output_dir='visual',
+  interval=1000,
+  res_name_list=[
+      'gt_img', 'masked_img', 'fake_res', 'fake_img', 'fake_gt_local'
+  ],
+)
+```
+
+</th></tr>
+</tbody></table>
+
+**改进**
+
+- 改进 `preprocess_div2k_dataset.py` 中的参数类型。 (#1381)
+- 更新 RDN 的 docstring。 (#1326)
+- 更新 `readme.md` 中的介绍说明。 (#)
+
+**Bug 修复**
+
+- 修复 FLAVR 在 `mmedit/models/video_interpolators` 中的注册和使用。(#1186)
+- 修复 `restoration_video_inference.py` 中的路径处理问题。 (#1262)
+- 修正 RDB 模型结构中的卷积通道数。(#1292, #1311)
+
+**Contributors**
+
+一共有 5 位 开发者对本次发布做出贡献。感谢 @LeoXing1996, @Z-Fran, @zengyh1900, @ryanxingql, @ruoningYu。
+
+## v0.15.2 (09/09/2022)
+
+**改进**
+
+- \[Docs\] 修正文档中的拼写错误 by @Yulv-git in https://github.com/open-mmlab/mmediting/pull/1079
+- \[Docs\] 修正 model zoo 数据集的链接 by @Z-Fran in https://github.com/open-mmlab/mmediting/pull/1043
+- \[Docs\] 修正 readme 中的拼写错误 by @arch-user-france1 in https://github.com/open-mmlab/mmediting/pull/1078
+- \[Improve\] 提供 FLAVR demo by @Yshuo-Li in https://github.com/open-mmlab/mmediting/pull/954
+- \[Fix\] 更新 MMCV 的版本上限到 1.7 by @wangruohui in https://github.com/open-mmlab/mmediting/pull/1001
+- \[Improve\] 改进 niqe_pris_params.npz 安装路径 by @ychfan in https://github.com/open-mmlab/mmediting/pull/995
+- \[CI\] 更新 Github Actions， CircleCI 以及 Issue 和 PR 的模板 by @zengyh1900 in https://github.com/open-mmlab/mmediting/pull/1087
+
+**Contributors**
+
+@wangruohui @Yshuo-Li @zengyh1900 @Z-Fran @ychfan @arch-user-france1 @Yulv-git
+
+## v0.15.1 (04/07/2022)
+
+**Bug 修复**
+
+- \[修复\] 更新 cain_b5_g1b32_vimeo90k_triplet.py 配置文件 ([#929](https://github.com/open-mmlab/mmediting/pull/929))
+- \[文档\] 修复 OST 数据集的链接 ([#933](https://github.com/open-mmlab/mmediting/pull/933))
+
+**改进**
+
+- \[文档\] 更新 OST 数据集指令 ([#937](https://github.com/open-mmlab/mmediting/pull/937))
+- \[测试\] 在 CUDA 环境中没有实际执行 ([#921](https://github.com/open-mmlab/mmediting/pull/921))
+- \[文档\] 首页演示视频添加水印 ([#935](https://github.com/open-mmlab/mmediting/pull/935))
+- \[测试\] 添加 mim ci ([#928](https://github.com/open-mmlab/mmediting/pull/928))
+- \[文档\] 更新 FLAVR 的 README.md ([#919](https://github.com/open-mmlab/mmediting/pull/919))
+- \[改进\] 更新 .pre-commit-config.yaml 中的 md-format ([#917](https://github.com/open-mmlab/mmediting/pull/917))
+- \[改进\] 在 setup.py 中添加 miminstall.txt ([#916](https://github.com/open-mmlab/mmediting/pull/916))
+- \[修复\] 修复 dim/README.md 中的混乱问题 ([#913](https://github.com/open-mmlab/mmediting/pull/913))
+- \[改进\] 跳过有问题的 opencv-python 版本 ([#833](https://github.com/open-mmlab/mmediting/pull/833))
+
+**贡献者**
+
+@wangruohui @Yshuo-Li
+
+## v0.15.0 (01/06/2022)
+
+**Highlights主要更新**
+
+1. 支持 FLAVR
+2. 支持 AOT-GAN
+3. 在 CAIN 中支持 ReduceLROnPlateau 策略
+
+**新功能**
+
+- 支持 AOT-GAN ([#681](https://github.com/open-mmlab/mmediting/pull/681))
+- 支持 Vimeo90k-triplet 数据集 ([#810](https://github.com/open-mmlab/mmediting/pull/810))
+- 为 mm-assistant 添加默认 config ([#827](https://github.com/open-mmlab/mmediting/pull/827))
+- 支持 CPU demo ([#848](https://github.com/open-mmlab/mmediting/pull/848))
+- 在 `LoadImageFromFileList` 中支持 `use_cache` 和 `backend` ([#857](https://github.com/open-mmlab/mmediting/pull/857))
+- 支持 VFIVimeo90K7FramesDataset ([#858](https://github.com/open-mmlab/mmediting/pull/858))
+- 在 VFI pipeline 中支持 ColorJitter ([#859](https://github.com/open-mmlab/mmediting/pull/859))
+- 支持 ReduceLrUpdaterHook ([#860](https://github.com/open-mmlab/mmediting/pull/860))
+- 在 IterBaseRunner 中支持 `after_val_epoch` ([#861](https://github.com/open-mmlab/mmediting/pull/861))
+- 支持 FLAVR Net ([#866](https://github.com/open-mmlab/mmediting/pull/866), [#867](https://github.com/open-mmlab/mmediting/pull/867), [#897](https://github.com/open-mmlab/mmediting/pull/897))
+- 支持 MAE 评估方式 ([#871](https://github.com/open-mmlab/mmediting/pull/871))
+- 使用 mdformat ([#888](https://github.com/open-mmlab/mmediting/pull/888))
+- 在 CAIN 中支持 ReduceLROnPlateau 策略 ([#906](https://github.com/open-mmlab/mmediting/pull/906))
+
+**Bug 修复**
+
+- 在 restoration_demo.py 中将 `-` 改为 `_` ([#834](https://github.com/open-mmlab/mmediting/pull/834))
+- 移除 requirements/docs.txt 中的 recommonmark ([#844](https://github.com/open-mmlab/mmediting/pull/844))
+- 将 README 中的 EDVR 移动到 VSR 类别中 ([#849](https://github.com/open-mmlab/mmediting/pull/849))
+- 修改 crop.py，移除跨栏 F-string 中的 `,` ([#855](https://github.com/open-mmlab/mmediting/pull/855))
+- 修改 test_pipeline，将重复的 `lq_path` 改为 `gt_path` ([#862](https://github.com/open-mmlab/mmediting/pull/862))
+- 修复 TOF-VFI 的 unittest 问题 ([#873](https://github.com/open-mmlab/mmediting/pull/873))
+- 解决 VFI demo 中帧序列出错问题 ([#891](https://github.com/open-mmlab/mmediting/pull/891))
+- 修复 README 中的 logo & contrib 链接 ([#898](https://github.com/open-mmlab/mmediting/pull/898))
+- 修复 indexnet_dimaug_mobv2_1x16_78k_comp1k.py ([#901](https://github.com/open-mmlab/mmediting/pull/901))
+
+**改进**
+
+- 在训练和测试脚本中增加 `--cfg-options` 参数 ([#826](https://github.com/open-mmlab/mmediting/pull/826))
+- 更新 MMCV_MAX 到 1.6 ([#829](https://github.com/open-mmlab/mmediting/pull/829))
+- 在 README 中更新 TOFlow ([#835](https://github.com/open-mmlab/mmediting/pull/835))
+- 恢复 beirf 安装步骤，合并可选要求 ([#836](https://github.com/open-mmlab/mmediting/pull/836))
+- 在 citation 中使用 {MMEditing Contributors} ([#838](https://github.com/open-mmlab/mmediting/pull/838))
+- 增加定制损失函数的教程 ([#839](https://github.com/open-mmlab/mmediting/pull/839))
+- 在 README 中添加安装指南 (wiki ver) ([#845](https://github.com/open-mmlab/mmediting/pull/845))
+- 在中文文档中添加“需要帮助翻译”的说明 ([#850](https://github.com/open-mmlab/mmediting/pull/850))
+- 在 README_zh-CN.md 中添加微信二维码 ([#851](https://github.com/open-mmlab/mmediting/pull/851))
+- 支持 SRFolderVideoDataset 的非零帧索引，修复拼写错误 ([#853](https://github.com/open-mmlab/mmediting/pull/853))
+- 创建 docker 的 README.md ([#856](https://github.com/open-mmlab/mmediting/pull/856))
+- 优化 IO 流量偏差 ([#881](https://github.com/open-mmlab/mmediting/pull/881))
+- 将 wiki/installation 移到 docs ([#883](https://github.com/open-mmlab/mmediting/pull/883))
+- 添加 `myst_heading_anchors` ([#887](https://github.com/open-mmlab/mmediting/pull/887))
+- 在 inpainting demo 中使用预训练模型链接 ([#892](https://github.com/open-mmlab/mmediting/pull/892))
+
+**贡献者**
+
+@wangruohui @quincylin1 @nijkah @jayagami @ckkelvinchan @ryanxingql @NK-CS-ZZL @Yshuo-Li
+
+## v0.14.0 (01/04/2022)
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 **新功能和改进**
 
@@ -213,7 +392,75 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 @plyfager, @LeoXing1996, @Z-Fran, @zengyh1900, @VongolaWu, @liuwenran, @AlexZou14, @lvhan028, @xiaomile, @ldr426, @austin273, @whu-lee, @willaty, @curiosity654, @Zdafeng, @Taited
 
+<<<<<<< HEAD
 ## v1.0.0rc4 (05/12/2022)
+=======
+## v0.11.0 (03/11/2021)
+
+**亮点**
+
+1. 支持使用 GLEAN 处理人脸图像的盲超分辨率
+2. 支持 Real-ESRGAN 模型 #546
+
+**新功能**
+
+- 指数移动平均线钩子 #542
+- 支持 DF2K_OST 数据 #566
+
+**改进**
+
+- 增加与 MATLAB 相似的双线性插值算法 #507
+- 在训练期间支持随机退化 #504
+- 支持 torchserve #568
+
+## v0.10.0 (12/08/2021).
+
+**亮点**
+
+1. 支持 LIIF-RDN (CVPR'2021)
+2. 支持 BasicVSR++ (NTIRE'2021)
+
+**新功能**
+
+- Video SR datasets 支持加载文件列表 ([#423](https://github.com/open-mmlab/mmediting/pull/423))
+- 支持 persistent worker ([#426](https://github.com/open-mmlab/mmediting/pull/426))
+- 支持 LIIF-RDN ([#428](https://github.com/open-mmlab/mmediting/pull/428), [#440](https://github.com/open-mmlab/mmediting/pull/440))
+- 支持 BasicVSR++ ([#451](https://github.com/open-mmlab/mmediting/pull/451), [#467](https://github.com/open-mmlab/mmediting/pull/467))
+- 支持 mim ([#455](https://github.com/open-mmlab/mmediting/pull/455))
+
+**Bug 修复**
+
+- 修复了 stat.py 中的 bug ([#420](https://github.com/open-mmlab/mmediting/pull/420))
+- 修复了 tensor2img 函数中的 astype 错误 ([#429](https://github.com/open-mmlab/mmediting/pull/429))
+- 修复了当 pytorch >= 1.7 时由  torch.new_tensor 导致的 device 错误 ([#465](https://github.com/open-mmlab/mmediting/pull/465))
+- 修复了 .mmedit/apis/train.py 中的 \_non_dist_train ([#473](https://github.com/open-mmlab/mmediting/pull/473))
+- 修复了多节点分布式测试函数 ([#478](https://github.com/open-mmlab/mmediting/pull/478))
+
+**兼容性更新**
+
+- 对 pytorch2onnx 重构了 LIIF  ([#425](https://github.com/open-mmlab/mmediting/pull/425))
+
+**改进**
+
+- 更新了部分中文文档 ([#415](https://github.com/open-mmlab/mmediting/pull/415), [#416](https://github.com/open-mmlab/mmediting/pull/416), [#418](https://github.com/open-mmlab/mmediting/pull/418), [#421](https://github.com/open-mmlab/mmediting/pull/421), [#424](https://github.com/open-mmlab/mmediting/pull/424), [#431](https://github.com/open-mmlab/mmediting/pull/431), [#442](https://github.com/open-mmlab/mmediting/pull/442))
+- 添加了 pytorch 1.9.0 的 CI ([#444](https://github.com/open-mmlab/mmediting/pull/444))
+- 重写了 README.md 的 configs 文件 ([#452](https://github.com/open-mmlab/mmediting/pull/452))
+- 避免在单元测试中加载 VGG 网络的预训练权重 ([#466](https://github.com/open-mmlab/mmediting/pull/466))
+- 支持在 div2k 数据集预处理时指定 scales ([#472](https://github.com/open-mmlab/mmediting/pull/472))
+- 支持 readthedocs 中的所有格式 ([#479](https://github.com/open-mmlab/mmediting/pull/479))
+- 使用 mmcv 的 version_info ([#480](https://github.com/open-mmlab/mmediting/pull/480))
+- 删除了 restoration_video_demo.py 中不必要的代码 ([#484](https://github.com/open-mmlab/mmediting/pull/484))
+- 将 DistEvalIterHook 的优先级修改为 'LOW' ([#489](https://github.com/open-mmlab/mmediting/pull/489))
+- 重置资源限制 ([#491](https://github.com/open-mmlab/mmediting/pull/491))
+- 在 README_CN.md 中更新了 QQ 的 QR code  ([#494](https://github.com/open-mmlab/mmediting/pull/494))
+- 添加了 `myst_parser` ([#495](https://github.com/open-mmlab/mmediting/pull/495))
+- 添加了 license 信息 ([#496](https://github.com/open-mmlab/mmediting/pull/496))
+- 修正了 StyleGAN modules 中的拼写错误 ([#427](https://github.com/open-mmlab/mmediting/pull/427))
+- 修正了 docs/demo.md 中的拼写错误 ([#453](https://github.com/open-mmlab/mmediting/pull/453), [#454](https://github.com/open-mmlab/mmediting/pull/454))
+- 修复了 tools/data/super-resolution/reds/README.md 中的拼写错误 ([#469](https://github.com/open-mmlab/mmediting/pull/469))
+
+## v0.9.0 (30/06/2021).
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 **主要更新**
 
@@ -233,9 +480,17 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 **Bug 修复**
 
+<<<<<<< HEAD
 - 修复 srgan 的训练配置. (#1441)
 - 修复 cain 的 config. (#1404)
 - 修复 rdn 和 srcnn 的训练配置. (#1392)
+=======
+- 修复了 restoration_video_inference.py 中的 bug ([#379](https://github.com/open-mmlab/mmediting/pull/379))
+- 修复了 LIIF 的配置文件 ([#368](https://github.com/open-mmlab/mmediting/pull/368))
+- 修改了 pre-trained EDVR-M 的路径 ([#396](https://github.com/open-mmlab/mmediting/pull/396))
+- 修复了 restoration_video_inference 中的 normalization ([#406](https://github.com/open-mmlab/mmediting/pull/406))
+- 修复了单元测试中的 \[brush_stroke_mask\] 错误 ([#409](https://github.com/open-mmlab/mmediting/pull/409))
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 **贡献者**
 
@@ -321,6 +576,21 @@ MMEditing 1.0.0rc1 已经合并了 MMGeneration 1.x。
 
 MMEditing 1.0.0rc0 是 MMEditing 1.x 的第一个版本，是 OpenMMLab 2.0 项目的一部分。
 
+<<<<<<< HEAD
 基于新的[训练引擎](https://github.com/open-mmlab/mmengine), MMEditing 1.x 统一了数据、模型、评测和可视化的接口。
+=======
+**Bug 修复**
+
+- 修复了 train api 中的 `_non_dist_train` ([#104](https://github.com/open-mmlab/mmediting/pull/104))
+- 修复了 setup 和 CI ([#109](https://github.com/open-mmlab/mmediting/pull/109))
+- 修复了 Normalize 中会导致多余循环的 bug ([#121](https://github.com/open-mmlab/mmediting/pull/121))
+- 修复了 `get_hash` in `setup.py` ([#124](https://github.com/open-mmlab/mmediting/pull/124))
+- 修复了 `tool/preprocess_reds_dataset.py` ([#148](https://github.com/open-mmlab/mmediting/pull/148))
+- 修复了 `getting_started.md` 中的 slurm 训练教程 ([#162](https://github.com/open-mmlab/mmediting/pull/162))
+- 修复了 pip 安装的 bug ([#173](https://github.com/open-mmlab/mmediting/pull/173))
+- 修复了 config file 中的 bug ([#185](https://github.com/open-mmlab/mmediting/pull/185))
+- 修复了数据集中失效的链接 ([#236](https://github.com/open-mmlab/mmediting/pull/236))
+- 修复了 model zoo 中失效的链接 ([#242](https://github.com/open-mmlab/mmediting/pull/242))
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 该版本存在有一些 BC-breaking 的修改。 请在[迁移指南](https://mmagic.readthedocs.io/zh_CN/latest/migration/overview.html)中查看更多细节。

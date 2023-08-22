@@ -159,6 +159,7 @@ class ResNetDec(BaseModule):
 
     def init_weights(self):
         """Init weights for the module."""
+<<<<<<< HEAD:mmagic/models/editors/gca/resgca_dec.py
         if self.init_cfg is not None:
             super().init_weights()
         else:
@@ -166,6 +167,12 @@ class ResNetDec(BaseModule):
                 if isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
                     constant_init(m.weight, 1)
                     constant_init(m.bias, 0)
+=======
+        for m in self.modules():
+            if isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
+                constant_init(m.weight, 1)
+                constant_init(m.bias, 0)
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/encoder_decoders/decoders/resnet_dec.py
 
         # Zero-initialize the last BN in each residual branch, so that the
         # residual branch starts with zeros, and each residual block behaves

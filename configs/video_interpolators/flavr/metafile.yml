@@ -1,0 +1,22 @@
+Collections:
+- Metadata:
+    Architecture:
+    - FLAVR
+  Name: FLAVR
+  Paper:
+  - https://arxiv.org/pdf/2012.08512.pdf
+  README: configs/video_interpolators/flavr/README.md
+Models:
+- Config: configs/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet.py
+  In Collection: FLAVR
+  Metadata:
+    Training Data: VIMEO90K
+  Name: flavr_in4out1_g8b4_vimeo90k_septuplet
+  Results:
+  - Dataset: VIMEO90K
+    Metrics:
+      Vimeo90k-triplet:
+        PSNR: 36.334
+        SSIM: 0.96015
+    Task: Video_interpolators
+  Weights: https://download.openmmlab.com/mmediting/video_interpolators/flavr/flavr_in4out1_g8b4_vimeo90k_septuplet_20220509-c2468995.pth

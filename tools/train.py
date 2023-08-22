@@ -97,8 +97,19 @@ def main():
     if args.resume:
         cfg.resume = True
 
+<<<<<<< HEAD
     # build the runner from config
     runner = Runner.from_cfg(cfg)
+=======
+    # create work_dir
+    mmcv.mkdir_or_exist(osp.abspath(cfg.work_dir))
+    # dump config
+    cfg.dump(osp.join(cfg.work_dir, osp.basename(args.config)))
+    # init the logger before other steps
+    timestamp = time.strftime('%Y%m%d_%H%M%S', time.localtime())
+    log_file = osp.join(cfg.work_dir, f'{timestamp}.log')
+    logger = get_root_logger(log_file=log_file, log_level=cfg.log_level)
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
     print_colored_log(f'Working directory: {cfg.work_dir}')
     print_colored_log(f'Log directory: {runner._log_dir}')

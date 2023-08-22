@@ -33,7 +33,11 @@ class PixelShufflePack(nn.Module):
             padding=(self.upsample_kernel - 1) // 2)
         self.init_weights()
 
+<<<<<<< HEAD:mmagic/models/archs/upsample.py
     def init_weights(self) -> None:
+=======
+    def init_weights(self):
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/common/upsample.py
         """Initialize weights for PixelShufflePack."""
         default_init_weights(self, 1)
 

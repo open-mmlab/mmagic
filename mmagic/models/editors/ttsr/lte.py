@@ -7,8 +7,13 @@ from mmagic.models.archs import ImgNormalize
 from mmagic.registry import MODELS
 
 
+<<<<<<< HEAD:mmagic/models/editors/ttsr/lte.py
 @MODELS.register_module()
 class LTE(BaseModule):
+=======
+@COMPONENTS.register_module()
+class LTE(nn.Module):
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/extractors/lte.py
     """Learnable Texture Extractor.
 
     Based on pretrained VGG19. Generate features in 3 levels.

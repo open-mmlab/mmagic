@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 <div id="top" align="center">
   <img src="docs/en/_static/image/mmagic-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
     <font size="10"><b>M</b>ultimodal <b>A</b>dvanced, <b>G</b>enerative, and <b>I</b>ntelligent <b>C</b>reation (MMagic [em'mædʒɪk])</font>
   </div>
+=======
+<div align="center">
+  <img src="docs/en/_static/image/mmediting-logo.png" width="500px"/>
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab website</font></b>
@@ -41,6 +46,19 @@ English | [简体中文](README_zh-CN.md)
 
 </div>
 
+<<<<<<< HEAD
+=======
+<div align="center">
+
+English | [简体中文](README_zh-CN.md)
+
+</div>
+
+## Introduction
+
+MMEditing is an open-source image and video editing toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project. Currently, MMEditing supports:
+
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 <div align="center">
   <a href="https://openmmlab.medium.com/" style="text-decoration:none;">
     <img src="https://user-images.githubusercontent.com/25839884/218352562-cdded397-b0f3-4ca1-b8dd-a60df8dca75b.png" width="3%" alt="" /></a>
@@ -59,17 +77,26 @@ English | [简体中文](README_zh-CN.md)
 
 ### New release [**MMagic v1.0.1**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.1) \[26/05/2023\]:
 
+<<<<<<< HEAD
 - Support tomesd for StableDiffusion speed-up.
 - Support all inpainting/matting/image restoration models inferencer.
 - Support animated drawings.
 - Support Style-Based Global Appearance Flow for Virtual Try-On.
 - Fix inferencer in pip-install.
+=======
+https://user-images.githubusercontent.com/12756472/175944645-cabe8c2b-9f25-440b-91cc-cdac4e752c5a.mp4
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration).
 
+<<<<<<< HEAD
 After iterative updates with OpenMMLab 2.0 framework and merged with MMGeneration, MMEditing has become a powerful tool that supports low-level algorithms based on both GAN and CNN. Today, MMEditing embraces Generative AI and transforms into a more advanced and comprehensive AIGC toolkit: **MMagic** (**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation). MMagic will provide more agile and flexible experimental support for researchers and AIGC enthusiasts, and help you on your AIGC exploration journey.
 
 We highlight the following new features.
+=======
+<details open>
+<summary>Major features</summary>
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 **1. New Models**
 
@@ -104,6 +131,7 @@ For the Diffusion Model, we provide the following "magic" :
 
 **3. Upgraded Framework**
 
+<<<<<<< HEAD
 By using MMEngine and MMCV of OpenMMLab 2.0 framework, MMagic has upgraded in the following new features:
 
 - Refactor DataSample to support the combination and splitting of batch dimensions.
@@ -117,6 +145,45 @@ By using MMEngine and MMCV of OpenMMLab 2.0 framework, MMagic has upgraded in th
 Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
 
 Please refer to [migration documents](docs/en/migration/overview.md) to migrate from [old version](https://github.com/open-mmlab/mmagic/tree/0.x) MMEditing 0.x to new version MMagic 1.x .
+=======
+## What's New
+
+MMEditing maintains both master and 1.x branches. See more details in  [Branch Maintenance Plan](README.md#branch-maintenance-plan).
+
+### 💎 Stable version
+
+**0.16.1** was released in 24/02/2023:
+
+- Support FID and KID metrics.
+- Support groups parameter in ResidualBlockNoBN.
+- Fix RealESRGAN test dataset.
+- Fix dynamic exportable ONNX of `pixel-unshuffle`.
+
+Please refer to [changelog.md](docs/en/changelog.md) for details and release history.
+
+### 🌟 Preview of 1.x version
+
+A brand new version of [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) was released in 24/02/2023:
+
+- Support all the tasks, models, metrics, and losses in [MMGeneration](https://github.com/open-mmlab/mmgeneration) 😍。
+- Unifies interfaces of all components based on [MMEngine](https://github.com/open-mmlab/mmengine).
+- Refactored and more flexible [architecture](https://mmediting.readthedocs.io/en/1.x/1_overview.html).
+- Support well-known text-to-image method [Stable Diffusion](https://github.com/open-mmlab/mmediting/tree/1.x/configs/stable_diffusion/README.md)!
+- Support a new text-to-image algorithm [GLIDE](https://github.com/open-mmlab/mmediting/tree/1.x/projects/glide/configs/README.md)!
+- Support Text2Image Task! [Disco-Diffusion](https://github.com/open-mmlab/mmediting/tree/1.x/configs/disco_diffusion/README.md)!
+- Support 3D-aware Generation Task! [EG3D](https://github.com/open-mmlab/mmediting/tree/1.x/configs/eg3d/README.md)!
+- Support an efficient image restoration algorithm [Restormer](https://github.com/open-mmlab/mmediting/tree/1.x/configs/restormer/README.md)!
+- Support swin based image restoration algorithm [SwinIR](https://github.com/open-mmlab/mmediting/tree/1.x/configs/swinir/README.md)!
+- Support [Image Colorization](https://github.com/open-mmlab/mmediting/tree/1.x/configs/inst_colorization/README.md).
+- [Projects](https://github.com/open-mmlab/mmediting/tree/1.x/projects/README.md) is opened for the community to add projects to MMEditing.
+- Support High-level apis and inferencer.
+- Support Gradio gui of Inpainting inference.
+- Support patch-based and slider-based image and video comparison viewer.
+
+Find more new features in [1.x branch](https://github.com/open-mmlab/mmediting/tree/1.x). Issues and PRs are welcome!
+
+## Installation
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 ## 📄 Table of Contents
 
@@ -193,6 +260,7 @@ mim install 'mmagic'
 Verify MMagic has been successfully installed.
 
 ```shell
+<<<<<<< HEAD
 cd ~
 python -c "import mmagic; print(mmagic.__version__)"
 # Example output: 1.0.0
@@ -223,6 +291,14 @@ pip3 install -e .
 ```
 
 Please refer to [installation](docs/en/get_started/install.md) for more detailed instruction.
+=======
+git clone https://github.com/open-mmlab/mmediting.git
+cd mmediting
+pip3 install -e .
+```
+
+Please refer to [install.md](docs/en/install.md) for more detailed instruction.
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
@@ -400,7 +476,15 @@ Please refer to [model_zoo](https://mmagic.readthedocs.io/en/latest/model_zoo/ov
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
+<<<<<<< HEAD
 ## 🤝 Acknowledgement
+=======
+- [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
+- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
+- [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
+- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
+- [x] [AOT-GAN](configs/inpainting/AOT-GAN/README.md) (TVCG'2021)
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 MMagic is an open source project that is contributed by researchers and engineers from various colleges and companies. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
 
@@ -416,6 +500,7 @@ We appreciate all the contributors who implement their methods or add new featur
 
 If MMagic is helpful to your research, please cite it as below.
 
+<<<<<<< HEAD
 ```bibtex
 @misc{mmagic2023,
     title = {{MMagic}: {OpenMMLab} Multimodal Advanced, Generative, and Intelligent Creation Toolbox},
@@ -424,6 +509,63 @@ If MMagic is helpful to your research, please cite it as below.
     year = {2023}
 }
 ```
+=======
+</details>
+
+<details open>
+<summary>Video-Super-Resolution</summary>
+
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
+- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
+- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
+- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
+- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
+- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (CVPR'2022)
+- [x] [RealBasicVSR](configs/restorers/real_basicvsr/README.md) (CVPR'2022)
+
+</details>
+
+<details open>
+<summary>Generation</summary>
+
+- [x] [CycleGAN](configs/synthesizers/cyclegan/README.md) (ICCV'2017)
+- [x] [pix2pix](configs/synthesizers/pix2pix/README.md) (CVPR'2017)
+
+</details>
+
+<details open>
+<summary>Video Interpolation</summary>
+
+- [x] [TOFlow](configs/video_interpolators/tof/README.md) (IJCV'2019)
+- [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
+- [x] [FLAVR](configs/video_interpolators/flavr/README.md) (CVPR'2021)
+
+</details>
+
+Please refer to [model_zoo](https://mmediting.readthedocs.io/en/latest/_tmp/modelzoo.html) for more details.
+
+## Contributing
+
+We appreciate all contributions to improve MMEditing. Please refer to our [contributing guidelines](https://github.com/open-mmlab/mmediting/wiki/A.-Contribution-Guidelines).
+
+## Acknowledgement
+
+MMEditing is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks. We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new methods.
+
+## Branch Maintenance Plan
+
+MMEditing currently has two branches, the master and 1.x branches, which go through the following three phases.
+
+| Phase                | Time                  | Branch                                                                        | description                                                                        |
+| -------------------- | --------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| RC Period            | 2022/9/1 - 2022.12.31 | Release candidate code (1.x version) will be released on 1.x branch. Default master branch is still 0.x version | Master and 1.x branches iterate normally                                           |
+| Compatibility Period | 2023/1/1 - 2023.12.31 | **Default master branch will be switched to 1.x branch**, and 0.x branch will correspond to 0.x version | We still maintain the old version 0.x, respond to user needs, but try not to introduce changes that break compatibility; master branch iterates normally |
+| Maintenance Period   | From 2024/1/1         | Default master branch corresponds to 1.x version and 0.x branch is 0.x version | 0.x branch is in maintenance phase, no more new feature support; master branch is iterating normally |
+
+## Citation
+
+If MMEditing is helpful to your research, please cite it as below.
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 ```bibtex
 @misc{mmediting2022,
@@ -443,10 +585,14 @@ Please refer to [LICENSES](LICENSE) for the careful check, if you are using our 
 
 <p align="right"><a href="#top">🔝Back to top</a></p>
 
+<<<<<<< HEAD
 ## 🏗️ ️OpenMMLab Family
 
+=======
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 - [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab foundational library for training deep learning models.
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab foundational library for computer vision.
+- [MMEval](https://github.com/open-mmlab/mmeval): A unified evaluation library for multiple machine learning libraries.
 - [MIM](https://github.com/open-mmlab/mim): MIM installs OpenMMLab packages.
 - [MMPreTrain](https://github.com/open-mmlab/mmpretrain): OpenMMLab Pre-training Toolbox and Benchmark.
 - [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab detection toolbox and benchmark.

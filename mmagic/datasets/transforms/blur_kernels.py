@@ -144,7 +144,11 @@ def bivariate_generalized_gaussian(kernel_size,
             Default: True.
 
     Returns:
+<<<<<<< HEAD:mmagic/datasets/transforms/blur_kernels.py
         kernel (np.ndarray): normalized kernel.
+=======
+        kernel (ndarray): normalized kernel.
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/datasets/pipelines/blur_kernels.py
     """
 
     if grid is None:

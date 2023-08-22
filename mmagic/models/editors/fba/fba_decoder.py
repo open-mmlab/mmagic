@@ -15,8 +15,13 @@ class FBADecoder(nn.Module):
     """Decoder for FBA matting.
 
     Args:
+<<<<<<< HEAD:mmagic/models/editors/fba/fba_decoder.py
         pool_scales (tuple[int]): Pooling scales used in
         Pooling Pyramid Module.
+=======
+        pool_scales (tuple[int]): Pooling scales used in Pooling Pyramid
+            Module.
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/encoder_decoders/decoders/fba_decoder.py
         in_channels (int): Input channels.
         channels (int): Channels after modules, before conv_seg.
         conv_cfg (dict|None): Config of conv layers.
@@ -113,7 +118,11 @@ class FBADecoder(nn.Module):
 
         self.unpool = nn.MaxUnpool2d(2, stride=2)
 
+<<<<<<< HEAD:mmagic/models/editors/fba/fba_decoder.py
         conv_up4_1 = list(
+=======
+        conv_up4_list = list(
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/encoder_decoders/decoders/fba_decoder.py
             ConvModule(
                 64 + 3 + 3 + 2,
                 32,
@@ -121,7 +130,11 @@ class FBADecoder(nn.Module):
                 kernel_size=3,
                 bias=True,
                 act_cfg=self.act_cfg).children())
+<<<<<<< HEAD:mmagic/models/editors/fba/fba_decoder.py
         conv_up4_2 = list(
+=======
+        conv_up4_list += list(
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/encoder_decoders/decoders/fba_decoder.py
             ConvModule(
                 32,
                 16,
@@ -129,11 +142,19 @@ class FBADecoder(nn.Module):
                 kernel_size=3,
                 bias=True,
                 act_cfg=self.act_cfg).children())
+<<<<<<< HEAD:mmagic/models/editors/fba/fba_decoder.py
         conv_up4_3 = list(
             ConvModule(
                 16, 7, padding=0, kernel_size=1, bias=True,
                 act_cfg=None).children())
         self.conv_up4 = nn.Sequential(*(conv_up4_1 + conv_up4_2 + conv_up4_3))
+=======
+        conv_up4_list += list(
+            ConvModule(
+                16, 7, padding=0, kernel_size=1, bias=True,
+                act_cfg=None).children())
+        self.conv_up4 = nn.Sequential(*conv_up4_list)
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/encoder_decoders/decoders/fba_decoder.py
 
     def init_weights(self, pretrained=None):
         """Init weights for the model.

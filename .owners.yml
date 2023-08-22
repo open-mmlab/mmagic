@@ -11,6 +11,7 @@ assign:
     '*/1 * * * *'
   # assignees
   assignees:
+<<<<<<< HEAD
     - zengyh1900
     - LeoXing1996
     - liuwenran
@@ -18,3 +19,12 @@ assign:
     - liuwenran
     - zengyh1900
     - zengyh1900
+=======
+    - LeoXing1996
+    - zengyh1900
+    - plyfager
+    - liuwenran
+    - Z-Fran
+    - LeoXing1996
+    - LeoXing1996
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895

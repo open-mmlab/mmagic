@@ -486,6 +486,7 @@ class IndexNetEncoder(BaseModule):
                     use_res_connect=True))
         return nn.Sequential(*layers)
 
+<<<<<<< HEAD:mmagic/models/editors/indexnet/indexnet_encoder.py
     def train(self, mode=True):
         """Set BatchNorm modules in the model to evaluation mode."""
         super().train(mode)
@@ -493,6 +494,13 @@ class IndexNetEncoder(BaseModule):
             for m in self.modules():
                 if isinstance(m, (nn.BatchNorm2d, SyncBatchNorm)):
                     m.eval()
+=======
+    def freeze_bn(self):
+        """Set BatchNorm modules in the model to evaluation mode."""
+        for m in self.modules():
+            if isinstance(m, (nn.BatchNorm2d, SyncBatchNorm)):
+                m.eval()
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/encoder_decoders/encoders/indexnet_encoder.py
 
     def init_weights(self):
         """Init weights for the model.

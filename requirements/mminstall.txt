@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 mmcv>=2.0.0
 mmengine>=0.4.0
+=======
+mmcv-full>=1.3.17
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895

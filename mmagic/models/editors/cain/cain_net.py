@@ -147,7 +147,11 @@ def get_padding_functions(x, padding=7):
     return padding_function, depadding_function
 
 
+<<<<<<< HEAD:mmagic/models/editors/cain/cain_net.py
 class ConvNormWithReflectionPad(BaseModule):
+=======
+class ConvNormWithReflectionPad(nn.Module):
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/vfi_backbones/cain_net.py
     """Apply reflection padding, followed by a convolution, which can be
     followed by an optional normalization.
 

@@ -14,7 +14,7 @@
 
 - DIV2K 数据集可以在 [这里](https://data.vision.ee.ethz.ch/cvl/DIV2K/) 下载 (我们只使用训练集)。
 - Flickr2K 数据集可以在 [这里](https://cv.snu.ac.kr/research/EDSR/Flickr2K.tar) 下载 (我们只使用训练集)。
-- OST 数据集可以在 [这里](https://openmmlab.oss-cn-hangzhou.aliyuncs.com/datasets/OST_dataset.zip) 下载 (我们只使用训练集)。
+- OST 数据集可以在 [这里](https://github.com/xinntao/SFTGAN#ost-dataset) 下载 (我们只使用训练集 OutdoorSceneTrain_v2 )。
 
 请先将所有图片放入 `GT` 文件夹（命名不需要按顺序）：
 

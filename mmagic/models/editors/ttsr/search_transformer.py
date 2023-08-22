@@ -35,7 +35,11 @@ class SearchTransformer(BaseModule):
 
         return outputs
 
+<<<<<<< HEAD:mmagic/models/editors/ttsr/search_transformer.py
     def forward(self, img_lq, ref_lq, refs):
+=======
+    def forward(self, lq_up, ref_downup, refs):
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/transformers/search_transformer.py
         """Texture transformer.
 
         Q = LTE(img_lq)

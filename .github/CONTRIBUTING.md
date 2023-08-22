@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Contributing to MMagic
+=======
+# Contributing to MMEditing
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 All kinds of contributions are welcome, including but not limited to the following.
 
@@ -8,7 +12,11 @@ All kinds of contributions are welcome, including but not limited to the followi
 
 ## Workflow
 
+<<<<<<< HEAD
 1. fork and pull the latest MMagic repository (MMagic)
+=======
+1. fork and pull the latest MMEditing repository (MMEditing)
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 2. checkout a new branch (do not use master branch for PRs)
 3. commit your changes
 4. create a PR

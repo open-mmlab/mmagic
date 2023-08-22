@@ -4,8 +4,13 @@ repos:
     rev: 4.0.1
     hooks:
       - id: flake8
+<<<<<<< HEAD
   - repo: https://github.com/zhouzaida/isort
     rev: 5.12.1
+=======
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.11.5
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
     hooks:
       - id: isort
   - repo: https://github.com/pre-commit/mirrors-yapf
@@ -32,13 +37,20 @@ repos:
     rev: v2.1.0
     hooks:
       - id: codespell
+<<<<<<< HEAD
         args: ["--skip", "*.ipynb", "-L", "formating,theis,te,nd,thre,Gool,gool,lod,patten,confectionary"]
+=======
+        args: ["--skip", "*.ipynb", "-L", "formating,theis"]
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
   - repo: https://github.com/executablebooks/mdformat
     rev: 0.7.9
     hooks:
       - id: mdformat
         args: ["--number", "--table-width", "200"]
+<<<<<<< HEAD
         # language_version: python3.7
+=======
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
         additional_dependencies:
           - mdformat-openmmlab
           - mdformat_frontmatter

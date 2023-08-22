@@ -180,6 +180,7 @@ val_pipeline = [
     dict(type='PackInputs')
 ]
 
+<<<<<<< HEAD:configs/real_esrgan/realesrnet_c64b23g32_4xb12-lr2e-4-1000k_df2k-ost.py
 # dataset settings
 dataset_type = 'BasicImageDataset'
 
@@ -221,6 +222,51 @@ train_cfg = dict(
     type='IterBasedTrainLoop', max_iters=1_000_000, val_interval=2000)
 val_cfg = dict(type='MultiValLoop')
 test_cfg = dict(type='MultiTestLoop')
+=======
+test_pipeline = [
+    dict(
+        type='LoadImageFromFile',
+        io_backend='disk',
+        key='lq',
+        channel_order='rgb'),
+    dict(type='RescaleToZeroOne', keys=['lq']),
+    dict(type='ImageToTensor', keys=['lq']),
+    dict(type='Collect', keys=['lq'], meta_keys=['lq_path']),
+]
+test_pipeline = val_pipeline
+
+data = dict(
+    workers_per_gpu=6,
+    train_dataloader=dict(
+        samples_per_gpu=12, drop_last=True,
+        persistent_workers=False),  # 4 gpus
+    val_dataloader=dict(samples_per_gpu=1, persistent_workers=False),
+    test_dataloader=dict(samples_per_gpu=1),
+    train=dict(
+        type='RepeatDataset',
+        times=1,
+        dataset=dict(
+            type=train_dataset_type,
+            lq_folder='data/df2k_ost/GT_sub',
+            gt_folder='data/df2k_ost/GT_sub',
+            ann_file='data/df2k_ost/meta_info_df2k_ost.txt',
+            pipeline=train_pipeline,
+            scale=scale)),
+    val=dict(
+        type=val_dataset_type,
+        lq_folder='data/Set5/LRbicx4',
+        gt_folder='data/Set5/GTmod12',
+        pipeline=val_pipeline,
+        scale=scale,
+        filename_tmpl='{}'),
+    test=dict(
+        type=val_dataset_type,
+        lq_folder='data/Set5/LRbicx4',
+        gt_folder='data/Set5/GTmod12',
+        pipeline=val_pipeline,
+        scale=scale,
+        filename_tmpl='{}'))
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:configs/restorers/real_esrgan/realesrnet_c64b23g32_12x4_lr2e-4_1000k_df2k_ost.py
 
 # optimizer
 optim_wrapper = dict(

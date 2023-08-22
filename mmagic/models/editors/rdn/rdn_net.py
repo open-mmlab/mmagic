@@ -5,8 +5,73 @@ from torch import nn
 from mmagic.registry import MODELS
 
 
+<<<<<<< HEAD:mmagic/models/editors/rdn/rdn_net.py
 @MODELS.register_module()
 class RDNNet(BaseModule):
+=======
+class DenseLayer(nn.Module):
+    """Dense layer.
+
+    Args:
+        in_channels (int): Channel number of inputs.
+        out_channels (int): Channel number of outputs.
+    """
+
+    def __init__(self, in_channels, out_channels):
+        super().__init__()
+        self.conv = nn.Conv2d(
+            in_channels, out_channels, kernel_size=3, padding=3 // 2)
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c_in, h, w).
+
+        Returns:
+            Tensor: Forward results, tensor with shape (n, c_in+c_out, h, w).
+        """
+        return torch.cat([x, self.relu(self.conv(x))], 1)
+
+
+class RDB(nn.Module):
+    """Residual Dense Block of Residual Dense Network.
+
+    Args:
+        in_channels (int): Channel number of inputs.
+        channel_growth (int): Channels growth in each layer.
+        num_layers (int): Layer number in the Residual Dense Block.
+    """
+
+    def __init__(self, in_channels, channel_growth, num_layers):
+        super().__init__()
+        self.layers = nn.Sequential(*[
+            DenseLayer(in_channels + channel_growth * i, channel_growth)
+            for i in range(num_layers)
+        ])
+
+        # local feature fusion
+        self.lff = nn.Conv2d(
+            in_channels + channel_growth * num_layers,
+            in_channels,
+            kernel_size=1)
+
+    def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (Tensor): Input tensor with shape (n, c, h, w).
+
+        Returns:
+            Tensor: Forward results.
+        """
+        return x + self.lff(self.layers(x))  # local residual learning
+
+
+@BACKBONES.register_module()
+class RDN(nn.Module):
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/sr_backbones/rdn.py
     """RDN model for single image super-resolution.
 
     Paper: Residual Dense Network for Image Super-Resolution
@@ -20,6 +85,10 @@ class RDNNet(BaseModule):
     'EDSR-PyTorch/blob/master/src/model/rdn.py'
     Copyright (c) 2017, sanghyun-son, under MIT license.
 
+<<<<<<< HEAD:mmagic/models/editors/rdn/rdn_net.py
+=======
+
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/sr_backbones/rdn.py
     Args:
         in_channels (int): Channel number of inputs.
         out_channels (int): Channel number of outputs.

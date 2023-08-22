@@ -53,7 +53,11 @@ def _cubic(x):
         x (np.ndarray): The distance from the center position.
 
     Returns:
+<<<<<<< HEAD:mmagic/datasets/transforms/matlab_like_resize.py
         np.ndarray: The weight corresponding to a particular distance.
+=======
+        ndarray: The weight corresponding to a particular distance.
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/datasets/pipelines/matlab_like_resize.py
     """
 
     x = np.array(x, dtype=np.float32)
@@ -82,8 +86,12 @@ def get_weights_indices(input_length, output_length, scale, kernel,
         kernel_width (int): The width of the kernel.
 
     Returns:
+<<<<<<< HEAD:mmagic/datasets/transforms/matlab_like_resize.py
         tuple(list[np.ndarray], list[np.ndarray]): The weights and the indices
             for interpolation.
+=======
+        list[ndarray]: The weights and the indices for interpolation.
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/datasets/pipelines/matlab_like_resize.py
     """
     if scale < 1:  # modified kernel for antialiasing
 

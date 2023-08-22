@@ -21,11 +21,19 @@ python demo/inpainting_demo.py \
 
 ```shell
 python demo/inpainting_demo.py \
+<<<<<<< HEAD:docs/zh_cn/user_guides/inference.md
     configs/global_local/gl_8xb12_celeba-256x256.py \
     https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth \
     tests/data/inpainting/celeba_test.png \
     tests/data/inpainting/bbox_mask.png \
     tests/data/inpainting/inpainting_celeba.png
+=======
+    configs/inpainting/global_local/gl_256x256_8x12_celeba.py \
+    https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth \
+    tests/data/image/celeba_test.png \
+    tests/data/image/bbox_mask.png \
+    tests/data/pred/inpainting_celeba.png
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:docs/zh_cn/demo.md
 ```
 
 补全结果将保存在 `tests/data/inpainting/inpainting_celeba.png` 中。

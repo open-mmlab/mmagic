@@ -67,8 +67,13 @@ autoapi_template_dir = '_templates'
 # autodoc_inherit_docstrings = True
 
 autodoc_mock_imports = [
+<<<<<<< HEAD
     'mmagic.version', 'mmcv._ext', 'mmcv.ops.ModulatedDeformConv2d',
     'mmcv.ops.modulated_deform_conv2d', 'clip', 'resize_right', 'pandas'
+=======
+    'mmedit.version', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmcv.ops.modulated_deform_conv2d', 'mmcv._ext'
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 ]
 
 source_suffix = {
@@ -126,9 +131,40 @@ html_theme_options = {
             'active':
             True,
         },
+        {
+            'name':
+            'Version',
+            'children': [
+                {
+                    'name': 'MMEditing 0.x',
+                    'url': 'https://mmediting.readthedocs.io/en/latest/',
+                    'description': 'docs at master branch'
+                },
+                {
+                    'name': 'MMEditing 1.x',
+                    'url': 'https://mmediting.readthedocs.io/en/dev-1.x/',
+                    'description': 'docs at 1.x branch'
+                },
+            ],
+            'active':
+            True,
+        },
     ],
     'menu_lang':
     'en',
+<<<<<<< HEAD
+=======
+    'header_note': {
+        'content':
+        'You are reading the documentation for MMEditing 0.x, which '
+        'will soon be deprecated by the end of 2022. We recommend you upgrade '
+        'to MMEditing 1.0 to enjoy fruitful new features and better performance '  # noqa
+        ' brought by OpenMMLab 2.0. Check out the '
+        '<a href="https://github.com/open-mmlab/mmediting/releases">changelog</a>, '  # noqa
+        '<a href="https://github.com/open-mmlab/mmediting/tree/1.x">code</a> '  # noqa
+        'and <a href="https://mmediting.readthedocs.io/en/1.x/">documentation</a> of MMEditing 1.0 for more details.',  # noqa
+    }
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

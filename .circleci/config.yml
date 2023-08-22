@@ -20,6 +20,7 @@ workflows:
           # line:
           # <regex path-to-test> <parameter-to-set> <value-of-pipeline-parameter>
           mapping: |
+<<<<<<< HEAD
             configs/.* lint_only true
             docs/.* lint_only true
             .dev_scripts/.* lint_only true
@@ -32,6 +33,15 @@ workflows:
             .circleci/.* lint_only false
             tools/.* lint_only true
           base-revision: main
+=======
+            mmedit/.* lint_only false
+            requirements/.* lint_only false
+            tests/.* lint_only false
+            tools/.* lint_only false
+            configs/.* lint_only false
+            .circleci/.* lint_only false
+          base-revision: master
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
           # this is the path of the configuration we should trigger once
           # path filtering and pipeline parameter value updates are
           # complete. In this case, we are using the parent dynamic

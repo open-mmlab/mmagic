@@ -737,10 +737,42 @@ class CropAroundFg(BaseTransform):
 class CropAroundUnknown(BaseTransform):
     """Crop around unknown area with a randomly selected scale.
 
+<<<<<<< HEAD:mmagic/datasets/transforms/crop.py
     Randomly select the w and h from a list of (w, h).
     Required keys are the keys in argument `keys`, added or
     modified keys are "crop_bbox" and the keys in argument `keys`.
     This class assumes value of "alpha" ranges from 0 to 255.
+=======
+    Required keys are "scale" and "gt", added or modified keys are "gt".
+    """
+
+    def __call__(self, results):
+        """Call function.
+
+        Args:
+            results (dict): A dict containing the necessary information and
+                data for augmentation.
+
+        Returns:
+            dict: A dict containing the processed data and information.
+        """
+        img = results['gt'].copy()
+        scale = results['scale']
+        if img.ndim in [2, 3]:
+            h, w = img.shape[0], img.shape[1]
+            h_remainder, w_remainder = h % scale, w % scale
+            img = img[:h - h_remainder, :w - w_remainder, ...]
+        else:
+            raise ValueError(f'Wrong img ndim: {img.ndim}.')
+        results['gt'] = img
+        return results
+
+
+@PIPELINES.register_module()
+class CropLike:
+    """Crop/pad the image in the target_key according to the size of image in
+    the reference_key .
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/datasets/pipelines/crop.py
 
     Args:
         keys (Sequence[str]): The images to be cropped. It must contain

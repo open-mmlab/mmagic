@@ -7,8 +7,13 @@ from mmagic.models.archs import MultiLayerDiscriminator
 from mmagic.registry import MODELS
 
 
+<<<<<<< HEAD:mmagic/models/editors/global_local/gl_disc.py
 @MODELS.register_module()
 class GLDiscs(BaseModule):
+=======
+@COMPONENTS.register_module()
+class GLDiscs(nn.Module):
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/components/discriminators/gl_disc.py
     """Discriminators in Global&Local.
 
     This discriminator contains a local discriminator and a global

@@ -20,8 +20,14 @@ except ImportError:
         return digit_ver
 
 
+<<<<<<< HEAD:mmagic/__init__.py
 MMCV_MIN = '2.0.0'
 MMCV_MAX = '2.1.0'
+=======
+MMCV_MIN = '1.3.13'
+MMCV_MAX = '1.8'
+
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/__init__.py
 mmcv_min_version = digit_version(MMCV_MIN)
 mmcv_max_version = digit_version(MMCV_MAX)
 mmcv_version = digit_version(mmcv.__version__)

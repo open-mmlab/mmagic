@@ -47,12 +47,18 @@ class IndexedUpsample(BaseModule):
 
     def init_weights(self):
         """Init weights for the module."""
+<<<<<<< HEAD:mmagic/models/editors/indexnet/indexnet_decoder.py
         if self.init_cfg is not None:
             super().init_weights()
         else:
             for m in self.modules():
                 if isinstance(m, nn.Conv2d):
                     kaiming_init(m, mode='fan_in', nonlinearity='leaky_relu')
+=======
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                kaiming_init(m, mode='fan_in', nonlinearity='leaky_relu')
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/encoder_decoders/decoders/indexnet_decoder.py
 
     def forward(self, x, shortcut, dec_idx_feat=None):
         """Forward function.
@@ -130,6 +136,7 @@ class IndexNetDecoder(BaseModule):
 
     def init_weights(self):
         """Init weights for the module."""
+<<<<<<< HEAD:mmagic/models/editors/indexnet/indexnet_decoder.py
         if self.init_cfg is not None:
             super().init_weights()
         else:
@@ -138,6 +145,12 @@ class IndexNetDecoder(BaseModule):
                     std = math.sqrt(2. /
                                     (m.out_channels * m.kernel_size[0]**2))
                     normal_init(m, mean=0, std=std)
+=======
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                std = math.sqrt(2. / (m.out_channels * m.kernel_size[0]**2))
+                normal_init(m, mean=0, std=std)
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/encoder_decoders/decoders/indexnet_decoder.py
 
     def forward(self, inputs):
         """Forward function.

@@ -67,8 +67,13 @@ autoapi_template_dir = '_templates'
 # autodoc_inherit_docstrings = True
 
 autodoc_mock_imports = [
+<<<<<<< HEAD
     'mmagic.version', 'mmcv._ext', 'mmcv.ops.ModulatedDeformConv2d',
     'mmcv.ops.modulated_deform_conv2d', 'clip', 'resize_right', 'pandas'
+=======
+    'mmedit.version', 'mmcv.ops.ModulatedDeformConv2d',
+    'mmcv.ops.modulated_deform_conv2d', 'mmcv._ext'
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 ]
 
 source_suffix = {
@@ -98,7 +103,6 @@ html_theme = 'pytorch_sphinx_theme'
 html_theme_path = [pytorch_sphinx_theme.get_html_theme_path()]
 
 html_theme_options = {
-    # 'logo_url': 'https://mmocr.readthedocs.io/en/latest/',
     'menu': [
         {
             'name': 'GitHub',
@@ -122,9 +126,38 @@ html_theme_options = {
             'active':
             True,
         },
+        {
+            'name':
+            '版本',
+            'children': [
+                {
+                    'name': 'MMEditing 0.x',
+                    'url': 'https://mmediting.readthedocs.io/zh_CN/latest/',
+                    'description': 'master 分支文档'
+                },
+                {
+                    'name': 'MMEditing 1.x',
+                    'url': 'https://mmediting.readthedocs.io/zh_CN/dev-1.x/',
+                    'description': '1.x 分支文档'
+                },
+            ],
+            'active':
+            True,
+        },
     ],
     'menu_lang':
-    'cn'
+    'cn',
+    'header_note': {
+        'title':
+        '注意',
+        'content':
+        '您正在阅读 MMEditing 0.x。 MMEditing 0.x 会在 2022 年末开始'
+        '逐步停止维护，建议您及时升级到 MMEditing 1.0 版本，享受由 OpenMMLab '
+        '2.0 带来的更多新特性和更佳的性能表现。阅读 MMEditing 1.0 的'
+        '<a href="https://github.com/open-mmlab/mmediting/releases">发版日志</a>、 '  # noqa
+        '<a href="https://github.com/open-mmlab/mmediting/tree/1.x">代码</a> '  # noqa
+        '和 <a href="https://mmediting.readthedocs.io/zh_CN/1.x/">文档</a> 以了解更多。',  # noqa
+    }
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

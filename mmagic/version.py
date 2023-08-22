@@ -1,6 +1,10 @@
 # Copyright (c) Open-MMLab. All rights reserved.
 
+<<<<<<< HEAD:mmagic/version.py
 __version__ = '1.0.2dev0'
+=======
+__version__ = '0.16.1'
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/version.py
 
 
 def parse_version_info(version_str):

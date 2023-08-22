@@ -177,6 +177,7 @@ class PlainDecoder(BaseModule):
 
     def init_weights(self):
         """Init weights for the module."""
+<<<<<<< HEAD:mmagic/models/editors/plain/plain_decoder.py
         if self.init_cfg is not None:
             super().init_weights()
         else:
@@ -184,6 +185,11 @@ class PlainDecoder(BaseModule):
             for m in self.modules():
                 if isinstance(m, nn.Conv2d):
                     xavier_init(m)
+=======
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                xavier_init(m)
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/encoder_decoders/decoders/plain_decoder.py
 
     def forward(self, inputs):
         """Forward function of PlainDecoder.

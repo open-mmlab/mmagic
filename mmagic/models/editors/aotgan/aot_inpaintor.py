@@ -120,7 +120,56 @@ class AOTInpaintor(OneStageInpaintor):
         fake_imgs = fake_reses * masks + masked_imgs * (1. - masks)
         return fake_reses, fake_imgs
 
+<<<<<<< HEAD:mmagic/models/editors/aotgan/aot_inpaintor.py
     def train_step(self, data: List[dict], optim_wrapper):
+=======
+        output = dict()
+        eval_results = {}
+        if self.eval_with_metrics:
+            gt_img = kwargs['gt_img']
+            data_dict = dict(
+                gt_img=gt_img, fake_res=fake_res, fake_img=fake_img, mask=None)
+            for metric_name in self.test_cfg['metrics']:
+                if metric_name in ['ssim', 'psnr']:
+                    eval_results[metric_name] = self._eval_metrics[
+                        metric_name](tensor2img(fake_img, min_max=(-1, 1)),
+                                     tensor2img(gt_img, min_max=(-1, 1)))
+                else:
+                    eval_results[metric_name] = self._eval_metrics[
+                        metric_name]()(data_dict).item()
+            output['eval_result'] = eval_results
+        else:
+            output['fake_res'] = fake_res
+            output['fake_img'] = fake_img
+
+        output['meta'] = None if 'meta' not in kwargs else kwargs['meta'][0]
+
+        if save_image:
+            assert save_image and save_path is not None, (
+                'Save path should been given')
+            assert output['meta'] is not None, (
+                'Meta information should be given to save image.')
+
+            tmp_filename = output['meta']['gt_img_path']
+            filestem = Path(tmp_filename).stem
+            if iteration is not None:
+                filename = f'{filestem}_{iteration}.png'
+            else:
+                filename = f'{filestem}.png'
+            mmcv.mkdir_or_exist(save_path)
+            img_list = [kwargs['gt_img']] if 'gt_img' in kwargs else []
+            img_list.extend(
+                [masked_img,
+                 mask.expand_as(masked_img), fake_res, fake_img])
+            img = torch.cat(img_list, dim=3).cpu()
+            self.save_visualization(img, osp.join(save_path, filename))
+            output['save_img_path'] = osp.abspath(
+                osp.join(save_path, filename))
+
+        return output
+
+    def train_step(self, data_batch, optimizer):
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/inpaintors/aot_inpaintor.py
         """Train step function.
 
         In this function, the inpaintor will finish the train step following

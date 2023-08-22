@@ -50,6 +50,7 @@ Documentation
    :maxdepth: 1
    :caption: Get Started
 
+<<<<<<< HEAD
    get_started/overview.md
    get_started/install.md
    get_started/quick_run.md
@@ -68,6 +69,10 @@ Documentation
    user_guides/useful_tools.md
    user_guides/deploy.md
 
+=======
+   install.md
+   demo.md
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 .. toctree::
    :maxdepth: 2

@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 <div id="top" align="center">
   <img src="docs/zh_cn/_static/image/mmagic-logo.png" width="500px"/>
   <div>&nbsp;</div>
   <div align="center">
     <font size="10"><b>M</b>ultimodal <b>A</b>dvanced, <b>G</b>enerative, and <b>I</b>ntelligent <b>C</b>reation (MMagic [em'mædʒɪk])</font>
   </div>
+=======
+<div align="center">
+  <img src="docs/zh_cn/_static/resources/mmediting-logo.png" width="500px"/>
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
   <div>&nbsp;</div>
   <div align="center">
     <b><font size="5">OpenMMLab 官网</font></b>
@@ -41,6 +46,21 @@
 
 </div>
 
+<<<<<<< HEAD
+=======
+<div align="center">
+
+[English](README.md) | 简体中文
+
+</div>
+
+## Introduction
+
+MMEditing 是基于 PyTorch 的图像&视频编辑开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
+
+目前 MMEditing 支持下列任务：
+
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 <div align="center">
   <a href="https://openmmlab.medium.com/" style="text-decoration:none;">
     <img src="https://user-images.githubusercontent.com/25839884/218352562-cdded397-b0f3-4ca1-b8dd-a60df8dca75b.png" width="3%" alt="" /></a>
@@ -67,9 +87,13 @@
 
 我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
 
+<<<<<<< HEAD
 经过 OpenMMLab 2.0 框架的迭代更新以及与 MMGeneration 的合并，MMEditing 已经成为了一个支持基于 GAN 和 CNN 的底层视觉算法的强大工具。而今天，MMEditing 将更加拥抱生成式 AI（Generative AI），正式更名为 **MMagic**（**M**ultimodal **A**dvanced, **G**enerative, and **I**ntelligent **C**reation），致力于打造更先进、更全面的 AIGC 开源算法库。MMagic 将为广大研究者与 AIGC 爱好者们提供更加快捷灵活的实验支持，助力你的 AIGC 探索之旅。
 
 以下是此次版本发布的重点新功能:
+=======
+### 主要特性
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 **1. 新算法**
 
@@ -104,6 +128,7 @@
 
 **3. 框架升级**
 
+<<<<<<< HEAD
 通过 OpenMMLab 2.0 框架的 MMEngine 和 MMCV， MMagic 在以下几方面完成升级：
 
 - 重构 DataSample，支持 batch 维度的组合与拆分.
@@ -113,6 +138,43 @@
 - 支持 33+ 算法 Pytorch 2.0 加速.
 
 **MMagic** 已经支持了[MMEditing](https://github.com/open-mmlab/mmediting)和[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 ，并基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口 😍。
+=======
+## 最新进展
+
+MMEditing 同时维护 0.x 和 1.x 版本，详情见[分支维护计划](README_zh-CN.md#分支维护计划)
+
+### 💎 稳定版本
+
+最新的 **0.16.1** 版本已经在 24/02/2023 发布：
+
+- 支持新评价指标 FID 和 KID。
+- 支持 ResidualBlockNoBN 模块设置 `groups` 参数。
+- 修复 RealESRGAN 测试数据集配置。
+- 修复 `pixel-unshuffle` 模块动态输入导出 ONNX 的Bug。
+
+如果像了解更多版本更新细节和历史信息，请阅读[更新日志](/docs/zh_cn/changelog.md)。
+
+### 🌟 1.x 预览版本
+
+全新的 [**MMEditing v1.0.0rc6**](https://github.com/open-mmlab/mmediting/releases/tag/v1.0.0rc6) 已经在 24/02/2023 发布:
+
+- 支持[MMGeneration](https://github.com/open-mmlab/mmgeneration)中的全量任务、模型、优化函数和评价指标 😍。
+- 基于[MMEngine](https://github.com/open-mmlab/mmengine)统一了各组件接口。
+- 重构之后更加灵活 [architecture](https://mmediting.readthedocs.io/en/1.x/1_overview.html)。
+- 支持了著名的文本生成图像方法 [Stable Diffusion](https://github.com/open-mmlab/mmediting/tree/1.x/configs/stable_diffusion/README.md)!
+- 支持了一个新的文本到图像生成算法 [GLIDE](https://github.com/open-mmlab/mmediting/tree/1.x/projects/glide/configs/README.md)!
+- 支持了一个新的文本到图像生成算法 [Disco-Diffusion](https://github.com/open-mmlab/mmediting/tree/1.x/configs/disco_diffusion/README.md)!
+- 支持了3D生成算法 [EG3D](https://github.com/open-mmlab/mmediting/tree/1.x/configs/eg3d/README.md)!
+- 支持了一个高效的图像复原算法 [Restormer](https://github.com/open-mmlab/mmediting/tree/1.x/configs/restormer/README.md)!
+- 支持了基于swin的图像复原算法 [SwinIR](https://github.com/open-mmlab/mmediting/tree/1.x/configs/swinir/README.md)!
+- 支持图像上色算法 [Image Colorization](https://github.com/open-mmlab/mmediting/tree/1.x/configs/inst_colorization/README.md).
+- 开启了[Projects](https://github.com/open-mmlab/mmediting/tree/1.x/projects/README.md)以便社区用户添加新的项目到MMEditing.
+- 支持了 High-level apis and inferencer.
+- 支持Inpainting任务的Gradio交互GUI.
+- 支持基于patch以及滑动条的图像和视频可视化比较工具.
+
+在[1.x 分支](https://github.com/open-mmlab/mmediting/tree/1.x)中发现更多特性！欢迎提 Issues 和 PRs！
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmagic/tree/master) MMEditing 0.x 迁移到新版本 MMagic 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
 
@@ -397,7 +459,15 @@ pip3 install -e .
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 
+<<<<<<< HEAD
 ## 🤝 致谢
+=======
+- [x] [Global&Local](configs/inpainting/global_local/README.md) (ToG'2017)
+- [x] [DeepFillv1](configs/inpainting/deepfillv1/README.md) (CVPR'2018)
+- [x] [PConv](configs/inpainting/partial_conv/README.md) (ECCV'2018)
+- [x] [DeepFillv2](configs/inpainting/deepfillv2/README.md) (CVPR'2019)
+- [x] [AOT-GAN](configs/inpainting/AOT-GAN/README.md) (TVCG'2021)
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
 
@@ -411,6 +481,7 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
 
 如果 MMagic 对您的研究有所帮助，请按照如下 bibtex 引用它。
 
+<<<<<<< HEAD
 ```bibtex
 @misc{mmagic2023,
     title = {{MMagic}: {OpenMMLab} Multimodal Advanced, Generative, and Intelligent Creation Toolbox},
@@ -419,6 +490,73 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
     year = {2023}
 }
 ```
+=======
+- [x] [SRCNN](configs/restorers/srcnn/README.md) (TPAMI'2015)
+- [x] [SRResNet&SRGAN](configs/restorers/srresnet_srgan/README.md) (CVPR'2016)
+- [x] [EDSR](configs/restorers/edsr/README.md) (CVPR'2017)
+- [x] [ESRGAN](configs/restorers/esrgan/README.md) (ECCV'2018)
+- [x] [RDN](configs/restorers/rdn/README.md) (CVPR'2018)
+- [x] [DIC](configs/restorers/dic/README.md) (CVPR'2020)
+- [x] [TTSR](configs/restorers/ttsr/README.md) (CVPR'2020)
+- [x] [GLEAN](configs/restorers/glean/README.md) (CVPR'2021)
+- [x] [LIIF](configs/restorers/liif/README.md) (CVPR'2021)
+
+</details>
+
+<details open>
+<summary>视频超分辨率</summary>
+
+- [x] [EDVR](configs/restorers/edvr/README.md) (CVPR'2019)
+- [x] [TOF](configs/restorers/tof/README.md) (IJCV'2019)
+- [x] [TDAN](configs/restorers/tdan/README.md) (CVPR'2020)
+- [x] [BasicVSR](configs/restorers/basicvsr/README.md) (CVPR'2021)
+- [x] [IconVSR](configs/restorers/iconvsr/README.md) (CVPR'2021)
+- [x] [BasicVSR++](configs/restorers/basicvsr_plusplus/README.md) (CVPR'2022)
+- [x] [RealBasicVSR](configs/restorers/real_basicvsr/README.md) (CVPR'2022)
+
+</details>
+
+<details open>
+<summary>图像生成</summary>
+
+- [x] [CycleGAN](configs/synthesizers/cyclegan/README.md) (ICCV'2017)
+- [x] [pix2pix](configs/synthesizers/pix2pix/README.md) (CVPR'2017)
+
+</details>
+
+<details open>
+<summary>视频插帧</summary>
+
+- [x] [TOFlow](configs/video_interpolators/tof/README.md) (IJCV'2019)
+- [x] [CAIN](configs/video_interpolators/cain/README.md) (AAAI'2020)
+- [x] [FLAVR](configs/video_interpolators/flavr/README.md) (CVPR'2021)
+
+</details>
+
+请参考[模型库](https://mmediting.readthedocs.io/en/latest/_tmp/modelzoo.html)了解详情。
+
+## 参与贡献
+
+感谢您为改善 MMEditing 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/blob/master/CONTRIBUTING.md) 以获取贡献指南。
+
+## 致谢
+
+MMEditing 是一款由不同学校和公司共同贡献的开源项目。我们感谢所有为项目提供算法复现和新功能支持的贡献者，以及提供宝贵反馈的用户。 我们希望该工具箱和基准测试可以为社区提供灵活的代码工具，供用户复现现有算法并开发自己的新模型，从而不断为开源社区提供贡献。
+
+## 分支维护计划
+
+MMCV 目前有两个分支，分别是 master 和 2.x 分支，它们会经历以下三个阶段：
+
+| 阶段   | 时间                  | 分支                                                         | 说明                                                                                                     |
+| ------ | --------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| 公测期 | 2022/9/1 - 2022.12.31 | 公测版代码发布在 1.x 分支；默认主分支 master 仍对应 0.x 版本 | master 和 1.x 分支正常进行迭代                                                                           |
+| 兼容期 | 2023/1/1 - 2023.12.31 | **切换默认主分支 master 为 1.x 版本**；0.x 分支对应 0.x 版本 | 保持对旧版本 0.x 的维护和开发，响应用户需求，但尽量不引进破坏旧版本兼容性的改动；master 分支正常进行迭代 |
+| 维护期 | 2024/1/1 - 待定       | 默认主分支 master 为 1.x 版本；0.x 分支对应 0.x 版本         | 0.x 分支进入维护阶段，不再进行新功能支持；master 分支正常进行迭代                                        |
+
+## 引用
+
+如果 MMEditing 对您的研究有所帮助，请按照如下 bibtex 引用它。
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 
 ```bibtex
 @misc{mmediting2022,
@@ -437,17 +575,22 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
 
 <p align="right"><a href="#top">🔝返回顶部</a></p>
 
+<<<<<<< HEAD
 ## 🏗️ ️OpenMMLab 的其他项目
 
 - [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab MMEngine.
+=======
+- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab 深度学习模型训练基础库
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 - [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab 计算机视觉基础库
+- [MMEval](https://github.com/open-mmlab/mmeval): 统一开放的跨框架算法评测库
 - [MIM](https://github.com/open-mmlab/mim): MIM 是 OpenMMlab 项目、算法、模型的统一入口
 - [MMPreTrain](https://github.com/open-mmlab/mmpretrain): OpenMMLab 预训练工具箱
 - [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab 目标检测工具箱
 - [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab 新一代通用 3D 目标检测平台
 - [MMRotate](https://github.com/open-mmlab/mmrotate): OpenMMLab 旋转框检测工具箱与测试基准
 - [MMSegmentation](https://github.com/open-mmlab/mmsegmentation): OpenMMLab 语义分割工具箱
-- [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab 全流程文字检测识别理解工具箱
+- [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab 全流程文字检测识别理解工具包
 - [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab 姿态估计工具箱
 - [MMHuman3D](https://github.com/open-mmlab/mmhuman3d): OpenMMLab 人体参数化模型工具箱与测试基准
 - [MMSelfSup](https://github.com/open-mmlab/mmselfsup): OpenMMLab 自监督学习工具箱与测试基准

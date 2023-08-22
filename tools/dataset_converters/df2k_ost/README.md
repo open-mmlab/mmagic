@@ -14,7 +14,7 @@
 
 - The DIV2K dataset can be downloaded from [here](https://data.vision.ee.ethz.ch/cvl/DIV2K/) (We use the training set only).
 - The Flickr2K dataset can be downloaded [here](https://cv.snu.ac.kr/research/EDSR/Flickr2K.tar) (We use the training set only).
-- The OST dataset can be downloaded [here](https://openmmlab.oss-cn-hangzhou.aliyuncs.com/datasets/OST_dataset.zip) (We use the training set only).
+- The OST dataset can be downloaded [here](https://github.com/xinntao/SFTGAN#ost-dataset) (We use the training set OutdoorSceneTrain_v2 only).
 
 Please first put all the images into the `GT` folder (naming does not need to be in order):
 

@@ -91,7 +91,11 @@ class IconVSRNet(BaseModule):
         self._raised_warning = False
 
     def spatial_padding(self, lrs):
+<<<<<<< HEAD:mmagic/models/editors/iconvsr/iconvsr_net.py
         """Apply padding spatially.
+=======
+        """Apply pdding spatially.
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/sr_backbones/iconvsr.py
 
         Since the PCD module in EDVR requires that the resolution is a multiple
         of 4, we apply padding to the input LR images if their resolution is
@@ -261,6 +265,24 @@ class IconVSRNet(BaseModule):
 
         return torch.stack(outputs, dim=1)[:, :, :, :4 * h_input, :4 * w_input]
 
+<<<<<<< HEAD:mmagic/models/editors/iconvsr/iconvsr_net.py
+=======
+    def init_weights(self, pretrained=None, strict=True):
+        """Init weights for models.
+
+        Args:
+            pretrained (str, optional): Path for pretrained weights. If given
+                None, pretrained weights will not be loaded. Defaults to None.
+            strict (boo, optional): Whether strictly load the pretrained model.
+                Defaults to True.
+        """
+        if isinstance(pretrained, str):
+            logger = get_root_logger()
+            load_checkpoint(self, pretrained, strict=strict, logger=logger)
+        elif pretrained is not None:
+            raise TypeError(f'"pretrained" must be a str or None. '
+                            f'But received {type(pretrained)}.')
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895:mmedit/models/backbones/sr_backbones/iconvsr.py
 
 class EDVRFeatureExtractor(BaseModule):
     """EDVR feature extractor for information-refill in IconVSR.

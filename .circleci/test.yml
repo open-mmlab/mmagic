@@ -25,7 +25,11 @@ jobs:
           name: Check docstring coverage
           command: |
             pip install interrogate
+<<<<<<< HEAD
             interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --ignore-magic --ignore-regex "__repr__" --fail-under 90 mmagic
+=======
+            interrogate -v --ignore-init-method --ignore-module --ignore-nested-functions --ignore-magic --ignore-regex "__repr__" --fail-under 50 mmedit
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
   build_cpu:
     parameters:
       # The python version must match available image tags in
@@ -42,6 +46,14 @@ jobs:
     steps:
       - checkout
       - run:
+<<<<<<< HEAD
+=======
+          name: Get MMCV_TORCH as environment variables
+          command: |
+            . .circleci/scripts/get_mmcv_var.sh << parameters.torch >>
+            source $BASH_ENV
+      - run:
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
           name: Install Libraries
           command: |
             sudo apt-get update
@@ -57,6 +69,7 @@ jobs:
             python -V
             pip install torch==<< parameters.torch >>+cpu torchvision==<< parameters.torchvision >>+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - run:
+<<<<<<< HEAD
           name: Install mmagic dependencies
           command: |
             pip install git+https://github.com/open-mmlab/mmengine.git@main
@@ -64,6 +77,12 @@ jobs:
             mim install 'mmcv >= 2.0.0'
             pip install -r requirements/tests.txt
             pip install scipy==1.7.2
+=======
+          name: Install mmediting dependencies
+          command: |
+            python -m pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch${MMCV_TORCH}/index.html
+            python -m pip install -r requirements.txt
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
       - run:
           name: Build and install
           command: |
@@ -71,7 +90,11 @@ jobs:
       - run:
           name: Run unittests
           command: |
+<<<<<<< HEAD
             coverage run --branch --source mmagic -m pytest tests/
+=======
+            coverage run --branch --source mmedit -m pytest tests/
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
             coverage xml
             coverage report -m
   build_cuda:
@@ -86,11 +109,16 @@ jobs:
         default: 7
     machine:
       image: ubuntu-2004-cuda-11.4:202110-01
+<<<<<<< HEAD
       # docker_layer_caching: true
+=======
+      docker_layer_caching: true
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
     resource_class: gpu.nvidia.small
     steps:
       - checkout
       - run:
+<<<<<<< HEAD
           # Cloning repos in VM since Docker doesn't have access to the private key
           name: Clone Repos
           command: |
@@ -117,6 +145,30 @@ jobs:
           command: |
             docker exec mmagic pytest tests/
 
+=======
+          name: Get MMCV_TORCH and MMCV_CUDA as environment variables
+          command: |
+            . .circleci/scripts/get_mmcv_var.sh << parameters.torch >> << parameters.cuda >>
+            source $BASH_ENV
+      - run:
+          name: Build Docker image
+          command: |
+            docker build .circleci/docker -t mmedit:gpu --build-arg PYTORCH=<< parameters.torch >> --build-arg CUDA=<< parameters.cuda >> --build-arg CUDNN=<< parameters.cudnn >>
+            docker run --gpus all -t -d -v /home/circleci/project:/mmedit -w /mmedit --name mmedit mmedit:gpu
+      - run:
+          name: Install mmedit dependencies
+          command: |
+            docker exec mmedit pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/${MMCV_CUDA}/torch${MMCV_TORCH}/index.html
+            docker exec mmedit pip install -r requirements.txt
+      - run:
+          name: Build and install
+          command: |
+            docker exec mmedit pip install -e .
+      - run:
+          name: Run unittests
+          command: |
+            docker exec mmedit pytest tests/
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 workflows:
   pr_stage_lint:
     when: << pipeline.parameters.lint_only >>
@@ -126,8 +178,12 @@ workflows:
           filters:
             branches:
               ignore:
+<<<<<<< HEAD
                 - dev-1.x
                 - main
+=======
+                - master
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
   pr_stage_test:
     when:
       not:
@@ -138,19 +194,32 @@ workflows:
           filters:
             branches:
               ignore:
+<<<<<<< HEAD
                 - dev-1.x
                 - main
       - build_cpu:
           name: minimum_version_cpu
           torch: 1.8.1
           torchvision: 0.9.1
+=======
+                - master
+      - build_cpu:
+          name: minimum_version_cpu
+          torch: 1.6.0
+          torchvision: 0.7.0
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
           python: 3.7.4
           requires:
             - lint
       - build_cpu:
           name: maximum_version_cpu
+<<<<<<< HEAD
           torch: 1.13.0
           torchvision: 0.14.0
+=======
+          torch: 1.9.0
+          torchvision: 0.10.0
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
           python: 3.9.0
           requires:
             - minimum_version_cpu
@@ -173,6 +242,7 @@ workflows:
     jobs:
       - build_cuda:
           name: minimum_version_gpu
+<<<<<<< HEAD
           torch: 1.8.1
           # Use double quotation mark to explicitly specify its type
           # as string instead of number
@@ -181,3 +251,13 @@ workflows:
             branches:
               only:
                 - dev-1.x
+=======
+          torch: 1.6.0
+          # Use double quotation mark to explicitly specify its type
+          # as string instead of number
+          cuda: "10.1"
+          filters:
+            branches:
+              only:
+                - master
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895

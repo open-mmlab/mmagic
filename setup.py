@@ -145,6 +145,7 @@ def parse_requirements(fname='requirements.txt', with_version=True):
     return packages
 
 
+<<<<<<< HEAD
 def make_cuda_ext(name, module, sources, sources_cuda=[]):
 
     define_macros = []
@@ -170,6 +171,8 @@ def make_cuda_ext(name, module, sources, sources_cuda=[]):
         extra_compile_args=extra_compile_args)
 
 
+=======
+>>>>>>> 6f2f3ae2ad3e365f94bbf19c01a1d1056dad3895
 def add_mim_extension():
     """Add extra files that are required to support MIM into the package.
 
