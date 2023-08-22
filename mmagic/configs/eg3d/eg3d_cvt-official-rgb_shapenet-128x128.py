@@ -7,10 +7,10 @@
 from mmengine.config import read_base
 from mmengine.dataset import DefaultSampler
 
-from mmagic.datasets.basic_conditional_dataset import BasicConditionalDataset
+from mmagic.datasets import BasicConditionalDataset
 from mmagic.datasets.transforms import LoadImageFromFile, PackInputs
 from mmagic.engine import VisualizationHook
-from mmagic.models.data_preprocessors.data_preprocessor import DataPreprocessor
+from mmagic.models.data_preprocessors import DataPreprocessor
 from mmagic.models.editors.eg3d import EG3D, TriplaneGenerator, UniformCamera
 
 with read_base():
