@@ -144,7 +144,7 @@ workflows:
           name: minimum_version_cpu
           torch: 1.8.1
           torchvision: 0.9.1
-          python: 3.7.4
+          python: 3.8.15
           requires:
             - lint
       - build_cpu:
