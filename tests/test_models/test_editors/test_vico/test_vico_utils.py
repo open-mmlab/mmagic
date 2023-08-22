@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 
 import pytest
+import platform
+
 from diffusers.models.unet_2d_condition import UNet2DConditionModel
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
@@ -9,8 +11,10 @@ from mmagic.models.editors.vico.vico_utils import set_vico_modules
 
 
 @pytest.mark.skipif(
-    digit_version(TORCH_VERSION) <= digit_version('1.8.1'),
-    reason='get_submodule requires torch >= 1.9.0')
+    'win' in platform.system().lower()
+    or digit_version(TORCH_VERSION) <= digit_version('1.8.1'),
+    reason='skip on windows due to limited RAM'
+    'and get_submodule requires torch >= 1.9.0')
 def test_set_vico_modules():
     model = UNet2DConditionModel()
     image_cross_layers = [1] * 16
