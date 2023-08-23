@@ -18,17 +18,17 @@ Models:
     Metrics:
       PSNR: 38.324
       SSIM: 0.9626
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: Set14
     Metrics:
       PSNR: 34.1174
       SSIM: 0.923
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: DIV2K
     Metrics:
       PSNR: 37.8921
       SSIM: 0.9481
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k-ed2d419e.pth
 - Config: configs/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
@@ -38,17 +38,17 @@ Models:
     Metrics:
       PSNR: 34.864
       SSIM: 0.9317
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: Set14
     Metrics:
       PSNR: 30.7669
       SSIM: 0.8508
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: DIV2K
     Metrics:
       PSNR: 34.1397
       SSIM: 0.8917
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x3s48w8d6e180_8xb4-lr2e-4-500k_div2k-926950f1.pth
 - Config: configs/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
@@ -58,17 +58,17 @@ Models:
     Metrics:
       PSNR: 32.7315
       SSIM: 0.9029
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: Set14
     Metrics:
       PSNR: 28.9065
       SSIM: 0.7915
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: DIV2K
     Metrics:
       PSNR: 32.0953
       SSIM: 0.8418
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x4s48w8d6e180_8xb4-lr2e-4-500k_div2k-88e4903d.pth
 - Config: configs/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
   In Collection: SwinIR
@@ -78,17 +78,17 @@ Models:
     Metrics:
       PSNR: 38.3971
       SSIM: 0.9629
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: Set14
     Metrics:
       PSNR: 34.4149
       SSIM: 0.9252
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: DIV2K
     Metrics:
       PSNR: 37.9473
       SSIM: 0.9488
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x2s64w8d6e180_8xb4-lr2e-4-500k_df2k-69e15fb6.pth
 - Config: configs/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
   In Collection: SwinIR
@@ -98,17 +98,17 @@ Models:
     Metrics:
       PSNR: 34.9335
       SSIM: 0.9323
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: Set14
     Metrics:
       PSNR: 30.9258
       SSIM: 0.854
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: DIV2K
     Metrics:
       PSNR: 34.283
       SSIM: 0.8939
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x3s64w8d6e180_8xb4-lr2e-4-500k_df2k-d6982f7b.pth
 - Config: configs/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k.py
   In Collection: SwinIR
@@ -118,17 +118,17 @@ Models:
     Metrics:
       PSNR: 32.9214
       SSIM: 0.9053
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: Set14
     Metrics:
       PSNR: 29.0792
       SSIM: 0.7953
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: DIV2K
     Metrics:
       PSNR: 32.3021
       SSIM: 0.8451
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x4s64w8d6e180_8xb4-lr2e-4-500k_df2k-0502d775.pth
 - Config: configs/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
@@ -138,17 +138,17 @@ Models:
     Metrics:
       PSNR: 38.1289
       SSIM: 0.9617
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: Set14
     Metrics:
       PSNR: 33.8404
       SSIM: 0.9207
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: DIV2K
     Metrics:
       PSNR: 37.5844
       SSIM: 0.9459
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x2s64w8d4e60_8xb4-lr2e-4-500k_div2k-131d3f64.pth
 - Config: configs/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
@@ -158,17 +158,17 @@ Models:
     Metrics:
       PSNR: 34.6037
       SSIM: 0.9293
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: Set14
     Metrics:
       PSNR: 30.534
       SSIM: 0.8468
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: DIV2K
     Metrics:
       PSNR: 33.8394
       SSIM: 0.8867
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x3s64w8d4e60_8xb4-lr2e-4-500k_div2k-309cb239.pth
 - Config: configs/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k.py
   In Collection: SwinIR
@@ -178,17 +178,17 @@ Models:
     Metrics:
       PSNR: 32.4343
       SSIM: 0.8984
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: Set14
     Metrics:
       PSNR: 28.7441
       SSIM: 0.7861
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   - Dataset: DIV2K
     Metrics:
       PSNR: 31.8636
       SSIM: 0.8353
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_x4s64w8d4e60_8xb4-lr2e-4-500k_div2k-d6622d03.pth
 - Config: configs/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
@@ -197,7 +197,7 @@ Models:
   - Dataset: RealSRSet+5images
     Metrics:
       NIQE: 5.7975
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-c6425057.pth
 - Config: configs/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
@@ -206,7 +206,7 @@ Models:
   - Dataset: RealSRSet+5images
     Metrics:
       NIQE: 7.2738
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x2s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-6f0c425f.pth
 - Config: configs/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
@@ -215,7 +215,7 @@ Models:
   - Dataset: RealSRSet+5images
     Metrics:
       NIQE: 5.2329
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-36960d18.pth
 - Config: configs/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
@@ -224,7 +224,7 @@ Models:
   - Dataset: RealSRSet+5images
     Metrics:
       NIQE: 7.746
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_psnr-x4s64w8d6e180_8xb4-lr1e-4-600k_df2k-os-a016a72f.pth
 - Config: configs/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
@@ -233,7 +233,7 @@ Models:
   - Dataset: RealSRSet+5images
     Metrics:
       NIQE: 5.1464
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-os-9f1599b5.pth
 - Config: configs/swinir/swinir_psnr-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-ost.py
   In Collection: SwinIR
@@ -242,7 +242,7 @@ Models:
   - Dataset: RealSRSet+5images
     Metrics:
       NIQE: 7.6378
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_gan-x4s64w8d9e240_8xb4-lr1e-4-600k_df2k-os-9f1599b5.pth
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15.py
   In Collection: SwinIR
@@ -251,15 +251,15 @@ Models:
   - Dataset: Set12
     Metrics:
       PSNR: 33.9731
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: BSD68
     Metrics:
       PSNR: 32.5203
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: Urban100
     Metrics:
       PSNR: 34.3424
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN15-6782691b.pth
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25.py
   In Collection: SwinIR
@@ -268,15 +268,15 @@ Models:
   - Dataset: Set12
     Metrics:
       PSNR: 31.6434
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: BSD68
     Metrics:
       PSNR: 30.1377
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: Urban100
     Metrics:
       PSNR: 31.9493
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN25-d0d8d4da.pth
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50.py
   In Collection: SwinIR
@@ -285,15 +285,15 @@ Models:
   - Dataset: Set12
     Metrics:
       PSNR: 28.5651
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: BSD68
     Metrics:
       PSNR: 27.3157
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: Urban100
     Metrics:
       PSNR: 28.6626
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-grayDN50-54c9968a.pth
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15.py
   In Collection: SwinIR
@@ -302,19 +302,19 @@ Models:
   - Dataset: CBSD68
     Metrics:
       PSNR: 34.4136
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: Kodak24
     Metrics:
       PSNR: 35.3555
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: McMaster
     Metrics:
       PSNR: 35.6205
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: Urban100
     Metrics:
       PSNR: 35.1836
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN15-c74a2cee.pth
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25.py
   In Collection: SwinIR
@@ -323,19 +323,19 @@ Models:
   - Dataset: CBSD68
     Metrics:
       PSNR: 31.7626
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: Kodak24
     Metrics:
       PSNR: 32.9003
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: McMaster
     Metrics:
       PSNR: 33.3198
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: Urban100
     Metrics:
       PSNR: 32.9458
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN25-df2b1c0c.pth
 - Config: configs/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50.py
   In Collection: SwinIR
@@ -344,19 +344,19 @@ Models:
   - Dataset: CBSD68
     Metrics:
       PSNR: 28.5346
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: Kodak24
     Metrics:
       PSNR: 29.8058
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: McMaster
     Metrics:
       PSNR: 30.2027
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   - Dataset: Urban100
     Metrics:
       PSNR: 29.8832
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: Image denoising
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s128w8d6e180_8xb1-lr2e-4-1600k_dfwb-colorDN50-e369874c.pth
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10.py
   In Collection: SwinIR
@@ -366,12 +366,12 @@ Models:
     Metrics:
       PSNR: 30.2746
       SSIM: 0.8254
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   - Dataset: LIVE1
     Metrics:
       PSNR: 29.8611
       SSIM: 0.8292
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR10-da93c8e9.pth
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20.py
   In Collection: SwinIR
@@ -381,12 +381,12 @@ Models:
     Metrics:
       PSNR: 32.5331
       SSIM: 0.8753
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   - Dataset: LIVE1
     Metrics:
       PSNR: 32.2667
       SSIM: 0.8914
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR20-d47367b1.pth
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30.py
   In Collection: SwinIR
@@ -396,12 +396,12 @@ Models:
     Metrics:
       PSNR: 33.7504
       SSIM: 0.8966
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   - Dataset: LIVE1
     Metrics:
       PSNR: 33.7001
       SSIM: 0.9179
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR30-52c083cf.pth
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40.py
   In Collection: SwinIR
@@ -411,12 +411,12 @@ Models:
     Metrics:
       PSNR: 34.5377
       SSIM: 0.9087
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   - Dataset: LIVE1
     Metrics:
       PSNR: 34.6846
       SSIM: 0.9322
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-grayCAR40-803e8d9b.pth
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10.py
   In Collection: SwinIR
@@ -426,12 +426,12 @@ Models:
     Metrics:
       PSNR: 30.1019
       SSIM: 0.8217
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   - Dataset: LIVE1
     Metrics:
       PSNR: 28.0676
       SSIM: 0.8094
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR10-09aafadc.pth
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20.py
   In Collection: SwinIR
@@ -441,12 +441,12 @@ Models:
     Metrics:
       PSNR: 32.3489
       SSIM: 0.8727
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   - Dataset: LIVE1
     Metrics:
       PSNR: 30.4514
       SSIM: 0.8745
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR20-b8a42b5e.pth
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30.py
   In Collection: SwinIR
@@ -456,12 +456,12 @@ Models:
     Metrics:
       PSNR: 33.6028
       SSIM: 0.8949
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   - Dataset: LIVE1
     Metrics:
       PSNR: 31.8235
       SSIM: 0.9023
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR30-e9fe6859.pth
 - Config: configs/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40.py
   In Collection: SwinIR
@@ -471,10 +471,10 @@ Models:
     Metrics:
       PSNR: 34.4344
       SSIM: 0.9076
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   - Dataset: LIVE1
     Metrics:
       PSNR: 32.761
       SSIM: 0.9179
-    Task: Image Super-Resolution, Image denoising, JPEG compression artifact reduction
+    Task: JPEG compression artifact reduction
   Weights: https://download.openmmlab.com/mmediting/swinir/swinir_s126w7d6e180_8xb1-lr2e-4-1600k_dfwb-colorCAR40-5b77a6e6.pth

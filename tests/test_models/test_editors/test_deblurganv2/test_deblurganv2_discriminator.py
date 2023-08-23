@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 
@@ -8,6 +10,9 @@ from mmagic.models.editors.deblurganv2.deblurganv2_discriminator import \
 from mmagic.registry import MODELS
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 class TestDeblurGanv2Discriminator(object):
 
     @classmethod
