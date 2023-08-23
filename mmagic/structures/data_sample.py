@@ -244,11 +244,6 @@ class DataSample(BaseDataElement):
             self.gt_label = label
         return self
 
-    def set_gt_prompt(self, value: Union[str, Sequence[str]]) -> 'DataSample':
-        """Set gt prompt."""
-        self.prompt = value
-        return self
-
     @property
     def gt_label(self):
         """This the function to fetch gt label.
