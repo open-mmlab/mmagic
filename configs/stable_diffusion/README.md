@@ -41,11 +41,11 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 
 ## Pretrained models
 
-|                                        Model                                         | Dataset | Download |
-| :----------------------------------------------------------------------------------: | :-----: | :------: |
-|          [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py)           |    -    |    -     |
-| [stable_diffusion_v1.5_tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     |
-|  [stable_diffusion_v1.5_inpaint](./stable-diffusion_ddim_denoisingunet-inpaint.py)   |    -    |    -     |
+|                                        Model                                         |    Task    | Dataset | Download |
+| :----------------------------------------------------------------------------------: | :--------: | :-----: | :------: |
+|          [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py)           | Text2Image |    -    |    -     |
+| [stable_diffusion_v1.5_tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) | Text2Image |    -    |    -     |
+|  [stable_diffusion_v1.5_inpaint](./stable-diffusion_ddim_denoisingunet-inpaint.py)   | Inpainting |    -    |    -     |
 
 We use stable diffusion v1.5 weights. This model has several weights including vae, unet and clip.
 
@@ -205,10 +205,10 @@ for ratio in ratios:
 
 Here are some inference performance comparisons running on **single RTX 3090** with `torch 2.0.0+cu118` as backends. The results are reasonable, when enabling `xformers`, the speed-up ratio is a little bit lower. But `tomesd` still effectively reduces the inference time. It is especially recommended that enable `tomesd` when the `image_size` and `num_images_per_prompt` are large, since the number of similar tokens are larger and `tomesd` can achieve better performance.
 
-|                                   Model                                    | Dataset | Download | xformer |            Ratio            | Size / Num images per prompt |                     Time (s)                      |
-| :------------------------------------------------------------------------: | :-----: | :------: | :-----: | :-------------------------: | :--------------------------: | :-----------------------------------------------: |
-| [stable_diffusion_v1.5-tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     |   w/o   | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 542.20 <br> 427.65 (↓21.1%) <br>  393.05 (↓27.5%) |
-| [stable_diffusion_v1.5-tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) |    -    |    -     |   w/    | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 541.64 <br> 428.53 (↓20.9%) <br>  396.38 (↓26.8%) |
+|                              Model                               |    Task    | Dataset | Download | xformer |            Ratio            | Size / Num images per prompt |                     Time (s)                      |
+| :--------------------------------------------------------------: | :--------: | :-----: | :------: | :-----: | :-------------------------: | :--------------------------: | :-----------------------------------------------: |
+| [stable_diffusion_v1.5-tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) | Text2Image |    -    |    -     |   w/o   | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 542.20 <br> 427.65 (↓21.1%) <br>  393.05 (↓27.5%) |
+| [stable_diffusion_v1.5-tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) | Text2Image |    -    |    -     |   w/    | w/o tome <br> 0.5 <br> 0.75 |         512  /    5          | 541.64 <br> 428.53 (↓20.9%) <br>  396.38 (↓26.8%) |
 
 <table align="center">
 <thead>
