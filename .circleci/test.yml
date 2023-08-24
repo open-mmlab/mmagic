@@ -63,7 +63,6 @@ jobs:
             pip install -U openmim
             mim install 'mmcv >= 2.0.0'
             pip install -r requirements/tests.txt
-            pip install scipy==1.7.2
       - run:
           name: Build and install
           command: |
@@ -107,7 +106,6 @@ jobs:
             docker exec mmagic pip install -U openmim
             docker exec mmagic mim install 'mmcv >= 2.0.0'
             docker exec mmagic pip install -r requirements/tests.txt
-            docker exec mmagic pip install 'scipy == 1.7.2'
       - run:
           name: Build and install
           command: |
@@ -142,16 +140,16 @@ workflows:
                 - main
       - build_cpu:
           name: minimum_version_cpu
-          torch: 1.8.1
-          torchvision: 0.9.1
-          python: 3.7.4
+          torch: 1.10.0
+          torchvision: 0.11.0
+          python: 3.8.15
           requires:
             - lint
       - build_cpu:
           name: maximum_version_cpu
           torch: 1.13.0
           torchvision: 0.14.0
-          python: 3.9.0
+          python: 3.8.15
           requires:
             - minimum_version_cpu
       - hold:
