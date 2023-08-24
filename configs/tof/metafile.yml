@@ -16,11 +16,11 @@ Models:
   - Dataset: Vimeo90k-triplet
     Metrics:
       PSNR: 33.3294
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Interpolation
   - Dataset: Vimeo90k-triplet
     Metrics:
       SSIM: 0.9465
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_chair_nobn_1xb1_vimeo90k_20220321-2fc9e258.pth
 - Config: configs/tof/tof_spynet-kitti-wobn_1xb1_vimeo90k-triplet.py
   In Collection: TOFlow
@@ -29,11 +29,11 @@ Models:
   - Dataset: Vimeo90k-triplet
     Metrics:
       PSNR: 33.3339
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Interpolation
   - Dataset: Vimeo90k-triplet
     Metrics:
       SSIM: 0.9466
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_kitti_nobn_1xb1_vimeo90k_20220321-3f7ca4cd.pth
 - Config: configs/tof/tof_spynet-sintel-wobn-clean_1xb1_vimeo90k-triplet.py
   In Collection: TOFlow
@@ -42,11 +42,11 @@ Models:
   - Dataset: Vimeo90k-triplet
     Metrics:
       PSNR: 33.317
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Interpolation
   - Dataset: Vimeo90k-triplet
     Metrics:
       SSIM: 0.9464
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_sintel_clean_nobn_1xb1_vimeo90k_20220321-6e52a6fd.pth
 - Config: configs/tof/tof_spynet-sintel-wobn-final_1xb1_vimeo90k-triplet.py
   In Collection: TOFlow
@@ -55,11 +55,11 @@ Models:
   - Dataset: Vimeo90k-triplet
     Metrics:
       PSNR: 33.3237
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Interpolation
   - Dataset: Vimeo90k-triplet
     Metrics:
       SSIM: 0.9465
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_sintel_final_nobn_1xb1_vimeo90k_20220321-8ab70dbb.pth
 - Config: configs/tof/tof_spynet-pytoflow-wobn_1xb1_vimeo90k-triplet.py
   In Collection: TOFlow
@@ -68,11 +68,11 @@ Models:
   - Dataset: Vimeo90k-triplet
     Metrics:
       PSNR: 33.3426
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Interpolation
   - Dataset: Vimeo90k-triplet
     Metrics:
       SSIM: 0.9467
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/video_interpolators/toflow/tof_vfi_spynet_pytoflow_nobn_1xb1_vimeo90k_20220321-5f4b243e.pth
 - Config: configs/tof/tof_x4_official_vimeo90k.py
   In Collection: TOFlow
@@ -83,5 +83,5 @@ Models:
       Vid4:
         PSNR: 24.4377
         SSIM: 0.7433
-    Task: Video Interpolation, Video Super-Resolution
+    Task: Video Super-Resolution
   Weights: https://download.openmmlab.com/mmediting/restorers/tof/tof_x4_vimeo90k_official-a569ff50.pth
