@@ -1,7 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
 from copy import deepcopy
 from unittest import TestCase
 
+import pytest
 import torch
 from mmengine import MessageHub
 from mmengine.optim import OptimWrapper, OptimWrapperDict
@@ -29,6 +31,9 @@ discriminator = dict(
 )
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 class TestDeblurGanV2(TestCase):
 
     def test_init(self):
