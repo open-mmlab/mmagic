@@ -51,6 +51,7 @@ Prompt-to-prompt Editing
 </div>
 
 - Support Attention Injection for more stable video generation with controlnet. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/controlnet_animation/README.md)
+- Support Stable Diffusion Inpainting. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion/README.md)
 
 **New Features & Improvements**
 
@@ -64,6 +65,7 @@ Prompt-to-prompt Editing
 - \[Enhancement\] Support Prompt-to-prompt, ddim inversion and null-text inversion by @FerryHuang in https://github.com/open-mmlab/mmagic/pull/1908
 - \[CodeCamp2023-302\] Support MMagic visualization and write a user guide  by @aptsunny in https://github.com/open-mmlab/mmagic/pull/1939
 - \[Feature\] Support Textual Inversion by @LeoXing1996 in https://github.com/open-mmlab/mmagic/pull/1822
+- \[Feature\] Support stable diffusion inpaint by @Taited in https://github.com/open-mmlab/mmagic/pull/1976
 - \[Enhancement\] Adopt `BaseModule` for some models by @LeoXing1996 in https://github.com/open-mmlab/mmagic/pull/1543
 - \[MMSIG\]支持 DeblurGANv2 inference by @xiaomile in https://github.com/open-mmlab/mmagic/pull/1955
 - \[CodeCamp2023-647\] Add new configs of EG3D by @RangeKing in https://github.com/open-mmlab/mmagic/pull/1985

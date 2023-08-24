@@ -51,6 +51,7 @@ Prompt-to-prompt 编辑
 </div>
 
 - 支持了 Attention Injection 以便使用 controlnet 生成更稳定的视频. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/controlnet_animation/README.md)
+- 支持了 Stable Diffusion Inpainting. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion/README.md)
 
 **新功能和改进**
 

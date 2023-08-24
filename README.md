@@ -62,6 +62,7 @@ English | [简体中文](README_zh-CN.md)
 - Support Prompt-to-prompt, DDIM Inversion and Null-text Inversion. [Click to View.](https://github.com/open-mmlab/mmagic/blob/main/projects/prompt_to_prompt/README.md)
 - Support Textual Inversion. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/textual_inversion/README.md)
 - Support Attention Injection for more stable video generation with controlnet. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/controlnet_animation/README.md)
+- Support Stable Diffusion Inpainting. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion/README.md)
 - More detailed documentation. [Click to view.](https://mmagic.readthedocs.io/en/latest/)
 
 We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration).

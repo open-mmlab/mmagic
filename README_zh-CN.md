@@ -62,6 +62,7 @@
 - 支持了 Prompt-to-prompt, DDIM Inversion 和 Null-text Inversion. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/projects/prompt_to_prompt/README.md)
 - 支持了 Textual Inversion. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/textual_inversion/README.md)
 - 支持了 Attention Injection 以便使用 controlnet 生成更稳定的视频. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/controlnet_animation/README.md)
+- 支持了 Stable Diffusion Inpainting. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion/README.md)
 - 更详尽的文档. [点击查看.](https://mmagic.readthedocs.io/zh_CN/latest/)
 
 我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
