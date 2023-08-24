@@ -1,16 +1,20 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import math
 from dataclasses import dataclass
+from typing import Optional
 
 import torch
 import torch.nn.functional as F
-from diffusers.models.attention import FeedForward
-# from diffusers.models.cross_attention import CrossAttention
-from diffusers.models.attention_processor import Attention as CrossAttention
 from diffusers.utils import BaseOutput
 from diffusers.utils.import_utils import is_xformers_available
 from einops import rearrange, repeat
 from torch import nn
+
+from mmagic.models.editors.ddpm.attention import GEGLU, ApproximateGELU
+# from diffusers.models.attention import FeedForward
+# from diffusers.models.cross_attention import CrossAttention
+# from diffusers.models.attention_processor import Attention as CrossAttention
+from .attention_3d import CrossAttention
 
 
 def zero_module(module):
@@ -305,7 +309,7 @@ class VersatileAttention(CrossAttention):
                 temporal_position_encoding
                 and attention_mode == 'Temporal') else None
 
-        self._use_memory_efficient_attention_xformers = True
+        self._use_memory_efficient_attention_xformers = False
 
     def extra_repr(self):
         """return module information."""
@@ -423,4 +427,74 @@ class VersatileAttention(CrossAttention):
             hidden_states = rearrange(
                 hidden_states, '(b d) f c -> (b f) d c', d=d)
 
+        return hidden_states
+
+
+class FeedForward(nn.Module):
+    r"""
+    A feed-forward layer.
+
+    Parameters:
+        dim (`int`): The number of channels in the input.
+        dim_out (`int`, *optional*):
+        The number of channels in the output. If not given, defaults to `dim`.
+        mult (`int`, *optional*, defaults to 4):
+        The multiplier to use for the hidden dimension.
+        dropout (`float`, *optional*, defaults to 0.0):
+        The dropout probability to use.
+        activation_fn (`str`, *optional*, defaults to `"geglu"`):
+        Activation function to be used in feed-forward.
+    """
+
+    def __init__(
+        self,
+        dim: int,
+        dim_out: Optional[int] = None,
+        mult: int = 4,
+        dropout: float = 0.0,
+        activation_fn: str = 'geglu',
+    ):
+        super().__init__()
+        inner_dim = int(dim * mult)
+        dim_out = dim_out if dim_out is not None else dim
+
+        if activation_fn == 'gelu':
+            act_fn = GELU(dim, inner_dim)
+        elif activation_fn == 'geglu':
+            act_fn = GEGLU(dim, inner_dim)
+        elif activation_fn == 'geglu-approximate':
+            act_fn = ApproximateGELU(dim, inner_dim)
+
+        self.net = nn.ModuleList([])
+        # project in
+        self.net.append(act_fn)
+        # project dropout
+        self.net.append(nn.Dropout(dropout))
+        # project out
+        self.net.append(nn.Linear(inner_dim, dim_out))
+
+    def forward(self, hidden_states):
+        for module in self.net:
+            hidden_states = module(hidden_states)
+        return hidden_states
+
+
+class GELU(nn.Module):
+    r"""
+    GELU activation function
+    """
+
+    def __init__(self, dim_in: int, dim_out: int):
+        super().__init__()
+        self.proj = nn.Linear(dim_in, dim_out)
+
+    def gelu(self, gate):
+        if gate.device.type != 'mps':
+            return F.gelu(gate)
+        # mps: gelu is not implemented for float16
+        return F.gelu(gate.to(dtype=torch.float32)).to(dtype=gate.dtype)
+
+    def forward(self, hidden_states):
+        hidden_states = self.proj(hidden_states)
+        hidden_states = self.gelu(hidden_states)
         return hidden_states
