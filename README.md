@@ -365,6 +365,7 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
           <li><a href="configs/partial_conv/README.md">PConv (ECCV'2018)</a></li>
           <li><a href="configs/deepfillv2/README.md">DeepFillv2 (CVPR'2019)</a></li>
           <li><a href="configs/aot_gan/README.md">AOT-GAN (TVCG'2019)</a></li>
+          <li><a href="configs/stable_diffusion/README.md">Stable Diffusion Inpainting (CVPR'2022)</a></li>
         </ul>
       </td>
       <td>
@@ -381,6 +382,9 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
           <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
           <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
           <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
+          <li><a href="configs/textual_inversion/README.md">Textual Inversion (2022)</a></li>
+          <li><a href="projects/prompt_to_prompt/README.md">Prompt-to-Prompt (2022)</a></li>
+          <li><a href="projects/prompt_to_prompt/README.md">Null-text Inversion (2022)</a></li>
           <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
           <li><a href="configs/controlnet_animation/README.md">ControlNet Animation (2023)</a></li>
         </ul>
