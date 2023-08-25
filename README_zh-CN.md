@@ -116,6 +116,8 @@
 
 如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmagic/tree/master) MMEditing 0.x 迁移到新版本 MMagic 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
 
+<div id="table" align="center"></div>
+
 ## 📄 目录
 
 - [📖 介绍](#-介绍)
@@ -127,8 +129,6 @@
 - [🎫 许可证](#-许可证)
 - [🏗️ ️OpenMMLab 的其他项目](#%EF%B8%8F-️openmmlab-的其他项目)
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
-
 ## 📖 介绍
 
 MMagic 是基于 PyTorch 的图像&视频编辑和生成开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
@@ -137,7 +137,7 @@ MMagic 是基于 PyTorch 的图像&视频编辑和生成开源工具箱。是 [O
 
 https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4
 
-主分支代码的最佳实践基于 **Python 3.8+** 和 **PyTorch 1.9+** 。
+主分支代码的最佳实践基于 **Python 3.8+** 和 **PyTorch 1.10+** 。
 
 ### ✨ 主要特性
 
@@ -153,7 +153,7 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
   通过 OpenMMLab 2.0 框架的 MMEngine 和 MMCV， MMagic 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。我们可以像搭建“乐高”一样定义训练流程，提供丰富的组件和策略。在 MMagic 中，你可以使用不同的 APIs 完全控制训练流程。得益于 [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), 动态模型结构的分布式训练可以轻松实现。
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🙌 参与贡献
 
@@ -167,7 +167,7 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 感谢您为改善 MMagic 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/blob/main/CONTRIBUTING_zh-CN.md) 和 MMEngine 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING_zh-CN.md) 以获取贡献指南。
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🛠️ 安装
 
@@ -395,7 +395,7 @@ pip3 install -e .
 
 请参考[模型库](https://mmagic.readthedocs.io/zh_CN/latest/model_zoo/overview.html)了解详情。
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🤝 致谢
 
@@ -405,7 +405,7 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
   <img src="https://contrib.rocks/image?repo=open-mmlab/mmagic" />
 </a>
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🖊️ 引用
 
@@ -429,13 +429,13 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
 }
 ```
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🎫 许可证
 
 本项目开源自 [Apache 2.0 license](LICENSE)。
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🏗️ ️OpenMMLab 的其他项目
 
@@ -459,7 +459,7 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
 - [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab 新一代人工智能内容生成（AIGC）工具箱
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab 模型部署框架
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 欢迎加入 OpenMMLab 社区
 
