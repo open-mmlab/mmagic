@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 cifar_pipeline = [dict(type='PackInputs')]
 cifar_dataset = dict(
     type='CIFAR10',

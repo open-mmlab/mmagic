@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from mmengine.config import read_base
 
 from mmagic.engine import VisualizationHook
