@@ -7,13 +7,13 @@ from mmagic.models.editors.biggan import (BigGAN, BigGANDiscriminator,
                                           BigGANGenerator)
 
 with read_base():
-    from .._base_.datasets.imagenet_noaug_128 import *
-    from .._base_.gen_default_runtime import *
+    from .._base_.datasets.imagenet_noaug_128 import *  # noqa: F401,F403
+    from .._base_.gen_default_runtime import *  # noqa: F401,F403
 
 # setting image size to 512x512
-train_dataloader.dataset.pipeline[2].scale = (512, 512)
-test_dataloader.dataset.pipeline[2].scale = (512, 512)
-val_dataloader.dataset.pipeline[2].scale = (512, 512)
+train_dataloader.dataset.pipeline[2].scale = (512, 512)  # noqa: F405
+test_dataloader.dataset.pipeline[2].scale = (512, 512)  # noqa: F405
+val_dataloader.dataset.pipeline[2].scale = (512, 512)  # noqa: F405
 
 ema_config = dict(
     type='ExponentialMovingAverage',

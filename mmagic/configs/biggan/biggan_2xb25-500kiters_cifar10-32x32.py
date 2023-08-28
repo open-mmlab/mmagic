@@ -10,8 +10,8 @@ from mmagic.models.editors.biggan import (BigGAN, BigGANDiscriminator,
 # define model
 
 with read_base():
-    from .._base_.datasets.cifar10_noaug import *
-    from .._base_.gen_default_runtime import *
+    from .._base_.datasets.cifar10_noaug import *  # noqa: F401,F403
+    from .._base_.gen_default_runtime import *  # noqa: F401,F403
 ema_config = dict(
     type='ExponentialMovingAverage',
     interval=1,
