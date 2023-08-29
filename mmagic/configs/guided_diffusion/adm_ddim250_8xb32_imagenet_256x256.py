@@ -41,7 +41,7 @@ model = dict(
     rgb2bgr=True,
     use_fp16=False)
 
-test_dataloader = dict(batch_size=32, num_workers=8)
+test_dataloader.update(dict(batch_size=32, num_workers=8))
 train_cfg = dict(max_iters=100000)
 metrics = [
     dict(
