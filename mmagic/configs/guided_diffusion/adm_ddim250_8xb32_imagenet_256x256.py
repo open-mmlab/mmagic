@@ -2,8 +2,8 @@
 from mmengine.config import read_base
 
 with read_base():
-    from .._base_.datasets.imagenet_64 import *  # noqa: F401,F403
-    from .._base_.gen_default_runtime import *  # noqa: F401,F403
+    from .._base_.datasets.imagenet_64 import *
+    from .._base_.gen_default_runtime import *
 
 from mmagic.engine.hooks.visualization_hook import VisualizationHook
 from mmagic.evaluation.metrics import FrechetInceptionDistance

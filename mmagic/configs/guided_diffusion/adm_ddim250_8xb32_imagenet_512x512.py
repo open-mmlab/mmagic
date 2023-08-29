@@ -2,8 +2,8 @@
 from mmengine.config import read_base
 
 with read_base():
-    from .._base_.datasets.imagenet_512 import *  # noqa: F401,F403
-    from .._base_.gen_default_runtime import *  # noqa: F401,F403
+    from .._base_.datasets.imagenet_512 import *
+    from .._base_.gen_default_runtime import *
 
 from mmagic.evaluation.metrics import FrechetInceptionDistance
 from mmagic.models.data_preprocessors.data_preprocessor import DataPreprocessor
