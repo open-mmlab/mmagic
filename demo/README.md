@@ -296,6 +296,12 @@ python demo/mmagic_inference_demo.py \
 
 First, put your checkpoint path in `./checkpoints`, *e.g.* `./checkpoints/stylegan2_lions_512_pytorch_mmagic.pth`
 
+```shell
+mkdir checkpoints
+cd checkpoints
+wget -O stylegan2_lions_512_pytorch_mmagic.pth https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-Lions-internet
+```
+
 Then, try on the script:
 
 ```shell

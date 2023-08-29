@@ -26,3 +26,14 @@ Models:
       Recall50k: 0.0
     Task: DragGAN
   Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-elephants-internet
+- Config: configs/draggan/stylegan2_256x256.py
+  In Collection: DragGAN
+  Name: stylegan2_256x256
+  Results:
+  - Dataset: LSUN-Horse
+    Metrics:
+      FID50k: 0.0
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: DragGAN
+  Weights: ./checkpoints/256.pth

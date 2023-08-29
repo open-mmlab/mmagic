@@ -48,6 +48,7 @@ showcase the manipulation of real images through GAN inversion.
 | :--------------------------------------------------: | :----------------: | :---------------------: | :----: | :----------: | :-------: | :------------------------------------------------------------------------------: |
 |   [stylegan2_lion_512x512](./stylegan2_512x512.py)   |   Internet Lions   | self-distilled StyleGAN |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-Lions-internet) |
 | [stylegan2_elphants_512x512](./stylegan2_512x512.py) | Internet Elephants | self-distilled StyleGAN |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-elephants-internet) |
+|  [stylegan2_horses_256x256](./stylegan2_256x256.py)  |     LSUN-Horse     |                         |  0.0   |     0.0      |    0.0    |                          [model](./checkpoints/256.pth)                          |
 
 ## Citation
 
