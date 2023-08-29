@@ -44,10 +44,10 @@ showcase the manipulation of real images through GAN inversion.
 <td><img src="https://github.com/open-mmlab/mmagic/assets/55343765/6fab1ccd-e190-4cd0-a8d5-0e843f65930b" border=0></td>
 </tr></table>
 
-|                           Model                           |      Dataset       |         Comment         | FID50k | Precision50k | Recall50k |                                  Download                                   |
-| :-------------------------------------------------------: | :----------------: | :---------------------: | :----: | :----------: | :-------: | :-------------------------------------------------------------------------: |
-|   [stylegan2_lion_512x512](./stylegan2_lion_512x512.py)   |   Internet Lions   | self-distilled StyleGAN |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-Lions-internet) |
-| [stylegan2_elphants_512x512](./stylegan2_lion_512x512.py) | Internet Elephants | self-distilled StyleGAN |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-elephants-internet) |
+|                        Model                         |      Dataset       |         Comment         | FID50k | Precision50k | Recall50k |                                     Download                                     |
+| :--------------------------------------------------: | :----------------: | :---------------------: | :----: | :----------: | :-------: | :------------------------------------------------------------------------------: |
+|   [stylegan2_lion_512x512](./stylegan2_512x512.py)   |   Internet Lions   | self-distilled StyleGAN |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-Lions-internet) |
+| [stylegan2_elphants_512x512](./stylegan2_512x512.py) | Internet Elephants | self-distilled StyleGAN |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-elephants-internet) |
 
 ## Citation
 

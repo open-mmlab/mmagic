@@ -9,9 +9,9 @@ Collections:
   - draggan
   Year: 2023
 Models:
-- Config: configs/draggan/stylegan2_lion_512x512.py
+- Config: configs/draggan/stylegan2_512x512.py
   In Collection: DragGAN
-  Name: stylegan2_lion_512x512
+  Name: stylegan2_512x512
   Results:
   - Dataset: InternetLions
     Metrics:
