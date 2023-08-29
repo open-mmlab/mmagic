@@ -91,7 +91,7 @@ Models:
       Precision50k: 0.0
       Recall50k: 0.0
     Task: Unconditional GANs
-  Weights: ./checkpoints/stylegan2_lions_512_pytorch.pth
+  Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-Lions-internet
 - Config: configs/styleganv2/stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256.py
   In Collection: StyleGANv2
   Name: stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256
