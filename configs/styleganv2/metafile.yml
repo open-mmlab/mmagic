@@ -85,9 +85,9 @@ Models:
   In Collection: StyleGANv2
   Name: stylegan2_lion_512x512
   Results:
-  - Dataset: FHQ
+  - Dataset: InternetLions
     Metrics:
-      FID50k: 2.4116
+      FID50k: 0.0
       Precision50k: 0.0
       Recall50k: 0.0
     Task: Unconditional GANs
