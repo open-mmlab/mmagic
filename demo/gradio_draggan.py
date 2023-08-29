@@ -191,9 +191,9 @@ def preprocess_mask_info(global_state, image):
 
 
 valid_checkpoints_dict = {
-    f.split('/')[-1].split('.')[0]: osp.join(cache_dir, f)
+    f.split('/')[-1]: osp.join(cache_dir, f)
     for f in os.listdir(cache_dir)
-    if (f.endswith('pkl') and osp.exists(osp.join(cache_dir, f)))
+    if (f.endswith('pth') and osp.exists(osp.join(cache_dir, f)))
 }
 print(f'File under cache_dir ({cache_dir}):')
 print(os.listdir(cache_dir))
