@@ -236,8 +236,8 @@ class Renderer:
                      **kwargs):
         # Dig up network details.
         editor = MMagicInferencer(
-            'styleganv2',
-            model_setting=6,
+            'draggan',
+            model_setting=0,
             model_ckpt=ckpt_pth,
         )
         self.editor = editor

@@ -2,7 +2,7 @@
 
 > [Drag Your GAN: Interactive Point-based Manipulation on the Generative Image Manifold](https://arxiv.org/pdf/2305.10973.pdf)
 
-> **Task**: Image Editing
+> **Task**: DragGAN
 
 <!-- [ALGORITHM] -->
 

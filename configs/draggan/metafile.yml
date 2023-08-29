@@ -6,7 +6,7 @@ Collections:
     URL: https://arxiv.org/pdf/2305.10973.pdf
   README: configs/draggan/README.md
   Task:
-  - image editing
+  - draggan
   Year: 2023
 Models:
 - Config: configs/draggan/stylegan2_lion_512x512.py
@@ -18,11 +18,11 @@ Models:
       FID50k: 0.0
       Precision50k: 0.0
       Recall50k: 0.0
-    Task: Image Editing
+    Task: DragGAN
   - Dataset: InternetElephants
     Metrics:
       FID50k: 0.0
       Precision50k: 0.0
       Recall50k: 0.0
-    Task: Image Editing
+    Task: DragGAN
   Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-elephants-internet

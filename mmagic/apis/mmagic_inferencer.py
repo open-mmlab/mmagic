@@ -115,7 +115,10 @@ class MMagicInferencer:
         'eg3d',
 
         # diffusers inferencer
-        'controlnet_animation'
+        'controlnet_animation',
+
+        # draggan
+        'draggan'
     ]
 
     inference_supported_models_cfg = {}
