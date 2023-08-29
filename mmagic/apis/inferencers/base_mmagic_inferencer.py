@@ -58,7 +58,6 @@ class BaseMMagicInferencer(BaseInferencer):
         super().__init__(config, ckpt, device)
 
         self._init_extra_parameters(extra_parameters)
-        print(extra_parameters)
         self.base_params = self._dispatch_kwargs(**kwargs)
         self.seed = seed
         set_random_seed(self.seed)
@@ -120,7 +119,6 @@ class BaseMMagicInferencer(BaseInferencer):
 
         return results
 
-    # @torch.no_grad()
     def __call__(self, **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
 

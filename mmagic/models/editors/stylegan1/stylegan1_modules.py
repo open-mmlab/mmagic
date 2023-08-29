@@ -102,6 +102,8 @@ class NoiseInjection(BaseModule):
     Args:
         noise_weight_init (float, optional): Initialization weight for noise
             injection. Defaults to ``0.``.
+        fixed_noise (bool, optional): Whether to inject a fixed noise. Defaults
+        to ``False``.
     """
 
     def __init__(self, noise_weight_init=0., fixed_noise=False):

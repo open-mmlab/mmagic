@@ -367,7 +367,6 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                 if 'feats' in outputs.keys():
                     feats = outputs['feats']
                 outputs = outputs['fake_img']
-            # else:t
 
             outputs = self.data_preprocessor.destruct(outputs, data_samples)
 
