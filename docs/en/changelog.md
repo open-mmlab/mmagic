@@ -1,5 +1,108 @@
 # Changelog
 
+## v1.0.2 (24/08/2023)
+
+**Highlights**
+
+**1. More detailed documentation**
+
+Thank you to the community contributors for helping us improve the documentation. We have improved many documents, including both Chinese and English versions. Please refer to the [documentation](https://mmagic.readthedocs.io/en/latest/) for more details.
+
+**2. New algorithms**
+
+- Support Prompt-to-prompt, DDIM Inversion and Null-text Inversion. [Click to View.](https://github.com/open-mmlab/mmagic/blob/main/projects/prompt_to_prompt/README.md)
+
+From right to left: origin image, DDIM inversion, Null-text inversion
+
+<center class="half">
+    <img src="https://github.com/FerryHuang/mmagic/assets/71176040/34d8a467-5378-41fb-83c6-b23c9dee8f0a" width="200"/><img src="https://github.com/FerryHuang/mmagic/assets/71176040/3d3814b4-7fb5-4232-a56f-fd7fef0ba28e" width="200"/><img src="https://github.com/FerryHuang/mmagic/assets/71176040/43008ed4-a5a3-4f81-ba9f-95d9e79e6a08" width="200"/>
+</center>
+
+Prompt-to-prompt Editing
+
+<div align="center">
+  <b>cat -> dog</b>
+  <br/>
+  <img src="https://github.com/FerryHuang/mmagic/assets/71176040/f5d3fc0c-aa7b-4525-9364-365b254d51ca" width="500"/>
+</div>
+
+<div align="center">
+  <b>spider man -> iron man(attention replace)</b>
+  <br/>
+  <img src="https://github.com/FerryHuang/mmagic/assets/71176040/074adbc6-bd48-4c82-99aa-f322cf937f5a" width="500"/>
+</div>
+
+<div align="center">
+  <b>Effel tower -> Effel tower at night (attention refine)</b>
+  <br/>
+  <img src="https://github.com/FerryHuang/mmagic/assets/71176040/f815dab3-b20c-4936-90e3-a060d3717e22" width="500"/>
+</div>
+
+<div align="center">
+  <b>blossom sakura tree -> blossom(-3) sakura tree (attention reweight)</b>
+  <br/>
+  <img src="https://github.com/FerryHuang/mmagic/assets/71176040/5ef770b9-4f28-4ae7-84b0-6c15ea7450e9" width="500"/>
+</div>
+
+- Support Textual Inversion. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/textual_inversion/README.md)
+
+<div align=center>
+<img src="https://github.com/open-mmlab/mmagic/assets/28132635/b2dac6f1-5151-4199-bcc2-71b5b1523a16">
+</div>
+
+- Support Attention Injection for more stable video generation with controlnet. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/controlnet_animation/README.md)
+- Support Stable Diffusion Inpainting. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion/README.md)
+
+**New Features & Improvements**
+
+- \[Enhancement\] Support noise offset in stable diffusion training by @LeoXing1996 in https://github.com/open-mmlab/mmagic/pull/1880
+- \[Community\] Support Glide Upsampler by @Taited in https://github.com/open-mmlab/mmagic/pull/1663
+- \[Enhance\] support controlnet inferencer by @Z-Fran in https://github.com/open-mmlab/mmagic/pull/1891
+- \[Feature\] support Albumentations augmentation transformations and pipeline by @Z-Fran in https://github.com/open-mmlab/mmagic/pull/1894
+- \[Feature\] Add Attention Injection for unet by @liuwenran in https://github.com/open-mmlab/mmagic/pull/1895
+- \[Enhance\] update benchmark scripts by @Z-Fran in https://github.com/open-mmlab/mmagic/pull/1907
+- \[Enhancement\] update mmagic docs by @crazysteeaam in https://github.com/open-mmlab/mmagic/pull/1920
+- \[Enhancement\] Support Prompt-to-prompt, ddim inversion and null-text inversion by @FerryHuang in https://github.com/open-mmlab/mmagic/pull/1908
+- \[CodeCamp2023-302\] Support MMagic visualization and write a user guide  by @aptsunny in https://github.com/open-mmlab/mmagic/pull/1939
+- \[Feature\] Support Textual Inversion by @LeoXing1996 in https://github.com/open-mmlab/mmagic/pull/1822
+- \[Feature\] Support stable diffusion inpaint by @Taited in https://github.com/open-mmlab/mmagic/pull/1976
+- \[Enhancement\] Adopt `BaseModule` for some models by @LeoXing1996 in https://github.com/open-mmlab/mmagic/pull/1543
+- \[MMSIG\]支持 DeblurGANv2 inference by @xiaomile in https://github.com/open-mmlab/mmagic/pull/1955
+- \[CodeCamp2023-647\] Add new configs of EG3D by @RangeKing in https://github.com/open-mmlab/mmagic/pull/1985
+
+**Bug Fixes**
+
+- Fix dtype error in StableDiffusion and DreamBooth training by @LeoXing1996 in https://github.com/open-mmlab/mmagic/pull/1879
+- Fix gui VideoSlider bug by @Z-Fran in https://github.com/open-mmlab/mmagic/pull/1885
+- Fix init_model and glide demo by @Z-Fran in https://github.com/open-mmlab/mmagic/pull/1888
+- Fix InstColorization bug when dim=3 by @Z-Fran in https://github.com/open-mmlab/mmagic/pull/1901
+- Fix sd and controlnet fp16 bugs by @Z-Fran in https://github.com/open-mmlab/mmagic/pull/1914
+- Fix num_images_per_prompt in controlnet by @LeoXing1996 in https://github.com/open-mmlab/mmagic/pull/1936
+- Revise metafile for sd-inpainting to fix inferencer init by @LeoXing1996 in https://github.com/open-mmlab/mmagic/pull/1995
+
+**New Contributors**
+
+- @wyyang23 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1886
+- @yehuixie made their first contribution in https://github.com/open-mmlab/mmagic/pull/1912
+- @crazysteeaam made their first contribution in https://github.com/open-mmlab/mmagic/pull/1920
+- @BUPT-NingXinyu made their first contribution in https://github.com/open-mmlab/mmagic/pull/1921
+- @zhjunqin made their first contribution in https://github.com/open-mmlab/mmagic/pull/1918
+- @xuesheng1031 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1923
+- @wslgqq277g made their first contribution in https://github.com/open-mmlab/mmagic/pull/1934
+- @LYMDLUT made their first contribution in https://github.com/open-mmlab/mmagic/pull/1933
+- @RangeKing made their first contribution in https://github.com/open-mmlab/mmagic/pull/1930
+- @xin-li-67 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1932
+- @chg0901 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1931
+- @aptsunny made their first contribution in https://github.com/open-mmlab/mmagic/pull/1939
+- @YanxingLiu made their first contribution in https://github.com/open-mmlab/mmagic/pull/1943
+- @tackhwa made their first contribution in https://github.com/open-mmlab/mmagic/pull/1937
+- @Geo-Chou made their first contribution in https://github.com/open-mmlab/mmagic/pull/1940
+- @qsun1 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1956
+- @ththth888 made their first contribution in https://github.com/open-mmlab/mmagic/pull/1961
+- @sijiua made their first contribution in https://github.com/open-mmlab/mmagic/pull/1967
+- @MING-ZCH made their first contribution in https://github.com/open-mmlab/mmagic/pull/1982
+- @AllYoung made their first contribution in https://github.com/open-mmlab/mmagic/pull/1996
+
 ## v1.0.1 (26/05/2023)
 
 **New Features & Improvements**

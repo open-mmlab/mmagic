@@ -57,13 +57,13 @@
 
 ## 🚀 最新进展 <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### 最新的 [**MMagic v1.0.1**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.1) 版本已经在 \[26/05/2023\] 发布:
+### 最新的 [**MMagic v1.0.2**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.2) 版本已经在 \[24/08/2023\] 发布:
 
-- 支持 StableDiffusion tomesd 加速.
-- 支持所有 inpainting/matting/image restoration 模型的 inferencer.
-- 支持 animated drawings.
-- 支持 Style-Based Global Appearance Flow for Virtual Try-On.
-- 修复 pip install 时 inferencer 无法使用的问题.
+- 支持了 Prompt-to-prompt, DDIM Inversion 和 Null-text Inversion. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/projects/prompt_to_prompt/README.md)
+- 支持了 Textual Inversion. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/textual_inversion/README.md)
+- 支持了 Attention Injection 以便使用 controlnet 生成更稳定的视频. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/controlnet_animation/README.md)
+- 支持了 Stable Diffusion Inpainting. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion/README.md)
+- 更详尽的文档. [点击查看.](https://mmagic.readthedocs.io/zh_CN/latest/)
 
 我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
 
@@ -116,6 +116,8 @@
 
 如果想了解更多版本更新细节和历史信息，请阅读[更新日志](docs/zh_cn/changelog.md)。如果想从[旧版本](https://github.com/open-mmlab/mmagic/tree/master) MMEditing 0.x 迁移到新版本 MMagic 1.x，请阅读[迁移文档](docs/zh_cn/migration/overview.md)。
 
+<div id="table" align="center"></div>
+
 ## 📄 目录
 
 - [📖 介绍](#-介绍)
@@ -127,8 +129,6 @@
 - [🎫 许可证](#-许可证)
 - [🏗️ ️OpenMMLab 的其他项目](#%EF%B8%8F-️openmmlab-的其他项目)
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
-
 ## 📖 介绍
 
 MMagic 是基于 PyTorch 的图像&视频编辑和生成开源工具箱。是 [OpenMMLab](https://openmmlab.com/) 项目的成员之一。
@@ -137,7 +137,7 @@ MMagic 是基于 PyTorch 的图像&视频编辑和生成开源工具箱。是 [O
 
 https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4
 
-主分支代码的最佳实践基于 **Python 3.8+** 和 **PyTorch 1.9+** 。
+主分支代码的最佳实践基于 **Python 3.8+** 和 **PyTorch 1.10+** 。
 
 ### ✨ 主要特性
 
@@ -153,7 +153,7 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
   通过 OpenMMLab 2.0 框架的 MMEngine 和 MMCV， MMagic 将编辑框架分解为不同的组件，并且可以通过组合不同的模块轻松地构建自定义的编辑器模型。我们可以像搭建“乐高”一样定义训练流程，提供丰富的组件和策略。在 MMagic 中，你可以使用不同的 APIs 完全控制训练流程。得益于 [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), 动态模型结构的分布式训练可以轻松实现。
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🙌 参与贡献
 
@@ -167,7 +167,7 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 感谢您为改善 MMagic 所做的所有贡献。请参阅 MMCV 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmcv/blob/main/CONTRIBUTING_zh-CN.md) 和 MMEngine 中的 [CONTRIBUTING.md](https://github.com/open-mmlab/mmengine/blob/main/CONTRIBUTING_zh-CN.md) 以获取贡献指南。
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🛠️ 安装
 
@@ -362,6 +362,7 @@ pip3 install -e .
           <li><a href="configs/partial_conv/README.md">PConv (ECCV'2018)</a></li>
           <li><a href="configs/deepfillv2/README.md">DeepFillv2 (CVPR'2019)</a></li>
           <li><a href="configs/aot_gan/README.md">AOT-GAN (TVCG'2019)</a></li>
+          <li><a href="configs/stable_diffusion/README.md">Stable Diffusion Inpainting (CVPR'2022)</a></li>
         </ul>
       </td>
       <td>
@@ -378,6 +379,9 @@ pip3 install -e .
           <li><a href="configs/disco_diffusion/README.md">Disco-Diffusion (2022)</a></li>
           <li><a href="configs/stable_diffusion/README.md">Stable-Diffusion (2022)</a></li>
           <li><a href="configs/dreambooth/README.md">DreamBooth (2022)</a></li>
+          <li><a href="configs/textual_inversion/README.md">Textual Inversion (2022)</a></li>
+          <li><a href="projects/prompt_to_prompt/README.md">Prompt-to-Prompt (2022)</a></li>
+          <li><a href="projects/prompt_to_prompt/README.md">Null-text Inversion (2022)</a></li>
           <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
           <li><a href="configs/controlnet_animation/README.md">ControlNet Animation (2023)</a></li>
         </ul>
@@ -395,7 +399,7 @@ pip3 install -e .
 
 请参考[模型库](https://mmagic.readthedocs.io/zh_CN/latest/model_zoo/overview.html)了解详情。
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🤝 致谢
 
@@ -405,7 +409,7 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
   <img src="https://contrib.rocks/image?repo=open-mmlab/mmagic" />
 </a>
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🖊️ 引用
 
@@ -429,13 +433,13 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
 }
 ```
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🎫 许可证
 
 本项目开源自 [Apache 2.0 license](LICENSE)。
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 🏗️ ️OpenMMLab 的其他项目
 
@@ -459,7 +463,7 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
 - [MMagic](https://github.com/open-mmlab/mmagic): OpenMMLab 新一代人工智能内容生成（AIGC）工具箱
 - [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab 模型部署框架
 
-<p align="right"><a href="#top">🔝返回顶部</a></p>
+<p align="right"><a href="#table">🔝返回目录</a></p>
 
 ## 欢迎加入 OpenMMLab 社区
 
