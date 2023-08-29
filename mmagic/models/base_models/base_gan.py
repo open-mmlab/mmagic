@@ -362,8 +362,10 @@ class BaseGAN(BaseModel, metaclass=ABCMeta):
                     noise, return_noise=False,
                     **sample_kwargs)  # no need to be False all time
             if isinstance(outputs, dict):
-                latent = outputs['latent']
-                feats = outputs['feats']
+                if 'latent' in outputs.keys():
+                    latent = outputs['latent']
+                if 'feats' in outputs.keys():
+                    feats = outputs['feats']
                 outputs = outputs['fake_img']
             # else:t
 
