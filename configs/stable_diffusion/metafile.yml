@@ -6,6 +6,7 @@ Collections:
   README: configs/stable_diffusion/README.md
   Task:
   - text2image
+  - inpainting
   Year: 2022
 Models:
 - Config: configs/stable_diffusion/stable-diffusion_ddim_denoisingunet.py
@@ -34,3 +35,10 @@ Models:
         PSNR: 512.0
         SSIM: 5.0
     Task: Text2Image
+- Config: configs/stable_diffusion/stable-diffusion_ddim_denoisingunet-inpaint.py
+  In Collection: Stable Diffusion
+  Name: stable-diffusion_ddim_denoisingunet-inpaint
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Inpainting
