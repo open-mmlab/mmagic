@@ -294,7 +294,7 @@ python demo/mmagic_inference_demo.py \
 
 #### 3.1.1 DragGAN
 
-First, put your checkpoint path in `./checkpoints`, *e.g.* `./checkpoints/stylegan2_lions_512_pytorch_mmagic.pth`
+First, put your checkpoint path in `./checkpoints`, *e.g.* `./checkpoints/stylegan2_lions_512_pytorch_mmagic.pth`. For example,
 
 ```shell
 mkdir checkpoints
