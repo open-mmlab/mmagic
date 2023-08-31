@@ -576,8 +576,8 @@ def get_object_localization_loss_for_one_layer(
     # Resize the object segmentation maps to
     # the size of the cross attention scores
     object_segmaps = F.interpolate(
-        object_segmaps, size=(size, size), mode='bilinear',
-        antialias=True)  # (b, max_num_objects, size, size)
+        object_segmaps, size=(size, size), mode='bilinear')
+    # (b, max_num_objects, size, size)
 
     object_segmaps = object_segmaps.view(
         b, max_num_objects, -1)  # (b, max_num_objects, num_noise_latents)
