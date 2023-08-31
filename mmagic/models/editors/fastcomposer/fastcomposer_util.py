@@ -394,7 +394,6 @@ def get_object_transforms(cfg):
                 T.Resize(
                     (cfg['object_resolution'], cfg['object_resolution']),
                     interpolation=T.InterpolationMode.BILINEAR,
-                    antialias=True,
                 ),
             ),
             *augmentations,
@@ -632,7 +631,6 @@ class RandomZoomIn(nn.Module):
             image,
             (int(zoom * image.shape[1]), int(zoom * image.shape[2])),
             interpolation=T.InterpolationMode.BILINEAR,
-            antialias=True,
         )
         # crop top square
         image = CropTopSquare()(image)
