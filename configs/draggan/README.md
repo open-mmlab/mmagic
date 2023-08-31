@@ -50,6 +50,7 @@ showcase the manipulation of real images through GAN inversion.
 | [stylegan2_elphants_512x512](./stylegan2_512x512.py) | Internet Elephants | self-distilled StyleGAN |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-elephants-internet) |
 |   [stylegan2_cats_512x512](./stylegan2_512x512.py)   |      Cat AFHQ      | self-distilled StyleGAN |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-cat-AFHQ) |
 |   [stylegan2_face_512x512](./stylegan2_512x512.py)   |        FFHQ        | self-distilled StyleGAN |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-FFHQ) |
+|  [stylegan2_horse_256x256](./stylegan2_256x256.py)   |     LSUN-Horse     | self-distilled StyleGAN |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-FFHQ) |
 
 ## Citation
 
