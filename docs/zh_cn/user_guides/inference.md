@@ -1,237 +1,366 @@
-# 教程 3：预训练权重推理（待更新）
+# 教程3：使用预训练模型推理
 
-我们针对特定任务提供了一些脚本，可以对单张图像进行推理。
+MMagic 提供了高级API，让您可以轻松地在自己的图像或视频上使用最先进的模型进行操作。
+在新的API中，仅需两行代码即可进行推理。
 
-#### 图像补全
+```python
+from mmagic.apis import MMagicInferencer
 
-您可以使用以下命令，输入一张测试图像以及缺损部位的遮罩图像，实现对测试图像的补全。
-
-```shell
-python demo/inpainting_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${MASKED_IMAGE_FILE} \
-    ${MASK_FILE} \
-    ${SAVE_FILE} \
-    [--imshow] \
-    [--device ${GPU_ID}]
+# 创建MMagicInferencer实例
+editor = MMagicInferencer('pix2pix')
+# 推理图片.需要输入图片路径与输出图片路径
+results = editor.infer(img='../resources/input/translation/gt_mask_0.png', result_out_dir='../resources/output/translation/tutorial_translation_pix2pix_res.jpg')
 ```
 
-如果指定了 --imshow ，演示程序将使用 opencv 显示图像。例子：
+MMagic支持各种基础生成模型，包括无条件生成对抗网络（GANs）、条件GANs、扩散模型等。
+MMagic 同样支持多种应用，包括：文生图、图生图的转换、3D感知生成、图像超分、视频超分、视频帧插值、图像修补、图像抠图、图像恢复、图像上色、图像生成等。
+在本节中，我们将详细说明如何使用我们预训练的模型进行操作。
 
-```shell
-python demo/inpainting_demo.py \
-    configs/global_local/gl_8xb12_celeba-256x256.py \
-    https://download.openmmlab.com/mmediting/inpainting/global_local/gl_256x256_8x12_celeba_20200619-5af0493f.pth \
-    tests/data/inpainting/celeba_test.png \
-    tests/data/inpainting/bbox_mask.png \
-    tests/data/inpainting/inpainting_celeba.png
+- 教程3: 使用预训练模型推理
+  - [准备一些图片或者视频用于推理](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Prepare-some-images-or-videos-for-inference)
+  - 生成模型
+    - [无条件生成对抗网络 (GANs)](<https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Unconditional-Generative-Adversarial-Networks-(GANs)>)
+    - [条件生成对抗网络(GANs)](<https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Conditional-Generative-Adversarial-Networks-(GANs)>)
+    - [扩散模型](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Diffusion-Models)
+  - 应用
+    - [文生图](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Text-to-Image)
+    - [图生图的转换](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Image-to-image-translation)
+    - [3D感知生成](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#3D-aware-generation)
+    - [图像超分](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Image-super-resolution)
+    - [视频超分](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Video-super-resolution)
+    - [视频帧插值](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/Video-frame-interpolation)
+    - [图像修补](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Image-inpainting)
+    - [图像抠图](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Image-matting)
+    - [图像恢复](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Image-restoration)
+    - [图像上色](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Image-colorization)
+- [以前的版本](https://github.com/open-mmlab/mmagic/blob/main/docs/zh_cn/user_guides/inference.md#Previous-Versions)
+
+## 准备一些图片或者视频用于推理
+
+请参考我们的[教程](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_tutorial.ipynb)获取详细信息。
+
+## 生成模型
+
+### 无条件生成对抗网络（GANs）
+
+MMagic提供了用于使用无条件GANs进行图像采样的高级API。无条件GAN模型不需要输入，并输出一张图像。我们以'styleganv1'为例。
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# 创建MMagicInferencer实例，并进行推理
+result_out_dir = './resources/output/unconditional/tutorial_unconditional_styleganv1_res.png'
+editor = MMagicInferencer('styleganv1')
+results = editor.infer(result_out_dir=result_out_dir)
 ```
 
-补全结果将保存在 `tests/data/inpainting/inpainting_celeba.png` 中。
+确实，我们已经为用户提供了一个更友好的演示脚本。您可以使用以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)：
 
-#### 抠图
-
-您可以使用以下命令，输入一张测试图像以及对应的三元图（trimap），实现对测试图像的抠图。
-
-```shell
-python demo/matting_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${IMAGE_FILE} \
-    ${TRIMAP_FILE} \
-    ${SAVE_FILE} \
-    [--imshow] \
-    [--device ${GPU_ID}]
+```python
+python demo/mmagic_inference_demo.py \
+        --model-name styleganv1 \
+        --result-out-dir demo_unconditional_styleganv1_res.jpg
 ```
 
-如果指定了 --imshow ，演示程序将使用 opencv 显示图像。例子：
+### 条件生成对抗网络(GANs)
 
-```shell
-python demo/matting_demo.py \
-    configs/dim/dim_stage3-v16-pln_1000k-1xb1_comp1k.py \
-    https://download.openmmlab.com/mmediting/mattors/dim/dim_stage3_v16_pln_1x1_1000k_comp1k_SAD-50.6_20200609_111851-647f24b6.pth \
-    tests/data/matting_dataset/merged/GT05.jpg \
-    tests/data/matting_dataset/trimap/GT05.png \
-    tests/data/matting_dataset/pred/GT05.png
+MMagic提供了使用条件GAN进行图像采样的高级API。条件GAN模型接受一个标签作为输入，并输出一张图像。我们以'biggan'为例。
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# 创建MMagicInferencer实例，并进行推理
+result_out_dir = './resources/output/conditional/tutorial_conditinal_biggan_res.jpg'
+editor = MMagicInferencer('biggan', model_setting=1)
+results = editor.infer(label=1, result_out_dir=result_out_dir)
 ```
 
-预测的 alpha 遮罩将保存在 `tests/data/matting_dataset/pred/GT05.png` 中。
-
-#### 图像超分辨率
-
-您可以使用以下命令来测试要恢复的图像。
+我们已经为用户提供了一个更友好的演示脚本。您可以使用以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)：
 
 ```shell
-python demo/restoration_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${IMAGE_FILE} \
-    ${SAVE_FILE} \
-    [--imshow] \
-    [--device ${GPU_ID}] \
-    [--ref-path ${REF_PATH}]
+python demo/mmagic_inference_demo.py \
+        --model-name biggan \
+        --model-setting 1 \
+        --label 1 \
+        --result-out-dir demo_conditional_biggan_res.jpg
 ```
 
-如果指定了 `--imshow` ，演示程序将使用 opencv 显示图像。例子：
+### 扩散模型
+
+MMagic提供了使用扩散模型进行图像采样的高级API。
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# 创建MMagicInferencer实例，并进行推理
+editor = MMagicInferencer(model_name='stable_diffusion')
+text_prompts = 'A panda is having dinner at KFC'
+result_out_dir = './resources/output/text2image/tutorial_text2image_sd_res.png'
+editor.infer(text=text_prompts, result_out_dir=result_out_dir)
+```
+
+通过以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)
 
 ```shell
-python demo/restoration_demo.py \
-    configs/esrgan/esrgan_x4c64b23g32_400k-1xb16_div2k.py \
-    https://download.openmmlab.com/mmediting/restorers/esrgan/esrgan_x4c64b23g32_1x16_400k_div2k_20200508-f8ccaf3b.pth \
-    tests/data/image/lq/baboon_x4.png \
-    demo/demo_out_baboon.png
+python demo/mmagic_inference_demo.py \
+        --model-name stable_diffusion \
+        --text "A panda is having dinner at KFC" \
+        --result-out-dir demo_text2image_stable_diffusion_res.png
 ```
 
-您可以通过提供 `--ref-path` 参数来测试基于参考的超分辨率算法。例子：
+## 应用
+
+### 文生图
+
+文生图模型将文本作为输入，输出一张图片。我们以'controlnet-canny'为例。
+
+```python
+import cv2
+import numpy as np
+import mmcv
+from mmengine import Config
+from PIL import Image
+
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
+
+register_all_modules()
+
+cfg = Config.fromfile('configs/controlnet/controlnet-canny.py')
+controlnet = MODELS.build(cfg.model).cuda()
+
+control_url = 'https://user-images.githubusercontent.com/28132635/230288866-99603172-04cb-47b3-8adb-d1aa532d1d2c.jpg'
+control_img = mmcv.imread(control_url)
+control = cv2.Canny(control_img, 100, 200)
+control = control[:, :, None]
+control = np.concatenate([control] * 3, axis=2)
+control = Image.fromarray(control)
+
+prompt = 'Room with blue walls and a yellow ceiling.'
+
+output_dict = controlnet.infer(prompt, control=control)
+samples = output_dict['samples']
+```
+
+通过以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)
 
 ```shell
-python demo/restoration_demo.py \
-    configs/ttsr/ttsr-gan_x4c64b16_500k-1xb9_CUFED.py \
-    https://download.openmmlab.com/mmediting/restorers/ttsr/ttsr-gan_x4_c64b16_g1_500k_CUFED_20210626-2ab28ca0.pth \
-    tests/data/frames/sequence/gt/sequence_1/00000000.png \
-    demo/demo_out.png \
-    --ref-path tests/data/frames/sequence/gt/sequence_1/00000001.png
+python demo/mmagic_inference_demo.py \
+        --model-name controlnet \
+        --model-setting 1 \
+        --text "Room with blue walls and a yellow ceiling." \
+        --control 'https://user-images.githubusercontent.com/28132635/230297033-4f5c32df-365c-4cf4-8e4f-1b76a4cbb0b7.png' \
+        --result-out-dir demo_text2image_controlnet_canny_res.png
 ```
 
-#### 人脸图像超分辨率
+### 图生图的转换
 
-您可以使用以下命令来测试要恢复的人脸图像。
+MMagic提供了使用图像翻译模型进行图像翻译的高级API。下面是构建Pix2Pix并获取翻译图像的示例。
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# Create a MMagicInferencer instance and infer
+editor = MMagicInferencer('pix2pix')
+results = editor.infer(img=img_path, result_out_dir=result_out_dir)
+```
+
+通过以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)
 
 ```shell
-python demo/restoration_face_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${IMAGE_FILE} \
-    ${SAVE_FILE} \
-    [--upscale-factor] \
-    [--face-size] \
-    [--imshow] \
-    [--device ${GPU_ID}]
+python demo/mmagic_inference_demo.py \
+        --model-name pix2pix \
+        --img ${IMAGE_PATH} \
+        --result-out-dir ${SAVE_PATH}
 ```
 
-如果指定了 --imshow ，演示程序将使用 opencv 显示图像。例子：
+### 3D感知生成
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# Create a MMagicInferencer instance and infer
+result_out_dir = './resources/output/eg3d-output'
+editor = MMagicInferencer('eg3d')
+results = editor.infer(result_out_dir=result_out_dir)
+```
+
+通过以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)
 
 ```shell
-python demo/restoration_face_demo.py \
-    configs/glean/glean_in128out1024_300k-4xb2_ffhq-celeba-hq.py \
-    https://download.openmmlab.com/mmediting/restorers/glean/glean_in128out1024_4x2_300k_ffhq_celebahq_20210812-acbcb04f.pth \
-    tests/data/image/face/000001.png \
-    tests/data/image/face/pred.png \
-    --upscale-factor 4
+python demo/mmagic_inference_demo.py \
+    --model-name eg3d \
+    --result-out-dir ./resources/output/eg3d-output
 ```
 
-#### 视频超分辨率
+### 图像超分
 
-您可以使用以下命令来测试视频以进行恢复。
+图像超分辨率模型接受一张图像作为输入，并输出一张高分辨率图像。我们以 'esrgan' 为例。
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# Create a MMagicInferencer instance and infer
+img = './resources/input/restoration/0901x2.png'
+result_out_dir = './resources/output/restoration/tutorial_restoration_esrgan_res.png'
+editor = MMagicInferencer('esrgan')
+results = editor.infer(img=img, result_out_dir=result_out_dir)
+```
+
+通过以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)
 
 ```shell
-python demo/restoration_video_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${INPUT_DIR} \
-    ${OUTPUT_DIR} \
-    [--window-size=${WINDOW_SIZE}] \
-    [--device ${GPU_ID}]
+python demo/mmagic_inference_demo.py \
+        --model-name esrgan \
+        --img ${IMAGE_PATH} \
+        --result-out-dir ${SAVE_PATH}
 ```
 
-它同时支持滑动窗口框架和循环框架。 例子：
+### 视频超分
 
-EDVR:
+```python
+import os
+from mmagic.apis import MMagicInferencer
+from mmengine import mkdir_or_exist
+
+# Create a MMagicInferencer instance and infer
+video = './resources/input/video_interpolation/b-3LLDhc4EU_000000_000010.mp4'
+result_out_dir = './resources/output/video_super_resolution/tutorial_video_super_resolution_basicvsr_res.mp4'
+mkdir_or_exist(os.path.dirname(result_out_dir))
+editor = MMagicInferencer('basicvsr')
+results = editor.infer(video=video, result_out_dir=result_out_dir)
+```
+
+通过以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)
 
 ```shell
-python demo/restoration_video_demo.py \
-    configs/edvr/edvrm_wotsa_reds_600k-8xb8.py \
-    https://download.openmmlab.com/mmediting/restorers/edvr/edvrm_wotsa_x4_8x4_600k_reds_20200522-0570e567.pth \
-    data/Vid4/BIx4/calendar/ \
-    demo/output \
-    --window-size=5
+python demo/mmagic_inference_demo.py \
+        --model-name basicvsr \
+        --video ./resources/input/video_restoration/QUuC4vJs_000084_000094_400x320.mp4 \
+        --result-out-dir ./resources/output/video_restoration/demo_video_restoration_basicvsr_res.mp4
 ```
 
-BasicVSR:
+### 视频帧插值
+
+视频插值模型接受一个视频作为输入，并输出一个插值后的视频。我们以 'flavr' 为例。
+
+```python
+import os
+from mmagic.apis import MMagicInferencer
+from mmengine import mkdir_or_exist
+
+# Create a MMagicInferencer instance and infer
+video = './resources/input/video_interpolation/b-3LLDhc4EU_000000_000010.mp4'
+result_out_dir = './resources/output/video_interpolation/tutorial_video_interpolation_flavr_res.mp4'
+mkdir_or_exist(os.path.dirname(result_out_dir))
+editor = MMagicInferencer('flavr')
+results = editor.infer(video=video, result_out_dir=result_out_dir)
+```
+
+### 图像修补
+
+修复模型接受一对屏蔽图像和屏蔽蒙版作为输入，并输出一个修复后的图像。我们以 'global_local' 为例。
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+img = './resources/input/matting/GT05.jpg'
+trimap = './resources/input/matting/GT05_trimap.jpg'
+
+# 创建MMagicInferencer实例，并进行推理
+result_out_dir = './resources/output/matting/tutorial_matting_gca_res.png'
+editor = MMagicInferencer('gca')
+results = editor.infer(img=img, trimap=trimap, result_out_dir=result_out_dir)
+```
+
+### 图像抠图
+
+**抠图**模型接受一对图像和修剪映射作为输入，并输出一个 alpha 图像。我们以 'gca' 为例。
+
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+img = './resources/input/matting/GT05.jpg'
+trimap = './resources/input/matting/GT05_trimap.jpg'
+
+# 创建MMagicInferencer实例，并进行推理
+result_out_dir = './resources/output/matting/tutorial_matting_gca_res.png'
+editor = MMagicInferencer('gca')
+results = editor.infer(img=img, trimap=trimap, result_out_dir=result_out_dir)
+```
+
+通过以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)
 
 ```shell
-python demo/restoration_video_demo.py \
-    configs/basicvsr/basicvsr_2xb4_reds4.py \
-    https://download.openmmlab.com/mmediting/restorers/basicvsr/basicvsr_reds4_20120409-0e599677.pth \
-    data/Vid4/BIx4/calendar/ \
-    demo/output
+python demo/mmagic_inference_demo.py \
+        --model-name gca  \
+        --img ./resources/input/matting/GT05.jpg \
+        --trimap ./resources/input/matting/GT05_trimap.jpg \
+        --result-out-dir ./resources/output/matting/demo_matting_gca_res.png
 ```
 
-复原的视频将保存在 ` demo/output/` 中。
+### 图像恢复
 
-#### 视频插帧
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
 
-您可以使用以下命令来测试视频插帧。
+# Create a MMagicInferencer instance and infer
+img = './resources/input/restoration/0901x2.png'
+result_out_dir = './resources/output/restoration/tutorial_restoration_nafnet_res.png'
+editor = MMagicInferencer('nafnet')
+results = editor.infer(img=img, result_out_dir=result_out_dir)
+```
+
+通过以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)
 
 ```shell
-python demo/video_interpolation_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${INPUT_DIR} \
-    ${OUTPUT_DIR} \
-    [--fps-multiplier ${FPS_MULTIPLIER}] \
-    [--fps ${FPS}]
+python demo/mmagic_inference_demo.py \
+        --model-name nafnet \
+        --img ./resources/input/restoration/0901x2.png \
+        --result-out-dir ./resources/output/restoration/demo_restoration_nafnet_res.png
 ```
 
-`${INPUT_DIR}` 和 `${OUTPUT_DIR}` 可以是视频文件路径或存放一系列有序图像的文件夹。
-若 `${OUTPUT_DIR}` 是视频文件地址，其帧率可由输入视频帧率和 `fps_multiplier` 共同决定，也可由 `fps` 直接给定(其中前者优先级更高）。例子：
+### 图像上色
 
-由输入视频帧率和 `fps_multiplier` 共同决定输出视频的帧率：
+```python
+import mmcv
+import matplotlib.pyplot as plt
+from mmagic.apis import MMagicInferencer
+
+# Create a MMagicInferencer instance and infer
+img = 'https://github-production-user-asset-6210df.s3.amazonaws.com/49083766/245713512-de973677-2be8-4915-911f-fab90bb17c40.jpg'
+result_out_dir = './resources/output/colorization/tutorial_colorization_res.png'
+editor = MMagicInferencer('inst_colorization')
+results = editor.infer(img=img, result_out_dir=result_out_dir)
+```
+
+通过以下命令使用[demo/mmagic_inference_demo.py](https://github.com/open-mmlab/mmagic/blob/main/demo/mmagic_inference_demo.py)
 
 ```shell
-python demo/video_interpolation_demo.py \
-    configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py \
-    https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
-    tests/data/frames/test_inference.mp4 \
-    tests/data/frames/test_inference_vfi_out.mp4 \
-    --fps-multiplier 2.0
+python demo/mmagic_inference_demo.py \
+        --model-name inst_colorization \
+        --img https://github-production-user-asset-6210df.s3.amazonaws.com/49083766/245713512-de973677-2be8-4915-911f-fab90bb17c40.jpg \
+        --result-out-dir demo_colorization_res.png
 ```
 
-由 `fps` 直接给定输出视频的帧率：
+## 以前的版本
 
-```shell
-python demo/video_interpolation_demo.py \
-    configs/cain/cain_g1b32_1xb5_vimeo90k-triplet.py \
-    https://download.openmmlab.com/mmediting/video_interpolators/cain/cain_b5_320k_vimeo-triple_20220117-647f3de2.pth \
-    tests/data/frames/test_inference.mp4 \
-    tests/data/frames/test_inference_vfi_out.mp4 \
-    --fps 60.0
-```
-
-#### 图像生成
-
-```shell
-python demo/generation_demo.py \
-    ${CONFIG_FILE} \
-    ${CHECKPOINT_FILE} \
-    ${IMAGE_FILE} \
-    ${SAVE_FILE} \
-    [--unpaired-path ${UNPAIRED_IMAGE_FILE}] \
-    [--imshow] \
-    [--device ${GPU_ID}]
-```
-
-如果指定了 `--unpaired-path` （用于 CycleGAN），模型将执行未配对的图像到图像的转换。 如果指定了 `--imshow` ，演示也将使用opencv显示图像。 例子：
-
-针对配对数据：
-
-```shell
-python demo/generation_demo.py \
-    configs/example_config.py \
-    work_dirs/example_exp/example_model_20200202.pth \
-    demo/demo.jpg \
-    demo/demo_out.jpg
-```
-
-针对未配对数据（用 opencv 显示图像）：
-
-```shell
-python demo/generation_demo.py 、
-    configs/example_config.py \
-    work_dirs/example_exp/example_model_20200202.pth \
-    demo/demo.jpg \
-    demo/demo_out.jpg \
-    --unpaired-path demo/demo_unpaired.jpg \
-    --imshow
-```
+如果您想使用已弃用的演示，请使用[MMagic v1.0.0rc7](https://github.com/open-mmlab/mmagic/tree/v1.0.0rc7)并参考[旧教程](https://github.com/open-mmlab/mmagic/blob/v1.0.0rc7/docs/en/user_guides/inference.md)。

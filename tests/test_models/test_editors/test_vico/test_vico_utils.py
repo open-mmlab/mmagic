@@ -1,8 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 
-import pytest
 import platform
 
+import pytest
 from diffusers.models.unet_2d_condition import UNet2DConditionModel
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
