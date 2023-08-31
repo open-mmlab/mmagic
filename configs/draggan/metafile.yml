@@ -48,4 +48,4 @@ Models:
       Precision50k: 0.0
       Recall50k: 0.0
     Task: DragGAN
-  Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-FFHQ
+  Weights: ./checkpoints/256.pth
