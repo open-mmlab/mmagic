@@ -3,9 +3,8 @@ import os
 
 from mmagic.datasets import TextualInversionDataset
 
-data_dir = os.path.join(__file__, '../', '../', 'data', 'textual_inversion')
-print(data_dir)
-concept_dir = os.path.join(data_dir, 'batman')
+data_dir = os.path.join(__file__, '../', '../', 'data', 'controlnet')
+concept_dir = os.path.join(data_dir, 'source')
 placeholder = 'S*'
 template = os.path.join(__file__, '../', '../', 'data', 'textual_inversion',
                         'imagenet_templates_small.txt')
