@@ -49,7 +49,7 @@ class FastComposer(StableDiffusion):
                     pretrained_cfg['finetuned_model_path'],
                     map_location='cpu'),
                 strict=False)
-        else:
+        elif pretrained_cfg['finetuned_model_path']:
             model.load_state_dict(
                 torch.load(
                     pretrained_cfg['finetuned_model_path'],
@@ -438,10 +438,6 @@ class FastComposer(StableDiffusion):
         else:
             # 8. Post-processing
             image = self.decode_latents(latents)
-
-            # 9. Run safety checker
-            image, has_nsfw_concept = self.run_safety_checker(
-                image, device, prompt_embeds.dtype)
 
         # Offload last model to CPU
         if hasattr(

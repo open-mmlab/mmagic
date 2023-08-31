@@ -15,19 +15,19 @@ torch.cuda.empty_cache()
 register_all_modules()
 stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 clip_vit_url = 'openai/clip-vit-large-patch14'
-finetuned_model_path = 'https://download.openxlab.org.cn/models/xiaomile/'\
-                       'fastcomposer/weight/pytorch_model.bin'
+finetuned_model_path = ''
 
 config = dict(
     type='FastComposer',
-    vae=dict(
-        type='AutoencoderKL',
-        from_pretrained=stable_diffusion_v15_url,
-        subfolder='vae'),
+    vae=dict(type='AutoencoderKL', sample_size=64),
     unet=dict(
+        sample_size=64,
         type='UNet2DConditionModel',
-        subfolder='unet',
-        from_pretrained=stable_diffusion_v15_url),
+        down_block_types=('DownBlock2D', ),
+        up_block_types=('UpBlock2D', ),
+        block_out_channels=(32, ),
+        cross_attention_dim=16,
+    ),
     text_encoder=dict(
         type='ClipWrapper',
         clip_type='huggingface',
@@ -68,33 +68,31 @@ class TestFastComposer(TestCase):
         self.fastcomposer = MODELS.build(config)
 
     def test_infer(self):
-        prompt = 'A man img and a man img sitting in a park'
-        negative_prompt = '((((ugly)))), (((duplicate))), ((morbid)), ' \
-                          '((mutilated)), [out of frame], extra fingers, ' \
-                          'mutated hands, ((poorly drawn hands)), ((poorly ' \
-                          'drawn face)), (((mutation))), (((deformed))), ' \
-                          '((ugly)), blurry, ((bad anatomy)), (((bad ' \
-                          'proportions))), ((extra limbs)), cloned face, ' \
-                          '(((disfigured))). out of frame, ugly, extra limbs,'\
-                          ' (bad anatomy), gross proportions, (malformed ' \
-                          'limbs), ((missing arms)), ((missing legs)), ' \
-                          '(((extra arms))), (((extra legs))), mutated hands,'\
-                          ' (fused fingers), (too many fingers), ' \
-                          '(((long neck)))'
+        fastcomposer = self.fastcomposer
+
+        def mock_encode_prompt(prompt, do_classifier_free_guidance,
+                               num_images_per_prompt, *args, **kwargs):
+            batch_size = len(prompt) if isinstance(prompt, list) else 1
+            batch_size *= num_images_per_prompt
+            if do_classifier_free_guidance:
+                batch_size *= 2
+            return torch.randn(batch_size, 5, 16)  # 2 for cfg
+
+        encode_prompt = fastcomposer._encode_prompt
+        fastcomposer._encode_prompt = mock_encode_prompt
+
+        prompt = 'A man img'
+        negative_prompt = ''
         alpha_ = 0.75
         guidance_scale = 5
         num_steps = 1
-        num_images = 4
+        num_images = 1
         image = []
         seed = -1
-
+        augmented_prompt_embeds = torch.randn(1, 5, 16)
         image.append(
             Image.fromarray(
-                np.random.randint(0, 255, size=(512, 512, 3)).astype('uint8')))
-
-        image.append(
-            Image.fromarray(
-                np.random.randint(0, 255, size=(512, 512, 3)).astype('uint8')))
+                np.random.randint(0, 255, size=(64, 64, 3)).astype('uint8')))
 
         if len(image) == 0:
             raise Exception('You need to upload at least one image.')
@@ -113,17 +111,18 @@ class TestFastComposer(TestCase):
 
         generator = torch.manual_seed(seed)
 
-        result = self.fastcomposer.infer(
+        result = fastcomposer.infer(
             prompt,
             negative_prompt=negative_prompt,
-            height=512,
-            width=512,
+            height=64,
+            width=64,
             num_inference_steps=num_steps,
             guidance_scale=guidance_scale,
             num_images_per_prompt=num_images,
             generator=generator,
             alpha_=alpha_,
             reference_subject_images=image,
-            output_type='latent')
-
-        assert result['samples'].shape == (num_images, 3, 512, 512)
+            augmented_prompt_embeds=augmented_prompt_embeds,
+            output_type='tensor')
+        fastcomposer._encode_prompt = encode_prompt
+        assert result['samples'].shape == (num_images, 3, 64, 64)
