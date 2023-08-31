@@ -235,12 +235,21 @@ class Renderer:
                      lr=0.001,
                      **kwargs):
         # Dig up network details.
-        editor = MMagicInferencer(
-            'draggan',
-            model_setting=0,
-            model_ckpt=ckpt_pth,
-        )
-        self.editor = editor
+        if '256' in ckpt_pth:
+            editor = MMagicInferencer(
+                'draggan',
+                model_setting=1,
+                model_ckpt=ckpt_pth,
+            )
+        elif '512' in ckpt_pth:
+            editor = MMagicInferencer(
+                'draggan',
+                model_setting=0,
+                model_ckpt=ckpt_pth,
+            )
+            self.editor = editor
+        else:
+            raise NotImplementedError
 
         # Generate random latents.
         self.w0_seed = w0_seed
