@@ -10,8 +10,7 @@ import torchvision.transforms as T
 from torch import nn
 from transformers import CLIPModel, CLIPPreTrainedModel, CLIPTextModel
 from transformers.modeling_outputs import BaseModelOutputWithPooling
-from transformers.models.clip.modeling_clip import (CLIPTextTransformer,
-                                                    _expand_mask)
+from transformers.models.clip.modeling_clip import _expand_mask
 
 
 class FastComposerModel(nn.Module):
@@ -181,8 +180,6 @@ class FastComposerModel(nn.Module):
 class FastComposerTextEncoder(CLIPPreTrainedModel):
     """TextEncoder for FastComposerModel."""
 
-    _build_causal_attention_mask = CLIPTextTransformer._build_causal_attention_mask  # noqa
-
     @staticmethod
     def from_pretrained(model_name_or_path, **kwargs):
         """Init textEncoder with Stable Diffusion Model name or path."""
@@ -196,6 +193,7 @@ class FastComposerTextEncoder(CLIPPreTrainedModel):
         self.final_layer_norm = text_model.final_layer_norm
         self.embeddings = text_model.embeddings
         self.encoder = text_model.encoder
+        self._build_causal_attention_mask = build_causal_attention_mask
 
     def forward(
         self,
@@ -771,3 +769,17 @@ def fuse_object_embeddings(
                                   valid_object_embeds)
     inputs_embeds = inputs_embeds.view(batch_size, seq_length, -1)
     return inputs_embeds
+
+
+def build_causal_attention_mask(bsz, seq_len, dtype, device=None):
+    """The function originally belonged to CLIPTextTransformer, but it has been
+    removed in versions of transformers after 4.25.1."""
+
+    # lazily create causal attention mask,
+    # with full attention between the vision tokens
+    # pytorch uses additive attention mask; fill with -inf
+    mask = torch.empty(bsz, seq_len, seq_len, dtype=dtype, device=device)
+    mask.fill_(torch.tensor(torch.finfo(dtype).min))
+    mask.triu_(1)  # zero out the lower diagonal
+    mask = mask.unsqueeze(1)  # expand mask
+    return mask
