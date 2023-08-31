@@ -15,7 +15,7 @@ from mmagic.models.data_preprocessors import DataPreprocessor
 from mmagic.models.editors.eg3d import EG3D, GaussianCamera, TriplaneGenerator
 
 with read_base():
-    from .._base_.gen_default_runtime import *  # noqa: F401,F403
+    from .._base_.gen_default_runtime import *
 
 model = dict(
     type=EG3D,
