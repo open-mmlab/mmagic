@@ -340,7 +340,7 @@ class FastComposerCLIPImageEncoder(CLIPPreTrainedModel):
         if h != self.image_size or w != self.image_size:
             h, w = self.image_size, self.image_size
             object_pixel_values = F.interpolate(
-                object_pixel_values, (h, w), mode='bilinear', antialias=True)
+                object_pixel_values, (h, w), mode='bilinear')
 
         object_pixel_values = self.vision_processor(object_pixel_values)
         object_embeds = self.vision_model(object_pixel_values)[1]
