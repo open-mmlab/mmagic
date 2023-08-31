@@ -15,6 +15,8 @@ from transformers.models.clip.modeling_clip import (CLIPTextTransformer,
 
 
 class FastComposerModel(nn.Module):
+    """FastComposerModel is based on the StableDiffusion Model and the Clip
+    Model."""
 
     def __init__(self, text_encoder, image_encoder, vae, unet, cfg):
         super().__init__()
@@ -49,6 +51,7 @@ class FastComposerModel(nn.Module):
             )
 
     def _clear_cross_attention_scores(self):
+        """Delete cross attention scores."""
         if hasattr(self, 'cross_attention_scores'):
             keys = list(self.cross_attention_scores.keys())
             for k in keys:
@@ -58,6 +61,8 @@ class FastComposerModel(nn.Module):
 
     @staticmethod
     def from_pretrained(cfg, vae, unet):
+        """Init FastComposerTextEncoder and FastComposerCLIPImageEncoder."""
+
         text_encoder = FastComposerTextEncoder.from_pretrained(
             cfg['pretrained_model_name_or_path'],
             subfolder='text_encoder',
@@ -69,6 +74,18 @@ class FastComposerModel(nn.Module):
         return FastComposerModel(text_encoder, image_encoder, vae, unet, cfg)
 
     def forward(self, batch, noise_scheduler):
+        """Forward function.
+
+        Args:
+            batch (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+            noise_scheduler (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+
+        Returns:
+            Dict
+        """
+
         pixel_values = batch['pixel_values']
         input_ids = batch['input_ids']
         image_token_mask = batch['image_token_mask']
@@ -162,10 +179,13 @@ class FastComposerModel(nn.Module):
 
 
 class FastComposerTextEncoder(CLIPPreTrainedModel):
+    """TextEncoder for FastComposerModel."""
+
     _build_causal_attention_mask = CLIPTextTransformer._build_causal_attention_mask  # noqa
 
     @staticmethod
     def from_pretrained(model_name_or_path, **kwargs):
+        """Init textEncoder with Stable Diffusion Model name or path."""
         model = CLIPTextModel.from_pretrained(model_name_or_path, **kwargs)
         text_model = model.text_model
         return FastComposerTextEncoder(text_model)
@@ -188,6 +208,30 @@ class FastComposerTextEncoder(CLIPPreTrainedModel):
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
     ) -> Union[Tuple, BaseModelOutputWithPooling]:
+        """Forward function.
+
+        Args:
+            input_ids (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+            image_token_mask (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+            object_embeds (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+            num_objects (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+            attention_mask (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+            output_attentions (bool ):
+                Default to None.
+            output_hidden_states (bool ):
+                Default to None.
+            return_dict (bool ):
+                Default to None.
+
+        Returns:
+            Union[Tuple, BaseModelOutputWithPooling]
+        """
+
         output_attentions = (
             output_attentions if output_attentions is not None else
             self.config.output_attentions)
@@ -247,9 +291,12 @@ class FastComposerTextEncoder(CLIPPreTrainedModel):
 
 
 class FastComposerCLIPImageEncoder(CLIPPreTrainedModel):
+    """CLIPImageEncoder for FastComposerModel."""
 
     @staticmethod
     def from_pretrained(global_model_name_or_path, ):
+        """Init CLIPModel with Clip model name or path."""
+
         model = CLIPModel.from_pretrained(global_model_name_or_path)
         vision_model = model.vision_model
         visual_projection = model.visual_projection
@@ -277,6 +324,16 @@ class FastComposerCLIPImageEncoder(CLIPPreTrainedModel):
         self.image_size = vision_model.config.image_size
 
     def forward(self, object_pixel_values):
+        """Forward function.
+
+        Args:
+            object_pixel_values (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
+
         b, num_objects, c, h, w = object_pixel_values.shape
 
         object_pixel_values = object_pixel_values.view(b * num_objects, c, h,
@@ -295,6 +352,8 @@ class FastComposerCLIPImageEncoder(CLIPPreTrainedModel):
 
 
 def get_object_transforms(cfg):
+    """Get Object transforms."""
+
     if cfg['no_object_augmentation']:
         pre_augmentations = []
         augmentations = []
@@ -347,6 +406,7 @@ def get_object_transforms(cfg):
 
 
 class FastComposerPostfuseModule(nn.Module):
+    """Postfuse Module for FastComposerModel."""
 
     def __init__(self, embed_dim):
         super().__init__()
@@ -356,6 +416,18 @@ class FastComposerPostfuseModule(nn.Module):
         self.layer_norm = nn.LayerNorm(embed_dim)
 
     def fuse_fn(self, text_embeds, object_embeds):
+        """Fuse function.
+
+        Args:
+            text_embeds (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+            object_embeds (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
+
         text_object_embeds = torch.cat([text_embeds, object_embeds], dim=-1)
         text_object_embeds = self.mlp1(text_object_embeds) + text_embeds
         text_object_embeds = self.mlp2(text_object_embeds)
@@ -369,6 +441,20 @@ class FastComposerPostfuseModule(nn.Module):
         image_token_mask,
         num_objects,
     ) -> torch.Tensor:
+        """Forward function.
+
+        Args:
+            text_embeds (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+            object_embeds (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+            image_token_mask (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
+
         text_object_embeds = fuse_object_embeddings(text_embeds,
                                                     image_token_mask,
                                                     object_embeds, num_objects,
@@ -378,6 +464,7 @@ class FastComposerPostfuseModule(nn.Module):
 
 
 def unet_store_cross_attention_scores(unet, attention_scores, layers=5):
+    """Unet store cross attention scores."""
     from diffusers.models.attention_processor import (Attention, AttnProcessor,
                                                       AttnProcessor2_0)
 
@@ -396,8 +483,10 @@ def unet_store_cross_attention_scores(unet, attention_scores, layers=5):
     applicable_layers = UNET_LAYER_NAMES[start_layer:end_layer]
 
     def make_new_get_attention_scores_fn(name):
+        """Wrapper Function of create attention scores for unet."""
 
         def new_get_attention_scores(module, query, key, attention_mask=None):
+            """Create attention scores for unet."""
             attention_probs = module.old_get_attention_scores(
                 query, key, attention_mask)
             attention_scores[name] = attention_probs
@@ -419,6 +508,7 @@ def unet_store_cross_attention_scores(unet, attention_scores, layers=5):
 
 
 class BalancedL1Loss(nn.Module):
+    """BalancedL1Loss for object localization."""
 
     def __init__(self, threshold=1.0, normalize=False):
         super().__init__()
@@ -426,6 +516,17 @@ class BalancedL1Loss(nn.Module):
         self.normalize = normalize
 
     def forward(self, object_token_attn_prob, object_segmaps):
+        """Forward function.
+
+        Args:
+            object_token_attn_prob (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+            object_segmaps (torch.Tensor ):
+                You can directly input a ``torch.Tensor``.
+
+        Returns:
+            float : ``float`` will be returned.
+        """
         if self.normalize:
             object_token_attn_prob = object_token_attn_prob / (
                 object_token_attn_prob.max(dim=2, keepdim=True)[0] + 1e-5)
@@ -449,6 +550,9 @@ def get_object_localization_loss(
     image_token_idx_mask,
     loss_fn,
 ):
+    """To obtain the average of the loss for each layer of object
+    localization."""
+
     num_layers = len(cross_attention_scores)
     loss = 0
     for k, v in cross_attention_scores.items():
@@ -465,6 +569,8 @@ def get_object_localization_loss_for_one_layer(
     object_token_idx_mask,
     loss_fn,
 ):
+    """Get object localization loss for one layer."""
+
     bxh, num_noise_latents, num_text_tokens = cross_attention_scores.shape
     b, max_num_objects, _, _ = object_segmaps.shape
     size = int(num_noise_latents**0.5)
@@ -507,6 +613,7 @@ def get_object_localization_loss_for_one_layer(
 
 
 class RandomZoomIn(nn.Module):
+    """RandomZoomIn for object transform."""
 
     def __init__(self, min_zoom=1.0, max_zoom=1.5):
         super().__init__()
@@ -514,6 +621,14 @@ class RandomZoomIn(nn.Module):
         self.max_zoom = max_zoom
 
     def forward(self, image: torch.Tensor):
+        """Forward function.
+
+        Args:
+            image (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         zoom = torch.rand(1) * (self.max_zoom - self.min_zoom) + self.min_zoom
         image = T.functional.resize(
             image,
@@ -527,6 +642,8 @@ class RandomZoomIn(nn.Module):
 
 
 class PadToSquare(nn.Module):
+    """If the height of the image is greater than the width, padding will be
+    added on both sides of the image to make it a square."""
 
     def __init__(self, fill=0, padding_mode='constant'):
         super().__init__()
@@ -534,6 +651,14 @@ class PadToSquare(nn.Module):
         self.padding_mode = padding_mode
 
     def forward(self, image: torch.Tensor):
+        """Forward function.
+
+        Args:
+            image (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         _, h, w = image.shape
         if h == w:
             return image
@@ -557,11 +682,21 @@ class PadToSquare(nn.Module):
 
 
 class CropTopSquare(nn.Module):
+    """If the height of the image is greater than the width, the image will be
+    cropped into a square starting from the top of the image."""
 
     def __init__(self):
         super().__init__()
 
     def forward(self, image: torch.Tensor):
+        """Forward function.
+
+        Args:
+            image (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         _, h, w = image.shape
         if h <= w:
             return image
@@ -569,6 +704,7 @@ class CropTopSquare(nn.Module):
 
 
 class MLP(nn.Module):
+    """Multilayer Perceptron."""
 
     def __init__(self, in_dim, out_dim, hidden_dim, use_residual=True):
         super().__init__()
@@ -581,6 +717,14 @@ class MLP(nn.Module):
         self.act_fn = nn.GELU()
 
     def forward(self, x):
+        """Forward function.
+
+        Args:
+            x (torch.Tensor ): You can directly input a ``torch.Tensor``.
+
+        Returns:
+            torch.Tensor : ``torch.tensor`` will be returned.
+        """
         residual = x
         x = self.layernorm(x)
         x = self.fc1(x)
@@ -598,6 +742,8 @@ def fuse_object_embeddings(
     num_objects,
     fuse_fn=torch.add,
 ):
+    """Fuse object embeddings."""
+
     object_embeds = object_embeds.to(inputs_embeds.dtype)
 
     batch_size, max_num_objects = object_embeds.shape[:2]

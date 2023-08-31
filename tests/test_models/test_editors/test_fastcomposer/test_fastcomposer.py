@@ -63,7 +63,7 @@ config = dict(
     data_preprocessor=dict(type='DataPreprocessor'))
 
 
-class TestControlStableDiffusion(TestCase):
+class TestFastComposer(TestCase):
 
     def setUp(self):
         cfg_file = Config.fromfile(config)
