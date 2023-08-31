@@ -4,7 +4,6 @@ from unittest import TestCase
 
 import numpy as np
 import torch
-from mmengine import Config
 from PIL import Image
 
 from mmagic.registry import MODELS
@@ -66,8 +65,7 @@ config = dict(
 class TestFastComposer(TestCase):
 
     def setUp(self):
-        cfg_file = Config.fromfile(config)
-        self.fastcomposer = MODELS.build(cfg_file.model)
+        self.fastcomposer = MODELS.build(config)
 
     def test_infer(self):
         prompt = 'A man img and a man img sitting in a park'
