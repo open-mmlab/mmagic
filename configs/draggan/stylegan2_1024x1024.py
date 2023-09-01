@@ -16,11 +16,11 @@ ema_half_life = 10.  # G_smoothing_kimg
 
 model = dict(
     generator=dict(
-        out_size=256,
+        out_size=1024,
         update_mean_latent_with_ema=True,
         bgr2rgb=False,
         fixed_noise=True),
-    discriminator=dict(in_size=256),  # useless
+    discriminator=dict(in_size=1024),  # useless
     ema_config=dict(
         type='ExponentialMovingAverage',
         interval=1,

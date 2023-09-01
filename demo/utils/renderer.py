@@ -247,10 +247,15 @@ class Renderer:
                 model_setting=0,
                 model_ckpt=ckpt_pth,
             )
-            self.editor = editor
+        elif '1024' in ckpt_pth:
+            editor = MMagicInferencer(
+                'draggan',
+                model_setting=2,
+                model_ckpt=ckpt_pth,
+            )
         else:
             raise NotImplementedError
-
+        self.editor = editor
         # Generate random latents.
         self.w0_seed = w0_seed
         self.w_load = w_load

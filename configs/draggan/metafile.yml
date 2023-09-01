@@ -48,4 +48,15 @@ Models:
       Precision50k: 0.0
       Recall50k: 0.0
     Task: DragGAN
-  Weights: ./checkpoints/256.pth
+  Weights: ./checkpoints/stylegan2-horse_256_pytorch_mmagic.pth
+- Config: configs/draggan/stylegan2_1024x1024.py
+  In Collection: DragGAN
+  Name: stylegan2_1024x1024
+  Results:
+  - Dataset: LSUN-Horse
+    Metrics:
+      FID50k: 0.0
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: DragGAN
+  Weights: ./checkpoints/stylegan2-dogs_1024_pytorch_mmagic.pth
