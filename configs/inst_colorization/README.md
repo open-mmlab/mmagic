@@ -33,7 +33,7 @@ You can use the following commands to colorize an image.
 
 ```shell
 
-python demo/colorization_demo.py configs/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256.py https://download.openmmlab.com/mmediting/inst_colorization/inst-colorizatioon_full_official_cocostuff-256x256-5b9d4eee.pth input.jpg output.jpg
+python demo/mmagic_inference_demo.py --model-name inst_colorization --img input.jpg --result-out-dir output.png
 ```
 
 For more demos, you can refer to [Tutorial 3: inference with pre-trained models](https://mmagic.readthedocs.io/en/latest/user_guides/3_inference.html).
