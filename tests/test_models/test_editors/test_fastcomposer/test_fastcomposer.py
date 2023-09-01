@@ -1,8 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import gc
+import platform
 from unittest import TestCase
 
 import numpy as np
+import pytest
 import torch
 from PIL import Image
 
@@ -62,6 +64,9 @@ config = dict(
     data_preprocessor=dict(type='DataPreprocessor'))
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 class TestFastComposer(TestCase):
 
     def setUp(self):
