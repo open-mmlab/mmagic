@@ -13,7 +13,6 @@ from mmagic.utils import register_all_modules
 
 gc.collect()
 torch.cuda.empty_cache()
-
 register_all_modules()
 stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 clip_vit_url = 'openai/clip-vit-large-patch14'
