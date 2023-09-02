@@ -8,7 +8,7 @@ from mmagic.models.editors.animatediff.unet_block import (
 
 
 def test_UNetMidBlock3DCrossAttn():
-    input = torch.rand((1, 64, 16, 64, 64))
+    input = torch.rand((1, 64, 16, 8, 8))
     midblock = UNetMidBlock3DCrossAttn(
         64,
         64,
@@ -16,11 +16,11 @@ def test_UNetMidBlock3DCrossAttn():
         unet_use_cross_frame_attention=False,
         unet_use_temporal_attention=False)
     output = midblock.forward(input)
-    assert output.shape == (1, 64, 16, 64, 64)
+    assert output.shape == (1, 64, 16, 8, 8)
 
 
 def test_CrossAttnDownBlock3D():
-    input = torch.rand((1, 64, 16, 64, 64))
+    input = torch.rand((1, 64, 16, 8, 8))
     downblock = CrossAttnDownBlock3D(
         64,
         64,
@@ -29,11 +29,11 @@ def test_CrossAttnDownBlock3D():
         unet_use_cross_frame_attention=False,
         unet_use_temporal_attention=False)
     output, _ = downblock.forward(input)
-    assert output.shape == (1, 64, 16, 32, 32)
+    assert output.shape == (1, 64, 16, 4, 4)
 
 
 def test_CrossAttnUpBlock3D():
-    input = torch.rand((1, 64, 16, 64, 64))
+    input = torch.rand((1, 64, 16, 8, 8))
     upblock = CrossAttnUpBlock3D(
         64,
         64,
@@ -43,7 +43,7 @@ def test_CrossAttnUpBlock3D():
         unet_use_cross_frame_attention=False,
         unet_use_temporal_attention=False)
     output = upblock.forward(input, [input])
-    assert output.shape == (1, 64, 16, 128, 128)
+    assert output.shape == (1, 64, 16, 16, 16)
 
 
 def test_get_down_block():
