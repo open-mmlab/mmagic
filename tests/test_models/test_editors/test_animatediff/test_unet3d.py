@@ -30,11 +30,11 @@ unet_cfg = dict(
     'win' in platform.system().lower(),
     reason='skip on windows due to limited RAM.')
 def test_Unet3D():
-    input = torch.rand((1, 4, 16, 32, 32))
-    text_feat = torch.rand([1, 77, 768])
+    input = torch.rand((1, 4, 16, 8, 8))
+    text_feat = torch.rand([1, 20, 768])
     unet = build_module(unet_cfg, MODELS)
     output = unet.forward(input, 10, text_feat)
-    assert output['sample'].shape == (1, 4, 16, 32, 32)
+    assert output['sample'].shape == (1, 4, 16, 8, 8)
 
 
 if __name__ == '__main__':
