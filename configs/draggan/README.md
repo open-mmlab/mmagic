@@ -57,12 +57,12 @@ showcase the manipulation of real images through GAN inversion.
 
 ## Citation
 
-````latex
+```latex
 @inproceedings{pan2023drag,
   title={Drag your gan: Interactive point-based manipulation on the generative image manifold},
   author={Pan, Xingang and Tewari, Ayush and Leimk{\"u}hler, Thomas and Liu, Lingjie and Meka, Abhimitra and Theobalt, Christian},
   booktitle={ACM SIGGRAPH 2023 Conference Proceedings},
   pages={1--11},
   year={2023}
-}```
-````
+}
+```
