@@ -15,6 +15,7 @@ from diffusers.models.embeddings import TimestepEmbedding, Timesteps
 from diffusers.models.modeling_utils import ModelMixin
 from diffusers.utils import BaseOutput
 from mmengine.logging import MMLogger
+from mmengine.model import constant_init
 
 from mmagic.registry import MODELS
 from .resnet_3d import InflatedConv3d
@@ -275,10 +276,22 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
             ]
             logger.info(
                 f'### Temporal Module Parameters: {sum(params) / 1e6} M')
-        # TODO: support initialize without pretrained model
+        elif from_pretrained is None:
+            #   As Improved-DDPM, we apply zero-initialization to
+            #   second conv block in ResBlock (keywords: conv_2)
+            #   the output layer of the Unet (keywords: 'out' but
+            #     not 'out_blocks')
+            #   projection layer in Attention layer (keywords: proj)
+            for n, m in self.named_modules():
+                if isinstance(m, nn.Conv2d) and ('conv2' in n or
+                                                 ('out' in n
+                                                  and 'out_blocks' not in n)):
+                    constant_init(m, 0)
+                if isinstance(m, nn.Conv1d) and 'proj' in n:
+                    constant_init(m, 0)
         else:
-            raise TypeError('from_pretrained must be a str  but \
-                            got None instead.')
+            raise TypeError('from_pretrained must be a str or None but'
+                            f' got {type(from_pretrained)} instead.')
 
     def set_attention_slice(self, slice_size):
         r"""

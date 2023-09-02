@@ -199,8 +199,9 @@ class Transformer3DModel(ModelMixin, ConfigMixin):
         f'but got ndim={hidden_states.dim()}.'
         video_length = hidden_states.shape[2]
         hidden_states = rearrange(hidden_states, 'b c f h w -> (b f) c h w')
-        encoder_hidden_states = repeat(
-            encoder_hidden_states, 'b n c -> (b f) n c', f=video_length)
+        if encoder_hidden_states is not None:
+            encoder_hidden_states = repeat(
+                encoder_hidden_states, 'b n c -> (b f) n c', f=video_length)
 
         batch, channel, height, weight = hidden_states.shape
         residual = hidden_states
@@ -572,7 +573,8 @@ class CrossAttention(nn.Module):
                     self.heads, dim=0)
 
         # attention, what we cannot get enough of
-        if self._use_memory_efficient_attention_xformers:
+        if self._use_memory_efficient_attention_xformers and\
+                'cuda' in query.device.type:
             # hidden_states = xformers.ops.memory_efficient_attention(
             # query, key, value, attn_bias=attention_mask,
             # op=self.attention_op, scale=self.scale

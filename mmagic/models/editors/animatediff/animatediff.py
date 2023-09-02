@@ -109,14 +109,16 @@ class AnimateDiff(BaseModel):
         self.unet = build_module(unet, MODELS)  # NOTE: initialize unet as fp32
         self._unet_ori_dtype = next(self.unet.parameters()).dtype
         print_log(f'Set UNet dtype to \'{self._unet_ori_dtype}\'.', 'current')
-        motion_module_state_dict = torch.load(
-            motion_module_cfg['path'], map_location='cpu')
-        # if "global_step" in motion_module_state_dict:
-        # func_args.update({"global_step":
-        # motion_module_state_dict["global_step"]})
-        missing, unexpected = self.unet.load_state_dict(
-            motion_module_state_dict, strict=False)
-        assert len(unexpected) == 0
+        if motion_module_cfg is not None:
+            if 'path' in motion_module_cfg.keys():
+                motion_module_state_dict = torch.load(
+                    motion_module_cfg['path'], map_location='cpu')
+                # if "global_step" in motion_module_state_dict:
+                # func_args.update({"global_step":
+                # motion_module_state_dict["global_step"]})
+                missing, unexpected = self.unet.load_state_dict(
+                    motion_module_state_dict, strict=False)
+                assert len(unexpected) == 0
 
         self.scheduler = build_module(scheduler, DIFFUSION_SCHEDULERS)
         if test_scheduler is None:
@@ -146,23 +148,26 @@ class AnimateDiff(BaseModel):
         self.set_tomesd()
 
         # TODO: finish
-        state_dict = {}
-        with safe_open(
-                dream_booth_lora_cfg['path'], framework='pt',
-                device='cpu') as f:
-            for key in f.keys():
-                state_dict[key] = f.get_tensor(key)
-        # vae
-        converted_vae_checkpoint = convert_ldm_vae_checkpoint(
-            state_dict, self.vae.config)
-        self.vae.load_state_dict(converted_vae_checkpoint)
-        # unet
-        converted_unet_checkpoint = convert_ldm_unet_checkpoint(
-            state_dict, self.unet.config)
-        self.unet.load_state_dict(converted_unet_checkpoint, strict=False)
-        # text_model
-        self.text_encoder = convert_ldm_clip_checkpoint(state_dict)
-        # self.convert_lora(state_dict)
+        if dream_booth_lora_cfg is not None:
+            if 'path' in dream_booth_lora_cfg.keys():
+                state_dict = {}
+                with safe_open(
+                        dream_booth_lora_cfg['path'], framework='pt',
+                        device='cpu') as f:
+                    for key in f.keys():
+                        state_dict[key] = f.get_tensor(key)
+                # vae
+                converted_vae_checkpoint = convert_ldm_vae_checkpoint(
+                    state_dict, self.vae.config)
+                self.vae.load_state_dict(converted_vae_checkpoint)
+                # unet
+                converted_unet_checkpoint = convert_ldm_unet_checkpoint(
+                    state_dict, self.unet.config)
+                self.unet.load_state_dict(
+                    converted_unet_checkpoint, strict=False)
+                # text_model
+                self.text_encoder = convert_ldm_clip_checkpoint(state_dict)
+                # self.convert_lora(state_dict)
 
         self.prepare_model()
 
@@ -608,7 +613,7 @@ class AnimateDiff(BaseModel):
               latents: Optional[torch.FloatTensor] = None,
               return_type: Optional[str] = 'tensor',
               show_progress: bool = True,
-              seed: Optional[int] = None):
+              seed: Optional[int] = 1007):
         """Function invoked when calling the pipeline for generation.
 
         Args:
