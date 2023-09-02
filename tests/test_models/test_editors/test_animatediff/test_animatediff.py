@@ -3,16 +3,18 @@ import platform
 from unittest import TestCase
 
 import pytest
-import torch
-from mmengine.utils import digit_version
-from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmagic.registry import MODELS
 from mmagic.utils import register_all_modules
 
+# import torch
+# from mmengine.utils import digit_version
+
+# from mmengine.utils.dl_utils import TORCH_VERSION
+
 register_all_modules()
 
-stable_diffusion_v15_url = '/home/wangrunqi/stable-diffusion-v1-5'
+stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 
 diffusion_scheduler = dict(
     type='DDIMScheduler',
@@ -48,8 +50,7 @@ model = dict(
             temporal_position_encoding=True,
             temporal_position_encoding_max_len=24,
             temporal_attention_dim_div=1),
-        subfolder='unet',
-        from_pretrained=stable_diffusion_v15_url),
+        subfolder='unet'),
     text_encoder=dict(
         type='ClipWrapper',
         clip_type='huggingface',
@@ -70,11 +71,6 @@ cfg = dict(diffusion_scheduler=diffusion_scheduler, model=model)
 class TestAnimateDiff(TestCase):
 
     def setUp(self):
-        # unet
-        if digit_version(TORCH_VERSION) <= digit_version('1.6.0'):
-            from mmagic.models.editors.ddpm.denoising_unet import SiLU
-            torch.nn.SiLU = SiLU
-
         animatediff = MODELS.build(model)
         assert not any([p.requires_grad for p in animatediff.vae.parameters()])
         assert not any(
