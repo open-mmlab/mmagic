@@ -52,8 +52,8 @@ showcase the manipulation of real images through GAN inversion.
 |   [stylegan2_face_512x512](./stylegan2_512x512.py)   |        FFHQ        |     self-distilled StyleGAN     |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-FFHQ) |
 |  [stylegan2_horse_256x256](./stylegan2_256x256.py)   |     LSUN-Horse     |     self-distilled StyleGAN     |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-lsun-horses) |
 | [stylegan2_dogs_1024x1024](./stylegan2_1024x1024.py) |   Internet Dogs    |     self-distilled StyleGAN     |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-dogs-internet) |
-|   [stylegan2_car_512x512](./stylegan2_512x512.py)    |        Car         | transfer from official training |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-dogs-internet) |
-|   [stylegan2_cat_256x256](./stylegan2_256x256.py)    |        Cat         | transfer from official training |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-dogs-internet) |
+|   [stylegan2_car_512x512](./stylegan2_512x512.py)    |        Car         | transfer from official training |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-car-official) |
+|   [stylegan2_cat_256x256](./stylegan2_256x256.py)    |        Cat         | transfer from official training |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-cat-official) |
 
 ## Citation
 

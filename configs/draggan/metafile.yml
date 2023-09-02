@@ -43,7 +43,7 @@ Models:
       Precision50k: 0.0
       Recall50k: 0.0
     Task: DragGAN
-  Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-dogs-internet
+  Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-car-official
 - Config: configs/draggan/stylegan2_256x256.py
   In Collection: DragGAN
   Name: stylegan2_256x256
@@ -60,7 +60,7 @@ Models:
       Precision50k: 0.0
       Recall50k: 0.0
     Task: DragGAN
-  Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-dogs-internet
+  Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-cat-official
 - Config: configs/draggan/stylegan2_1024x1024.py
   In Collection: DragGAN
   Name: stylegan2_1024x1024
