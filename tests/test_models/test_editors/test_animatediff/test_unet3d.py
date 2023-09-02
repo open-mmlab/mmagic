@@ -1,4 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 import torch
 
 from mmagic.models.utils import build_module
@@ -23,6 +26,9 @@ unet_cfg = dict(
     subfolder='unet')
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 def test_Unet3D():
     input = torch.rand((1, 4, 16, 32, 32))
     text_feat = torch.rand([1, 77, 768])
