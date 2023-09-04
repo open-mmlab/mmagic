@@ -1,0 +1,113 @@
+Collections:
+- Name: StyleGANv3
+  Paper:
+    Title: Alias-Free Generative Adversarial Networks
+    URL: https://nvlabs-fi-cdn.nvidia.com/stylegan3/stylegan3-paper.pdf
+  README: configs/styleganv3/README.md
+  Task:
+  - unconditional gans
+  Year: 2021
+Models:
+- Config: configs/styleganv3/stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024.py
+  In Collection: StyleGANv3
+  Name: stylegan3-t_gamma32.8_8xb4-fp16-noaug_ffhq-1024x1024
+  Results:
+  - Dataset: ffhq1024x1024
+    Metrics:
+      Iter: 490000.0
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma32.8_ffhq_1024_b4x8_best_fid_iter_490000_20220401_120733-4ff83434.pth
+- Config: configs/styleganv3/stylegan3-t_ada-gamma6.6_8xb4-fp16_metfaces-1024x1024.py
+  In Collection: StyleGANv3
+  Name: stylegan3-t_ada-gamma6.6_8xb4-fp16_metfaces-1024x1024
+  Results:
+  - Dataset: metface1024x1024
+    Metrics:
+      FID50k: 15.09
+      Iter: 130000.0
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ada_fp16_gamma6.6_metfaces_1024_b4x8_best_fid_iter_130000_20220401_115101-f2ef498e.pth
+- Config: configs/styleganv3/stylegan3-t_gamma2.0_8xb4-fp16-noaug_ffhq-256x256.py
+  In Collection: StyleGANv3
+  Name: stylegan3-t_gamma2.0_8xb4-fp16-noaug_ffhq-256x256
+  Results:
+  - Dataset: ffhq256x256
+    Metrics:
+      FID50k: 4.51
+      Iter: 740000.0
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_noaug_fp16_gamma2.0_ffhq_256_b4x8_best_fid_iter_740000_20220401_122456-730e1fba.pth
+- Config: configs/styleganv3/stylegan3-r_ada-gamma3.3_8xb4-fp16_metfaces-1024x1024.py
+  In Collection: StyleGANv3
+  Name: stylegan3-r_ada-gamma3.3_8xb4-fp16_metfaces-1024x1024
+  Results:
+  - Dataset: ffhq1024x1024
+    Metrics: {}
+    Task: Unconditional GANs
+  Weights: <>
+- Config: configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_ffhqu-256x256.py
+  In Collection: StyleGANv3
+  Name: stylegan3-t_cvt-official-rgb_8xb4_ffhqu-256x256
+  Results:
+  - Dataset: ffhqu256x256
+    Metrics:
+      EQ-R: 13.12
+      EQ-T: 63.01
+      FID50k: 4.62
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ffhqu_256_b4x8_cvt_official_rgb_20220329_235046-153df4c8.pth
+- Config: configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_afhqv2-512x512.py
+  In Collection: StyleGANv3
+  Name: stylegan3-t_cvt-official-rgb_8xb4_afhqv2-512x512
+  Results:
+  - Dataset: afhqv2512x512
+    Metrics:
+      EQ-R: 13.51
+      EQ-T: 60.15
+      FID50k: 4.04
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_afhqv2_512_b4x8_cvt_official_rgb_20220329_235017-ee6b037a.pth
+- Config: configs/styleganv3/stylegan3-t_cvt-official-rgb_8xb4_ffhq-1024x1024.py
+  In Collection: StyleGANv3
+  Name: stylegan3-t_cvt-official-rgb_8xb4_ffhq-1024x1024
+  Results:
+  - Dataset: ffhq1024x1024
+    Metrics:
+      EQ-R: 13.82
+      EQ-T: 61.21
+      FID50k: 2.79
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_t_ffhq_1024_b4x8_cvt_official_rgb_20220329_235113-db6c6580.pth
+- Config: configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4_ffhqu-256x256.py
+  In Collection: StyleGANv3
+  Name: stylegan3-r_cvt-official-rgb_8xb4_ffhqu-256x256
+  Results:
+  - Dataset: ffhqu256x256
+    Metrics:
+      EQ-R: 40.48
+      EQ-T: 66.65
+      FID50k: 4.5
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_ffhqu_256_b4x8_cvt_official_rgb_20220329_234909-4521d963.pth
+- Config: configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4x8_afhqv2-512x512.py
+  In Collection: StyleGANv3
+  Name: stylegan3-r_cvt-official-rgb_8xb4x8_afhqv2-512x512
+  Results:
+  - Dataset: afhqv2512x512
+    Metrics:
+      EQ-R: 40.34
+      EQ-T: 64.89
+      FID50k: 4.4
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_afhqv2_512_b4x8_cvt_official_rgb_20220329_234829-f2eaca72.pth
+- Config: configs/styleganv3/stylegan3-r_cvt-official-rgb_8xb4_ffhq-1024x1024.py
+  In Collection: StyleGANv3
+  Name: stylegan3-r_cvt-official-rgb_8xb4_ffhq-1024x1024
+  Results:
+  - Dataset: ffhq1024x1024
+    Metrics:
+      EQ-R: 46.62
+      EQ-T: 64.76
+      FID50k: 3.07
+    Task: Unconditional GANs
+  Weights: https://download.openmmlab.com/mmediting/stylegan3/stylegan3_r_ffhq_1024_b4x8_cvt_official_rgb_20220329_234933-ac0500a1.pth
