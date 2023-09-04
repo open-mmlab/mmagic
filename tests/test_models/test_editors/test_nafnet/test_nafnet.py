@@ -66,3 +66,8 @@ def test_nafnet_local():
         output = model(inputs)
         assert torch.is_tensor(output)
         assert output.shape == targets.shape
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -55,3 +55,8 @@ class TestDCGANDiscriminator(object):
         assert not d.output_layer.with_norm
         assert not d.output_layer.with_activation
         assert isinstance(d.downsamples[1].activate, torch.nn.LeakyReLU)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

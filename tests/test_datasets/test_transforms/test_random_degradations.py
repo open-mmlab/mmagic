@@ -451,3 +451,8 @@ def test_degradations_with_shuffle():
     ] * 10
     model = DegradationsWithShuffle(degradations=degradations, keys=['lq'])
     model(results)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -56,3 +56,8 @@ def test_video_interpolation_inferencer_fps_multiplier():
     inference_result = inferencer_instance(
         video=video_path, result_out_dir=result_out_dir)
     assert inference_result is None
+
+
+def teardown_module():
+    import gc
+    gc.collect()

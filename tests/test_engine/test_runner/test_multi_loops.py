@@ -205,3 +205,8 @@ class TestLoop(TestCase):
     def test_run(self):
         self._test_run(True)  # val
         self._test_run(False)  # test
+
+
+def teardown_module():
+    import gc
+    gc.collect()

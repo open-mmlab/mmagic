@@ -19,3 +19,8 @@ def test_get_blocks():
     assert len(blocks) == 4
     with pytest.raises(ValueError):
         get_blocks(num_layers=1000)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

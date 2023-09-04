@@ -81,3 +81,8 @@ def test_cain_net_cuda():
         with pytest.raises(ValueError):
             model_cfg = dict(type='CAINNet', norm='lys')
             MODELS.build(model_cfg).cuda()
+
+
+def teardown_module():
+    import gc
+    gc.collect()

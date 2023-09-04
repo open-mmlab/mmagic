@@ -88,3 +88,8 @@ def test_prepare():
 
     metric.get_metric_sampler(None, dataloader, [])
     assert dataloader == dataloader
+
+
+def teardown_module():
+    import gc
+    gc.collect()

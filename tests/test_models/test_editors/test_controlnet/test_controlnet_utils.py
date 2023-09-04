@@ -67,3 +67,8 @@ def test_change_base_model():
     with pytest.raises(Exception):
         change_base_model(controlnet, currmodel, wrong_model)
     # change_base_model(controlnet, currmodel, wrong_base_state_dict)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

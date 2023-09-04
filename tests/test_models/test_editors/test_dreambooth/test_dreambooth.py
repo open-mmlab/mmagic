@@ -145,3 +145,8 @@ class TestControlStableDiffusion(TestCase):
         dreambooth.text_encoder = mock_text_encoder()
 
         dreambooth.train_step(data, optim_wrapper)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

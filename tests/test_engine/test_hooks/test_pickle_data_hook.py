@@ -41,3 +41,8 @@ def test_PickleDataHook():
 
     # test before run
     hook.before_run(runner)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -80,3 +80,8 @@ def test_iconvsr():
                 padding=2,
                 spynet_pretrained=None,
                 edvr_pretrained=123).cuda()
+
+
+def teardown_module():
+    import gc
+    gc.collect()

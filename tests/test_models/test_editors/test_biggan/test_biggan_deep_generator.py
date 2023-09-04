@@ -228,3 +228,8 @@ class TestBigGANDeepGenerator(object):
         g = MODELS.build(cfg).cuda()
         res = g(None, None, num_batches=3)
         assert res.shape == (3, 3, 128, 128)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

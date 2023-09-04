@@ -33,3 +33,8 @@ def test_gl_decoder():
         gl_decoder = gl_decoder.cuda()
         output = gl_decoder(input_x.cuda())
         assert output.shape == (1, 3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

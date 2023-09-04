@@ -93,3 +93,8 @@ class TestStyleGAN3(TestCase):
         data = dict(inputs=dict(), data_samples=[DataSample(gt_img=img)])
         message_hub.update_info('iter', 0)
         _ = stylegan.train_step(data, optim_wrapper_dict)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

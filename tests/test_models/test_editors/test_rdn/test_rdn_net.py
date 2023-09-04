@@ -58,3 +58,8 @@ def test_rdn():
         optimizer.step()
         assert torch.is_tensor(output)
         assert output.shape == targets.shape
+
+
+def teardown_module():
+    import gc
+    gc.collect()

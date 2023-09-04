@@ -876,3 +876,8 @@ class TestBaseDataPreprocessor(TestCase):
         destruct_batch = data_preprocessor.destruct(inputs)
         self.assertEqual(destruct_batch.shape, (2, 1, 5, 5))
         assert_allclose(destruct_batch.float(), inputs.float())
+
+
+def teardown_module():
+    import gc
+    gc.collect()

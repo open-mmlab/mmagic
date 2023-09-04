@@ -65,3 +65,8 @@ def test_ensemble_cuda():
             ensemble = SpatialTemporalEnsemble(is_temporal_ensemble=True)
             inputs = torch.rand(1, 3, 4, 4).cuda()
             outputs = ensemble(inputs, model)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

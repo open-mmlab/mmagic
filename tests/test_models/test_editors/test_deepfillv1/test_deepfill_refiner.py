@@ -39,3 +39,8 @@ def test_deepfill_refiner():
                           ContextualAttentionNeck)
         assert isinstance(refiner.decoder, DeepFillDecoder)
         assert isinstance(refiner.dilation_neck, GLDilationNeck)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

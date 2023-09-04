@@ -434,3 +434,8 @@ class TestBigGANDiscResBlock:
         module = MODELS.build(cfg).cuda()
         out = module(self.x.cuda())
         assert out.shape == (2, 64, 8, 8)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

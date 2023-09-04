@@ -70,3 +70,8 @@ class TestLSGANDiscriminator(object):
         x = torch.randn((2, 3, 64, 64))
         score = d(x.cuda())
         assert score.shape == (2, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

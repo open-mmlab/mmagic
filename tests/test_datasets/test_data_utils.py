@@ -20,3 +20,8 @@ def test_infer_io_backend():
 
 
 # TODO: add more uts
+
+
+def teardown_module():
+    import gc
+    gc.collect()

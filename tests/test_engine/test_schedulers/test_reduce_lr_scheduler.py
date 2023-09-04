@@ -105,3 +105,8 @@ class TestLRScheduler(TestCase):
             ReduceLR(self.optimizer, threshold_mode='ysli')
         with pytest.raises(ValueError):
             ReduceLR(self.optimizer, factor=1.5)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

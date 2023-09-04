@@ -105,3 +105,8 @@ class TestGLIDE(TestCase):
             prompt=text_prompts, show_progress=True,
             num_inference_steps=2)['samples']
         assert image.shape == (1, 3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

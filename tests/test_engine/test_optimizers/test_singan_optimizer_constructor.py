@@ -60,3 +60,8 @@ class TestSinGANOptimWrapperConstructor(TestCase):
         with self.assertRaises(AssertionError):
             optim_wrapper_dict_builder = SinGANOptimWrapperConstructor(
                 self.optim_wrapper_cfg, 'test')
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -22,3 +22,8 @@ def test_pconv_encdec():
 
         with pytest.raises(TypeError):
             pconv_encdec.init_weights(pretrained=dict(igccc=8989))
+
+
+def teardown_module():
+    import gc
+    gc.collect()

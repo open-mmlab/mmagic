@@ -33,3 +33,8 @@ def test_indexnet_decoder():
     indexnet_decoder.init_weights()
     out = indexnet_decoder(outputs_enc)
     assert out.shape == (2, 1, 32, 32)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

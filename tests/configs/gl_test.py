@@ -130,3 +130,8 @@ test_pipeline = [
     dict(type='GetMaskedImage'),
     dict(type='PackInputs'),
 ]
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -31,3 +31,8 @@ def test_aspp():
     x = torch.rand(2, 128, 8, 8)
     output = aspp(x)
     assert output.shape == (2, 256, 8, 8)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

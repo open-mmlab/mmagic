@@ -208,3 +208,8 @@ class TestNonMetricEvaluator(TestCase):
         evaluator = Evaluator(None)
         output = evaluator.evaluate()
         self.assertEqual(output, {'No Metric': 'Nan'})
+
+
+def teardown_module():
+    import gc
+    gc.collect()

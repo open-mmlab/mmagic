@@ -32,3 +32,8 @@ def test_SpectralNorm():
     x = torch.randn(1, 4)
     out = sn_block(x)
     assert out.shape == (1, 4)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

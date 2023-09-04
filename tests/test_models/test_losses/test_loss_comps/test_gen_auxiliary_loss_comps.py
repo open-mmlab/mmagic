@@ -69,3 +69,8 @@ class TestPathRegularizer:
 
         with pytest.raises(AssertionError):
             _ = pl(1., 2, outputs_dict=output_dict)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

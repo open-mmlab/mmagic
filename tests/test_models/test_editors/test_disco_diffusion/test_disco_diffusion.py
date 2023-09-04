@@ -246,3 +246,8 @@ class TestDiscoDiffusion(TestCase):
                     num_inference_steps=2,
                     eta=0.8)['samples']
                 assert image.shape == (1, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

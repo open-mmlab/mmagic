@@ -124,3 +124,8 @@ class TestDeblurGanV2(TestCase):
                 self.assertEqual(
                     log.keys(), set(['loss_g_content', 'loss_g_adv',
                                      'loss_g']))
+
+
+def teardown_module():
+    import gc
+    gc.collect()

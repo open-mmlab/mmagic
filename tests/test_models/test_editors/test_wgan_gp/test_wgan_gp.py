@@ -101,3 +101,8 @@ class TestWGANGP(TestCase):
                 self.assertEqual(
                     log.keys(),
                     set(['loss', 'loss', 'loss_disc_fake', 'loss_disc_real']))
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -230,3 +230,8 @@ class TestTransIS:
             IS.process(_data_batch, _predictions)
         IS_res = IS.compute_metrics(IS.fake_results)
         assert 'is' in IS_res and 'is_std' in IS_res
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -33,3 +33,8 @@ def test_gated_conv():
     assert conv.conv.out_channels == 20
     out = conv(x)
     assert out.shape == (2, 10, 10, 10)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

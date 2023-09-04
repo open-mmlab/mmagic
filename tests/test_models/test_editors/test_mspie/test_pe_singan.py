@@ -118,3 +118,8 @@ class TestPESinGAN:
             elif i in [4, 5]:
                 assert singan.curr_stage == 2
                 assert img.shape[-2:] == (32, 32)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

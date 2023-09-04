@@ -71,3 +71,8 @@ def test_fractional_pseduo_rotation():
     ref, ref_mask = apply_fractional_pseudo_rotation(x, angle)
     print(ref.shape)
     print(ref_mask.shape)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

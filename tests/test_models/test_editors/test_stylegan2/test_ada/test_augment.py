@@ -69,3 +69,8 @@ class TestAuementPipe(TestCase):
         inp = torch.rand(2, 3, 64, 64)
         out = augment_pipeline(inp)
         assert out.shape == (2, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

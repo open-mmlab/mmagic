@@ -71,3 +71,8 @@ def test_pconv2d():
             eps=1e-8).cuda().half()
         output = pconv2d(x.cuda().half(), mask=None)
         assert output.shape == (1, 2, 6, 6)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

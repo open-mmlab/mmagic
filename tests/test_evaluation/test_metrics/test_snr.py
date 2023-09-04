@@ -88,3 +88,8 @@ def test_snr():
     img_hw_2 = np.zeros((32, 32), dtype=np.uint8)
     snr_result = snr(img_hw_1, img_hw_2, crop_border=0)
     assert snr_result == 0
+
+
+def teardown_module():
+    import gc
+    gc.collect()

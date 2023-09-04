@@ -121,3 +121,8 @@ class TestInstColorization:
 
         assert torch.is_tensor(res)
         assert res.shape == target_shape
+
+
+def teardown_module():
+    import gc
+    gc.collect()

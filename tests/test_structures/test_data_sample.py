@@ -285,3 +285,8 @@ class TestDataSample(TestCase):
         empty_data = DataSample(
             img=torch.randn(3, 3), metainfo=dict(img_shape=[3, 3]))
         assert len(empty_data) == 1
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -62,3 +62,8 @@ def test_update_and_check_evaluator():
     evaluator = dict(type='Evaluator')
     evaluator = update_and_check_evaluator(evaluator)
     assert evaluator['metrics'] is None
+
+
+def teardown_module():
+    import gc
+    gc.collect()

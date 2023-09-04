@@ -63,3 +63,8 @@ def test_to_numpy():
     input = torch.rand(1, 3, 8, 8)
     output = to_numpy(input)
     assert isinstance(output, np.ndarray)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

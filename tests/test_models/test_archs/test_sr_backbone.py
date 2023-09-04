@@ -10,3 +10,8 @@ def test_sr_backbone_utils():
     input = torch.rand((2, 64, 128, 128))
     output = block(input)
     assert output.detach().numpy().shape == (2, 64, 128, 128)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

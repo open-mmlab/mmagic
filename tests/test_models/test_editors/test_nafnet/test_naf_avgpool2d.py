@@ -51,3 +51,8 @@ def test_avgpool2d():
     print(outputs)
     assert info == tar_info
     assert torch.all(torch.eq(targets, outputs))
+
+
+def teardown_module():
+    import gc
+    gc.collect()

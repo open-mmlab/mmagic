@@ -154,3 +154,8 @@ class TestR1GradientPenalty:
 
         with pytest.raises(AssertionError):
             _ = gp_loss(1., 2, outputs_dict=data_dict)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -25,3 +25,8 @@ def test_pconv_enc():
     assert isinstance(output['hidden_feats'], dict)
     assert isinstance(output['hidden_masks'], dict)
     assert output['out'].detach().numpy().shape == (2, 512, 1, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

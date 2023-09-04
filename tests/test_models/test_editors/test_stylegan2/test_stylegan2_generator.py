@@ -245,3 +245,8 @@ class TestStyleGAN2Generator:
             g(None, num_batches=2)
         res = g(None, num_batches=2, label=torch.randn(2, 10))
         assert res.shape == (2, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

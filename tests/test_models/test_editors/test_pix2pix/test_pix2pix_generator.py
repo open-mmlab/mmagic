@@ -60,3 +60,8 @@ class TestUnetGenerator:
         with pytest.raises(TypeError):
             gen = UnetGenerator(**self.default_cfg)
             gen.init_weights(pretrained=10)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

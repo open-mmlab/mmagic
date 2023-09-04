@@ -46,3 +46,8 @@ class TestWrapper(TestCase):
 
         # tear down
         shutil.rmtree(config_path)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

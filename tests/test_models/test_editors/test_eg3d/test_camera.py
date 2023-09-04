@@ -172,3 +172,8 @@ class TestGaussianCamera(TestCase):
         camera = GaussianCamera(**cfg_)
         repr_string = repr(camera)
         self.assertIn('GaussianCamera', repr_string)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

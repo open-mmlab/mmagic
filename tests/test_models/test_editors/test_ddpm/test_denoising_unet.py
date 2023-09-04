@@ -18,3 +18,8 @@ def test_NormWithEmbedding():
     ins = NormWithEmbedding(32, 32)
     output = ins.forward(input, emb)
     assert output.shape == (4, 32, 4, 32)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -108,3 +108,8 @@ class TestEG3DRenderer(TestCase):
                 ray_origins,
                 ray_directions,
                 render_kwargs=render_kwargs)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

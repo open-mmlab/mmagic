@@ -125,3 +125,8 @@ class TestPPL:
             ppl.process(_data_batch, _predictions)
         ppl_res = ppl.compute_metrics(ppl.fake_results)
         assert ppl_res['ppl_score'] >= 0
+
+
+def teardown_module():
+    import gc
+    gc.collect()

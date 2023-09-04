@@ -170,3 +170,8 @@ class TestImageDatasets:
             gt_path=str(self.data_root / 'gt' / 'baboon.png'),
             ref_path=str(self.data_root / 'gt' / 'baboon.png'),
             sample_idx=0)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

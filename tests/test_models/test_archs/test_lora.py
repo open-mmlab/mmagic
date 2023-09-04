@@ -126,3 +126,8 @@ def test_set_lora():
     set_lora_enable(model)
     out_lora_enable = model(img, context)
     assert (out_lora_enable == out_w_lora).all()
+
+
+def teardown_module():
+    import gc
+    gc.collect()

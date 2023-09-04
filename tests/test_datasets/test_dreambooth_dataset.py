@@ -18,3 +18,8 @@ def test_dreambooth_dataset():
     assert len(dataset) == 2
     for data in dataset:
         assert data['prompt'] == 'a sks ball'
+
+
+def teardown_module():
+    import gc
+    gc.collect()

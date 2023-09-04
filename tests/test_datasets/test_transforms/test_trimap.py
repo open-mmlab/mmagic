@@ -229,3 +229,8 @@ def test_transform_trimap():
         'transformed_trimap'].shape[:2] == dummy_trimap.shape
     repr_str = transform.__class__.__name__
     assert repr(transform) == repr_str
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -104,3 +104,8 @@ class TestMattingMetrics:
 
         assert list(res.keys()) == ['ConnectivityError']
         assert np.allclose(res['ConnectivityError'], 0.256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()

@@ -111,3 +111,8 @@ def test_ada_pipeline():
     ada.update(1, 2)
     ada.update(2, 2)
     assert (ada.log_buffer == 0).all()
+
+
+def teardown_module():
+    import gc
+    gc.collect()

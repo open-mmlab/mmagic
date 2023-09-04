@@ -145,3 +145,8 @@ def test_t_perceptual_loss():
     # test whether vgg type is valid
     with pytest.raises(ValueError):
         TransferalPerceptualLoss(criterion='l2')
+
+
+def teardown_module():
+    import gc
+    gc.collect()

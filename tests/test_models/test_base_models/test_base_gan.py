@@ -427,3 +427,8 @@ class TestBaseGAN(TestCase):
         # test raise error
         with self.assertRaises(AssertionError):
             gan.gather_log_vars([dict(a=1), dict(b=2)])
+
+
+def teardown_module():
+    import gc
+    gc.collect()

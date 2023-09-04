@@ -250,3 +250,8 @@ def test_pix2pix_val_step():
     # assert 'gt_photo' in out[0]
     # assert 'gt_mask' in out[0]
     assert 'fake_photo' in out[0]
+
+
+def teardown_module():
+    import gc
+    gc.collect()
