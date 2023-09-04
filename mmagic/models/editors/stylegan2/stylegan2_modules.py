@@ -226,7 +226,6 @@ class ModulatedConv2d(BaseModule):
 
     def forward(self, x, style, input_gain=None):
         n, c, h, w = x.shape
-
         weight = self.weight
         # Pre-normalize inputs to avoid FP16 overflow.
         # if x.dtype == torch.float16 and self.demodulate:
@@ -238,7 +237,6 @@ class ModulatedConv2d(BaseModule):
             )  # max_Ikk
             style = style / style.norm(
                 float('inf'), dim=1, keepdim=True)  # max_I
-
         with autocast(enabled=self.fp16_enabled):
             # process style code
             style = self.style_modulation(style).view(n, 1, c, 1,
@@ -329,7 +327,8 @@ class ModulatedStyleConv(BaseModule):
                  style_mod_cfg=dict(bias_init=1.),
                  style_bias=0.,
                  fp16_enabled=False,
-                 conv_clamp=256):
+                 conv_clamp=256,
+                 fixed_noise=False):
         super().__init__()
 
         # add support for fp16
@@ -348,7 +347,7 @@ class ModulatedStyleConv(BaseModule):
             style_bias=style_bias,
             fp16_enabled=fp16_enabled)
 
-        self.noise_injector = NoiseInjection()
+        self.noise_injector = NoiseInjection(fixed_noise=fixed_noise)
         self.activate = _FusedBiasLeakyReLU(out_channels)
 
     def forward(self,
@@ -384,7 +383,6 @@ class ModulatedStyleConv(BaseModule):
 
             # TODO: FP16 in activate layers
             out = self.activate(out)
-
             if self.fp16_enabled:
                 out = torch.clamp(
                     out, min=-self.conv_clamp, max=self.conv_clamp)
