@@ -102,11 +102,14 @@ class NoiseInjection(BaseModule):
     Args:
         noise_weight_init (float, optional): Initialization weight for noise
             injection. Defaults to ``0.``.
+        fixed_noise (bool, optional): Whether to inject a fixed noise. Defaults
+        to ``False``.
     """
 
-    def __init__(self, noise_weight_init=0.):
+    def __init__(self, noise_weight_init=0., fixed_noise=False):
         super().__init__()
         self.weight = nn.Parameter(torch.zeros(1).fill_(noise_weight_init))
+        self.fixed_noise = fixed_noise
 
     def forward(self, image, noise=None, return_noise=False):
         """Forward Function.
@@ -124,6 +127,10 @@ class NoiseInjection(BaseModule):
         if noise is None:
             batch, _, height, width = image.shape
             noise = image.new_empty(batch, 1, height, width).normal_()
+            if self.fixed_noise:
+                torch.manual_seed(1024)
+                noise = torch.randn(batch, 1, height, width).cuda()
+
         noise = noise.to(image.dtype)
         if return_noise:
             return image + self.weight.to(image.dtype) * noise, noise

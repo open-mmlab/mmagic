@@ -120,7 +120,8 @@ class StyleGAN2Generator(BaseModule):
                  num_fp16_scales=0,
                  fp16_enabled=False,
                  bgr2rgb=False,
-                 pretrained=None):
+                 pretrained=None,
+                 fixed_noise=False):
         super().__init__()
         self.out_size = out_size
         self.style_channels = style_channels
@@ -189,7 +190,8 @@ class StyleGAN2Generator(BaseModule):
             kernel_size=3,
             style_channels=style_channels,
             blur_kernel=blur_kernel,
-            fp16_enabled=fp16_enabled)
+            fp16_enabled=fp16_enabled,
+            fixed_noise=fixed_noise)
         self.to_rgb1 = ModulatedToRGB(
             self.channels[4],
             style_channels,
@@ -348,7 +350,10 @@ class StyleGAN2Generator(BaseModule):
                 injected_noise=None,
                 add_noise=True,
                 randomize_noise=True,
-                update_ws=False):
+                update_ws=False,
+                return_features=False,
+                feat_idx=5,
+                return_latent_only=False):
         """Forward function.
 
         This function has been integrated with the truncation trick. Please
@@ -393,6 +398,7 @@ class StyleGAN2Generator(BaseModule):
             torch.Tensor | dict: Generated image tensor or dictionary \
                 containing more data.
         """
+        # device = styles.device
         input_dim = self.style_channels if input_is_latent else self.noise_size
         # receive noise and conduct sanity check.
         if isinstance(styles, torch.Tensor):
@@ -503,6 +509,10 @@ class StyleGAN2Generator(BaseModule):
 
             latent = torch.cat([latent, latent2], 1)
 
+        if return_latent_only:
+            return latent
+
+        feats = []
         with autocast(enabled=self.fp16_enabled):
             # 4x4 stage
             out = self.constant_input(latent)
@@ -513,6 +523,7 @@ class StyleGAN2Generator(BaseModule):
                 latent[:, 0],
                 noise=injected_noise[0],
                 add_noise=add_noise)
+            feats.append(out)
             skip = self.to_rgb1(out, latent[:, 1])
 
             _index = 1
@@ -528,17 +539,26 @@ class StyleGAN2Generator(BaseModule):
                     latent[:, _index + 1],
                     noise=noise2,
                     add_noise=add_noise)
+                feats.append(out)
                 skip = to_rgb(out, latent[:, _index + 2], skip)
                 _index += 2
 
         # make sure the output image is torch.float32 to avoid RunTime Error
         # in other modules
         img = skip.to(torch.float32)
-
         if self.bgr2rgb:
             img = torch.flip(img, dims=[1])
 
         if return_latents or return_noise:
+            if return_features:
+                output_dict = dict(
+                    fake_img=img,
+                    latent=latent,
+                    inject_index=inject_index,
+                    noise_batch=noise_batch,
+                    feats=feats[feat_idx])
+                return output_dict
+
             output_dict = dict(
                 fake_img=img,
                 latent=latent,

@@ -53,7 +53,7 @@ class Inferencers:
         elif self.task in ['colorization', 'Colorization']:
             self.inferencer = ColorizationInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
-        elif self.task in ['unconditional', 'Unconditional GANs']:
+        elif self.task in ['unconditional', 'Unconditional GANs', 'DragGAN']:
             self.inferencer = UnconditionalInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['matting', 'Matting']:

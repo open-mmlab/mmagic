@@ -14,6 +14,7 @@ Import:
 - configs/dic/metafile.yml
 - configs/dim/metafile.yml
 - configs/disco_diffusion/metafile.yml
+- configs/draggan/metafile.yml
 - configs/dreambooth/metafile.yml
 - configs/edsr/metafile.yml
 - configs/edvr/metafile.yml
