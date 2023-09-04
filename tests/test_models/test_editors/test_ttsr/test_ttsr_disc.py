@@ -22,3 +22,10 @@ def test_ttsr_dict():
         net = net.cuda()
         output = net(inputs.cuda())
         assert output.shape == (2, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

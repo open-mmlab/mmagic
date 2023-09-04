@@ -64,3 +64,10 @@ def test_label_sample_fn():
 
     with pytest.raises(AssertionError):
         label_sample_fn([0, 10, 2, 3], num_classes=5)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

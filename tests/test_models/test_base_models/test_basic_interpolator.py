@@ -39,3 +39,10 @@ def test_basic_interpolator():
     result = model.merge_frames(input_tensors, output_tensors)
     assert len(result) == 17
     assert result[0].shape == (16, 16, 3)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

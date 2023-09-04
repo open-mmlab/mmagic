@@ -53,3 +53,10 @@ model = dict(
     ),
     loss_disc_shift=dict(type='DiscShiftLoss', loss_weight=0.001),
 )
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

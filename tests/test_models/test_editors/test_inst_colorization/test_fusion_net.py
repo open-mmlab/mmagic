@@ -79,3 +79,10 @@ def test_fusion_net():
         output = model(input_A, input_B, mask_B, instance_feature,
                        box_info_box)
         assert torch.is_tensor(output)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

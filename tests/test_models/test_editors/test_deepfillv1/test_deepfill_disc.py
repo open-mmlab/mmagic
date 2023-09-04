@@ -49,3 +49,10 @@ def test_deepfillv1_disc():
         global_pred, local_pred = disc((global_x, local_x))
         assert global_pred.shape == (2, 1)
         assert local_pred.shape == (2, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -105,3 +105,10 @@ def test_two_stage_inpaintor():
     assert 'stage1_loss_l1_valid' in log_vars
     assert 'stage2_loss_l1_hole' in log_vars
     assert 'stage2_loss_l1_valid' in log_vars
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

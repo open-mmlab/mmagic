@@ -57,3 +57,10 @@ class TestCSG:
     def test_csg_cuda(self):
         embed = self.csg(torch.randn((2, 4, 5, 5)).cuda())
         assert embed.shape == (2, 2, 5, 5) and embed.is_cuda
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

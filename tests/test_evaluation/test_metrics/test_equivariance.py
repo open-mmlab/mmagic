@@ -67,3 +67,10 @@ class TestEquivariance:
         eq_res = eq.compute_metrics(eq.fake_results)
         isinstance(eq_res['eqt_int'], float) and isinstance(
             eq_res['eqt_frac'], float) and isinstance(eq_res['eqr'], float)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -35,3 +35,10 @@ def test_matlab_like_resize():
     assert repr(imresize) == imresize.__class__.__name__ \
         + "(keys=['lq'], scale=None, output_shape=(6, 6), " \
         + 'kernel=bicubic, kernel_width=4.0)'
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -24,3 +24,10 @@ def test_conditional_inferencer():
         label=1, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.shape == (4, 3, 32, 32)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -43,3 +43,10 @@ model = dict(
         type='MaskedTVLoss',
         loss_weight=0.1,
     ))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -33,3 +33,10 @@ def test_dynamic_upsampling_filter():
         filters = torch.rand(1, 9, 16, 4, 4).cuda()
         output = duf(x, filters)
         assert output.shape == (1, 48, 4, 4)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

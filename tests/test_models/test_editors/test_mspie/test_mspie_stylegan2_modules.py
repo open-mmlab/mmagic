@@ -108,3 +108,10 @@ class TestModulatedPEConv2d(TestCase):
             **cfg, upsample=True, deconv2conv=True, interp_pad=3)
         out = conv(x, style)
         self.assertEqual(out.shape, (1, 8, 67, 67))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
