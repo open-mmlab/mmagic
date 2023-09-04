@@ -12,6 +12,8 @@ from mmagic.models.editors.stylegan3.stylegan3_generator import \
     StyleGAN3Generator
 from mmagic.models.editors.stylegan3.stylegan3_modules import SynthesisNetwork
 
+# 删除scope相关配置
+default_scope = None
 synthesis_cfg = {
     'type': SynthesisNetwork,
     'channel_base': 65536,

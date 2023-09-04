@@ -13,6 +13,8 @@ from mmagic.models.base_models.average_model import RampUpEMA
 from mmagic.models.base_models.base_gan import BaseGAN
 from mmagic.models.editors.stylegan3.stylegan3_modules import SynthesisNetwork
 
+# 删除scope相关配置
+default_scope = None
 batch_size = 32
 magnitude_ema_beta = 0.5**(batch_size / (20 * 1e3))
 
