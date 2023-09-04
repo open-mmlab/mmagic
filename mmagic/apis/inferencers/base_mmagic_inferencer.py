@@ -30,7 +30,9 @@ class BaseMMagicInferencer(BaseInferencer):
         ckpt (str, optional): Path to the checkpoint.
         device (str, optional): Device to run inference. If None, the best
             device will be automatically used.
-        result_out_dir (str): Output directory of images. Defaults to ''.
+        extra_parameters (Dict, optional): Extra parameters for
+            different models in inference stage.
+        seed (str, optional): Seed for inference.
     """
 
     func_kwargs = dict(
