@@ -142,11 +142,19 @@ class DataPreprocessor(ImgDataPreprocessor):
     def _parse_channel_index(inputs) -> int:
         """Parse channel index of inputs."""
         channel_index_mapping = {2: 1, 3: 0, 4: 1, 5: 2}
-        assert inputs.ndim in channel_index_mapping, (
-            'Only support (H*W, C), (C, H, W), (N, C, H, W) or '
-            '(N, t, C, H, W) inputs. But received '
-            f'\'({inputs.shape})\'.')
-        channel_index = channel_index_mapping[inputs.ndim]
+        if isinstance(inputs, dict):
+            ndim = inputs['fake_img'].ndim
+            assert ndim in channel_index_mapping, (
+                'Only support (H*W, C), (C, H, W), (N, C, H, W) or '
+                '(N, t, C, H, W) inputs. But received '
+                f'\'({inputs.shape})\'.')
+            channel_index = channel_index_mapping[ndim]
+        else:
+            assert inputs.ndim in channel_index_mapping, (
+                'Only support (H*W, C), (C, H, W), (N, C, H, W) or '
+                '(N, t, C, H, W) inputs. But received '
+                f'\'({inputs.shape})\'.')
+            channel_index = channel_index_mapping[inputs.ndim]
 
         return channel_index
 
@@ -155,7 +163,10 @@ class DataPreprocessor(ImgDataPreprocessor):
                              inputs: Tensor,
                              data_sample: Optional[DataSample] = None) -> str:
         channel_index = self._parse_channel_index(inputs)
-        num_color_channels = inputs.shape[channel_index]
+        if isinstance(inputs, dict):
+            num_color_channels = inputs['fake_img'].shape[channel_index]
+        else:
+            num_color_channels = inputs.shape[channel_index]
 
         # data sample is None, attempt to infer from input tensor
         if data_sample is None:

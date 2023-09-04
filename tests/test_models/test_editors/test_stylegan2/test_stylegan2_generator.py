@@ -132,6 +132,29 @@ class TestStyleGAN2Generator:
         # should not be update in test
         assert (mean_latent_test == mean_latent).all()
 
+        # test return features
+        g.eval()
+        res = g(
+            None,
+            num_batches=1,
+            injected_noise=None,
+            randomize_noise=False,
+            return_noise=True,
+            return_features=True,
+            feat_idx=1)
+        assert res['feats'].shape == (1, 512, 8, 8)
+        assert res['latent'].shape == (1, 10, 16)
+
+        # test return latent only
+        g.eval()
+        res = g(
+            None,
+            num_batches=1,
+            injected_noise=None,
+            randomize_noise=False,
+            return_latent_only=True)
+        assert res.shape == (1, 10, 16)
+
         g.train()
         res = g(
             None,
