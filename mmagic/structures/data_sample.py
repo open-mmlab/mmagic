@@ -191,7 +191,10 @@ class DataSample(BaseDataElement):
         'pred_img': 'pred_img',
         'ori_trimap': 'ori_trimap',
         # For text to images
-        'prompt': 'prompt'
+        'prompt': 'prompt',
+        # For StyleGAN
+        'latent': 'latent',
+        'feats': 'feats'
     }
 
     def set_predefined_data(self, data: dict) -> None:
