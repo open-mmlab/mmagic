@@ -1,10 +1,16 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 import torch
 
 from mmagic.models.editors.animatediff.motion_module import (
     FeedForward, VanillaTemporalModule)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 def test_VanillaTemporalModule():
     # This also test TemporalTransformerBlock
     input = torch.rand((1, 64, 16, 32, 32))
@@ -21,6 +27,6 @@ def test_FeedForward():
     assert output.shape == (2, 64, 64)
 
 
-if __name__ == '__main__':
-    test_VanillaTemporalModule()
-    test_FeedForward()
+# if __name__ == '__main__':
+#     test_VanillaTemporalModule()
+#     test_FeedForward()

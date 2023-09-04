@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 
@@ -7,6 +9,9 @@ from mmagic.models.editors.animatediff.unet_block import (
     get_down_block, get_up_block)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 def test_UNetMidBlock3DCrossAttn():
     input = torch.rand((1, 64, 16, 8, 8))
     midblock = UNetMidBlock3DCrossAttn(
@@ -56,8 +61,8 @@ def test_get_up_block():
         get_up_block('tem', 1, 1, 1, 1, 1, True, 'silu', 1)
 
 
-if __name__ == '__main__':
-    test_CrossAttnDownBlock3D()
-    test_CrossAttnUpBlock3D()
-    test_get_down_block()
-    test_get_up_block()
+# if __name__ == '__main__':
+#     test_CrossAttnDownBlock3D()
+#     test_CrossAttnUpBlock3D()
+#     test_get_down_block()
+#     test_get_up_block()

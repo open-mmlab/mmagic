@@ -37,5 +37,5 @@ def test_Unet3D():
     assert output['sample'].shape == (1, 4, 16, 8, 8)
 
 
-if __name__ == '__main__':
-    test_Unet3D()
+# if __name__ == '__main__':
+#     test_Unet3D()

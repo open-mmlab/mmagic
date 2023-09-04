@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
 import pytest
 import torch
 
@@ -16,6 +18,9 @@ def test_crossattention():
         crossattention.set_attention_slice(10)
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 def test_Transformer3DModel_init():
     with pytest.raises(Exception):
         Transformer3DModel(
@@ -34,6 +39,6 @@ def test_Transformer3DModel_init():
         unet_use_temporal_attention=False)
 
 
-if __name__ == '__main__':
-    test_crossattention()
-    test_Transformer3DModel_init()
+# if __name__ == '__main__':
+#     test_crossattention()
+#     test_Transformer3DModel_init()
