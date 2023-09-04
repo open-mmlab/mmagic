@@ -70,3 +70,5 @@ def test_reduce_to_five_heatmaps():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

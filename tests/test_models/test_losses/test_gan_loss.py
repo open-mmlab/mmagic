@@ -120,3 +120,5 @@ def test_gan_losses():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

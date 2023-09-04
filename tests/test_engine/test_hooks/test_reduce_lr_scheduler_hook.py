@@ -118,3 +118,5 @@ def test_reduce_lr_scheduler_hook():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

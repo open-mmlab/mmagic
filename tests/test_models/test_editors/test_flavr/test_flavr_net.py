@@ -55,3 +55,5 @@ def test_flavr_net():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

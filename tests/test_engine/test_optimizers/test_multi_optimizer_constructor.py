@@ -142,3 +142,5 @@ def test_optimizer_constructor():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

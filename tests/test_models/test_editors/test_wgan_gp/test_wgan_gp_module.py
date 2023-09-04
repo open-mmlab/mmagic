@@ -29,3 +29,5 @@ def test_WGANNoiseTo2DFeat():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

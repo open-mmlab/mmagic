@@ -26,3 +26,5 @@ def test_face_id_loss_comps():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

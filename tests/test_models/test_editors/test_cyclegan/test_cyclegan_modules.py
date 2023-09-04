@@ -79,3 +79,5 @@ def test_gan_image_buffer():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

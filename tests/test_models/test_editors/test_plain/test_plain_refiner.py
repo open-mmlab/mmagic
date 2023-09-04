@@ -23,3 +23,5 @@ def test_plain_refiner():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

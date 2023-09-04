@@ -56,3 +56,5 @@ def test_load_clip_submodels_transformers_none():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

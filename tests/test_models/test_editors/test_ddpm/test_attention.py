@@ -42,3 +42,5 @@ def test_FeedForward():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

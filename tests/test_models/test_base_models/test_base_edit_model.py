@@ -69,3 +69,5 @@ def test_base_edit_model():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

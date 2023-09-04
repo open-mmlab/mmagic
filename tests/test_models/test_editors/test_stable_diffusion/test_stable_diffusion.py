@@ -126,3 +126,5 @@ def test_stable_diffusion():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

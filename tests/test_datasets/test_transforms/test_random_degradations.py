@@ -456,3 +456,5 @@ def test_degradations_with_shuffle():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

@@ -27,3 +27,5 @@ def test_controlnet_dataset():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

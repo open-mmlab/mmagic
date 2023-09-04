@@ -14,3 +14,5 @@ def test_download_from_url():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

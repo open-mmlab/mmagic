@@ -15,3 +15,5 @@ def test_unet_skip_connection_block():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

@@ -35,3 +35,5 @@ def test_deepfill_contextual_attention_neck():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

@@ -94,3 +94,5 @@ def test_video_restoration_inferencer_max_seq_len():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

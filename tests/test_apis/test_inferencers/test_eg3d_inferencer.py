@@ -162,3 +162,5 @@ def test_eg3d_inferencer():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

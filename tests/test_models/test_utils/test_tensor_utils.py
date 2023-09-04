@@ -28,3 +28,5 @@ def test_normalize_vector():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

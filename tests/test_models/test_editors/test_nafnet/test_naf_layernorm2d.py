@@ -17,3 +17,5 @@ def test_layer_norm():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

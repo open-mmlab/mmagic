@@ -27,3 +27,5 @@ def test_ttsr_dict():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

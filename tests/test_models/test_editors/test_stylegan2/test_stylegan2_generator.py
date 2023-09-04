@@ -250,3 +250,5 @@ class TestStyleGAN2Generator:
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

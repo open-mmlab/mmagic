@@ -23,3 +23,5 @@ def test_aot_dilation_neck():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

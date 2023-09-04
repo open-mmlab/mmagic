@@ -83,3 +83,5 @@ def test_composition_losses():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

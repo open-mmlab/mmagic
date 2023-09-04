@@ -76,3 +76,5 @@ def test_pconv2d():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

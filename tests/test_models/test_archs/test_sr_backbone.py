@@ -15,3 +15,5 @@ def test_sr_backbone_utils():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

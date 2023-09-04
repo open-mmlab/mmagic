@@ -32,3 +32,5 @@ def test_gl_dilation_neck():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

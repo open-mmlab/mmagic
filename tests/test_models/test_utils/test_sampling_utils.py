@@ -69,3 +69,5 @@ def test_label_sample_fn():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

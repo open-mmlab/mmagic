@@ -87,3 +87,5 @@ def test_upsampleOneStep():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

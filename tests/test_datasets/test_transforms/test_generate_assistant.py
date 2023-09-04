@@ -79,3 +79,5 @@ def test_generate_facial_heatmap():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

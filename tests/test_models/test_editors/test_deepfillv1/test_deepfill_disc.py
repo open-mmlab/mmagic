@@ -54,3 +54,5 @@ def test_deepfillv1_disc():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

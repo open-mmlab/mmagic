@@ -138,3 +138,5 @@ def test_fba_encoder():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

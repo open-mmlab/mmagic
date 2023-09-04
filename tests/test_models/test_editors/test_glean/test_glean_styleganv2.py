@@ -87,3 +87,5 @@ def test_glean(init_weights):
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

@@ -67,3 +67,5 @@ def test_update_and_check_evaluator():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

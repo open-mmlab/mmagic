@@ -61,3 +61,5 @@ def test_mmagic_inferencer():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

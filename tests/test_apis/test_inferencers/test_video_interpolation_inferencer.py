@@ -61,3 +61,5 @@ def test_video_interpolation_inferencer_fps_multiplier():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

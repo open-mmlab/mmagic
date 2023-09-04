@@ -39,3 +39,5 @@ def test_gl_encdec():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

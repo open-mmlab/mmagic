@@ -140,3 +140,5 @@ def test_res_gca_decoder():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

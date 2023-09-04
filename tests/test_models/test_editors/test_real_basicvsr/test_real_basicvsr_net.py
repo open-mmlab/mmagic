@@ -54,3 +54,5 @@ def test_real_basicvsr_net():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

@@ -57,3 +57,5 @@ def test_fba_decoder():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

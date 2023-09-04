@@ -255,3 +255,5 @@ def test_pix2pix_val_step():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

@@ -97,3 +97,5 @@ def test_basicvsr_plusplus_cuda():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

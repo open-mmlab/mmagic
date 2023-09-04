@@ -72,3 +72,5 @@ def test_change_base_model():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

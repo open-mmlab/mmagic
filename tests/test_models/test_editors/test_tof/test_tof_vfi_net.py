@@ -31,3 +31,5 @@ def test_tof_vfi_net():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

@@ -92,3 +92,5 @@ def _demo_inputs_pair(img_shape=(64, 64), batch_size=1, cuda=False):
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

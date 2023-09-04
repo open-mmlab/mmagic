@@ -35,3 +35,5 @@ def test_image_super_resolution_inferencer():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

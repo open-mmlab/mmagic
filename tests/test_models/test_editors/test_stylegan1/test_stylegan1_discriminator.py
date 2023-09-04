@@ -36,3 +36,5 @@ class TestStyleGANv1Disc:
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

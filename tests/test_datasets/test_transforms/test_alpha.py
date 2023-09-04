@@ -89,3 +89,5 @@ def test_generate_soft_seg():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

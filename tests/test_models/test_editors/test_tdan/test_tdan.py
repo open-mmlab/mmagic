@@ -47,3 +47,5 @@ def test_tdan():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

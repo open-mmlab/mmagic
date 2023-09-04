@@ -129,3 +129,5 @@ def test_dic_net_cuda():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

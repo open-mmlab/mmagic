@@ -69,3 +69,5 @@ def test_Upsample2D():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

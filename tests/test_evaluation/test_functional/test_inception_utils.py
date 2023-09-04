@@ -69,3 +69,5 @@ def test_vgg_feat_cache_name_args():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

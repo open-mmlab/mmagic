@@ -55,3 +55,5 @@ def test_light_cnn_feature_loss():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

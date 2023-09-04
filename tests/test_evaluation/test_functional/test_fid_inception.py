@@ -46,3 +46,5 @@ def test_load_fid_inception():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

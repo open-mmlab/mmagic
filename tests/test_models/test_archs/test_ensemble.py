@@ -70,3 +70,5 @@ def test_ensemble_cuda():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

@@ -23,3 +23,5 @@ def test_dreambooth_dataset():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

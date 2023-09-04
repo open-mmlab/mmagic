@@ -37,3 +37,5 @@ def test_sample_rays():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

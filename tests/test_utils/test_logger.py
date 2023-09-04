@@ -9,3 +9,5 @@ def test_print_colored_log():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

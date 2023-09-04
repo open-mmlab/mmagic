@@ -71,3 +71,5 @@ def test_baseline_local():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

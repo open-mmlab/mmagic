@@ -136,3 +136,5 @@ def test_gca_module():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

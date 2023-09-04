@@ -76,3 +76,5 @@ def test_fractional_pseduo_rotation():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

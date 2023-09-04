@@ -170,3 +170,5 @@ def test_random_load_resize_bg():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

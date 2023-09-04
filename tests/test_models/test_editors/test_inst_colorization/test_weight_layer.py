@@ -33,3 +33,5 @@ def test_weight_layer():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

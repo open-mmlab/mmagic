@@ -28,3 +28,5 @@ def test_unet_disc_with_spectral_norm():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()

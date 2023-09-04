@@ -37,3 +37,5 @@ def test_inverse_transform_sampling():
 def teardown_module():
     import gc
     gc.collect()
+    globals().clear()
+    locals().clear()
