@@ -1,10 +1,18 @@
 from mmengine.config import read_base
 
 with read_base():
-    from .._base_.models.base_styleganv3 import *
     from .._base_.datasets.ffhq_flip import *
     from .._base_.gen_default_runtime import *
+    from .._base_.models.base_styleganv3 import *
 
+from torch.optim import Adam
+
+from mmagic.engine.hooks.visualization_hook import VisualizationHook
+from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
+from mmagic.models.base_models.average_model import ExponentialMovingAverage
+from mmagic.models.base_models.base_gan import BaseGAN
+from mmagic.models.editors.stylegan2.stylegan2_discriminator import (
+    ADAAug, ADAStyleGAN2Discriminator)
 from mmagic.models.editors.stylegan3.stylegan3_modules import SynthesisNetwork
 
 synthesis_cfg = {
@@ -43,12 +51,8 @@ ema_kimg = 10
 ema_nimg = ema_kimg * 1000
 ema_beta = 0.5**(32 / max(ema_nimg, 1e-8))
 
-from mmagic.models.base_models.average_model import ExponentialMovingAverage
-
 ema_config = dict(
     type=ExponentialMovingAverage, interval=1, momentum=ema_beta, start_iter=0)
-from mmagic.models.editors.stylegan2.stylegan2_discriminator import (
-    ADAAug, ADAStyleGAN2Discriminator)
 
 model.update(
     generator=dict(
@@ -63,8 +67,6 @@ model.update(
         data_aug=dict(type=ADAAug, aug_pipeline=aug_kwargs, ada_kimg=100)),
     loss_config=dict(r1_loss_weight=r1_gamma / 2.0 * d_reg_interval),
     ema_config=ema_config)
-
-from torch.optim import Adam
 
 optim_wrapper.update(
     generator=dict(
@@ -85,9 +87,6 @@ test_dataloader.update(
 train_cfg.update(max_iters=160000)
 
 # VIS_HOOK
-from mmagic.engine.hooks.visualization_hook import VisualizationHook
-from mmagic.models.base_models.base_gan import BaseGAN
-
 custom_hooks = [
     dict(
         type=VisualizationHook,
@@ -98,8 +97,6 @@ custom_hooks = [
 ]
 
 # METRICS
-from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
-
 metrics = [
     dict(
         type=FrechetInceptionDistance,

@@ -5,9 +5,16 @@ with read_base():
     from .._base_.gen_default_runtime import *
     from .._base_.models.base_styleganv3 import *
 
+from torch.optim import Adam
+
+from mmagic.engine.hooks.visualization_hook import VisualizationHook
+from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
+from mmagic.models.base_models.average_model import RampUpEMA
+from mmagic.models.base_models.base_gan import BaseGAN
+from mmagic.models.editors.stylegan3.stylegan3_modules import SynthesisNetwork
+
 batch_size = 32
 magnitude_ema_beta = 0.5**(batch_size / (20 * 1e3))
-from mmagic.models.editors.stylegan3.stylegan3_modules import SynthesisNetwork
 
 synthesis_cfg = {
     'type': SynthesisNetwork,
@@ -17,8 +24,6 @@ synthesis_cfg = {
 }
 r1_gamma = 32.8
 d_reg_interval = 16
-
-from mmagic.models.base_models.average_model import RampUpEMA
 
 ema_config = dict(
     type=RampUpEMA,
@@ -39,8 +44,6 @@ g_reg_interval = 4
 
 g_reg_ratio = g_reg_interval / (g_reg_interval + 1)
 d_reg_ratio = d_reg_interval / (d_reg_interval + 1)
-
-from torch.optim import Adam
 
 optim_wrapper.update(
     generator=dict(
@@ -64,9 +67,6 @@ test_dataloader.update(
 train_cfg.update(max_iters=800002)
 
 # VIS_HOOK
-from mmagic.engine.hooks.visualization_hook import VisualizationHook
-from mmagic.models.base_models.base_gan import BaseGAN
-
 custom_hooks = [
     dict(
         type=VisualizationHook,
@@ -77,8 +77,6 @@ custom_hooks = [
 ]
 
 # METRICS
-from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
-
 metrics = [
     dict(
         type=FrechetInceptionDistance,

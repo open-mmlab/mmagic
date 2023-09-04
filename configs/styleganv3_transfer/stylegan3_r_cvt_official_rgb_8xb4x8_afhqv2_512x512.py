@@ -1,10 +1,15 @@
 from mmengine.config import read_base
 
 with read_base():
-    from .._base_.models.base_styleganv3 import *
     from .._base_.datasets.unconditional_imgs_flip_512x512 import *
     from .._base_.gen_default_runtime import *
+    from .._base_.models.base_styleganv3 import *
 
+from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
+from mmagic.models.editors.stylegan2.stylegan2_discriminator import \
+    StyleGAN2Discriminator
+from mmagic.models.editors.stylegan3.stylegan3_generator import \
+    StyleGAN3Generator
 from mmagic.models.editors.stylegan3.stylegan3_modules import SynthesisNetwork
 
 synthesis_cfg = {
@@ -16,15 +21,9 @@ synthesis_cfg = {
     'use_radial_filters': True
 }
 
-from mmagic.models.editors.stylegan2.stylegan2_discriminator import \
-    StyleGAN2Discriminator
-from mmagic.models.editors.stylegan3.stylegan3_generator import \
-    StyleGAN3Generator
-
 model.update(
     generator=dict(
-        type=
-        StyleGAN3Generator,  # type='StyleGANv3Generator', 这是 Registry里面用于区分的别名，实际上还是StyleGAN3Generator
+        type=StyleGAN3Generator,  # 'StyleGANv3Generator',Registry里面用于区分别名
         noise_size=512,
         style_channels=512,
         out_size=512,
@@ -43,8 +42,6 @@ test_dataloader.update(
     batch_size=batch_size, dataset=dict(data_root=data_root))
 
 train_cfg = train_dataloader = optim_wrapper = None
-
-from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
 
 metrics = [
     dict(

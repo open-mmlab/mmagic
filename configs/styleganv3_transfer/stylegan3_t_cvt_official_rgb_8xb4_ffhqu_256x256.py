@@ -6,6 +6,7 @@ with read_base():
     from .._base_.models.base_styleganv3 import *
 
 # synthesis network的配置（generator）
+from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
 from mmagic.models.editors.stylegan3.stylegan3_modules import SynthesisNetwork
 
 synthesis_cfg = {
@@ -34,8 +35,6 @@ test_dataloader.update(
     batch_size=batch_size, dataset=dict(data_root=data_root))
 
 train_cfg = train_dataloader = optim_wrapper = None
-
-from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
 
 metrics = [
     dict(

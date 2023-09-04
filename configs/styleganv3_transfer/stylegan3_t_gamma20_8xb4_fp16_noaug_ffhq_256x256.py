@@ -1,10 +1,18 @@
 from mmengine.config import read_base
 
 with read_base():
-    from .._base_.models.base_styleganv3 import *
-    from .._base_.datasets.unconditional_imgs_flip_lanczos_resize_256x256 import *
+    from .._base_.datasets.unconditional_imgs_flip_lanczos_resize_256x256 \
+        import *
     from .._base_.gen_default_runtime import *
+    from .._base_.models.base_styleganv3 import *
 
+from torch.optim import Adam
+
+from mmagic.engine.hooks.visualization_hook import VisualizationHook
+from mmagic.evaluation.metrics.equivariance import Equivariance
+from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
+from mmagic.models.base_models.average_model import RampUpEMA
+from mmagic.models.base_models.base_gan import BaseGAN
 from mmagic.models.editors.stylegan3.stylegan3_modules import SynthesisNetwork
 
 synthesis_cfg = {
@@ -15,7 +23,6 @@ synthesis_cfg = {
 }
 r1_gamma = 2.  # set by user
 d_reg_interval = 16
-from mmagic.models.base_models.average_model import RampUpEMA
 
 ema_config = dict(
     type=RampUpEMA,
@@ -36,8 +43,6 @@ g_reg_interval = 4
 
 g_reg_ratio = g_reg_interval / (g_reg_interval + 1)
 d_reg_ratio = d_reg_interval / (d_reg_interval + 1)
-
-from torch.optim import Adam
 
 optim_wrapper.update(
     generator=dict(
@@ -60,10 +65,6 @@ test_dataloader.update(
 
 train_cfg.update(max_iters=800002)
 
-#
-from mmagic.engine.hooks.visualization_hook import VisualizationHook
-from mmagic.models.base_models.base_gan import BaseGAN
-
 custom_hooks = [
     dict(
         type=VisualizationHook,
@@ -73,10 +74,7 @@ custom_hooks = [
     )  # vis_kwargs_list=dict(type='GAN', name='fake_img'))
 ]
 
-from mmagic.evaluation.metrics.equivariance import Equivariance
 # METRICS
-from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
-
 metrics = [
     dict(
         type=FrechetInceptionDistance,

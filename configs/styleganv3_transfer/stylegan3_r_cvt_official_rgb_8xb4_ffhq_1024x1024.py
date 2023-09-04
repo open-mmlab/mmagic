@@ -1,10 +1,13 @@
 from mmengine.config import read_base
 
 with read_base():
-    from .._base_.models.base_styleganv3 import *
     from .._base_.datasets.ffhq_flip import *
     from .._base_.gen_default_runtime import *
+    from .._base_.models.base_styleganv3 import *
 
+from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
+from mmagic.models.editors.stylegan2.stylegan2_discriminator import \
+    StyleGAN2Discriminator
 from mmagic.models.editors.stylegan3.stylegan3_modules import SynthesisNetwork
 
 synthesis_cfg = {
@@ -18,9 +21,6 @@ synthesis_cfg = {
 
 r1_gamma = 32.8
 d_reg_interval = 16
-
-from mmagic.models.editors.stylegan2.stylegan2_discriminator import \
-    StyleGAN2Discriminator
 
 model.update(
     generator=dict(
@@ -39,8 +39,6 @@ test_dataloader.update(
     batch_size=batch_size, dataset=dict(data_root=data_root))
 
 train_cfg = train_dataloader = optim_wrapper = None
-
-from mmagic.evaluation.metrics.fid import FrechetInceptionDistance
 
 metrics = [
     dict(
