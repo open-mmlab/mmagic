@@ -48,6 +48,24 @@ DragGAN 由两个主要部分组成： 1) 基于特征的运动监督，驱动�
 |   [stylegan2_car_512x512](./stylegan2_512x512.py)    |        Car         |    官方训练    |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-car-official) |
 |   [stylegan2_cat_256x256](./stylegan2_256x256.py)    |        Cat         |    官方训练    |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-cat-official) |
 
+## 演示
+
+为了使用DragGAN演示, 请执行以下两步:
+
+首先，把模型文件放在 `./checkpoints`下, 比如 `./checkpoints/stylegan2_lions_512_pytorch_mmagic.pth`. 具体来说,
+
+```shell
+mkdir checkpoints
+cd checkpoints
+wget -O stylegan2_lions_512_pytorch_mmagic.pth https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-Lions-internet
+```
+
+然后，执行下面的脚本:
+
+```shell
+python demo/gradio_draggan.py
+```
+
 ## 引用
 
 ```latex

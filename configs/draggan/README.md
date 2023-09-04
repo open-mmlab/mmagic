@@ -55,6 +55,24 @@ showcase the manipulation of real images through GAN inversion.
 |   [stylegan2_car_512x512](./stylegan2_512x512.py)    |        Car         | transfer from official training |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-car-official) |
 |   [stylegan2_cat_256x256](./stylegan2_256x256.py)    |        Cat         | transfer from official training |  0.0   |     0.0      |    0.0    | [model](https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-cat-official) |
 
+## Demo
+
+To run DragGAN demo, please follow these two steps:
+
+First, put your checkpoint path in `./checkpoints`, *e.g.* `./checkpoints/stylegan2_lions_512_pytorch_mmagic.pth`. To be specific,
+
+```shell
+mkdir checkpoints
+cd checkpoints
+wget -O stylegan2_lions_512_pytorch_mmagic.pth https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-Lions-internet
+```
+
+Then, try on the script:
+
+```shell
+python demo/gradio_draggan.py
+```
+
 ## Citation
 
 ```latex
