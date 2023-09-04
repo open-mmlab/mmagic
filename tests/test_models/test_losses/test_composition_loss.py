@@ -78,3 +78,10 @@ def test_composition_losses():
     loss = cb_comp_loss(pred_alpha, fg, bg, ori_merged, weight)
     assert loss.shape == ()
     assert math.isclose(loss.item(), 1536, rel_tol=1e-6)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

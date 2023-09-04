@@ -83,3 +83,10 @@ def test_edsr_cuda():
             mid_channels=64,
             num_blocks=16,
             upscale_factor=5)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

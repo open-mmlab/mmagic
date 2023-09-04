@@ -27,3 +27,10 @@ def test_gl_dilation_neck():
         res = neck(x)
         assert isinstance(neck.dilation_convs[0], SimpleGatedConvModule)
         assert res.shape == (2, 8, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

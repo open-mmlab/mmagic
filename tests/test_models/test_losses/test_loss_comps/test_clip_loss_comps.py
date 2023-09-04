@@ -27,3 +27,10 @@ def test_clip_loss():
     data_dict = dict(fake_imgs=image, descriptions=text_inputs)
     loss = clip_loss_comps(outputs_dict=data_dict)
     print(loss)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -34,3 +34,10 @@ def test_gl_encdec():
         aot_encdec = aot_encdec.cuda()
         output = aot_encdec(input_x.cuda())
         assert output.shape == (1, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

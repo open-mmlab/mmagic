@@ -121,3 +121,10 @@ def _demo_inputs_pair(img_shape=(64, 64), batch_size=1, cuda=False):
         trimap = trimap.cuda()
         raw_alpha = raw_alpha.cuda()
     return merged, alpha, trimap, raw_alpha
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

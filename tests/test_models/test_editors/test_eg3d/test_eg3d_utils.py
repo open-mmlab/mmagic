@@ -32,3 +32,10 @@ def test_inverse_transform_sampling():
     assert samples_det_1.shape == (10, 5)
     assert samples_det_2.shape == (10, 5)
     assert (samples_det_1 == samples_det_2).all()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -52,3 +52,10 @@ def test_disc_shift_loss():
     loss = loss_disc_shift(x)
 
     npt.assert_almost_equal(loss.item(), 0.001)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

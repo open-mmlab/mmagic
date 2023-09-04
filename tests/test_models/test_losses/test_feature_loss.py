@@ -50,3 +50,10 @@ def test_light_cnn_feature_loss():
     # test criterion value error
     with pytest.raises(ValueError):
         LightCNNFeatureLoss(pretrained=pretrained, criterion='l2')
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

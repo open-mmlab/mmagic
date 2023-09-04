@@ -65,3 +65,10 @@ def test_reduce_to_five_heatmaps():
     with pytest.raises(NotImplementedError):
         heatmap = torch.rand((2, 12, 64, 64))
         reduce_to_five_heatmaps(heatmap, False)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

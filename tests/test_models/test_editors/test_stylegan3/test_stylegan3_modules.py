@@ -48,3 +48,10 @@ def test_MappingNetwork():
     # test z is None + noise_size > 0
     with pytest.raises(AssertionError):
         mapping_network(None)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

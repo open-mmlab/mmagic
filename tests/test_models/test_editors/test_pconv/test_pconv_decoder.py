@@ -21,3 +21,10 @@ def test_pconv_dec():
     h, h_mask = pconv_dec(input)
     assert h.detach().numpy().shape == (2, 3, 128, 128)
     assert h_mask.detach().numpy().shape == (2, 3, 128, 128)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

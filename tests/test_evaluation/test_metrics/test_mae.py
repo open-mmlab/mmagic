@@ -49,3 +49,10 @@ class TestPixelMetrics:
         result = mae.compute_metrics(mae.results)
         assert 'MAE' in result
         np.testing.assert_almost_equal(result['MAE'], 0.003921568627)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

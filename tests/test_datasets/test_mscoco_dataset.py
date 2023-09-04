@@ -29,3 +29,10 @@ class TestMSCoCoDatasets:
             img_path=os.path.join(self.data_root, 'val2014',
                                   'COCO_val2014_000000000042.jpg'),
             sample_idx=0)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

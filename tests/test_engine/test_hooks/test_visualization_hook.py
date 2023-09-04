@@ -616,3 +616,10 @@ class TestVisualizationHook(TestCase):
 
         hook.after_test_iter(runner, 0, [], outputs)
         assert mock_visualuzer.add_datasample.call_count == 3
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

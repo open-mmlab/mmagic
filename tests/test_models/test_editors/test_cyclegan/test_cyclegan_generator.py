@@ -53,3 +53,10 @@ class TestResnetGenerator:
         gen = ResnetGenerator(**cfg).cuda()
         fake_b = gen(real_a)
         assert fake_b.shape == (2, 3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

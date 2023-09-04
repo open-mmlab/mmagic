@@ -36,3 +36,10 @@ def test_srcnn():
         # The length of kernel tuple should be 3
         net = SRCNNNet(
             channels=(3, 4, 4, 3), kernel_sizes=(9, 1, 1, 5), upscale_factor=4)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -30,3 +30,10 @@ def test_image_super_resolution_inferencer():
         img=img_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.shape == (480, 500, 3)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
