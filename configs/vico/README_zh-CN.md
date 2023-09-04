@@ -124,10 +124,6 @@ torch.save(new_checkpoint, "work_dirs/vico/dog.pth")
   <img src="https://github.com/open-mmlab/mmagic/assets/71176040/58a6953c-053a-40ea-8826-eee428c992b5" width="800"/>
   <br/>
   <b>'vico'</b>
-</div></td>
-    <td>
-</div></td>
-    <td>
 </thead>
 </table>
 
