@@ -88,7 +88,7 @@ register_all_modules()
 cfg = Config.fromfile('configs/vico/dog.py')
 state_dict = torch.load("./dog.pth")
 vico = MODELS.build(cfg.model)
-vico.load_state_dict(state_dict)
+vico.load_state_dict(state_dict, strict=False)
 vico = vico.cuda()
 
 prompt = ["A photo of S*", "A photo of S* on the beach"]
@@ -103,6 +103,7 @@ output.save("infer.png")
    commands at step3, here are codes to extract the trained parameters, then you can infer with it like step4
 
 ```python
+import torch
 def extract_vico_parameters(state_dict):
     new_state_dict = dict()
     for k, v in state_dict.items():

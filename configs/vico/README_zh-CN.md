@@ -88,7 +88,7 @@ register_all_modules()
 cfg = Config.fromfile('configs/vico/dog.py')
 state_dict = torch.load("./dog.pth")
 vico = MODELS.build(cfg.model)
-vico.load_state_dict(state_dict)
+vico.load_state_dict(state_dict, strict=False)
 vico = vico.cuda()
 
 prompt = ["A photo of S*", "A photo of S* on the beach"]
@@ -102,6 +102,7 @@ output.save("infer.png")
 5. (可选) 如果你想使用第3步训练得到的checkpoint进行推理，可以先使用以下脚本将训练过的参数提取出来（文件大小会轻量很多），再使用第4步进行推理
 
 ```python
+import torch
 def extract_vico_parameters(state_dict):
     new_state_dict = dict()
     for k, v in state_dict.items():
