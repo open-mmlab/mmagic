@@ -30,7 +30,7 @@ class TextualInversionDataset(BaseDataset):
             placeholder: str,
             template: str,
             # used for vico training
-            with_image_reference: bool,
+            with_image_reference: bool = False,
             pipeline: List[Union[dict, Callable]] = []):
 
         data_prefix = dict(img_path=concept_dir)
