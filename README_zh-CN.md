@@ -467,10 +467,10 @@ MMagic 是一款由不同学校和公司共同贡献的开源项目。我们感�
 
 ## 欢迎加入 OpenMMLab 社区
 
-扫描下方的二维码可关注 OpenMMLab 团队的 [知乎官方账号](https://www.zhihu.com/people/openmmlab)，加入 OpenMMLab 团队的 [官方交流 QQ 群](https://jq.qq.com/?_wv=1027&k=K0QI8ByU)，或通过群主小喵加入微信官方交流群。
+扫描下方的二维码可关注 OpenMMLab 团队的 [知乎官方账号](https://www.zhihu.com/people/openmmlab)，扫描下方微信二维码添加喵喵好友，进入 MMagic 微信交流社群。【加好友申请格式：研究方向+地区+学校/公司+姓名】
 
 <div align="center">
-<img src="docs/zh_cn/_static/image/zhihu_qrcode.jpg" height="500" />  <img src="https://user-images.githubusercontent.com/25839884/203927852-e15def4d-a0eb-4dfc-9bfb-7cf09ea945d0.png" height="500" /> <img src="https://raw.githubusercontent.com/open-mmlab/mmcv/master/docs/en/_static/wechat_qrcode.jpg" height="500" />
+<img src="docs/zh_cn/_static/image/zhihu_qrcode.jpg" height="500" />  <img src="https://github.com/open-mmlab/mmagic/assets/62195058/0e80cbee-7b81-4648-8bc6-7a3585fa8476" height="500" />
 </div>
 
 我们会在 OpenMMLab 社区为大家
