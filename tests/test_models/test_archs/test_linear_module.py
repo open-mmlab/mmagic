@@ -46,3 +46,10 @@ def test_linear_module():
         order=('act', 'linear'))
 
     assert linear.order == ('act', 'linear')
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

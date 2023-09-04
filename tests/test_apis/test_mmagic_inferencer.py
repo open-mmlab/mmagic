@@ -54,3 +54,10 @@ def test_edit():
 
 if __name__ == '__main__':
     test_edit()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

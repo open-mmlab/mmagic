@@ -74,3 +74,10 @@ def test_calculate_ssim():
     np.testing.assert_almost_equal(ssim_result, 0.9130623)
     ssim_result = ssim(img_hwc_1, img_hwc_2, crop_border=0, convert_to='Y')
     np.testing.assert_almost_equal(ssim_result, 0.9987801)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -17,3 +17,10 @@ def test_toflow_vsr_net():
     out = model(imgs)
     assert isinstance(out, torch.Tensor)
     assert out.shape == (2, 3, 16, 16)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

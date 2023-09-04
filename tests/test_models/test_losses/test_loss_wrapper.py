@@ -55,3 +55,10 @@ def test_utils():
     with pytest.raises(AssertionError):
         weight_wrong = weight[:, 0:2, ...]
         reduced = mask_reduce_loss(loss, weight=weight_wrong, reduction='mean')
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

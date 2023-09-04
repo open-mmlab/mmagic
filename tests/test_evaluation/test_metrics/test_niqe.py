@@ -80,3 +80,10 @@ def test_calculate_niqe():
         input_order='CHW',
         convert_to='y')
     np.testing.assert_almost_equal(result, 6.10074, decimal=5)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

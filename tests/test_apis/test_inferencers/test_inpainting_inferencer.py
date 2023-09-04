@@ -30,3 +30,10 @@ def test_inpainting_inferencer():
         img=masked_img_path, mask=mask_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img.shape == (256, 256, 3)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

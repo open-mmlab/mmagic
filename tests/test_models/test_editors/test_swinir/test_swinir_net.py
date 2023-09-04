@@ -106,3 +106,10 @@ def test_swinir_cuda():
         output = net(img.cuda())
         assert isinstance(output, torch.Tensor)
         assert output.shape == (1, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

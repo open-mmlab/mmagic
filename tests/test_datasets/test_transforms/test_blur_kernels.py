@@ -10,3 +10,10 @@ def test_blur_kernels():
     for kernel_type in kernels:
         kernel = blur_kernels.random_mixed_kernels([kernel_type], [1], 5)
         assert kernel.shape == (5, 5)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

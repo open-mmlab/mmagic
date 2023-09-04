@@ -52,3 +52,10 @@ def test_fba_decoder():
     assert_tensor_with_shape(alpha, torch.Size([1, 1, 320, 320]))
     assert_tensor_with_shape(F, torch.Size([1, 3, 320, 320]))
     assert_tensor_with_shape(B, torch.Size([1, 3, 320, 320]))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

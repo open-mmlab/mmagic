@@ -56,3 +56,10 @@ def test_mmagic_inferencer():
 
     extra_parameters = inferencer_instance.get_extra_parameters()
     assert len(extra_parameters) == 2
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

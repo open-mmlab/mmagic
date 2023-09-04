@@ -71,3 +71,10 @@ def test_liif():
     output = model(
         torch.rand(1, 3, 8, 8), DataSample.stack([data_sample]), mode='tensor')
     assert output.shape == (1, 256, 3)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

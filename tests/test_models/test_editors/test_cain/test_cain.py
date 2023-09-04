@@ -126,3 +126,10 @@ def test_cain():
     # feat
     output = model(torch.rand(1, 2, 3, 32, 32), mode='tensor')
     assert output.shape == (1, 3, 32, 32)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

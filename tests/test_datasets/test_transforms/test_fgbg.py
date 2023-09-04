@@ -165,3 +165,10 @@ def test_random_load_resize_bg():
 
     assert repr(
         random_load_bg) == f"RandomLoadResizeBg(bg_dir='{str(bg_dir)}')"
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

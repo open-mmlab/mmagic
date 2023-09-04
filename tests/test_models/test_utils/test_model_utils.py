@@ -123,3 +123,10 @@ def test_build_module():
 
     # remove the registered module
     MODELS._module_dict.pop('MiniModule')
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

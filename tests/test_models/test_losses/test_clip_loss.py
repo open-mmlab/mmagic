@@ -24,3 +24,10 @@ def test_clip_loss():
     text_inputs = torch.cat([clip.tokenize(text)])
     loss = clip_loss(image, text_inputs)
     print(loss)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

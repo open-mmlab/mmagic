@@ -114,3 +114,10 @@ class TestStyleGAN3Generator:
 
         res = generator(torch.randn, num_batches=1)
         assert res.shape == (1, 3, 16, 16)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

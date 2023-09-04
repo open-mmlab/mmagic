@@ -41,3 +41,10 @@ def test_gl_discs():
         input_l = torch.randn(1, 3, 128, 128).cuda()
         output = gl_discs((input_g, input_l))
         assert output.shape == (1, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

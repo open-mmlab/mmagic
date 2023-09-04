@@ -69,3 +69,10 @@ def test_gl_inpaintor():
     res, loss = gl_dirty.generator_loss(gt_img, gt_img, gt_img, gt_img, mask,
                                         masked_img)
     assert len(loss) == 0
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -333,3 +333,10 @@ class TestPGGANNoiseTo2DFeat:
         assert not module.linear.bias
         assert module.with_norm
         assert isinstance(module.activation, nn.LeakyReLU)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
