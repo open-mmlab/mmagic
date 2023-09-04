@@ -1,0 +1,74 @@
+Collections:
+- Name: DragGAN
+  Paper:
+    Title: 'Drag Your GAN: Interactive Point-based Manipulation on the Generative
+      Image Manifold'
+    URL: https://arxiv.org/pdf/2305.10973.pdf
+  README: configs/draggan/README.md
+  Task:
+  - draggan
+  Year: 2023
+Models:
+- Config: configs/draggan/stylegan2_512x512.py
+  In Collection: DragGAN
+  Name: stylegan2_512x512
+  Results:
+  - Dataset: InternetLions
+    Metrics:
+      FID50k: 0.0
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: DragGAN
+  - Dataset: InternetElephants
+    Metrics:
+      FID50k: 0.0
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: DragGAN
+  - Dataset: CatAFHQ
+    Metrics:
+      FID50k: 0.0
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: DragGAN
+  - Dataset: FFHQ
+    Metrics:
+      FID50k: 0.0
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: DragGAN
+  - Dataset: Car
+    Metrics:
+      FID50k: 0.0
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: DragGAN
+  Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-car-official
+- Config: configs/draggan/stylegan2_256x256.py
+  In Collection: DragGAN
+  Name: stylegan2_256x256
+  Results:
+  - Dataset: LSUN-Horse
+    Metrics:
+      FID50k: 0.0
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: DragGAN
+  - Dataset: Cat
+    Metrics:
+      FID50k: 0.0
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: DragGAN
+  Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-cat-official
+- Config: configs/draggan/stylegan2_1024x1024.py
+  In Collection: DragGAN
+  Name: stylegan2_1024x1024
+  Results:
+  - Dataset: InternetDogs
+    Metrics:
+      FID50k: 0.0
+      Precision50k: 0.0
+      Recall50k: 0.0
+    Task: DragGAN
+  Weights: https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-dogs-internet

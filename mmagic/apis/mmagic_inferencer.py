@@ -35,7 +35,7 @@ class MMagicInferencer:
         >>> editor = MMagicInferencer(model_name='pix2pix')
         >>> editor.infer(img='./test.jpg', result_out_dir='./pix2pix_res.jpg')
 
-        >>> # see demo/mmagic_inference_tutorial.ipynb for more examples
+        >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
     """
     # unsupported now
     # singan, liif
@@ -116,7 +116,10 @@ class MMagicInferencer:
         'eg3d',
 
         # diffusers inferencer
-        'controlnet_animation'
+        'controlnet_animation',
+
+        # draggan
+        'draggan'
     ]
 
     inference_supported_models_cfg = {}

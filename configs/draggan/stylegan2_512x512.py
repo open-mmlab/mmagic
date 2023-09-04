@@ -15,8 +15,12 @@ d_reg_ratio = d_reg_interval / (d_reg_interval + 1)
 ema_half_life = 10.  # G_smoothing_kimg
 
 model = dict(
-    generator=dict(out_size=1024),
-    discriminator=dict(in_size=1024),
+    generator=dict(
+        out_size=512,
+        update_mean_latent_with_ema=True,
+        bgr2rgb=False,
+        fixed_noise=True),
+    discriminator=dict(in_size=512),  # useless
     ema_config=dict(
         type='ExponentialMovingAverage',
         interval=1,
@@ -28,8 +32,6 @@ model = dict(
         g_reg_interval=g_reg_interval,
         g_reg_weight=2. * g_reg_interval,
         pl_batch_shrink=2))
-
-extra_parameters = dict(num_batches=1, sample_model='orig')
 
 train_cfg = dict(max_iters=800002)
 
@@ -43,7 +45,7 @@ optim_wrapper = dict(
             type='Adam', lr=0.002 * d_reg_ratio, betas=(0,
                                                         0.99**d_reg_ratio))))
 
-batch_size = 4
+batch_size = 1
 data_root = './data/ffhq/images'
 
 train_dataloader = dict(
