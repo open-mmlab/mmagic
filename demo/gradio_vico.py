@@ -18,7 +18,7 @@ ckpts = os.listdir(checkpoint_dir)
 
 def load_base_model():
     global cfg, model
-    cfg = Config.fromfile('configs/vico/batman.py')
+    cfg = Config.fromfile('configs/vico/vico.py')
     model = MODELS.build(cfg.model)
 
 
@@ -31,7 +31,7 @@ def train(train_data, init_token, placeholder):
         image = Image.open(data.name)
         image.save(os.path.join(image_dir, f'{i}.png'))
     global train_cfg
-    train_cfg = Config.fromfile('configs/vico/batman.py')
+    train_cfg = Config.fromfile('configs/vico/vico.py')
     train_cfg.work_dir = os.path.join('./work_dirs', 'vico_gradio')
     train_cfg.dataset['data_root'] = data_root
     train_cfg.dataset['concept_dir'] = init_token

@@ -293,8 +293,8 @@ class ViCo(StableDiffusion):
                 truncation=True)['input_ids'].to(self.device)
             ph_tok = ph_tokens[0, 1]
             placeholder_idx = torch.where(input_ids == ph_tok)
-            # TODO fix hard code
-            clip_eot_token_id = 49407
+            clip_eot_token_id = self.tokenizer.encode(
+                self.tokenizer.eos_token)['input_ids'][1]
             endoftext_idx = (torch.arange(input_ids.shape[0]),
                              (input_ids == clip_eot_token_id).nonzero(
                                  as_tuple=False)[0, 1])
@@ -488,13 +488,9 @@ class ViCo(StableDiffusion):
         extra_step_kwargs = self.prepare_extra_step_kwargs(generator, eta)
 
         # 7. Denoising loop
-        # TODO check if one forward can work
         if show_progress:
             timesteps = tqdm(timesteps)
         for i, t in enumerate(timesteps):
-            # expand the latents if we are doing classifier free guidance
-            # latent_model_input = torch.cat(
-            #     [latents] * 2) if do_classifier_free_guidance else latents
             latents = torch.cat([latents, image_reference], dim=0)
             latent_model_input = self.test_scheduler.scale_model_input(
                 latents, t)
@@ -518,7 +514,6 @@ class ViCo(StableDiffusion):
 
             # perform guidance
             if do_classifier_free_guidance:
-                # noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)
                 noise_pred = noise_pred_uncond + guidance_scale * (
                     noise_pred_text - noise_pred_uncond)
 
