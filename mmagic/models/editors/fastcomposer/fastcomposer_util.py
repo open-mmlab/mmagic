@@ -8,7 +8,9 @@ import torch
 import torch.nn.functional as F
 import torchvision.transforms as T
 from torch import nn
-from transformers import CLIPModel, CLIPPreTrainedModel, CLIPTextModel
+from torch.nn import Linear
+from transformers import (CLIPModel, CLIPPreTrainedModel, CLIPTextModel,
+                          CLIPVisionConfig, CLIPVisionModel)
 from transformers.modeling_outputs import BaseModelOutputWithPooling
 from transformers.models.clip.modeling_clip import _expand_mask
 
@@ -67,8 +69,23 @@ class FastComposerModel(nn.Module):
             subfolder='text_encoder',
             revision=cfg['revision'],
         )
-        image_encoder = FastComposerCLIPImageEncoder.from_pretrained(
-            cfg['image_encoder_name_or_path'], )
+        if not isinstance(cfg['image_encoder'], dict):
+            image_encoder = FastComposerCLIPImageEncoder.from_pretrained(
+                cfg['image_encoder'])
+        else:
+            vision_model = CLIPVisionModel(
+                CLIPVisionConfig.from_dict(cfg['image_encoder']))
+            visual_projection = Linear(
+                in_features=1024, out_features=768, bias=False)
+            vision_processor = T.Normalize(
+                (0.48145466, 0.4578275, 0.40821073),
+                (0.26862954, 0.26130258, 0.27577711),
+            )
+            image_encoder = FastComposerCLIPImageEncoder(
+                vision_model,
+                visual_projection,
+                vision_processor,
+            )
 
         return FastComposerModel(text_encoder, image_encoder, vae, unet, cfg)
 
@@ -292,7 +309,7 @@ class FastComposerCLIPImageEncoder(CLIPPreTrainedModel):
     """CLIPImageEncoder for FastComposerModel."""
 
     @staticmethod
-    def from_pretrained(global_model_name_or_path, ):
+    def from_pretrained(global_model_name_or_path):
         """Init CLIPModel with Clip model name or path."""
 
         model = CLIPModel.from_pretrained(global_model_name_or_path)

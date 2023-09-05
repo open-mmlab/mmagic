@@ -34,6 +34,75 @@
 python demo/gradio_fastcomposer.py
 ```
 
+或者运行一下代码，您就能获得依照文本生成的特定图像。
+
+```python
+import numpy as np
+import mmcv
+from mmengine import Config
+from PIL import Image
+
+from mmagic.registry import MODELS
+from mmagic.utils import register_all_modules
+import torch, gc
+
+gc.collect()
+torch.cuda.empty_cache()
+
+register_all_modules()
+
+cfg_file = Config.fromfile('configs/fastcomposer/fastcomposer.py')
+
+fastcomposer = MODELS.build(cfg_file.model).cuda()
+
+prompt = "A man img and a man img sitting in a park"
+negative_prompt = "((((ugly)))), (((duplicate))), ((morbid)), ((mutilated)), [out of frame], extra fingers, mutated hands, ((poorly drawn hands)), ((poorly drawn face)), (((mutation))), (((deformed))), ((ugly)), blurry, ((bad anatomy)), (((bad proportions))), ((extra limbs)), cloned face, (((disfigured))). out of frame, ugly, extra limbs, (bad anatomy), gross proportions, (malformed limbs), ((missing arms)), ((missing legs)), (((extra arms))), (((extra legs))), mutated hands, (fused fingers), (too many fingers), (((long neck)))"
+alpha_ = 0.75
+guidance_scale = 5
+num_steps = 50
+num_images = 4
+image = []
+seed = -1
+
+image1 = mmcv.imread('https://img-blog.csdnimg.cn/df51cfed28de4b81acb771188831461c.jpeg')
+image2 = mmcv.imread('https://img-blog.csdnimg.cn/4dca7b8cec0549c3b1247f01ea184f3e.jpeg')
+
+image.append(Image.fromarray(image1))
+
+image.append(Image.fromarray(image2))
+
+if len(image) == 0:
+    raise Exception("You need to upload at least one image.")
+
+num_subject_in_text = (
+        np.array(fastcomposer.special_tokenizer.encode(prompt))
+        == fastcomposer.image_token_id
+).sum()
+if num_subject_in_text != len(image):
+    raise Exception(f"Number of subjects in the text description doesn't match the number of reference images, #text subjects: {num_subject_in_text} #reference image: {len(image)}",
+    )
+
+if seed == -1:
+    seed = np.random.randint(0, 1000000)
+
+generator = torch.manual_seed(seed)
+
+output_dict = fastcomposer.infer(prompt,
+                                 negative_prompt=negative_prompt,
+                                 height=512,
+                                 width=512,
+                                 num_inference_steps=num_steps,
+                                 guidance_scale=guidance_scale,
+                                 num_images_per_prompt=num_images,
+                                 generator=generator,
+                                 alpha_=alpha_,
+                                 reference_subject_images=image)
+
+samples = output_dict['samples']
+for idx, sample in enumerate(samples):
+    sample.save(f'sample_{idx}.png')
+```
+
 ## 引用
 
 ```bibtex
