@@ -68,7 +68,6 @@ image1 = mmcv.imread('https://img-blog.csdnimg.cn/df51cfed28de4b81acb77118883146
 image2 = mmcv.imread('https://img-blog.csdnimg.cn/4dca7b8cec0549c3b1247f01ea184f3e.jpeg')
 
 image.append(Image.fromarray(image1))
-
 image.append(Image.fromarray(image2))
 
 if len(image) == 0:
