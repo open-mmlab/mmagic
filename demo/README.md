@@ -307,3 +307,37 @@ Then, try on the script:
 ```shell
 python demo/gradio_draggan.py
 ```
+
+#### 3.1.2 ViCo
+
+Launch the UI.
+
+```shell
+python demo/gradio_vico.py
+```
+
+*Training*
+
+1. Submit your concept sample images to the interface and fill in the *init_token* and *placeholder*.
+
+2. Click the *Start Training* button.
+
+3. Your training results will be under the folder `./work_dirs/vico_gradio`.
+
+*Inference*
+
+1. Follow the [instructions](../configs/vico/README.md#quick-start#4) to download the pretrained weights (or [use your own weights](../configs/vico/README.md#quick-start#5)) and put them under the folder `ckpts`, your folder structure should be like:
+
+```
+ckpts
+└── barn.pth
+└── batman.pth
+└── clock.pth
+...
+```
+
+2. Upload reference image.
+
+3. (Optional) Customize advanced settings.
+
+4. Click inference button.
