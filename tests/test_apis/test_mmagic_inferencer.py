@@ -52,10 +52,6 @@ def test_edit():
     assert result_img.shape == (4, 3, 32, 32)
 
 
-if __name__ == '__main__':
-    test_edit()
-
-
 def teardown_module():
     import gc
     gc.collect()
