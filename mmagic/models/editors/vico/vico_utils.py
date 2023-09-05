@@ -19,6 +19,15 @@ class ViCoCrossAttnProcessor:
                  hidden_states,
                  encoder_hidden_states=None,
                  attention_mask=None):
+        """
+        Args:
+            attn (Attention): Attention module.
+            hidden_states (torch.Tensor): Input hidden states.
+            encoder_hidden_states (torch.Tensor): Encoder hidden states.
+            attention_mask (torch.Tensor): Attention mask.
+        Returns:
+            torch.Tensor: Output hidden states.
+        """
         batch_size, sequence_length, _ = hidden_states.shape
         attention_mask = attn.prepare_attention_mask(
             attention_mask, sequence_length, batch_size=batch_size)
@@ -65,7 +74,12 @@ class ViCoTransformer2DModelOutput(BaseOutput):
 
 
 def otsu(mask_in):
-    """Apply otsu for mask."""
+    """Apply otsu for mask.
+
+    Args:
+        mask_in (torch.Tensor): Input mask.
+    """
+
     # normalize
     mask_norm = (mask_in - mask_in.min(-1, keepdim=True)[0]) / \
         (mask_in.max(-1, keepdim=True)[0] - mask_in.min(-1, keepdim=True)[0])
@@ -99,16 +113,17 @@ def otsu(mask_in):
 
 
 class ViCoTransformer2D(nn.Module):
-    """New ViCo-Transformer2D to replace the original Transformer2D model.
-
-    Args:
-        org_transformer2d (Transformer2DModel): Original Transformer2DModel.
-        have_image_cross (bool): Flag indicating if the model has
-        image_cross_attention module
-    """
+    """New ViCo-Transformer2D to replace the original Transformer2D model."""
 
     def __init__(self, org_transformer2d: Transformer2DModel,
                  have_image_cross) -> None:
+        """
+        Args:
+            org_transformer2d (Transformer2DModel): Original
+            Transformer2DModel.
+            have_image_cross (bool): Flag indicating if the model has
+            image_cross_attention modules.
+        """
         super().__init__()
         self.transformer_blocks = org_transformer2d.transformer_blocks
         self.is_input_continuous = org_transformer2d.is_input_continuous
@@ -298,9 +313,7 @@ def replace_transformer2d(module: nn.Module,
 
 
 class ViCoBlockWrapper(nn.Module):
-    # replace forward function for CrossAttentionBlock
-    # def __init__(self, org_module) -> None:
-    #     super().__init__()
+    """Wrapper for ViCo blocks."""
 
     def apply_to(self, org_module):
         self.org_module = org_module
@@ -319,6 +332,23 @@ class ViCoCrossAttnDownBlock2D(ViCoBlockWrapper):
         cross_attention_kwargs: Optional[Dict[str, Any]] = None,
         encoder_attention_mask: Optional[torch.FloatTensor] = None,
     ):
+        """
+        Args:
+            hidden_states (torch.FloatTensor): Hidden states.
+            temb (Optional[torch.FloatTensor]): Time embedding.
+            encoder_hidden_states (Optional[torch.FloatTensor]): Encoder
+                hidden states.
+            placeholder_position (torch.Tensor): Placeholder position.
+            attention_mask (Optional[torch.FloatTensor]): Attention mask.
+            cross_attention_kwargs (Optional[Dict[str, Any]]): Cross attention
+                keyword arguments.
+            encoder_attention_mask (Optional[torch.FloatTensor]): Encoder
+                attention mask.
+        Returns:
+            torch.FloatTensor: Output hidden states.
+            Tuple[torch.FloatTensor]: Output hidden states of each block.
+            torch.FloatTensor: Attention regularization loss.
+        """
         output_states = ()
         loss_reg_all = 0.0
 
@@ -396,6 +426,22 @@ class ViCoUNetMidBlock2DCrossAttn(ViCoBlockWrapper):
         cross_attention_kwargs: Optional[Dict[str, Any]] = None,
         encoder_attention_mask: Optional[torch.FloatTensor] = None,
     ) -> torch.FloatTensor:
+        """
+        Args:
+            hidden_states (torch.FloatTensor): Hidden states.
+            temb (Optional[torch.FloatTensor]): Time embedding.
+            encoder_hidden_states (Optional[torch.FloatTensor]): Encoder
+                hidden states.
+            placeholder_position (torch.Tensor): Placeholder position.
+            attention_mask (Optional[torch.FloatTensor]): Attention mask.
+            cross_attention_kwargs (Optional[Dict[str, Any]]): Cross attention
+                keyword arguments.
+            encoder_attention_mask (Optional[torch.FloatTensor]): Encoder
+                attention mask.
+        Returns:
+            torch.FloatTensor: Output hidden states.
+            torch.FloatTensor: Attention regularization loss.
+        """
         loss_reg_all = 0.0
         hidden_states = self.org_module.resnets[0](hidden_states, temb)
         for attn, resnet in zip(self.org_module.attentions,
@@ -430,6 +476,31 @@ class ViCoCrossAttnUpBlock2D(ViCoBlockWrapper):
         attention_mask: Optional[torch.FloatTensor] = None,
         encoder_attention_mask: Optional[torch.FloatTensor] = None,
     ):
+        """Performs the forward pass through the ViCoCrossAttnUpBlock2D module.
+
+        Args:
+            hidden_states (torch.FloatTensor): Input hidden states.
+            res_hidden_states_tuple (Tuple[torch.FloatTensor, ...]):
+                Tuple of residual hidden states.
+            temb (Optional[torch.FloatTensor], optional):
+                Temporal embeddings. Defaults to None.
+            encoder_hidden_states (Optional[torch.FloatTensor], optional):
+                Encoder hidden states. Defaults to None.
+            placeholder_position (torch.Tensor, optional):
+                Placeholder positions. Defaults to None.
+            cross_attention_kwargs (Optional[Dict[str, Any]], optional):
+                Keyword arguments for cross-attention. Defaults to None.
+            upsample_size (Optional[int], optional): Upsample size.
+            attention_mask (Optional[torch.FloatTensor], optional):
+              Attention mask.
+            encoder_attention_mask (Optional[torch.FloatTensor], optional):
+                Encoder attention mask.
+
+        Returns:
+            Tuple[torch.FloatTensor, torch.FloatTensor]:
+                A tuple containing the output hidden states and
+                the total regularization loss.
+        """
         loss_reg_all = 0.0
         for resnet, attn in zip(self.org_module.resnets,
                                 self.org_module.attentions):
@@ -521,7 +592,38 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
         encoder_attention_mask: Optional[torch.Tensor] = None,
         return_dict: bool = True,
     ) -> Union[UNet2DConditionOutput, Tuple]:
+        """Performs the forward pass through the ViCoBlock2D module.
 
+        Args:
+            sample (torch.FloatTensor): Input sample.
+            timestep (Union[torch.Tensor, float, int]): Timestep value.
+            encoder_hidden_states (torch.Tensor): Encoder hidden states.
+            placeholder_position (torch.Tensor): Placeholder positions.
+            class_labels (Optional[torch.Tensor], optional): Class labels.
+                Defaults to None.
+            timestep_cond (Optional[torch.Tensor], optional):
+                Timestep condition. Defaults to None.
+            attention_mask (Optional[torch.Tensor], optional):
+                Attention mask. Defaults to None.
+            cross_attention_kwargs (Optional[Dict[str, Any]], optional):
+                Keyword arguments for cross-attention. Defaults to None.
+            added_cond_kwargs (Optional[Dict[str, torch.Tensor]], optional):
+                Additional condition arguments. Defaults to None.
+            down_block_additional_residuals
+                (Optional[Tuple[torch.Tensor]], optional):
+                Additional residuals for down-blocks. Defaults to None.
+            mid_block_additional_residual (Optional[torch.Tensor], optional):
+                Additional residual for mid-block. Defaults to None.
+            encoder_attention_mask (Optional[torch.Tensor], optional):
+                Encoder attention mask. Defaults to None.
+            return_dict (bool, optional):
+                Whether to return a dictionary or a tuple.
+
+        Returns:
+            Union[UNet2DConditionOutput, Tuple]:
+                The output of the forward pass, which can be either
+                a UNet2DConditionOutput object or a tuple of tensors.
+        """
         default_overall_up_factor = 2**self.org_module.num_upsamplers
         forward_upsample_size = False
         upsample_size = None
@@ -726,7 +828,13 @@ class ViCoUNet2DConditionModel(ViCoBlockWrapper):
 
 
 def set_vico_modules(unet, image_cross_layers):
-    """Set all modules for ViCo method after the UNet initialized normally."""
+    """Set all modules for ViCo method after the UNet initialized normally.
+
+    Args:
+        unet (nn.Module): UNet model.
+        image_cross_layers (List): List of flag indicating which
+        transformer2D modules have image_cross_attention modules.
+    """
     # replace transformer2d blocks
     replace_transformer2d(unet, image_cross_layers)
 

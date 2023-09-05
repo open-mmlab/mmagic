@@ -20,9 +20,9 @@ ModelType = Union[Dict, nn.Module]
 
 @MODELS.register_module()
 class ViCo(StableDiffusion):
-    """Implementation of `DreamBooth with Stable Diffusion.
+    """Implementation of `ViCo with Stable Diffusion.
 
-    <https://arxiv.org/abs/2208.12242>`_ (DreamBooth).
+    <https://arxiv.org/abs/2306.00971>`_ (ViCo).
 
     Args:
         vae (Union[dict, nn.Module]): The config or module for VAE model.
@@ -30,25 +30,16 @@ class ViCo(StableDiffusion):
             encoder.
         tokenizer (str): The **name** for CLIP tokenizer.
         unet (Union[dict, nn.Module]): The config or module for Unet model.
-        controlnet (Union[dict, nn.Module]): The config or module for
-            ControlNet.
         schedule (Union[dict, nn.Module]): The config or module for diffusion
             scheduler.
         test_scheduler (Union[dict, nn.Module], optional): The config or
             module for diffusion scheduler in test stage (`self.infer`). If not
             passed, will use the same scheduler as `schedule`. Defaults to
             None.
-        lora_config (dict, optional): The config for LoRA finetuning. Defaults
-            to None.
         val_prompts (Union[str, List[str]], optional): The prompts for
             validation. Defaults to None.
-        class_prior_prompt (str, optional): The prompt for class prior loss.
         num_class_images (int, optional): The number of images for class prior.
             Defaults to 3.
-        prior_loss_weight (float, optional): The weight for class prior loss.
-            Defaults to 0.
-        fine_tune_text_encoder (bool, optional): Whether to fine-tune text
-            encoder. Defaults to False.
         dtype (str, optional): The dtype for the model. Defaults to 'fp16'.
         enable_xformers (bool, optional): Whether to use xformers.
             Defaults to True.
@@ -60,30 +51,36 @@ class ViCo(StableDiffusion):
                 dict(type='DataPreprocessor').
         init_cfg (dict, optional): The weight initialized config for
             :class:`BaseModule`. Defaults to None/
+        image_cross_layers (List[int], optional): The layers to use image
+            cross attention. Defaults to None.
+        reg_loss_weight (float, optional): The weight of regularization loss.
+            Defaults to 0.
+        placeholder (str, optional): The placeholder token. Defaults to None.
+        initialize_token (str, optional): The token to initialize the
+            placeholder. Defaults to None.
+        num_vectors_per_token (int, optional): The number of vectors per token.
     """
 
-    def __init__(
-            self,
-            vae: ModelType,
-            text_encoder: ModelType,
-            tokenizer: str,
-            unet: ModelType,
-            scheduler: ModelType,
-            test_scheduler: Optional[ModelType] = None,
-            #  vico_config: Optional[dict] = None,
-            val_prompts: Union[str, List[str]] = None,
-            dtype: str = 'fp16',
-            enable_xformers: bool = True,
-            noise_offset_weight: float = 0,
-            tomesd_cfg: Optional[dict] = None,
-            data_preprocessor: Optional[ModelType] = dict(
-                type='DataPreprocessor'),
-            init_cfg: Optional[dict] = None,
-            image_cross_layers: List[int] = None,
-            reg_loss_weight: float = 0,
-            placeholder: str = None,
-            initialize_token: str = None,
-            num_vectors_per_token: int = 1):
+    def __init__(self,
+                 vae: ModelType,
+                 text_encoder: ModelType,
+                 tokenizer: str,
+                 unet: ModelType,
+                 scheduler: ModelType,
+                 test_scheduler: Optional[ModelType] = None,
+                 val_prompts: Union[str, List[str]] = None,
+                 dtype: str = 'fp16',
+                 enable_xformers: bool = True,
+                 noise_offset_weight: float = 0,
+                 tomesd_cfg: Optional[dict] = None,
+                 data_preprocessor: Optional[ModelType] = dict(
+                     type='DataPreprocessor'),
+                 init_cfg: Optional[dict] = None,
+                 image_cross_layers: List[int] = None,
+                 reg_loss_weight: float = 0,
+                 placeholder: str = None,
+                 initialize_token: str = None,
+                 num_vectors_per_token: int = 1):
 
         super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
                          test_scheduler, dtype, enable_xformers,
@@ -123,6 +120,7 @@ class ViCo(StableDiffusion):
         set_vico_modules(self.unet, have_image_cross_attention)
 
     def set_only_imca_trainable(self):
+        """Set only image cross attention trainable."""
         for _, layer in self.unet.named_modules():
             if layer.__class__.__name__ == 'ViCoTransformer2D':
                 if hasattr(layer, 'image_cross_attention'):
@@ -246,7 +244,7 @@ class ViCo(StableDiffusion):
         return image_ref
 
     def train_step(self, data, optim_wrapper):
-
+        """Training step."""
         data = self.data_preprocessor(data)
         inputs, data_samples = data['inputs'], data['data_samples']
 
