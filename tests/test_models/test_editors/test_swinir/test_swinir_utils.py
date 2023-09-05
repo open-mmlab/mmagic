@@ -24,3 +24,10 @@ def test_window():
     assert x.shape == (4, 4, 4, 3)
     x = window_reverse(x, 4, 8, 8)
     assert x.shape == (1, 8, 8, 3)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

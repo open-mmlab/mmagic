@@ -106,3 +106,10 @@ class TestTranslationInferencer(TestCase):
                 text=text, result_out_dir=result_out_dir)
             result_img = inference_result[1]
             assert result_img[0].cpu().numpy().shape == (3, 32, 32)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

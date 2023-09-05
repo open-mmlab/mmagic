@@ -13,3 +13,10 @@ def test_albumentations():
         ])
     results = model(results)
     assert results['img'].shape == (4, 4, 3)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

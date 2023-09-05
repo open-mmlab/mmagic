@@ -165,3 +165,10 @@ class TestStyleGAN1Generator:
         g = StyleGAN1Generator(**cfg_)
         res = g(None, num_batches=2)
         assert res.shape == (2, 3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

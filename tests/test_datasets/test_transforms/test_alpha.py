@@ -84,3 +84,10 @@ def test_generate_soft_seg():
         'erode_iter_range=(1, 2), dilate_iter_range=(1, 2), '
         'blur_ksizes=[(11, 11)])')
     assert repr(generate_soft_seg) == repr_str
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

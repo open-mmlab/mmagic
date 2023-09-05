@@ -50,3 +50,10 @@ def test_flavr_net():
         output = model(inputs)
         assert torch.is_tensor(output)
         assert output.shape == target.shape
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

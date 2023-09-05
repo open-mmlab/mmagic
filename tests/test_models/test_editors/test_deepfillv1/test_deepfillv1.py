@@ -99,3 +99,10 @@ def test_deepfillv1_inpaintor():
             assert 'stage2_loss_l1_hole' in log_vars
             assert 'stage2_loss_l1_valid' in log_vars
             assert 'stage2_loss_g_fake' in log_vars
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

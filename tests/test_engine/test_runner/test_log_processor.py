@@ -26,3 +26,10 @@ class TestLogProcessor:
         assert log_processor._get_dataloader_size(self.runner, 'train') == 20
         assert log_processor._get_dataloader_size(self.runner, 'val') == 10
         assert log_processor._get_dataloader_size(self.runner, 'test') == 5
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

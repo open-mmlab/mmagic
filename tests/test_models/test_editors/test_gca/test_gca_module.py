@@ -131,3 +131,10 @@ def test_gca_module():
     gca = GCAModule(128, 128, rate=2)
     output = gca(img_feat, alpha_feat, unknown)
     assert output.shape == (1, 128, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

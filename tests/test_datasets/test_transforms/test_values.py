@@ -61,3 +61,10 @@ class TestAugmentations:
             assert new_results[key] == dictionary[key]
         assert repr(set_values) == (
             set_values.__class__.__name__ + f'(dictionary={dictionary})')
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

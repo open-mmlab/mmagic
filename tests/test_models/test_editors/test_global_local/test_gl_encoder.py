@@ -19,3 +19,10 @@ def test_gl_encoder():
         gl_encoder = gl_encoder.cuda()
         output = gl_encoder(input_x.cuda())
         assert output.shape == (1, 256, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

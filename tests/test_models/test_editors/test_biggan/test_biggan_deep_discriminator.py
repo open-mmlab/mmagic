@@ -103,3 +103,10 @@ class TestBigGANDeepDiscriminator(object):
         d = MODELS.build(cfg).cuda()
         y = d(self.x.cuda(), self.label.cuda())
         assert y.shape == (2, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -258,3 +258,10 @@ class TestToRGB:
         skip = torch.randn(2, 3, 4, 4).cuda()
         res = model(input_x, style, skip)
         assert res.shape == (2, 3, 8, 8)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

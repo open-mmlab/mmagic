@@ -45,3 +45,10 @@ def test_smpatch_discriminator():
         net = net.cuda()
         output = net(img.cuda())
         assert output.shape == (1, 1, 6, 6)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

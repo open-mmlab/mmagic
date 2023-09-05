@@ -22,3 +22,10 @@ class TestSinGANDisc:
         img = torch.randn(1, 3, 24, 24)
         res = disc(img, 2)
         assert res.shape[0] == 1
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

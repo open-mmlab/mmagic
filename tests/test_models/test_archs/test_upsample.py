@@ -19,3 +19,10 @@ def test_pixel_shuffle():
         x = x.cuda()
         y = model(x)
         assert y.shape == (1, 3, 32, 32)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

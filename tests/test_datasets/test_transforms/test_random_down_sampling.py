@@ -41,3 +41,10 @@ def test_random_down_sampling():
     results3 = down_sampling3(inputs3)
     assert results3['img_channel_order'] == 'rgb'
     assert results3['img_color_type'] == 'color'
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

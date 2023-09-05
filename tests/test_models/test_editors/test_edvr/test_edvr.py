@@ -70,3 +70,10 @@ def test_edvr():
                 type='CharbonnierLoss', loss_weight=1.0, reduction='sum'),
             train_cfg=dict())
         model.train_step(data, optim_wrapper)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

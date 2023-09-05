@@ -54,3 +54,10 @@ def test_mattor_preprocessor():
     data = dict(inputs=inputs, data_samples=[data_sample])
 
     data = processor(data, training=False)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

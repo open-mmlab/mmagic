@@ -85,3 +85,10 @@ def test_multi_layer_disc():
     assert not multi_disc.conv5.with_norm
     assert not multi_disc.conv5.with_activation
     assert multi_disc.conv5.stride == (1, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
