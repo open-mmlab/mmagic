@@ -101,3 +101,10 @@ def test_one_stage_inpaintor():
         assert inpaintor.train_cfg.disc_step == 2
         log_vars = inpaintor.train_step(data_batch, optim_dict)
         assert 'loss_l1_hole' not in log_vars
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

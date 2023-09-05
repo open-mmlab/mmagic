@@ -70,3 +70,10 @@ def test_depthwise_separable_conv():
     assert conv.pointwise_conv.activate.__class__.__name__ == 'LeakyReLU'
     output = conv(x)
     assert output.shape == (1, 8, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

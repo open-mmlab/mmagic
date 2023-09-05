@@ -23,3 +23,10 @@ def test_normalize_vector():
     l2_norm_out = l2_norm(inp)
 
     assert (out == l2_norm_out).all()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

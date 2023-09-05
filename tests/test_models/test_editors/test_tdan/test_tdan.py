@@ -42,3 +42,10 @@ def test_tdan():
     # feat
     output = model(torch.rand(1, 5, 3, 16, 16), mode='tensor')
     assert output.shape == (1, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

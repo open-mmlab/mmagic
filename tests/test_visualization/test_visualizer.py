@@ -85,3 +85,10 @@ class TestGenVisualer(TestCase):
         osp.exists(osp.join(img_root, 'fake_img_padding_5.png'))
 
         shutil.rmtree(img_root)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

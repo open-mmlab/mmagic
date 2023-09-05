@@ -49,3 +49,10 @@ def test_reorder_image():
 
     output = reorder_image(img_chw, input_order='CHW')
     assert output.shape == (32, 32, 3)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

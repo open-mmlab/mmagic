@@ -40,3 +40,10 @@ def test_deepfill_dec():
         assert decoder.dec2.conv.out_channels == 96 * 2
         assert not decoder.dec7.with_feat_act
         assert res.min().item() >= -1. and res.max().item() <= 1
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

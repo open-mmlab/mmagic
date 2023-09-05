@@ -62,3 +62,10 @@ class TestMS_SSIM(TestCase):
         # test prefix
         MS_SSIM = MultiScaleStructureSimilarity(
             fake_nums=4, fake_key='fake', sample_model='ema', prefix='ms-ssim')
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

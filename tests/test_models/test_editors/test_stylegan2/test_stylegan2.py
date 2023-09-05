@@ -67,3 +67,10 @@ class TestStyleGAN2(TestCase):
         # simulate train_loop here
         message_hub.update_info('iter', 0)
         _ = stylegan2.train_step(data, optim_wrapper_dict)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

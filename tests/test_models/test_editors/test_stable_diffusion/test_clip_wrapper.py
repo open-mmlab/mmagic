@@ -51,3 +51,10 @@ def test_load_clip_submodels_transformers_none():
         load_clip_submodels(init_cfg, submodels, True)
 
     sys.modules['transformers'] = transformer_location
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

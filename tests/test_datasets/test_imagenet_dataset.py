@@ -14,3 +14,10 @@ class TestImageNetDataset(TestCase):
         with self.assertRaisesRegex(
                 AssertionError, r"\(3\) doesn't match .* classes \(1000\)"):
             ImageNet(data_root=DATA_DIR, data_prefix=DATA_DIR)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

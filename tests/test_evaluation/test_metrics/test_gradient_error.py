@@ -101,3 +101,10 @@ class TestMattingMetrics:
         assert list(res.keys()) == ['GradientError']
         np.testing.assert_almost_equal(el['grad_err'], 0.0028887)
         # assert np.allclose(res['GradientError'], 0.0028887)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

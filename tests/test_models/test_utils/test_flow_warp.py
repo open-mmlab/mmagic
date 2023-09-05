@@ -50,3 +50,10 @@ def test_flow_warp():
         assert result.size() == (1, 3, 10, 10)
         error = torch.sum(torch.abs(result - tensor_shift(x, (1, 1))))
         assert error < 1e-5
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

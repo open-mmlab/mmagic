@@ -133,3 +133,10 @@ class TestAugmentations:
                                        alpha / 255.)
         np.testing.assert_almost_equal(rescale_to_zero_one_results['alpha'][1],
                                        alpha_2 / 255.)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

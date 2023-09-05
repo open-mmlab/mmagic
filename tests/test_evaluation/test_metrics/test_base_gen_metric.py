@@ -117,3 +117,10 @@ def test_GenerativeMetric():
     output = next(iterator)
     assert output['inputs'] == dict(
         sample_model='ema', num_batches=10, sample_kwargs=sample_kwargs)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

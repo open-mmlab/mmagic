@@ -698,3 +698,10 @@ class TestFramesDatasets:
                     '00000000.png')
             ],
             sample_idx=1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

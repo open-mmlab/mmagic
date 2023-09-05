@@ -70,3 +70,10 @@ class TestBaseTranslationModel(TestCase):
             img=torch.randn(1, 3, 64, 64), target_domain=None)
         self.assertEqual(res['target'].shape, (1, 3, 64, 64))
         self.assertEqual(res['source'].shape, (1, 3, 64, 64))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

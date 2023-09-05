@@ -133,3 +133,10 @@ def test_edvr_net():
             # The height and width of inputs should be a multiple of 4
             input_tensor = torch.rand(1, 5, 3, 3, 3).cuda()
             edvrnet(input_tensor)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

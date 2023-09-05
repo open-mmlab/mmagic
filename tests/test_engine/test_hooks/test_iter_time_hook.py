@@ -69,3 +69,10 @@ class TestIterTimerHook(TestCase):
         assert runner.message_hub.get_info('eta') == 10
         self.hook._after_iter(runner, batch_idx=19, mode='test')
         assert runner.message_hub.get_info('eta') == 0
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

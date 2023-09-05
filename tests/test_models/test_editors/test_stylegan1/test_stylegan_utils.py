@@ -30,3 +30,10 @@ def mock_generator(code, *args, **kwargs):
 def test_style_mixing():
     out = style_mixing(mock_generator, n_source=10, n_target=11)
     assert out.shape == ((1 + 10 + (1 + 10) * 11), 3, 16, 16)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
