@@ -42,6 +42,8 @@ Table of contents:
 
 &#8195;      [3.1.1. DragGAN](#311-draggan)
 
+&#8195;      [3.1.2. ViCo](#312-vico)
+
 ## 1. Download sample images or videos
 
 We prepared some images and videos for you to run demo with. After MMagic is well installed, you could use demos in this folder to infer these data.
@@ -326,7 +328,13 @@ python demo/gradio_vico.py
 
 *Inference*
 
-1. Follow the [instructions](../configs/vico/README.md#quick-start#4) to download the pretrained weights (or [use your own weights](../configs/vico/README.md#quick-start#5)) and put them under the folder `ckpts`, your folder structure should be like:
+Follow the [instructions](../configs/vico/README.md#quick-start#4) to download the pretrained weights (or [use your own weights](../configs/vico/README.md#quick-start#5)) and put them under the folder `./ckpts`
+
+```
+mkdir ckpts
+```
+
+your folder structure should be like:
 
 ```
 ckpts
@@ -336,8 +344,10 @@ ckpts
 ...
 ```
 
-2. Upload reference image.
+Then launch the UI and you can use the pretrained weights to generate images.
 
-3. (Optional) Customize advanced settings.
+1. Upload reference image.
 
-4. Click inference button.
+2. (Optional) Customize advanced settings.
+
+3. Click inference button.
