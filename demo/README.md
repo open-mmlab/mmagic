@@ -307,3 +307,40 @@ Then, try on the script:
 ```shell
 python demo/gradio_draggan.py
 ```
+
+#### 3.1.2 FastComposer
+
+First, run the script:
+
+```shell
+python demo/gradio_fastcomposer.py
+```
+
+Second, upload reference subject images.For example,
+
+<table align="center">
+<thead>
+  <tr>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/14927720/265911400-91635451-54b6-4dc6-92a7-c1d02f88b62e.jpeg" width="400"/>
+  <br/>
+  <b>'reference_0.png'</b>
+</div></td>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/14927720/265911502-66b67f53-dff0-4d25-a9af-3330e446aa48.jpeg" width="400"/>
+  <br/>
+  <b>'reference_1.png'</b>
+</div></td>
+    <td>
+</thead>
+</table>
+
+Then, add prompt like `A man img and a man img sitting together` and press `run` button.
+
+Finally, you can get  text-generated images.
+
+<div align=center>
+<img src="https://user-images.githubusercontent.com/14927720/265911526-4975d6e2-c5fc-4324-80c9-a7a512953218.png">
+</div>

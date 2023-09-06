@@ -109,7 +109,6 @@ class MMagicInferencer:
         # text2image models
         'controlnet',
         'disco_diffusion',
-        'fastcomposer',
         'stable_diffusion',
 
         # 3D-aware generation

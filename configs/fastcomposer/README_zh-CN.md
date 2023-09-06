@@ -15,7 +15,7 @@
 <!-- [IMAGE] -->
 
 <div align=center>
-<img src="https://fastcomposer.mit.edu/figures/multi_subject.png">
+<img src="https://user-images.githubusercontent.com/14927720/265914135-8a25789c-8d30-40cb-8ac5-e3bd3b617aac.png">
 </div>
 
 ## 预训练模型
@@ -64,8 +64,8 @@ num_images = 1
 image = []
 seed = -1
 
-image1 = mmcv.imread('https://img-blog.csdnimg.cn/df51cfed28de4b81acb771188831461c.jpeg')
-image2 = mmcv.imread('https://img-blog.csdnimg.cn/4dca7b8cec0549c3b1247f01ea184f3e.jpeg')
+image1 = mmcv.imread('https://user-images.githubusercontent.com/14927720/265911400-91635451-54b6-4dc6-92a7-c1d02f88b62e.jpeg')
+image2 = mmcv.imread('https://user-images.githubusercontent.com/14927720/265911502-66b67f53-dff0-4d25-a9af-3330e446aa48.jpeg')
 
 image.append(Image.fromarray(image1))
 
