@@ -17,24 +17,23 @@ register_all_modules()
 stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 finetuned_model_path = ''
 
-vision_config = {
-    'attention_dropout': 0.0,
-    'dropout': 0.0,
-    'hidden_act': 'quick_gelu',
-    'hidden_size': 1024,
-    'image_size': 64,
-    'initializer_factor': 1.0,
-    'initializer_range': 0.02,
-    'intermediate_size': 64,
-    'layer_norm_eps': 1e-05,
-    'model_type': 'clip_vision_model',
-    'num_attention_heads': 16,
-    'num_channels': 3,
-    'num_hidden_layers': 24,
-    'patch_size': 14,
-    'projection_dim': 768,
-    'transformers_version': '4.29.1'
-}
+vision_config = dict(
+    attention_dropout=0.0,
+    dropout=0.0,
+    hidden_act='quick_gelu',
+    hidden_size=1024,
+    image_size=64,
+    initializer_factor=1.0,
+    initializer_range=0.02,
+    intermediate_size=64,
+    layer_norm_eps=1e-05,
+    model_type='clip_vision_model',
+    num_attention_heads=16,
+    num_channels=3,
+    num_hidden_layers=24,
+    patch_size=14,
+    projection_dim=768,
+    transformers_version='4.29.1')
 
 config = dict(
     type='FastComposer',
