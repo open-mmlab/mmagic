@@ -49,8 +49,7 @@ model = dict(
             attention_block_types=['Temporal_Self', 'Temporal_Self'],
             temporal_position_encoding=True,
             temporal_position_encoding_max_len=24,
-            temporal_attention_dim_div=1),
-        subfolder='unet'),
+            temporal_attention_dim_div=1)),
     text_encoder=dict(
         type='ClipWrapper',
         clip_type='huggingface',
@@ -61,8 +60,6 @@ model = dict(
     test_scheduler=diffusion_scheduler,
     data_preprocessor=dict(type='DataPreprocessor'),
     dream_booth_lora_cfg=dict(type='ToonYou', steps=25, guidance_scale=7.5))
-
-cfg = dict(diffusion_scheduler=diffusion_scheduler, model=model)
 
 
 @pytest.mark.skipif(
