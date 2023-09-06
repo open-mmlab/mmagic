@@ -22,9 +22,9 @@ Diffusion models excel at text-to-image generation, especially in subject-driven
 
 This model has several weights including vae, unet and clip. You should download the weights from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and [clipModel](https://huggingface.co/openai/clip-vit-large-patch14),and then change the 'stable_diffusion_v15_url' and 'clip_vit_url' in config to the corresponding weights path and "finetuned_model_path" to the weight path of fastcomposer.
 
-|                    Model                    | Dataset |                                            Download                                             |
-| :-----------------------------------------: | :-----: | :---------------------------------------------------------------------------------------------: |
-| [FastComposer](./fastcomposer_8xb1_FFHQ.py) |    -    | [model](https://download.openxlab.org.cn/models/xiaomile/fastcomposer/weight/pytorch_model.bin) |
+|                    Model                     | Dataset |                                            Download                                             |
+| :------------------------------------------: | :-----: | :---------------------------------------------------------------------------------------------: |
+| [FastComposer](./fastcomposer_8xb16_FFHQ.py) |    -    | [model](https://download.openxlab.org.cn/models/xiaomile/fastcomposer/weight/pytorch_model.bin) |
 
 ## Quick Start
 
@@ -51,7 +51,7 @@ torch.cuda.empty_cache()
 
 register_all_modules()
 
-cfg_file = Config.fromfile('configs/fastcomposer/fastcomposer.py')
+cfg_file = Config.fromfile('configs/fastcomposer/fastcomposer_8xb16_FFHQ.py')
 
 fastcomposer = MODELS.build(cfg_file.model).cuda()
 
@@ -60,7 +60,7 @@ negative_prompt = "((((ugly)))), (((duplicate))), ((morbid)), ((mutilated)), [ou
 alpha_ = 0.75
 guidance_scale = 5
 num_steps = 50
-num_images = 4
+num_images = 1
 image = []
 seed = -1
 

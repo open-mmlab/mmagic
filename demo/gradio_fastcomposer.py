@@ -94,7 +94,7 @@ def create_demo():
     """
 
     cfg_file = Config.fromfile(
-        'configs/fastcomposer/fastcomposer_8xb1_FFHQ.py')
+        'configs/fastcomposer/fastcomposer_8xb16_FFHQ.py')
     fastcomposer = MODELS.build(cfg_file.model)
     model = ModelWrapper(fastcomposer)
     # model = ModelWrapper(convert_model_to_pipeline(args, "cpu"))

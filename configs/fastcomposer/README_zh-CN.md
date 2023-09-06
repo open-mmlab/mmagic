@@ -22,9 +22,9 @@
 
 该模型有几个权重，包括vae，unet和clip。您应该先从[stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) 和 [clipModel](https://huggingface.co/openai/clip-vit-large-patch14) 下载权重，然后将配置中的“stable_diffusion_v15_url”和”clip_vit_url“更改为对应的权重路径，将”finetuned_model_path“更改为fastcomposer的权重路径。
 
-|                    Model                    | Dataset |                                            Download                                             |
-| :-----------------------------------------: | :-----: | :---------------------------------------------------------------------------------------------: |
-| [FastComposer](./fastcomposer_8xb1_FFHQ.py) |    -    | [model](https://download.openxlab.org.cn/models/xiaomile/fastcomposer/weight/pytorch_model.bin) |
+|                    Model                     | Dataset |                                            Download                                             |
+| :------------------------------------------: | :-----: | :---------------------------------------------------------------------------------------------: |
+| [FastComposer](./fastcomposer_8xb16_FFHQ.py) |    -    | [model](https://download.openxlab.org.cn/models/xiaomile/fastcomposer/weight/pytorch_model.bin) |
 
 ## 快速开始
 
@@ -51,7 +51,7 @@ torch.cuda.empty_cache()
 
 register_all_modules()
 
-cfg_file = Config.fromfile('configs/fastcomposer/fastcomposer.py')
+cfg_file = Config.fromfile('configs/fastcomposer/fastcomposer_8xb16_FFHQ.py')
 
 fastcomposer = MODELS.build(cfg_file.model).cuda()
 
@@ -60,7 +60,7 @@ negative_prompt = "((((ugly)))), (((duplicate))), ((morbid)), ((mutilated)), [ou
 alpha_ = 0.75
 guidance_scale = 5
 num_steps = 50
-num_images = 4
+num_images = 1
 image = []
 seed = -1
 
