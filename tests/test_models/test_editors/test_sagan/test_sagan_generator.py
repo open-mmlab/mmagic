@@ -300,3 +300,10 @@ class TestSNGANPROJGenerator(object):
         assert isinstance(g, SNGANGenerator)
         x = g(None, num_batches=2)
         assert x.shape == (2, 3, 32, 32)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

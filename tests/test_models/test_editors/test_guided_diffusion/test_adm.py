@@ -87,3 +87,10 @@ class TestAdm(TestCase):
             classifier_scale=1.0,
             show_progress=False)['samples']
         assert samples.shape == (1, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

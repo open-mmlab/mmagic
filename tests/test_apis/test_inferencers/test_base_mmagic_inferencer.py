@@ -23,3 +23,10 @@ def test_base_mmagic_inferencer():
     inferencer_instance = BaseMMagicInferencer(cfg, None)
     extra_parameters = inferencer_instance.get_extra_parameters()
     assert len(extra_parameters) == 0
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -62,3 +62,10 @@ def test_pconv_inpaintor():
     assert 'fake_img' in prediction
     assert 'pred_img' in prediction
     assert prediction.pred_img.shape == (3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -32,3 +32,10 @@ def test_masked_img():
     assert results['ori_img_shape'] == img.shape
     assert results['img_channel_order'] == 'rgb'
     assert results['img_color_type'] == 'color'
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

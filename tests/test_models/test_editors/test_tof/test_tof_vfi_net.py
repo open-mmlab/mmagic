@@ -26,3 +26,10 @@ def test_tof_vfi_net():
         output = model(inputs)
         assert torch.is_tensor(output)
         assert output.shape == (1, 3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

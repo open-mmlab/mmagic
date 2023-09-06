@@ -275,3 +275,10 @@ class TestSNGANPROJDiscriminator(object):
         assert isinstance(d, ProjDiscriminator)
         score = d(self.x.cuda(), self.label.cuda())
         assert score.shape == (2, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

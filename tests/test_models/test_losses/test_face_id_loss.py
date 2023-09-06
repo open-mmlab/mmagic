@@ -16,3 +16,10 @@ def test_face_id_loss():
     gt, pred = torch.randn(1, 3, 224, 224), torch.randn(1, 3, 224, 224)
     loss = face_id_loss(pred, gt)
     assert loss.shape == ()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

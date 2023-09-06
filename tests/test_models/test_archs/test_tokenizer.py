@@ -46,3 +46,10 @@ class TestTokenizerWrapper(TestCase):
         for idx in range(4):
             self.assertIn(f'ngapi_{idx}', text_recon_raw)
         self.assertEqual(input_ids, self.tokenizer(text).input_ids)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

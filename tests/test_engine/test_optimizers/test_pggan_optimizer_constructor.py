@@ -90,3 +90,10 @@ class TestPGGANOptimWrapperConstructor(TestCase):
         self.assertTrue(all([id(gen_optims[0]) == id(o) for o in gen_optims]))
         self.assertTrue(
             all([id(disc_optims[0]) == id(o) for o in disc_optims]))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

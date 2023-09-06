@@ -47,3 +47,10 @@ class TestStyleConv:
 
         res = conv(input_x, input_style1, input_style2)
         assert res.shape == (2, 256, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

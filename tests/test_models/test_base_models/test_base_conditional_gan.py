@@ -287,3 +287,10 @@ class TestBaseGAN(TestCase):
         self.assertIn('loss_disc_fake_g', log_vars)
         self.assertNotIn('loss_gen_aux', log_vars)
         self.assertNotIn('loss_disc_shift', log_vars)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

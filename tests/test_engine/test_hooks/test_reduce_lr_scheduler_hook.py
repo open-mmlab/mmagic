@@ -113,3 +113,10 @@ def test_reduce_lr_scheduler_hook():
     with pytest.raises(TypeError):
         runner.param_schedulers = ''
         hook.after_val_epoch(runner, metrics=dict(PSNR=50))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

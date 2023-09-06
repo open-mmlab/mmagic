@@ -9,3 +9,10 @@ def test_modifiedVGG():
     inputs = torch.randn(1, 3, 128, 128)
     outputs = model(inputs)
     assert outputs.shape == (1, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

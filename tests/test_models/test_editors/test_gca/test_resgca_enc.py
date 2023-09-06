@@ -176,3 +176,10 @@ def test_res_shortcut_encoder():
         assert_tensor_with_shape(outputs['feat3'], target_late_ds_shape[2])
         assert_tensor_with_shape(outputs['feat4'], target_late_ds_shape[3])
         assert_tensor_with_shape(outputs['feat5'], target_late_ds_shape[4])
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -151,3 +151,10 @@ class TestColorUtils:
         assert data_q.shape == (1, 1, 8, 8)
         assert data_q.equal(data_ab_rs[:, [0], :, :] * A +
                             data_ab_rs[:, [1], :, :])
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
