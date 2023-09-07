@@ -383,7 +383,7 @@ Second, upload reference subject images.For example,
 
 Then, add prompt like `A man img and a man img sitting together` and press `run` button.
 
-Finally, you can get  text-generated images.
+Finally, you can get text-generated images.
 
 <div align=center>
 <img src="https://user-images.githubusercontent.com/14927720/265911526-4975d6e2-c5fc-4324-80c9-a7a512953218.png">
