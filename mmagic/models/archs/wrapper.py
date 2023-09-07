@@ -177,3 +177,11 @@ class DiffusersWrapper(BaseModule):
             Any: The output of wrapped module's forward function.
         """
         return self.model(*args, **kwargs)
+
+    def to(
+        self,
+        torch_device: Optional[Union[str, torch.device]] = None,
+        torch_dtype: Optional[torch.dtype] = None,
+    ):
+        self.model.to(torch_device, torch_dtype)
+        return self
