@@ -1,0 +1,18 @@
+Collections:
+- Name: ViCo
+  Paper:
+    Title: 'ViCo: Detail-Preserving Visual Condition for Personalized Text-to-Image
+      Generation'
+    URL: https://arxiv.org/abs/2306.00971
+  README: configs/vico/README.md
+  Task:
+  - text2image
+  Year: 2023
+Models:
+- Config: configs/vico/vico.py
+  In Collection: ViCo
+  Name: vico
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
