@@ -10,7 +10,7 @@
 
 <!-- [ABSTRACT] -->
 
-We support diffusers pipelines for users to conveniently use diffusers to do inferece in our repo.
+For the convenience of our community users, this inferencer supports using the pipelines from diffusers for inference to compare the results with the algorithms supported within our algorithm library.
 
 ## Configs
 
@@ -20,6 +20,10 @@ We support diffusers pipelines for users to conveniently use diffusers to do inf
 
 ## Quick Start
 
+### sd_xl_pipeline
+
+To run stable diffusion XL with mmagic inference API, follow these codes:
+
 ```python
 from mmagic.apis import MMagicInferencer
 
@@ -27,11 +31,17 @@ from mmagic.apis import MMagicInferencer
 editor = MMagicInferencer(model_name='diffusers_pipeline')
 text_prompts = 'Japanese anime style, girl, beautiful, cute, colorful, best quality, extremely detailed'
 negative_prompt = 'bad face, bad hands'
-result_out_dir = 'resources/output/text2image/sd_xl_japanese.png'
+result_out_dir = 'sd_xl_japanese.png'
 editor.infer(text=text_prompts,
              negative_prompt=negative_prompt,
              result_out_dir=result_out_dir)
 ```
+
+You will get this picture:
+
+<div align=center >
+ <img src="https://user-images.githubusercontent.com/12782558/266557074-53519887-6597-42cf-8a0b-03c2db3f4ab2.png" width="600"/>
+</div >
 
 ## Citation
 
