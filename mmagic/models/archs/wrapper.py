@@ -183,6 +183,18 @@ class DiffusersWrapper(BaseModule):
         torch_device: Optional[Union[str, torch.device]] = None,
         torch_dtype: Optional[torch.dtype] = None,
     ):
+        """Put wrapped module to device or convert it to torch_dtype. There are
+        two to() function. One is nn.module.to() and the other is
+        diffusers.pipeline.to(), if both args are passed,
+        diffusers.pipeline.to() is called.
+
+        Args:
+            torch_device: The device to put to.
+            torch_dtype: The type to convert to.
+
+        Returns:
+            self: the wrapped module itself.
+        """
         if torch_dtype is None:
             self.model.to(torch_device)
         else:

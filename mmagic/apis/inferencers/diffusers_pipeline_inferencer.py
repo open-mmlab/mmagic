@@ -14,16 +14,19 @@ class DiffusersPipelineInferencer(BaseMMagicInferencer):
     """inferencer that predicts with text2image models."""
 
     func_kwargs = dict(
-        preprocess=['text', 'negative_prompt'],
+        preprocess=[
+            'text', 'negative_prompt', 'num_inference_steps', 'height', 'width'
+        ],
         forward=[],
         visualize=['result_out_dir'],
         postprocess=[])
 
-    extra_parameters = dict(height=None, width=None)
-
     def preprocess(self,
                    text: InputsType,
-                   negative_prompt: InputsType = None) -> Dict:
+                   negative_prompt: InputsType = None,
+                   num_inference_steps: int = 20,
+                   height=None,
+                   width=None) -> Dict:
         """Process the inputs into a model-feedable format.
 
         Args:
@@ -35,9 +38,14 @@ class DiffusersPipelineInferencer(BaseMMagicInferencer):
         """
         result = self.extra_parameters
         result['prompt'] = text
-
         if negative_prompt:
             result['negative_prompt'] = negative_prompt
+        if num_inference_steps:
+            result['num_inference_steps'] = num_inference_steps
+        if height:
+            result['height'] = height
+        if width:
+            result['width'] = width
 
         return result
 
