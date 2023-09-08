@@ -84,7 +84,10 @@ if num_subject_in_text != len(image):
 if seed == -1:
     seed = np.random.randint(0, 1000000)
 
-generator = torch.manual_seed(seed)
+device = torch.device('cuda' if torch.cuda.is_available(
+    ) else 'cpu')
+generator = torch.Generator(device=device)
+generator.manual_seed(seed)
 
 output_dict = fastcomposer.infer(prompt,
                                  negative_prompt=negative_prompt,
