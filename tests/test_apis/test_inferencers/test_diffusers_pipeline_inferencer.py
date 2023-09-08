@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import pytest
 import platform
+
+import pytest
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
