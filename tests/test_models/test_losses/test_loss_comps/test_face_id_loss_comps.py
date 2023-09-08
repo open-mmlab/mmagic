@@ -21,3 +21,10 @@ def test_face_id_loss_comps():
         fake_imgs=torch.randn(1, 3, 224, 224))
     loss = face_id_loss_comps(outputs_dict=data_dict)
     assert loss.shape == ()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

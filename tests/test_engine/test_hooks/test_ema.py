@@ -252,3 +252,10 @@ class TestEMA:
         assert torch.equal(runner.model.module_a.a,
                            torch.tensor([0.25, 0.5]).cuda())
         assert torch.equal(ema_states['a'], torch.tensor([0.375, 0.75]).cuda())
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

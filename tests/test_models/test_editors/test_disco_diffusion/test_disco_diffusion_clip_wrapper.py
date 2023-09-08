@@ -115,3 +115,10 @@ def test_embedding_layer_with_fixes():
     out_feat = embedding_layer_wrapper(input_ids)
     assert (out_feat[0, 3:7] == 2.3).all()
     assert (out_feat[2, 5:9] == 2.3).all()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

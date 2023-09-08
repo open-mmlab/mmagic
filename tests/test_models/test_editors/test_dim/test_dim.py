@@ -284,3 +284,10 @@ def test_dim():
 
 
 test_dim()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

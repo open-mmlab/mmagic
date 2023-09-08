@@ -49,3 +49,10 @@ class TestPixelMetrics:
         result = mae.compute_metrics(mae.results)
         assert 'MSE' in result
         np.testing.assert_almost_equal(result['MSE'], 0.000015378700496)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

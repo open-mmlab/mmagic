@@ -22,3 +22,10 @@ def test_controlnet_dataset():
         assert 'source_path' in data
         assert 'target_path' in data
         assert data['prompt'] == prompts[idx]
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -168,3 +168,10 @@ class TestEG3D(TestCase):
             num_images=3, num_batches=2, sample_model='ema')
         self.assertEqual(len(output_list), 3)
         self._check_dict_output(output_list, 32, 5, 2)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

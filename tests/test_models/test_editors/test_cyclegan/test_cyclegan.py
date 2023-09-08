@@ -330,3 +330,10 @@ def test_cyclegan():
     assert len(out) == 1
     assert out[0].fake_photo.data.shape == (3, 64, 64)
     assert out[0].fake_mask.data.shape == (3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

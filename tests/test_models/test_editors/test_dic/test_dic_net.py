@@ -124,3 +124,10 @@ def test_dic_net_cuda():
         assert len(output) == 4
         assert torch.is_tensor(output[-1])
         assert output[-1].shape == targets.shape
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

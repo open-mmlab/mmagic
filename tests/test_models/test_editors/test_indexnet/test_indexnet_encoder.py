@@ -139,3 +139,10 @@ def test_index_blocks():
     enc_idx_feat, dec_idx_feat = block(x)
     assert enc_idx_feat.shape == (2, 128, 8, 8)
     assert dec_idx_feat.shape == (2, 128, 8, 8)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

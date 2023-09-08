@@ -109,3 +109,10 @@ class TestWrapper(TestCase):
         model.registrer_buffer('buffer', 123)
         called_args, _ = register_buffer_mock.call_args
         self.assertEqual(called_args, ('buffer', 123))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

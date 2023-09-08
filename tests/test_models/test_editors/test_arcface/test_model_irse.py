@@ -114,3 +114,10 @@ class TestIRSEModel:
         x = torch.randn((2, 3, 224, 224)).cuda()
         y = model(x)
         assert y.shape == (2, 512)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

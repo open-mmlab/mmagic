@@ -383,3 +383,10 @@ def test_instance_crop():
         cropped_img = results['cropped_img']
         assert len(cropped_img) == 0
         assert len(cropped_img) <= 2
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -76,3 +76,10 @@ def test_gan_losses():
     npt.assert_almost_equal(loss.item(), 0.0)
     loss = gan_loss(input_2, False, is_disc=True)
     npt.assert_almost_equal(loss.item(), 3.0)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

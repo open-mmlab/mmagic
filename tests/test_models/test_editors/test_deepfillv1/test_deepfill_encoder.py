@@ -81,3 +81,10 @@ def test_deepfill_enc():
         assert isinstance(encoder.enc2, SimpleGatedConvModule)
         assert encoder.enc2.conv.stride == (2, 2)
         assert encoder.enc2.conv.out_channels == 48 * 2
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
