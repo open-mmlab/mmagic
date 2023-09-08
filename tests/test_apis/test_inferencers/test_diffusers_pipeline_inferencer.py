@@ -29,9 +29,9 @@ def test_diffusers_pipeline_inferencer():
     result = inferencer_instance(
         text=text_prompts,
         negative_prompt=negative_prompt,
-        height=128,
-        width=128)
-    assert result[1][0].size == (128, 128)
+        height=64,
+        width=64)
+    assert result[1][0].size == (64, 64)
 
 
 def teardown_module():
