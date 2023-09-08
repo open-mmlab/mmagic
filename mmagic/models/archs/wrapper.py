@@ -183,5 +183,8 @@ class DiffusersWrapper(BaseModule):
         torch_device: Optional[Union[str, torch.device]] = None,
         torch_dtype: Optional[torch.dtype] = None,
     ):
-        self.model.to(torch_device, torch_dtype)
+        if torch_dtype is None:
+            self.model.to(torch_device)
+        else:
+            self.model.to(torch_device, torch_dtype)
         return self
