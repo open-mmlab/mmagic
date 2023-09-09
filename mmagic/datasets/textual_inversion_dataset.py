@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
 import os.path as osp
 from random import choice
 from typing import Callable, List, Union
@@ -8,85 +9,39 @@ from mmengine.dataset import BaseDataset
 
 from mmagic.registry import DATASETS
 
-imagenet_templates_small = [
-    'a photo of a {}',
-    'a rendering of a {}',
-    'a cropped photo of the {}',
-    'the photo of a {}',
-    'a photo of a clean {}',
-    'a photo of a dirty {}',
-    'a dark photo of the {}',
-    'a photo of my {}',
-    'a photo of the cool {}',
-    'a close-up photo of a {}',
-    'a bright photo of the {}',
-    'a cropped photo of a {}',
-    'a photo of the {}',
-    'a good photo of the {}',
-    'a photo of one {}',
-    'a close-up photo of the {}',
-    'a rendition of the {}',
-    'a photo of the clean {}',
-    'a rendition of a {}',
-    'a photo of a nice {}',
-    'a good photo of a {}',
-    'a photo of the nice {}',
-    'a photo of the small {}',
-    'a photo of the weird {}',
-    'a photo of the large {}',
-    'a photo of a cool {}',
-    'a photo of a small {}',
-]
-
-imagenet_style_templates_small = [
-    'a painting in the style of {}',
-    'a rendering in the style of {}',
-    'a cropped painting in the style of {}',
-    'the painting in the style of {}',
-    'a clean painting in the style of {}',
-    'a dirty painting in the style of {}',
-    'a dark painting in the style of {}',
-    'a picture in the style of {}',
-    'a cool painting in the style of {}',
-    'a close-up painting in the style of {}',
-    'a bright painting in the style of {}',
-    'a cropped painting in the style of {}',
-    'a good painting in the style of {}',
-    'a close-up painting in the style of {}',
-    'a rendition in the style of {}',
-    'a nice painting in the style of {}',
-    'a small painting in the style of {}',
-    'a weird painting in the style of {}',
-    'a large painting in the style of {}',
-]
-
 
 @DATASETS.register_module()
 class TextualInversionDataset(BaseDataset):
-    """Dataset for DreamBooth.
+    """Dataset for Textual Inversion and ViCo.
 
     Args:
         data_root (str): Path to the data root.
         concept_dir (str): Path to the concept images.
-        is_style (bool)
-        prompt (str): Prompt of the concept.
+        placeholder (str): A string to denote the concept.
+        template (list[str]): A list of strings like 'A photo of {}'.
+        with_image_reference (bool): Is used for vico training.
         pipeline (list[dict | callable]): A sequence of data transforms.
     """
 
-    def __init__(self,
-                 data_root: str,
-                 concept_dir: str,
-                 placeholder: str,
-                 is_style: bool = False,
-                 pipeline: List[Union[dict, Callable]] = []):
+    def __init__(
+            self,
+            data_root: str,
+            concept_dir: str,
+            placeholder: str,
+            template: str,
+            # used for vico training
+            with_image_reference: bool = False,
+            pipeline: List[Union[dict, Callable]] = []):
 
         data_prefix = dict(img_path=concept_dir)
 
         self.placeholder = placeholder
-        if is_style:
-            self.template = imagenet_style_templates_small
-        else:
-            self.template = imagenet_templates_small
+        if osp.exists(osp.join(data_root, concept_dir)):
+            self.num_images = len(os.listdir(osp.join(data_root, concept_dir)))
+        if osp.exists(template):
+            with open(template, 'r') as file:
+                self.template = file.readlines()
+        self.with_image_reference = with_image_reference
 
         super().__init__(
             data_root=data_root, data_prefix=data_prefix, pipeline=pipeline)
@@ -115,6 +70,20 @@ class TextualInversionDataset(BaseDataset):
             Any: Depends on ``self.pipeline``.
         """
         data_info = self.get_data_info(idx)
+
+        if self.with_image_reference:
+            numbers = list(range(self.num_images))
+            if len(numbers) > 1:
+                numbers.remove(idx % self.num_images)
+            img_dir = self.data_prefix['img_path']
+            file_client = FileClient.infer_client(uri=img_dir)
+            img_dir = osp.abspath(img_dir)
+            data_names = list(
+                file_client.list_dir_or_file(img_dir, list_dir=False))
+            image_ref_path = file_client.join_path(img_dir,
+                                                   data_names[choice(numbers)])
+            data_info['img_ref_path'] = image_ref_path
+
         # load random template
         selected_template = choice(self.template)
         prompt = selected_template.format(self.placeholder)
