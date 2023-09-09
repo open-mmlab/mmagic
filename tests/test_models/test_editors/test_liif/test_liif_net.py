@@ -113,3 +113,10 @@ def test_liif_rdn_net():
         output = model(inputs, coord, cell, True)
         assert torch.is_tensor(output)
         assert output.shape == targets.shape
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

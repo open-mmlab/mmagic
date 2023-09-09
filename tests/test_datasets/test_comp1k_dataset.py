@@ -73,3 +73,10 @@ class TestMattingDatasets:
             # assert 'alpha' in first_data
             # assert isinstance(first_data['alpha'], np.ndarray)
             # assert first_data['alpha'].shape == (552, 800)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

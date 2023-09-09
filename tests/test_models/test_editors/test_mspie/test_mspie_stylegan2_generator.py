@@ -133,3 +133,10 @@ class TestMSStyleGAN2:
 
         g = MSStyleGANv2Generator(
             **cfg, head_pos_encoding=dict(type='MockHeadPosEncoding'))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

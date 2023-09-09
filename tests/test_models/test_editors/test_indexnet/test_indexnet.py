@@ -209,3 +209,10 @@ def test_indexed_upsample():
     shortcut = torch.rand(2, 6, 64, 64)
     output = indexed_upsample(x, shortcut, dec_idx_feat)
     assert_tensor_with_shape(output, (2, 12, 64, 64))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

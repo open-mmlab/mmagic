@@ -369,3 +369,10 @@ def test_numpy_pad():
         f'(keys={pad.keys}, padding={pad.padding}, kwargs={pad.kwargs})')
 
     assert str(pad) == repr_str
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

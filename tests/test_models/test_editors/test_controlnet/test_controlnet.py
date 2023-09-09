@@ -224,3 +224,10 @@ class TestControlStableDiffusion(TestCase):
         control_sd.text_encoder = mock_text_encoder()
 
         control_sd.train_step(data, optim_wrapper)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

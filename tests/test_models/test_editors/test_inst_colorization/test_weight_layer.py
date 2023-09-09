@@ -28,3 +28,10 @@ def test_weight_layer():
     conv1_2 = weight_layer(instance_feature_conv1_2, conv1_2, box_info)
 
     assert conv1_2.shape == instance_feature_conv1_2.shape
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -105,3 +105,10 @@ def test_pack_inputs():
     gt_bg_tensor = to_tensor(ori_results['bg'])
     gt_bg_tensor = gt_bg_tensor.permute(2, 0, 1)
     assert_tensor_equal(data_sample.gt_bg, gt_bg_tensor)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -18,6 +18,6 @@ __all__ = [
     'AdobeComp1kDataset', 'BasicImageDataset', 'BasicFramesDataset',
     'BasicConditionalDataset', 'UnpairedImageDataset', 'PairedImageDataset',
     'ImageNet', 'CIFAR10', 'GrowScaleImgDataset', 'SinGANDataset',
-    'MSCoCoDataset', 'ControlNetDataset', 'DreamBoothDataset',
+    'MSCoCoDataset', 'ControlNetDataset', 'DreamBoothDataset', 'ViCoDataset',
     'ControlNetDataset', 'SDFinetuneDataset', 'TextualInversionDataset'
 ]

@@ -95,3 +95,10 @@ class TestBasicConditonalDataset(TestCase):
                          [1, 2, 3, 4])
         self.assertEqual(dataset[1]['data_samples'].gt_label.label.tolist(),
                          [1, 4, 5, 3])
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

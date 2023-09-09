@@ -69,3 +69,10 @@ def test_val_data_sampler():
     tar_out = [[0, 1, 2, 3]]
     for idx, out in enumerate(val_sampler):
         assert out == tar_out[idx]
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

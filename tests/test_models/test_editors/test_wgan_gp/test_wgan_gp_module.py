@@ -24,3 +24,10 @@ def test_WGANNoiseTo2DFeat():
     noise = torch.randn(1, 16)
     feat = noise2feat(noise)
     assert feat.shape == (1, 32, 4, 4)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

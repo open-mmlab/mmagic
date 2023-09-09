@@ -56,3 +56,10 @@ class TestDeblurGanv2Discriminator(object):
         assert d.patch_gan
         assert isinstance(pred, list)
         assert len(pred) == 2
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
