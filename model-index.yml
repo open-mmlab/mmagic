@@ -20,6 +20,7 @@ Import:
 - configs/edvr/metafile.yml
 - configs/eg3d/metafile.yml
 - configs/esrgan/metafile.yml
+- configs/fastcomposer/metafile.yml
 - configs/flavr/metafile.yml
 - configs/gca/metafile.yml
 - configs/ggan/metafile.yml
