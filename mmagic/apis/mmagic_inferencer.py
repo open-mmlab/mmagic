@@ -114,11 +114,14 @@ class MMagicInferencer:
         # 3D-aware generation
         'eg3d',
 
-        # diffusers inferencer
+        # animation inferencer
         'controlnet_animation',
 
         # draggan
-        'draggan'
+        'draggan',
+
+        # diffusers pipeline inferencer
+        'diffusers_pipeline',
     ]
 
     inference_supported_models_cfg = {}
