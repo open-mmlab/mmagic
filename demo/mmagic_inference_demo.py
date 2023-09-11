@@ -44,6 +44,11 @@ def parse_args():
         default=None,
         help='Pretrained mmagic algorithm setting')
     parser.add_argument(
+        '--config-name',
+        type=str,
+        default=None,
+        help='Pretrained mmagic algorithm config name')
+    parser.add_argument(
         '--model-config',
         type=str,
         default=None,
