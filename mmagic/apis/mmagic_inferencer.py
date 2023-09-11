@@ -141,9 +141,9 @@ class MMagicInferencer:
         MMagicInferencer.init_inference_supported_models_cfg()
         inferencer_kwargs = {}
         inferencer_kwargs.update(
-            self._get_inferencer_kwargs(model_name, model_setting,
-                                        config_name, model_config,
-                                        model_ckpt, extra_parameters))
+            self._get_inferencer_kwargs(model_name, model_setting, config_name,
+                                        model_config, model_ckpt,
+                                        extra_parameters))
         self.inferencer = Inferencers(
             device=device, seed=seed, **inferencer_kwargs)
 
