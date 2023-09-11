@@ -536,3 +536,86 @@ class LoadPairedImageFromFile(LoadImageFromFile):
             results[f'ori_{self.key}'] = ori_image
 
         return results
+
+
+@TRANSFORMS.register_module()
+class LoadImageFromHuggingFaceDataset(BaseTransform):
+    """Load a single image from corresponding paths. Required
+    Keys:
+    - [Key]_path
+
+    New Keys:
+    - [KEY]
+    - ori_[KEY]_shape
+    - ori_[KEY]
+
+    Args:
+        key (str): Keys in results to find corresponding path.
+        channel_order (str): Order of channel, candidates are 'bgr' and 'rgb'.
+            Default: 'bgr'.
+        imdecode_backend (str): The image decoding backend type. The backend
+            argument for :func:``mmcv.imfrombytes``.
+            See :func:``mmcv.imfrombytes`` for details.
+            candidates are 'cv2', 'turbojpeg', 'pillow', and 'tifffile'.
+            Defaults to None.
+        to_float32 (bool): Whether to convert the loaded image to a float32
+            numpy array. If set to False, the loaded image is an uint8 array.
+            Defaults to False.
+    """
+
+    def __init__(
+        self,
+        key: str,
+        channel_order: str = 'bgr',
+        to_float32: bool = False,
+        save_original_img: bool = False,
+    ) -> None:
+
+        self.key = key
+        self.channel_order = channel_order
+        self.save_original_img = save_original_img
+
+        # convert
+        self.to_float32 = to_float32
+
+    def transform(self, results: dict) -> dict:
+        """Functions to load image or frames.
+
+        Args:
+            results (dict): Result dict from :obj:``mmcv.BaseDataset``.
+        Returns:
+            dict: The dict contains loaded image and meta information.
+        """
+
+        img = results[f'{self.key}']
+        if self.channel_order == 'rgb':
+            img = img.convert('RGB')
+            img = np.array(img)
+        elif self.channel_order == 'bgr':
+            img = np.array(img)
+            img = img[..., ::-1]
+
+        if img.ndim == 2:
+            img = np.expand_dims(img, axis=2)
+
+        if self.to_float32:
+            img = img.astype(np.float32)
+
+        results[self.key] = img
+        results[f'ori_{self.key}_shape'] = img.shape
+        results[f'{self.key}_channel_order'] = self.channel_order
+        results[f'{self.key}_color_type'] = 'color'
+        if self.save_original_img:
+            results[f'ori_{self.key}'] = img.copy()
+
+        return results
+
+    def __repr__(self):
+
+        repr_str = (f'{self.__class__.__name__}('
+                    f'key={self.key}, '
+                    f'channel_order={self.channel_order}, '
+                    f'to_float32={self.to_float32}, '
+                    f'save_original_img={self.save_original_img})')
+
+        return repr_str
