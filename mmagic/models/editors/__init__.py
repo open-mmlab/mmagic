@@ -24,6 +24,7 @@ from .edsr import EDSRNet
 from .edvr import EDVR, EDVRNet
 from .eg3d import EG3D
 from .esrgan import ESRGAN, RRDBNet
+from .fastcomposer import FastComposer
 from .fba import FBADecoder, FBAResnetDilated
 from .flavr import FLAVR, FLAVRNet
 from .gca import GCA
@@ -94,5 +95,5 @@ __all__ = [
     'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
     'ControlStableDiffusion', 'DreamBooth', 'TextualInversion', 'DeblurGanV2',
     'DeblurGanV2Generator', 'DeblurGanV2Discriminator',
-    'StableDiffusionInpaint', 'ViCo'
+    'StableDiffusionInpaint', 'ViCo', 'FastComposer'
 ]
