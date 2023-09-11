@@ -3,11 +3,12 @@ import platform
 from unittest import TestCase
 
 import pytest
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmagic.registry import MODELS
 from mmagic.utils import register_all_modules
 
-# import torch
 # from mmengine.utils import digit_version
 
 # from mmengine.utils.dl_utils import TORCH_VERSION
@@ -63,8 +64,10 @@ model = dict(
 
 
 @pytest.mark.skipif(
-    'win' in platform.system().lower(),
-    reason='skip on windows due to limited RAM.')
+    'win' in platform.system().lower()
+    or digit_version(TORCH_VERSION) <= digit_version('1.9.2'),
+    reason='skip on windows due to limited RAM'
+    'and torch >= 1.10.0')
 class TestAnimateDiff(TestCase):
 
     def setUp(self):

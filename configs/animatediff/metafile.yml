@@ -49,3 +49,11 @@ Models:
     Metrics: {}
     Task: Text2Video
   Weights: https://civitai.com/api/download/models/29460
+- Config: configs/animatediff/animatediff_RealisticVision_v2.py
+  In Collection: AnimateDiff
+  Name: animatediff_RealisticVision_v2
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://huggingface.co/guoyww/animatediff/resolve/main/mm_sd_v15_v2.ckpt
