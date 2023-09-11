@@ -22,7 +22,7 @@ class DiffusersPipelineInferencer(BaseMMagicInferencer):
         postprocess=[])
 
     def preprocess(self,
-                   text: InputsType,
+                   text: InputsType = None,
                    negative_prompt: InputsType = None,
                    num_inference_steps: int = 20,
                    height=None,
@@ -37,7 +37,8 @@ class DiffusersPipelineInferencer(BaseMMagicInferencer):
             result(Dict): Results of preprocess.
         """
         result = self.extra_parameters
-        result['prompt'] = text
+        if text:
+            result['prompt'] = text
         if negative_prompt:
             result['negative_prompt'] = negative_prompt
         if num_inference_steps:
