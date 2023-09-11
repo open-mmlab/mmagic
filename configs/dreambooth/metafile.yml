@@ -44,10 +44,10 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Image
-- Config: configs/dreambooth/dreambooth-lora-prior_pre.py
+- Config: configs/dreambooth/dreambooth-lora-prior_pre_backpack.py
   In Collection: DreamBooth
   Name: dreambooth-lora-prior_pre_backpack
   Results:
-  - Dataset: 'google/dreambooth'
+  - Dataset: '-'
     Metrics: {}
     Task: Text2Image
