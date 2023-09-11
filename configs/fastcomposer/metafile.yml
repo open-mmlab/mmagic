@@ -1,0 +1,19 @@
+Collections:
+- Name: FastComposer
+  Paper:
+    Title: 'FastComposer: Tuning-Free Multi-Subject Image Generation with Localized
+      Attention'
+    URL: https://arxiv.org/abs/2305.10431
+  README: configs/fastcomposer/README.md
+  Task:
+  - text2image
+  Year: 2023
+Models:
+- Config: configs/fastcomposer/fastcomposer_8xb16_FFHQ.py
+  In Collection: FastComposer
+  Name: fastcomposer_8xb16_FFHQ
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
+  Weights: https://download.openxlab.org.cn/models/xiaomile/fastcomposer/weight/pytorch_model.bin
