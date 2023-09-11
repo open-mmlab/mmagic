@@ -17,3 +17,35 @@ Models:
     Metrics: {}
     Task: Text2Video
   Weights: https://civitai.com/api/download/models/78775
+- Config: configs/animatediff/animatediff_Lyriel.py
+  In Collection: AnimateDiff
+  Name: animatediff_Lyriel
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://civitai.com/api/download/models/72396
+- Config: configs/animatediff/animatediff_RcnzCartoon.py
+  In Collection: AnimateDiff
+  Name: animatediff_RcnzCartoon
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://civitai.com/api/download/models/71009
+- Config: configs/animatediff/animatediff_MajicMix.py
+  In Collection: AnimateDiff
+  Name: animatediff_MajicMix
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://civitai.com/api/download/models/79068
+- Config: configs/animatediff/animatediff_RealisticVision.py
+  In Collection: AnimateDiff
+  Name: animatediff_RealisticVision
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://civitai.com/api/download/models/29460

@@ -24,9 +24,13 @@ TODO... Add Image
 
 <!-- SKIP THIS TABLE -->
 
-|  模型   |     下载     |
-| :-----: | :----------: |
-| ToonYou | Coming soon! |
+|      模型       |     下载     |
+| :-------------: | :----------: |
+|     ToonYou     | Coming soon! |
+|     Lyriel      | Coming soon! |
+|   RcnzCartoon   | Coming soon! |
+|    MajicMix     | Coming soon! |
+| RealisticVision | Coming soon! |
 
 ## 待办列表
 

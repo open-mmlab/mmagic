@@ -2,30 +2,11 @@
 stable_diffusion_v15_url = '/home/wangrunqi/stable-diffusion-v1-5'
 randomness = dict(
     seed=[
-        10788741199826055526, 6520604954829636163, 6519455744612555650,
-        16372571278361863751
+        5658137986800322009, 12099779162349365895, 10499524853910852697,
+        16768009035333711932
     ],
     diff_rank_seed=True)
 
-val_prompts = [
-    'best quality, masterpiece, 1girl, looking at viewer,\
-        blurry background, upper body, contemporary, dress',
-    'masterpiece, best quality, 1girl, solo, cherry blossoms,\
-        hanami, pink flower, white flower, spring season, wisteria,\
-            petals, flower, plum blossoms, outdoors, falling petals,\
-                white hair, black eyes,',
-    'best quality, masterpiece, 1boy, formal, abstract,\
-        looking at viewer, masculine, marble pattern',
-    'best quality, masterpiece, 1girl, cloudy sky,\
-        dandelion, contrapposto, alternate hairstyle,'
-]
-val_neg_propmts = [
-    '',
-    'badhandv4,easynegative,ng_deepnegative_v1_75t,verybadimagenegative_v1.3,\
-        bad-artist, bad_prompt_version2-neg, teeth',
-    '',
-    '',
-]
 diffusion_scheduler = dict(
     type='DDIMScheduler',
     beta_end=0.012,
@@ -77,6 +58,6 @@ model = dict(
     dream_booth_lora_cfg=dict(
         type='ToonYou',
         path='/home/wangrunqi/AnimateDiff/models/' +
-        'DreamBooth_LoRA/toonyou_beta3.safetensors',
+        'DreamBooth_LoRA/realisticVisionV20_v20.safetensors',
         steps=25,
         guidance_scale=7.5))
