@@ -20,13 +20,14 @@ Large text-to-image models achieved a remarkable leap in the evolution of AI, en
 
 ## Configs
 
-|                                     Model                                      | Dataset | Download |
-| :----------------------------------------------------------------------------: | :-----: | :------: |
-|                         [DreamBooth](./dreambooth.py)                          |    -    |    -     |
-|  [DreamBooth (Finetune Text Encoder)](./dreambooth-finetune_text_encoder.py)   |    -    |    -     |
-|      [DreamBooth with Prior-Preservation Loss](./dreambooth-prior_pre.py)      |    -    |    -     |
-|                    [DreamBooth LoRA](./dreambooth-lora.py)                     |    -    |    -     |
-| [DreamBooth LoRA with Prior-Preservation Loss](./dreambooth-lora-prior_pre.py) |    -    |    -     |
+|                                              Model                                               | Dataset | Download |
+| :----------------------------------------------------------------------------------------------: | :-----: | :------: |
+|                                  [DreamBooth](./dreambooth.py)                                   |    -    |    -     |
+|           [DreamBooth (Finetune Text Encoder)](./dreambooth-finetune_text_encoder.py)            |    -    |    -     |
+|               [DreamBooth with Prior-Preservation Loss](./dreambooth-prior_pre.py)               |    -    |    -     |
+|                             [DreamBooth LoRA](./dreambooth-lora.py)                              |    -    |    -     |
+|          [DreamBooth LoRA with Prior-Preservation Loss](./dreambooth-lora-prior_pre.py)          |    -    |    -     |
+| [DreamBooth LoRA with Prior-Preservation Loss Backpack](./dreambooth-lora-prior_pre_backpack.py) |    -    |    -     |
 
 ## Quick Start
 
