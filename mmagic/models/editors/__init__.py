@@ -96,7 +96,6 @@ __all__ = [
     'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
     'ControlStableDiffusion', 'DreamBooth', 'TextualInversion', 'DeblurGanV2',
     'DeblurGanV2Generator', 'DeblurGanV2Discriminator',
-    'StableDiffusionInpaint', 'ViCo', 'FastComposer',
-    'AnimateDiff', 'UNet3DConditionMotionModel'
-
+    'StableDiffusionInpaint', 'ViCo', 'FastComposer', 'AnimateDiff',
+    'UNet3DConditionMotionModel'
 ]
