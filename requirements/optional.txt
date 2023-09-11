@@ -1,6 +1,6 @@
 albumentations
 -e git+https://github.com/openai/CLIP.git@d50d76daa670286dd6cacf3bcd80b5e4823fc8e1#egg=clip
-datasets >= 2.14.5
+datasets == 2.14.5
 imageio-ffmpeg==0.4.4
 mmdet >= 3.0.0
 open_clip_torch
