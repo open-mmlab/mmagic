@@ -2,7 +2,6 @@
 import platform
 
 import pytest
-import torch
 from mmengine.utils import digit_version
 from mmengine.utils.dl_utils import TORCH_VERSION
 
@@ -21,24 +20,11 @@ register_all_modules()
 def test_diffusers_pipeline_inferencer():
     cfg = dict(
         model=dict(
-            type='DiffusionPipeline',
-            from_pretrained='runwayml/stable-diffusion-v1-5'))
+            type='DiffusionPipeline', from_pretrained='google/ddpm-cat-256'))
 
     inferencer_instance = DiffusersPipelineInferencer(cfg, None)
-
-    def mock_infer(*args, **kwargs):
-        return dict(samples=torch.randn(1, 3, 64, 64))
-
-    inferencer_instance.model.infer = mock_infer
-
-    text_prompts = 'Japanese anime style, girl'
-    negative_prompt = 'bad face, bad hands'
-    result = inferencer_instance(
-        text=text_prompts,
-        negative_prompt=negative_prompt,
-        height=64,
-        width=64)
-    assert result[1][0].size == (64, 64)
+    result = inferencer_instance()
+    assert result[1][0].size == (256, 256)
 
 
 def teardown_module():
