@@ -18,7 +18,7 @@ from mmengine.logging import MMLogger
 from mmengine.model import constant_init
 
 from mmagic.registry import MODELS
-from .resnet_3d import InflatedConv3d
+from .resnet_3d import InflatedConv3d, InflatedGroupNorm
 from .unet_block import (CrossAttnDownBlock3D, CrossAttnUpBlock3D, DownBlock3D,
                          UNetMidBlock3DCrossAttn, UpBlock3D, get_down_block,
                          get_up_block)
@@ -74,6 +74,7 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
         resnet_time_scale_shift: str = 'default',
 
         # Additional
+        use_inflated_groupnorm=False,
         use_motion_module=False,
         motion_module_resolutions=(1, 2, 4, 8),
         motion_module_mid_block=False,
@@ -154,6 +155,7 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
                 resnet_time_scale_shift=resnet_time_scale_shift,
                 unet_use_cross_frame_attention=unet_use_cross_frame_attention,
                 unet_use_temporal_attention=unet_use_temporal_attention,
+                use_inflated_groupnorm=use_inflated_groupnorm,
                 use_motion_module=use_motion_module
                 and (res in motion_module_resolutions)
                 and (not motion_module_decoder_only),
@@ -179,6 +181,7 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
                 upcast_attention=upcast_attention,
                 unet_use_cross_frame_attention=unet_use_cross_frame_attention,
                 unet_use_temporal_attention=unet_use_temporal_attention,
+                use_inflated_groupnorm=use_inflated_groupnorm,
                 use_motion_module=use_motion_module
                 and motion_module_mid_block,
                 motion_module_type=motion_module_type,
@@ -232,6 +235,7 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
                 resnet_time_scale_shift=resnet_time_scale_shift,
                 unet_use_cross_frame_attention=unet_use_cross_frame_attention,
                 unet_use_temporal_attention=unet_use_temporal_attention,
+                use_inflated_groupnorm=use_inflated_groupnorm,
                 use_motion_module=use_motion_module
                 and (res in motion_module_resolutions),
                 motion_module_type=motion_module_type,
@@ -241,6 +245,16 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
             prev_output_channel = output_channel
 
         # out
+        if use_inflated_groupnorm:
+            self.conv_norm_out = InflatedGroupNorm(
+                num_channels=block_out_channels[0],
+                num_groups=norm_num_groups,
+                eps=norm_eps)
+        else:
+            self.conv_norm_out = nn.GroupNorm(
+                num_channels=block_out_channels[0],
+                num_groups=norm_num_groups,
+                eps=norm_eps)
         self.conv_norm_out = nn.GroupNorm(
             num_channels=block_out_channels[0],
             num_groups=norm_num_groups,

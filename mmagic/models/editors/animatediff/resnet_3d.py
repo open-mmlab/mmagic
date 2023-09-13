@@ -22,6 +22,18 @@ class InflatedConv3d(nn.Conv2d):
         return x
 
 
+class InflatedGroupNorm(nn.GroupNorm):
+
+    def forward(self, x):
+        video_length = x.shape[2]
+
+        x = rearrange(x, 'b c f h w -> (b f) c h w')
+        x = super().forward(x)
+        x = rearrange(x, '(b f) c h w -> b c f h w', f=video_length)
+
+        return x
+
+
 class Upsample3D(nn.Module):
     """An 3D upsampling layer with an optional convolution.
 
@@ -173,6 +185,7 @@ class ResnetBlock3D(nn.Module):
         time_embedding_norm='default',
         output_scale_factor=1.0,
         use_in_shortcut=None,
+        use_inflated_groupnorm=None,
     ):
         super().__init__()
         self.pre_norm = pre_norm
@@ -187,8 +200,18 @@ class ResnetBlock3D(nn.Module):
         if groups_out is None:
             groups_out = groups
 
-        self.norm1 = torch.nn.GroupNorm(
-            num_groups=groups, num_channels=in_channels, eps=eps, affine=True)
+        if use_inflated_groupnorm:
+            self.norm1 = InflatedGroupNorm(
+                num_groups=groups,
+                num_channels=in_channels,
+                eps=eps,
+                affine=True)
+        else:
+            self.norm1 = torch.nn.GroupNorm(
+                num_groups=groups,
+                num_channels=in_channels,
+                eps=eps,
+                affine=True)
 
         self.conv1 = InflatedConv3d(
             in_channels, out_channels, kernel_size=3, stride=1, padding=1)
@@ -207,11 +230,19 @@ class ResnetBlock3D(nn.Module):
         else:
             self.time_emb_proj = None
 
-        self.norm2 = torch.nn.GroupNorm(
-            num_groups=groups_out,
-            num_channels=out_channels,
-            eps=eps,
-            affine=True)
+        if use_inflated_groupnorm:
+            self.norm2 = InflatedGroupNorm(
+                num_groups=groups_out,
+                num_channels=out_channels,
+                eps=eps,
+                affine=True)
+        else:
+            self.norm2 = torch.nn.GroupNorm(
+                num_groups=groups_out,
+                num_channels=out_channels,
+                eps=eps,
+                affine=True)
+
         self.dropout = torch.nn.Dropout(dropout)
         self.conv2 = InflatedConv3d(
             out_channels, out_channels, kernel_size=3, stride=1, padding=1)

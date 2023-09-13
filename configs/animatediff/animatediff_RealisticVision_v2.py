@@ -2,8 +2,8 @@
 stable_diffusion_v15_url = '/home/wangrunqi/stable-diffusion-v1-5'
 randomness = dict(
     seed=[
-        5658137986800322009, 12099779162349365895, 10499524853910852697,
-        16768009035333711932
+        13100322578370451493, 14752961627088720670, 9329399085567825781,
+        16987697414827649302
     ],
     diff_rank_seed=True)
 
@@ -32,7 +32,7 @@ model = dict(
         unet_use_temporal_attention=False,
         use_motion_module=True,
         motion_module_resolutions=[1, 2, 4, 8],
-        motion_module_mid_block=False,
+        motion_module_mid_block=True,
         motion_module_decoder_only=False,
         motion_module_type='Vanilla',
         motion_module_kwargs=dict(
