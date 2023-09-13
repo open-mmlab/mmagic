@@ -9,7 +9,8 @@ from mmengine.optim.optimizer import OptimWrapper
 from mmengine.runner.loops import IterBasedTrainLoop
 from torch.optim.adam import Adam
 
-from mmagic.engine import DataPreprocessor, MultiOptimWrapperConstructor
+from mmagic.engine import MultiOptimWrapperConstructor
+from mmagic.models.data_preprocessors import DataPreprocessor
 from mmagic.models.editors import (RealBasicVSR, RealBasicVSRNet,
                                    UNetDiscriminatorWithSpectralNorm)
 from mmagic.models.losses import GANLoss, L1Loss, PerceptualLoss

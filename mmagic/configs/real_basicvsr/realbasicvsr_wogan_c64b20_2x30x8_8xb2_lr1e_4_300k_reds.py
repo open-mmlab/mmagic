@@ -6,9 +6,8 @@
 
 from mmengine.config import read_base
 from mmengine.dataset.sampler import DefaultSampler, InfiniteSampler
-from mmengine.hooks import (BasicVisualizationHook, CheckpointHook,
-                            DistSamplerSeedHook, ExponentialMovingAverageHook,
-                            IterTimerHook, LoggerHook, ParamSchedulerHook)
+from mmengine.hooks import (CheckpointHook, DistSamplerSeedHook, LoggerHook,
+                            ParamSchedulerHook)
 from mmengine.optim.optimizer.optimizer_wrapper import OptimWrapper
 from mmengine.runner.loops import IterBasedTrainLoop
 from torch.optim.adam import Adam
@@ -24,6 +23,8 @@ from mmagic.datasets.transforms import (Clip, CopyValues,
                                         RandomVideoCompression, SetValues,
                                         UnsharpMasking)
 from mmagic.engine import MultiOptimWrapperConstructor
+from mmagic.engine.hooks import (BasicVisualizationHook,
+                                 ExponentialMovingAverageHook, IterTimerHook)
 from mmagic.evaluation import Evaluator
 from mmagic.models.data_preprocessors import DataPreprocessor
 from mmagic.models.editors import RealBasicVSR, RealBasicVSRNet
