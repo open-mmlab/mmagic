@@ -4,11 +4,7 @@ with read_base():
     from .._base_.gen_default_runtime import *
 
 from mmagic.models.editors.textual_inversion import TextualInversion
-# from mmagic.models.editors.stable_diffusion import AutoencoderKL
-#AutoencoderKL.__init__() got an unexpected keyword argument 'from_pretrained'
 from mmagic.datasets.textual_inversion_dataset import TextualInversionDataset
-# from mmagic.models.diffusion_schedulers.ddim_scheduler import EditDDIMScheduler
-# from mmagic.models.diffusion_schedulers.ddpm_scheduler import EditDDPMScheduler
 from mmagic.models.editors.disco_diffusion.clip_wrapper import ClipWrapper
 from mmagic.models.data_preprocessors.data_preprocessor import DataPreprocessor
 from mmagic.datasets.transforms.loading import LoadImageFromFile
@@ -77,7 +73,7 @@ pipeline = [
     dict(type=PackInputs)
 ]
 
-dataset=dict(
+dataset = dict(
     type=TextualInversionDataset,
     data_root='./tests/data/Textual_Inversion/data/',
     concept_dir='cat_toy',
