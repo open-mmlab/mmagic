@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import inspect
 from copy import deepcopy
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -13,7 +13,7 @@ from mmengine.runner import set_random_seed
 from PIL import Image
 from tqdm.auto import tqdm
 
-from mmagic.models.archs import TokenizerWrapper
+from mmagic.models.archs import TokenizerWrapper, set_lora
 from mmagic.models.utils import build_module, set_tomesd, set_xformers
 from mmagic.registry import DIFFUSION_SCHEDULERS, MODELS
 from mmagic.structures import DataSample
@@ -24,43 +24,56 @@ logger = MMLogger.get_current_instance()
 ModelType = Union[Dict, nn.Module]
 
 
-@MODELS.register_module('sd')
+@MODELS.register_module('sdxl')
 @MODELS.register_module()
-class StableDiffusion(BaseModel):
-    """Class for Stable Diffusion. Refers to https://github.com/Stability-
-    AI/stablediffusion and https://github.com/huggingface/diffusers/blob/main/s
-    rc/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion_attend_an
-    d_excite.py  # noqa.
+class StableDiffusionXL(BaseModel):
+    """Class for Stable Diffusion XL. Refers to https://github.com/Stability-
+    AI.
+
+    /generative-models and https://github.com/huggingface/diffusers/blob/main/
+    src/diffusers/pipelines/stable_diffusion_xl/pipeline_stable_diffusion_xl.py
 
     Args:
         unet (Union[dict, nn.Module]): The config or module for Unet model.
-        text_encoder (Union[dict, nn.Module]): The config or module for text
-            encoder.
+        text_encoder_one (Union[dict, nn.Module]): The config or module for
+            text encoder.
+        tokenizer_one (str): The **name** for CLIP tokenizer.
+        text_encoder_two (Union[dict, nn.Module]): The config or module for
+            text encoder.
+        tokenizer_two (str): The **name** for CLIP tokenizer.
         vae (Union[dict, nn.Module]): The config or module for VAE model.
-        tokenizer (str): The **name** for CLIP tokenizer.
         schedule (Union[dict, nn.Module]): The config or module for diffusion
             scheduler.
         test_scheduler (Union[dict, nn.Module], optional): The config or
             module for diffusion scheduler in test stage (`self.infer`). If not
             passed, will use the same scheduler as `schedule`. Defaults to
             None.
-        dtype (str, optional): The dtype for the model This argument will not work
-            when dtype is defined for submodels. Defaults to None.
+        dtype (str, optional): The dtype for the model This argument will not
+            work when dtype is defined for submodels. Defaults to None.
         enable_xformers (bool, optional): Whether to use xformers.
             Defaults to True.
         noise_offset_weight (bool, optional): The weight of noise offset
-            introduced in https://www.crosslabs.org/blog/diffusion-with-offset-noise
+            introduced in
+            https://www.crosslabs.org/blog/diffusion-with-offset-noise
             Defaults to 0.
         data_preprocessor (dict, optional): The pre-process config of
             :class:`BaseDataPreprocessor`.
+        lora_config (dict, optional): The config for LoRA finetuning. Defaults
+            to None.
+        val_prompts (Union[str, List[str]], optional): The prompts for
+            validation. Defaults to None.
+        finetune_text_encoder (bool, optional): Whether to fine-tune text
+            encoder. Defaults to False.
         init_cfg (dict, optional): The weight initialized config for
             :class:`BaseModule`.
     """
 
     def __init__(self,
                  vae: ModelType,
-                 text_encoder: ModelType,
-                 tokenizer: str,
+                 text_encoder_one: ModelType,
+                 tokenizer_one: str,
+                 text_encoder_two: ModelType,
+                 tokenizer_two: str,
                  unet: ModelType,
                  scheduler: ModelType,
                  test_scheduler: Optional[ModelType] = None,
@@ -70,6 +83,10 @@ class StableDiffusion(BaseModel):
                  tomesd_cfg: Optional[dict] = None,
                  data_preprocessor: Optional[ModelType] = dict(
                      type='DataPreprocessor'),
+                 lora_config: Optional[dict] = None,
+                 val_prompts: Union[str, List[str]] = None,
+                 finetune_text_encoder: bool = False,
+                 force_zeros_for_empty_prompt: bool = True,
                  init_cfg: Optional[dict] = None):
 
         # TODO: support `from_pretrained` for this class
@@ -99,12 +116,21 @@ class StableDiffusion(BaseModel):
         else:
             self.test_scheduler = build_module(test_scheduler,
                                                DIFFUSION_SCHEDULERS)
-        self.text_encoder = build_module(text_encoder, MODELS)
-        if not isinstance(tokenizer, str):
-            self.tokenizer = tokenizer
+        self.text_encoder_one = build_module(text_encoder_one, MODELS)
+        if not isinstance(tokenizer_one, str):
+            self.tokenizer_one = tokenizer_one
         else:
             # NOTE: here we assume tokenizer is an string
-            self.tokenizer = TokenizerWrapper(tokenizer, subfolder='tokenizer')
+            self.tokenizer_one = TokenizerWrapper(
+                tokenizer_one, subfolder='tokenizer')
+
+        self.text_encoder_two = build_module(text_encoder_two, MODELS)
+        if not isinstance(tokenizer_two, str):
+            self.tokenizer_two = tokenizer_two
+        else:
+            # NOTE: here we assume tokenizer is an string
+            self.tokenizer_two = TokenizerWrapper(
+                tokenizer_two, subfolder='tokenizer_2')
 
         self.unet_sample_size = self.unet.sample_size
         self.vae_scale_factor = 2**(len(self.vae.block_out_channels) - 1)
@@ -112,11 +138,44 @@ class StableDiffusion(BaseModel):
         self.enable_noise_offset = noise_offset_weight > 0
         self.noise_offset_weight = noise_offset_weight
 
+        self.finetune_text_encoder = finetune_text_encoder
+        self.val_prompts = val_prompts
+        self.lora_config = deepcopy(lora_config)
+        self.force_zeros_for_empty_prompt = force_zeros_for_empty_prompt
+
+        self.prepare_model()
+        self.set_lora()
+
         self.enable_xformers = enable_xformers
         self.set_xformers()
 
         self.tomesd_cfg = tomesd_cfg
         self.set_tomesd()
+
+    def prepare_model(self):
+        """Prepare model for training.
+
+        Move model to target dtype and disable gradient for some models.
+        """
+        self.vae.requires_grad_(False)
+        print_log('Set VAE untrainable.', 'current')
+        self.vae.to(self.dtype)
+        print_log(f'Move VAE to {self.dtype}.', 'current')
+        if not self.finetune_text_encoder or self.lora_config:
+            self.text_encoder_one.requires_grad_(False)
+            self.text_encoder_two.requires_grad_(False)
+            print_log('Set Text Encoder untrainable.', 'current')
+            self.text_encoder_one.to(self.dtype)
+            self.text_encoder_two.to(self.dtype)
+            print_log(f'Move Text Encoder to {self.dtype}.', 'current')
+        if self.lora_config:
+            self.unet.requires_grad_(False)
+            print_log('Set Unet untrainable.', 'current')
+
+    def set_lora(self):
+        """Set LORA for model."""
+        if self.lora_config:
+            set_lora(self.unet, self.lora_config)
 
     def set_xformers(self, module: Optional[nn.Module] = None) -> nn.Module:
         """Set xformers for the model.
@@ -164,17 +223,26 @@ class StableDiffusion(BaseModel):
     @torch.no_grad()
     def infer(self,
               prompt: Union[str, List[str]],
+              prompt_2: Optional[Union[str, List[str]]] = None,
               height: Optional[int] = None,
               width: Optional[int] = None,
               num_inference_steps: int = 50,
+              denoising_end: Optional[float] = None,
               guidance_scale: float = 7.5,
               negative_prompt: Optional[Union[str, List[str]]] = None,
+              negative_prompt_2: Optional[Union[str, List[str]]] = None,
               num_images_per_prompt: Optional[int] = 1,
               eta: float = 0.0,
               generator: Optional[torch.Generator] = None,
               latents: Optional[torch.FloatTensor] = None,
               show_progress=True,
               seed=1,
+              original_size: Optional[Tuple[int, int]] = None,
+              crops_coords_top_left: Tuple[int, int] = (0, 0),
+              target_size: Optional[Tuple[int, int]] = None,
+              negative_original_size: Optional[Tuple[int, int]] = None,
+              negative_crops_coords_top_left: Tuple[int, int] = (0, 0),
+              negative_target_size: Optional[Tuple[int, int]] = None,
               return_type='image'):
         """Function invoked when calling the pipeline for generation.
 
@@ -191,6 +259,18 @@ class StableDiffusion(BaseModel):
                 The number of denoising steps.
                 More denoising steps usually lead to a higher
                 quality image at the expense of slower inference.
+            denoising_end (`float`, *optional*):
+                When specified, determines the fraction (between 0.0 and 1.0)
+                of the total denoising process to be completed before it is
+                intentionally prematurely terminated. As a result, the returned
+                sample will still retain a substantial amount of noise as
+                determined by the discrete timesteps selected by the scheduler.
+                The denoising_end parameter should ideally be utilized when
+                this pipeline forms a part of a "Mixture of Denoisers"
+                multi-pipeline setup, as elaborated in
+                [**Refining the Image Output**](
+                https://huggingface.co/docs/diffusers/api/pipelines/
+                stable_diffusion/stable_diffusion_xl#refining-the-image-output)
             guidance_scale (`float`, *optional*, defaults to 7.5):
                 Guidance scale as defined in
                 [Classifier-Free Diffusion Guidance]
@@ -222,6 +302,41 @@ class StableDiffusion(BaseModel):
                 returned, and the value range will be same as decoder's
                 output range. If 'tensor' is passed, the decoder's output
                 will be returned. Defaults to 'image'.
+            original_size (`Tuple[int]`, *optional*):
+                If `original_size` is not the same as `target_size` the image
+                will appear to be down- or upsampled. If `original_size` is
+                `(width, height)` if not specified.
+                Defaults to None.
+            crops_coords_top_left (`Tuple[int]`, *optional*):
+                `crops_coords_top_left` can be used to generate an image that
+                appears to be "cropped" from the position. Favorable,
+                well-centered images are usually achieved by setting
+                `crops_coords_top_left` to (0, 0).
+                Defaults to (0, 0).
+            target_size (`Tuple[int]`, *optional*):
+                For most cases, `target_size` should be set to the desired
+                height and width of the generated image. If not specified it
+                will be `(width, height)`. Defaults to None.
+            negative_original_size (`Tuple[int]`, *optional*):
+                To negatively condition the generation process based on a
+                specific image resolution. For more information, refer to this
+                issue thread:
+                https://github.com/huggingface/diffusers/issues/4208.
+                Defaults to None.
+            negative_crops_coords_top_left (`Tuple[int]`, *optional*):
+                To negatively condition the generation process based on a
+                specific crop coordinates. For more information, refer to this
+                issue thread:
+                https://github.com/huggingface/diffusers/issues/4208.
+                Defaults to (0, 0).
+            negative_target_size (`Tuple[int]`, *optional*):
+                To negatively condition the generation process based on a
+                target image resolution. It should be as same as the
+                `target_size` for most cases. For more information,
+                refer to this issue thread:
+                https://github.com/huggingface/diffusers/issues/4208.
+                Defaults to None.
+
 
         Returns:
             dict: A dict containing the generated images.
@@ -232,6 +347,9 @@ class StableDiffusion(BaseModel):
         # 0. Default height and width to unet
         height = height or self.unet_sample_size * self.vae_scale_factor
         width = width or self.unet_sample_size * self.vae_scale_factor
+
+        original_size = original_size or (height, width)
+        target_size = target_size or (height, width)
 
         # 1. Check inputs. Raise error if not correct
         self.check_inputs(prompt, height, width)
@@ -251,10 +369,15 @@ class StableDiffusion(BaseModel):
         do_classifier_free_guidance = guidance_scale > 1.0
 
         # 3. Encode input prompt
-        text_embeddings = self._encode_prompt(prompt, device,
-                                              num_images_per_prompt,
-                                              do_classifier_free_guidance,
-                                              negative_prompt)
+        (
+            prompt_embeds,
+            negative_prompt_embeds,
+            pooled_prompt_embeds,
+            negative_pooled_prompt_embeds,
+        ) = self._encode_prompt(prompt, prompt_2, device,
+                                num_images_per_prompt,
+                                do_classifier_free_guidance, negative_prompt,
+                                negative_prompt_2)
 
         # 4. Prepare timesteps
         self.test_scheduler.set_timesteps(num_inference_steps)
@@ -270,7 +393,7 @@ class StableDiffusion(BaseModel):
             num_channels_latents,
             height,
             width,
-            text_embeddings.dtype,
+            prompt_embeds.dtype,
             device,
             generator,
             latents,
@@ -280,7 +403,52 @@ class StableDiffusion(BaseModel):
         # TODO: Logic should ideally just be moved out of the pipeline
         extra_step_kwargs = self.prepare_extra_step_kwargs(generator, eta)
 
-        # 7. Denoising loop
+        # 7. Prepare added time ids & embeddings
+        add_text_embeds = pooled_prompt_embeds
+        add_time_ids = self._get_add_time_ids(
+            original_size,
+            crops_coords_top_left,
+            target_size,
+            dtype=prompt_embeds.dtype)
+        if (negative_original_size is not None) and (negative_target_size
+                                                     is not None):
+            negative_add_time_ids = self._get_add_time_ids(
+                negative_original_size,
+                negative_crops_coords_top_left,
+                negative_target_size,
+                dtype=prompt_embeds.dtype,
+            )
+        else:
+            negative_add_time_ids = add_time_ids
+
+        if do_classifier_free_guidance:
+            prompt_embeds = torch.cat([negative_prompt_embeds, prompt_embeds],
+                                      dim=0)
+            add_text_embeds = torch.cat(
+                [negative_pooled_prompt_embeds, add_text_embeds], dim=0)
+            add_time_ids = torch.cat([negative_add_time_ids, add_time_ids],
+                                     dim=0)
+
+        prompt_embeds = prompt_embeds.to(device)
+        add_text_embeds = add_text_embeds.to(device)
+        add_time_ids = add_time_ids.to(device).repeat(
+            batch_size * num_images_per_prompt, 1)
+
+        # 9 Apply denoising_end
+        if denoising_end is not None and isinstance(
+                denoising_end,
+                float) and denoising_end > 0 and denoising_end < 1:
+            discrete_timestep_cutoff = int(
+                round(self.scheduler.config.num_train_timesteps -
+                      (denoising_end *
+                       self.scheduler.config.num_train_timesteps)))
+            num_inference_steps = len(
+                list(
+                    filter(lambda ts: ts >= discrete_timestep_cutoff,
+                           timesteps)))
+            timesteps = timesteps[:num_inference_steps]
+
+        # 10. Denoising loop
         if show_progress:
             timesteps = tqdm(timesteps)
         for i, t in enumerate(timesteps):
@@ -291,11 +459,19 @@ class StableDiffusion(BaseModel):
                 latent_model_input, t)
 
             latent_model_input = latent_model_input.to(latent_dtype)
-            text_embeddings = text_embeddings.to(latent_dtype)
+            prompt_embeds = prompt_embeds.to(latent_dtype)
             # predict the noise residual
+            added_cond_kwargs = {
+                'text_embeds': add_text_embeds,
+                'time_ids': add_time_ids
+            }
             noise_pred = self.unet(
-                latent_model_input, t,
-                encoder_hidden_states=text_embeddings)['sample']
+                latent_model_input,
+                t,
+                encoder_hidden_states=prompt_embeds,
+                added_cond_kwargs=added_cond_kwargs,
+                return_dict=False,
+            )[0]
 
             # perform guidance
             if do_classifier_free_guidance:
@@ -320,6 +496,28 @@ class StableDiffusion(BaseModel):
 
         return {'samples': image}
 
+    def _get_add_time_ids(self, original_size, crops_coords_top_left,
+                          target_size, dtype):
+        add_time_ids = list(original_size + crops_coords_top_left +
+                            target_size)
+
+        passed_add_embed_dim = (
+            self.unet.config.addition_time_embed_dim * len(add_time_ids) +
+            self.text_encoder_two.config.projection_dim)
+        expected_add_embed_dim = self.unet.add_embedding.linear_1.in_features
+
+        if expected_add_embed_dim != passed_add_embed_dim:
+            raise ValueError(
+                'Model expects an added time embedding vector of length '
+                f'{expected_add_embed_dim}, but a vector of '
+                f'{passed_add_embed_dim} was created. The model has an '
+                'incorrect config. Please check '
+                '`unet.config.time_embedding_type` and '
+                '`text_encoder_2.config.projection_dim`.')
+
+        add_time_ids = torch.tensor([add_time_ids], dtype=dtype)
+        return add_time_ids
+
     def output_to_pil(self, image) -> List[Image.Image]:
         """Convert output tensor to PIL image. Output tensor will be de-normed
         to [0, 255] by `DataPreprocessor.destruct`. Due to no `data_samples` is
@@ -336,12 +534,16 @@ class StableDiffusion(BaseModel):
         image = [Image.fromarray(img) for img in image]
         return image
 
-    def _encode_prompt(self, prompt, device, num_images_per_prompt,
-                       do_classifier_free_guidance, negative_prompt):
+    def _encode_prompt(self, prompt, prompt_2, device, num_images_per_prompt,
+                       do_classifier_free_guidance, negative_prompt,
+                       negative_prompt_2):
         """Encodes the prompt into text encoder hidden states.
 
         Args:
             prompt (str or list(int)): prompt to be encoded.
+            prompt_2 (str or list(int)): prompt to be encoded. Send to the
+                `tokenizer_two` and `text_encoder_two`. If not defined,
+                `prompt` is used in both text-encoders.
             device: (torch.device): torch device.
             num_images_per_prompt (int): number of images that should be
                 generated per prompt.
@@ -350,6 +552,11 @@ class StableDiffusion(BaseModel):
             negative_prompt (str or List[str]): The prompt or prompts not
                 to guide the image generation. Ignored when not using
                 guidance (i.e., ignored if `guidance_scale` is less than `1`).
+            negative_prompt_2 (str or List[str]): The prompt or prompts not
+                to guide the image generation. Ignored when not using
+                guidance (i.e., ignored if `guidance_scale` is less than `1`).
+                Send to `tokenizer_two` and `text_encoder_two`. If not defined,
+                `negative_prompt` is used in both text-encoders
 
         Returns:
             text_embeddings (torch.Tensor): text embeddings generated by
@@ -357,38 +564,44 @@ class StableDiffusion(BaseModel):
         """
         batch_size = len(prompt) if isinstance(prompt, list) else 1
 
-        text_inputs = self.tokenizer(
-            prompt,
-            padding='max_length',
-            max_length=self.tokenizer.model_max_length,
-            truncation=True,
-            return_tensors='pt',
-        )
-        text_input_ids = text_inputs.input_ids
-        untruncated_ids = self.tokenizer(
-            prompt, padding='max_length', return_tensors='pt').input_ids
+        prompt_2 = prompt_2 or prompt
+        tokenizers = [self.tokenizer_one, self.tokenizer_two]
+        text_encoders = [self.text_encoder_one, self.text_encoder_two]
+        prompts = [prompt, prompt_2]
+        prompt_embeds_list = []
+        for tokenizer, text_encoder, prompt in zip(tokenizers, text_encoders,
+                                                   prompts):
+            text_inputs = tokenizer(
+                prompt,
+                padding='max_length',
+                max_length=tokenizer.model_max_length,
+                truncation=True,
+                return_tensors='pt',
+            )
+            text_input_ids = text_inputs.input_ids
+            untruncated_ids = tokenizer(
+                prompt, padding='max_length', return_tensors='pt').input_ids
 
-        if not torch.equal(text_input_ids, untruncated_ids):
-            removed_text = self.tokenizer.batch_decode(
-                untruncated_ids[:, self.tokenizer.model_max_length - 1:-1])
-            logger.warning(
-                'The following part of your input was truncated because CLIP'
-                ' can only handle sequences up to'
-                f' {self.tokenizer.model_max_length} tokens: {removed_text}')
+            if not torch.equal(text_input_ids, untruncated_ids):
+                removed_text = tokenizer.batch_decode(
+                    untruncated_ids[:, tokenizer.model_max_length - 1:-1])
+                logger.warning(
+                    'The following part of your input was truncated because '
+                    ' CLIP can only handle sequences up to'
+                    f' {tokenizer.model_max_length} tokens: {removed_text}')
 
-        text_encoder = self.text_encoder.module if hasattr(
-            self.text_encoder, 'module') else self.text_encoder
-        if hasattr(text_encoder.config, 'use_attention_mask'
-                   ) and text_encoder.config.use_attention_mask:
-            attention_mask = text_inputs.attention_mask.to(device)
-        else:
-            attention_mask = None
+            text_encoder = text_encoder.module if hasattr(
+                text_encoder, 'module') else text_encoder
+            text_embeddings = text_encoder(
+                text_input_ids.to(device),
+                output_hidden_states=True,
+            )
+            pooled_prompt_embeds = text_embeddings.pooler_output
+            text_embeddings = text_embeddings.hidden_states[-2]
 
-        text_embeddings = text_encoder(
-            text_input_ids.to(device),
-            attention_mask=attention_mask,
-        )
-        text_embeddings = text_embeddings[0]
+            prompt_embeds_list.append(text_embeddings)
+
+        text_embeddings = torch.concat(prompt_embeds_list, dim=-1)
 
         # duplicate text embeddings for each generation per prompt,
         bs_embed, seq_len, _ = text_embeddings.shape
@@ -397,63 +610,86 @@ class StableDiffusion(BaseModel):
             bs_embed * num_images_per_prompt, seq_len, -1)
 
         # get unconditional embeddings for classifier free guidance
-        if do_classifier_free_guidance:
+        if do_classifier_free_guidance and self.force_zeros_for_empty_prompt:
+            negative_prompt_embeds = torch.zeros_like(text_embeddings)
+            negative_pooled_prompt_embeds = torch.zeros_like(
+                pooled_prompt_embeds)
+        elif do_classifier_free_guidance:
+            negative_prompt = negative_prompt or ''
+            negative_prompt_2 = negative_prompt_2 or negative_prompt
+
             uncond_tokens: List[str]
-            if negative_prompt is None:
-                uncond_tokens = [''] * batch_size
-            elif type(prompt) is not type(negative_prompt):
+            if prompt is not None and type(prompt) is not type(
+                    negative_prompt):
                 raise TypeError(
-                    f'`negative_prompt` should be the same type to `prompt`,'
-                    f'but got {type(negative_prompt)} !='
-                    f' {type(prompt)}.')
+                    '`negative_prompt` should be the same type to `prompt`, '
+                    f'but got {type(negative_prompt)} != {type(prompt)}.')
             elif isinstance(negative_prompt, str):
-                uncond_tokens = [negative_prompt]
+                uncond_tokens = [negative_prompt, negative_prompt_2]
             elif batch_size != len(negative_prompt):
                 raise ValueError(
-                    f'`negative_prompt`: {negative_prompt} has '
-                    f'batch size {len(negative_prompt)}, but `prompt`:'
-                    f' {prompt} has batch size {batch_size}.'
-                    f' Please make sure that passed `negative_prompt` matches'
-                    ' the batch size of `prompt`.')
+                    f'`negative_prompt`: {negative_prompt} has batch size '
+                    f'{len(negative_prompt)}, but `prompt`: {prompt} has batch'
+                    f' size {batch_size}. Please make sure that passed '
+                    '`negative_prompt` matches the batch size of `prompt`.')
             else:
-                uncond_tokens = negative_prompt
+                uncond_tokens = [negative_prompt, negative_prompt_2]
 
-            max_length = text_input_ids.shape[-1]
-            uncond_input = self.tokenizer(
-                uncond_tokens,
-                padding='max_length',
-                max_length=max_length,
-                truncation=True,
-                return_tensors='pt',
-            )
+            negative_prompt_embeds_list = []
+            for negative_prompt, tokenizer, text_encoder in zip(
+                    uncond_tokens, tokenizers, text_encoders):
+                max_length = text_embeddings.shape[1]
+                uncond_input = tokenizer(
+                    negative_prompt,
+                    padding='max_length',
+                    max_length=max_length,
+                    truncation=True,
+                    return_tensors='pt',
+                )
 
-            if hasattr(text_encoder.config, 'use_attention_mask'
-                       ) and text_encoder.config.use_attention_mask:
-                attention_mask = uncond_input.attention_mask.to(device)
-            else:
-                attention_mask = None
+                negative_prompt_embeds = text_encoder(
+                    uncond_input.input_ids.to(device),
+                    output_hidden_states=True,
+                )
+                # We are only ALWAYS interested in the pooled output of the
+                # final text encoder
+                negative_pooled_prompt_embeds = (
+                    negative_prompt_embeds.pooler_output)
+                negative_prompt_embeds = negative_prompt_embeds.hidden_states[
+                    -2]
 
-            uncond_embeddings = text_encoder(
-                uncond_input.input_ids.to(device),
-                attention_mask=attention_mask,
-            )
-            uncond_embeddings = uncond_embeddings[0]
+                negative_prompt_embeds_list.append(negative_prompt_embeds)
 
-            # duplicate unconditional embeddings for
-            # each generation per prompt, using mps friendly method
-            seq_len = uncond_embeddings.shape[1]
-            uncond_embeddings = uncond_embeddings.repeat(
+            negative_prompt_embeds = torch.concat(
+                negative_prompt_embeds_list, dim=-1)
+
+        bs_embed, seq_len, _ = text_embeddings.shape
+        # duplicate text embeddings for each generation per prompt, using mps
+        # friendly method
+        text_embeddings = text_embeddings.repeat(1, num_images_per_prompt, 1)
+        text_embeddings = text_embeddings.view(
+            bs_embed * num_images_per_prompt, seq_len, -1)
+
+        if do_classifier_free_guidance:
+            # duplicate unconditional embeddings for each generation per prompt
+            # ,using mps friendly method
+            seq_len = negative_prompt_embeds.shape[1]
+            negative_prompt_embeds = negative_prompt_embeds.repeat(
                 1, num_images_per_prompt, 1)
-            uncond_embeddings = uncond_embeddings.view(
+            negative_prompt_embeds = negative_prompt_embeds.view(
                 batch_size * num_images_per_prompt, seq_len, -1)
 
-            # For classifier free guidance, we need to do two forward passes.
-            # Here we concatenate the unconditional
-            # and text embeddings into a single batch
-            # to avoid doing two forward passes
-            text_embeddings = torch.cat([uncond_embeddings, text_embeddings])
+        pooled_prompt_embeds = pooled_prompt_embeds.repeat(
+            1, num_images_per_prompt).view(bs_embed * num_images_per_prompt,
+                                           -1)
+        if do_classifier_free_guidance:
+            negative_pooled_prompt_embeds = (
+                negative_pooled_prompt_embeds.repeat(
+                    1, num_images_per_prompt).view(
+                        bs_embed * num_images_per_prompt, -1))
 
-        return text_embeddings
+        return (text_embeddings, negative_prompt_embeds, pooled_prompt_embeds,
+                negative_pooled_prompt_embeds)
 
     def decode_latents(self, latents):
         """use vae to decode latents.
@@ -589,47 +825,88 @@ class StableDiffusion(BaseModel):
 
     @torch.no_grad()
     def val_step(self, data: dict) -> SampleList:
-        data = self.data_preprocessor(data)
-        data_samples = data['data_samples']
-        prompt = data_samples.prompt
+        if self.val_prompts is None:
+            data = self.data_preprocessor(data)
+            data_samples = data['data_samples']
+            prompt = data_samples.prompt
+        else:
+            prompt = self.val_prompts
+            # construct a fake data_sample for destruct
+            data_samples = DataSample.stack(data['data_samples'] * len(prompt))
 
         output = self.infer(prompt, return_type='tensor')
         samples = output['samples']
 
         samples = self.data_preprocessor.destruct(samples, data_samples)
-        gt_img = self.data_preprocessor.destruct(data['inputs'], data_samples)
+        if self.val_prompts is None:
+            gt_img = self.data_preprocessor.destruct(data['inputs'],
+                                                     data_samples)
 
-        out_data_sample = DataSample(
-            fake_img=samples, gt_img=gt_img, prompt=prompt)
+            out_data_sample = DataSample(
+                fake_img=samples, gt_img=gt_img, prompt=prompt)
+        else:
+            out_data_sample = DataSample(fake_img=samples, prompt=prompt)
 
-        # out_data_sample = DataSample(fake_img=samples, prompt=prompt)
         data_sample_list = out_data_sample.split()
         return data_sample_list
 
     @torch.no_grad()
     def test_step(self, data: dict) -> SampleList:
-        data = self.data_preprocessor(data)
-        data_samples = data['data_samples']
-        prompt = data_samples.prompt
+        if self.val_prompts is None:
+            data = self.data_preprocessor(data)
+            data_samples = data['data_samples']
+            prompt = data_samples.prompt
+        else:
+            prompt = self.val_prompts
+            # construct a fake data_sample for destruct
+            data_samples = DataSample.stack(data['data_samples'] * len(prompt))
 
         output = self.infer(prompt, return_type='tensor')
         samples = output['samples']
 
         samples = self.data_preprocessor.destruct(samples, data_samples)
-        gt_img = self.data_preprocessor.destruct(data['inputs'], data_samples)
+        if self.val_prompts is None:
+            gt_img = self.data_preprocessor.destruct(data['inputs'],
+                                                     data_samples)
 
-        out_data_sample = DataSample(
-            fake_img=samples, gt_img=gt_img, prompt=prompt)
+            out_data_sample = DataSample(
+                fake_img=samples, gt_img=gt_img, prompt=prompt)
+        else:
+            out_data_sample = DataSample(fake_img=samples, prompt=prompt)
+
         data_sample_list = out_data_sample.split()
         return data_sample_list
 
-    def train_step(self, data, optim_wrapper_dict):
+    def encode_prompt_train(self, text_one, text_two):
+        prompt_embeds_list = []
+
+        text_encoders = [self.text_encoder_one, self.text_encoder_two]
+        texts = [text_one, text_two]
+        for text_encoder, text in zip(text_encoders, texts):
+
+            prompt_embeds = text_encoder(
+                text,
+                output_hidden_states=True,
+            )
+
+            # We are only ALWAYS interested in the pooled output of the
+            # final text encoder
+            pooled_prompt_embeds = prompt_embeds.pooler_output
+            prompt_embeds = prompt_embeds.hidden_states[-2]
+            bs_embed, seq_len, _ = prompt_embeds.shape
+            prompt_embeds = prompt_embeds.view(bs_embed, seq_len, -1)
+            prompt_embeds_list.append(prompt_embeds)
+
+        prompt_embeds = torch.concat(prompt_embeds_list, dim=-1)
+        pooled_prompt_embeds = pooled_prompt_embeds.view(bs_embed, -1)
+        return prompt_embeds, pooled_prompt_embeds
+
+    def train_step(self, data, optim_wrapper):
         data = self.data_preprocessor(data)
         inputs, data_samples = data['inputs'], data['data_samples']
 
         vae = self.vae.module if hasattr(self.vae, 'module') else self.vae
 
-        optim_wrapper = optim_wrapper_dict['unet']
         with optim_wrapper.optim_context(self.unet):
             image = inputs
             prompt = data_samples.prompt
@@ -657,14 +934,26 @@ class StableDiffusion(BaseModel):
 
             noisy_latents = self.scheduler.add_noise(latents, noise, timesteps)
 
-            input_ids = self.tokenizer(
+            input_ids_one = self.tokenizer_one(
                 prompt,
-                max_length=self.tokenizer.model_max_length,
+                max_length=self.tokenizer_one.model_max_length,
+                return_tensors='pt',
+                padding='max_length',
+                truncation=True)['input_ids'].to(self.device)
+            input_ids_two = self.tokenizer_two(
+                prompt,
+                max_length=self.tokenizer_two.model_max_length,
                 return_tensors='pt',
                 padding='max_length',
                 truncation=True)['input_ids'].to(self.device)
 
-            encoder_hidden_states = self.text_encoder(input_ids)[0]
+            (encoder_hidden_states,
+             pooled_prompt_embeds) = self.encode_prompt_train(
+                 input_ids_one, input_ids_two)
+            unet_added_conditions = {
+                'time_ids': data['time_ids'],
+                'text_embeds': pooled_prompt_embeds
+            }
 
             if self.scheduler.config.prediction_type == 'epsilon':
                 gt = noise
@@ -678,7 +967,8 @@ class StableDiffusion(BaseModel):
             model_output = self.unet(
                 noisy_latents.float(),
                 timesteps,
-                encoder_hidden_states=encoder_hidden_states.float())
+                encoder_hidden_states=encoder_hidden_states.float(),
+                added_cond_kwargs=unet_added_conditions)
             model_pred = model_output['sample']
 
             loss_dict = dict()
