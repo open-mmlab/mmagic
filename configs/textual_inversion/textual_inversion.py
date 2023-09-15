@@ -3,20 +3,19 @@ from mmengine.config import read_base
 with read_base():
     from .._base_.gen_default_runtime import *
 
-from mmagic.models.editors.textual_inversion import TextualInversion
-from mmagic.datasets.textual_inversion_dataset import TextualInversionDataset
-from mmagic.models.editors.disco_diffusion.clip_wrapper import ClipWrapper
-from mmagic.models.data_preprocessors.data_preprocessor import DataPreprocessor
-from mmagic.datasets.transforms.loading import LoadImageFromFile
-
-from mmagic.engine.hooks.visualization_hook import VisualizationHook
 from mmengine.dataset.sampler import InfiniteSampler
 from mmengine.hooks import CheckpointHook, LoggerHook
-from mmagic.datasets.transforms.formatting import PackInputs
-
-from mmagic.datasets.transforms.aug_shape import Resize
-
 from torch.optim import AdamW
+
+from mmagic.datasets.textual_inversion_dataset import TextualInversionDataset
+from mmagic.datasets.transforms.aug_shape import Resize
+from mmagic.datasets.transforms.formatting import PackInputs
+from mmagic.datasets.transforms.loading import LoadImageFromFile
+from mmagic.engine.hooks.visualization_hook import VisualizationHook
+from mmagic.models.data_preprocessors.data_preprocessor import DataPreprocessor
+from mmagic.models.editors.disco_diffusion.clip_wrapper import ClipWrapper
+from mmagic.models.editors.textual_inversion import TextualInversion
+
 
 # config for model
 dtype = 'fp16'
