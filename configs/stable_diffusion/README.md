@@ -41,11 +41,12 @@ Stable Diffusion is a latent diffusion model conditioned on the text embeddings 
 
 ## Pretrained models
 
-|                                        Model                                         |    Task    | Dataset | Download |
-| :----------------------------------------------------------------------------------: | :--------: | :-----: | :------: |
-|          [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py)           | Text2Image |    -    |    -     |
-| [stable_diffusion_v1.5_tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) | Text2Image |    -    |    -     |
-|  [stable_diffusion_v1.5_inpaint](./stable-diffusion_ddim_denoisingunet-inpaint.py)   | Inpainting |    -    |    -     |
+|                                        Model                                         |    Task    | Dataset |  Download   |
+| :----------------------------------------------------------------------------------: | :--------: | :-----: | :---------: |
+|          [stable_diffusion_v1.5](./stable-diffusion_ddim_denoisingunet.py)           | Text2Image |    -    |      -      |
+| [stable_diffusion_v1.5_tomesd](./stable-diffusion_ddim_denoisingunet-tomesd_5e-1.py) | Text2Image |    -    |      -      |
+|  [stable_diffusion_v1.5_inpaint](./stable-diffusion_ddim_denoisingunet-inpaint.py)   | Inpainting |    -    |      -      |
+|     [stable-diffusion_v15_pokemon_blip](./stable-diffusion_v15_pokemon_blip.py)      | Text2Image |    -    | [model](<>) |
 
 We use stable diffusion v1.5 weights. This model has several weights including vae, unet and clip.
 

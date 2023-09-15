@@ -77,19 +77,28 @@ class TextualInversion(StableDiffusion):
                      type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None):
 
-        super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, dtype, enable_xformers,
-                         noise_offset_weight, tomesd_cfg, data_preprocessor,
-                         init_cfg)
-
-        self.val_prompts = val_prompts
         self.placeholder_token = placeholder_token
-        self.add_tokens(placeholder_token, initialize_token,
-                        num_vectors_per_token)
-        self.prepare_models()
+        self.initialize_token = initialize_token
+        self.num_vectors_per_token = num_vectors_per_token
+        super().__init__(
+            vae,
+            text_encoder,
+            tokenizer,
+            unet,
+            scheduler,
+            test_scheduler,
+            dtype=dtype,
+            enable_xformers=enable_xformers,
+            noise_offset_weight=noise_offset_weight,
+            tomesd_cfg=tomesd_cfg,
+            data_preprocessor=data_preprocessor,
+            val_prompts=val_prompts,
+            init_cfg=init_cfg)
 
     def prepare_models(self):
         """Disable gradient for untrainable modules to save memory."""
+        self.add_tokens(self.placeholder_token, self.initialize_token,
+                        self.num_vectors_per_token)
         self.vae.requires_grad_(False)
         self.unet.requires_grad_(False)
         self.text_encoder.set_only_embedding_trainable()

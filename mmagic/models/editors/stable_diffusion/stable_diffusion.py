@@ -13,7 +13,7 @@ from mmengine.runner import set_random_seed
 from PIL import Image
 from tqdm.auto import tqdm
 
-from mmagic.models.archs import TokenizerWrapper
+from mmagic.models.archs import TokenizerWrapper, set_lora
 from mmagic.models.utils import build_module, set_tomesd, set_xformers
 from mmagic.registry import DIFFUSION_SCHEDULERS, MODELS
 from mmagic.structures import DataSample
@@ -70,6 +70,9 @@ class StableDiffusion(BaseModel):
                  tomesd_cfg: Optional[dict] = None,
                  data_preprocessor: Optional[ModelType] = dict(
                      type='DataPreprocessor'),
+                 lora_config: Optional[dict] = None,
+                 val_prompts: Union[str, List[str]] = None,
+                 finetune_text_encoder: bool = False,
                  init_cfg: Optional[dict] = None):
 
         # TODO: support `from_pretrained` for this class
@@ -112,11 +115,41 @@ class StableDiffusion(BaseModel):
         self.enable_noise_offset = noise_offset_weight > 0
         self.noise_offset_weight = noise_offset_weight
 
+        self.finetune_text_encoder = finetune_text_encoder
+        self.val_prompts = val_prompts
+        self.lora_config = deepcopy(lora_config)
+
+        self.prepare_model()
+        self.set_lora()
+
         self.enable_xformers = enable_xformers
         self.set_xformers()
 
         self.tomesd_cfg = tomesd_cfg
         self.set_tomesd()
+
+    def prepare_model(self):
+        """Prepare model for training.
+
+        Move model to target dtype and disable gradient for some models.
+        """
+        self.vae.requires_grad_(False)
+        print_log('Set VAE untrainable.', 'current')
+        self.vae.to(self.dtype)
+        print_log(f'Move VAE to {self.dtype}.', 'current')
+        if not self.finetune_text_encoder or self.lora_config:
+            self.text_encoder.requires_grad_(False)
+            print_log('Set Text Encoder untrainable.', 'current')
+            self.text_encoder.to(self.dtype)
+            print_log(f'Move Text Encoder to {self.dtype}.', 'current')
+        if self.lora_config:
+            self.unet.requires_grad_(False)
+            print_log('Set Unet untrainable.', 'current')
+
+    def set_lora(self):
+        """Set LORA for model."""
+        if self.lora_config:
+            set_lora(self.unet, self.lora_config)
 
     def set_xformers(self, module: Optional[nn.Module] = None) -> nn.Module:
         """Set xformers for the model.
@@ -589,47 +622,64 @@ class StableDiffusion(BaseModel):
 
     @torch.no_grad()
     def val_step(self, data: dict) -> SampleList:
-        data = self.data_preprocessor(data)
-        data_samples = data['data_samples']
-        prompt = data_samples.prompt
+        if self.val_prompts is None:
+            data = self.data_preprocessor(data)
+            data_samples = data['data_samples']
+            prompt = data_samples.prompt
+        else:
+            prompt = self.val_prompts
+            # construct a fake data_sample for destruct
+            data_samples = DataSample.stack(data['data_samples'] * len(prompt))
 
         output = self.infer(prompt, return_type='tensor')
         samples = output['samples']
 
         samples = self.data_preprocessor.destruct(samples, data_samples)
-        gt_img = self.data_preprocessor.destruct(data['inputs'], data_samples)
+        if self.val_prompts is None:
+            gt_img = self.data_preprocessor.destruct(data['inputs'],
+                                                     data_samples)
 
-        out_data_sample = DataSample(
-            fake_img=samples, gt_img=gt_img, prompt=prompt)
+            out_data_sample = DataSample(
+                fake_img=samples, gt_img=gt_img, prompt=prompt)
+        else:
+            out_data_sample = DataSample(fake_img=samples, prompt=prompt)
 
-        # out_data_sample = DataSample(fake_img=samples, prompt=prompt)
         data_sample_list = out_data_sample.split()
         return data_sample_list
 
     @torch.no_grad()
     def test_step(self, data: dict) -> SampleList:
-        data = self.data_preprocessor(data)
-        data_samples = data['data_samples']
-        prompt = data_samples.prompt
+        if self.val_prompts is None:
+            data = self.data_preprocessor(data)
+            data_samples = data['data_samples']
+            prompt = data_samples.prompt
+        else:
+            prompt = self.val_prompts
+            # construct a fake data_sample for destruct
+            data_samples = DataSample.stack(data['data_samples'] * len(prompt))
 
         output = self.infer(prompt, return_type='tensor')
         samples = output['samples']
 
         samples = self.data_preprocessor.destruct(samples, data_samples)
-        gt_img = self.data_preprocessor.destruct(data['inputs'], data_samples)
+        if self.val_prompts is None:
+            gt_img = self.data_preprocessor.destruct(data['inputs'],
+                                                     data_samples)
 
-        out_data_sample = DataSample(
-            fake_img=samples, gt_img=gt_img, prompt=prompt)
+            out_data_sample = DataSample(
+                fake_img=samples, gt_img=gt_img, prompt=prompt)
+        else:
+            out_data_sample = DataSample(fake_img=samples, prompt=prompt)
+
         data_sample_list = out_data_sample.split()
         return data_sample_list
 
-    def train_step(self, data, optim_wrapper_dict):
+    def train_step(self, data, optim_wrapper):
         data = self.data_preprocessor(data)
         inputs, data_samples = data['inputs'], data['data_samples']
 
         vae = self.vae.module if hasattr(self.vae, 'module') else self.vae
 
-        optim_wrapper = optim_wrapper_dict['unet']
         with optim_wrapper.optim_context(self.unet):
             image = inputs
             prompt = data_samples.prompt

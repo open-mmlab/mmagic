@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import random
-from copy import deepcopy
 from typing import Dict, List, Optional, Union
 
 import torch
@@ -8,7 +7,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from mmengine import print_log
 
-from mmagic.models.archs import set_lora
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 from mmagic.utils.typing import SampleList
@@ -84,31 +82,27 @@ class DreamBooth(StableDiffusion):
                      type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None):
 
-        super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, dtype, enable_xformers,
-                         noise_offset_weight, tomesd_cfg, data_preprocessor,
-                         init_cfg)
+        super().__init__(
+            vae,
+            text_encoder,
+            tokenizer,
+            unet,
+            scheduler,
+            test_scheduler,
+            dtype=dtype,
+            enable_xformers=enable_xformers,
+            noise_offset_weight=noise_offset_weight,
+            tomesd_cfg=tomesd_cfg,
+            data_preprocessor=data_preprocessor,
+            lora_config=lora_config,
+            val_prompts=val_prompts,
+            finetune_text_encoder=finetune_text_encoder,
+            init_cfg=init_cfg)
+
         self.num_class_images = num_class_images
         self.class_prior_prompt = class_prior_prompt
         self.prior_loss_weight = prior_loss_weight
         self.class_images = []
-
-        self.dtype = torch.float32
-        if dtype == 'fp16':
-            self.dtype = torch.float16
-        elif dtype == 'bf16':
-            self.dtype = torch.bfloat16
-        else:
-            assert dtype in [
-                'fp32', None
-            ], ('dtype must be one of \'fp32\', \'fp16\', \'bf16\' or None.')
-
-        self.finetune_text_encoder = finetune_text_encoder
-        self.val_prompts = val_prompts
-        self.lora_config = deepcopy(lora_config)
-
-        self.prepare_model()
-        self.set_lora()
 
     @torch.no_grad()
     def generate_class_prior_images(self, num_batches=None):
@@ -147,29 +141,6 @@ class DreamBooth(StableDiffusion):
             samples = output['samples']
             self.class_images.append(samples.clamp(-1, 1))
         self.unet.to(unet_dtype)
-
-    def prepare_model(self):
-        """Prepare model for training.
-
-        Move model to target dtype and disable gradient for some models.
-        """
-        self.vae.requires_grad_(False)
-        print_log('Set VAE untrainable.', 'current')
-        self.vae.to(self.dtype)
-        print_log(f'Move VAE to {self.dtype}.', 'current')
-        if not self.finetune_text_encoder or self.lora_config:
-            self.text_encoder.requires_grad_(False)
-            print_log('Set Text Encoder untrainable.', 'current')
-            self.text_encoder.to(self.dtype)
-            print_log(f'Move Text Encoder to {self.dtype}.', 'current')
-        if self.lora_config:
-            self.unet.requires_grad_(False)
-            print_log('Set Unet untrainable.', 'current')
-
-    def set_lora(self):
-        """Set LORA for model."""
-        if self.lora_config:
-            set_lora(self.unet, self.lora_config)
 
     @torch.no_grad()
     def val_step(self, data: dict) -> SampleList:

@@ -9,6 +9,7 @@ controlnet_aux
 # pytest-runner
 # yapf
 coverage < 7.0.0
+datasets
 imageio-ffmpeg==0.4.4
 interrogate
 mmdet >= 3.0.0

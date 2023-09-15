@@ -20,7 +20,8 @@ from .generate_frame_indices import (GenerateFrameIndices,
                                      GenerateFrameIndiceswithPadding,
                                      GenerateSegmentIndices)
 from .get_masked_image import GetMaskedImage
-from .loading import (GetSpatialDiscountMask, LoadImageFromFile, LoadMask,
+from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
+                      LoadImageFromHuggingFaceDataset, LoadMask,
                       LoadPairedImageFromFile)
 from .matlab_like_resize import MATLABLikeResize
 from .normalization import Normalize, RescaleToZeroOne
@@ -49,5 +50,6 @@ __all__ = [
     'GenerateTrimapWithDistTransform', 'CompositeFg', 'RandomLoadResizeBg',
     'MergeFgAndBg', 'PerturbBg', 'RandomJitter', 'LoadPairedImageFromFile',
     'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'InstanceCrop',
-    'Albumentations', 'AlbuCorruptFunction', 'PairedAlbuTransForms'
+    'Albumentations', 'AlbuCorruptFunction', 'PairedAlbuTransForms',
+    'LoadImageFromHuggingFaceDataset'
 ]

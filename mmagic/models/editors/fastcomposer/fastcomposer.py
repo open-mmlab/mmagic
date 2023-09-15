@@ -34,10 +34,19 @@ class FastComposer(StableDiffusion):
                  tomesd_cfg: Optional[dict] = None,
                  data_preprocessor=dict(type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None):
-        super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, dtype, enable_xformers,
-                         noise_offset_weight, tomesd_cfg, data_preprocessor,
-                         init_cfg)
+        super().__init__(
+            vae,
+            text_encoder,
+            tokenizer,
+            unet,
+            scheduler,
+            test_scheduler,
+            dtype=dtype,
+            enable_xformers=enable_xformers,
+            noise_offset_weight=noise_offset_weight,
+            tomesd_cfg=tomesd_cfg,
+            data_preprocessor=data_preprocessor,
+            init_cfg=init_cfg)
         self.vae = self.vae.model
         self.unet = self.unet.model
         model = FastComposerModel.from_pretrained(pretrained_cfg, self.vae,

@@ -72,29 +72,43 @@ class ControlStableDiffusion(StableDiffusion):
                  data_preprocessor=dict(type='DataPreprocessor'),
                  init_cfg: Optional[dict] = None,
                  attention_injection=False):
-        super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, dtype, enable_xformers,
-                         noise_offset_weight, tomesd_cfg, data_preprocessor,
-                         init_cfg)
+        self.controlnet = controlnet
+        super().__init__(
+            vae,
+            text_encoder,
+            tokenizer,
+            unet,
+            scheduler,
+            test_scheduler,
+            dtype=dtype,
+            enable_xformers=enable_xformers,
+            noise_offset_weight=noise_offset_weight,
+            tomesd_cfg=tomesd_cfg,
+            data_preprocessor=data_preprocessor,
+            init_cfg=init_cfg)
 
-        default_args = dict()
-        if dtype is not None:
-            default_args['dtype'] = dtype
+        if attention_injection:
+            self.unet = AttentionInjection(self.unet)
 
+    def prepare_model(self):
         # NOTE: initialize controlnet as fp32
-        self.controlnet = build_module(controlnet, MODELS)
+        self.controlnet = build_module(self.controlnet, MODELS)
         self._controlnet_ori_dtype = next(self.controlnet.parameters()).dtype
         print_log(
             'Set ControlNetModel dtype to '
             f'\'{self._controlnet_ori_dtype}\'.', 'current')
-        self.set_xformers(self.controlnet)
 
         self.vae.requires_grad_(False)
+        print_log('Set VAE untrainable.', 'current')
         self.text_encoder.requires_grad_(False)
+        print_log('Set Text Encoder untrainable.', 'current')
         self.unet.requires_grad_(False)
+        print_log('Set Unet untrainable.', 'current')
 
-        if attention_injection:
-            self.unet = AttentionInjection(self.unet)
+    def set_lora(self):
+        """Set LORA for model."""
+        # todo: support LoRA for ControlNet
+        pass
 
     def init_weights(self):
         """Initialize the weights. Noted that this function will only be called

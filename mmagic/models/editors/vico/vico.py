@@ -82,27 +82,26 @@ class ViCo(StableDiffusion):
                  initialize_token: str = None,
                  num_vectors_per_token: int = 1):
 
-        super().__init__(vae, text_encoder, tokenizer, unet, scheduler,
-                         test_scheduler, dtype, enable_xformers,
-                         noise_offset_weight, tomesd_cfg, data_preprocessor,
-                         init_cfg)
-        self.reg_loss_weight = reg_loss_weight
         self.placeholder = placeholder
+        self.initialize_token = initialize_token
+        self.num_vectors_per_token = num_vectors_per_token
+        self.image_cross_layers = image_cross_layers
 
-        self.dtype = torch.float32
-        if dtype == 'fp16':
-            self.dtype = torch.float16
-        elif dtype == 'bf16':
-            self.dtype = torch.bfloat16
-        else:
-            assert dtype in [
-                'fp32', None
-            ], ('dtype must be one of \'fp32\', \'fp16\', \'bf16\' or None.')
-
-        self.val_prompts = val_prompts
-        self.add_tokens(placeholder, initialize_token, num_vectors_per_token)
-        self.set_vico(image_cross_layers)
-        self.prepare_models()
+        super().__init__(
+            vae,
+            text_encoder,
+            tokenizer,
+            unet,
+            scheduler,
+            test_scheduler,
+            dtype=dtype,
+            enable_xformers=enable_xformers,
+            noise_offset_weight=noise_offset_weight,
+            tomesd_cfg=tomesd_cfg,
+            data_preprocessor=data_preprocessor,
+            val_prompts=val_prompts,
+            init_cfg=init_cfg)
+        self.reg_loss_weight = reg_loss_weight
 
     def prepare_models(self):
         """Prepare model for training.
@@ -110,6 +109,10 @@ class ViCo(StableDiffusion):
         Move model to target dtype and disable gradient for some models.
         """
         """Disable gradient for untrainable modules to save memory."""
+        self.add_tokens(self.placeholder, self.initialize_token,
+                        self.num_vectors_per_token)
+        self.set_vico(self.image_cross_layers)
+
         self.vae.requires_grad_(False)
         self.unet.requires_grad_(False)
         self.text_encoder.set_only_embedding_trainable()

@@ -6,7 +6,10 @@ import torch
 import torch.nn as nn
 from addict import Dict
 from mmengine import MODELS, Config
+from mmengine.optim import OptimWrapper
+from torch.optim import SGD
 
+from mmagic.structures import DataSample
 from mmagic.utils import register_all_modules
 
 register_all_modules()
@@ -92,6 +95,31 @@ model = dict(
     text_encoder=dummy_text_encoder(),
     tokenizer=dummy_text_encoder())
 
+stable_diffusion_tiny_url = 'diffusers/tiny-stable-diffusion-torch'
+model_train = dict(
+    type='StableDiffusion',
+    unet=dict(
+        type='UNet2DConditionModel',
+        subfolder='unet',
+        from_pretrained=stable_diffusion_tiny_url),
+    vae=dict(type='AutoencoderKL', sample_size=64),
+    init_cfg=init_cfg,
+    text_encoder=dict(
+        type='ClipWrapper',
+        clip_type='huggingface',
+        pretrained_model_name_or_path=stable_diffusion_tiny_url,
+        subfolder='text_encoder'),
+    tokenizer=stable_diffusion_tiny_url,
+    scheduler=dict(
+        type='DDPMScheduler',
+        from_pretrained=stable_diffusion_tiny_url,
+        subfolder='scheduler'),
+    test_scheduler=dict(
+        type='DDIMScheduler',
+        from_pretrained=stable_diffusion_tiny_url,
+        subfolder='scheduler'),
+    val_prompts=['a dog', 'a dog'])
+
 
 @pytest.mark.skipif(
     'win' in platform.system().lower(),
@@ -121,6 +149,38 @@ def test_stable_diffusion():
         width=64,
         num_inference_steps=1,
         return_type='image')
+
+
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
+def test_stable_diffusion_step():
+    StableDiffuser = MODELS.build(Config(model_train))
+
+    # train step
+    data = dict(
+        inputs=[torch.ones([3, 64, 64])],
+        data_samples=[
+            DataSample(prompt='an insect robot preparing a delicious meal')
+        ])
+    optimizer = SGD(StableDiffuser.parameters(), lr=0.1)
+    optim_wrapper = OptimWrapper(optimizer)
+    log_vars = StableDiffuser.train_step(data, optim_wrapper)
+    assert log_vars
+    assert isinstance(log_vars['loss'], torch.Tensor)
+
+    # val step
+    data = dict(data_samples=[DataSample()])
+    outputs = StableDiffuser.val_step(data)
+    assert len(outputs) == 2
+    assert isinstance(outputs[0].fake_img, torch.Tensor)
+    assert outputs[0].fake_img.shape == (3, 32, 32)
+
+    # test step
+    outputs = StableDiffuser.test_step(data)
+    assert len(outputs) == 2
+    assert isinstance(outputs[0].fake_img, torch.Tensor)
+    assert outputs[0].fake_img.shape == (3, 32, 32)
 
 
 def teardown_module():

@@ -42,3 +42,11 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: Inpainting
+- Config: configs/stable_diffusion/stable-diffusion_v15_pokemon_blip.py
+  In Collection: Stable Diffusion
+  Name: stable-diffusion_v15_pokemon_blip
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
+  Weights: <>
