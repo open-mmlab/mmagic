@@ -103,7 +103,7 @@ class ViCo(StableDiffusion):
             init_cfg=init_cfg)
         self.reg_loss_weight = reg_loss_weight
 
-    def prepare_models(self):
+    def prepare_model(self):
         """Prepare model for training.
 
         Move model to target dtype and disable gradient for some models.
