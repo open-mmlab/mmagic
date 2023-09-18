@@ -14,7 +14,7 @@ from mmagic.utils import register_all_modules
 gc.collect()
 torch.cuda.empty_cache()
 register_all_modules()
-stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
+stable_diffusion_tiny_url = 'diffusers/tiny-stable-diffusion-torch'
 finetuned_model_path = ''
 
 vision_config = dict(
@@ -49,13 +49,13 @@ config = dict(
     text_encoder=dict(
         type='ClipWrapper',
         clip_type='huggingface',
-        pretrained_model_name_or_path=stable_diffusion_v15_url,
+        pretrained_model_name_or_path=stable_diffusion_tiny_url,
         subfolder='text_encoder'),
-    tokenizer=stable_diffusion_v15_url,
+    tokenizer=stable_diffusion_tiny_url,
     pretrained_cfg=dict(
         finetuned_model_path=finetuned_model_path,
         enable_xformers_memory_efficient_attention=None,
-        pretrained_model_name_or_path=stable_diffusion_v15_url,
+        pretrained_model_name_or_path=stable_diffusion_tiny_url,
         image_encoder=vision_config,
         revision=None,
         non_ema_revision=None,
@@ -70,11 +70,11 @@ config = dict(
         object_resolution=64),
     scheduler=dict(
         type='DDPMScheduler',
-        from_pretrained=stable_diffusion_v15_url,
+        from_pretrained=stable_diffusion_tiny_url,
         subfolder='scheduler'),
     test_scheduler=dict(
         type='DDIMScheduler',
-        from_pretrained=stable_diffusion_v15_url,
+        from_pretrained=stable_diffusion_tiny_url,
         subfolder='scheduler'),
     dtype='fp32',
     data_preprocessor=dict(type='DataPreprocessor'))
