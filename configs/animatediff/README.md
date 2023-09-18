@@ -62,11 +62,7 @@ wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --
 3. Enjoy Text2Video world
 
 ```python
-import cv2
-import numpy as np
-import mmcv
 from mmengine import Config
-from PIL import Image
 
 from mmagic.registry import MODELS
 from mmagic.utils import register_all_modules
