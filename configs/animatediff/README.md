@@ -186,10 +186,6 @@ prompt:
 
 ```
 
-### Using MMInferencer
-
-Ongoing...
-
 ## Citation
 
 ```bibtex

@@ -16,7 +16,7 @@
 
 <!-- [IMAGE] -->
 
-TODO... Add Image
+![512](https://github.com/ElliotQi/mmagic/assets/46469021/54d92aca-dfa9-4eeb-ba38-3f6c981e5399)
 
 ## 模型与结果
 
@@ -24,25 +24,14 @@ TODO... Add Image
 
 <!-- SKIP THIS TABLE -->
 
-|      模型       |     下载     |
-| :-------------: | :----------: |
-|     ToonYou     | Coming soon! |
-|     Lyriel      | Coming soon! |
-|   RcnzCartoon   | Coming soon! |
-|    MajicMix     | Coming soon! |
-| RealisticVision | Coming soon! |
-
-## 待办列表
-
-- [x] 整体pipeline完成
-- [x] 支持xformer显存优化，目前可以在13G显存下输出16帧512\*512视频
-- \[\] 优化512\*512视频质量
-- \[\] 支持以图生成视频
-- \[\] 完成Gradio部署
-- \[\] 训练SD XL基础上的Motion Module
-- \[\] 支持更快的采样器(plms，dpm-solver等)
-
-我们很欢迎社区用户支持这些项目和任何其他有趣的工作!
+|                           模型                            |                                       下载                                        |
+| :-------------------------------------------------------: | :-------------------------------------------------------------------------------: |
+|            [ToonYou](./animatediff_ToonYou.py)            |              [model](https://civitai.com/api/download/models/78775)               |
+|             [Lyriel](./animatediff_Lyriel.py)             |              [model](https://civitai.com/api/download/models/72396)               |
+|        [RcnzCartoon](./animatediff_RcnzCartoon.py)        |              [model](https://civitai.com/api/download/models/71009)               |
+|           [MajicMix](./animatediff_MajicMix.py)           |              [model](https://civitai.com/api/download/models/79068)               |
+|    [RealisticVision](./animatediff_RealisticVision.py)    |              [model](https://civitai.com/api/download/models/29460)               |
+| [RealisticVision_v2](./animatediff_RealisticVision_v2.py) | [model](https://huggingface.co/guoyww/animatediff/resolve/main/mm_sd_v15_v2.ckpt) |
 
 ## Quick Start
 
@@ -75,12 +64,7 @@ wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --
 3. 享受AnimateDiff视频生成吧！
 
 ```python
-import cv2
-import numpy as np
-import mmcv
 from mmengine import Config
-from PIL import Image
-
 from mmagic.registry import MODELS
 from mmagic.utils import register_all_modules
 
@@ -121,7 +105,7 @@ time_str = datetime.datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
 savedir = f"samples/{Path(cfg.model['dream_booth_lora_cfg']['type']).stem}-{time_str}"
 os.makedirs(savedir)
 for prompt_idx, (prompt, n_prompt, random_seed) in enumerate(zip(prompts, negative_prompts, random_seeds)):
-    output_dict = animatediff.infer(prompt,negative_prompt=n_prompt, video_length=16, height=256, width=256, seed=random_seed,num_inference_steps=cfg.model['dream_booth_lora_cfg']['steps'])
+    output_dict = animatediff.infer(prompt,negative_prompt=n_prompt, video_length=16, height=512, width=512, seed=random_seed,num_inference_steps=cfg.model['dream_booth_lora_cfg']['steps'])
     sample = output_dict['samples']
     prompt = "-".join((prompt.replace("/", "").split(" ")[:10]))
     save_videos_grid(sample, f"{savedir}/sample/{sample_idx}-{prompt}.gif")
@@ -132,6 +116,74 @@ for prompt_idx, (prompt, n_prompt, random_seed) in enumerate(zip(prompts, negati
 samples = torch.concat(samples)
 save_videos_grid(samples, f"{savedir}/sample.gif", n_rows=4)
 
+
+```
+
+### 其他配置文件的Prompts
+
+- Lyriel
+
+```yaml
+  prompt:
+    - "dark shot, epic realistic, portrait of halo, sunglasses, blue eyes, tartan scarf, white hair by atey ghailan, by greg rutkowski, by greg tocchini, by james gilleard, by joe fenton, by kaethe butcher, gradient yellow, black, brown and magenta color scheme, grunge aesthetic!!! graffiti tag wall background, art by greg rutkowski and artgerm, soft cinematic light, adobe lightroom, photolab, hdr, intricate, highly detailed, depth of field, faded, neutral colors, hdr, muted colors, hyperdetailed, artstation, cinematic, warm lights, dramatic light, intricate details, complex background, rutkowski, teal and orange"
+    - "A forbidden castle high up in the mountains, pixel art, intricate details2, hdr, intricate details, hyperdetailed5, natural skin texture, hyperrealism, soft light, sharp, game art, key visual, surreal"
+    - "dark theme, medieval portrait of a man sharp features, grim, cold stare, dark colors, Volumetric lighting, baroque oil painting by Greg Rutkowski, Artgerm, WLOP, Alphonse Mucha dynamic lighting hyperdetailed intricately detailed, hdr, muted colors, complex background, hyperrealism, hyperdetailed, amandine van ray"
+    - "As I have gone alone in there and with my treasures bold, I can keep my secret where and hint of riches new and old. Begin it where warm waters halt and take it in a canyon down, not far but too far to walk, put in below the home of brown."
+
+  n_prompt:
+    - "3d, cartoon, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, artist name, young, loli, elf, 3d, illustration"
+    - "3d, cartoon, anime, sketches, worst quality, low quality, normal quality, lowres, normal quality, monochrome, grayscale, skin spots, acnes, skin blemishes, bad anatomy, girl, loli, young, large breasts, red eyes, muscular"
+    - "dof, grayscale, black and white, bw, 3d, cartoon, anime, sketches, worst quality, low quality, normal quality, lowres, normal quality, monochrome, grayscale, skin spots, acnes, skin blemishes, bad anatomy, girl, loli, young, large breasts, red eyes, muscular,badhandsv5-neg, By bad artist -neg 1, monochrome"
+    - "holding an item, cowboy, hat, cartoon, 3d, disfigured, bad art, deformed,extra limbs,close up,b&w, weird colors, blurry, duplicate, morbid, mutilated, [out of frame], extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, out of frame, ugly, extra limbs, bad anatomy, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, mutated hands, fused fingers, too many fingers, long neck, Photoshop, video game, ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, mutation, mutated, extra limbs, extra legs, extra arms, disfigured, deformed, cross-eye, body out of frame, blurry, bad art, bad anatomy, 3d render"
+```
+
+- RcnzCartoon
+
+```yaml
+prompt:
+    - "Jane Eyre with headphones, natural skin texture,4mm,k textures, soft cinematic light, adobe lightroom, photolab, hdr, intricate, elegant, highly detailed, sharp focus, cinematic look, soothing tones, insane details, intricate details, hyperdetailed, low contrast, soft cinematic light, dim colors, exposure blend, hdr, faded"
+    - "close up Portrait photo of muscular bearded guy in a worn mech suit, light bokeh, intricate, steel metal [rust], elegant, sharp focus, photo by greg rutkowski, soft lighting, vibrant colors, masterpiece, streets, detailed face"
+    - "absurdres, photorealistic, masterpiece, a 30 year old man with gold framed, aviator reading glasses and a black hooded jacket and a beard, professional photo, a character portrait, altermodern, detailed eyes, detailed lips, detailed face, grey eyes"
+    - "a golden labrador, warm vibrant colours, natural lighting, dappled lighting, diffused lighting, absurdres, highres,k, uhd, hdr, rtx, unreal, octane render, RAW photo, photorealistic, global illumination, subsurface scattering"
+
+  n_prompt:
+    - "deformed, distorted, disfigured, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, mutated hands and fingers, disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation"
+    - "nude, cross eyed, tongue, open mouth, inside, 3d, cartoon, anime, sketches, worst quality, low quality, normal quality, lowres, normal quality, monochrome, grayscale, skin spots, acnes, skin blemishes, bad anatomy, red eyes, muscular"
+    - "easynegative, cartoon, anime, sketches, necklace, earrings worst quality, low quality, normal quality, bad anatomy, bad hands, shiny skin, error, missing fingers, extra digit, fewer digits, jpeg artifacts, signature, watermark, username, blurry, chubby, anorectic, bad eyes, old, wrinkled skin, red skin, photograph By bad artist -neg, big eyes, muscular face,"
+    - "beard, EasyNegative, lowres, chromatic aberration, depth of field, motion blur, blurry, bokeh, bad quality, worst quality, multiple arms, badhand"
+
+```
+
+- MajicMix
+
+```yaml
+prompt:
+    - "1girl, offshoulder, light smile, shiny skin best quality, masterpiece, photorealistic"
+    - "best quality, masterpiece, photorealistic, 1boy, 50 years old beard, dramatic lighting"
+    - "best quality, masterpiece, photorealistic, 1girl, light smile, shirt with collars, waist up, dramatic lighting, from below"
+    - "male, man, beard, bodybuilder, skinhead,cold face, tough guy, cowboyshot, tattoo, french windows, luxury hotel masterpiece, best quality, photorealistic"
+
+  n_prompt:
+    - "ng_deepnegative_v1_75t, badhandv4, worst quality, low quality, normal quality, lowres, bad anatomy, bad hands, watermark, moles"
+    - "nsfw, ng_deepnegative_v1_75t,badhandv4, worst quality, low quality, normal quality, lowres,watermark, monochrome"
+    - "nsfw, ng_deepnegative_v1_75t,badhandv4, worst quality, low quality, normal quality, lowres,watermark, monochrome"
+    - "nude, nsfw, ng_deepnegative_v1_75t, badhandv4, worst quality, low quality, normal quality, lowres, bad anatomy, bad hands, monochrome, grayscale watermark, moles, people"
+```
+
+- Realistic & Realistic_v2 (两者使用相同prompts和不同的随机种子)
+
+```yaml
+  prompt:
+    - "b&w photo of 42 y.o man in black clothes, bald, face, half body, body, high detailed skin, skin pores, coastline, overcast weather, wind, waves, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3"
+    - "close up photo of a rabbit, forest, haze, halation, bloom, dramatic atmosphere, centred, rule of thirds, 200mm 1.4f macro shot"
+    - "photo of coastline, rocks, storm weather, wind, waves, lightning, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3"
+    - "night, b&w photo of old house, post apocalypse, forest, storm weather, wind, rocks, 8k uhd, dslr, soft lighting, high quality, film grain"
+
+  n_prompt:
+    - "semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, text, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck"
+    - "semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, text, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck"
+    - "blur, haze, deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, mutated hands and fingers, deformed, distorted, disfigured, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, amputation"
+    - "blur, haze, deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, art, mutated hands and fingers, deformed, distorted, disfigured, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, amputation"
 
 ```
 
