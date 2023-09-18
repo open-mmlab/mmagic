@@ -26,7 +26,6 @@ unet_cfg = dict(
         temporal_position_encoding=True,
         temporal_position_encoding_max_len=24,
         temporal_attention_dim_div=1),
-    from_pretrained=stable_diffusion_v15_url,
     subfolder='unet')
 
 
