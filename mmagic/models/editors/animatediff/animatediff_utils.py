@@ -24,16 +24,9 @@ import torchvision
 from diffusers.pipelines.paint_by_example import PaintByExampleImageEncoder
 from diffusers.pipelines.stable_diffusion import StableUnCLIPImageNormalizer
 from diffusers.schedulers import DDPMScheduler
-# from diffusers.utils.import_utils import BACKENDS_MAPPING
 from einops import rearrange
 from transformers import (CLIPImageProcessor, CLIPTextModel, CLIPVisionConfig,
                           CLIPVisionModelWithProjection)
-
-#   DPMSolverMultistepScheduler,
-#   EulerAncestralDiscreteScheduler,
-#   EulerDiscreteScheduler,
-#   HeunDiscreteScheduler, LMSDiscreteScheduler,
-#   PNDMScheduler, UnCLIPScheduler)
 
 
 def shave_segments(path, n_shave_prefix_segments=1):
@@ -91,15 +84,6 @@ def renew_attention_paths(old_list, n_shave_prefix_segments=0):
     mapping = []
     for old_item in old_list:
         new_item = old_item
-
-        # new_item = new_item.replace('norm.weight', 'group_norm.weight')
-        # new_item = new_item.replace('norm.bias', 'group_norm.bias')
-
-        # new_item = new_item.replace('proj_out.weight', 'proj_attn.weight')
-        # new_item = new_item.replace('proj_out.bias', 'proj_attn.bias')
-
-        # new_item = shave_segments(new_item,
-        # n_shave_prefix_segments=n_shave_prefix_segments)
 
         mapping.append({'old': old_item, 'new': new_item})
 
@@ -318,25 +302,6 @@ def create_vae_diffusers_config(original_config, image_size: int):
         'layers_per_block': vae_params.num_res_blocks,
     }
     return config
-
-
-# def create_diffusers_schedular(original_config):
-#     schedular = DDIMScheduler(
-#         num_train_timesteps=original_config.model.params.timesteps,
-#         beta_start=original_config.model.params.linear_start,
-#         beta_end=original_config.model.params.linear_end,
-#         beta_schedule='scaled_linear',
-#     )
-#     return schedular
-
-# def create_ldm_bert_config(original_config):
-#     bert_params = original_config.model.params.cond_stage_config.params
-#     config = LDMBertConfig(
-#         d_model=bert_params.n_embed,
-#         encoder_layers=bert_params.n_layer,
-#         encoder_ffn_dim=bert_params.n_embed * 4,
-#     )
-#     return config
 
 
 def convert_ldm_unet_checkpoint(checkpoint,
@@ -859,60 +824,6 @@ def convert_ldm_vae_checkpoint(checkpoint, config):
         for key, value in new_checkpoint.items()
     }
     return new_checkpoint
-
-
-# def convert_ldm_bert_checkpoint(checkpoint, config):
-
-#     def _copy_attn_layer(hf_attn_layer, pt_attn_layer):
-#         hf_attn_layer.q_proj.weight.data = pt_attn_layer.to_q.weight
-#         hf_attn_layer.k_proj.weight.data = pt_attn_layer.to_k.weight
-#         hf_attn_layer.v_proj.weight.data = pt_attn_layer.to_v.weight
-
-#         hf_attn_layer.out_proj.weight = pt_attn_layer.to_out.weight
-#         hf_attn_layer.out_proj.bias = pt_attn_layer.to_out.bias
-
-#     def _copy_linear(hf_linear, pt_linear):
-#         hf_linear.weight = pt_linear.weight
-#         hf_linear.bias = pt_linear.bias
-
-#     def _copy_layer(hf_layer, pt_layer):
-#         # copy layer norms
-#         _copy_linear(hf_layer.self_attn_layer_norm, pt_layer[0][0])
-#         _copy_linear(hf_layer.final_layer_norm, pt_layer[1][0])
-
-#         # copy attn
-#         _copy_attn_layer(hf_layer.self_attn, pt_layer[0][1])
-
-#         # copy MLP
-#         pt_mlp = pt_layer[1][1]
-#         _copy_linear(hf_layer.fc1, pt_mlp.net[0][0])
-#         _copy_linear(hf_layer.fc2, pt_mlp.net[2])
-
-#     def _copy_layers(hf_layers, pt_layers):
-#         for i, hf_layer in enumerate(hf_layers):
-#             if i != 0:
-#                 i += i
-#             pt_layer = pt_layers[i:i + 2]
-#             _copy_layer(hf_layer, pt_layer)
-
-#     hf_model = LDMBertModel(config).eval()
-
-#     # copy  embeds
-#     hf_model.model.embed_tokens.weight =
-#       checkpoint.transformer.token_emb.weight
-#     hf_model.model.embed_positions.weight.data =
-#       checkpoint.transformer.pos_emb.emb.weight
-
-#     # copy layer norm
-#     _copy_linear(hf_model.model.layer_norm, checkpoint.transformer.norm)
-
-#     # copy hidden layers
-#     _copy_layers(hf_model.model.layers,
-#                  checkpoint.transformer.attn_layers.layers)
-
-#     _copy_linear(hf_model.to_logits, checkpoint.transformer.to_logits)
-
-#     return hf_model
 
 
 def convert_ldm_clip_checkpoint(checkpoint):

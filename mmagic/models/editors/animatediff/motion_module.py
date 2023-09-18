@@ -11,9 +11,6 @@ from einops import rearrange, repeat
 from torch import nn
 
 from mmagic.models.editors.ddpm.attention import GEGLU, ApproximateGELU
-# from diffusers.models.attention import FeedForward
-# from diffusers.models.cross_attention import CrossAttention
-# from diffusers.models.attention_processor import Attention as CrossAttention
 from .attention_3d import CrossAttention
 
 

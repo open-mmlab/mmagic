@@ -380,7 +380,6 @@ class BasicTransformerBlock(nn.Module):
             self.norm1(hidden_states, timestep)
             if self.use_ada_layer_norm else self.norm1(hidden_states))
 
-        # pdb.set_trace()
         if self.unet_use_cross_frame_attention:
             hidden_states = self.attn1(
                 norm_hidden_states,

@@ -104,7 +104,6 @@ class AnimateDiff(BaseModel):
             assert dtype in [
                 'fp32', None
             ], ('dtype must be one of \'fp32\', \'fp16\', \'bf16\' or None.')
-        # breakpoint()
         self.vae = build_module(vae, MODELS, default_args=default_args)
         self.unet = build_module(unet, MODELS)  # NOTE: initialize unet as fp32
         self._unet_ori_dtype = next(self.unet.parameters()).dtype
@@ -133,8 +132,6 @@ class AnimateDiff(BaseModel):
 
         self.enable_xformers = enable_xformers
         self.unet.set_use_memory_efficient_attention_xformers(True)
-        # self.unet.enable_xformers_memory_efficient_attention()
-        # self.set_xformers()
 
         self.tomesd_cfg = tomesd_cfg
         self.set_tomesd()
@@ -142,9 +139,6 @@ class AnimateDiff(BaseModel):
         self.init_dreambooth_lora(dream_booth_lora_cfg)
 
         self.prepare_model()
-
-        # breakpoint()
-        # self.set_lora()
 
     def set_xformers(self, module: Optional[nn.Module] = None) -> nn.Module:
         """Set xformers for the model.
@@ -423,7 +417,6 @@ class AnimateDiff(BaseModel):
                 layer_infos = key.split('.')[0].split(LORA_PREFIX_UNET +
                                                       '_')[-1].split('_')
                 curr_layer = self.unet
-            # breakpoint()
             # find the target layer
             temp_name = layer_infos.pop(0)
             while len(layer_infos) > -1:
@@ -479,7 +472,6 @@ class AnimateDiff(BaseModel):
                         generator,
                         latents=None):
         """Prepare latent variables."""
-        # breakpoint()
         shape = (batch_size, num_channels_latents, video_length,
                  height // self.vae_scale_factor,
                  width // self.vae_scale_factor)
@@ -719,7 +711,6 @@ class AnimateDiff(BaseModel):
 
         # 5. Prepare latent variables
         num_channels_latents = self.unet.config.in_channels
-        # breakpoint()
         latents = self.prepare_latents(
             batch_size * num_videos_per_prompt,
             num_channels_latents,
