@@ -1,5 +1,5 @@
 # config for model
-stable_diffusion_v15_url = '/home/wangrunqi/stable-diffusion-v1-5'
+stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 randomness = dict(
     seed=[
         10917152860782582783, 6399018107401806238, 15875751942533906793,

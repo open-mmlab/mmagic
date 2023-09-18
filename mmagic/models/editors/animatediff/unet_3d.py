@@ -14,8 +14,10 @@ from diffusers.configuration_utils import ConfigMixin, register_to_config
 from diffusers.models.embeddings import TimestepEmbedding, Timesteps
 from diffusers.models.modeling_utils import ModelMixin
 from diffusers.utils import BaseOutput
+from huggingface_hub import snapshot_download
 from mmengine.logging import MMLogger
 from mmengine.model import constant_init
+from safetensors import safe_open
 
 from mmagic.registry import MODELS
 from .resnet_3d import InflatedConv3d, InflatedGroupNorm
@@ -277,8 +279,21 @@ class UNet3DConditionMotionModel(ModelMixin, ConfigMixin):
             from diffusers.utils import WEIGHTS_NAME
             model_file = os.path.join(from_pretrained, subfolder, WEIGHTS_NAME)
             if not os.path.isfile(model_file):
-                raise RuntimeError(f'{model_file} does not exist')
-            state_dict = torch.load(model_file, map_location='cpu')
+                cache_file = snapshot_download(
+                    'runwayml/stable-diffusion-v1-5',
+                    allow_patterns=['*.json', '*unet*safetensors'],
+                    ignore_patterns=[
+                        '*.fp16.safetensors', '*v1-5*', '*ema.safetensors'
+                    ])
+                from diffusers.utils import SAFETENSORS_WEIGHTS_NAME
+                model_file = os.path.join(cache_file, subfolder,
+                                          SAFETENSORS_WEIGHTS_NAME)
+                state_dict = {}
+                with safe_open(model_file, framework='pt', device='cpu') as f:
+                    for key in f.keys():
+                        state_dict[key] = f.get_tensor(key)
+            else:
+                state_dict = torch.load(model_file, map_location='cpu')
 
             m, u = self.load_state_dict(state_dict, strict=False)
             logger.info(

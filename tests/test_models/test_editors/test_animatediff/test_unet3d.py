@@ -7,6 +7,7 @@ import torch
 from mmagic.models.utils import build_module
 from mmagic.registry import MODELS
 
+stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 unet_cfg = dict(
     type='UNet3DConditionMotionModel',
     unet_use_cross_frame_attention=False,
@@ -23,6 +24,7 @@ unet_cfg = dict(
         temporal_position_encoding=True,
         temporal_position_encoding_max_len=24,
         temporal_attention_dim_div=1),
+    from_pretrained=stable_diffusion_v15_url,
     subfolder='unet')
 
 
@@ -37,5 +39,5 @@ def test_Unet3D():
     assert output['sample'].shape == (1, 4, 16, 8, 8)
 
 
-# if __name__ == '__main__':
-#     test_Unet3D()
+if __name__ == '__main__':
+    test_Unet3D()
