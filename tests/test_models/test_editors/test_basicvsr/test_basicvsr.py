@@ -79,3 +79,10 @@ def test_basicvsr():
             train_cfg=dict(fix_iter=1),
             ensemble=dict(type=''),
             data_preprocessor=DataPreprocessor())
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

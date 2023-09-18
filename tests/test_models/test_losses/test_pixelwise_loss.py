@@ -112,3 +112,10 @@ def test_pixelwise_losses():
     assert loss.item() == 0.0
     loss = psnr_loss(target, target)
     assert loss.item() == -80.0
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

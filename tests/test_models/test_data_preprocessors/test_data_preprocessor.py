@@ -54,6 +54,10 @@ class TestBaseDataPreprocessor(TestCase):
             data_preprocessor._parse_channel_index(
                 torch.rand(1, 2, 10, 3, 5, 5, 5))
 
+        # test dict input
+        inputs = dict(fake_img=torch.rand(2, 3, 5, 5))
+        self.assertEqual(data_preprocessor._parse_channel_index(inputs), 1)
+
     def test_parse_channel_order(self):
         data_preprocessor = DataPreprocessor()
         parse_fn = data_preprocessor._parse_channel_order
@@ -61,6 +65,10 @@ class TestBaseDataPreprocessor(TestCase):
         self.assertEqual(parse_fn('img', torch.rand(3, 5, 5)), 'BGR')
         self.assertEqual(parse_fn('img', torch.rand(1, 3, 3, 4)), 'BGR')
         self.assertEqual(parse_fn('img', torch.rand(1, 1, 3, 4)), 'single')
+
+        # test dict input
+        inputs = dict(fake_img=torch.rand(1, 3, 3, 4))
+        self.assertEqual(parse_fn('img', inputs), 'BGR')
 
         # test data sample is not None
         data_sample = DataSample()
@@ -868,3 +876,10 @@ class TestBaseDataPreprocessor(TestCase):
         destruct_batch = data_preprocessor.destruct(inputs)
         self.assertEqual(destruct_batch.shape, (2, 1, 5, 5))
         assert_allclose(destruct_batch.float(), inputs.float())
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -51,3 +51,10 @@ def test_rrdbnet_backbone():
         net = net.cuda()
         output = net(img.cuda())
         assert output.shape == (1, 3, 24, 24)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

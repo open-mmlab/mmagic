@@ -23,3 +23,10 @@ def test_rstb():
         net = net.cuda()
         output = net(img.cuda(), (8, 8))
         assert output.shape == (1, 64, 6)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

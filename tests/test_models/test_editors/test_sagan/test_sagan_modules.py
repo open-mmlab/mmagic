@@ -504,3 +504,10 @@ class TestSNConditionalNorm(object):
         norm = MODELS.build(config).cuda()
         out = norm(self.input.cuda(), self.label.cuda())
         assert out.shape == (2, 4, 4, 4)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

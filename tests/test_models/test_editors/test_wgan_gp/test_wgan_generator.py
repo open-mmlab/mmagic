@@ -82,3 +82,10 @@ class TestWGANGPGenerator(object):
         assert isinstance(g, WGANGPGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 128, 128)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -41,3 +41,10 @@ model = dict(
     loss_l1_valid=dict(type='L1Loss', loss_weight=1.0),
     loss_tv=dict(type='MaskedTVLoss', loss_weight=0.01),
     train_cfg=dict(disc_step=1))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

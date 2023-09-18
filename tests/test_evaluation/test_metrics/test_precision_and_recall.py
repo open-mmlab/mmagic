@@ -97,3 +97,10 @@ class TestPR:
         pr_score = pr.evaluate()
         print(pr_score)
         assert pr_score['precision'] >= 0 and pr_score['recall'] >= 0
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

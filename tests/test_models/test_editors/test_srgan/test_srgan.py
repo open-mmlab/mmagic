@@ -78,3 +78,10 @@ def test_srgan_resnet(init_weights):
 
     # reset mock to clear some memory usage
     init_weights.reset_mock()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

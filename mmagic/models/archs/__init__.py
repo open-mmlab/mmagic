@@ -63,10 +63,21 @@ def register_diffusers_models() -> List[str]:
             wrapped_module = gen_wrapped_cls(module, module_name)
             MODELS.register_module(name=module_name, module=wrapped_module)
             DIFFUSERS_MODELS.append(module_name)
-    return DIFFUSERS_MODELS
+
+    DIFFUSERS_PIPELINES = []
+    for pipeline_name in dir(diffusers.pipelines):
+        pipeline = getattr(diffusers.pipelines, pipeline_name)
+        if (inspect.isclass(pipeline)
+                and issubclass(pipeline, diffusers.DiffusionPipeline)):
+            wrapped_pipeline = gen_wrapped_cls(pipeline, pipeline_name)
+            MODELS.register_module(name=pipeline_name, module=wrapped_pipeline)
+            DIFFUSERS_PIPELINES.append(pipeline_name)
+
+    return DIFFUSERS_MODELS, DIFFUSERS_PIPELINES
 
 
-REGISTERED_DIFFUSERS_MODELS = register_diffusers_models()
+REGISTERED_DIFFUSERS_MODELS, REGISTERED_DIFFUSERS_PIPELINES = \
+    register_diffusers_models()
 
 __all__ = [
     'ASPP', 'DepthwiseSeparableConvModule', 'SimpleGatedConvModule',

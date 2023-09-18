@@ -35,7 +35,7 @@ class MMagicInferencer:
         >>> editor = MMagicInferencer(model_name='pix2pix')
         >>> editor.infer(img='./test.jpg', result_out_dir='./pix2pix_res.jpg')
 
-        >>> # see demo/mmagic_inference_tutorial.ipynb for more examples
+        >>> # see demo/mmediting_inference_tutorial.ipynb for more examples
     """
     # unsupported now
     # singan, liif
@@ -114,8 +114,14 @@ class MMagicInferencer:
         # 3D-aware generation
         'eg3d',
 
-        # diffusers inferencer
-        'controlnet_animation'
+        # animation inferencer
+        'controlnet_animation',
+
+        # draggan
+        'draggan',
+
+        # diffusers pipeline inferencer
+        'diffusers_pipeline',
     ]
 
     inference_supported_models_cfg = {}
@@ -124,6 +130,7 @@ class MMagicInferencer:
     def __init__(self,
                  model_name: str = None,
                  model_setting: int = None,
+                 config_name: int = None,
                  model_config: str = None,
                  model_ckpt: str = None,
                  device: torch.device = None,
@@ -134,7 +141,7 @@ class MMagicInferencer:
         MMagicInferencer.init_inference_supported_models_cfg()
         inferencer_kwargs = {}
         inferencer_kwargs.update(
-            self._get_inferencer_kwargs(model_name, model_setting,
+            self._get_inferencer_kwargs(model_name, model_setting, config_name,
                                         model_config, model_ckpt,
                                         extra_parameters))
         self.inferencer = Inferencers(
@@ -142,6 +149,7 @@ class MMagicInferencer:
 
     def _get_inferencer_kwargs(self, model_name: Optional[str],
                                model_setting: Optional[int],
+                               config_name: Optional[int],
                                model_config: Optional[str],
                                model_ckpt: Optional[str],
                                extra_parameters: Optional[Dict]) -> Dict:
@@ -155,6 +163,11 @@ class MMagicInferencer:
             if model_setting:
                 setting_to_use = model_setting
             config_dir = cfgs['settings'][setting_to_use]['Config']
+            if config_name:
+                for setting in cfgs['settings']:
+                    if setting['Name'] == config_name:
+                        config_dir = setting['Config']
+                        break
             config_dir = config_dir[config_dir.find('configs'):]
             if osp.exists(
                     osp.join(osp.dirname(__file__), '..', '..', config_dir)):

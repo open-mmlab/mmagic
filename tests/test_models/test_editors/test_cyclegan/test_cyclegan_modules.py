@@ -74,3 +74,10 @@ def test_gan_image_buffer():
             and torch.equal(buffer.image_buffer[0], img_tensor_0)) or \
            (torch.equal(img_tensor_return, img_tensor_00)
             and torch.equal(buffer.image_buffer[0], img_tensor_1))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

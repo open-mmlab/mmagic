@@ -74,3 +74,10 @@ def test_generate_facial_heatmap():
         f'target_size={generate_heatmap.target_size}, ' +
         f'sigma={generate_heatmap.sigma}, '
         f'use_cache={generate_heatmap.use_cache})')
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

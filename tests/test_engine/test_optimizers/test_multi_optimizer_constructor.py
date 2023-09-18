@@ -137,3 +137,10 @@ def test_optimizer_constructor():
     model = ToyModel2()
     optim_wrapper = optim_wrapper_constructor(model)
     assert isinstance(optim_wrapper, OptimWrapper)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

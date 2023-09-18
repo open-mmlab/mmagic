@@ -16,3 +16,10 @@ def test_gl_enc():
     aot_encdec = MODELS.build(cfg_)
     output = aot_encdec(input_x)
     assert output.shape == (1, 3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

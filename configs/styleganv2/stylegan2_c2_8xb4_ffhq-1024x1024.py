@@ -29,6 +29,8 @@ model = dict(
         g_reg_weight=2. * g_reg_interval,
         pl_batch_shrink=2))
 
+extra_parameters = dict(num_batches=1, sample_model='orig')
+
 train_cfg = dict(max_iters=800002)
 
 optim_wrapper = dict(

@@ -36,3 +36,10 @@ def test_gl_encdec():
         gl_encdec = gl_encdec.cuda()
         output = gl_encdec(input_x.cuda())
         assert output.shape == (1, 3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

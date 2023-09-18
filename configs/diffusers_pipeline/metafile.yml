@@ -1,0 +1,17 @@
+Collections:
+- Name: Diffusers Pipeline
+  Paper:
+    Title: Diffusers Pipeline
+    URL: https://github.com/huggingface/diffusers
+  README: configs/diffusers_pipeline/README.md
+  Task:
+  - diffusers pipeline
+  Year: 2023
+Models:
+- Config: configs/diffusers_pipeline/sd_xl_pipeline.py
+  In Collection: Diffusers Pipeline
+  Name: sd_xl_pipeline
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Diffusers Pipeline

@@ -18,3 +18,10 @@ def test_plain_refiner():
         raw_alpha = torch.rand((2, 1, 128, 128))
         output = plain_refiner(input, raw_alpha)
         assert output.detach().numpy().shape == (2, 1, 128, 128)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

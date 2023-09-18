@@ -93,3 +93,10 @@ class TestSinGANPEGen:
             interp_pad=True, noise_with_pad=False, **self.default_args)
         res = gen(None, self.fixed_noises, self.noise_weights, 'rand', 2)
         assert res.shape == (1, 3, 12, 12)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

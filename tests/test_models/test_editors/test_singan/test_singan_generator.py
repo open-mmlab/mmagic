@@ -42,3 +42,10 @@ class TestSinGANGen:
             get_prev_res=True)
 
         assert output['prev_res_list'][0].shape == (1, 3, 8, 8)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

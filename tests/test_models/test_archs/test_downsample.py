@@ -21,3 +21,10 @@ def test_pixel_unshuffle():
 
         with pytest.raises(AssertionError):
             y = pixel_unshuffle(x, scale=3)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

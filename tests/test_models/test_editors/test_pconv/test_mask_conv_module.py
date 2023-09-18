@@ -76,3 +76,10 @@ def test_mask_conv_module():
 
     with pytest.raises(KeyError):
         conv = MaskConvModule(3, 8, 3, padding=1, padding_mode='igccc')
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

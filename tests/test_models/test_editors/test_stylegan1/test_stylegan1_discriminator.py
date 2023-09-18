@@ -31,3 +31,10 @@ class TestStyleGANv1Disc:
         img = torch.randn((2, 3, 64, 64))
         score = d(img)
         assert score.shape == (2, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
