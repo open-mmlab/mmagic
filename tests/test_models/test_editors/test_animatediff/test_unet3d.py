@@ -3,6 +3,8 @@ import platform
 
 import pytest
 import torch
+from mmengine.utils import digit_version
+from mmengine.utils.dl_utils import TORCH_VERSION
 
 from mmagic.models.utils import build_module
 from mmagic.registry import MODELS
@@ -29,8 +31,10 @@ unet_cfg = dict(
 
 
 @pytest.mark.skipif(
-    'win' in platform.system().lower(),
-    reason='skip on windows due to limited RAM.')
+    'win' in platform.system().lower()
+    or digit_version(TORCH_VERSION) <= digit_version('1.9.2'),
+    reason='skip on windows due to limited RAM'
+    'and torch >= 1.10.0')
 def test_Unet3D():
     input = torch.rand((1, 4, 16, 8, 8))
     text_feat = torch.rand([1, 20, 768])
