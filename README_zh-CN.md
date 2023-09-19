@@ -31,7 +31,6 @@
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/issues)
 [![Open in OpenXLab](https://cdn-static.openxlab.org.cn/app-center/openxlab_demo.svg)](https://openxlab.org.cn/apps?search=mmagic)
 
-
 [📘使用文档](https://mmagic.readthedocs.io/zh_CN/latest/) |
 [🛠️安装教程](https://mmagic.readthedocs.io/zh_CN/latest/get_started/install.html) |
 [📊模型库](https://mmagic.readthedocs.io/zh_CN/latest/model_zoo/overview.html) |
