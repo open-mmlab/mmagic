@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+# Adapted from https://github.com/huggingface/diffusers
+
 import math
 from dataclasses import dataclass
 from typing import Optional
