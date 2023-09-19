@@ -33,9 +33,13 @@
 |    [RealisticVision](./animatediff_RealisticVision.py)    |              [model](https://civitai.com/api/download/models/29460)               |
 | [RealisticVision_v2](./animatediff_RealisticVision_v2.py) | [model](https://huggingface.co/guoyww/animatediff/resolve/main/mm_sd_v15_v2.ckpt) |
 
-## Quick Start
+## 快速开始
 
 运行以下代码，你可以使用AnimateDiff通过文本生成视频。
+
+#### 小建议
+
+强烈推荐安装 [xformers](https://github.com/facebookresearch/xformers)，512\*512分辨率可以节省约20G显存。
 
 1. 下载 [ToonYou](https://civitai.com/api/download/models/78775) 和 MotionModule 权重
 
@@ -54,11 +58,11 @@ wget https://civitai.com/api/download/models/78775 -P DreamBooth_LoRA/ --content
 ```python
     models_path = {Your Checkpoints Path}
     motion_module_cfg=dict(
-        path={Your MotionModule path}
+        path={Your MotionModule Path}
     ),
     dream_booth_lora_cfg=dict(
         type='ToonYou',
-        path={Your Dreambooth_Lora path},
+        path={Your Dreambooth_Lora Path},
         steps=25,
         guidance_scale=7.5)
 ```
@@ -107,7 +111,7 @@ time_str = datetime.datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
 savedir = f"samples/{Path(cfg.model['dream_booth_lora_cfg']['type']).stem}-{time_str}"
 os.makedirs(savedir)
 for prompt_idx, (prompt, n_prompt, random_seed) in enumerate(zip(prompts, negative_prompts, random_seeds)):
-    output_dict = animatediff.infer(prompt,negative_prompt=n_prompt, video_length=16, height=512, width=512, seed=random_seed,num_inference_steps=cfg.model['dream_booth_lora_cfg']['steps'])
+    output_dict = animatediff.infer(prompt,negative_prompt=n_prompt, video_length=16, height=256, width=256, seed=random_seed,num_inference_steps=cfg.model['dream_booth_lora_cfg']['steps'])
     sample = output_dict['samples']
     prompt = "-".join((prompt.replace("/", "").split(" ")[:10]))
     save_videos_grid(sample, f"{savedir}/sample/{sample_idx}-{prompt}.gif")
@@ -189,7 +193,7 @@ prompt:
 
 ```
 
-## Citation
+## 引用
 
 ```bibtex
 @article{guo2023animatediff,
