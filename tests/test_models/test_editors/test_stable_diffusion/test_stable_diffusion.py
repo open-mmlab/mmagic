@@ -84,7 +84,7 @@ class dummy_text_encoder(nn.Module):
 
 
 model = dict(
-    type='StableDiffusionXL',
+    type='StableDiffusion',
     scheduler=diffusion_scheduler,
     unet=unet,
     vae=vae,
