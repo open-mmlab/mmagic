@@ -643,7 +643,7 @@ class StableDiffusionXL(BaseModel):
 
             prompt_embeds_list.append(text_embeddings)
 
-        text_embeddings = torch.concat(prompt_embeds_list, dim=-1)
+        text_embeddings = torch.cat(prompt_embeds_list, dim=-1)
 
         # duplicate text embeddings for each generation per prompt,
         bs_embed, seq_len, _ = text_embeddings.shape
@@ -702,7 +702,7 @@ class StableDiffusionXL(BaseModel):
 
                 negative_prompt_embeds_list.append(negative_prompt_embeds)
 
-            negative_prompt_embeds = torch.concat(
+            negative_prompt_embeds = torch.cat(
                 negative_prompt_embeds_list, dim=-1)
 
         bs_embed, seq_len, _ = text_embeddings.shape
@@ -967,7 +967,7 @@ class StableDiffusionXL(BaseModel):
             prompt_embeds = prompt_embeds.view(bs_embed, seq_len, -1)
             prompt_embeds_list.append(prompt_embeds)
 
-        prompt_embeds = torch.concat(prompt_embeds_list, dim=-1)
+        prompt_embeds = torch.cat(prompt_embeds_list, dim=-1)
         pooled_prompt_embeds = pooled_prompt_embeds.view(bs_embed, -1)
         return prompt_embeds, pooled_prompt_embeds
 
