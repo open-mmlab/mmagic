@@ -836,6 +836,13 @@ def convert_ldm_clip_checkpoint(checkpoint):
         if key.startswith('cond_stage_model.transformer'):
             text_model_dict[
                 key[len('cond_stage_model.transformer.'):]] = checkpoint[key]
+    # Certain text transformers no longer
+    # expect position_ids after transformers==4.31
+    position_id_key = 'text_model.embeddings.position_ids'
+    if position_id_key in text_model_dict and \
+            position_id_key not in text_model.state_dict():
+        del text_model_dict[position_id_key]
+
     text_model.load_state_dict(text_model_dict)
 
     return text_model
