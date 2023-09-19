@@ -16,14 +16,14 @@ from mmagic.registry import MODELS
 from mmagic.utils import register_all_modules
 
 register_all_modules()
-models_path = '/home/wangrunqi/glcc/AnimateDiff/models/'
+
 sample_idx = 0
 scheduler_dict = {
     'Euler': EulerDiscreteScheduler,
     'PNDM': PNDMScheduler,
     'DDIM': DDIMScheduler,
 }
-cfg = Config.fromfile('../configs/animatediff/animatediff_ToonYou.py')
+cfg = Config.fromfile('configs/animatediff/animatediff_ToonYou.py')
 css = """
 .toolbutton {
     margin-buttom: 0em 0em 0em 0em;
@@ -39,7 +39,7 @@ class AnimateController:
     def __init__(self):
 
         # config dirs
-        self.basedir = models_path
+        self.basedir = cfg.models_path
         self.stable_diffusion_dir = os.path.join(self.basedir,
                                                  'StableDiffusion')
         self.motion_module_dir = os.path.join(self.basedir, 'Motion_Module')

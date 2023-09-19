@@ -42,9 +42,11 @@
 ```bash
 #!/bin/bash
 
-gdown 1RqkQuGPaCO5sGZ6V6KZ-jUWmsRu48Kdq -O models/Motion_Module/
+mkdir models && cd models
+mkdir Motion_Module && mkdir DreamBooth_LoRA
+gdown 1RqkQuGPaCO5sGZ6V6KZ-jUWmsRu48Kdq -O Motion_Module/
 gdown 1ql0g_Ys4UCz2RnokYlBjyOYPbttbIpbu -O models/Motion_Module/
-wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --content-disposition --no-check-certificate
+wget https://civitai.com/api/download/models/78775 -P DreamBooth_LoRA/ --content-disposition --no-check-certificate
 ```
 
 2. 修改 `configs/animatediff/animatediff_ToonYou.py` 配置文件中的权重路径
@@ -58,7 +60,7 @@ wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --
         type='ToonYou',
         path={Your Dreambooth_Lora path},
         steps=25,
-        guidance_scale=7.5))
+        guidance_scale=7.5)
 ```
 
 3. 享受AnimateDiff视频生成吧！

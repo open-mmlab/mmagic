@@ -40,9 +40,11 @@ Running the following codes, you can get a text-generated image.
 ```bash
 #!/bin/bash
 
-gdown 1RqkQuGPaCO5sGZ6V6KZ-jUWmsRu48Kdq -O models/Motion_Module/
+mkdir models && cd models
+mkdir Motion_Module && mkdir DreamBooth_LoRA
+gdown 1RqkQuGPaCO5sGZ6V6KZ-jUWmsRu48Kdq -O Motion_Module/
 gdown 1ql0g_Ys4UCz2RnokYlBjyOYPbttbIpbu -O models/Motion_Module/
-wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --content-disposition --no-check-certificate
+wget https://civitai.com/api/download/models/78775 -P DreamBooth_LoRA/ --content-disposition --no-check-certificate
 ```
 
 2. Modify the config file in `configs/animatediff/animatediff_ToonYou.py`
@@ -56,7 +58,7 @@ wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --
         type='ToonYou',
         path={Your Dreambooth_Lora path},
         steps=25,
-        guidance_scale=7.5))
+        guidance_scale=7.5)
 ```
 
 3. Enjoy Text2Video world
@@ -104,7 +106,7 @@ time_str = datetime.datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
 savedir = f"samples/{Path(cfg.model['dream_booth_lora_cfg']['type']).stem}-{time_str}"
 os.makedirs(savedir)
 for prompt_idx, (prompt, n_prompt, random_seed) in enumerate(zip(prompts, negative_prompts, random_seeds)):
-    output_dict = animatediff.infer(prompt,negative_prompt=n_prompt, video_length=16, height=256, width=256, seed=random_seed,num_inference_steps=cfg.model['dream_booth_lora_cfg']['steps'])
+    output_dict = animatediff.infer(prompt,negative_prompt=n_prompt, video_length=16, height=512, width=512, seed=random_seed,num_inference_steps=cfg.model['dream_booth_lora_cfg']['steps'])
     sample = output_dict['samples']
     prompt = "-".join((prompt.replace("/", "").split(" ")[:10]))
     save_videos_grid(sample, f"{savedir}/sample/{sample_idx}-{prompt}.gif")

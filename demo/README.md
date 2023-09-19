@@ -388,3 +388,54 @@ Finally, you can get text-generated images.
 <div align=center>
 <img src="https://user-images.githubusercontent.com/14927720/265911526-4975d6e2-c5fc-4324-80c9-a7a512953218.png">
 </div>
+
+#### 3.1.4 AnimateDiff
+
+1. Download [ToonYou](https://civitai.com/api/download/models/78775) and MotionModule checkpoint
+
+```bash
+#!/bin/bash
+
+mkdir models && cd models
+mkdir Motion_Module && mkdir DreamBooth_LoRA
+gdown 1RqkQuGPaCO5sGZ6V6KZ-jUWmsRu48Kdq -O models/Motion_Module/
+gdown 1ql0g_Ys4UCz2RnokYlBjyOYPbttbIpbu -O models/Motion_Module/
+wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --content-disposition --no-check-certificate
+```
+
+2. Modify the config file in `configs/animatediff/animatediff_ToonYou.py`
+
+```python
+
+models_path = '/home/wangrunqi/glcc/AnimateDiff/models/'
+```
+
+3. Then, try on the script:
+
+```shell
+python demo/gradio_animatediff.py
+```
+
+4. Select SD, MotionModule and DreamBooth checkpoints. Adjust inference parameters. Then input a selected prompt and its relative negative_prompt:
+
+```python
+
+prompts = [
+    "best quality, masterpiece, 1girl, looking at viewer, blurry background, upper body, contemporary, dress",
+
+    "masterpiece, best quality, 1girl, solo, cherry blossoms, hanami, pink flower, white flower, spring season, wisteria, petals, flower, plum blossoms, outdoors, falling petals, white hair, black eyes,",
+
+    "best quality, masterpiece, 1boy, formal, abstract, looking at viewer, masculine, marble pattern",
+
+    "best quality, masterpiece, 1girl, cloudy sky, dandelion, contrapposto, alternate hairstyle,"
+]
+negative_prompts = [
+    "",
+    "badhandv4,easynegative,ng_deepnegative_v1_75t,verybadimagenegative_v1.3, bad-artist, bad_prompt_version2-neg, teeth",
+    "",
+    "",
+]
+# More test samples could be generated with other config files. Please check 'configs/animatediff/README.md'
+```
+
+5. Click the 'Generate' button.
