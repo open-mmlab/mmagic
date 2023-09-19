@@ -1,5 +1,6 @@
 # config for model
 stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
+models_path = '/home/wangrunqi/glcc/AnimateDiff/models/'
 randomness = dict(
     seed=[
         16931037867122267877, 2094308009433392066, 4292543217695451092,
@@ -52,12 +53,9 @@ model = dict(
     scheduler=diffusion_scheduler,
     test_scheduler=diffusion_scheduler,
     data_preprocessor=dict(type='DataPreprocessor'),
-    motion_module_cfg=dict(
-        path='/home/wangrunqi/AnimateDiff/models/Motion_Module/mm_sd_v14.ckpt'
-    ),
+    motion_module_cfg=dict(path=models_path + 'Motion_Module/mm_sd_v14.ckpt'),
     dream_booth_lora_cfg=dict(
         type='ToonYou',
-        path='/home/wangrunqi/AnimateDiff/models/' +
-        'DreamBooth_LoRA/rcnzCartoon3d_v10.safetensors',
+        path=models_path + 'DreamBooth_LoRA/rcnzCartoon3d_v10.safetensors',
         steps=25,
         guidance_scale=7.5))

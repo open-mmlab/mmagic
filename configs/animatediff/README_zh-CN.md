@@ -52,7 +52,7 @@ wget https://civitai.com/api/download/models/78775 -P DreamBooth_LoRA/ --content
 2. 修改 `configs/animatediff/animatediff_ToonYou.py` 配置文件中的权重路径
 
 ```python
-
+    models_path = {Your Checkpoints Path}
     motion_module_cfg=dict(
         path={Your MotionModule path}
     ),
