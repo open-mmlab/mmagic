@@ -46,6 +46,9 @@ model = dict(
 @pytest.mark.skipif(
     'win' in platform.system().lower(),
     reason='skip on windows due to limited RAM.')
+@pytest.mark.skipif(
+    torch.__version__ < '1.9.0',
+    reason='skip on torch<1.9 due to unsupported torch.concat')
 def test_stable_xl_diffusion():
     StableDiffuser = MODELS.build(Config(model))
 
@@ -74,6 +77,9 @@ def test_stable_xl_diffusion():
 @pytest.mark.skipif(
     'win' in platform.system().lower(),
     reason='skip on windows due to limited RAM.')
+@pytest.mark.skipif(
+    torch.__version__ < '1.9.0',
+    reason='skip on torch<1.9 due to unsupported torch.concat')
 def test_stable_diffusion_xl_step():
     StableDiffuser = MODELS.build(Config(model))
 
