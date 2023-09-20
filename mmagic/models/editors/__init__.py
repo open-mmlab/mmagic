@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from .animatediff import AnimateDiff, UNet3DConditionMotionModel
 from .aotgan import AOTBlockNeck, AOTEncoderDecoder, AOTInpaintor
 from .arcface import IDLossModel
 from .basicvsr import BasicVSR, BasicVSRNet
@@ -96,5 +97,6 @@ __all__ = [
     'ClipWrapper', 'EG3D', 'Restormer', 'SwinIRNet', 'StableDiffusion',
     'ControlStableDiffusion', 'DreamBooth', 'TextualInversion', 'DeblurGanV2',
     'DeblurGanV2Generator', 'DeblurGanV2Discriminator',
-    'StableDiffusionInpaint', 'ViCo', 'FastComposer', 'StableDiffusionXL'
+    'StableDiffusionInpaint', 'ViCo', 'FastComposer', 'AnimateDiff',
+    'UNet3DConditionMotionModel', 'StableDiffusionXL'
 ]
