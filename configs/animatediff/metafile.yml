@@ -67,4 +67,7 @@ Models:
   - Dataset: WebVid
     Metrics: {}
     Task: Text2Video
-  Weights: https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_fromscratch_2.5Mval
+  - Dataset: WebVid
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_fromscratch_10Mval

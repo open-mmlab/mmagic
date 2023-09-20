@@ -24,16 +24,19 @@
 
 <!-- SKIP THIS TABLE -->
 
-|                             模型                              |                                                下载                                                 |
-| :-----------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: |
-|              [ToonYou](./animatediff_ToonYou.py)              |                       [model](https://civitai.com/api/download/models/78775)                        |
-|               [Lyriel](./animatediff_Lyriel.py)               |                       [model](https://civitai.com/api/download/models/72396)                        |
-|          [RcnzCartoon](./animatediff_RcnzCartoon.py)          |                       [model](https://civitai.com/api/download/models/71009)                        |
-|             [MajicMix](./animatediff_MajicMix.py)             |                       [model](https://civitai.com/api/download/models/79068)                        |
-|      [RealisticVision](./animatediff_RealisticVision.py)      |                       [model](https://civitai.com/api/download/models/29460)                        |
-|   [RealisticVision_v2](./animatediff_RealisticVision_v2.py)   |          [model](https://huggingface.co/guoyww/animatediff/resolve/main/mm_sd_v15_v2.ckpt)          |
-|  [MotionModel_v1-5_v2](./animatediff_RealisticVision_v2.py)   |      [model](https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_sd_v15_v2)      |
-| [MotionModel_v1-5_2Mval](./animatediff_RealisticVision_v1.py) | [model](https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_fromscratch_2.5Mval) |
+|                              模型                              |                                                下载                                                 |
+| :------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: |
+|              [ToonYou](./animatediff_ToonYou.py)               |                       [model](https://civitai.com/api/download/models/78775)                        |
+|               [Lyriel](./animatediff_Lyriel.py)                |                       [model](https://civitai.com/api/download/models/72396)                        |
+|          [RcnzCartoon](./animatediff_RcnzCartoon.py)           |                       [model](https://civitai.com/api/download/models/71009)                        |
+|             [MajicMix](./animatediff_MajicMix.py)              |                       [model](https://civitai.com/api/download/models/79068)                        |
+|      [RealisticVision](./animatediff_RealisticVision.py)       |                       [model](https://civitai.com/api/download/models/29460)                        |
+|   [RealisticVision_v2](./animatediff_RealisticVision_v2.py)    |          [model](https://huggingface.co/guoyww/animatediff/resolve/main/mm_sd_v15_v2.ckpt)          |
+|   [MotionModel_v1-5_v2](./animatediff_RealisticVision_v2.py)   |      [model](https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_sd_v15_v2)      |
+| [MotionModel_v1-5_2Mval](./animatediff_RealisticVision_v1.py)  | [model](https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_fromscratch_2.5Mval) |
+| [MotionModel_v1-5_10Mval](./animatediff_RealisticVision_v1.py) |                                               WebVid                                                |
+
+最新模型更新请在[浦源_AnimateDiff](https://openxlab.org.cn/models/detail/ElliotQi/AnimateDiff)中查看
 
 ## 快速开始
 
