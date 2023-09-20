@@ -417,6 +417,8 @@ models_path = '/home/AnimateDiff/models/'
 3. Then, try on the script:
 
 ```shell
+# may need to install imageio[ffmpeg]:
+# pip install imageio-ffmpeg
 python demo/gradio_animatediff.py
 ```
 
