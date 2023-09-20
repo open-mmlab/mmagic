@@ -1096,4 +1096,8 @@ def save_videos_grid(videos: torch.Tensor,
         outputs.append(x)
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    imageio.mimsave(path, outputs, duration=1000 * 1 / fps)
+    # imageio v3 doesn't support fps
+    if imageio.__version__ < '2.28.0':
+        imageio.mimsave(path, outputs, fps=fps)
+    else:
+        imageio.mimsave(path, outputs, duration=1000 * 1 / fps, loop=10)
