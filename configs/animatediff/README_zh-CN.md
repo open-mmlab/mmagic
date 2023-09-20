@@ -203,8 +203,6 @@ bash tools/dist_train.sh configs/animatediff/animatediff.py 4
 # 1 GPU
 python tools/train.py configs/animatediff/animatediff.py
 
-# Currently, it still can't achieve good quality from scratch. It will be fully supported later with WebVid dataset, video transform and detailed training config etc...
-# Pretrained models are released on https://openxlab.org.cn/models/detail/ElliotQi/AnimateDiff
 ```
 
 ## 引用

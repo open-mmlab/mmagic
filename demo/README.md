@@ -44,6 +44,10 @@ Table of contents:
 
 &#8195;      [3.1.2. ViCo](#312-vico)
 
+&#8195;      [3.1.3. FastComposer](#313-fastcomposer)
+
+&#8195;      [3.1.4. AnimateDiff](#314-animatediff)
+
 ## 1. Download sample images or videos
 
 We prepared some images and videos for you to run demo with. After MMagic is well installed, you could use demos in this folder to infer these data.
