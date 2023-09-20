@@ -1,0 +1,73 @@
+Collections:
+- Name: AnimateDiff
+  Paper:
+    Title: 'AnimateDiff: Animate Your Personalized Text-to-Image Diffusion Models
+      without Specific Tuning'
+    URL: https://arxiv.org/abs/2307.04725
+  README: configs/animatediff/README.md
+  Task:
+  - text2video
+  Year: 2023
+Models:
+- Config: configs/animatediff/animatediff_ToonYou.py
+  In Collection: AnimateDiff
+  Name: animatediff_ToonYou
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://civitai.com/api/download/models/78775
+- Config: configs/animatediff/animatediff_Lyriel.py
+  In Collection: AnimateDiff
+  Name: animatediff_Lyriel
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://civitai.com/api/download/models/72396
+- Config: configs/animatediff/animatediff_RcnzCartoon.py
+  In Collection: AnimateDiff
+  Name: animatediff_RcnzCartoon
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://civitai.com/api/download/models/71009
+- Config: configs/animatediff/animatediff_MajicMix.py
+  In Collection: AnimateDiff
+  Name: animatediff_MajicMix
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://civitai.com/api/download/models/79068
+- Config: configs/animatediff/animatediff_RealisticVision.py
+  In Collection: AnimateDiff
+  Name: animatediff_RealisticVision
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://civitai.com/api/download/models/29460
+- Config: configs/animatediff/animatediff_RealisticVision_v2.py
+  In Collection: AnimateDiff
+  Name: animatediff_RealisticVision_v2
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Video
+  - Dataset: WebVid
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_sd_v15_v2
+- Config: configs/animatediff/animatediff_RealisticVision_v1.py
+  In Collection: AnimateDiff
+  Name: animatediff_RealisticVision_v1
+  Results:
+  - Dataset: WebVid
+    Metrics: {}
+    Task: Text2Video
+  - Dataset: WebVid
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_fromscratch_10Mval
