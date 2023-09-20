@@ -65,8 +65,7 @@ class AnimateController:
         self.lora_model_state_dict = {}
 
     def refresh_stable_diffusion(self):
-        self.stable_diffusion_list = glob(
-            os.path.join(self.stable_diffusion_dir, '*/'))
+        self.stable_diffusion_list = ['runwayml/stable-diffusion-v1-5']
 
     def refresh_motion_module(self):
         motion_module_list = glob(
