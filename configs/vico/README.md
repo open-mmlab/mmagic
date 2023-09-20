@@ -26,7 +26,7 @@ Personalized text-to-image generation using diffusion models has recently been p
 
 ## Quick Start
 
-1. Download [data](https://drive.google.com/drive/folders/1m8TCsY-C1tIOflHtWnFzTbw2C6dq67mC) and [templates](https://drive.google.com/drive/folders/1SpByLKECISmj5fhkaicT4yrsyqqpWL_T)
+1. Download concept data and imagenet_templates_small.txt from [here](https://openxlab.org.cn/datasets/ferry/ViCo/tree/main).
    and save to `data/vico/`
 
 The file structure will be like this:
@@ -72,7 +72,7 @@ bash tools/dist_train.sh configs/vico/vico.py 4
 python tools/train.py configs/vico/vico.py
 ```
 
-4. Use the [pretrained checkpoins](https://drive.google.com/drive/folders/1GQGVzzOP2IgEfsQ-6ii6o2DqElnFThHM) to inference
+4. Use the [pretrained checkpoins](https://openxlab.org.cn/models/detail/ferry/ViCo) to inference
 
 ```python
 import torch
