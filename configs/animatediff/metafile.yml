@@ -56,4 +56,15 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Video
-  Weights: https://huggingface.co/guoyww/animatediff/resolve/main/mm_sd_v15_v2.ckpt
+  - Dataset: WebVid
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_sd_v15_v2
+- Config: configs/animatediff/animatediff_RealisticVision_v1.py
+  In Collection: AnimateDiff
+  Name: animatediff_RealisticVision_v1
+  Results:
+  - Dataset: WebVid
+    Metrics: {}
+    Task: Text2Video
+  Weights: https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_fromscratch_2.5Mval
