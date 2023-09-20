@@ -92,3 +92,10 @@ def test_basicvsr_plusplus_cuda():
         input_tensor = torch.rand(1, 5, 3, 256, 256).cuda()
         output = model(input_tensor)
         assert output.shape == (1, 5, 3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

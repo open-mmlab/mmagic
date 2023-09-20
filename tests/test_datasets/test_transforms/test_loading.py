@@ -296,3 +296,10 @@ class TestInpaintLoading:
         with pytest.raises(NotImplementedError):
             loader = LoadMask('xxxx', mask_config)
             results = loader(results)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

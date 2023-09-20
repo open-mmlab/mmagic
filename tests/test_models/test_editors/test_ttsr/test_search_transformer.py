@@ -22,3 +22,10 @@ def test_search_transformer():
     assert t_level3.shape == (2, 32, 32, 32)
     assert t_level2.shape == (2, 16, 64, 64)
     assert t_level1.shape == (2, 8, 128, 128)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

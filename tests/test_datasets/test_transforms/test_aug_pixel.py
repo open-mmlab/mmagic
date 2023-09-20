@@ -264,3 +264,10 @@ class TestAugmentations:
         with pytest.raises(ValueError):
             unsharp_masking = UnsharpMasking(
                 kernel_size=10, sigma=0, weight=0.5, threshold=10, keys=['gt'])
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

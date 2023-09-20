@@ -392,3 +392,10 @@ def test_irregular_mask():
 
     mask = get_irregular_mask(img_shape, num_vertices=10)
     assert mask.shape == (256, 256, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -16,3 +16,10 @@ def test_tdan_net():
         assert len(output) == 2  # (1) HR center + (2) aligned LRs
         assert output[0].shape == (1, 3, 256, 256)  # HR center frame
         assert output[1].shape == (1, 5, 3, 64, 64)  # aligned LRs
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

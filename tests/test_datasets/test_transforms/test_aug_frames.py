@@ -94,3 +94,10 @@ class TestAugmentations:
         np.testing.assert_almost_equal(results['lq'][0], img_lq1)
         np.testing.assert_almost_equal(results['lq'][1], img_lq2)
         np.testing.assert_almost_equal(results['gt'][0], img_gt)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

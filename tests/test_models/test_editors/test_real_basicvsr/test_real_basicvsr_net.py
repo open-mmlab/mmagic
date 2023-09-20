@@ -49,3 +49,10 @@ def test_real_basicvsr_net():
         output, lq = real_basicvsr(input_tensor, return_lqs=True)
         assert output.shape == (1, 5, 3, 256, 256)
         assert lq.shape == (1, 5, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

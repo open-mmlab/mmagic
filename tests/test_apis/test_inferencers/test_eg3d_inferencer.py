@@ -157,3 +157,10 @@ def test_eg3d_inferencer():
             interpolation='camera',
             num_images=2,
             result_out_dir=result_out_dir)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

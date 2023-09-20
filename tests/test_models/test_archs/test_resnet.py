@@ -16,3 +16,10 @@ def test_resnet():
     input = torch.rand((2, 3, 128, 128))
     output = resnet(input)
     assert output[0].detach().numpy().shape == (2, 3, 128, 128)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -17,10 +17,17 @@ from mmagic.models.losses import CLIPLoss
     digit_version(TORCH_VERSION) <= digit_version('1.6.0'),
     reason='version limitation')
 def test_clip_loss():
-    clip_loss = CLIPLoss(clip_model=dict(in_size=32))
+    clip_loss = CLIPLoss(clip_model=dict(in_size=32, clip_type='RN50'))
 
     image = torch.randn(1, 3, 32, 32)
     text = 'Image for test'
     text_inputs = torch.cat([clip.tokenize(text)])
     loss = clip_loss(image, text_inputs)
     print(loss)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

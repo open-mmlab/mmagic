@@ -59,3 +59,10 @@ class TestUnpairedImageDataset(object):
         assert img.ndim == 3
         img = dataset[0]['inputs']['img_b']
         assert img.ndim == 3
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

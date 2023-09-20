@@ -74,3 +74,10 @@ def test_aot_inpaintor():
     assert 'fake_img' in prediction
     assert 'pred_img' in prediction
     assert prediction.pred_img.shape == (1, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

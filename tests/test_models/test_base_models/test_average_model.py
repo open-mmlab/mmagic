@@ -217,3 +217,10 @@ class TestRamUpEMA(TestCase):
             missing_keys=[],
             unexpected_keys=[],
             error_msgs=[])
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

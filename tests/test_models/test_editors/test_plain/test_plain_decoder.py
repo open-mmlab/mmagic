@@ -57,3 +57,10 @@ def test_plain_decoder():
             outputs = encoder(img)
             prediction = model(outputs)
             assert_tensor_with_shape(prediction, torch.Size([1, 1, 64, 64]))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

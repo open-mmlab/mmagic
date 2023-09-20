@@ -59,3 +59,10 @@ def test_patch_discriminator():
     bad_cfg['norm_cfg'] = dict(tp='BN')
     with pytest.raises(AssertionError):
         _ = MODELS.build(bad_cfg)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

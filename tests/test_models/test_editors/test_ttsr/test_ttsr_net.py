@@ -72,3 +72,10 @@ def test_ttsr_net():
     outputs = ttsr(inputs, soft_attention, (t_level3, t_level2, t_level1))
 
     assert outputs.shape == (2, 3, 96, 96)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -56,3 +56,10 @@ class TestLSGANGenerator(object):
         assert isinstance(g, LSGANGenerator)
         x = g(None, num_batches=3)
         assert x.shape == (3, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

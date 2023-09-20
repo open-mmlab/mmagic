@@ -64,3 +64,10 @@ def test_vgg_feat_cache_name_args():
     # check whether cache name are same with the same inputs
     assert cache_tag_1 == cache_tag_2
     assert args_1 == args_2
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

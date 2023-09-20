@@ -123,3 +123,10 @@ class TestSuperResolutionModule(TestCase):
         features = torch.randn(2, 8, 3, 3)
         sr_imgs = sr_model(imgs, features, styles)
         self.assertEqual(sr_imgs.shape, (2, 3, 8, 8))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

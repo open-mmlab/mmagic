@@ -131,3 +131,10 @@ class TestPGGANFetchDataHook(TestCase):
         runner.train_loop.dataloader = dataloader
         model._next_scale_int = 4
         self.assertRaises(ValueError, hooks.before_train_iter, runner, 0, None)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

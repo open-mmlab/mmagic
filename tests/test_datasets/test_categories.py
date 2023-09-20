@@ -8,3 +8,10 @@ def test_cifar10_categories():
 
 def test_imagenet_categories():
     assert len(IMAGENET_CATEGORIES) == 1000
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
