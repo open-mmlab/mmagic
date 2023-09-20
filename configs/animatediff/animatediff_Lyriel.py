@@ -1,6 +1,6 @@
 # config for model
 stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
-models_path = '/home/wangrunqi/glcc/AnimateDiff/models/'
+models_path = '/home/AnimateDiff/models/'
 randomness = dict(
     seed=[
         10917152860782582783, 6399018107401806238, 15875751942533906793,

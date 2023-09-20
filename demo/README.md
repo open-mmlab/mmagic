@@ -411,7 +411,7 @@ wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --
 
 ```python
 
-models_path = '/home/wangrunqi/glcc/AnimateDiff/models/'
+models_path = '/home/AnimateDiff/models/'
 ```
 
 3. Then, try on the script:
