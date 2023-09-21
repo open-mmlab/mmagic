@@ -153,3 +153,4 @@ batchscript-*
 *.zip
 work_dir
 work_dir/
+!tests/data/sd/*

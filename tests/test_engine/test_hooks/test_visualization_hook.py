@@ -617,6 +617,23 @@ class TestVisualizationHook(TestCase):
         hook.after_test_iter(runner, 0, [], outputs)
         assert mock_visualuzer.add_datasample.call_count == 3
 
+    def test_after_train_epoch(self):
+        model = MagicMock()
+        hook = VisualizationHook(
+            interval=1,
+            n_samples=2,
+            vis_kwargs_list=dict(type='GAN'),
+            by_epoch=True)
+        mock_visualuzer = MagicMock()
+        mock_visualuzer.add_datasample = MagicMock()
+        hook._visualizer = mock_visualuzer
+
+        runner = MagicMock()
+        runner.model = model
+
+        hook.after_train_epoch(runner)
+        mock_visualuzer.assert_not_called()
+
 
 def teardown_module():
     import gc

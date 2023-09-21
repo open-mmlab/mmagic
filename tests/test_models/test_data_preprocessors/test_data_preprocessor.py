@@ -476,6 +476,7 @@ class TestBaseDataPreprocessor(TestCase):
             img_A=[torch.randint(0, 255, (3, 5, 5)) for _ in range(3)],
             img_B=[torch.randint(0, 255, (3, 5, 5)) for _ in range(3)],
             noise=[torch.randn(16) for _ in range(3)],
+            time_ids=[torch.randn(6) for _ in range(3)],
             num_batches=3,
             tensor=torch.randint(0, 255, (3, 4, 5, 5)),
             mode=['ema', 'ema', 'ema'],
@@ -490,6 +491,7 @@ class TestBaseDataPreprocessor(TestCase):
         target_B = (torch.stack(inputs['img_B']) - 127.5) / 127.5
         target_B = target_B[:, [2, 1, 0]]
         target_noise = torch.stack(inputs['noise'])
+        target_time_ids = torch.stack(inputs['time_ids'])
         # no metainfo, parse as BGR, do conversion
         target_tensor = ((inputs['tensor'] - 127.5) / 127.5)[:, [2, 1, 0, 3]]
 
@@ -497,6 +499,7 @@ class TestBaseDataPreprocessor(TestCase):
         assert_allclose(outputs['img_A'], target_A)
         assert_allclose(outputs['img_B'], target_B)
         assert_allclose(outputs['noise'], target_noise)
+        assert_allclose(outputs['time_ids'], target_time_ids)
         assert_allclose(outputs['tensor'], target_tensor)
         self.assertEqual(outputs['mode'], 'ema')
         self.assertEqual(outputs['num_batches'], 3)
@@ -769,21 +772,35 @@ class TestBaseDataPreprocessor(TestCase):
         img2 = torch.randn(3, 4, 4)
         noise1 = torch.randn(3, 4, 4)
         noise2 = torch.randn(3, 4, 4)
+        time_ids1 = torch.randn(6)
+        time_ids2 = torch.randn(6)
         target_input1 = (img1[[2, 1, 0], ...].clone() - 127.5) / 127.5
         target_input2 = (img2[[2, 1, 0], ...].clone() - 127.5) / 127.5
 
         data = dict(inputs=[
-            dict(noise=noise1, img=img1, num_batches=2, mode='ema'),
-            dict(noise=noise2, img=img2, num_batches=2, mode='ema'),
+            dict(
+                noise=noise1,
+                img=img1,
+                num_batches=2,
+                mode='ema',
+                time_ids=time_ids1),
+            dict(
+                noise=noise2,
+                img=img2,
+                num_batches=2,
+                mode='ema',
+                time_ids=time_ids2),
         ])
         data_preprocessor = DataPreprocessor(output_channel_order='RGB')
         data = data_preprocessor(data)
 
         self.assertEqual(
             list(data['inputs'].keys()),
-            ['noise', 'img', 'num_batches', 'mode'])
+            ['noise', 'img', 'num_batches', 'mode', 'time_ids'])
         assert_allclose(data['inputs']['noise'][0], noise1)
         assert_allclose(data['inputs']['noise'][1], noise2)
+        assert_allclose(data['inputs']['time_ids'][0], time_ids1)
+        assert_allclose(data['inputs']['time_ids'][1], time_ids2)
         assert_allclose(data['inputs']['img'][0], target_input1)
         assert_allclose(data['inputs']['img'][1], target_input2)
         self.assertEqual(data['inputs']['num_batches'], 2)

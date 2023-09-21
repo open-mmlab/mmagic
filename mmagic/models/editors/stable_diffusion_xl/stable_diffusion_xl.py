@@ -72,6 +72,9 @@ class StableDiffusionXL(BaseModel):
         force_zeros_for_empty_prompt (bool): Whether the negative prompt
             embeddings shall be forced to always be set to 0.
             Defaults to True.
+        with_cp (bool): Whether or not to use gradient
+            checkpointing to save memory at the expense of slower backward
+            pass. Defaults to False.
         init_cfg (dict, optional): The weight initialized config for
             :class:`BaseModule`.
     """
@@ -95,6 +98,7 @@ class StableDiffusionXL(BaseModel):
                  val_prompts: Union[str, List[str]] = None,
                  finetune_text_encoder: bool = False,
                  force_zeros_for_empty_prompt: bool = True,
+                 with_cp: bool = False,
                  init_cfg: Optional[dict] = None):
 
         # TODO: support `from_pretrained` for this class
@@ -150,6 +154,7 @@ class StableDiffusionXL(BaseModel):
         self.val_prompts = val_prompts
         self.lora_config = deepcopy(lora_config)
         self.force_zeros_for_empty_prompt = force_zeros_for_empty_prompt
+        self.with_cp = with_cp
 
         self.prepare_model()
         self.set_lora()
@@ -165,6 +170,12 @@ class StableDiffusionXL(BaseModel):
 
         Move model to target dtype and disable gradient for some models.
         """
+        if self.with_cp:
+            self.unet.enable_gradient_checkpointing()
+            if self.finetune_text_encoder:
+                self.text_encoder_one.gradient_checkpointing_enable()
+                self.text_encoder_two.gradient_checkpointing_enable()
+
         self.vae.requires_grad_(False)
         print_log('Set VAE untrainable.', 'current')
         self.vae.to(self.dtype)
@@ -989,7 +1000,8 @@ class StableDiffusionXL(BaseModel):
         vae = self.vae.module if hasattr(self.vae, 'module') else self.vae
 
         with optim_wrapper.optim_context(self.unet):
-            image = inputs
+            image = inputs['img']
+            time_ids = inputs['time_ids']
             prompt = data_samples.prompt
             num_batches = image.shape[0]
 
@@ -1032,7 +1044,7 @@ class StableDiffusionXL(BaseModel):
              pooled_prompt_embeds) = self.encode_prompt_train(
                  input_ids_one, input_ids_two)
             unet_added_conditions = {
-                'time_ids': data['time_ids'],
+                'time_ids': time_ids,
                 'text_embeds': pooled_prompt_embeds
             }
 
