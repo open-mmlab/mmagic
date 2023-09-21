@@ -303,9 +303,9 @@ class StableDiffusion(BaseModel):
                 noise_pred = noise_pred_uncond + guidance_scale * (
                     noise_pred_text - noise_pred_uncond)
 
-                # compute the previous noisy sample x_t -> x_t-1
-                latents = self.test_scheduler.step(
-                    noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
+            # compute the previous noisy sample x_t -> x_t-1
+            latents = self.test_scheduler.step(
+                noise_pred, t, latents, **extra_step_kwargs)['prev_sample']
 
         # 8. Post-processing
         image = self.decode_latents(latents.to(img_dtype))

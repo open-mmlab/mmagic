@@ -26,7 +26,7 @@ Text-to-image models offer unprecedented freedom to guide creation through natur
 
 ## Quick Start
 
-1. Download [data](https://drive.google.com/drive/folders/1fmJMs25nxS_rSNqS5hTcRdLem_YQXbq5) and [template](https://drive.google.com/drive/folders/1SpByLKECISmj5fhkaicT4yrsyqqpWL_T?usp=drive_link)
+1. Download [data](https://drive.google.com/drive/folders/1fmJMs25nxS_rSNqS5hTcRdLem_YQXbq5) and [template](https://openxlab.org.cn/datasets/ferry/ViCo/tree/main)(two txt files)
    and save to `data`
 
 The file structure will be like this:
