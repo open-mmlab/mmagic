@@ -1,9 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import platform
+
+import pytest
 from mmengine.testing import RunnerTestCase
 
 from mmagic.datasets import HuggingFaceDataset
 
 
+@pytest.mark.skipif(
+    'win' in platform.system().lower(),
+    reason='skip on windows due to limited RAM.')
 class TestHFDataset(RunnerTestCase):
 
     def test_dataset_from_local(self):

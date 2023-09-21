@@ -22,6 +22,19 @@ from mmagic.registry import MODELS  # isort:skip  # noqa
 register_all_modules()
 
 
+class DummyModel(torch.nn.Module):
+
+    def __init__(self):
+        super().__init__()
+        self.conv1 = torch.nn.Conv2d(1, 1, 1)
+
+    def forward(self, x):
+        return self.conv1(x)
+
+    def val_step(self, *args, **kwargs):
+        return DataSample(fake_img=torch.randn(3, 6, 6), prompt='dummy')
+
+
 class TestBasicVisualizationHook(TestCase):
 
     def setUp(self) -> None:
@@ -621,18 +634,22 @@ class TestVisualizationHook(TestCase):
         model = MagicMock()
         hook = VisualizationHook(
             interval=1,
-            n_samples=2,
-            vis_kwargs_list=dict(type='GAN'),
-            by_epoch=True)
+            n_samples=1,
+            vis_kwargs_list=dict(type='Data', name='fake_img'),
+            by_epoch=True,
+            fixed_input=True)
+        hook.inputs_buffer = {'Data': ['dummy']}
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
         hook._visualizer = mock_visualuzer
 
         runner = MagicMock()
+        runner.train_dataloader.batch_size = 1
         runner.model = model
+        runner.epoch = 5
 
         hook.after_train_epoch(runner)
-        mock_visualuzer.assert_not_called()
+        self.assertEqual(mock_visualuzer.add_datasample.call_count, 1)
 
 
 def teardown_module():
