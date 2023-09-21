@@ -12,7 +12,7 @@ default_hooks = dict(
         interval=1,
         by_epoch=True,
         max_keep_ckpts=3,
-        save_optimizer=False))
+        save_optimizer=True))
 
 # config for environment
 env_cfg = dict(

@@ -22,19 +22,6 @@ from mmagic.registry import MODELS  # isort:skip  # noqa
 register_all_modules()
 
 
-class DummyModel(torch.nn.Module):
-
-    def __init__(self):
-        super().__init__()
-        self.conv1 = torch.nn.Conv2d(1, 1, 1)
-
-    def forward(self, x):
-        return self.conv1(x)
-
-    def val_step(self, *args, **kwargs):
-        return DataSample(fake_img=torch.randn(3, 6, 6), prompt='dummy')
-
-
 class TestBasicVisualizationHook(TestCase):
 
     def setUp(self) -> None:
