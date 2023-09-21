@@ -64,3 +64,10 @@ class TestDeblurGanv2Generator(object):
             num_filter_fpn=128).cuda()
         img = g(self.input_tensor)
         assert img.shape == (1, 3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -277,3 +277,10 @@ class TestTransFID:
         fid_res = fid.compute_metrics(fid.fake_results)
         assert fid_res['fid'] >= 0 and fid_res['mean'] >= 0 and fid_res[
             'cov'] >= 0
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

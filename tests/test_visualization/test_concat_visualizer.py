@@ -38,3 +38,10 @@ def test_concatimagevisualizer():
     for fn in 'rgb_1.png', 'bgr_2.png':
         img = mmcv.imread(f'work_dirs/vis_data/vis_image/{fn}')
         assert img.shape == (64, 16 * 3 * 2, 3)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

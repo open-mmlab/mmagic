@@ -75,3 +75,10 @@ class TestEG3DGenerator(TestCase):
             _, called_kwargs = render_mock.call_args
             self.assertIn('render_kwargs', called_kwargs)
             self.assertDictEqual(called_kwargs['render_kwargs'], render_kwargs)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

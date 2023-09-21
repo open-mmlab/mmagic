@@ -95,3 +95,10 @@ class TestDCGANGenerator(object):
             _ = g(None)
         results = g(self.noise, return_noise=True)
         assert results['noise_batch'].shape == (2, 100, 1, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

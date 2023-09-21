@@ -48,5 +48,8 @@ def test_ddim_step():
     assert result['prev_sample'].shape == (1, 4, 32, 32)
 
 
-if __name__ == '__main__':
-    test_ddim_step()
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -62,6 +62,8 @@ class TestDataSample(TestCase):
         img_path, gt_path, merged_path = 'aaa', 'bbb', 'ccc'
         gt_channel_order, gt_color_type = 'rgb', 'color'
         prompt = 'prompt'
+        latent = torch.randn(1, 16, 512)
+        feats = torch.randn(64, 256, 256)
 
         data = dict(
             gt=gt,
@@ -76,7 +78,9 @@ class TestDataSample(TestCase):
             merged_path=merged_path,
             gt_channel_order=gt_channel_order,
             gt_color_type=gt_color_type,
-            prompt=prompt)
+            prompt=prompt,
+            latent=latent,
+            feats=feats)
         data_sample = DataSample()
         data_sample.set_predefined_data(data)
 
@@ -94,6 +98,8 @@ class TestDataSample(TestCase):
         self._check_in_and_same(data_sample, 'gt_color_type', gt_color_type,
                                 True)
         self._check_in_and_same(data_sample, 'prompt', prompt, False)
+        self._check_in_and_same(data_sample, 'latent', latent)
+        self._check_in_and_same(data_sample, 'feats', feats)
         # check gt label
         data_sample.gt_label.data = gt_label
 
@@ -279,3 +285,10 @@ class TestDataSample(TestCase):
         empty_data = DataSample(
             img=torch.randn(3, 3), metainfo=dict(img_shape=[3, 3]))
         assert len(empty_data) == 1
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

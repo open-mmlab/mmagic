@@ -23,3 +23,10 @@ def test_Timesteps():
     timesteps = Timesteps(num_channels=9)
     emb = timesteps.forward(input)
     assert emb.shape == (1, 9)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

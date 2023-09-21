@@ -12,3 +12,10 @@ def test_deepfill_contextual_attention_module():
     res, offset = cmodule(x, x, mask)
     assert res.shape == (2, 128, 64, 64)
     assert offset.shape == (2, 32, 32, 32, 32)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

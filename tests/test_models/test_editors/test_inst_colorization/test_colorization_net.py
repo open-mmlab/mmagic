@@ -40,3 +40,10 @@ def test_colorization_net():
         assert isinstance(feature_map, dict)
         for item in feature_map.keys():
             assert torch.is_tensor(feature_map[item])
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

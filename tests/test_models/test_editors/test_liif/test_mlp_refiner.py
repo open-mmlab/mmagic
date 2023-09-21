@@ -9,3 +9,10 @@ def test_MLPRefiner():
     inputs = torch.randn(1, 8)
     outputs = model(inputs)
     assert outputs.shape == (1, 2)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

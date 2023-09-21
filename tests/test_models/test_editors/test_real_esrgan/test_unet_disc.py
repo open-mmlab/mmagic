@@ -23,3 +23,10 @@ def test_unet_disc_with_spectral_norm():
         img = img.cuda()
         output = disc(img)
         assert output.detach().cpu().numpy().shape == (1, 1, 16, 16)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

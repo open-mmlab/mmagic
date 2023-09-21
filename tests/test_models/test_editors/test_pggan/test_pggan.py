@@ -184,3 +184,10 @@ class TestPGGAN(TestCase):
                 assert np.isclose(pggan._actual_nkimgs[0], 0.006, atol=1e-8)
             elif iter_num == 5:
                 assert np.isclose(pggan._actual_nkimgs[-1], 0.012, atol=1e-8)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

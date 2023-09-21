@@ -125,3 +125,10 @@ class TestSinGAN:
 
             assert all([hasattr(out.orig, 'prev_res_list') for out in outputs])
             assert all([hasattr(out.ema, 'prev_res_list') for out in outputs])
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

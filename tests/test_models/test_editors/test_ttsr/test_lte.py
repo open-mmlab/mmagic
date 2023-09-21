@@ -20,3 +20,10 @@ def test_lte():
     assert x_level1.shape == (2, 64, 64, 64)
     assert x_level2.shape == (2, 128, 32, 32)
     assert x_level3.shape == (2, 256, 16, 16)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -233,3 +233,10 @@ class TestAugmentations:
         frame_index_generator = GenerateSegmentIndices(interval_list=[1])
         rlt = frame_index_generator(copy.deepcopy(results))
         assert len(rlt['img_path']) == 100
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

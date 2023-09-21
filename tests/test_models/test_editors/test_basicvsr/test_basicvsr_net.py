@@ -27,3 +27,10 @@ def test_basicvsr_net():
         input_tensor = torch.rand(1, 5, 3, 16, 16).cuda()
         output = basicvsr(input_tensor)
         assert output.shape == (1, 5, 3, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

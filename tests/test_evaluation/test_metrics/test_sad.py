@@ -104,3 +104,10 @@ class TestMattingMetrics:
 
         assert list(res.keys()) == ['SAD']
         np.testing.assert_almost_equal(res['SAD'], 0.768)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

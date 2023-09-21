@@ -26,3 +26,10 @@ def test_translation_inferencer():
         img=data_path, result_out_dir=result_out_dir)
     result_img = inference_result[1]
     assert result_img[0].cpu().numpy().shape == (3, 256, 256)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

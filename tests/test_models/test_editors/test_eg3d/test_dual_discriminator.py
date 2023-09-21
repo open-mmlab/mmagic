@@ -84,3 +84,10 @@ class TestEG3DDiscriminator(TestCase):
         disc = DualDiscriminator(**cfg)
         out = disc(img, img_raw, None)
         self.assertEqual(out.shape, (2, 1))
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
