@@ -16,6 +16,7 @@ from mmagic.models.data_preprocessors.data_preprocessor import DataPreprocessor
 from mmagic.models.editors.disco_diffusion.clip_wrapper import ClipWrapper
 from mmagic.models.editors.dreambooth import DreamBooth
 
+# config for model
 stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
 
 val_prompts = [
@@ -41,6 +42,7 @@ model = dict(
         pretrained_model_name_or_path=stable_diffusion_v15_url,
         subfolder='text_encoder'),
     tokenizer=stable_diffusion_v15_url,
+    finetune_text_encoder=True,
     scheduler=dict(
         type='DDPMScheduler',
         from_pretrained=stable_diffusion_v15_url,

@@ -23,6 +23,7 @@ val_prompts = [
     'a sks dog beside a swimming pool', 'a sks dog on the desk',
     'a sleeping sks dog', 'a screaming sks dog', 'a man in the garden'
 ]
+lora_config = dict(target_modules=['to_q', 'to_k', 'to_v'])
 
 model = dict(
     type=DreamBooth,
@@ -50,25 +51,28 @@ model = dict(
         from_pretrained=stable_diffusion_v15_url,
         subfolder='scheduler'),
     data_preprocessor=dict(type=DataPreprocessor),
-    val_prompts=val_prompts)
+    prior_loss_weight=0,
+    val_prompts=val_prompts,
+    lora_config=lora_config)
 
 train_cfg = dict(max_iters=1000)
 
-optim_wrapper.update(
-    modules='.*unet',
-    optimizer=dict(type=AdamW, lr=5e-6),
-    accumulative_counts=4  # batch size = 4 * 1 = 4
-)
+optim_wrapper = dict(
+    # Only optimize LoRA mappings
+    modules='.*.lora_mapping',
+    # NOTE: lr should be larger than dreambooth finetuning
+    optimizer=dict(type=AdamW, lr=5e-4),
+    accumulative_counts=1)
 
 pipeline = [
     dict(type=LoadImageFromFile, key='img', channel_order='rgb'),
     dict(type=Resize, scale=(512, 512)),
     dict(type=PackInputs)
 ]
-
 dataset = dict(
     type=DreamBoothDataset,
     data_root='./data/dreambooth',
+    # TODO: rename to instance
     concept_dir='imgs',
     prompt='a photo of sks dog',
     pipeline=pipeline)
