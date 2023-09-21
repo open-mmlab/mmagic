@@ -57,6 +57,7 @@ from .singan import SinGAN
 from .srcnn import SRCNNNet
 from .srgan import SRGAN, ModifiedVGG, MSRResNet
 from .stable_diffusion import StableDiffusion, StableDiffusionInpaint
+from .stable_diffusion_xl import StableDiffusionXL
 from .stylegan1 import StyleGAN1
 from .stylegan2 import StyleGAN2
 from .stylegan3 import StyleGAN3, StyleGAN3Generator
@@ -97,5 +98,5 @@ __all__ = [
     'ControlStableDiffusion', 'DreamBooth', 'TextualInversion', 'DeblurGanV2',
     'DeblurGanV2Generator', 'DeblurGanV2Discriminator',
     'StableDiffusionInpaint', 'ViCo', 'FastComposer', 'AnimateDiff',
-    'UNet3DConditionMotionModel'
+    'UNet3DConditionMotionModel', 'StableDiffusionXL'
 ]
