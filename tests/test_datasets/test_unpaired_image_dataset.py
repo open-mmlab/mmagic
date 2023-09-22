@@ -1,6 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os.path as osp
 
+from mmengine.registry import init_default_scope
+
 from mmagic.datasets import UnpairedImageDataset
 from mmagic.utils import register_all_modules
 
@@ -11,6 +13,7 @@ class TestUnpairedImageDataset(object):
 
     @classmethod
     def setup_class(cls):
+        init_default_scope('mmagic')
         cls.imgs_root = osp.join(
             osp.dirname(osp.dirname(__file__)), 'data/unpaired')
         cls.default_pipeline = [
