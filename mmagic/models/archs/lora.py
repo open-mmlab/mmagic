@@ -219,7 +219,7 @@ class LoRAWrapper(nn.Module):
                 mapping_out = self.scale * self.lora_mapping(x)
         return mapping_out
 
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x: Tensor, **kwargs) -> Tensor:
         """Forward and add LoRA mapping.
 
         Args:

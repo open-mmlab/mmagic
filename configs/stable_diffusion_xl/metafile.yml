@@ -24,3 +24,11 @@ Models:
     Metrics: {}
     Task: Text2Image
   Weights: <>
+- Config: configs/stable_diffusion_xl/stable-diffusion_xl_lora_pokemon_blip.py
+  In Collection: Stable Diffusion XL
+  Name: stable-diffusion_xl_lora_pokemon_blip
+  Results:
+  - Dataset: '[pokemon-blip-caption](https://huggingface.co/datasets/lambdalabs/pokemon-blip-captions)'
+    Metrics: {}
+    Task: Text2Image
+  Weights: <>
