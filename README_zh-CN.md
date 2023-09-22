@@ -58,13 +58,13 @@
 
 ## 🚀 最新进展 <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### 最新的 [**MMagic v1.0.2**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.2) 版本已经在 \[24/08/2023\] 发布:
+### 最新的 [**MMagic v1.1.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.1.0) 版本已经在 \[22/09/2023\] 发布:
 
-- 支持了 Prompt-to-prompt, DDIM Inversion 和 Null-text Inversion. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/projects/prompt_to_prompt/README.md)
-- 支持了 Textual Inversion. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/textual_inversion/README.md)
-- 支持了 Attention Injection 以便使用 controlnet 生成更稳定的视频. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/controlnet_animation/README.md)
-- 支持了 Stable Diffusion Inpainting. [点击查看.](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion/README.md)
-- 更详尽的文档. [点击查看.](https://mmagic.readthedocs.io/zh_CN/latest/)
+- 支持ViCo，一种新的个性化方法，用于SD（Style Disentanglement）。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/vico/README.md)
+- 支持AnimateDiff，一种流行的文本转动画方法。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/animatediff/README.md)
+- 支持SDXL（Stable Diffusion XL）方法。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion_xl/README.md)
+- 支持DragGAN方法的实现，使用MMagic。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/draggan/README.md)
+- 支持FastComposer, 一种新的多主体文本生成图像方法。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/fastcomposer/README.md)
 
 我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
 
@@ -160,9 +160,11 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 越来越多社区贡献者的加入使我们的算法库日益发展。最近由社区贡献的项目包括：
 
-- [GLIDE](projects/glide/configs/README.md) 来自 @Taited.
-- [Restormer](configs/restormer/README.md) 来自 @AlexZou14.
-- [SwinIR](configs/swinir/README.md) 来自 @Zdafeng.
+- [SDXL](configs/stable_diffusion_xl/README.md) 来自 @okotaku.
+- [AnimateDiff](configs/animatediff/README.md) 来自 @ElliotQi.
+- [ViCo](configs/vico/README.md) 来自 @FerryHuang.
+- [DragGan](configs/draggan/README.md) 来自 @qsun1.
+- [FastComposer](configs/fastcomposer/README.md) 来自 @xiaomile.
 
 为使向 MMagic 中添加项目更加容易，我们开启了 [Projects](projects/README.md) 。
 
@@ -264,6 +266,7 @@ pip3 install -e .
           <li><a href="configs/styleganv1/README.md">StyleGANV1 (CVPR'2019)</a></li>
           <li><a href="configs/styleganv2/README.md">StyleGANV2 (CVPR'2019)</a></li>
           <li><a href="configs/styleganv3/README.md">StyleGANV3 (NeurIPS'2021)</a></li>
+          <li><a href="configs/draggan/README.md">DragGan (2023)</a></li>
         </ul>
       </td>
       <td>
@@ -349,7 +352,7 @@ pip3 install -e .
         <b>Matting</b>
       </td>
       <td>
-        <b>Text-to-Image</b>
+        <b>Text-to-Image(Video)</b>
       </td>
       <td>
         <b>3D-aware Generation</b>
@@ -384,7 +387,10 @@ pip3 install -e .
           <li><a href="projects/prompt_to_prompt/README.md">Prompt-to-Prompt (2022)</a></li>
           <li><a href="projects/prompt_to_prompt/README.md">Null-text Inversion (2022)</a></li>
           <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
-          <li><a href="configs/controlnet_animation/README.md">ControlNet Animation (2023)</a></li>
+          <li><a href="configs/stable_diffusion_xl/README.md">Stable Diffusion XL (2023)</a></li>
+          <li><a href="configs/animatediff/README.md">AnimateDiff (2023)</a></li>
+          <li><a href="configs/vico/README.md">ViCo (2023)</a></li>
+          <li><a href="configs/fastcomposer/README.md">FastComposer (2023)</a></li>
         </ul>
       </td>
       <td>

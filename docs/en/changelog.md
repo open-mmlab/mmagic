@@ -1,5 +1,85 @@
 # Changelog
 
+## v1.1.0 (22/09/2023)
+
+**Highlights**
+
+In this new version of MMagic, we have added support for the following five new algorithms.
+
+- Support ViCo, a new SD personalization method. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/vico/README.md)
+
+<table align="center">
+<thead>
+  <tr>
+    <td>
+<div align="center">
+  <img src="https://github.com/open-mmlab/mmagic/assets/71176040/58a6953c-053a-40ea-8826-eee428c992b5" width="800"/>
+  <br/>
+</thead>
+</table>
+
+- Support AnimateDiff, a popular text2animation method. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/animatediff/README.md)
+
+![512](https://github.com/ElliotQi/mmagic/assets/46469021/54d92aca-dfa9-4eeb-ba38-3f6c981e5399)
+
+- Support SDXL. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion_xl/README.md)
+
+<div align=center>
+<img src="https://github.com/okotaku/diffengine/assets/24734142/27d4ebad-5705-4500-826f-41f425a08c0d"/>
+</div>
+
+- Support DragGAN implementation with MMagic. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/draggan/README.md)
+
+<div align=center>
+<img src="https://github.com/open-mmlab/mmagic/assets/55343765/7c397bd0-fa07-48fe-8a7c-a4022907404b"/>
+</div>
+
+- Support for FastComposer. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/fastcomposer/README.md)
+
+<div align=center>
+<img src="https://user-images.githubusercontent.com/14927720/265914135-8a25789c-8d30-40cb-8ac5-e3bd3b617aac.png">
+</div>
+
+**New Features & Improvements**
+
+- \[Feature\] Support inference with diffusers pipeline, sd_xl first. by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2023
+- \[Enhance\] add negative prompt for sd inferencer by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2021
+- \[Enhance\] Update flake8 checking config in setup.cfg by @LeoXing1996 in https://github.com/open-mmlab/mmagic/pull/2007
+- \[Enhance\] Add ‘config_name' as a supplement to the 'model_setting' by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2027
+- \[Enhance\] faster test by @okotaku in https://github.com/open-mmlab/mmagic/pull/2034
+- \[Enhance\] Add OpenXLab Badge by @ZhaoQiiii in https://github.com/open-mmlab/mmagic/pull/2037
+
+**CodeCamp Contributions**
+
+- \[CodeCamp2023-643\] Add new configs of BigGAN by @limafang in https://github.com/open-mmlab/mmagic/pull/2003
+- \[CodeCamp2023-648\] MMagic new config GuidedDiffusion by @ooooo-create in https://github.com/open-mmlab/mmagic/pull/2005
+- \[CodeCamp2023-649\] MMagic new config Instance Colorization by @ooooo-create in https://github.com/open-mmlab/mmagic/pull/2010
+- \[CodeCamp2023-652\] MMagic new config StyleGAN3 by @hhy150 in https://github.com/open-mmlab/mmagic/pull/2018
+- \[CodeCamp2023-653\] Add new configs of Real BasicVSR by @RangeKing in https://github.com/open-mmlab/mmagic/pull/2030
+
+**Bug Fixes**
+
+- \[Fix\] Fix best practice and back to contents on mainpage, add new models to model zoo by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2001
+- \[Fix\] Check CI error and remove main stream gpu test by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2013
+- \[Fix\] Check circle ci memory by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2016
+- \[Fix\] remove code and fix clip loss ut test by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2017
+- \[Fix\] mock infer in diffusers pipeline inferencer ut. by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2026
+- \[Fix\] Fix bug caused by merging draggan by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2029
+- \[Fix\] Update QRcode by @crazysteeaam in https://github.com/open-mmlab/mmagic/pull/2009
+- \[Fix\] Replace the download links in README with OpenXLab version by @FerryHuang in https://github.com/open-mmlab/mmagic/pull/2038
+- \[Fix\] Increase docstring coverage by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2039
+
+**New Contributors**
+
+- @limafang made their first contribution in https://github.com/open-mmlab/mmagic/pull/2003
+- @ooooo-create made their first contribution in https://github.com/open-mmlab/mmagic/pull/2005
+- @hhy150 made their first contribution in https://github.com/open-mmlab/mmagic/pull/2018
+- @ZhaoQiiii made their first contribution in https://github.com/open-mmlab/mmagic/pull/2037
+- @ElliotQi made their first contribution in https://github.com/open-mmlab/mmagic/pull/1980
+- @Beaconsyh08 made their first contribution in https://github.com/open-mmlab/mmagic/pull/2012
+
+**Full Changelog**: https://github.com/open-mmlab/mmagic/compare/v1.0.2...v1.0.3
+
 ## v1.0.2 (24/08/2023)
 
 **Highlights**
