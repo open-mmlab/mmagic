@@ -44,7 +44,7 @@ class DreamBooth(StableDiffusion):
             Defaults to 3.
         prior_loss_weight (float, optional): The weight for class prior loss.
             Defaults to 0.
-        fine_tune_text_encoder (bool, optional): Whether to fine-tune text
+        finetune_text_encoder (bool, optional): Whether to fine-tune text
             encoder. Defaults to False.
         dtype (str, optional): The dtype for the model. Defaults to 'fp16'.
         enable_xformers (bool, optional): Whether to use xformers.

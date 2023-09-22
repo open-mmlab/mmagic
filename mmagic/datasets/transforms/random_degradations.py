@@ -138,6 +138,7 @@ class RandomBlur:
         return imgs
 
     def __call__(self, results):
+        """Call this transform."""
         if np.random.uniform() > self.params.get('prob', 1):
             return results
 
@@ -147,6 +148,7 @@ class RandomBlur:
         return results
 
     def __repr__(self):
+        """Print the basic information of the transform."""
         repr_str = self.__class__.__name__
         repr_str += (f'(params={self.params}, keys={self.keys})')
         return repr_str
@@ -208,6 +210,7 @@ class RandomJPEGCompression:
         return outputs
 
     def __call__(self, results):
+        """Call this transform."""
         if np.random.uniform() > self.params.get('prob', 1):
             return results
 
@@ -217,6 +220,7 @@ class RandomJPEGCompression:
         return results
 
     def __repr__(self):
+        """Print the basic information of the transform."""
         repr_str = self.__class__.__name__
         repr_str += (f'(params={self.params}, keys={self.keys})')
         return repr_str
@@ -329,6 +333,7 @@ class RandomNoise:
         return imgs
 
     def __call__(self, results):
+        """Call this transform."""
         if np.random.uniform() > self.params.get('prob', 1):
             return results
 
@@ -338,6 +343,7 @@ class RandomNoise:
         return results
 
     def __repr__(self):
+        """Print the basic information of the transform."""
         repr_str = self.__class__.__name__
         repr_str += (f'(params={self.params}, keys={self.keys})')
         return repr_str
@@ -443,6 +449,7 @@ class RandomResize:
         return outputs
 
     def __call__(self, results):
+        """Call this transform."""
         if np.random.uniform() > self.params.get('prob', 1):
             return results
 
@@ -452,6 +459,7 @@ class RandomResize:
         return results
 
     def __repr__(self):
+        """Print the basic information of the transform."""
         repr_str = self.__class__.__name__
         repr_str += (f'(params={self.params}, keys={self.keys})')
         return repr_str
@@ -519,6 +527,7 @@ class RandomVideoCompression:
         return outputs
 
     def __call__(self, results):
+        """Call this transform."""
         if np.random.uniform() > self.params.get('prob', 1):
             return results
 
@@ -528,6 +537,7 @@ class RandomVideoCompression:
         return results
 
     def __repr__(self):
+        """Print the basic information of the transform."""
         repr_str = self.__class__.__name__
         repr_str += (f'(params={self.params}, keys={self.keys})')
         return repr_str
@@ -593,6 +603,7 @@ class DegradationsWithShuffle:
         return degradations
 
     def __call__(self, results):
+        """Call this transform."""
         # shuffle degradations
         if len(self.shuffle_idx) > 0:
             shuffle_list = [self.degradations[i] for i in self.shuffle_idx]
@@ -611,6 +622,7 @@ class DegradationsWithShuffle:
         return results
 
     def __repr__(self):
+        """Print the basic information of the transform."""
         repr_str = self.__class__.__name__
         repr_str += (f'(degradations={self.degradations}, '
                      f'keys={self.keys}, '
