@@ -64,7 +64,7 @@
 - 支持AnimateDiff，一种流行的文本转动画方法。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/animatediff/README.md)
 - 支持SDXL（Stable Diffusion XL）方法。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion_xl/README.md)
 - 支持DragGAN方法的实现，使用MMagic。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/draggan/README.md)
-- 支持FastComposer。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/fastcomposer/README.md)
+- 支持FastComposer, 一种新的多主体文本生成图像方法。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/fastcomposer/README.md)
 
 我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
 
