@@ -7,6 +7,7 @@ import mmcv
 import numpy as np
 import torch
 from mmengine import MessageHub
+from mmengine.registry import init_default_scope
 from mmengine.testing import assert_allclose
 from mmengine.visualization import Visualizer
 from torch.utils.data.dataset import Dataset
@@ -25,6 +26,7 @@ register_all_modules()
 class TestBasicVisualizationHook(TestCase):
 
     def setUp(self) -> None:
+        init_default_scope('mmagic')
         input = torch.rand(2, 3, 32, 32)
         data_sample = DataSample(
             path_rgb='rgb.png',
@@ -89,6 +91,7 @@ class TestVisualizationHook(TestCase):
     MessageHub.get_instance('test-gen-visualizer')
 
     def test_init(self):
+        init_default_scope('mmagic')
         hook = VisualizationHook(
             interval=10, vis_kwargs_list=dict(type='Noise'))
         self.assertEqual(hook.interval, 10)
