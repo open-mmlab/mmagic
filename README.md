@@ -58,7 +58,7 @@ English | [简体中文](README_zh-CN.md)
 
 ## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### New release [**MMagic v1.0.3**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.3) \[21/09/2023\]:
+### New release [**MMagic v1.1.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.1.0) \[22/09/2023\]:
 
 - Support ViCo, a new SD personalization method. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/vico/README.md)
 - Support AnimateDiff, a popular text2animation method. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/animatediff/README.md)

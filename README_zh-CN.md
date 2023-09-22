@@ -58,7 +58,7 @@
 
 ## 🚀 最新进展 <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### 最新的 [**MMagic v1.0.3**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.3) 版本已经在 \[21/09/2023\] 发布:
+### 最新的 [**MMagic v1.1.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.1.0) 版本已经在 \[22/09/2023\] 发布:
 
 - 支持ViCo，一种新的个性化方法，用于SD（Style Disentanglement）。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/vico/README.md)
 - 支持AnimateDiff，一种流行的文本转动画方法。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/animatediff/README.md)
