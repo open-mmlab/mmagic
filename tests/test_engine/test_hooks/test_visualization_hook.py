@@ -126,6 +126,7 @@ class TestVisualizationHook(TestCase):
             interval=10, vis_kwargs_list=dict(type='GAN'), n_samples=9)
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
+        mock_visualuzer.get_current_instance = MagicMock()
         hook._visualizer = mock_visualuzer
 
         # build a empty data sample
@@ -221,6 +222,7 @@ class TestVisualizationHook(TestCase):
             n_samples=9)
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
+        mock_visualuzer.get_current_instance = MagicMock()
         hook._visualizer = mock_visualuzer
 
         # build a empty data sample
@@ -348,6 +350,7 @@ class TestVisualizationHook(TestCase):
             interval=10, n_samples=2, vis_kwargs_list=dict(type='GAN'))
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
+        mock_visualuzer.get_current_instance = MagicMock()
         hook._visualizer = mock_visualuzer
 
         runner = MagicMock()
@@ -373,6 +376,7 @@ class TestVisualizationHook(TestCase):
             interval=2, vis_kwargs_list=dict(type='GAN'), n_samples=9)
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
+        mock_visualuzer.get_current_instance = MagicMock()
         hook._visualizer = mock_visualuzer
 
         # build a empty data sample
@@ -503,6 +507,7 @@ class TestVisualizationHook(TestCase):
             interval=2, vis_kwargs_list=dict(type='GAN'), n_samples=3, n_row=8)
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
+        mock_visualuzer.get_current_instance = MagicMock()
         hook._visualizer = mock_visualuzer
 
         # build a empty data sample
@@ -526,6 +531,7 @@ class TestVisualizationHook(TestCase):
             vis_kwargs_list=dict(type='GAN'))
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
+        mock_visualuzer.get_current_instance = MagicMock()
         hook._visualizer = mock_visualuzer
 
         runner = MagicMock()
@@ -605,6 +611,7 @@ class TestVisualizationHook(TestCase):
 
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
+        mock_visualuzer.get_current_instance = MagicMock()
         hook._visualizer = mock_visualuzer
 
         runner = MagicMock()
@@ -631,6 +638,7 @@ class TestVisualizationHook(TestCase):
         hook.inputs_buffer = {'Data': ['dummy']}
         mock_visualuzer = MagicMock()
         mock_visualuzer.add_datasample = MagicMock()
+        mock_visualuzer.get_current_instance = MagicMock()
         hook._visualizer = mock_visualuzer
 
         runner = MagicMock()
