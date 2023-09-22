@@ -42,32 +42,32 @@
 
 **新功能和改进**
 
-\[功能\] 支持使用diffusers pipeline进行推断，首先使用sd_xl。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2023
-\[增强\] 为sd推理器添加负面提示。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2021
-\[增强\] 更新setup.cfg中的flake8检查配置。由@LeoXing1996完成，在https://github.com/open-mmlab/mmagic/pull/2007
-\[增强\] 将'config_name'作为'model_setting'的补充添加。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2027
-\[增强\] 更快的测试。由@okotaku完成，在https://github.com/open-mmlab/mmagic/pull/2034
-\[增强\] 添加OpenXLab徽章。由@ZhaoQiiii完成，在https://github.com/open-mmlab/mmagic/pull/2037
+- \[功能\] 支持使用diffusers pipeline进行推断，首先使用sd_xl。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2023
+- \[增强\] 为sd推理器添加负面提示。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2021
+- \[增强\] 更新setup.cfg中的flake8检查配置。由@LeoXing1996完成，在https://github.com/open-mmlab/mmagic/pull/2007
+- \[增强\] 将'config_name'作为'model_setting'的补充添加。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2027
+- \[增强\] 更快的测试。由@okotaku完成，在https://github.com/open-mmlab/mmagic/pull/2034
+- \[增强\] 添加OpenXLab徽章。由@ZhaoQiiii完成，在https://github.com/open-mmlab/mmagic/pull/2037
 
 **CodeCamp贡献**
 
-\[CodeCamp2023-643\] 添加BigGAN的新配置。由@limafang完成，在https://github.com/open-mmlab/mmagic/pull/2003
-\[CodeCamp2023-648\] MMagic的新配置GuidedDiffusion。由@ooooo-create完成，在https://github.com/open-mmlab/mmagic/pull/2005
-\[CodeCamp2023-649\] MMagic的新配置Instance Colorization。由@ooooo-create完成，在https://github.com/open-mmlab/mmagic/pull/2010
-\[CodeCamp2023-652\] MMagic的新配置StyleGAN3。由@hhy150完成，在https://github.com/open-mmlab/mmagic/pull/2018
-\[CodeCamp2023-653\] 添加Real BasicVSR的新配置。由@RangeKing完成，在https://github.com/open-mmlab/mmagic/pull/2030
+- \[CodeCamp2023-643\] 添加BigGAN的新配置。由@limafang完成，在https://github.com/open-mmlab/mmagic/pull/2003
+- \[CodeCamp2023-648\] MMagic的新配置GuidedDiffusion。由@ooooo-create完成，在https://github.com/open-mmlab/mmagic/pull/2005
+- \[CodeCamp2023-649\] MMagic的新配置Instance Colorization。由@ooooo-create完成，在https://github.com/open-mmlab/mmagic/pull/2010
+- \[CodeCamp2023-652\] MMagic的新配置StyleGAN3。由@hhy150完成，在https://github.com/open-mmlab/mmagic/pull/2018
+- \[CodeCamp2023-653\] 添加Real BasicVSR的新配置。由@RangeKing完成，在https://github.com/open-mmlab/mmagic/pull/2030
 
 **Bug 修复**
 
-\[修复\] 修复主页上的最佳实践和返回目录，将新模型添加到模型库中。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2001
-\[修复\] 检查CI错误并移除主流GPU测试。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2013
-\[修复\] 检查Circle CI内存。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2016
-\[修复\] 移除代码并修复剪辑损失的单元测试。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2017
-\[修复\] 在diffusers pipeline推理器单元测试中模拟推理。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2026
-\[修复\] 由于合并draggan而修复的错误。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2029
-\[修复\] 更新QR码。由@crazysteeaam完成，在https://github.com/open-mmlab/mmagic/pull/2009
-\[修复\] 用OpenXLab版本替换README中的下载链接。由@FerryHuang完成，在https://github.com/open-mmlab/mmagic/pull/2038
-\[修复\] 增加文档字符串覆盖率。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2039
+- \[修复\] 修复主页上的最佳实践和返回目录，将新模型添加到模型库中。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2001
+- \[修复\] 检查CI错误并移除主流GPU测试。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2013
+- \[修复\] 检查Circle CI内存。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2016
+- \[修复\] 移除代码并修复剪辑损失的单元测试。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2017
+- \[修复\] 在diffusers pipeline推理器单元测试中模拟推理。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2026
+- \[修复\] 由于合并draggan而修复的错误。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2029
+- \[修复\] 更新QR码。由@crazysteeaam完成，在https://github.com/open-mmlab/mmagic/pull/2009
+- \[修复\] 用OpenXLab版本替换README中的下载链接。由@FerryHuang完成，在https://github.com/open-mmlab/mmagic/pull/2038
+- \[修复\] 增加文档字符串覆盖率。由@liuwenran完成，在https://github.com/open-mmlab/mmagic/pull/2039
 
 **新贡献者**
 
