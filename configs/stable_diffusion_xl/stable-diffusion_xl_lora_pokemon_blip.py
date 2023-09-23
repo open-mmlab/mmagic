@@ -19,5 +19,6 @@ custom_hooks = [
         fixed_input=True,
         # visualize train dataset
         vis_kwargs_list=dict(type='Data', name='fake_img'),
-        n_samples=1)
+        n_samples=1),
+    dict(type='LoRACheckpointToSaveHook')
 ]
