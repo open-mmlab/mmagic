@@ -1,6 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
-import gc
 import platform
 
 import pytest
@@ -87,11 +86,6 @@ class TestLoRACheckpointToSaveHook(RunnerTestCase):
         MODELS.module_dict.pop('UNet2DConditionModel')
         MODELS.module_dict.pop('AutoencoderKL')
         MODELS.module_dict.pop('DataPreprocessor')
-
-        gc.collect()
-        globals().clear()
-        locals().clear()
-
         return super().tearDown()
 
     def test_init(self):
