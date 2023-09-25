@@ -89,6 +89,7 @@ class FPN_inception(nn.Module):
             param.requires_grad = False
 
     def unfreeze(self):
+        """Unfreeze params."""
         for param in self.inception.parameters():
             param.requires_grad = True
 
@@ -174,6 +175,7 @@ class FPNInception(nn.Module):
             num_filter // 2, output_ch, kernel_size=3, padding=1)
 
     def unfreeze(self):
+        """Unfreeze params."""
         self.fpn.unfreeze()
 
     def forward(self, x):
@@ -256,6 +258,7 @@ class FPN_inceptionsimple(nn.Module):
             param.requires_grad = False
 
     def unfreeze(self):
+        """Unfreeze params."""
         for param in self.inception.parameters():
             param.requires_grad = True
 
@@ -338,6 +341,7 @@ class FPNInceptionSimple(nn.Module):
             num_filter // 2, output_ch, kernel_size=3, padding=1)
 
     def unfreeze(self):
+        """unfreeze the fpn network."""
         self.fpn.unfreeze()
 
     def forward(self, x):
@@ -423,6 +427,7 @@ class FPN_mobilenet(nn.Module):
             param.requires_grad = False
 
     def unfreeze(self):
+        """Unfreeze params."""
         for param in self.features.parameters():
             param.requires_grad = True
 

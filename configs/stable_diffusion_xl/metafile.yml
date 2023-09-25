@@ -1,0 +1,18 @@
+Collections:
+- Name: Stable Diffusion XL
+  Paper:
+    Title: Stable Diffusion XL
+    URL: https://arxiv.org/abs/2307.01952
+  README: configs/stable_diffusion_xl/README.md
+  Task:
+  - text2image
+  - inpainting
+  Year: 2023
+Models:
+- Config: configs/stable_diffusion_xl/stable-diffusion_xl_ddim_denoisingunet.py
+  In Collection: Stable Diffusion XL
+  Name: stable-diffusion_xl_ddim_denoisingunet
+  Results:
+  - Dataset: '-'
+    Metrics: {}
+    Task: Text2Image
