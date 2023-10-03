@@ -301,6 +301,7 @@ class AttentionPool2d(nn.Module):
         self.attention = QKVAttention(self.num_heads)
 
     def forward(self, x):
+        """Forward function."""
         b, c, *_spatial = x.shape
         x = x.reshape(b, c, -1)  # NC(HW)
         x = torch.cat([x.mean(dim=-1, keepdim=True), x], dim=-1)  # NC(HW+1)
@@ -325,6 +326,7 @@ class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
     support it as an extra input."""
 
     def forward(self, x, emb):
+        """Forward function."""
         for layer in self:
             if isinstance(layer, TimestepBlock):
                 x = layer(x, emb)
@@ -353,6 +355,7 @@ class Upsample(nn.Module):
                 dims, self.channels, self.out_channels, 3, padding=1)
 
     def forward(self, x):
+        """Forward function."""
         assert x.shape[1] == self.channels
         if self.dims == 3:
             x = F.interpolate(
@@ -394,6 +397,7 @@ class Downsample(nn.Module):
             self.op = avg_pool_nd(dims, kernel_size=stride, stride=stride)
 
     def forward(self, x):
+        """Forward function."""
         assert x.shape[1] == self.channels
         return self.op(x)
 
@@ -490,6 +494,7 @@ class ResBlock(TimestepBlock):
                           self.use_checkpoint)
 
     def _forward(self, x, emb):
+        """Forward function."""
         if self.updown:
             in_rest, in_conv = self.in_layers[:-1], self.in_layers[-1]
             h = in_rest(x)
@@ -559,6 +564,7 @@ class AttentionBlock(nn.Module):
         self.proj_out = zero_module(conv_nd(dims, channels, channels, 1))
 
     def forward(self, x, encoder_out=None):
+        """Forward function."""
         if encoder_out is None:
             return checkpoint(self._forward, (x, ), self.parameters(),
                               self.use_checkpoint)
@@ -567,6 +573,7 @@ class AttentionBlock(nn.Module):
                               self.parameters(), self.use_checkpoint)
 
     def _forward(self, x, encoder_out=None):
+        """Forward function."""
         b, _, *spatial = x.shape
         qkv = self.qkv(self.norm(x)).view(b, -1, np.prod(spatial))
         if encoder_out is not None:
@@ -644,6 +651,7 @@ class QKVAttentionLegacy(nn.Module):
 
     @staticmethod
     def count_flops(model, _x, y):
+        """return count flops attention."""
         return count_flops_attn(model, _x, y)
 
 
@@ -685,6 +693,7 @@ class QKVAttention(nn.Module):
 
     @staticmethod
     def count_flops(model, _x, y):
+        """return count flops attention."""
         return count_flops_attn(model, _x, y)
 
 
@@ -711,18 +720,22 @@ class KarrasDenoiser:
         self.num_timesteps = 40
 
     def get_snr(self, sigmas):
+        """return snr."""
         return sigmas**-2
 
     def get_sigmas(self, sigmas):
+        """return sigmas."""
         return sigmas
 
     def get_scalings(self, sigma):
+        """return scalings."""
         c_skip = self.sigma_data**2 / (sigma**2 + self.sigma_data**2)
         c_out = sigma * self.sigma_data / (sigma**2 + self.sigma_data**2)**0.5
         c_in = 1 / (sigma**2 + self.sigma_data**2)**0.5
         return c_skip, c_out, c_in
 
     def get_scalings_for_boundary_condition(self, sigma):
+        """return scalings for boundary condition."""
         c_skip = self.sigma_data**2 / (
             (sigma - self.sigma_min)**2 + self.sigma_data**2)
         c_out = ((sigma - self.sigma_min) * self.sigma_data /
@@ -731,6 +744,7 @@ class KarrasDenoiser:
         return c_skip, c_out, c_in
 
     def denoise(self, model, x_t, sigmas, **model_kwargs):
+        """return model's output and denoise."""
 
         if not self.distillation:
             c_skip, c_out, c_in = [

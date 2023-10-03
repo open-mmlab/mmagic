@@ -32,12 +32,14 @@ def get_weightings(weight_schedule, snrs, sigma_data):
 
 
 class SiLU(nn.Module):
+    """PyTorch 1.7 has SiLU, but we support PyTorch 1.5."""
 
     def forward(self, x):
         return x * torch.sigmoid(x)
 
 
 class GroupNorm32(nn.GroupNorm):
+    """PyTorch 1.7 has GroupNorm32, but we support PyTorch 1.5."""
 
     def forward(self, x):
         return super().forward(x.float()).type(x.dtype)
@@ -64,6 +66,7 @@ def karras_sample(
         generator=None,
         ts=None,
 ):
+    """karras sample function."""
     if generator is None:
         generator = get_generator('dummy')
 
@@ -92,6 +95,7 @@ def karras_sample(
         sampler_args = {}
 
     def denoiser(x_t, sigma):
+        """denoiser function."""
         _, denoised = diffusion.denoise(model, x_t, sigma, **model_kwargs)
         if clip_denoised:
             denoised = denoised.clamp(-1, 1)
@@ -110,6 +114,7 @@ def karras_sample(
 
 
 def get_sample_fn(sampler):
+    """return sampler function."""
     return {
         'heun': sample_heun,
         'dpm': sample_dpm,
@@ -377,6 +382,7 @@ def stochastic_iterative_sampler(
     rho=7.0,
     steps=40,
 ):
+    """sample function stochastic iterative."""
     t_max_rho = t_max**(1 / rho)
     t_min_rho = t_min**(1 / rho)
     s_in = x.new_ones([x.shape[0]])
@@ -401,6 +407,7 @@ def sample_progdist(
     progress=False,
     callback=None,
 ):
+    """sample function progdist."""
     s_in = x.new_ones([x.shape[0]])
     sigmas = sigmas[:-1]  # skip the zero sigma
 
@@ -549,9 +556,11 @@ def checkpoint(func, inputs, params, flag):
 
 
 class CheckpointFunction(torch.autograd.Function):
+    """checkpoint function."""
 
     @staticmethod
     def forward(ctx, run_function, length, *args):
+        """run forward function."""
         ctx.run_function = run_function
         ctx.input_tensors = list(args[:length])
         ctx.input_params = list(args[length:])
@@ -561,6 +570,7 @@ class CheckpointFunction(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, *output_grads):
+        """run backward function."""
         ctx.input_tensors = [
             x.detach().requires_grad_(True) for x in ctx.input_tensors
         ]
