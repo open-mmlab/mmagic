@@ -15,6 +15,7 @@
 <div align="center">
 <img src="https://github.com/xiaomile/mmagic/assets/14927720/1586f0c0-8def-4339-b898-470333a26125" width=800>
 </div>
+
 ## 预训练模型
 
 |                                             Model                                             |  Dataset   | Download |
