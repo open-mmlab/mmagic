@@ -1,0 +1,52 @@
+Collections:
+- Name: Consistency Models
+  Paper:
+    Title: Consistency Models
+    URL: https://arxiv.org/abs/2303.01469
+  README: configs/consistency_models/README.md
+  Task:
+  - conditional
+  Year: 2023
+Models:
+- Config: configs/consistency_models/consistency_models_8xb256-imagenet1k-onestep-64x64.py
+  In Collection: Consistency Models
+  Name: consistency_models_8xb256-imagenet1k-onestep-64x64
+  Results:
+  - Dataset: imagenet1k
+    Metrics: {}
+    Task: conditional
+- Config: configs/consistency_models/consistency_models_8xb256-imagenet1k-multistep-64x64.py
+  In Collection: Consistency Models
+  Name: consistency_models_8xb256-imagenet1k-multistep-64x64
+  Results:
+  - Dataset: imagenet1k
+    Metrics: {}
+    Task: conditional
+- Config: configs/consistency_models/consistency_models_8xb32-LSUN-bedroom-onestep-256x256.py
+  In Collection: Consistency Models
+  Name: consistency_models_8xb32-LSUN-bedroom-onestep-256x256
+  Results:
+  - Dataset: LSUN
+    Metrics: {}
+    Task: conditional
+- Config: configs/consistency_models/consistency_models_8xb32-LSUN-bedroom-multistep-256x256.py
+  In Collection: Consistency Models
+  Name: consistency_models_8xb32-LSUN-bedroom-multistep-256x256
+  Results:
+  - Dataset: LSUN
+    Metrics: {}
+    Task: conditional
+- Config: configs/consistency_models/consistency_models_8xb32-LSUN-cat-onestep-256x256.py
+  In Collection: Consistency Models
+  Name: consistency_models_8xb32-LSUN-cat-onestep-256x256
+  Results:
+  - Dataset: LSUN
+    Metrics: {}
+    Task: conditional
+- Config: configs/consistency_models/consistency_models_8xb32-LSUN-cat-multistep-256x256.py
+  In Collection: Consistency Models
+  Name: consistency_models_8xb32-LSUN-cat-multistep-256x256
+  Results:
+  - Dataset: LSUN
+    Metrics: {}
+    Task: conditional
