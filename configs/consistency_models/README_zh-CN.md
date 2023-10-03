@@ -14,23 +14,31 @@
 
 ## 预训练模型
 
-我们已经发布了论文中主要模型的权重。
+|                                             Model                                             |  Dataset   | Download |
+| :-------------------------------------------------------------------------------------------: | :--------: | :------: |
+|       [onestep on ImageNet-64](./consistency_models_8xb256-imagenet1k-onestep-64x64.py)       | imagenet1k |    -     |
+|     [multistep on ImageNet-64](./consistency_models_8xb256-imagenet1k-multistep-64x64.py)     | imagenet1k |    -     |
+|   [onestep on LSUN Bedroom-256](./consistency_models_8xb32-LSUN-bedroom-onestep-256x256.py)   |    LSUN    |    -     |
+| [multistep on LSUN Bedroom-256](./consistency_models_8xb32-LSUN-bedroom-multistep-256x256.py) |    LSUN    |    -     |
+|       [onstep on LSUN Cat-256](./consistency_models_8xb32-LSUN-cat-onestep-256x256.py)        |    LSUN    |    -     |
+|     [multistep on LSUN Cat-256](./consistency_models_8xb32-LSUN-cat-multistep-256x256.py)     |    LSUN    |    -     |
+
+你也可以在进行推理前先把论文中主要模型的权重下载到本地的机器上并将权重路径传给'model_path'。
 以下是每个模型权重的下载链接：
 
-|                                           Model                                            |  Dataset   | metric |                                            Download                                            |
-| :----------------------------------------------------------------------------------------: | :--------: | :----: | :--------------------------------------------------------------------------------------------: |
-|       [EDM on ImageNet-64](./consistency_models_8xb256-imagenet1k-onestep-64x64.py)        | imagenet1k |   -    | [edm_imagenet64_ema.pt](https://openaipublic.blob.core.windows.net/consistency/edm_imagenet64_ema.pt) |
-| [CD on ImageNet-64 with l2 metric](./consistency_models_8xb256-imagenet1k-onestep-64x64.py) | imagenet1k |   l2   | [cd_imagenet64_l2.pt](https://openaipublic.blob.core.windows.net/consistency/cd_imagenet64_l2.pt) |
-| [CD on ImageNet-64 with LPIPS metric](./consistency_models_8xb256-imagenet1k-onestep-64x64.py) | imagenet1k | lpips  | [cd_imagenet64_lpips.pt](https://openaipublic.blob.core.windows.net/consistency/cd_imagenet64_lpips.pt) |
-|        [CT on ImageNet-64](./consistency_models_8xb256-imagenet1k-onestep-64x64.py)        | imagenet1k |   -    |  [ct_imagenet64.pt](https://openaipublic.blob.core.windows.net/consistency/ct_imagenet64.pt)   |
-|   [EDM on LSUN Bedroom-256](./consistency_models_8xb32-LSUN-bedroom-onestep-256x256.py)    |    LSUN    |   -    | [edm_bedroom256_ema.pt](https://openaipublic.blob.core.windows.net/consistency/edm_bedroom256_ema.pt) |
-| [CD on LSUN Bedroom-256 with l2 metric](./consistency_models_8xb32-LSUN-bedroom-onestep-256x256.py) |    LSUN    |   l2   | [cd_bedroom256_l2.pt](https://openaipublic.blob.core.windows.net/consistency/cd_bedroom256_l2.pt) |
-| [CD on LSUN Bedroom-256 with LPIPS metric](./consistency_models_8xb32-LSUN-bedroom-onestep-256x256.py) |    LSUN    | lpips  | [cd_bedroom256_lpips.pt](https://openaipublic.blob.core.windows.net/consistency/cd_bedroom256_lpips.pt) |
-|    [CT on LSUN Bedroom-256](./consistency_models_8xb32-LSUN-bedroom-onestep-256x256.py)    |    LSUN    |   -    |  [ct_bedroom256.pt](https://openaipublic.blob.core.windows.net/consistency/ct_bedroom256.pt)   |
-|       [EDM on LSUN Cat-256](./consistency_models_8xb32-LSUN-cat-onestep-256x256.py)        |    LSUN    |   -    | [edm_cat256_ema.pt](https://openaipublic.blob.core.windows.net/consistency/edm_cat256_ema.pt)  |
-| [CD on LSUN Cat-256 with l2 metric](./consistency_models_8xb32-LSUN-cat-onestep-256x256.py) |    LSUN    |   l2   |   [cd_cat256_l2.pt](https://openaipublic.blob.core.windows.net/consistency/cd_cat256_l2.pt)    |
-| [CD on LSUN Cat-256 with LPIPS metric](./consistency_models_8xb32-LSUN-cat-onestep-256x256.py) |    LSUN    | lpips  | [cd_cat256_lpips.pt](https://openaipublic.blob.core.windows.net/consistency/cd_cat256_lpips.pt) |
-|        [CT on LSUN Cat-256](./consistency_models_8xb32-LSUN-cat-onestep-256x256.py)        |    LSUN    |   -    |      [ct_cat256.pt](https://openaipublic.blob.core.windows.net/consistency/ct_cat256.pt)       |
+- EDM on ImageNet-64: [edm_imagenet64_ema.pt](https://openaipublic.blob.core.windows.net/consistency/edm_imagenet64_ema.pt)
+- CD on ImageNet-64 with l2 metric: [cd_imagenet64_l2.pt](https://openaipublic.blob.core.windows.net/consistency/cd_imagenet64_l2.pt)
+- CD on ImageNet-64 with LPIPS metric: [cd_imagenet64_lpips.pt](https://openaipublic.blob.core.windows.net/consistency/cd_imagenet64_lpips.pt)
+- CT on ImageNet-64: [ct_imagenet64.pt](https://openaipublic.blob.core.windows.net/consistency/ct_imagenet64.pt)
+- EDM on LSUN Bedroom-256: [edm_bedroom256_ema.pt](https://openaipublic.blob.core.windows.net/consistency/edm_bedroom256_ema.pt)
+- CD on LSUN Bedroom-256 with l2 metric: [cd_bedroom256_l2.pt](https://openaipublic.blob.core.windows.net/consistency/cd_bedroom256_l2.pt)
+- CD on LSUN Bedroom-256 with LPIPS metric: [cd_bedroom256_lpips.pt](https://openaipublic.blob.core.windows.net/consistency/cd_bedroom256_lpips.pt)
+- CT on LSUN Bedroom-256: [ct_bedroom256.pt](https://openaipublic.blob.core.windows.net/consistency/ct_bedroom256.pt)
+- EDM on LSUN Cat-256: [edm_cat256_ema.pt](https://openaipublic.blob.core.windows.net/consistency/edm_cat256_ema.pt)
+- CD on LSUN Cat-256 with l2 metric: [cd_cat256_l2.pt](https://openaipublic.blob.core.windows.net/consistency/cd_cat256_l2.pt)
+- CD on LSUN Cat-256 with LPIPS metric: [cd_cat256_lpips.pt](https://openaipublic.blob.core.windows.net/consistency/cd_cat256_lpips.pt)
+- CT on LSUN Cat-256: [ct_cat256.pt](https://openaipublic.blob.core.windows.net/consistency/ct_cat256.pt)
+-
 
 ## 快速开始
 
