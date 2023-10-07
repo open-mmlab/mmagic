@@ -78,7 +78,6 @@ def karras_sample(
             steps, sigma_min, sigma_max, rho, device=device)
 
     x_T = generator.randn(*shape, device=device) * sigma_max
-
     sample_fn = get_sample_fn(sampler)
 
     if sampler in ['heun', 'dpm']:
