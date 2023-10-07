@@ -35,8 +35,8 @@ model = dict(
     generator='determ',
     image_size=64,
     learn_sigma=False,
-    model_path='https://openaipublic.blob.core.windows.net/'
-    'consistency/cd_imagenet64_l2.pt',
+    model_path='https://download.openxlab.org.cn/models/xiaomile/'
+    'consistency_models/weight/cd_imagenet64_l2.pt',
     num_classes=1000,
     sampler='multistep',
     seed=42,

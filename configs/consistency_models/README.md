@@ -18,30 +18,30 @@ Diffusion models have significantly advanced the fields of image, audio, and vid
 
 ## Pre-trained models
 
-|                                             Model                                             |  Dataset   | Download |
-| :-------------------------------------------------------------------------------------------: | :--------: | :------: |
-|       [onestep on ImageNet-64](./consistency_models_8xb256-imagenet1k-onestep-64x64.py)       | imagenet1k |    -     |
-|     [multistep on ImageNet-64](./consistency_models_8xb256-imagenet1k-multistep-64x64.py)     | imagenet1k |    -     |
-|   [onestep on LSUN Bedroom-256](./consistency_models_8xb32-LSUN-bedroom-onestep-256x256.py)   |    LSUN    |    -     |
-| [multistep on LSUN Bedroom-256](./consistency_models_8xb32-LSUN-bedroom-multistep-256x256.py) |    LSUN    |    -     |
-|       [onstep on LSUN Cat-256](./consistency_models_8xb32-LSUN-cat-onestep-256x256.py)        |    LSUN    |    -     |
-|     [multistep on LSUN Cat-256](./consistency_models_8xb32-LSUN-cat-multistep-256x256.py)     |    LSUN    |    -     |
+|                                             Model                                             |  Dataset   | Conditional | Download |
+| :-------------------------------------------------------------------------------------------: | :--------: | :---------: | :------: |
+|       [onestep on ImageNet-64](./consistency_models_8xb256-imagenet1k-onestep-64x64.py)       | imagenet1k |     yes     |    -     |
+|     [multistep on ImageNet-64](./consistency_models_8xb256-imagenet1k-multistep-64x64.py)     | imagenet1k |     yes     |    -     |
+|   [onestep on LSUN Bedroom-256](./consistency_models_8xb32-LSUN-bedroom-onestep-256x256.py)   |    LSUN    |     no      |    -     |
+| [multistep on LSUN Bedroom-256](./consistency_models_8xb32-LSUN-bedroom-multistep-256x256.py) |    LSUN    |     no      |    -     |
+|       [onstep on LSUN Cat-256](./consistency_models_8xb32-LSUN-cat-onestep-256x256.py)        |    LSUN    |     no      |    -     |
+|     [multistep on LSUN Cat-256](./consistency_models_8xb32-LSUN-cat-multistep-256x256.py)     |    LSUN    |     no      |    -     |
 
 You can also download checkpoints which is the main models in the paper to local machine and deliver the path to 'model_path' before infer.
 Here are the download links for each model checkpoint:
 
-- EDM on ImageNet-64: [edm_imagenet64_ema.pt](https://openaipublic.blob.core.windows.net/consistency/edm_imagenet64_ema.pt)
-- CD on ImageNet-64 with l2 metric: [cd_imagenet64_l2.pt](https://openaipublic.blob.core.windows.net/consistency/cd_imagenet64_l2.pt)
-- CD on ImageNet-64 with LPIPS metric: [cd_imagenet64_lpips.pt](https://openaipublic.blob.core.windows.net/consistency/cd_imagenet64_lpips.pt)
-- CT on ImageNet-64: [ct_imagenet64.pt](https://openaipublic.blob.core.windows.net/consistency/ct_imagenet64.pt)
-- EDM on LSUN Bedroom-256: [edm_bedroom256_ema.pt](https://openaipublic.blob.core.windows.net/consistency/edm_bedroom256_ema.pt)
-- CD on LSUN Bedroom-256 with l2 metric: [cd_bedroom256_l2.pt](https://openaipublic.blob.core.windows.net/consistency/cd_bedroom256_l2.pt)
-- CD on LSUN Bedroom-256 with LPIPS metric: [cd_bedroom256_lpips.pt](https://openaipublic.blob.core.windows.net/consistency/cd_bedroom256_lpips.pt)
-- CT on LSUN Bedroom-256: [ct_bedroom256.pt](https://openaipublic.blob.core.windows.net/consistency/ct_bedroom256.pt)
-- EDM on LSUN Cat-256: [edm_cat256_ema.pt](https://openaipublic.blob.core.windows.net/consistency/edm_cat256_ema.pt)
-- CD on LSUN Cat-256 with l2 metric: [cd_cat256_l2.pt](https://openaipublic.blob.core.windows.net/consistency/cd_cat256_l2.pt)
-- CD on LSUN Cat-256 with LPIPS metric: [cd_cat256_lpips.pt](https://openaipublic.blob.core.windows.net/consistency/cd_cat256_lpips.pt)
-- CT on LSUN Cat-256: [ct_cat256.pt](https://openaipublic.blob.core.windows.net/consistency/ct_cat256.pt)
+- EDM on ImageNet-64: [edm_imagenet64_ema.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/edm_imagenet64_ema.pt)
+- CD on ImageNet-64 with l2 metric: [cd_imagenet64_l2.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/cd_imagenet64_l2.pt)
+- CD on ImageNet-64 with LPIPS metric: [cd_imagenet64_lpips.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/cd_imagenet64_lpips.pt)
+- CT on ImageNet-64: [ct_imagenet64.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/ct_imagenet64.pt)
+- EDM on LSUN Bedroom-256: [edm_bedroom256_ema.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/edm_bedroom256_ema.pt)
+- CD on LSUN Bedroom-256 with l2 metric: [cd_bedroom256_l2.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/cd_bedroom256_l2.pt)
+- CD on LSUN Bedroom-256 with LPIPS metric: [cd_bedroom256_lpips.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/cd_bedroom256_lpips.pt)
+- CT on LSUN Bedroom-256: [ct_bedroom256.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/ct_bedroom256.pt)
+- EDM on LSUN Cat-256: [edm_cat256_ema.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/edm_cat256_ema.pt)
+- CD on LSUN Cat-256 with l2 metric: [cd_cat256_l2.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/cd_cat256_l2.pt)
+- CD on LSUN Cat-256 with LPIPS metric: [cd_cat256_lpips.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/cd_cat256_lpips.pt)
+- CT on LSUN Cat-256: [ct_cat256.pt](https://download.openxlab.org.cn/models/xiaomile/consistency_models/weight/ct_cat256.pt)
 
 ## quick start
 
@@ -63,6 +63,13 @@ python demo\mmagic_inference_demo.py \
 python demo\mmagic_inference_demo.py \
     --model-name consistency_models \
     --model-config configs/consistency_models/consistency_models_8xb256-imagenet1k-multistep-64x64.py \
+    --result-out-dir demo_consistency_model.jpg
+
+# conditional
+python demo\mmagic_inference_demo.py \
+    --model-name consistency_models \
+    --model-config configs/consistency_models/consistency_models_8xb256-imagenet1k-onestep-64x64.py \
+    --label 145 \
     --result-out-dir demo_consistency_model.jpg
 ```
 
