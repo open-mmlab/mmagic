@@ -187,9 +187,9 @@ Install MMCV, MMEngine and MMagic with [MIM](https://github.com/open-mmlab/mim).
 
 ```shell
 pip3 install openmim
-mim install 'mmcv>=2.0.0'
-mim install 'mmengine'
-mim install 'mmagic'
+mim install mmcv>=2.0.0
+mim install mmengine
+mim install mmagic
 ```
 
 **Step 3.**
