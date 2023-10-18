@@ -21,7 +21,7 @@ except ImportError:
 
 
 MMCV_MIN = '2.0.0'
-MMCV_MAX = '2.1.0'
+MMCV_MAX = '2.2.0'
 mmcv_min_version = digit_version(MMCV_MIN)
 mmcv_max_version = digit_version(MMCV_MAX)
 mmcv_version = digit_version(mmcv.__version__)
