@@ -25,7 +25,7 @@ class TestTokenizerWrapper(TestCase):
 
     def test_encode_and_decode_and_call(self):
         # test single token
-        text = 'hello world, kwaheri!'
+        text = 'Nice bro, kwaheri!'
         input_ids = self.tokenizer.encode(text).input_ids
         self.assertEqual(input_ids[-3:-2],
                          self.tokenizer.encode('kwaheri').input_ids[1:-1])
