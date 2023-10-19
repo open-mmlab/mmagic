@@ -58,13 +58,13 @@ English | [简体中文](README_zh-CN.md)
 
 ## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### New release [**MMagic v1.0.2**](https://github.com/open-mmlab/mmagic/releases/tag/v1.0.2) \[24/08/2023\]:
+### New release [**MMagic v1.1.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.1.0) \[22/09/2023\]:
 
-- Support Prompt-to-prompt, DDIM Inversion and Null-text Inversion. [Click to View.](https://github.com/open-mmlab/mmagic/blob/main/projects/prompt_to_prompt/README.md)
-- Support Textual Inversion. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/textual_inversion/README.md)
-- Support Attention Injection for more stable video generation with controlnet. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/controlnet_animation/README.md)
-- Support Stable Diffusion Inpainting. [Click to view.](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion/README.md)
-- More detailed documentation. [Click to view.](https://mmagic.readthedocs.io/en/latest/)
+- Support ViCo, a new SD personalization method. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/vico/README.md)
+- Support AnimateDiff, a popular text2animation method. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/animatediff/README.md)
+- Support SDXL（Stable Diffusion XL）. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion_xl/README.md)
+- Support DragGAN implementation with MMagic. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/draggan/README.md)
+- Support FastComposer, a new multi-subject text-to-image generation method. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/fastcomposer/README.md)
 
 We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration).
 
@@ -162,9 +162,11 @@ The best practice on our main branch works with **Python 3.8+** and **PyTorch 1.
 
 More and more community contributors are joining us to make our repo better. Some recent projects are contributed by the community including:
 
-- [GLIDE](projects/glide/configs/README.md) is contributed by @Taited.
-- [Restormer](configs/restormer/README.md) is contributed by @AlexZou14.
-- [SwinIR](configs/swinir/README.md) is contributed by @Zdafeng.
+- [SDXL](configs/stable_diffusion_xl/README.md) is contributed by  @okotaku.
+- [AnimateDiff](configs/animatediff/README.md) is contributed by @ElliotQi.
+- [ViCo](configs/vico/README.md) is contributed by @FerryHuang.
+- [DragGan](configs/draggan/README.md) is contributed by @qsun1.
+- [FastComposer](configs/fastcomposer/README.md) is contributed by @xiaomile.
 
 [Projects](projects/README.md) is opened to make it easier for everyone to add projects to MMagic.
 
@@ -185,9 +187,9 @@ Install MMCV, MMEngine and MMagic with [MIM](https://github.com/open-mmlab/mim).
 
 ```shell
 pip3 install openmim
-mim install 'mmcv>=2.0.0'
-mim install 'mmengine'
-mim install 'mmagic'
+mim install mmcv>=2.0.0
+mim install mmengine
+mim install mmagic
 ```
 
 **Step 3.**
@@ -267,6 +269,7 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
           <li><a href="configs/styleganv1/README.md">StyleGANV1 (CVPR'2019)</a></li>
           <li><a href="configs/styleganv2/README.md">StyleGANV2 (CVPR'2019)</a></li>
           <li><a href="configs/styleganv3/README.md">StyleGANV3 (NeurIPS'2021)</a></li>
+          <li><a href="configs/draggan/README.md">DragGan (2023)</a></li>
         </ul>
       </td>
       <td>
@@ -352,7 +355,7 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
         <b>Matting</b>
       </td>
       <td>
-        <b>Text-to-Image</b>
+        <b>Text-to-Image(Video)</b>
       </td>
       <td>
         <b>3D-aware Generation</b>
@@ -388,6 +391,10 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
           <li><a href="projects/prompt_to_prompt/README.md">Null-text Inversion (2022)</a></li>
           <li><a href="configs/controlnet/README.md">ControlNet (2023)</a></li>
           <li><a href="configs/controlnet_animation/README.md">ControlNet Animation (2023)</a></li>
+          <li><a href="configs/stable_diffusion_xl/README.md">Stable Diffusion XL (2023)</a></li>
+          <li><a href="configs/animatediff/README.md">AnimateDiff (2023)</a></li>
+          <li><a href="configs/vico/README.md">ViCo (2023)</a></li>
+          <li><a href="configs/fastcomposer/README.md">FastComposer (2023)</a></li>
         </ul>
       </td>
       <td>
