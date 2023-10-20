@@ -15,7 +15,6 @@ from mmagic.utils import register_all_modules
 gc.collect()
 torch.cuda.empty_cache()
 register_all_modules()
-
 denoiser_config = dict(
     type='KarrasDenoiser',
     sigma_data=0.5,
