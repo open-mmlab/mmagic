@@ -23,8 +23,7 @@ val_evaluator = [
 ]
 test_evaluator = val_evaluator
 
-train_cfg = dict(
-    type=IterBasedTrainLoop, max_iters=300_000, val_interval=5000)
+train_cfg = dict(type=IterBasedTrainLoop, max_iters=300_000, val_interval=5000)
 val_cfg = dict(type=MultiValLoop)
 test_cfg = dict(type=MultiTestLoop)
 

@@ -22,8 +22,7 @@ model = dict(
         type=GLEncoderDecoder,
         encoder=dict(type=GLEncoder, norm_cfg=dict(type='SyncBN')),
         decoder=dict(type=GLDecoder, norm_cfg=dict(type='SyncBN')),
-        dilation_neck=dict(
-            type=GLDilationNeck, norm_cfg=dict(type='SyncBN'))),
+        dilation_neck=dict(type=GLDilationNeck, norm_cfg=dict(type='SyncBN'))),
     disc=dict(
         type=GLDiscs,
         global_disc_cfg=dict(
@@ -56,8 +55,7 @@ model = dict(
 # optimizer
 optim_wrapper = dict(
     constructor='MultiOptimWrapperConstructor',
-    generator=dict(
-        type=OptimWrapper, optimizer=dict(type='Adam', lr=0.0004)),
+    generator=dict(type=OptimWrapper, optimizer=dict(type='Adam', lr=0.0004)),
     disc=dict(type=OptimWrapper, optimizer=dict(type='Adam', lr=0.0004)))
 
 # learning policy

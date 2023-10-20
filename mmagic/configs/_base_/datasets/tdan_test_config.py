@@ -51,18 +51,14 @@ SPMC_bi_dataloader = dict(
 SPMC_bd_evaluator = dict(
     type=Evaluator,
     metrics=[
-        dict(
-            type=PSNR, crop_border=8, convert_to='Y', prefix='SPMCS-BDx4-Y'),
-        dict(
-            type=SSIM, crop_border=8, convert_to='Y', prefix='SPMCS-BDx4-Y'),
+        dict(type=PSNR, crop_border=8, convert_to='Y', prefix='SPMCS-BDx4-Y'),
+        dict(type=SSIM, crop_border=8, convert_to='Y', prefix='SPMCS-BDx4-Y'),
     ])
 SPMC_bi_evaluator = dict(
     type=Evaluator,
     metrics=[
-        dict(
-            type=PSNR, crop_border=8, convert_to='Y', prefix='SPMCS-BIx4-Y'),
-        dict(
-            type=SSIM, crop_border=8, convert_to='Y', prefix='SPMCS-BIx4-Y'),
+        dict(type=PSNR, crop_border=8, convert_to='Y', prefix='SPMCS-BIx4-Y'),
+        dict(type=SSIM, crop_border=8, convert_to='Y', prefix='SPMCS-BIx4-Y'),
     ])
 
 # config for vid4

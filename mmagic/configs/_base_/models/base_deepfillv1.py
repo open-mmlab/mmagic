@@ -28,9 +28,7 @@ model = dict(
             type=GLEncoderDecoder,
             encoder=dict(type=DeepFillEncoder, padding_mode='reflect'),
             decoder=dict(
-                type=DeepFillDecoder,
-                in_channels=128,
-                padding_mode='reflect'),
+                type=DeepFillDecoder, in_channels=128, padding_mode='reflect'),
             dilation_neck=dict(
                 type=GLDilationNeck,
                 in_channels=128,
@@ -56,8 +54,7 @@ model = dict(
                 in_channels=128,
                 padding_mode='reflect'),
             decoder=dict(
-                type=DeepFillDecoder,
-                in_channels=256,
+                type=DeepFillDecoder, in_channels=256,
                 padding_mode='reflect'))),
     disc=dict(
         type=DeepFillv1Discriminators,
@@ -102,8 +99,7 @@ model = dict(
 # optimizer
 optim_wrapper = dict(
     constructor='MultiOptimWrapperConstructor',
-    generator=dict(
-        type=OptimWrapper, optimizer=dict(type='Adam', lr=0.0001)),
+    generator=dict(type=OptimWrapper, optimizer=dict(type='Adam', lr=0.0001)),
     disc=dict(type=OptimWrapper, optimizer=dict(type='Adam', lr=0.0001)))
 
 # learning policy

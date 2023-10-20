@@ -34,12 +34,8 @@ train_pipeline = [
     dict(type=SetValues, dictionary=dict(scale=scale)),
     dict(type=PairedRandomCrop, gt_patch_size=256),
     dict(
-        type=Flip,
-        keys=['img', 'gt'],
-        flip_ratio=0.5,
-        direction='horizontal'),
-    dict(
-        type=Flip, keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
+        type=Flip, keys=['img', 'gt'], flip_ratio=0.5, direction='horizontal'),
+    dict(type=Flip, keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type=RandomTransposeHW, keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type=PackInputs)
 ]
@@ -112,8 +108,7 @@ val_evaluator = [
 ]
 test_evaluator = val_evaluator
 
-train_cfg = dict(
-    type=IterBasedTrainLoop, max_iters=600_000, val_interval=5000)
+train_cfg = dict(type=IterBasedTrainLoop, max_iters=600_000, val_interval=5000)
 val_cfg = dict(type=MultiValLoop)
 test_cfg = dict(type=MultiTestLoop)
 

@@ -31,12 +31,8 @@ train_pipeline = [
         scale_max=scale_max,
         patch_size=48),
     dict(
-        type=Flip,
-        keys=['img', 'gt'],
-        flip_ratio=0.5,
-        direction='horizontal'),
-    dict(
-        type=Flip, keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
+        type=Flip, keys=['img', 'gt'], flip_ratio=0.5, direction='horizontal'),
+    dict(type=Flip, keys=['img', 'gt'], flip_ratio=0.5, direction='vertical'),
     dict(type=RandomTransposeHW, keys=['img', 'gt'], transpose_ratio=0.5),
     dict(type=GenerateCoordinateAndCell, sample_quantity=2304),
     dict(type=PackInputs)

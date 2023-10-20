@@ -10,10 +10,7 @@ train_pipeline = [
     dict(type=PackInputs)
 ]
 
-val_pipeline = [
-    dict(type=LoadImageFromFile, key='gt'),
-    dict(type=PackInputs)
-]
+val_pipeline = [dict(type=LoadImageFromFile, key='gt'), dict(type=PackInputs)]
 
 # `batch_size` and `data_root` need to be set.
 train_dataloader = dict(

@@ -106,8 +106,7 @@ model = dict(
 # optimizer
 optim_wrapper = dict(
     constructor='MultiOptimWrapperConstructor',
-    generator=dict(
-        type=OptimWrapper, optimizer=dict(type='Adam', lr=0.0001)),
+    generator=dict(type=OptimWrapper, optimizer=dict(type='Adam', lr=0.0001)),
     disc=dict(type=OptimWrapper, optimizer=dict(type='Adam', lr=0.0001)))
 
 # learning policy
