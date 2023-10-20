@@ -54,3 +54,10 @@ class TestLinearLrInterval(TestCase):
             param_scheduler.step()
             np.testing.assert_almost_equal(param_scheduler._get_value(),
                                            targets[step].item())
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

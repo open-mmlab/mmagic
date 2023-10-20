@@ -72,3 +72,10 @@ class TestPGGANDiscriminator:
             self.default_inputx4.cuda(), transition_weight=0.1, curr_scale=4)
         assert score.shape == (2, 1)
         assert label.shape == (2, 2)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

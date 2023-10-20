@@ -32,3 +32,10 @@ def test_sample_rays():
     # check if camera origin in one batch is all same
     for origin in ray_origins:
         assert (origin == origin[0]).all()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

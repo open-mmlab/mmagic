@@ -126,3 +126,10 @@ def test_stable_diffusion():
         width=64,
         num_inference_steps=1,
         return_type='image')
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

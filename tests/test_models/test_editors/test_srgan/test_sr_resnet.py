@@ -73,3 +73,10 @@ def test_discriminator():
         input_shape = (1, 3, 64, 64)
         img = torch.rand(input_shape)
         output = net(img)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

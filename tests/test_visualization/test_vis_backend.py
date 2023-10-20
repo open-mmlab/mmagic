@@ -159,3 +159,10 @@ class TestWandbBackend(TestCase):
         vis_backend._init_env()
         _, called_kwargs = wandb_mock.init.call_args
         self.assertEqual(called_kwargs['name'], f'test_wandb_{timestamp}')
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

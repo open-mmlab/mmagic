@@ -104,3 +104,10 @@ class TestMattingMetrics:
 
         assert list(res.keys()) == ['MattingMSE']
         np.testing.assert_almost_equal(res['MattingMSE'], 3.0)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

@@ -172,3 +172,10 @@ class TestCIFAR10(TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.tmpdir.cleanup()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

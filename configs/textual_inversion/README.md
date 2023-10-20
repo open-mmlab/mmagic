@@ -26,7 +26,8 @@ Text-to-image models offer unprecedented freedom to guide creation through natur
 
 ## Quick Start
 
-1. Download [data](https://drive.google.com/drive/folders/1fmJMs25nxS_rSNqS5hTcRdLem_YQXbq5) and save to `data/cat_toy`
+1. Download [data](https://drive.google.com/drive/folders/1fmJMs25nxS_rSNqS5hTcRdLem_YQXbq5) and [template](https://openxlab.org.cn/datasets/ferry/ViCo/tree/main)(two txt files)
+   and save to `data`
 
 The file structure will be like this:
 
@@ -40,6 +41,8 @@ data
     ├── 4.jpeg
     ├── 6.jpeg
     └── 7.jpeg
+└── imagenet_templates_small.txt
+└── imagenet_style_templates_small.txt
 ```
 
 2. Start training with the following command:

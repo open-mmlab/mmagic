@@ -232,3 +232,10 @@ class TestBigGANGenerator(object):
         cfg.update(dict(init_cfg=dict(type='ortho')))
         g = MODELS.build(cfg)
         g.init_weights()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

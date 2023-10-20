@@ -37,3 +37,10 @@ class TestArcFace:
         x2 = torch.randn((2, 3, 224, 224)).cuda()
         y, _ = id_loss_model(pred=x1, gt=x2)
         assert y >= 0
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

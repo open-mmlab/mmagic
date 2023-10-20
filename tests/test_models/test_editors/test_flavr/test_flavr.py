@@ -31,3 +31,10 @@ def test_flavr():
     result = model.merge_frames(input_tensors, output_tensors)
     assert len(result) == 15
     assert result[0].shape == (16, 16, 3)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

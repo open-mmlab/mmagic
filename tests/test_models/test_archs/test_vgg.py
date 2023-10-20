@@ -129,3 +129,10 @@ def test_vgg16_encoder():
         assert_tensor_with_shape(outputs['max_idx_4'], target_shape[3])
         assert_tensor_with_shape(outputs['max_idx_5'], target_shape[4])
         assert check_norm_state(model.modules(), True)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

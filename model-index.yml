@@ -1,4 +1,5 @@
 Import:
+- configs/animatediff/metafile.yml
 - configs/aot_gan/metafile.yml
 - configs/basicvsr/metafile.yml
 - configs/basicvsr_pp/metafile.yml
@@ -12,13 +13,16 @@ Import:
 - configs/deepfillv1/metafile.yml
 - configs/deepfillv2/metafile.yml
 - configs/dic/metafile.yml
+- configs/diffusers_pipeline/metafile.yml
 - configs/dim/metafile.yml
 - configs/disco_diffusion/metafile.yml
+- configs/draggan/metafile.yml
 - configs/dreambooth/metafile.yml
 - configs/edsr/metafile.yml
 - configs/edvr/metafile.yml
 - configs/eg3d/metafile.yml
 - configs/esrgan/metafile.yml
+- configs/fastcomposer/metafile.yml
 - configs/flavr/metafile.yml
 - configs/gca/metafile.yml
 - configs/ggan/metafile.yml
@@ -45,6 +49,7 @@ Import:
 - configs/srcnn/metafile.yml
 - configs/srgan_resnet/metafile.yml
 - configs/stable_diffusion/metafile.yml
+- configs/stable_diffusion_xl/metafile.yml
 - configs/styleganv1/metafile.yml
 - configs/styleganv2/metafile.yml
 - configs/styleganv3/metafile.yml
@@ -53,4 +58,5 @@ Import:
 - configs/textual_inversion/metafile.yml
 - configs/tof/metafile.yml
 - configs/ttsr/metafile.yml
+- configs/vico/metafile.yml
 - configs/wgan-gp/metafile.yml

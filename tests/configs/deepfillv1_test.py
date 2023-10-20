@@ -65,3 +65,10 @@ model = dict(
     loss_disc_shift=dict(type='DiscShiftLoss', loss_weight=0.001),
     train_cfg=dict(disc_step=2, start_iter=0, local_size=(128, 128)),
 )
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

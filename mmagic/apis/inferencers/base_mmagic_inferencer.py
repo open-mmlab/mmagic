@@ -30,7 +30,9 @@ class BaseMMagicInferencer(BaseInferencer):
         ckpt (str, optional): Path to the checkpoint.
         device (str, optional): Device to run inference. If None, the best
             device will be automatically used.
-        result_out_dir (str): Output directory of images. Defaults to ''.
+        extra_parameters (Dict, optional): Extra parameters for
+            different models in inference stage.
+        seed (str, optional): Seed for inference.
     """
 
     func_kwargs = dict(
@@ -119,7 +121,6 @@ class BaseMMagicInferencer(BaseInferencer):
 
         return results
 
-    @torch.no_grad()
     def __call__(self, **kwargs) -> Union[Dict, List[Dict]]:
         """Call the inferencer.
 
@@ -129,6 +130,25 @@ class BaseMMagicInferencer(BaseInferencer):
         Returns:
             Union[Dict, List[Dict]]: Results of inference pipeline.
         """
+        if ('extra_parameters' in kwargs.keys() and kwargs['extra_parameters']
+                and 'infer_with_grad' in kwargs['extra_parameters'].keys()
+                and kwargs['extra_parameters']['infer_with_grad']):
+            results = self.base_call(**kwargs)
+        else:
+            with torch.no_grad():
+                results = self.base_call(**kwargs)
+        return results
+
+    def base_call(self, **kwargs) -> Union[Dict, List[Dict]]:
+        """Call the inferencer.
+
+        Args:
+            kwargs: Keyword arguments for the inferencer.
+
+        Returns:
+            Union[Dict, List[Dict]]: Results of inference pipeline.
+        """
+
         self._update_extra_parameters(**kwargs)
 
         params = self._dispatch_kwargs(**kwargs)

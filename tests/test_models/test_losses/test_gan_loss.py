@@ -115,3 +115,10 @@ def test_gan_losses():
         mask = torch.ones(1, 3)
         gausian_blur = GaussianBlur()
         gausian_blur(mask).detach().cpu()
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

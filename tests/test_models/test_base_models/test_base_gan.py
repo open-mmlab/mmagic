@@ -278,6 +278,14 @@ class TestBaseGAN(TestCase):
         for idx in range(4):
             self.assertEqual(outputs[idx].fake_img.shape, (3, 8, 8))
 
+        # test additional sample kwargs
+        sample_kwargs = dict(return_noise=True)
+        inputs = dict(noise=torch.randn(4, 10), sample_kwargs=sample_kwargs)
+        outputs = gan(inputs)
+        self.assertEqual(len(outputs), 4)
+        for idx in range(4):
+            self.assertEqual(outputs[idx].fake_img.shape, (3, 8, 8))
+
         # test when data samples is not None
         inputs = dict(num_batches=3, sample_model='ema/orig')
         data_samples = [DataSample(id=1), DataSample(id=2), DataSample(id=3)]
@@ -419,3 +427,10 @@ class TestBaseGAN(TestCase):
         # test raise error
         with self.assertRaises(AssertionError):
             gan.gather_log_vars([dict(a=1), dict(b=2)])
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

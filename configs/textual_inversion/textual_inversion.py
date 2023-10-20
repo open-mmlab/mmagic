@@ -60,6 +60,7 @@ dataset = dict(
     data_root='./data/',
     concept_dir='cat_toy',
     placeholder=placeholder_token,
+    template='data/imagenet_templates_small.txt',
     pipeline=pipeline)
 
 train_dataloader = dict(

@@ -24,3 +24,10 @@ def test_DiscriminatorBlock():
     x = torch.randn(1, 3, 6, 6)
     out = disc_block(x)
     assert out.shape == (1, 1, 6, 6)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

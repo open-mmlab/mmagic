@@ -18,3 +18,10 @@ def test_aot_dilation_neck():
         x = torch.rand((2, 32, 64, 64)).cuda()
         res = neck(x)
         assert res.shape == (2, 32, 64, 64)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

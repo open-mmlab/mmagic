@@ -21,7 +21,7 @@ ckpt_path = osp.join(test_dir, 'configs', 'ckpt')
 
 register_all_modules()
 
-stable_diffusion_v15_url = 'runwayml/stable-diffusion-v1-5'
+stable_diffusion_tiny_url = 'diffusers/tiny-stable-diffusion-torch'
 val_prompts = ['a sks dog in basket']
 
 config = dict(
@@ -38,16 +38,16 @@ config = dict(
     text_encoder=dict(
         type='ClipWrapper',
         clip_type='huggingface',
-        pretrained_model_name_or_path=stable_diffusion_v15_url,
+        pretrained_model_name_or_path=stable_diffusion_tiny_url,
         subfolder='text_encoder'),
-    tokenizer=stable_diffusion_v15_url,
+    tokenizer=stable_diffusion_tiny_url,
     scheduler=dict(
         type='DDPMScheduler',
-        from_pretrained=stable_diffusion_v15_url,
+        from_pretrained=stable_diffusion_tiny_url,
         subfolder='scheduler'),
     test_scheduler=dict(
         type='DDIMScheduler',
-        from_pretrained=stable_diffusion_v15_url,
+        from_pretrained=stable_diffusion_tiny_url,
         subfolder='scheduler'),
     dtype='fp32',
     data_preprocessor=dict(type='DataPreprocessor'),
@@ -145,3 +145,10 @@ class TestControlStableDiffusion(TestCase):
         dreambooth.text_encoder = mock_text_encoder()
 
         dreambooth.train_step(data, optim_wrapper)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

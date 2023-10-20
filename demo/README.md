@@ -38,6 +38,16 @@ Table of contents:
 
 [3. Other demos](#3-other-demos)
 
+&#8195;    [3.1. Gradio demo](#31-gradio-demo)
+
+&#8195;      [3.1.1. DragGAN](#311-draggan)
+
+&#8195;      [3.1.2. ViCo](#312-vico)
+
+&#8195;      [3.1.3. FastComposer](#313-fastcomposer)
+
+&#8195;      [3.1.4. AnimateDiff](#314-animatediff)
+
 ## 1. Download sample images or videos
 
 We prepared some images and videos for you to run demo with. After MMagic is well installed, you could use demos in this folder to infer these data.
@@ -283,3 +293,155 @@ python demo/mmagic_inference_demo.py \
     --model-name eg3d \
     --result-out-dir ./resources/output/eg3d-output
 ```
+
+## 3. Other demos
+
+## 3.1 gradio demo
+
+#### 3.1.1 DragGAN
+
+First, put your checkpoint path in `./checkpoints`, *e.g.* `./checkpoints/stylegan2_lions_512_pytorch_mmagic.pth`. For example,
+
+```shell
+mkdir checkpoints
+cd checkpoints
+wget -O stylegan2_lions_512_pytorch_mmagic.pth https://download.openxlab.org.cn/models/qsun1/DragGAN-StyleGAN2-checkpoint/weight//StyleGAN2-Lions-internet
+```
+
+Then, try on the script:
+
+```shell
+python demo/gradio_draggan.py
+```
+
+#### 3.1.2 ViCo
+
+Launch the UI.
+
+```shell
+python demo/gradio_vico.py
+```
+
+*Training*
+
+1. Submit your concept sample images to the interface and fill in the *init_token* and *placeholder*.
+
+2. Click the *Start Training* button.
+
+3. Your training results will be under the folder `./work_dirs/vico_gradio`.
+
+*Inference*
+
+Follow the [instructions](../configs/vico/README.md#quick-start#4) to download the pretrained weights (or [use your own weights](../configs/vico/README.md#quick-start#5)) and put them under the folder `./ckpts`
+
+```
+mkdir ckpts
+```
+
+your folder structure should be like:
+
+```
+ckpts
+└── barn.pth
+└── batman.pth
+└── clock.pth
+...
+```
+
+Then launch the UI and you can use the pretrained weights to generate images.
+
+1. Upload reference image.
+
+2. (Optional) Customize advanced settings.
+
+3. Click inference button.
+
+#### 3.1.3 FastComposer
+
+First, run the script:
+
+```shell
+python demo/gradio_fastcomposer.py
+```
+
+Second, upload reference subject images.For example,
+
+<table align="center">
+<thead>
+  <tr>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/14927720/265911400-91635451-54b6-4dc6-92a7-c1d02f88b62e.jpeg" width="400"/>
+  <br/>
+  <b>'reference_0.png'</b>
+</div></td>
+    <td>
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/14927720/265911502-66b67f53-dff0-4d25-a9af-3330e446aa48.jpeg" width="400"/>
+  <br/>
+  <b>'reference_1.png'</b>
+</div></td>
+    <td>
+</thead>
+</table>
+
+Then, add prompt like `A man img and a man img sitting together` and press `run` button.
+
+Finally, you can get text-generated images.
+
+<div align=center>
+<img src="https://user-images.githubusercontent.com/14927720/265911526-4975d6e2-c5fc-4324-80c9-a7a512953218.png">
+</div>
+
+#### 3.1.4 AnimateDiff
+
+1. Download [ToonYou](https://civitai.com/api/download/models/78775) and MotionModule checkpoint
+
+```bash
+#!/bin/bash
+
+mkdir models && cd models
+mkdir Motion_Module && mkdir DreamBooth_LoRA
+gdown 1RqkQuGPaCO5sGZ6V6KZ-jUWmsRu48Kdq -O models/Motion_Module/
+gdown 1ql0g_Ys4UCz2RnokYlBjyOYPbttbIpbu -O models/Motion_Module/
+wget https://civitai.com/api/download/models/78775 -P models/DreamBooth_LoRA/ --content-disposition --no-check-certificate
+```
+
+2. Modify the config file in `configs/animatediff/animatediff_ToonYou.py`
+
+```python
+
+models_path = '/home/AnimateDiff/models/'
+```
+
+3. Then, try on the script:
+
+```shell
+# may need to install imageio[ffmpeg]:
+# pip install imageio-ffmpeg
+python demo/gradio_animatediff.py
+```
+
+4. Select SD, MotionModule and DreamBooth checkpoints. Adjust inference parameters. Then input a selected prompt and its relative negative_prompt:
+
+```python
+
+prompts = [
+    "best quality, masterpiece, 1girl, looking at viewer, blurry background, upper body, contemporary, dress",
+
+    "masterpiece, best quality, 1girl, solo, cherry blossoms, hanami, pink flower, white flower, spring season, wisteria, petals, flower, plum blossoms, outdoors, falling petals, white hair, black eyes,",
+
+    "best quality, masterpiece, 1boy, formal, abstract, looking at viewer, masculine, marble pattern",
+
+    "best quality, masterpiece, 1girl, cloudy sky, dandelion, contrapposto, alternate hairstyle,"
+]
+negative_prompts = [
+    "",
+    "badhandv4,easynegative,ng_deepnegative_v1_75t,verybadimagenegative_v1.3, bad-artist, bad_prompt_version2-neg, teeth",
+    "",
+    "",
+]
+# More test samples could be generated with other config files. Please check 'configs/animatediff/README.md'
+```
+
+5. Click the 'Generate' button.

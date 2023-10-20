@@ -85,3 +85,10 @@ class TestSWD(TestCase):
             swd.process(None, fake_samples)
         # fake_nums is -1, all samples (10 * 3 = 30) is processed
         self.assertEqual(swd._num_processed, 30)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()

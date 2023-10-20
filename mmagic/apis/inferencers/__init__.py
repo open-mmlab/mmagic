@@ -7,6 +7,7 @@ from mmagic.utils import ConfigType
 from .colorization_inferencer import ColorizationInferencer
 from .conditional_inferencer import ConditionalInferencer
 from .controlnet_animation_inferencer import ControlnetAnimationInferencer
+from .diffusers_pipeline_inferencer import DiffusersPipelineInferencer
 from .eg3d_inferencer import EG3DInferencer
 from .image_super_resolution_inferencer import ImageSuperResolutionInferencer
 from .inpainting_inferencer import InpaintingInferencer
@@ -23,7 +24,7 @@ __all__ = [
     'ImageSuperResolutionInferencer', 'Text2ImageInferencer',
     'TranslationInferencer', 'UnconditionalInferencer',
     'VideoInterpolationInferencer', 'VideoRestorationInferencer',
-    'ControlnetAnimationInferencer'
+    'ControlnetAnimationInferencer', 'DiffusersPipelineInferencer'
 ]
 
 
@@ -53,7 +54,7 @@ class Inferencers:
         elif self.task in ['colorization', 'Colorization']:
             self.inferencer = ColorizationInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
-        elif self.task in ['unconditional', 'Unconditional GANs']:
+        elif self.task in ['unconditional', 'Unconditional GANs', 'DragGAN']:
             self.inferencer = UnconditionalInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         elif self.task in ['matting', 'Matting']:
@@ -90,6 +91,9 @@ class Inferencers:
                 'artifact reduction', 'Deblurring'
         ]:
             self.inferencer = ImageSuperResolutionInferencer(
+                config, ckpt, device, extra_parameters, seed=seed)
+        elif self.task in ['Diffusers Pipeline']:
+            self.inferencer = DiffusersPipelineInferencer(
                 config, ckpt, device, extra_parameters, seed=seed)
         else:
             raise ValueError(f'Unknown inferencer task: {self.task}')

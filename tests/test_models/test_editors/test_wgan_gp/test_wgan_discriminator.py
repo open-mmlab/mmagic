@@ -106,3 +106,10 @@ class TestWGANGPDiscriminator(object):
         assert isinstance(d, WGANGPDiscriminator)
         score = d(self.x.cuda())
         assert score.shape == (2, 1)
+
+
+def teardown_module():
+    import gc
+    gc.collect()
+    globals().clear()
+    locals().clear()
