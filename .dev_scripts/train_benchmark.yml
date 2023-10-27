@@ -49,7 +49,7 @@ cases:
   params:
     checkpoint: stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
     checkpoint_url: https://download.openmmlab.com/mmediting/stylegan2/stylegan2_c2_ffhq_256_b4x8_20210407_160709-7890ae1f.pth
-    config: configs/styleganv2/stylegan2_c2_PL_8xb4_fp16_partial_GD_no_scaler_800kiters_ffhq_256x256.py
+    config: configs/styleganv2/stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256.py
     cpus_per_node: 4
     gpus: 8
     gpus_per_node: 8

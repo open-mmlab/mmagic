@@ -67,5 +67,5 @@ MMGeneration incorporates config mechanism to set parameters used for training a
 An Example:
 
 ```shell
-python tools/misc/print_config.py configs/styleganv2/stylegan2_c2_PL_8xb4_fp16_partial_GD_no_scaler_800kiters_ffhq_256x256.py
+python tools/misc/print_config.py configs/styleganv2/stylegan2_c2-PL_8xb4-fp16-partial-GD-no-scaler-800kiters_ffhq-256x256.py
 ```
