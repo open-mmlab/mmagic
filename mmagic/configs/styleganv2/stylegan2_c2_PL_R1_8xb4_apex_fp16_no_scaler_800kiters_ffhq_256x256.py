@@ -2,7 +2,7 @@
 from mmengine.config import read_base
 
 with read_base():
-    from stylegan2_c2_8xb4_800kiters_ffhq_256x256 import *
+    from mmagic.configs.styleganv2.stylegan2_c2_8xb4_800kiters_ffhq_256x256 import *
 
 model.update(loss_config=dict(r1_use_apex_amp=False, g_reg_use_apex_amp=False))
 
