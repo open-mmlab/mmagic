@@ -50,7 +50,6 @@ class MMagicInferencer:
         'biggan',
         'sngan_proj',
         'sagan',
-        'consistency_models',
 
         # unconditional models
         'dcgan',

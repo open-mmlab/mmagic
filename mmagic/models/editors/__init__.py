@@ -100,6 +100,5 @@ __all__ = [
     'ControlStableDiffusion', 'DreamBooth', 'TextualInversion', 'DeblurGanV2',
     'DeblurGanV2Generator', 'DeblurGanV2Discriminator',
     'StableDiffusionInpaint', 'ViCo', 'FastComposer', 'AnimateDiff',
-    'UNet3DConditionMotionModel', 'StableDiffusionXL', 'ConsistencyModel',
-    'ConsistencyUNetModel', 'KarrasDenoiser'
+    'UNet3DConditionMotionModel', 'StableDiffusionXL'
 ]

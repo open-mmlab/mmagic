@@ -147,10 +147,3 @@ class TestFastComposer(TestCase):
             output_type='tensor')
         fastcomposer._encode_prompt = encode_prompt
         assert result['samples'].shape == (num_images, 3, 64, 64)
-
-
-def teardown_module():
-    import gc
-    gc.collect()
-    globals().clear()
-    locals().clear()

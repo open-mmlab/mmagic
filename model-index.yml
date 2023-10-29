@@ -5,7 +5,6 @@ Import:
 - configs/basicvsr_pp/metafile.yml
 - configs/biggan/metafile.yml
 - configs/cain/metafile.yml
-- configs/consistency_models/metafile.yml
 - configs/controlnet/metafile.yml
 - configs/controlnet_animation/metafile.yml
 - configs/cyclegan/metafile.yml
