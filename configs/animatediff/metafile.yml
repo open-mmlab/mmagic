@@ -16,7 +16,7 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Video
-  Weights: https://civitai.com/api/download/models/78775
+  Weights: https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/toonyou_beta3.safetensors
 - Config: configs/animatediff/animatediff_Lyriel.py
   In Collection: AnimateDiff
   Name: animatediff_Lyriel
@@ -24,7 +24,7 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Video
-  Weights: https://civitai.com/api/download/models/72396
+  Weights: https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/lyriel_v16.safetensors
 - Config: configs/animatediff/animatediff_RcnzCartoon.py
   In Collection: AnimateDiff
   Name: animatediff_RcnzCartoon
@@ -32,7 +32,7 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Video
-  Weights: https://civitai.com/api/download/models/71009
+  Weights: https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/rcnzCartoon3d_v10.safetensors
 - Config: configs/animatediff/animatediff_MajicMix.py
   In Collection: AnimateDiff
   Name: animatediff_MajicMix
@@ -40,7 +40,7 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Video
-  Weights: https://civitai.com/api/download/models/79068
+  Weights: https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/majicmixRealistic_v5Preview.safetensors
 - Config: configs/animatediff/animatediff_RealisticVision.py
   In Collection: AnimateDiff
   Name: animatediff_RealisticVision
@@ -48,18 +48,15 @@ Models:
   - Dataset: '-'
     Metrics: {}
     Task: Text2Video
-  Weights: https://civitai.com/api/download/models/29460
+  Weights: https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/realisticVisionV51_v20Novae.safetensors
 - Config: configs/animatediff/animatediff_RealisticVision_v2.py
   In Collection: AnimateDiff
   Name: animatediff_RealisticVision_v2
   Results:
-  - Dataset: '-'
-    Metrics: {}
-    Task: Text2Video
   - Dataset: WebVid
     Metrics: {}
     Task: Text2Video
-  Weights: https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_sd_v15_v2
+  Weights: https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/mm_sd_v15_v2.ckpt
 - Config: configs/animatediff/animatediff_RealisticVision_v1.py
   In Collection: AnimateDiff
   Name: animatediff_RealisticVision_v1
@@ -70,4 +67,4 @@ Models:
   - Dataset: WebVid
     Metrics: {}
     Task: Text2Video
-  Weights: https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_fromscratch_10Mval
+  Weights: https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/mm_fromscratch_10Mval.ckpt
