@@ -22,17 +22,16 @@ We use Stable Diffusion's weights provided by HuggingFace Diffusers. You do not 
 
 This model has several weights including vae, unet and clip. You should download the weights from [stable-diffusion-1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and change the 'pretrained_model_path' in config to the weights dir.
 
-|                             Model                              | Dataset |                                              Download                                               |
-| :------------------------------------------------------------: | :-----: | :-------------------------------------------------------------------------------------------------: |
-|              [ToonYou](./animatediff_ToonYou.py)               |    -    |                       [model](https://civitai.com/api/download/models/78775)                        |
-|               [Lyriel](./animatediff_Lyriel.py)                |    -    |                       [model](https://civitai.com/api/download/models/72396)                        |
-|          [RcnzCartoon](./animatediff_RcnzCartoon.py)           |    -    |                       [model](https://civitai.com/api/download/models/71009)                        |
-|             [MajicMix](./animatediff_MajicMix.py)              |    -    |                       [model](https://civitai.com/api/download/models/79068)                        |
-|      [RealisticVision](./animatediff_RealisticVision.py)       |    -    |                       [model](https://civitai.com/api/download/models/29460)                        |
-|   [RealisticVision_v2](./animatediff_RealisticVision_v2.py)    |    -    |          [model](https://huggingface.co/guoyww/animatediff/resolve/main/mm_sd_v15_v2.ckpt)          |
-|   [MotionModel_v1-5_v2](./animatediff_RealisticVision_v2.py)   | WebVid  |      [model](https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_sd_v15_v2)      |
-| [MotionModel_v1-5_2Mval](./animatediff_RealisticVision_v1.py)  | WebVid  | [model](https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_fromscratch_2.5Mval) |
-| [MotionModel_v1-5_10Mval](./animatediff_RealisticVision_v1.py) | WebVid  | [model](https://download.openxlab.org.cn/models/ElliotQi/AnimateDiff/weight/mm_fromscratch_10Mval)  |
+|                             Model                              | Dataset |                                                      Download                                                       |
+| :------------------------------------------------------------: | :-----: | :-----------------------------------------------------------------------------------------------------------------: |
+|              [ToonYou](./animatediff_ToonYou.py)               |    -    |        [model](https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/toonyou_beta3.safetensors)        |
+|               [Lyriel](./animatediff_Lyriel.py)                |    -    |         [model](https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/lyriel_v16.safetensors)          |
+|          [RcnzCartoon](./animatediff_RcnzCartoon.py)           |    -    |      [model](https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/rcnzCartoon3d_v10.safetensors)      |
+|             [MajicMix](./animatediff_MajicMix.py)              |    -    | [model](https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/majicmixRealistic_v5Preview.safetensors) |
+|      [RealisticVision](./animatediff_RealisticVision.py)       |    -    | [model](https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/realisticVisionV51_v20Novae.safetensors) |
+|   [MotionModel_v1-5_v2](./animatediff_RealisticVision_v2.py)   | WebVid  |            [model](https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/mm_sd_v15_v2.ckpt)            |
+| [MotionModel_v1-5_2Mval](./animatediff_RealisticVision_v1.py)  | WebVid  |       [model](https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/mm_fromscratch_2.5Mval.ckpt)       |
+| [MotionModel_v1-5_10Mval](./animatediff_RealisticVision_v1.py) | WebVid  |       [model](https://download.openxlab.org.cn/models/Masbfca/AnimateDiff/weight/mm_fromscratch_10Mval.ckpt)        |
 
 Latest models could be looked up on [OpenXLab_AnimateDiff](https://openxlab.org.cn/models/detail/ElliotQi/AnimateDiff).
 
