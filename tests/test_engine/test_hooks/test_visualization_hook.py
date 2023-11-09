@@ -7,6 +7,7 @@ import mmcv
 import numpy as np
 import torch
 from mmengine import MessageHub
+from mmengine.registry import init_default_scope
 from mmengine.testing import assert_allclose
 from mmengine.visualization import Visualizer
 from torch.utils.data.dataset import Dataset
@@ -25,6 +26,7 @@ register_all_modules()
 class TestBasicVisualizationHook(TestCase):
 
     def setUp(self) -> None:
+        init_default_scope('mmagic')
         input = torch.rand(2, 3, 32, 32)
         data_sample = DataSample(
             path_rgb='rgb.png',
@@ -89,6 +91,7 @@ class TestVisualizationHook(TestCase):
     MessageHub.get_instance('test-gen-visualizer')
 
     def test_init(self):
+        init_default_scope('mmagic')
         hook = VisualizationHook(
             interval=10, vis_kwargs_list=dict(type='Noise'))
         self.assertEqual(hook.interval, 10)
@@ -119,6 +122,7 @@ class TestVisualizationHook(TestCase):
         runner.train_dataloader = MagicMock()
         runner.train_dataloader.batch_size = 10
 
+        _ = Visualizer.get_instance('name1')
         hook = VisualizationHook(
             interval=10, vis_kwargs_list=dict(type='GAN'), n_samples=9)
         mock_visualuzer = MagicMock()
@@ -209,6 +213,7 @@ class TestVisualizationHook(TestCase):
         runner.val_loop = MagicMock()
         runner.val_loop.dataloader = val_dataloader
 
+        _ = Visualizer.get_instance('name1')
         hook = VisualizationHook(
             interval=10,
             vis_kwargs_list=[
@@ -341,6 +346,7 @@ class TestVisualizationHook(TestCase):
 
     def test_after_val_iter(self):
         model = MagicMock()
+        _ = Visualizer.get_instance('name1')
         hook = VisualizationHook(
             interval=10, n_samples=2, vis_kwargs_list=dict(type='GAN'))
         mock_visualuzer = MagicMock()
@@ -366,6 +372,7 @@ class TestVisualizationHook(TestCase):
         runner.train_dataloader = MagicMock()
         runner.train_dataloader.batch_size = 10
 
+        _ = Visualizer.get_instance('name1')
         hook = VisualizationHook(
             interval=2, vis_kwargs_list=dict(type='GAN'), n_samples=9)
         mock_visualuzer = MagicMock()
@@ -496,6 +503,7 @@ class TestVisualizationHook(TestCase):
         runner.train_dataloader = MagicMock()
         runner.train_dataloader.batch_size = 2
 
+        _ = Visualizer.get_instance('name1')
         hook = VisualizationHook(
             interval=2, vis_kwargs_list=dict(type='GAN'), n_samples=3, n_row=8)
         mock_visualuzer = MagicMock()
@@ -515,6 +523,7 @@ class TestVisualizationHook(TestCase):
 
     def test_after_test_iter(self):
         model = MagicMock()
+        _ = Visualizer.get_instance('name1')
         hook = VisualizationHook(
             interval=10,
             n_samples=2,
@@ -593,6 +602,7 @@ class TestVisualizationHook(TestCase):
             hook.after_test_iter(runner, 42, [], outputs)
 
         # test max save time
+        _ = Visualizer.get_instance('name1')
         hook = VisualizationHook(
             interval=10,
             n_samples=2,
@@ -616,6 +626,28 @@ class TestVisualizationHook(TestCase):
 
         hook.after_test_iter(runner, 0, [], outputs)
         assert mock_visualuzer.add_datasample.call_count == 3
+
+    def test_after_train_epoch(self):
+        model = MagicMock()
+        _ = Visualizer.get_instance('name1')
+        hook = VisualizationHook(
+            interval=1,
+            n_samples=1,
+            vis_kwargs_list=dict(type='Data', name='fake_img'),
+            by_epoch=True,
+            fixed_input=True)
+        hook.inputs_buffer = {'Data': ['dummy']}
+        mock_visualuzer = MagicMock()
+        mock_visualuzer.add_datasample = MagicMock()
+        hook._visualizer = mock_visualuzer
+
+        runner = MagicMock()
+        runner.train_dataloader.batch_size = 1
+        runner.model = model
+        runner.epoch = 5
+
+        hook.after_train_epoch(runner)
+        self.assertEqual(mock_visualuzer.add_datasample.call_count, 1)
 
 
 def teardown_module():

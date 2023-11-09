@@ -85,8 +85,10 @@ def test_stable_diffusion_xl_step():
 
     # train step
     data = dict(
-        inputs=torch.ones([1, 3, 64, 64]),
-        time_ids=torch.zeros((1, 6)),
+        inputs={
+            'img': torch.ones([1, 3, 64, 64]),
+            'time_ids': torch.zeros((1, 6))
+        },
         data_samples=[
             DataSample(prompt='an insect robot preparing a delicious meal')
         ])

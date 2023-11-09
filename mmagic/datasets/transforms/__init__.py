@@ -20,7 +20,8 @@ from .generate_frame_indices import (GenerateFrameIndices,
                                      GenerateFrameIndiceswithPadding,
                                      GenerateSegmentIndices)
 from .get_masked_image import GetMaskedImage
-from .loading import (GetSpatialDiscountMask, LoadImageFromFile, LoadMask,
+from .loading import (GetSpatialDiscountMask, LoadImageFromFile,
+                      LoadImageFromHuggingFaceDataset, LoadMask,
                       LoadPairedImageFromFile)
 from .matlab_like_resize import MATLABLikeResize
 from .normalization import Normalize, RescaleToZeroOne
@@ -28,6 +29,7 @@ from .random_degradations import (DegradationsWithShuffle, RandomBlur,
                                   RandomJPEGCompression, RandomNoise,
                                   RandomResize, RandomVideoCompression)
 from .random_down_sampling import RandomDownSampling
+from .sdxl import ComputeTimeIds, FlipXL, RandomCropXL, ResizeEdge
 from .trimap import (FormatTrimap, GenerateTrimap,
                      GenerateTrimapWithDistTransform, TransformTrimap)
 from .values import CopyValues, SetValues
@@ -49,5 +51,7 @@ __all__ = [
     'GenerateTrimapWithDistTransform', 'CompositeFg', 'RandomLoadResizeBg',
     'MergeFgAndBg', 'PerturbBg', 'RandomJitter', 'LoadPairedImageFromFile',
     'CenterCropLongEdge', 'RandomCropLongEdge', 'NumpyPad', 'InstanceCrop',
-    'Albumentations', 'AlbuCorruptFunction', 'PairedAlbuTransForms'
+    'Albumentations', 'AlbuCorruptFunction', 'PairedAlbuTransForms',
+    'LoadImageFromHuggingFaceDataset', 'RandomCropXL', 'FlipXL',
+    'ComputeTimeIds', 'ResizeEdge'
 ]

@@ -68,7 +68,7 @@ class DataPreprocessor(ImgDataPreprocessor):
             data sample. Only support with input data samples are
             `DataSamples`. Defaults to True.
     """
-    _NON_IMAGE_KEYS = ['noise']
+    _NON_IMAGE_KEYS = ['noise', 'time_ids']
     _NON_CONCATENATE_KEYS = ['num_batches', 'mode', 'sample_kwargs', 'eq_cfg']
 
     def __init__(self,

@@ -20,9 +20,11 @@ We present SDXL, a latent diffusion model for text-to-image synthesis. Compared 
 
 ## Pretrained models
 
-|                               Model                                |    Task    | Dataset | Download |
-| :----------------------------------------------------------------: | :--------: | :-----: | :------: |
-| [stable_diffusion_xl](./stable-diffusion_xl_ddim_denoisingunet.py) | Text2Image |    -    |    -     |
+|                                        Model                                        |    Task    |                                         Dataset                                          |  Download   |
+| :---------------------------------------------------------------------------------: | :--------: | :--------------------------------------------------------------------------------------: | :---------: |
+|         [stable_diffusion_xl](./stable-diffusion_xl_ddim_denoisingunet.py)          | Text2Image |                                            -                                             |      -      |
+|      [stable_diffusion_xl_pokemon_blip](./stable-diffusion_xl_pokemon_blip.py)      | Text2Image | [pokemon-blip-caption](https://huggingface.co/datasets/lambdalabs/pokemon-blip-captions) | [model](<>) |
+| [stable-diffusion_xl_lora_pokemon_blip](./stable-diffusion_xl_lora_pokemon_blip.py) | Text2Image | [pokemon-blip-caption](https://huggingface.co/datasets/lambdalabs/pokemon-blip-captions) | [model](<>) |
 
 We use stable diffusion xl weights. This model has several weights including vae, unet and clip.
 

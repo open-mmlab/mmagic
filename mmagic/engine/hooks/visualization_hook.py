@@ -149,6 +149,7 @@ class VisualizationHook(Hook):
             If None is passed, all samples will be saved. Defaults to 100.
         show (bool): Whether to display the drawn image. Default to False.
         wait_time (float): The interval of show (s). Defaults to 0.
+        by_epoch (bool): Whether to visualize by epoch. Defaults to False.
     """
 
     priority = 'NORMAL'
@@ -182,10 +183,12 @@ class VisualizationHook(Hook):
                  max_save_at_test: int = 100,
                  test_vis_keys: Optional[Union[str, List[str]]] = None,
                  show: bool = False,
-                 wait_time: float = 0):
+                 wait_time: float = 0,
+                 by_epoch: bool = False):
 
         self._visualizer: Visualizer = Visualizer.get_current_instance()
         self.interval = interval
+        self.by_epoch = by_epoch
 
         self.vis_kwargs_list = deepcopy(vis_kwargs_list)
         if isinstance(self.vis_kwargs_list, dict):
@@ -287,8 +290,21 @@ class VisualizationHook(Hook):
                 Defaults to None.
             outputs (dict, optional): Outputs from model. Defaults to None.
         """
-        if self.every_n_inner_iters(batch_idx, self.interval):
+        if not self.by_epoch and self.every_n_inner_iters(
+                batch_idx, self.interval):
             self.vis_sample(runner, batch_idx, data_batch, outputs)
+
+    @master_only
+    def after_train_epoch(self, runner) -> None:
+        """Visualize samples after train iteration.
+
+        Args:
+            runner (Runner): The runner of the training process.
+        """
+        batch_idx = runner.epoch
+        if self.by_epoch and self.every_n_inner_iters(batch_idx,
+                                                      self.interval):
+            self.vis_sample(runner, batch_idx, {}, None)
 
     @torch.no_grad()
     def vis_sample(self,

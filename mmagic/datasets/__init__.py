@@ -7,6 +7,7 @@ from .comp1k_dataset import AdobeComp1kDataset
 from .controlnet_dataset import ControlNetDataset
 from .dreambooth_dataset import DreamBoothDataset
 from .grow_scale_image_dataset import GrowScaleImgDataset
+from .hf_dataset import HuggingFaceDataset
 from .imagenet_dataset import ImageNet
 from .mscoco_dataset import MSCoCoDataset
 from .paired_image_dataset import PairedImageDataset
@@ -19,5 +20,6 @@ __all__ = [
     'BasicConditionalDataset', 'UnpairedImageDataset', 'PairedImageDataset',
     'ImageNet', 'CIFAR10', 'GrowScaleImgDataset', 'SinGANDataset',
     'MSCoCoDataset', 'ControlNetDataset', 'DreamBoothDataset', 'ViCoDataset',
-    'ControlNetDataset', 'SDFinetuneDataset', 'TextualInversionDataset'
+    'ControlNetDataset', 'SDFinetuneDataset', 'TextualInversionDataset',
+    'HuggingFaceDataset'
 ]

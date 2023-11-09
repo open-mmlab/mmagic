@@ -5,9 +5,12 @@ import mmcv
 import numpy as np
 import pytest
 from mmengine.fileio.backends import LocalBackend
+from PIL import Image
 
 from mmagic.datasets.transforms import (GetSpatialDiscountMask,
-                                        LoadImageFromFile, LoadMask)
+                                        LoadImageFromFile,
+                                        LoadImageFromHuggingFaceDataset,
+                                        LoadMask)
 
 
 def test_load_image_from_file():
@@ -296,6 +299,43 @@ class TestInpaintLoading:
         with pytest.raises(NotImplementedError):
             loader = LoadMask('xxxx', mask_config)
             results = loader(results)
+
+
+def test_load_image_from_huggingface_dataset():
+
+    path_baboon = Path(
+        __file__).parent.parent.parent / 'data' / 'image' / 'gt' / 'baboon.png'
+    img_baboon = mmcv.imread(str(path_baboon), flag='color')
+    h, w, _ = img_baboon.shape
+
+    # read gt image
+    # input path is Path object
+    results = dict(img=Image.open(str(path_baboon)))
+    config = dict(key='img')
+    image_loader = LoadImageFromHuggingFaceDataset(**config)
+    results = image_loader(results)
+    assert results['img'].shape == (h, w, 3)
+    assert results['ori_img_shape'] == (h, w, 3)
+    np.testing.assert_almost_equal(results['img'], img_baboon)
+    assert results['img_channel_order'] == 'bgr'
+    assert results['img_color_type'] == 'color'
+
+    # test save_original_img
+    results = dict(img=Image.open(str(path_baboon)))
+    config = dict(key='img', save_original_img=True, channel_order='rgb')
+    image_loader = LoadImageFromHuggingFaceDataset(**config)
+    results = image_loader(results)
+    assert results['img'].shape == (h, w, 3)
+    assert results['ori_img_shape'] == (h, w, 3)
+    np.testing.assert_almost_equal(results['ori_img'], results['img'])
+    np.testing.assert_almost_equal(results['img'], img_baboon[..., ::-1])
+    assert id(results['ori_img']) != id(results['img'])
+    assert results['img_channel_order'] == 'rgb'
+    assert results['img_color_type'] == 'color'
+
+    assert image_loader.__repr__() == (
+        image_loader.__class__.__name__ + '(key=img, channel_order=rgb,'
+        ' to_float32=False, save_original_img=True)')
 
 
 def teardown_module():
