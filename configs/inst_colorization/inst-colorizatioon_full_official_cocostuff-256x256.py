@@ -48,6 +48,7 @@ test_pipeline = [
     dict(
         type='InstanceCrop',
         config_file='mmdet::mask_rcnn/mask-rcnn_x101-32x8d_fpn_ms-poly-3x_coco.py',  # noqa
+        from_pretrained=None,
         finesize=256,
         box_num_upbound=5),
     dict(
