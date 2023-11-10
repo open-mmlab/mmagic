@@ -12,10 +12,13 @@ from torch.nn import Linear
 from transformers import (CLIPModel, CLIPPreTrainedModel, CLIPTextModel,
                           CLIPVisionConfig, CLIPVisionModel)
 from transformers.modeling_outputs import BaseModelOutputWithPooling
+
 try:
     from transformers.models.clip.modeling_clip import _expand_mask
 except:
-    from transformers.models.clip.modeling_clip import _prepare_4d_attention_mask as _expand_mask
+    from transformers.models.clip.modeling_clip import \
+        _prepare_4d_attention_mask as _expand_mask
+
 
 class FastComposerModel(nn.Module):
     """FastComposerModel is based on the StableDiffusion Model and the Clip
