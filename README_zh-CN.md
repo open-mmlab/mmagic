@@ -154,7 +154,7 @@ https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-
 
 ### ✨ 最佳实践
 
-主分支代码的最佳实践基于 **Python 3.8+** 和 **PyTorch 1.10+** 。
+- 主分支代码的最佳实践基于 **Python 3.9+** 和 **PyTorch 2.0+** 。
 
 <p align="right"><a href="#table">🔝返回目录</a></p>
 
