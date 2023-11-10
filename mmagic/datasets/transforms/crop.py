@@ -968,11 +968,11 @@ class InstanceCrop(BaseTransform):
             "\"mim install 'mmdet >= 3.0.0'\".")
 
         cfg = get_config(config_file, pretrained=True)
-        
+
         # loading checkpoint from local path
-        if from_pretrained is not None: 
-            cfg.model.backbone.init_cfg.checkpoint=from_pretrained 
-             
+        if from_pretrained is not None:
+            cfg.model.backbone.init_cfg.checkpoint = from_pretrained
+
         with DefaultScope.overwrite_default_scope('mmdet'):
             self.predictor = mmdet_apis.init_detector(cfg, cfg.model_path)
 
