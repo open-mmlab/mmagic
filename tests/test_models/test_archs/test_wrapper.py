@@ -40,6 +40,7 @@ class TestWrapper(TestCase):
         self.assertIn(f'From Config: {config_path}', model_str)
 
         # 2. test save as diffuser
+        os.makedirs(model_path, exist_ok=True)
         if digit_version(TORCH_VERSION) < digit_version('2.0.1'):
             model.save_pretrained(model_path, safe_serialization=False)
         else:
