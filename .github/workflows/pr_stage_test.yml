@@ -109,7 +109,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8]
-        platform: [cpu, cu111]
+        platform: [cpu, cu118]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
