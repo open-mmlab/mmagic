@@ -2,6 +2,7 @@
 import os
 import os.path as osp
 import shutil
+import stat
 from unittest import TestCase
 from unittest.mock import MagicMock
 
@@ -72,7 +73,11 @@ class TestWrapper(TestCase):
         model.init_weights()
 
         # delete saved model to save space
+        if not os.access(model_path, os.W_OK):
+            os.chmod(model_path, stat.S_IWUSR)
         shutil.rmtree(model_path)
+        if not os.access(ckpt_path, os.W_OK):
+            os.chmod(ckpt_path, stat.S_IWUSR)
         shutil.rmtree(ckpt_path)
 
         # 4. test loading without repo_id
