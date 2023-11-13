@@ -16,7 +16,7 @@ class IDLossModel(nn.Module):
             Defaults to None.
     """
     # ir se50 weight download link
-    _ir_se50_url = 'https://gg0ltg.by.files.1drv.com/y4m3fNNszG03z9n8JQ7EhdtQKW8tQVQMFBisPVRgoXi_UfP8pKSSqv8RJNmHy2JampcPmEazo_Mx6NTFSqBpZmhPniROm9uNoghnzaavvYpxkCfiNmDH9YyIF3g-0nwt6bsjk2X80JDdL5z88OAblSDmB-kuQkWSWvA9BM3Xt8DHMCY8lO4HOQCZ5YWUtFyPAVwEyzTGDM-JRA5EJoN2bF1cg'  # noqa
+    _ir_se50_url = 'https://download.openxlab.org.cn/models/rangoliu/Arcface-IR-SE50/weight/Arcface-IR-SE50'  # noqa
 
     def __init__(self, ir_se50_weights=None):
         super(IDLossModel, self).__init__()
