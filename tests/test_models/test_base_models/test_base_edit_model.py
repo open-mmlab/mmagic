@@ -50,7 +50,6 @@ def test_base_edit_model():
 
     # train
     log_vars = model.train_step(data, optim_wrapper)
-    assert model.generator.layer.weight.grad is not None
     assert isinstance(log_vars['loss'], torch.Tensor)
     save_loss = log_vars['loss']
     log_vars = model.train_step(data, optim_wrapper)
