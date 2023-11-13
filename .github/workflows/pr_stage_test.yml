@@ -25,8 +25,8 @@ jobs:
       matrix:
         python-version: [3.8]
         include:
-          - torch: 2.1.0
-            torchvision: 0.16.0
+          - torch: 2.0.1
+            torchvision: 0.15.2
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -90,7 +90,7 @@ jobs:
           apt-get update
           apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libxrender-dev
       - name: Install PyTorch
-        run: pip install torch==2.1.0+cpu torchvision==0.16.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+        run: pip install torch==2.0.1+cpu torchvision==0.15.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install mmagic dependencies
         run: |
           pip install git+https://github.com/open-mmlab/mmengine.git@main
