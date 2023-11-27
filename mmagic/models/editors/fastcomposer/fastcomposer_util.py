@@ -12,7 +12,13 @@ from torch.nn import Linear
 from transformers import (CLIPModel, CLIPPreTrainedModel, CLIPTextModel,
                           CLIPVisionConfig, CLIPVisionModel)
 from transformers.modeling_outputs import BaseModelOutputWithPooling
-from transformers.models.clip.modeling_clip import _expand_mask
+
+from mmagic.utils import try_import
+
+_expand_mask = try_import('transformers.models.clip.modeling_clip')
+if _expand_mask is None:
+    _expand_mask = try_import(
+        'ransformers.models.clip.modeling_clip._prepare_4d_attention_mask')
 
 
 class FastComposerModel(nn.Module):

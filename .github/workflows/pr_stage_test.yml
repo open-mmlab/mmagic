@@ -23,10 +23,10 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python-version: [3.7]
+        python-version: [3.8]
         include:
-          - torch: 1.8.1
-            torchvision: 0.9.1
+          - torch: 2.0.1
+            torchvision: 0.15.2
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -66,13 +66,13 @@ jobs:
       #   if: ${{ failure() }}
       #   uses: mxschmitt/action-tmate@v3
 
-  build_cu102:
+  build_cu118:
     runs-on: ubuntu-22.04
     container:
-      image: pytorch/pytorch:1.8.1-cuda10.2-cudnn7-devel
+      image: pytorch/pytorch:2.1.0-cuda11.8-cudnn8-devel
     strategy:
       matrix:
-        python-version: [3.7]
+        python-version: [3.8]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -88,9 +88,9 @@ jobs:
       - name: Install system dependencies
         run: |
           apt-get update
-          apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libxrender-dev
+          DEBIAN_FRONTEND=noninteractive apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libxrender-dev
       - name: Install PyTorch
-        run: pip install torch==1.8.1+cpu torchvision==0.9.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+        run: pip install torch==2.0.1+cpu torchvision==0.15.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install mmagic dependencies
         run: |
           pip install git+https://github.com/open-mmlab/mmengine.git@main
@@ -108,8 +108,8 @@ jobs:
     runs-on: windows-2022
     strategy:
       matrix:
-        python-version: [3.7]
-        platform: [cpu, cu111]
+        python-version: [3.8]
+        platform: [cpu, cu118]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -121,7 +121,7 @@ jobs:
       - name: Install lmdb
         run: python -m pip install lmdb
       - name: Install PyTorch
-        run: python -m pip install torch==1.8.1+${{matrix.platform}} torchvision==0.9.1+${{matrix.platform}} -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html
+        run: python -m pip install torch==2.0.1+${{matrix.platform}} torchvision==0.15.2+${{matrix.platform}} -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install mmagic dependencies
         run: |
           python -m pip install git+https://github.com/open-mmlab/mmengine.git@main

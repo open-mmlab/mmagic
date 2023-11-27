@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import os
 import os.path as osp
+import platform
 import shutil
 from unittest import TestCase
 from unittest.mock import MagicMock
@@ -12,7 +13,7 @@ from mmengine.utils.dl_utils import TORCH_VERSION
 from mmagic.registry import MODELS
 from mmagic.utils import register_all_modules
 
-test_dir = osp.join(osp.dirname(__file__), '../../..', 'tests')
+test_dir = osp.join(osp.dirname(__file__), '..', '..', '..', 'tests')
 config_path = osp.join(test_dir, 'configs', 'diffuser_wrapper_cfg')
 model_path = osp.join(test_dir, 'configs', 'tmp_weight')
 ckpt_path = osp.join(test_dir, 'configs', 'ckpt')
@@ -40,6 +41,7 @@ class TestWrapper(TestCase):
         self.assertIn(f'From Config: {config_path}', model_str)
 
         # 2. test save as diffuser
+        os.makedirs(model_path, exist_ok=True)
         if digit_version(TORCH_VERSION) < digit_version('2.0.1'):
             model.save_pretrained(model_path, safe_serialization=False)
         else:
@@ -71,8 +73,9 @@ class TestWrapper(TestCase):
         model.init_weights()
 
         # delete saved model to save space
-        shutil.rmtree(model_path)
-        shutil.rmtree(ckpt_path)
+        if 'win' not in platform.system().lower():
+            shutil.rmtree(model_path)
+            shutil.rmtree(ckpt_path)
 
         # 4. test loading without repo_id
         model = MODELS.build(
