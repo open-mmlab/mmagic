@@ -26,11 +26,6 @@ pipe.tokenizer = TokenizerWrapper(from_pretrained="runwayml/stable-diffusion-v1-
 add_tokens(tokenizer = pipe.tokenizer,text_encoder = pipe.text_encoder,placeholder_tokens = ["MMcontext","MMshape","MMobject"],initialize_tokens = ["a","a","a"],num_vectors_per_token = 10)
 pipe.unet.load_state_dict(torch.load("./models/diffusion_pytorch_model.bin"), strict=False)
 pipe.text_encoder.load_state_dict(torch.load("./models/change_pytorch_model.bin"), strict=False)
-
-# add_tokens(tokenizer = pipe.tokenizer,text_encoder = pipe.text_encoder,placeholder_tokens = ["MMRemoveZJH","MMInsertZJH","MMInsert_allZJH"],initialize_tokens = ["a","a","a"],num_vectors_per_token = 10)
-# pipe.unet.load_state_dict(torch.load("/mnt/petrelfs/zhuangjunhao/code/Smartbrush/laion_open0-8_4to9_1024_seg_bbox_aug_align_doubleprompt_VQA_3prompt_negprompt_warmup_lr5_LaMa_BLIP_coco1-model/checkpoint-22000/unet/diffusion_pytorch_model.bin"), strict=False)
-# pipe.text_encoder.load_state_dict(torch.load("/mnt/petrelfs/zhuangjunhao/code/Smartbrush/laion_open0-8_4to9_1024_seg_bbox_aug_align_doubleprompt_VQA_3prompt_negprompt_warmup_lr5_LaMa_BLIP_coco1-model/checkpoint-22000/unet/pytorch_model.bin"), strict=False)
-
 pipe = pipe.to("cuda")
 
 import random
@@ -59,25 +54,6 @@ def add_task(prompt,negative_prompt,control_type):
         negative_promptB = negative_prompt+" MMobject"
 
     return promptA,promptB,negative_promptA,negative_promptB
-
-# def add_task(prompt,negative_prompt,control_type):
-#     if control_type == 'Object_removal':
-#         promptA = prompt+" MMRemoveZJH"
-#         promptB = prompt+" MMRemoveZJH"
-#         negative_promptA = negative_prompt+" MMInsert_allZJH"
-#         negative_promptB = negative_prompt+" MMInsert_allZJH"
-#     elif control_type == 'Shape_object':
-#         promptA = prompt+" MMInsertZJH"
-#         promptB = prompt+" MMRemoveZJH"
-#         negative_promptA = negative_prompt+" MMInsertZJH"
-#         negative_promptB = negative_prompt+" MMRemoveZJH"
-#     elif control_type == 'Object_inpaint':
-#         promptA = prompt+" MMInsert_allZJH"
-#         promptB = prompt+" MMInsert_allZJH"
-#         negative_promptA = negative_prompt+" MMInsert_allZJH"
-#         negative_promptB = negative_prompt+" MMInsert_allZJH"
-
-#     return promptA,promptB,negative_promptA,negative_promptB
 
 from PIL import Image, ImageFilter
 def predict(input_image, mask_img, prompt,Fitting_degree, ddim_steps, scale, seed,negative_prompt,task):
