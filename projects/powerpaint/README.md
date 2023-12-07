@@ -12,13 +12,13 @@ This README provides a step-by-step guide to download the repository, set up the
 
 ```bash
 # Clone the Repository
-git clone https://github.com/zhuang2002/PowerPaint.git
+git clone https://github.com/open-mmlab/mmagic.git
 
 # Navigate to the Repository
-cd PowerPaint
+cd projects/powerpaint
 
 # Create Virtual Environment with Conda
-conda create --name PowerPaint python=3.8
+conda create --name PowerPaint python=3.9
 conda activate PowerPaint
 
 # Install Dependencies
@@ -43,16 +43,6 @@ python gradio_PowerPaint.py
 ```
 
 This command will launch the Gradio interface for PowerPaint.
-
-## Using PowerPaint with ControlNet
-
-PowerPaint can be used in conjunction with ControlNet. The project supports ControlNet integration for human pose, HED, Canny, and depth. To use PowerPaint with ControlNet, execute the following command:
-
-```bash
-python gradio_PowerPaint_ControlNet.py
-```
-
-This command will launch the Gradio interface for PowerPaint with ControlNet.
 
 Feel free to explore and create stunning images with PowerPaint!
 
