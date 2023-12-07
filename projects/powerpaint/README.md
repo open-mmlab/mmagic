@@ -1,8 +1,8 @@
 # A Task is Worth One Word: Learning with Task Prompts for High-Quality Versatile Image Inpainting
 
-### [Project Page](https://powerpaint.github.io/) | [Paper](https://arxiv.org/abs/2312.03594) 
+### [Project Page](https://powerpaint.github.io/) | [Paper](https://arxiv.org/abs/2312.03594)
 
-This README provides a step-by-step guide to download the repository, set up the required virtual environment named "PowerPaint" using conda, and run PowerPaint with or without ControlNet. 
+This README provides a step-by-step guide to download the repository, set up the required virtual environment named "PowerPaint" using conda, and run PowerPaint with or without ControlNet.
 
 **Stronger Model Weights and Online Demo Coming Soon！**
 
@@ -60,7 +60,7 @@ Feel free to explore and create stunning images with PowerPaint!
 
 ```
 @misc{zhuang2023task,
-      title={A Task is Worth One Word: Learning with Task Prompts for High-Quality Versatile Image Inpainting}, 
+      title={A Task is Worth One Word: Learning with Task Prompts for High-Quality Versatile Image Inpainting},
       author={Junhao Zhuang and Yanhong Zeng and Wenran Liu and Chun Yuan and Kai Chen},
       year={2023},
       eprint={2312.03594},
