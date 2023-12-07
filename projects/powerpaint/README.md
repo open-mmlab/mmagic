@@ -15,7 +15,6 @@ This README provides a step-by-step guide to download the repository, set up the
 git clone https://github.com/zhuang2002/PowerPaint.git
 
 # Navigate to the Repository
-
 cd PowerPaint
 
 # Create Virtual Environment with Conda
