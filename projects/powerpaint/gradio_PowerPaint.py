@@ -12,20 +12,11 @@ from pipeline.pipeline_PowerPaint import StableDiffusionInpaintPipeline as Pipel
 from utils.utils import *
 pipe = Pipeline.from_pretrained(
     "runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16,safety_checker=None)
-pipe.tokenizer = CLIPTokenizer.from_pretrained(
-        "runwayml/stable-diffusion-v1-5", subfolder="tokenizer", revision=None, torch_dtype=torch.float16
-    )
-pipe.text_encoder = CLIPTextModel.from_pretrained(
-            "runwayml/stable-diffusion-v1-5", subfolder="text_encoder", revision=None,torch_dtype=torch.float16
-        )
-pipe.vae = AutoencoderKL.from_pretrained(
-            "runwayml/stable-diffusion-v1-5", subfolder="vae", revision=None,torch_dtype=torch.float16
-        )
-
 pipe.tokenizer = TokenizerWrapper(from_pretrained="runwayml/stable-diffusion-v1-5", subfolder="tokenizer", revision=None)
 add_tokens(tokenizer = pipe.tokenizer,text_encoder = pipe.text_encoder,placeholder_tokens = ["MMcontext","MMshape","MMobject"],initialize_tokens = ["a","a","a"],num_vectors_per_token = 10)
-pipe.unet.load_state_dict(torch.load("./models/diffusion_pytorch_model.bin"), strict=False)
-pipe.text_encoder.load_state_dict(torch.load("./models/change_pytorch_model.bin"), strict=False)
+pipe.unet.load_state_dict(torch.load("./models/unet/diffusion_pytorch_model.bin"), strict=False)
+pipe.text_encoder.load_state_dict(torch.load("./models/text_encoder/pytorch_model.bin"), strict=False)
+
 pipe = pipe.to("cuda")
 
 import random
@@ -38,20 +29,20 @@ def set_seed(seed):
 
 def add_task(prompt,negative_prompt,control_type):
     if control_type == 'Object_removal':
-        promptA = prompt+" MMcontext"
-        promptB = prompt+" MMcontext"
-        negative_promptA = negative_prompt+" MMobject"
-        negative_promptB = negative_prompt+" MMobject"
+        promptA = prompt+" P_ctxt"
+        promptB = prompt+" P_ctxt"
+        negative_promptA = negative_prompt+" P_obj"
+        negative_promptB = negative_prompt+" P_obj"
     elif control_type == 'Shape_object':
-        promptA = prompt+" MMshape"
-        promptB = prompt+" MMcontext"
-        negative_promptA = negative_prompt+" MMshape"
-        negative_promptB = negative_prompt+" MMcontext"
+        promptA = prompt+" P_shape"
+        promptB = prompt+" P_ctxt"
+        negative_promptA = negative_prompt+" P_shape"
+        negative_promptB = negative_prompt+" P_ctxt"
     elif control_type == 'Object_inpaint':
-        promptA = prompt+" MMobject"
-        promptB = prompt+" MMobject"
-        negative_promptA = negative_prompt+" MMobject"
-        negative_promptB = negative_prompt+" MMobject"
+        promptA = prompt+" P_obj"
+        promptB = prompt+" P_obj"
+        negative_promptA = negative_prompt+" P_obj"
+        negative_promptB = negative_prompt+" P_obj"
 
     return promptA,promptB,negative_promptA,negative_promptB
 
