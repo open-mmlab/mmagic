@@ -1,37 +1,27 @@
 import random
 
+import cv2
 import gradio as gr
 import numpy as np
 import torch
-from diffusers import AutoencoderKL
+from controlnet_aux import HEDdetector, OpenposeDetector
+from diffusers.pipelines.controlnet.pipeline_controlnet import ControlNetModel
 from PIL import Image, ImageFilter
 from pipeline.pipeline_PowerPaint import \
     StableDiffusionInpaintPipeline as Pipeline
-from transformers import CLIPTextModel, CLIPTokenizer
+from pipeline.pipeline_PowerPaint_ControlNet import \
+    StableDiffusionControlNetInpaintPipeline as controlnetPipeline
+from transformers import DPTFeatureExtractor, DPTForDepthEstimation
 from utils.utils import TokenizerWrapper, add_tokens
 
 torch.set_grad_enabled(False)
 
-weight_type = torch.float16
+weight_dtype = torch.float16
+global pipe
 pipe = Pipeline.from_pretrained(
     'runwayml/stable-diffusion-inpainting',
-    torch_dtype=torch.float16,
+    torch_dtype=weight_dtype,
     safety_checker=None)
-pipe.tokenizer = CLIPTokenizer.from_pretrained(
-    'runwayml/stable-diffusion-v1-5',
-    subfolder='tokenizer',
-    revision=None,
-    torch_dtype=torch.float16)
-pipe.text_encoder = CLIPTextModel.from_pretrained(
-    'runwayml/stable-diffusion-v1-5',
-    subfolder='text_encoder',
-    revision=None,
-    torch_dtype=torch.float16)
-pipe.vae = AutoencoderKL.from_pretrained(
-    'runwayml/stable-diffusion-v1-5',
-    subfolder='vae',
-    revision=None,
-    torch_dtype=torch.float16)
 pipe.tokenizer = TokenizerWrapper(
     from_pretrained='runwayml/stable-diffusion-v1-5',
     subfolder='tokenizer',
@@ -55,6 +45,17 @@ pipe.text_encoder.load_state_dict(
     strict=False)
 pipe = pipe.to('cuda')
 
+depth_estimator = DPTForDepthEstimation.from_pretrained(
+    'Intel/dpt-hybrid-midas').to('cuda')
+feature_extractor = DPTFeatureExtractor.from_pretrained(
+    'Intel/dpt-hybrid-midas')
+openpose = OpenposeDetector.from_pretrained('lllyasviel/ControlNet')
+hed = HEDdetector.from_pretrained('lllyasviel/ControlNet')
+
+global current_control
+current_control = 'canny'
+controlnet_conditioning_scale = 0.5
+
 
 def set_seed(seed):
     torch.manual_seed(seed)
@@ -64,32 +65,44 @@ def set_seed(seed):
     random.seed(seed)
 
 
+def get_depth_map(image):
+    image = feature_extractor(
+        images=image, return_tensors='pt').pixel_values.to('cuda')
+    with torch.no_grad(), torch.autocast('cuda'):
+        depth_map = depth_estimator(image).predicted_depth
+
+    depth_map = torch.nn.functional.interpolate(
+        depth_map.unsqueeze(1),
+        size=(1024, 1024),
+        mode='bicubic',
+        align_corners=False,
+    )
+    depth_min = torch.amin(depth_map, dim=[1, 2, 3], keepdim=True)
+    depth_max = torch.amax(depth_map, dim=[1, 2, 3], keepdim=True)
+    depth_map = (depth_map - depth_min) / (depth_max - depth_min)
+    image = torch.cat([depth_map] * 3, dim=1)
+
+    image = image.permute(0, 2, 3, 1).cpu().numpy()[0]
+    image = Image.fromarray((image * 255.0).clip(0, 255).astype(np.uint8))
+    return image
+
+
 def add_task(prompt, negative_prompt, control_type):
-    if control_type == 'context-aware':
-        promptA = prompt + ' MMcontext'
-        promptB = prompt + ' MMcontext'
-        negative_promptA = negative_prompt + ' MMcontext'
-        negative_promptB = negative_prompt + ' MMcontext'
-    elif control_type == 'object-removal':
-        promptA = prompt + ' MMcontext'
-        promptB = prompt + ' MMcontext'
-        negative_promptA = negative_prompt + ' MMobject'
-        negative_promptB = negative_prompt + ' MMobject'
+    if control_type == 'object-removal':
+        promptA = prompt + ' P_ctxt'
+        promptB = prompt + ' P_ctxt'
+        negative_promptA = negative_prompt + ' P_obj'
+        negative_promptB = negative_prompt + ' P_obj'
     elif control_type == 'shape-guided':
-        promptA = prompt + ' MMshape'
-        promptB = prompt + ' MMcontext'
-        negative_promptA = negative_prompt + ' MMshape'
-        negative_promptB = negative_prompt + ' MMcontext'
-    elif control_type == 'text-guided':
-        promptA = prompt + ' MMobject'
-        promptB = prompt + ' MMobject'
-        negative_promptA = negative_prompt + ' MMobject'
-        negative_promptB = negative_prompt + ' MMobject'
+        promptA = prompt + ' P_shape'
+        promptB = prompt + ' P_ctxt'
+        negative_promptA = negative_prompt + ' P_shape'
+        negative_promptB = negative_prompt + ' P_ctxt'
     else:
-        promptA = prompt + ' MMcontext'
-        promptB = prompt + ' MMcontext'
-        negative_promptA = negative_prompt + ' MMcontext'
-        negative_promptB = negative_prompt + ' MMcontext'
+        promptA = prompt + ' P_obj'
+        promptB = prompt + ' P_obj'
+        negative_promptA = negative_prompt + ' P_obj'
+        negative_promptB = negative_prompt + ' P_obj'
 
     return promptA, promptB, negative_promptA, negative_promptB
 
@@ -112,6 +125,7 @@ def predict(input_image, prompt, fitting_degree, ddim_steps, scale, seed,
     input_image['image'] = input_image['image'].resize((H, W))
     input_image['mask'] = input_image['mask'].resize((H, W))
     set_seed(seed)
+    global pipe
     result = pipe(
         promptA=promptA,
         promptB=promptB,
@@ -147,6 +161,134 @@ def predict(input_image, prompt, fitting_degree, ddim_steps, scale, seed,
     return result_paste, dict_res
 
 
+def predict_controlnet(input_image, input_control_image, control_type, prompt,
+                       ddim_steps, scale, seed, negative_prompt):
+    promptA = prompt + ' P_obj'
+    promptB = prompt + ' P_obj'
+    negative_promptA = negative_prompt + ' P_obj'
+    negative_promptB = negative_prompt + ' P_obj'
+    img = np.array(input_image['image'].convert('RGB'))
+    W = int(np.shape(img)[0] - np.shape(img)[0] % 8)
+    H = int(np.shape(img)[1] - np.shape(img)[1] % 8)
+    input_image['image'] = input_image['image'].resize((H, W))
+    input_image['mask'] = input_image['mask'].resize((H, W))
+    print(np.shape(np.array(input_image['mask'].convert('RGB'))))
+    print(np.shape(np.array(input_image['image'].convert('RGB'))))
+
+    global current_control
+    global pipe
+
+    base_control = ControlNetModel.from_pretrained(
+        'lllyasviel/sd-controlnet-canny', torch_dtype=weight_dtype)
+    control_pipe = controlnetPipeline(pipe.vae, pipe.text_encoder,
+                                      pipe.tokenizer, pipe.unet, base_control,
+                                      pipe.scheduler, None, None, False)
+    control_pipe = control_pipe.to('cuda')
+    if current_control != control_type:
+        if control_type == 'canny' or control_type is None:
+            control_pipe.controlnet = ControlNetModel.from_pretrained(
+                'lllyasviel/sd-controlnet-canny', torch_dtype=weight_dtype)
+        elif control_type == 'pose':
+            control_pipe.controlnet = ControlNetModel.from_pretrained(
+                'lllyasviel/sd-controlnet-openpose', torch_dtype=weight_dtype)
+        elif control_type == 'depth':
+            control_pipe.controlnet = ControlNetModel.from_pretrained(
+                'lllyasviel/sd-controlnet-depth', torch_dtype=weight_dtype)
+        else:
+            control_pipe.controlnet = ControlNetModel.from_pretrained(
+                'lllyasviel/sd-controlnet-hed', torch_dtype=weight_dtype)
+        control_pipe = control_pipe.to('cuda')
+        current_control = control_type
+
+    controlnet_image = input_control_image
+    if current_control == 'canny':
+        controlnet_image = controlnet_image.resize((H, W))
+        controlnet_image = np.array(controlnet_image)
+        controlnet_image = cv2.Canny(controlnet_image, 100, 200)
+        controlnet_image = controlnet_image[:, :, None]
+        controlnet_image = np.concatenate(
+            [controlnet_image, controlnet_image, controlnet_image], axis=2)
+        controlnet_image = Image.fromarray(controlnet_image)
+    elif current_control == 'pose':
+        controlnet_image = openpose(controlnet_image)
+    elif current_control == 'depth':
+        controlnet_image = controlnet_image.resize((H, W))
+        controlnet_image = get_depth_map(controlnet_image)
+    else:
+        controlnet_image = hed(controlnet_image)
+
+    mask_np = np.array(input_image['mask'].convert('RGB'))
+    controlnet_image = controlnet_image.resize((H, W))
+    set_seed(seed)
+    result = control_pipe(
+        promptA=promptB,
+        promptB=promptA,
+        tradoff=1.0,
+        tradoff_nag=1.0,
+        negative_promptA=negative_promptA,
+        negative_promptB=negative_promptB,
+        image=input_image['image'].convert('RGB'),
+        mask_image=input_image['mask'].convert('RGB'),
+        control_image=controlnet_image,
+        width=H,
+        height=W,
+        guidance_scale=scale,
+        num_inference_steps=ddim_steps).images[0]
+    red = np.array(result).astype('float') * 1
+    red[:, :, 0] = 180.0
+    red[:, :, 2] = 0
+    red[:, :, 1] = 0
+    result_m = np.array(result)
+    result_m = Image.fromarray(
+        (result_m.astype('float') * (1 - mask_np.astype('float') / 512.0) +
+         mask_np.astype('float') / 512.0 * red).astype('uint8'))
+
+    mask_np = np.array(input_image['mask'].convert('RGB'))
+    m_img = input_image['mask'].convert('RGB').filter(
+        ImageFilter.GaussianBlur(radius=4))
+    m_img = np.asarray(m_img) / 255.0
+    img_np = np.asarray(input_image['image'].convert('RGB')) / 255.0
+    ours_np = np.asarray(result) / 255.0
+    ours_np = ours_np * m_img + (1 - m_img) * img_np
+    result_paste = Image.fromarray(np.uint8(ours_np * 255))
+    return result_paste, [controlnet_image, result_m]
+
+
+def infer(input_image, text_guided_prompt, text_guided_negative_prompt,
+          shape_guided_prompt, shape_guided_negative_prompt, fitting_degree,
+          ddim_steps, scale, seed, task, enable_control, input_control_image,
+          control_type):
+    if task == 'text-guided':
+        prompt = text_guided_prompt
+        negative_prompt = text_guided_negative_prompt
+    elif task == 'shape-guided':
+        prompt = shape_guided_prompt
+        negative_prompt = shape_guided_negative_prompt
+    else:
+        prompt = ''
+        negative_prompt = ''
+
+    if enable_control:
+        return predict_controlnet(input_image, input_control_image,
+                                  control_type, prompt, ddim_steps, scale,
+                                  seed, negative_prompt)
+    else:
+        return predict(input_image, prompt, fitting_degree, ddim_steps, scale,
+                       seed, negative_prompt, task)
+
+
+def select_tab_text_guided():
+    return 'text-guided'
+
+
+def select_tab_object_removal():
+    return 'object-removal'
+
+
+def select_tab_shape_guided():
+    return 'shape-guided'
+
+
 with gr.Blocks(css='style.css') as demo:
     with gr.Row():
         gr.Markdown(
@@ -164,24 +306,57 @@ with gr.Blocks(css='style.css') as demo:
             gr.Markdown('### Input image and draw mask')
             input_image = gr.Image(source='upload', tool='sketch', type='pil')
 
-            gr.Markdown('### Input prompt')
-            prompt = gr.Textbox(label='Prompt')
-            negative_prompt = gr.Textbox(label='negative_prompt')
+            task = gr.Radio(['text-guided', 'object-removal', 'shape-guided'],
+                            show_label=False,
+                            visible=False)
 
-            gr.Markdown('### Select task')
-            control_type = gr.Radio([
-                'context-aware', 'text-guided', 'object-removal',
-                'shape-guided'
-            ])
+            # Text-guided object inpainting
+            with gr.Tab('Text-guided object inpainting') as tab_text_guided:
+                enable_text_guided = gr.Checkbox(
+                    label='Enable text-guided object inpainting',
+                    value=True,
+                    interactive=False)
+                text_guided_prompt = gr.Textbox(label='Prompt')
+                text_guided_negative_prompt = gr.Textbox(
+                    label='negative_prompt')
+                gr.Markdown('### Controlnet setting')
+                enable_control = gr.Checkbox(
+                    label='Enable controlnet',
+                    info='Enable this if you want to use controlnet')
+                control_type = gr.Radio(['canny', 'pose', 'depth', 'hed'],
+                                        label='Control type')
+                input_control_image = gr.Image(source='upload', type='pil')
+            tab_text_guided.select(
+                fn=select_tab_text_guided, inputs=None, outputs=task)
 
-            gr.Markdown('### Select fitting degree if task is shape-guided')
-            fitting_degree = gr.Slider(
-                label='fitting degree',
-                minimum=0,
-                maximum=1,
-                step=0.05,
-                randomize=True,
-            )
+            # Object removal inpainting
+            with gr.Tab('Object removal inpainting') as tab_object_removal:
+                enable_object_removal = gr.Checkbox(
+                    label='Enable object removal inpainting',
+                    value=True,
+                    interactive=False)
+            tab_object_removal.select(
+                fn=select_tab_object_removal, inputs=None, outputs=task)
+
+            # Shape-guided object inpainting
+            with gr.Tab('Shape-guided object inpainting') as tab_shape_guided:
+                enable_shape_guided = gr.Checkbox(
+                    label='Enable shape-guided object inpainting',
+                    value=True,
+                    interactive=False)
+                shape_guided_prompt = gr.Textbox(label='shape_guided_prompt')
+                shape_guided_negative_prompt = gr.Textbox(
+                    label='shape_guided_negative_prompt')
+                fitting_degree = gr.Slider(
+                    label='fitting degree',
+                    minimum=0,
+                    maximum=1,
+                    step=0.05,
+                    randomize=True,
+                )
+            tab_shape_guided.select(
+                fn=select_tab_shape_guided, inputs=None, outputs=task)
+
             run_button = gr.Button(label='Run')
             with gr.Accordion('Advanced options', open=False):
                 ddim_steps = gr.Slider(
@@ -208,10 +383,12 @@ with gr.Blocks(css='style.css') as demo:
                     grid=[2], height='auto')
 
     run_button.click(
-        fn=predict,
+        fn=infer,
         inputs=[
-            input_image, prompt, fitting_degree, ddim_steps, scale, seed,
-            negative_prompt, control_type
+            input_image, text_guided_prompt, text_guided_negative_prompt,
+            shape_guided_prompt, shape_guided_negative_prompt, fitting_degree,
+            ddim_steps, scale, seed, task, enable_control, input_control_image,
+            control_type
         ],
         outputs=[inpaint_result, gallery])
 
