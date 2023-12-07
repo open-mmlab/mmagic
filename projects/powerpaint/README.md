@@ -6,7 +6,7 @@ This README provides a step-by-step guide to download the repository, set up the
 
 **Stronger Model Weights and Online Demo Coming Soon！**
 
-<img src='fig/teaser.png'/>
+<img src='https://github.com/open-mmlab/mmagic/assets/12782558/acd01391-c73f-4997-aafd-0869aebcc915'/>
 
 ## Getting Started
 
