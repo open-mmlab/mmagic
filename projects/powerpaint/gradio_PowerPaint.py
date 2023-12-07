@@ -34,9 +34,9 @@ add_tokens(
     initialize_tokens=['a', 'a', 'a'],
     num_vectors_per_token=10)
 pipe.unet.load_state_dict(
-    torch.load('./models/unet/diffusion_pytorch_model.bin'), strict=False)
+    torch.load('./models/diffusion_pytorch_model.bin'), strict=False)
 pipe.text_encoder.load_state_dict(
-    torch.load('./models/text_encoder/pytorch_model.bin'), strict=False)
+    torch.load('./models/pytorch_model.bin'), strict=False)
 pipe = pipe.to('cuda')
 
 depth_estimator = DPTForDepthEstimation.from_pretrained(
