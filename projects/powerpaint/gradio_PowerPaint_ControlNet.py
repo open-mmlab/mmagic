@@ -25,20 +25,10 @@ pipe = Pipeline.from_pretrained(
     "runwayml/stable-diffusion-inpainting", controlnet=controlnet, torch_dtype=torch.float16,safety_checker=None)
 
 
-pipe.tokenizer = CLIPTokenizer.from_pretrained(
-        "runwayml/stable-diffusion-v1-5", subfolder="tokenizer", revision=None, torch_dtype=torch.float16
-    )
-pipe.text_encoder = CLIPTextModel.from_pretrained(
-            "runwayml/stable-diffusion-v1-5", subfolder="text_encoder", revision=None,torch_dtype=torch.float16
-        )
-pipe.vae = AutoencoderKL.from_pretrained(
-            "runwayml/stable-diffusion-v1-5", subfolder="vae", revision=None,torch_dtype=torch.float16
-        )
-
 pipe.tokenizer = TokenizerWrapper(from_pretrained="runwayml/stable-diffusion-v1-5", subfolder="tokenizer", revision=None)
 add_tokens(tokenizer = pipe.tokenizer,text_encoder = pipe.text_encoder,placeholder_tokens = ["MMcontext","MMshape","MMobject"],initialize_tokens = ["a","a","a"],num_vectors_per_token = 10)
-pipe.unet.load_state_dict(torch.load("./models/diffusion_pytorch_model.bin"), strict=False)
-pipe.text_encoder.load_state_dict(torch.load("./models/change_pytorch_model.bin"), strict=False)
+pipe.unet.load_state_dict(torch.load("./models/unet/diffusion_pytorch_model.bin"), strict=False)
+pipe.text_encoder.load_state_dict(torch.load("./models/text_encoder/pytorch_model.bin"), strict=False)
 pipe = pipe.to("cuda")
 
 
@@ -82,10 +72,10 @@ openpose = OpenposeDetector.from_pretrained('lllyasviel/ControlNet')
 hed = HEDdetector.from_pretrained('lllyasviel/ControlNet')
 
 def predict(input_image, input_control_image, control_type, prompt, ddim_steps, scale, seed,negative_prompt):
-    promptA = prompt+" MMobject"
-    promptB = prompt+" MMobject"
-    negative_promptA = negative_prompt+" MMobject"
-    negative_promptB = negative_prompt+" MMobject"
+    promptA = prompt+" P_obj"
+    promptB = prompt+" P_obj"
+    negative_promptA = negative_prompt+" P_obj"
+    negative_promptB = negative_prompt+" P_obj"
     img = np.array(input_image["image"].convert("RGB"))
     W = int(np.shape(img)[0]-np.shape(img)[0]%8)
     H = int(np.shape(img)[1]-np.shape(img)[1]%8)
