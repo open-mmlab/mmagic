@@ -1,12 +1,11 @@
-import torch
-import torch.nn as nn
-import math
 import copy
 import os
 import random
 from logging import WARNING
 from typing import Any, List, Optional, Union
 
+import torch
+import torch.nn as nn
 from mmengine import print_log
 
 from mmagic.utils import try_import
@@ -259,7 +258,7 @@ class TokenizerWrapper:
             prefix += f'From Pretrained: {self._from_pretrained}\n'
         s = prefix + s
         return s
-    
+
 
 class EmbeddingLayerWithFixes(nn.Module):
     """The revised embedding layer to support external embeddings. This design
@@ -500,16 +499,19 @@ class EmbeddingLayerWithFixes(nn.Module):
             vecs.append(new_embedding)
 
         return torch.stack(vecs)
-    
-def add_tokens( tokenizer,text_encoder,placeholder_tokens: list,
-                initialize_tokens: list = None,
-                num_vectors_per_token: int = 1):
+
+
+def add_tokens(tokenizer,
+               text_encoder,
+               placeholder_tokens: list,
+               initialize_tokens: list = None,
+               num_vectors_per_token: int = 1):
     """Add token for training.
 
     # TODO: support add tokens as dict, then we can load pretrained tokens.
     """
     if initialize_tokens is not None:
-        assert len(initialize_tokens)==len(placeholder_tokens), (
+        assert len(initialize_tokens) == len(placeholder_tokens), (
             'placeholder_token should be the same length as initialize_token')
     for ii in range(len(placeholder_tokens)):
 
@@ -518,9 +520,10 @@ def add_tokens( tokenizer,text_encoder,placeholder_tokens: list,
 
     # text_encoder.set_embedding_layer()
     embedding_layer = text_encoder.text_model.embeddings.token_embedding
-    text_encoder.text_model.embeddings.token_embedding = EmbeddingLayerWithFixes(embedding_layer)
+    text_encoder.text_model.embeddings.token_embedding = \
+        EmbeddingLayerWithFixes(embedding_layer)
     embedding_layer = text_encoder.text_model.embeddings.token_embedding
-    
+
     assert embedding_layer is not None, (
         'Do not support get embedding layer for current text encoder. '
         'Please check your configuration.')
@@ -530,15 +533,16 @@ def add_tokens( tokenizer,text_encoder,placeholder_tokens: list,
             init_id = tokenizer(initialize_tokens[ii]).input_ids[1]
             temp_embedding = embedding_layer.weight[init_id]
             initialize_embedding.append(temp_embedding[None, ...].repeat(
-                    num_vectors_per_token, 1))
+                num_vectors_per_token, 1))
     else:
         for ii in range(len(placeholder_tokens)):
             init_id = tokenizer('a').input_ids[1]
             temp_embedding = embedding_layer.weight[init_id]
             len_emb = temp_embedding.shape[0]
-            init_weight = (torch.rand(num_vectors_per_token,len_emb)-0.5)/2.0
+            init_weight = (torch.rand(num_vectors_per_token, len_emb) -
+                           0.5) / 2.0
             initialize_embedding.append(init_weight)
-        
+
     # initialize_embedding  = torch.cat(initialize_embedding,dim=0)
 
     token_info_all = []
