@@ -200,7 +200,7 @@ with gr.Blocks(css='style.css') as demo:
         )
     with gr.Row():
         gr.Markdown(
-            "<div align='center'><font size='5'><a href='https://powerpaint.github.io/'>Project Page</a> &ensp;" # noqa
+            "<div align='center'><font size='5'><a href='https://powerpaint.github.io/'>Project Page</a> &ensp;"  # noqa
             "<a href='https://arxiv.org/abs/2312.03594/'>Paper</a> &ensp;"
             "<a href='https://github.com/open-mmlab/mmagic/tree/main/projects/powerpaint'>Code</a> </font></div>"  # noqa
         )
