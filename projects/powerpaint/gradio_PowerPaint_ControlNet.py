@@ -196,11 +196,13 @@ def predict(input_image, input_control_image, control_type, prompt, ddim_steps,
 with gr.Blocks(css='style.css') as demo:
     with gr.Row():
         gr.Markdown(
-            "<div align='center'><font size='18'>PowerPaint with Controlnet</font></div>"  # noqa
+            "<div align='center'><font size='18'>PowerPaint with Controlnet: High-Quality Versatile Image Inpainting</font></div>"  # noqa
         )
     with gr.Row():
         gr.Markdown(
-            "<div align='center'><font size='5'>A Task is Worth One Word: Learning with Task Prompts for High-Quality Versatile Image Inpainting</font></div>"  # noqa
+            "<div align='center'><font size='5'><a href='https://powerpaint.github.io/'>Project Page</a> &ensp;" # noqa
+            "<a href='https://arxiv.org/abs/2312.03594/'>Paper</a> &ensp;"
+            "<a href='https://github.com/open-mmlab/mmagic/tree/main/projects/powerpaint'>Code</a> </font></div>"  # noqa
         )
 
     with gr.Row():
