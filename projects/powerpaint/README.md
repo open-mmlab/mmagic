@@ -50,7 +50,7 @@ This command will launch the Gradio interface for PowerPaint.
 PowerPaint can be used in conjunction with ControlNet. The project supports ControlNet integration for human pose, HED, Canny, and depth. To use PowerPaint with ControlNet, execute the following command:
 
 ```bash
-python gradio_PowerPaint_Controlnet.py
+python gradio_PowerPaint_ControlNet.py
 ```
 
 This command will launch the Gradio interface for PowerPaint with ControlNet.
