@@ -1,1 +1,8 @@
 diffusers==0.23.1
+opencv-python
+gradio==3.23.0
+torch
+torchvision
+controlnet-aux==0.0.3
+transformers
+mmengine

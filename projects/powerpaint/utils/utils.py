@@ -1,4 +1,5 @@
 import copy
+import importlib
 import os
 import random
 from logging import WARNING
@@ -8,7 +9,21 @@ import torch
 import torch.nn as nn
 from mmengine import print_log
 
-from mmagic.utils import try_import
+
+def try_import(name: str):
+    """Try to import a module.
+
+    Args:
+        name (str): Specifies what module to import in absolute or relative
+            terms (e.g. either pkg.mod or ..mod).
+    Returns:
+        ModuleType or None: If importing successfully, returns the imported
+        module, otherwise returns None.
+    """
+    try:
+        return importlib.import_module(name)
+    except ImportError:
+        return None
 
 
 class TokenizerWrapper:
