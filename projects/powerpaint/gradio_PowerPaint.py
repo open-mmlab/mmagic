@@ -258,10 +258,14 @@ def infer(input_image, text_guided_prompt, text_guided_negative_prompt,
     elif task == 'shape-guided':
         prompt = shape_guided_prompt
         negative_prompt = shape_guided_negative_prompt
-    else:
+    elif task == 'object-removal':
         prompt = ''
         negative_prompt = ''
         scale = 10.0
+    else:
+        task = 'text-guided'
+        prompt = text_guided_prompt
+        negative_prompt = text_guided_negative_prompt
 
     if enable_control:
         return predict_controlnet(input_image, input_control_image,
@@ -374,8 +378,7 @@ with gr.Blocks(css='style.css') as demo:
             inpaint_result = gr.Image()
             gr.Markdown('### Mask')
             gallery = gr.Gallery(
-                label='Generated images', show_label=False).style(
-                    grid=[2], height='auto')
+                label='Generated images', show_label=False, columns=2)
 
     run_button.click(
         fn=infer,
