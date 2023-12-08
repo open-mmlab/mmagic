@@ -261,6 +261,7 @@ def infer(input_image, text_guided_prompt, text_guided_negative_prompt,
     else:
         prompt = ''
         negative_prompt = ''
+        scale = 10.0
 
     if enable_control:
         return predict_controlnet(input_image, input_control_image,
