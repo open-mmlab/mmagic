@@ -30,7 +30,7 @@ pipe.tokenizer = TokenizerWrapper(
 add_tokens(
     tokenizer=pipe.tokenizer,
     text_encoder=pipe.text_encoder,
-    placeholder_tokens=['MMcontext', 'MMshape', 'MMobject'],
+    placeholder_tokens=['P_ctxt', 'P_shape', 'P_obj'],
     initialize_tokens=['a', 'a', 'a'],
     num_vectors_per_token=10)
 pipe.unet.load_state_dict(
