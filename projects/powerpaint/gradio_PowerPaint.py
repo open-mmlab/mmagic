@@ -108,10 +108,11 @@ def add_task(prompt, negative_prompt, control_type):
 
 
 def predict(input_image, prompt, fitting_degree, ddim_steps, scale, seed,
-            negative_prompt, task,vertical_expansion_ratio,horizontal_expansion_ratio):
+            negative_prompt, task, vertical_expansion_ratio,
+            horizontal_expansion_ratio):
     size1, size2 = input_image['image'].convert('RGB').size
 
-    if task!='image-outpainting':
+    if task != 'image-outpainting':
         if size1 < size2:
             input_image['image'] = input_image['image'].convert('RGB').resize(
                 (640, int(size2 / size1 * 640)))
@@ -125,31 +126,40 @@ def predict(input_image, prompt, fitting_degree, ddim_steps, scale, seed,
         else:
             input_image['image'] = input_image['image'].convert('RGB').resize(
                 (int(size1 / size2 * 512), 512))
-        
-    if vertical_expansion_ratio!=None and horizontal_expansion_ratio!=None:
-        o_W,o_H = input_image['image'].convert('RGB').size
-        c_W = int(horizontal_expansion_ratio*o_W)
-        c_H = int(vertical_expansion_ratio*o_H)
 
-        expand_img = np.ones((c_H, c_W,3), dtype=np.uint8)*127
+    if vertical_expansion_ratio != None and horizontal_expansion_ratio != None:
+        o_W, o_H = input_image['image'].convert('RGB').size
+        c_W = int(horizontal_expansion_ratio * o_W)
+        c_H = int(vertical_expansion_ratio * o_H)
+
+        expand_img = np.ones((c_H, c_W, 3), dtype=np.uint8) * 127
         original_img = np.array(input_image['image'])
-        expand_img[int((c_H-o_H)/2.0):int((c_H-o_H)/2.0)+o_H,int((c_W-o_W)/2.0):int((c_W-o_W)/2.0)+o_W,:] = original_img
+        expand_img[int((c_H - o_H) / 2.0):int((c_H - o_H) / 2.0) + o_H,
+                   int((c_W - o_W) / 2.0):int((c_W - o_W) / 2.0) +
+                   o_W, :] = original_img
 
         blurry_gap = 10
 
-        expand_mask = np.ones((c_H, c_W,3), dtype=np.uint8)*255
-        if vertical_expansion_ratio == 1 and horizontal_expansion_ratio!=1:
-            expand_mask[int((c_H-o_H)/2.0):int((c_H-o_H)/2.0)+o_H,int((c_W-o_W)/2.0)+blurry_gap:int((c_W-o_W)/2.0)+o_W-blurry_gap,:] = 0
-        elif vertical_expansion_ratio != 1 and horizontal_expansion_ratio!=1:
-            expand_mask[int((c_H-o_H)/2.0)+blurry_gap:int((c_H-o_H)/2.0)+o_H-blurry_gap,int((c_W-o_W)/2.0)+blurry_gap:int((c_W-o_W)/2.0)+o_W-blurry_gap,:] = 0
-        elif vertical_expansion_ratio != 1 and horizontal_expansion_ratio==1:
-            expand_mask[int((c_H-o_H)/2.0)+blurry_gap:int((c_H-o_H)/2.0)+o_H-blurry_gap,int((c_W-o_W)/2.0):int((c_W-o_W)/2.0)+o_W,:] = 0
-        
+        expand_mask = np.ones((c_H, c_W, 3), dtype=np.uint8) * 255
+        if vertical_expansion_ratio == 1 and horizontal_expansion_ratio != 1:
+            expand_mask[int((c_H - o_H) / 2.0):int((c_H - o_H) / 2.0) + o_H,
+                        int((c_W - o_W) / 2.0) +
+                        blurry_gap:int((c_W - o_W) / 2.0) + o_W -
+                        blurry_gap, :] = 0
+        elif vertical_expansion_ratio != 1 and horizontal_expansion_ratio != 1:
+            expand_mask[int((c_H - o_H) / 2.0) +
+                        blurry_gap:int((c_H - o_H) / 2.0) + o_H - blurry_gap,
+                        int((c_W - o_W) / 2.0) +
+                        blurry_gap:int((c_W - o_W) / 2.0) + o_W -
+                        blurry_gap, :] = 0
+        elif vertical_expansion_ratio != 1 and horizontal_expansion_ratio == 1:
+            expand_mask[int((c_H - o_H) / 2.0) +
+                        blurry_gap:int((c_H - o_H) / 2.0) + o_H - blurry_gap,
+                        int((c_W - o_W) /
+                            2.0):int((c_W - o_W) / 2.0) + o_W, :] = 0
+
         input_image['image'] = Image.fromarray(expand_img)
         input_image['mask'] = Image.fromarray(expand_mask)
-
-        
-
 
     promptA, promptB, negative_promptA, negative_promptB = add_task(
         prompt, negative_prompt, task)
@@ -299,7 +309,8 @@ def predict_controlnet(input_image, input_control_image, control_type, prompt,
 def infer(input_image, text_guided_prompt, text_guided_negative_prompt,
           shape_guided_prompt, shape_guided_negative_prompt, fitting_degree,
           ddim_steps, scale, seed, task, enable_control, input_control_image,
-          control_type,vertical_expansion_ratio,horizontal_expansion_ratio,outpaint_prompt,outpaint_negative_prompt):
+          control_type, vertical_expansion_ratio, horizontal_expansion_ratio,
+          outpaint_prompt, outpaint_negative_prompt):
     if task == 'text-guided':
         prompt = text_guided_prompt
         negative_prompt = text_guided_negative_prompt
@@ -313,7 +324,8 @@ def infer(input_image, text_guided_prompt, text_guided_negative_prompt,
         prompt = outpaint_prompt
         negative_prompt = outpaint_negative_prompt
         return predict(input_image, prompt, fitting_degree, ddim_steps, scale,
-                       seed, negative_prompt, task,vertical_expansion_ratio,horizontal_expansion_ratio)
+                       seed, negative_prompt, task, vertical_expansion_ratio,
+                       horizontal_expansion_ratio)
     else:
         task = 'text-guided'
         prompt = text_guided_prompt
@@ -325,7 +337,7 @@ def infer(input_image, text_guided_prompt, text_guided_negative_prompt,
                                   seed, negative_prompt)
     else:
         return predict(input_image, prompt, fitting_degree, ddim_steps, scale,
-                       seed, negative_prompt, task,None,None)
+                       seed, negative_prompt, task, None, None)
 
 
 def select_tab_text_guided():
@@ -334,6 +346,7 @@ def select_tab_text_guided():
 
 def select_tab_object_removal():
     return 'object-removal'
+
 
 def select_tab_image_outpainting():
     return 'image-outpainting'
@@ -360,7 +373,10 @@ with gr.Blocks(css='style.css') as demo:
             gr.Markdown('### Input image and draw mask')
             input_image = gr.Image(source='upload', tool='sketch', type='pil')
 
-            task = gr.Radio(['text-guided', 'object-removal', 'shape-guided', 'image-outpainting'],
+            task = gr.Radio([
+                'text-guided', 'object-removal', 'shape-guided',
+                'image-outpainting'
+            ],
                             show_label=False,
                             visible=False)
 
@@ -391,7 +407,7 @@ with gr.Blocks(css='style.css') as demo:
                     interactive=False)
             tab_object_removal.select(
                 fn=select_tab_object_removal, inputs=None, outputs=task)
-            
+
             # Object image outpainting
             with gr.Tab('Image outpainting') as tab_image_outpainting:
                 enable_object_removal = gr.Checkbox(
@@ -443,7 +459,8 @@ with gr.Blocks(css='style.css') as demo:
                     label='Steps', minimum=1, maximum=50, value=45, step=1)
                 scale = gr.Slider(
                     label='Guidance Scale',
-                    info='For object removal, it is recommended to set the value at 10 or above, while for image outpainting, it is advisable to set it at 18 or above.',
+                    info=
+                    'For object removal, it is recommended to set the value at 10 or above, while for image outpainting, it is advisable to set it at 18 or above.',
                     minimum=0.1,
                     maximum=30.0,
                     value=7.5,
@@ -468,7 +485,8 @@ with gr.Blocks(css='style.css') as demo:
             input_image, text_guided_prompt, text_guided_negative_prompt,
             shape_guided_prompt, shape_guided_negative_prompt, fitting_degree,
             ddim_steps, scale, seed, task, enable_control, input_control_image,
-            control_type,vertical_expansion_ratio,horizontal_expansion_ratio,outpaint_prompt,outpaint_negative_prompt
+            control_type, vertical_expansion_ratio, horizontal_expansion_ratio,
+            outpaint_prompt, outpaint_negative_prompt
         ],
         outputs=[inpaint_result, gallery])
 
