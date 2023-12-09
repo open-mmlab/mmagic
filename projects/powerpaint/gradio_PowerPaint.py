@@ -127,7 +127,8 @@ def predict(input_image, prompt, fitting_degree, ddim_steps, scale, seed,
             input_image['image'] = input_image['image'].convert('RGB').resize(
                 (int(size1 / size2 * 512), 512))
 
-    if vertical_expansion_ratio != None and horizontal_expansion_ratio != None:
+    if (vertical_expansion_ratio is not None) and (horizontal_expansion_ratio
+                                                   is not None):  # noqa
         o_W, o_H = input_image['image'].convert('RGB').size
         c_W = int(horizontal_expansion_ratio * o_W)
         c_H = int(vertical_expansion_ratio * o_H)
@@ -358,14 +359,22 @@ def select_tab_shape_guided():
 
 with gr.Blocks(css='style.css') as demo:
     with gr.Row():
-        gr.Markdown(
-            "<div align='center'><font size='18'>PowerPaint: High-Quality Versatile Image Inpainting</font></div>"  # noqa
-        )
+        gr.Markdown("<div align='center'><font size='18'>PowerPaint: \
+                High-Quality Versatile Image Inpainting</font></div>"
+
+                    # noqa
+                    )
     with gr.Row():
         gr.Markdown(
-            "<div align='center'><font size='5'><a href='https://powerpaint.github.io/'>Project Page</a> &ensp;"  # noqa
+            "<div align='center'><font size='5'><a href=\
+                'https://powerpaint.github.io/'>Project Page</a> &ensp;"
+
+            # noqa
             "<a href='https://arxiv.org/abs/2312.03594/'>Paper</a> &ensp;"
-            "<a href='https://github.com/open-mmlab/mmagic/tree/main/projects/powerpaint'>Code</a> </font></div>"  # noqa
+            "<a href='https://github.com/open-mmlab/mmagic\
+                /tree/main/projects/powerpaint'>Code</a> </font></div>"
+
+            # noqa
         )
 
     with gr.Row():
@@ -459,8 +468,7 @@ with gr.Blocks(css='style.css') as demo:
                     label='Steps', minimum=1, maximum=50, value=45, step=1)
                 scale = gr.Slider(
                     label='Guidance Scale',
-                    info=
-                    'For object removal, \
+                    info='For object removal, \
                         it is recommended to set the value at 10 or above, \
                         while for image outpainting, \
                             it is advisable to set it at 18 or above.',
