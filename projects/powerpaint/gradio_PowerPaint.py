@@ -460,7 +460,10 @@ with gr.Blocks(css='style.css') as demo:
                 scale = gr.Slider(
                     label='Guidance Scale',
                     info=
-                    'For object removal, it is recommended to set the value at 10 or above, while for image outpainting, it is advisable to set it at 18 or above.',
+                    'For object removal, \
+                        it is recommended to set the value at 10 or above, \
+                        while for image outpainting, \
+                            it is advisable to set it at 18 or above.',
                     minimum=0.1,
                     maximum=30.0,
                     value=7.5,
