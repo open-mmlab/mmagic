@@ -30,13 +30,13 @@ pipe.tokenizer = TokenizerWrapper(
 add_tokens(
     tokenizer=pipe.tokenizer,
     text_encoder=pipe.text_encoder,
-    placeholder_tokens=['MMcontext', 'MMshape', 'MMobject'],
+    placeholder_tokens=['P_ctxt', 'P_shape', 'P_obj'],
     initialize_tokens=['a', 'a', 'a'],
     num_vectors_per_token=10)
 pipe.unet.load_state_dict(
-    torch.load('./models/diffusion_pytorch_model.bin'), strict=False)
+    torch.load('./models/unet/diffusion_pytorch_model.bin'), strict=False)
 pipe.text_encoder.load_state_dict(
-    torch.load('./models/pytorch_model.bin'), strict=False)
+    torch.load('./models/text_encoder/pytorch_model.bin'), strict=False)
 pipe = pipe.to('cuda')
 
 depth_estimator = DPTForDepthEstimation.from_pretrained(
@@ -258,9 +258,14 @@ def infer(input_image, text_guided_prompt, text_guided_negative_prompt,
     elif task == 'shape-guided':
         prompt = shape_guided_prompt
         negative_prompt = shape_guided_negative_prompt
-    else:
+    elif task == 'object-removal':
         prompt = ''
         negative_prompt = ''
+        scale = 10.0
+    else:
+        task = 'text-guided'
+        prompt = text_guided_prompt
+        negative_prompt = text_guided_negative_prompt
 
     if enable_control:
         return predict_controlnet(input_image, input_control_image,
@@ -373,8 +378,7 @@ with gr.Blocks(css='style.css') as demo:
             inpaint_result = gr.Image()
             gr.Markdown('### Mask')
             gallery = gr.Gallery(
-                label='Generated images', show_label=False).style(
-                    grid=[2], height='auto')
+                label='Generated images', show_label=False, columns=2)
 
     run_button.click(
         fn=infer,

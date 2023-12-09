@@ -1,6 +1,6 @@
 # A Task is Worth One Word: Learning with Task Prompts for High-Quality Versatile Image Inpainting
 
-### [Project Page](https://powerpaint.github.io/) | [Paper](https://arxiv.org/abs/2312.03594)
+### [Project Page](https://powerpaint.github.io/) | [Paper](https://arxiv.org/abs/2312.03594) | [OpenXLab](https://openxlab.org.cn/apps/detail/rangoliu/PowerPaint#basic-information)
 
 This README provides a step-by-step guide to download the repository, set up the required virtual environment named "PowerPaint" using conda, and run PowerPaint with or without ControlNet.
 
