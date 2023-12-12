@@ -140,8 +140,6 @@ Currently, MMagic support multiple image and video generation/editing tasks.
 
 https://user-images.githubusercontent.com/49083766/233564593-7d3d48ed-e843-4432-b610-35e3d257765c.mp4
 
-The best practice on our main branch works with **Python 3.8+** and **PyTorch 1.10+**.
-
 ### ✨ Major features
 
 - **State of the Art Models**
@@ -155,6 +153,10 @@ The best practice on our main branch works with **Python 3.8+** and **PyTorch 1.
 - **Efficient Framework**
 
   By using MMEngine and MMCV of OpenMMLab 2.0 framework, MMagic decompose the editing framework into different modules and one can easily construct a customized editor framework by combining different modules. We can define the training process just like playing with Legos and provide rich components and strategies. In MMagic, you can complete controls on the training process with different levels of APIs. With the support of [MMSeparateDistributedDataParallel](https://github.com/open-mmlab/mmengine/blob/main/mmengine/model/wrappers/seperate_distributed.py), distributed training for dynamic architectures can be easily implemented.
+
+### ✨ Best Practice
+
+- The best practice on our main branch works with **Python 3.9+** and **PyTorch 2.0+**.
 
 <p align="right"><a href="#table">🔝Back to Table of Contents</a></p>
 

@@ -254,7 +254,7 @@ class ADAStyleGAN2Discriminator(StyleGAN2Discriminator):
                 augmentation. Defaults to None.
         """
         super().__init__(in_size, *args, **kwargs)
-        self.with_ada = data_aug is not None and data_aug is not dict()
+        self.with_ada = data_aug is not None and data_aug != dict()
         if self.with_ada:
             self.ada_aug = MODELS.build(data_aug)
             self.ada_aug.requires_grad = False
