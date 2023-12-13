@@ -69,6 +69,8 @@ class TestConsistencyModelUtils(TestCase):
             model_kwargs=model_kwargs)
         assert sample.shape == (batch_size, channel_num, image_size,
                                 image_size)
+        unet.convert_to_fp32()
+        unet.convert_to_fp16()
 
     def test_get_generator(self):
         self.assertIsInstance(get_generator('dummy'), DummyGenerator)
@@ -122,6 +124,7 @@ class TestConsistencyModelUtils(TestCase):
         generator_list = ['dummy', 'determ', 'determ-indiv']
         for generator_str in generator_list:
             generator = get_generator(generator_str, 4, 0)
+            generator.randint(1, 2, (1, 2), dtype=torch.long, device='cpu')
             x_T = generator.randn(*shape, device=device) * sigma_max
             for sample in sample_list:
                 if sample == 'progdist':
