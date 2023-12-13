@@ -98,6 +98,7 @@ def get_sample_fn(sampler):
         'progdist': sample_progdist,
         'euler': sample_euler,
         'multistep': stochastic_iterative_sampler,
+        'midpoint': sample_midpoint_ancestral,
     }[sampler]
 
 
