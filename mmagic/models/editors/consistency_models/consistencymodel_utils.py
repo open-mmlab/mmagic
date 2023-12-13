@@ -7,30 +7,6 @@ import torch.distributed as dist
 import torch.nn as nn
 
 
-def device():
-    """return torch.device."""
-    if torch.cuda.is_available():
-        return torch.device('cuda')
-    return torch.device('cpu')
-
-
-def get_weightings(weight_schedule, snrs, sigma_data):
-    """return weightings."""
-    if weight_schedule == 'snr':
-        weightings = snrs
-    elif weight_schedule == 'snr+1':
-        weightings = snrs + 1
-    elif weight_schedule == 'karras':
-        weightings = snrs + 1.0 / sigma_data**2
-    elif weight_schedule == 'truncated-snr':
-        weightings = torch.clamp(snrs, min=1.0)
-    elif weight_schedule == 'uniform':
-        weightings = torch.ones_like(snrs)
-    else:
-        raise NotImplementedError()
-    return weightings
-
-
 class SiLU(nn.Module):
     """PyTorch 1.7 has SiLU, but we support PyTorch 1.5."""
 
@@ -654,7 +630,7 @@ class DeterministicGenerator:
         self.seed = seed
         self.rng_cpu = torch.Generator()
         if torch.cuda.is_available():
-            self.rng_cuda = torch.Generator(device())
+            self.rng_cuda = torch.Generator(torch.device('cuda'))
         self.set_seed(seed)
 
     def get_global_size_and_indices(self, size):
@@ -737,7 +713,8 @@ class DeterministicIndividualGenerator:
         self.rng_cpu = [torch.Generator() for _ in range(num_samples)]
         if torch.cuda.is_available():
             self.rng_cuda = [
-                torch.Generator(device()) for _ in range(num_samples)
+                torch.Generator(torch.device('cuda'))
+                for _ in range(num_samples)
             ]
         self.set_seed(seed)
 

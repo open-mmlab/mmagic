@@ -82,17 +82,20 @@ config_multistep = dict(
 @pytest.mark.skipif(
     'win' in platform.system().lower(),
     reason='skip on windows due to limited RAM.')
-class TestDeblurGanV2(TestCase):
+class TestConsistencyModels(TestCase):
 
     def test_init(self):
         model = ConsistencyModel(
             unet=unet_config,
             denoiser=denoiser_config,
             data_preprocessor=DataPreprocessor())
+        if torch.cuda.is_available():
+            self.assertIsInstance(model.device, torch.device('cuda'))
         self.assertIsInstance(model, ConsistencyModel)
         self.assertIsInstance(model.data_preprocessor, DataPreprocessor)
         self.assertIsInstance(model.model, ConsistencyUNetModel)
         self.assertIsInstance(model.diffusion, KarrasDenoiser)
+
         unet_cfg = deepcopy(unet_config)
         diffuse_cfg = deepcopy(denoiser_config)
         unet = MODELS.build(unet_cfg)
@@ -114,6 +117,11 @@ class TestDeblurGanV2(TestCase):
         for datasample in result:
             assert datasample.fake_img.shape == (3, model.image_size,
                                                  model.image_size)
+        result, labels = model.infer()
+        assert len(result) == model.batch_size
+        assert len(labels) == model.batch_size
+        for datasample in result:
+            assert datasample.shape == (model.image_size, model.image_size, 3)
 
     def test_multistep_infer(self):
         model = MODELS.build(config_multistep)
@@ -127,6 +135,11 @@ class TestDeblurGanV2(TestCase):
         for datasample in result:
             assert datasample.fake_img.shape == (3, model.image_size,
                                                  model.image_size)
+        result, labels = model.infer()
+        assert len(result) == model.batch_size
+        assert len(labels) == model.batch_size
+        for datasample in result:
+            assert datasample.shape == (model.image_size, model.image_size, 3)
 
 
 def teardown_module():

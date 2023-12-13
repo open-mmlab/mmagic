@@ -13,7 +13,7 @@ from torch.hub import load_state_dict_from_url
 from mmagic.registry import MODELS
 from mmagic.structures import DataSample
 from mmagic.utils import ForwardInputs
-from .consistencymodel_utils import (device, get_generator, get_sample_fn,
+from .consistencymodel_utils import (get_generator, get_sample_fn,
                                      get_sigmas_karras, karras_sample)
 
 ModelType = Union[Dict, nn.Module]
@@ -56,6 +56,9 @@ class ConsistencyModel(BaseModel, metaclass=ABCMeta):
         super().__init__(data_preprocessor=data_preprocessor)
 
         self.num_classes = num_classes
+        self.device = torch.device('cpu')
+        if torch.cuda.is_available():
+            self.device = torch.device('cuda')
         if 'consistency' in training_mode:
             self.distillation = True
         else:
@@ -117,7 +120,7 @@ class ConsistencyModel(BaseModel, metaclass=ABCMeta):
                 self.model.load_state_dict(
                     torch.load(model_path, map_location='cpu'))
 
-        self.model.to(device())
+        self.model.to(self.device)
 
         if sampler == 'multistep':
             assert len(ts) > 0
@@ -147,7 +150,7 @@ class ConsistencyModel(BaseModel, metaclass=ABCMeta):
                 (self.batch_size, 3, self.image_size, self.image_size),
                 steps=self.steps,
                 model_kwargs=self.model_kwargs,
-                device=device(),
+                device=self.device,
                 clip_denoised=self.clip_denoised,
                 sampler=self.sampler,
                 sigma_min=self.sigma_min,
@@ -216,18 +219,18 @@ class ConsistencyModel(BaseModel, metaclass=ABCMeta):
                 self.sigma_min,
                 self.sigma_max,
                 self.diffusion.rho,
-                device=device())
+                device=self.device)
         else:
             sigmas = get_sigmas_karras(
                 self.steps,
                 self.sigma_min,
                 self.sigma_max,
                 self.diffusion.rho,
-                device=device())
+                device=self.device)
 
         noise = self.generator.randn(
             *(self.batch_size, 3, self.image_size, self.image_size),
-            device=device()) * self.sigma_max
+            device=self.device) * self.sigma_max
 
         sample_fn = get_sample_fn(self.sampler)
 
@@ -291,11 +294,11 @@ class ConsistencyModel(BaseModel, metaclass=ABCMeta):
                 'it should be within the range (0,num_classes).'
             classes = torch.tensor(
                 [int(class_id) for i in range(self.batch_size)],
-                device=device())
+                device=self.device)
         else:
             classes = torch.randint(
                 low=0,
                 high=self.num_classes,
                 size=(self.batch_size, ),
-                device=device())
+                device=self.device)
         return classes
