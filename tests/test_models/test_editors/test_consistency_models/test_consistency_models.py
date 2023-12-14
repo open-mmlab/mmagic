@@ -95,7 +95,6 @@ class TestConsistencyModels(TestCase):
         self.assertIsInstance(model.data_preprocessor, DataPreprocessor)
         self.assertIsInstance(model.model, ConsistencyUNetModel)
         self.assertIsInstance(model.diffusion, KarrasDenoiser)
-
         unet_cfg = deepcopy(unet_config)
         diffuse_cfg = deepcopy(denoiser_config)
         unet = MODELS.build(unet_cfg)
