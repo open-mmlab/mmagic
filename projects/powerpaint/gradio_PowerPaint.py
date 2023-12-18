@@ -11,6 +11,7 @@ from pipeline.pipeline_PowerPaint import \
     StableDiffusionInpaintPipeline as Pipeline
 from pipeline.pipeline_PowerPaint_ControlNet import \
     StableDiffusionControlNetInpaintPipeline as controlnetPipeline
+from safetensors.torch import load_file
 from transformers import DPTFeatureExtractor, DPTForDepthEstimation
 from utils.utils import TokenizerWrapper, add_tokens
 
@@ -34,7 +35,9 @@ add_tokens(
     initialize_tokens=['a', 'a', 'a'],
     num_vectors_per_token=10)
 pipe.unet.load_state_dict(
-    torch.load('./models/unet/diffusion_pytorch_model.bin'), strict=False)
+    load_file(
+        './models/unet/diffusion_pytorch_model.safetensors', device='cuda'),
+    strict=False)
 pipe.text_encoder.load_state_dict(
     torch.load('./models/text_encoder/pytorch_model.bin'), strict=False)
 pipe = pipe.to('cuda')
