@@ -58,13 +58,9 @@ English | [简体中文](README_zh-CN.md)
 
 ## 🚀 What's New <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### New release [**MMagic v1.1.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.1.0) \[22/09/2023\]:
+### New release [**MMagic v1.2.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.2.0) \[18/12/2023\]:
 
-- Support ViCo, a new SD personalization method. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/vico/README.md)
-- Support AnimateDiff, a popular text2animation method. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/animatediff/README.md)
-- Support SDXL（Stable Diffusion XL）. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion_xl/README.md)
-- Support DragGAN implementation with MMagic. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/draggan/README.md)
-- Support FastComposer, a new multi-subject text-to-image generation method. [Click to View](https://github.com/open-mmlab/mmagic/blob/main/configs/fastcomposer/README.md)
+- An advanced and powerful inpainting algorithm named PowerPaint is released in our repository. [Click to View](https://github.com/open-mmlab/mmagic/tree/main/projects/powerpaint)
 
 We are excited to announce the release of MMagic v1.0.0 that inherits from [MMEditing](https://github.com/open-mmlab/mmediting) and [MMGeneration](https://github.com/open-mmlab/mmgeneration).
 
@@ -397,6 +393,7 @@ Please refer to [installation](docs/en/get_started/install.md) for more detailed
           <li><a href="configs/animatediff/README.md">AnimateDiff (2023)</a></li>
           <li><a href="configs/vico/README.md">ViCo (2023)</a></li>
           <li><a href="configs/fastcomposer/README.md">FastComposer (2023)</a></li>
+          <li><a href="projects/powerpaint/README.md">PowerPaint (2023)</a></li>
         </ul>
       </td>
       <td>

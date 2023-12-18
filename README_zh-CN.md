@@ -58,13 +58,9 @@
 
 ## 🚀 最新进展 <a><img width="35" height="20" src="https://user-images.githubusercontent.com/12782558/212848161-5e783dd6-11e8-4fe0-bbba-39ffb77730be.png"></a>
 
-### 最新的 [**MMagic v1.1.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.1.0) 版本已经在 \[22/09/2023\] 发布:
+### 最新的 [**MMagic v1.2.0**](https://github.com/open-mmlab/mmagic/releases/tag/v1.2.0) 版本已经在 \[18/12/2023\] 发布:
 
-- 支持ViCo，一种新的个性化方法，用于SD（Style Disentanglement）。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/vico/README.md)
-- 支持AnimateDiff，一种流行的文本转动画方法。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/animatediff/README.md)
-- 支持SDXL（Stable Diffusion XL）方法。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/stable_diffusion_xl/README.md)
-- 支持DragGAN方法的实现，使用MMagic。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/draggan/README.md)
-- 支持FastComposer, 一种新的多主体文本生成图像方法。[点击查看](https://github.com/open-mmlab/mmagic/blob/main/configs/fastcomposer/README.md)
+- 我们的代码仓库中发布了一个先进而强大的图像 inpainting 算法 PowerPaint。 [Click to View](https://github.com/open-mmlab/mmagic/tree/main/projects/powerpaint)
 
 我们正式发布 MMagic v1.0.0 版本，源自 [MMEditing](https://github.com/open-mmlab/mmediting) 和 [MMGeneration](https://github.com/open-mmlab/mmgeneration)。
 
@@ -393,6 +389,7 @@ pip3 install -e .
           <li><a href="configs/animatediff/README.md">AnimateDiff (2023)</a></li>
           <li><a href="configs/vico/README.md">ViCo (2023)</a></li>
           <li><a href="configs/fastcomposer/README.md">FastComposer (2023)</a></li>
+          <li><a href="projects/powerpaint/README.md">PowerPaint (2023)</a></li>
         </ul>
       </td>
       <td>

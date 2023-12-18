@@ -1,5 +1,54 @@
 # 变更日志
 
+**亮点**
+
+- 我们的代码仓库中发布了一个先进而强大的图像 inpainting 算法 PowerPaint。 [Click to View](https://github.com/open-mmlab/mmagic/tree/main/projects/powerpaint)
+
+<div align=center>
+<img src="https://github.com/open-mmlab/mmagic/assets/12782558/eba2c6a4-3ff4-4075-a027-0e9799769bf9"/>
+</div>
+
+**新功能和改进**
+
+- \[CodeCamp2023-645\] 新增 dreambooth 的new cfg, by @YanxingLiu in https://github.com/open-mmlab/mmagic/pull/2042
+- \[Enhance\] 新增 _base_ 目录下的 new config by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2053
+- \[Enhance\] 支持了 instance_crop 使用 from_pretrained by @zengyh1900 in https://github.com/open-mmlab/mmagic/pull/2066
+- \[Enhance\] 支持了最新的 diffusers 使用 lora by @zengyh1900 in https://github.com/open-mmlab/mmagic/pull/2067
+- \[Enhance\] 提升了 powerpaint by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2078
+- \[Enhance\] 提升了 powerpaint by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2080
+- \[Enhance\] 增加了 gradio_PowerPaint.py 的 outpainting  by @zhuang2002 in https://github.com/open-mmlab/mmagic/pull/2084
+- \[MMSIG\] 增加了 StyleGAN2 的新config by @xiaomile in https://github.com/open-mmlab/mmagic/pull/2057
+- \[MMSIG\] \[Doc\] 更新了 data_preprocessor.md by @jinxianwei in https://github.com/open-mmlab/mmagic/pull/2055
+- \[Enhance\] 提升了 PowerPaint by @zhuang2002 in https://github.com/open-mmlab/mmagic/pull/2093
+
+**Bug 修复**
+
+- \[Fix\] 更新了 README.md by @eze1376 in https://github.com/open-mmlab/mmagic/pull/2048
+- \[Fix\] 修复了 test tokenizer by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2050
+- \[Fix\] 修复了 readthedocs building by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2052
+- \[Fix\] 修复了 --local-rank for PyTorch >= 2.0.0 by @youqingxiaozhua in https://github.com/open-mmlab/mmagic/pull/2051
+- \[Fix\] 修复了 animatediff download from openxlab by @JianxinDong in https://github.com/open-mmlab/mmagic/pull/2061
+- \[Fix\] 修复了 best practice by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2063
+- \[Fix\] 修复了 try import expand mask from transformers by @zengyh1900 in https://github.com/open-mmlab/mmagic/pull/2064
+- \[Fix\] 更新了 diffusers to v0.23.0 by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2069
+- \[Fix\] 修复了 openxlab link to powerpaint by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2082
+- \[Fix\] 更新了 swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py, use MultiValLoop. by @ashutoshsingh0223 in https://github.com/open-mmlab/mmagic/pull/2085
+- \[Fix\] 修复了 a test expression that has a logical short circuit. by @munahaf in https://github.com/open-mmlab/mmagic/pull/2046
+- \[Fix\] 修复了 Powerpaint  load safetensors by @sdbds in https://github.com/open-mmlab/mmagic/pull/2088
+
+**新贡献者**
+
+- @eze1376 首次贡献于 https://github.com/open-mmlab/mmagic/pull/2048
+- @youqingxiaozhua 首次贡献于 https://github.com/open-mmlab/mmagic/pull/2051
+- @JianxinDong 首次贡献于 https://github.com/open-mmlab/mmagic/pull/2061
+- @zhuang2002 首次贡献于 https://github.com/open-mmlab/mmagic/pull/2076
+- @ashutoshsingh0223 首次贡献于 https://github.com/open-mmlab/mmagic/pull/2085
+- @jinxianwei 首次贡献于 https://github.com/open-mmlab/mmagic/pull/2055
+- @munahaf 首次贡献于 https://github.com/open-mmlab/mmagic/pull/2046
+- @sdbds 首次贡献于 https://github.com/open-mmlab/mmagic/pull/2088
+
+**完整更新日志**: https://github.com/open-mmlab/mmagic/compare/v1.1.0...v1.2.0
+
 ## v1.1.0 (22/09/2023)
 
 **亮点**
