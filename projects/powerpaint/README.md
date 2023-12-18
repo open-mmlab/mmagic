@@ -4,8 +4,20 @@
 
 This README provides a step-by-step guide to download the repository, set up the required virtual environment named "PowerPaint" using conda, and run PowerPaint with or without ControlNet.
 
+## News
+
+**December 18, 2023**
+
+*Enhanced PowerPaint Model*
+
+- We are delighted to announce the release of more stable model weights. These refined weights can now be accessed on [Hugging Face](https://huggingface.co/JunhaoZhuang/PowerPaint-v1/tree/main). The `gradio_PowerPaint.py` file and [Online Demo](https://openxlab.org.cn/apps/detail/rangoliu/PowerPaint) have also been updated as part of this release.
+
+
+## Next
+
 **Stronger Model Weights Coming Soon！**
 
+________________
 <img src='https://github.com/open-mmlab/mmagic/assets/12782558/acd01391-c73f-4997-aafd-0869aebcc915'/>
 
 ## Getting Started
