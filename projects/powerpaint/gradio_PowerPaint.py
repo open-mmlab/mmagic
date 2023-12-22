@@ -239,6 +239,7 @@ def predict_controlnet(input_image, input_control_image, control_type, prompt,
                                       pipe.tokenizer, pipe.unet, base_control,
                                       pipe.scheduler, None, None, False)
     control_pipe = control_pipe.to('cuda')
+    current_control = 'canny'
     if current_control != control_type:
         if control_type == 'canny' or control_type is None:
             control_pipe.controlnet = ControlNetModel.from_pretrained(
