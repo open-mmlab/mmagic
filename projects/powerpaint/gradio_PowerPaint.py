@@ -527,3 +527,4 @@ with gr.Blocks(css='style.css') as demo:
 
 demo.queue()
 demo.launch(share=False, server_name='0.0.0.0', server_port=7860)
+
