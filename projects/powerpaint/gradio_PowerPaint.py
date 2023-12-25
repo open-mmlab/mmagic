@@ -11,6 +11,7 @@ from pipeline.pipeline_PowerPaint import \
     StableDiffusionInpaintPipeline as Pipeline
 from pipeline.pipeline_PowerPaint_ControlNet import \
     StableDiffusionControlNetInpaintPipeline as controlnetPipeline
+from safetensors.torch import load_model
 from transformers import DPTFeatureExtractor, DPTForDepthEstimation
 from utils.utils import TokenizerWrapper, add_tokens
 
@@ -19,9 +20,7 @@ torch.set_grad_enabled(False)
 weight_dtype = torch.float16
 global pipe
 pipe = Pipeline.from_pretrained(
-    'runwayml/stable-diffusion-inpainting',
-    torch_dtype=weight_dtype,
-    safety_checker=None)
+    'runwayml/stable-diffusion-inpainting', torch_dtype=weight_dtype)
 pipe.tokenizer = TokenizerWrapper(
     from_pretrained='runwayml/stable-diffusion-v1-5',
     subfolder='tokenizer',
@@ -33,8 +32,8 @@ add_tokens(
     placeholder_tokens=['P_ctxt', 'P_shape', 'P_obj'],
     initialize_tokens=['a', 'a', 'a'],
     num_vectors_per_token=10)
-pipe.unet.load_state_dict(
-    torch.load('./models/unet/diffusion_pytorch_model.bin'), strict=False)
+
+load_model(pipe.unet, './models/unet/diffusion_pytorch_model.safetensors')
 pipe.text_encoder.load_state_dict(
     torch.load('./models/text_encoder/pytorch_model.bin'), strict=False)
 pipe = pipe.to('cuda')
@@ -48,7 +47,7 @@ hed = HEDdetector.from_pretrained('lllyasviel/ControlNet')
 
 global current_control
 current_control = 'canny'
-controlnet_conditioning_scale = 0.5
+# controlnet_conditioning_scale = 0.8
 
 
 def set_seed(seed):
@@ -91,8 +90,8 @@ def add_task(prompt, negative_prompt, control_type):
     elif control_type == 'shape-guided':
         promptA = prompt + ' P_shape'
         promptB = prompt + ' P_ctxt'
-        negative_promptA = negative_prompt + ' P_shape'
-        negative_promptB = negative_prompt + ' P_ctxt'
+        negative_promptA = negative_prompt
+        negative_promptB = negative_prompt
     elif control_type == 'image-outpainting':
         promptA = prompt + ' P_ctxt'
         promptB = prompt + ' P_ctxt'
@@ -101,8 +100,8 @@ def add_task(prompt, negative_prompt, control_type):
     else:
         promptA = prompt + ' P_obj'
         promptB = prompt + ' P_obj'
-        negative_promptA = negative_prompt + ' P_obj'
-        negative_promptB = negative_prompt + ' P_obj'
+        negative_promptA = negative_prompt
+        negative_promptB = negative_prompt
 
     return promptA, promptB, negative_promptA, negative_promptB
 
@@ -127,8 +126,8 @@ def predict(input_image, prompt, fitting_degree, ddim_steps, scale, seed,
             input_image['image'] = input_image['image'].convert('RGB').resize(
                 (int(size1 / size2 * 512), 512))
 
-    if (vertical_expansion_ratio is not None) and (horizontal_expansion_ratio
-                                                   is not None):  # noqa
+    if (vertical_expansion_ratio is not None
+            and horizontal_expansion_ratio is not None):
         o_W, o_H = input_image['image'].convert('RGB').size
         c_W = int(horizontal_expansion_ratio * o_W)
         c_H = int(vertical_expansion_ratio * o_H)
@@ -146,25 +145,25 @@ def predict(input_image, prompt, fitting_degree, ddim_steps, scale, seed,
             expand_mask[int((c_H - o_H) / 2.0):int((c_H - o_H) / 2.0) + o_H,
                         int((c_W - o_W) / 2.0) +
                         blurry_gap:int((c_W - o_W) / 2.0) + o_W -
-                        blurry_gap, :] = 0
+                        blurry_gap, :] = 0  # noqa
         elif vertical_expansion_ratio != 1 and horizontal_expansion_ratio != 1:
             expand_mask[int((c_H - o_H) / 2.0) +
                         blurry_gap:int((c_H - o_H) / 2.0) + o_H - blurry_gap,
                         int((c_W - o_W) / 2.0) +
                         blurry_gap:int((c_W - o_W) / 2.0) + o_W -
-                        blurry_gap, :] = 0
+                        blurry_gap, :] = 0  # noqa
         elif vertical_expansion_ratio != 1 and horizontal_expansion_ratio == 1:
             expand_mask[int((c_H - o_H) / 2.0) +
                         blurry_gap:int((c_H - o_H) / 2.0) + o_H - blurry_gap,
                         int((c_W - o_W) /
-                            2.0):int((c_W - o_W) / 2.0) + o_W, :] = 0
+                            2.0):int((c_W - o_W) / 2.0) + o_W, :] = 0  # noqa
 
         input_image['image'] = Image.fromarray(expand_img)
         input_image['mask'] = Image.fromarray(expand_mask)
 
     promptA, promptB, negative_promptA, negative_promptB = add_task(
         prompt, negative_prompt, task)
-    # print(promptA, promptB, negative_promptA, negative_promptB)
+    print(promptA, promptB, negative_promptA, negative_promptB)
     img = np.array(input_image['image'].convert('RGB'))
 
     W = int(np.shape(img)[0] - np.shape(img)[0] % 8)
@@ -188,8 +187,8 @@ def predict(input_image, prompt, fitting_degree, ddim_steps, scale, seed,
         num_inference_steps=ddim_steps).images[0]
     mask_np = np.array(input_image['mask'].convert('RGB'))
     red = np.array(result).astype('float') * 1
-    red[:, :, 0] = 0
-    red[:, :, 2] = 180.0
+    red[:, :, 0] = 180.0
+    red[:, :, 2] = 0
     red[:, :, 1] = 0
     result_m = np.array(result)
     result_m = Image.fromarray(
@@ -205,15 +204,18 @@ def predict(input_image, prompt, fitting_degree, ddim_steps, scale, seed,
 
     dict_res = [input_image['mask'].convert('RGB'), result_m]
 
-    return result_paste, dict_res
+    dict_out = [input_image['image'].convert('RGB'), result_paste]
+
+    return dict_out, dict_res
 
 
 def predict_controlnet(input_image, input_control_image, control_type, prompt,
-                       ddim_steps, scale, seed, negative_prompt):
+                       ddim_steps, scale, seed, negative_prompt,
+                       controlnet_conditioning_scale):
     promptA = prompt + ' P_obj'
     promptB = prompt + ' P_obj'
-    negative_promptA = negative_prompt + ' P_obj'
-    negative_promptB = negative_prompt + ' P_obj'
+    negative_promptA = negative_prompt
+    negative_promptB = negative_prompt
     size1, size2 = input_image['image'].convert('RGB').size
 
     if size1 < size2:
@@ -237,6 +239,7 @@ def predict_controlnet(input_image, input_control_image, control_type, prompt,
                                       pipe.tokenizer, pipe.unet, base_control,
                                       pipe.scheduler, None, None, False)
     control_pipe = control_pipe.to('cuda')
+    current_control = 'canny'
     if current_control != control_type:
         if control_type == 'canny' or control_type is None:
             control_pipe.controlnet = ControlNetModel.from_pretrained(
@@ -286,6 +289,7 @@ def predict_controlnet(input_image, input_control_image, control_type, prompt,
         width=H,
         height=W,
         guidance_scale=scale,
+        controlnet_conditioning_scale=controlnet_conditioning_scale,
         num_inference_steps=ddim_steps).images[0]
     red = np.array(result).astype('float') * 1
     red[:, :, 0] = 180.0
@@ -304,14 +308,17 @@ def predict_controlnet(input_image, input_control_image, control_type, prompt,
     ours_np = np.asarray(result) / 255.0
     ours_np = ours_np * m_img + (1 - m_img) * img_np
     result_paste = Image.fromarray(np.uint8(ours_np * 255))
-    return result_paste, [controlnet_image, result_m]
+    return [input_image['image'].convert('RGB'),
+            result_paste], [controlnet_image, result_m]
 
 
 def infer(input_image, text_guided_prompt, text_guided_negative_prompt,
           shape_guided_prompt, shape_guided_negative_prompt, fitting_degree,
           ddim_steps, scale, seed, task, enable_control, input_control_image,
           control_type, vertical_expansion_ratio, horizontal_expansion_ratio,
-          outpaint_prompt, outpaint_negative_prompt):
+          outpaint_prompt, outpaint_negative_prompt,
+          controlnet_conditioning_scale, removal_prompt,
+          removal_negative_prompt):
     if task == 'text-guided':
         prompt = text_guided_prompt
         negative_prompt = text_guided_negative_prompt
@@ -319,8 +326,8 @@ def infer(input_image, text_guided_prompt, text_guided_negative_prompt,
         prompt = shape_guided_prompt
         negative_prompt = shape_guided_negative_prompt
     elif task == 'object-removal':
-        prompt = ''
-        negative_prompt = ''
+        prompt = removal_prompt
+        negative_prompt = removal_negative_prompt
     elif task == 'image-outpainting':
         prompt = outpaint_prompt
         negative_prompt = outpaint_negative_prompt
@@ -335,7 +342,8 @@ def infer(input_image, text_guided_prompt, text_guided_negative_prompt,
     if enable_control and task == 'text-guided':
         return predict_controlnet(input_image, input_control_image,
                                   control_type, prompt, ddim_steps, scale,
-                                  seed, negative_prompt)
+                                  seed, negative_prompt,
+                                  controlnet_conditioning_scale)
     else:
         return predict(input_image, prompt, fitting_degree, ddim_steps, scale,
                        seed, negative_prompt, task, None, None)
@@ -368,7 +376,10 @@ with gr.Blocks(css='style.css') as demo:
             "<a href='https://arxiv.org/abs/2312.03594/'>Paper</a> &ensp;"
             "<a href='https://github.com/open-mmlab/mmagic/tree/main/projects/powerpaint'>Code</a> </font></div>"  # noqa
         )
-
+    with gr.Row():
+        gr.Markdown(
+            '**Note:** Due to network-related factors, the page may experience occasional bugs！ If the inpainting results deviate significantly from expectations, consider toggling between task options to refresh the content.'  # noqa
+        )
     with gr.Row():
         with gr.Column():
             gr.Markdown('### Input image and draw mask')
@@ -394,6 +405,13 @@ with gr.Blocks(css='style.css') as demo:
                 enable_control = gr.Checkbox(
                     label='Enable controlnet',
                     info='Enable this if you want to use controlnet')
+                controlnet_conditioning_scale = gr.Slider(
+                    label='controlnet conditioning scale',
+                    minimum=0,
+                    maximum=1,
+                    step=0.05,
+                    value=0.5,
+                )
                 control_type = gr.Radio(['canny', 'pose', 'depth', 'hed'],
                                         label='Control type')
                 input_control_image = gr.Image(source='upload', type='pil')
@@ -405,7 +423,14 @@ with gr.Blocks(css='style.css') as demo:
                 enable_object_removal = gr.Checkbox(
                     label='Enable object removal inpainting',
                     value=True,
+                    info='The recommended configuration for '
+                    'the Guidance Scale is 10 or higher.'
+                    'If undesired objects appear in the masked area, '
+                    'you can address this by specifically increasing '
+                    'the Guidance Scale.',
                     interactive=False)
+                removal_prompt = gr.Textbox(label='Prompt')
+                removal_negative_prompt = gr.Textbox(label='negative_prompt')
             tab_object_removal.select(
                 fn=select_tab_object_removal, inputs=None, outputs=task)
 
@@ -414,6 +439,12 @@ with gr.Blocks(css='style.css') as demo:
                 enable_object_removal = gr.Checkbox(
                     label='Enable image outpainting',
                     value=True,
+                    info='The recommended configuration for the Guidance '
+                    'Scale is 10 or higher. '
+                    'If unwanted random objects appear in '
+                    'the extended image region, '
+                    'you can enhance the cleanliness of the extension '
+                    'area by increasing the Guidance Scale.',
                     interactive=False)
                 outpaint_prompt = gr.Textbox(label='Outpainting_prompt')
                 outpaint_negative_prompt = gr.Textbox(
@@ -460,10 +491,8 @@ with gr.Blocks(css='style.css') as demo:
                     label='Steps', minimum=1, maximum=50, value=45, step=1)
                 scale = gr.Slider(
                     label='Guidance Scale',
-                    info='For object removal, \
-                        it is recommended to set the value at 10 or above, \
-                        while for image outpainting, \
-                            it is advisable to set it at 18 or above.',
+                    info='For object removal and image outpainting, '
+                    'it is recommended to set the value at 10 or above.',
                     minimum=0.1,
                     maximum=30.0,
                     value=7.5,
@@ -477,10 +506,11 @@ with gr.Blocks(css='style.css') as demo:
                 )
         with gr.Column():
             gr.Markdown('### Inpainting result')
-            inpaint_result = gr.Image()
+            inpaint_result = gr.Gallery(
+                label='Generated images', show_label=False, columns=2)
             gr.Markdown('### Mask')
             gallery = gr.Gallery(
-                label='Generated images', show_label=False, columns=2)
+                label='Generated masks', show_label=False, columns=2)
 
     run_button.click(
         fn=infer,
@@ -489,7 +519,9 @@ with gr.Blocks(css='style.css') as demo:
             shape_guided_prompt, shape_guided_negative_prompt, fitting_degree,
             ddim_steps, scale, seed, task, enable_control, input_control_image,
             control_type, vertical_expansion_ratio, horizontal_expansion_ratio,
-            outpaint_prompt, outpaint_negative_prompt
+            outpaint_prompt, outpaint_negative_prompt,
+            controlnet_conditioning_scale, removal_prompt,
+            removal_negative_prompt
         ],
         outputs=[inpaint_result, gallery])
 

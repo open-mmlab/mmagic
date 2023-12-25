@@ -1,5 +1,56 @@
 # Changelog
 
+**Highlights**
+
+- An advanced and powerful inpainting algorithm named PowerPaint is released in our repository. [Click to View](https://github.com/open-mmlab/mmagic/tree/main/projects/powerpaint)
+
+<div align=center>
+<img src="https://github.com/open-mmlab/mmagic/assets/12782558/eba2c6a4-3ff4-4075-a027-0e9799769bf9"/>
+</div>
+
+**New Features & Improvements**
+
+- \[Release\] Post release for v1.1.0 by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2043
+- \[CodeCamp2023-645\]Add dreambooth new cfg by @YanxingLiu in https://github.com/open-mmlab/mmagic/pull/2042
+- \[Enhance\] add new config for _base_ dir by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2053
+- \[Enhance\] support using from_pretrained for instance_crop by @zengyh1900 in https://github.com/open-mmlab/mmagic/pull/2066
+- \[Enhance\] update support for latest diffusers with lora by @zengyh1900 in https://github.com/open-mmlab/mmagic/pull/2067
+- \[Feature\] PowerPaint by @zhuang2002 in https://github.com/open-mmlab/mmagic/pull/2076
+- \[Enhance\] powerpaint improvement by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2078
+- \[Enhance\] Improve powerpaint by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2080
+- \[Enhance\] add outpainting to gradio_PowerPaint.py by @zhuang2002 in https://github.com/open-mmlab/mmagic/pull/2084
+- \[MMSIG\] Add new configuration files for StyleGAN2 by @xiaomile in https://github.com/open-mmlab/mmagic/pull/2057
+- \[MMSIG\] \[Doc\] Update data_preprocessor.md by @jinxianwei in https://github.com/open-mmlab/mmagic/pull/2055
+- \[Enhance\] Enhance PowerPaint by @zhuang2002 in https://github.com/open-mmlab/mmagic/pull/2093
+
+**Bug Fixes**
+
+- \[Fix\] Update README.md by @eze1376 in https://github.com/open-mmlab/mmagic/pull/2048
+- \[Fix\] Fix test tokenizer by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2050
+- \[Fix\] fix readthedocs building by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2052
+- \[Fix\] --local-rank for PyTorch >= 2.0.0 by @youqingxiaozhua in https://github.com/open-mmlab/mmagic/pull/2051
+- \[Fix\] animatediff download from openxlab by @JianxinDong in https://github.com/open-mmlab/mmagic/pull/2061
+- \[Fix\] fix best practice by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2063
+- \[Fix\] try import expand mask from transformers by @zengyh1900 in https://github.com/open-mmlab/mmagic/pull/2064
+- \[Fix\] Update diffusers to v0.23.0 by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2069
+- \[Fix\] add openxlab link to powerpaint by @liuwenran in https://github.com/open-mmlab/mmagic/pull/2082
+- \[Fix\] Update swinir_x2s48w8d6e180_8xb4-lr2e-4-500k_div2k.py, use MultiValLoop. by @ashutoshsingh0223 in https://github.com/open-mmlab/mmagic/pull/2085
+- \[Fix\] Fix a test expression that has a logical short circuit. by @munahaf in https://github.com/open-mmlab/mmagic/pull/2046
+- \[Fix\] Powerpaint to load safetensors by @sdbds in https://github.com/open-mmlab/mmagic/pull/2088
+
+**New Contributors**
+
+- @eze1376 made their first contribution in https://github.com/open-mmlab/mmagic/pull/2048
+- @youqingxiaozhua made their first contribution in https://github.com/open-mmlab/mmagic/pull/2051
+- @JianxinDong made their first contribution in https://github.com/open-mmlab/mmagic/pull/2061
+- @zhuang2002 made their first contribution in https://github.com/open-mmlab/mmagic/pull/2076
+- @ashutoshsingh0223 made their first contribution in https://github.com/open-mmlab/mmagic/pull/2085
+- @jinxianwei made their first contribution in https://github.com/open-mmlab/mmagic/pull/2055
+- @munahaf made their first contribution in https://github.com/open-mmlab/mmagic/pull/2046
+- @sdbds made their first contribution in https://github.com/open-mmlab/mmagic/pull/2088
+
+**Full Changelog**: https://github.com/open-mmlab/mmagic/compare/v1.1.0...v1.2.0
+
 ## v1.1.0 (22/09/2023)
 
 **Highlights**
