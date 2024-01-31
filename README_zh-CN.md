@@ -29,7 +29,7 @@
 [![license](https://img.shields.io/github/license/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/blob/main/LICENSE)
 [![open issues](https://isitmaintained.com/badge/open/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/open-mmlab/mmagic.svg)](https://github.com/open-mmlab/mmagic/issues)
-[![Open in OpenXLab](https://cdn-static.openxlab.org.cn/app-center/openxlab_demo.svg)](https://openxlab.org.cn/apps?search=mmagic)
+[![Open in OpenXLab](https://cdn-static.openxlab.org.cn/app-center/openxlab_demo.svg)](https://openxlab.org.cn/apps/detail/%E6%94%BF%E6%9D%B0/OpenMMLab-Projects)
 
 [📘使用文档](https://mmagic.readthedocs.io/zh_CN/latest/) |
 [🛠️安装教程](https://mmagic.readthedocs.io/zh_CN/latest/get_started/install.html) |
