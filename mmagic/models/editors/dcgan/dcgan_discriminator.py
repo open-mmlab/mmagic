@@ -119,6 +119,7 @@ class DCGANDiscriminator(BaseModule):
             return
         for m in self.modules():
             module_name = m.__class__.__name__
+            init_info = f"Initialize {module_name} by init_cfg {self.init_cfg}"
             if isinstance(m, (nn.Conv2d, nn.ConvTranspose2d)):
                 normal_init(m, 0, 0.02)
                 init_info = (f'{module_name} belongs to (nn.Conv2d and '
