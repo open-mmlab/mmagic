@@ -6,6 +6,8 @@ from .basicvsr import BasicVSR, BasicVSRNet
 from .basicvsr_plusplus_net import BasicVSRPlusPlusNet
 from .biggan import BigGAN
 from .cain import CAIN, CAINNet
+from .consistency_models import (ConsistencyModel, ConsistencyUNetModel,
+                                 KarrasDenoiser)
 from .controlnet import ControlStableDiffusion
 from .cyclegan import CycleGAN
 from .dcgan import DCGAN
@@ -98,5 +100,6 @@ __all__ = [
     'ControlStableDiffusion', 'DreamBooth', 'TextualInversion', 'DeblurGanV2',
     'DeblurGanV2Generator', 'DeblurGanV2Discriminator',
     'StableDiffusionInpaint', 'ViCo', 'FastComposer', 'AnimateDiff',
-    'UNet3DConditionMotionModel', 'StableDiffusionXL'
+    'UNet3DConditionMotionModel', 'StableDiffusionXL', 'ConsistencyModel',
+    'ConsistencyUNetModel', 'KarrasDenoiser'
 ]
