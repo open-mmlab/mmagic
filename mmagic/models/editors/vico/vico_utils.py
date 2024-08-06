@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from diffusers import Transformer2DModel
 from diffusers.models.attention import Attention, BasicTransformerBlock
-from diffusers.models.unet_2d_condition import UNet2DConditionOutput
+from diffusers.models.unets.unet_2d_condition import UNet2DConditionOutput
 from diffusers.utils import BaseOutput, is_torch_version
 
 
