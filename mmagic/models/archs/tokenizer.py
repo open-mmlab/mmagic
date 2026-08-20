@@ -243,6 +243,7 @@ class TokenizerWrapper:
         Returns:
             Union[str, List[str]]: The decoded text.
         """
+        kwargs.setdefault('clean_up_tokenization_spaces', True)
         text = self.wrapped.decode(token_ids, *args, **kwargs)
         if return_raw:
             return text

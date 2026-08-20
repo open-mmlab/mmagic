@@ -1,10 +1,18 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import platform
+from unittest.mock import patch
 
 import pytest
 import torch
 
 from mmagic.models import IDLossModel
+from mmagic.models.editors.arcface.model_irse import Backbone
+
+
+def get_mock_weights():
+    return Backbone(
+        input_size=112, num_layers=50, drop_ratio=0.6,
+        mode='ir_se').state_dict()
 
 
 class TestArcFace:
@@ -23,7 +31,10 @@ class TestArcFace:
         reason='skip on windows-cuda due to limited RAM.')
     def test_arcface_cpu(self):
         # test loss model
-        id_loss_model = IDLossModel()
+        with patch(
+                'torch.hub.load_state_dict_from_url',
+                return_value=get_mock_weights()):
+            id_loss_model = IDLossModel()
         x1 = torch.randn((2, 3, 224, 224))
         x2 = torch.randn((2, 3, 224, 224))
         y, _ = id_loss_model(pred=x1, gt=x2)
@@ -32,7 +43,10 @@ class TestArcFace:
     @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires cuda')
     def test_arcface_cuda(self):
         # test loss model
-        id_loss_model = IDLossModel().cuda()
+        with patch(
+                'torch.hub.load_state_dict_from_url',
+                return_value=get_mock_weights()):
+            id_loss_model = IDLossModel().cuda()
         x1 = torch.randn((2, 3, 224, 224)).cuda()
         x2 = torch.randn((2, 3, 224, 224)).cuda()
         y, _ = id_loss_model(pred=x1, gt=x2)

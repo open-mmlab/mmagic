@@ -35,20 +35,56 @@ class InpaintingInferencer(BaseMMagicInferencer):
         Returns:
             results(Dict): Results of preprocess.
         """
-        infer_pipeline_cfg = [
-            dict(type='LoadImageFromFile', key='gt', channel_order='bgr'),
-            dict(
-                type='LoadMask',
-                mask_mode='file',
-            ),
+        infer_pipeline_cfg = []
+        inputs = dict()
+
+        if isinstance(img, np.ndarray):
+            img = img.copy()
+            if img.ndim == 2:
+                img = np.expand_dims(img, axis=2)
+            if img.ndim != 3 or img.shape[2] not in (1, 3):
+                raise ValueError('Image array must have shape (H, W), '
+                                 '(H, W, 1), or (H, W, 3), but got '
+                                 f'{img.shape}.')
+            inputs.update(
+                gt=img,
+                ori_gt_shape=img.shape,
+                gt_channel_order='bgr',
+                gt_color_type='grayscale' if img.shape[2] == 1 else 'color')
+        else:
+            inputs['gt_path'] = img
+            infer_pipeline_cfg.append(
+                dict(type='LoadImageFromFile', key='gt', channel_order='bgr'))
+
+        if isinstance(mask, np.ndarray):
+            mask = mask.copy()
+            if mask.ndim == 2:
+                mask = np.expand_dims(mask, axis=2)
+            elif mask.ndim == 3 and mask.shape[2] > 0:
+                mask = mask[:, :, 0:1]
+            else:
+                raise ValueError('Mask array must have shape (H, W) or '
+                                 '(H, W, C), where C is positive, but got '
+                                 f'{mask.shape}.')
+            mask[mask > 0] = 1.
+            inputs['mask'] = mask
+        else:
+            inputs['mask_path'] = mask
+            infer_pipeline_cfg.append(
+                dict(
+                    type='LoadMask',
+                    mask_mode='file',
+                ))
+
+        infer_pipeline_cfg.extend([
             dict(type='GetMaskedImage'),
             dict(type='PackInputs'),
-        ]
+        ])
 
         infer_pipeline = Compose(infer_pipeline_cfg)
 
         # prepare data
-        _data = infer_pipeline(dict(gt_path=img, mask_path=mask))
+        _data = infer_pipeline(inputs)
         data = dict()
         data['inputs'] = [_data['inputs']]
         data['data_samples'] = [_data['data_samples']]

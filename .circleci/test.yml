@@ -59,9 +59,9 @@ jobs:
       - run:
           name: Install mmagic dependencies
           command: |
-            pip install git+https://github.com/open-mmlab/mmengine.git@main
+            pip install 'mmengine >= 0.4.0, < 1.0.0'
             pip install -U openmim
-            mim install 'mmcv >= 2.0.0'
+            mim install 'mmcv >= 2.0.0, < 2.2.0'
             pip install -r requirements/tests.txt
       - run:
           name: Build and install
@@ -70,7 +70,12 @@ jobs:
       - run:
           name: Run unittests
           command: |
-            coverage run --branch --source mmagic -m pytest tests/
+            # Run the large editor suite in batches so that objects retained by
+            # pytest plugins are released before the next batch starts.
+            coverage erase
+            coverage run --branch --source mmagic -m pytest tests/ --ignore=tests/test_models
+            coverage run --append --branch --source mmagic -m pytest tests/test_models --ignore=tests/test_models/test_editors
+            find tests/test_models/test_editors -mindepth 1 -maxdepth 1 -type d -print0 | sort -z | xargs -0 -n 15 coverage run --append --branch --source mmagic -m pytest
             coverage xml
             coverage report -m
   build_cuda:
