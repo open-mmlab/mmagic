@@ -86,8 +86,8 @@ class BasicVisualizationHook(Hook):
 
         ``BaseModel.train_step`` returns a mapping of losses, while validation
         and test steps return a list of :class:`BaseDataElement` objects.  A
-        collated ``data_batch`` may itself contain one stacked data element,
-        so both forms need to be normalized before they reach a visualizer.
+        collated ``data_batch`` may itself contain one stacked data element, so
+        both forms need to be normalized before they reach a visualizer.
         """
         if isinstance(data_samples, BaseDataElement):
             try:
@@ -127,8 +127,8 @@ class BasicVisualizationHook(Hook):
         """Attach a detached training input to a copied data sample.
 
         Training outputs are usually loss dictionaries and therefore do not
-        contain predictions.  Keeping the original sample fields and adding
-        the corresponding input gives visualizers enough context to render a
+        contain predictions.  Keeping the original sample fields and adding the
+        corresponding input gives visualizers enough context to render a
         training snapshot.  Inputs are detached before attaching so a hook
         cannot retain the autograd graph.
         """
