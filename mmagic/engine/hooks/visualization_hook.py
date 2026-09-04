@@ -2,6 +2,7 @@
 import math
 import warnings
 from collections import defaultdict
+from collections.abc import Mapping
 from copy import deepcopy
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
@@ -74,8 +75,132 @@ class BasicVisualizationHook(Hook):
             interval = self._interval.get(mode, 1)
 
         if self.every_n_inner_iters(batch_idx, interval):
-            for data_sample in outputs:
+            data_samples = self._get_visualization_samples(
+                data_batch, outputs, mode)
+            for data_sample in data_samples:
                 runner.visualizer.add_datasample(data_sample, step=runner.iter)
+
+    @staticmethod
+    def _split_samples(data_samples) -> List[BaseDataElement]:
+        """Convert a collated data sample or a sample list to a list.
+
+        ``BaseModel.train_step`` returns a mapping of losses, while validation
+        and test steps return a list of :class:`BaseDataElement` objects.  A
+        collated ``data_batch`` may itself contain one stacked data element,
+        so both forms need to be normalized before they reach a visualizer.
+        """
+        if isinstance(data_samples, BaseDataElement):
+            try:
+                return list(data_samples.split())
+            except (TypeError, ValueError):
+                # An unbatched custom data element may contain non-sequential
+                # metadata.  It is still a valid single visualization sample.
+                return [data_samples]
+        if is_list_of(data_samples, BaseDataElement):
+            return list(data_samples)
+        return []
+
+    @staticmethod
+    def _sample_input(inputs, index: int, batch_size: int):
+        """Select one item from a collated input without changing its shape.
+
+        Tensor and sequence inputs are split only when their leading length
+        matches the number of samples.  A mapping is handled recursively so
+        common ``{'img': batch}`` inputs work as well.
+        """
+        if isinstance(inputs, Mapping):
+            return {
+                key:
+                BasicVisualizationHook._sample_input(value, index, batch_size)
+                for key, value in inputs.items()
+            }
+        if isinstance(inputs, torch.Tensor):
+            if inputs.ndim > 0 and inputs.shape[0] == batch_size:
+                return inputs[index]
+            return inputs
+        if isinstance(inputs, (list, tuple)) and len(inputs) == batch_size:
+            return inputs[index]
+        return inputs
+
+    @staticmethod
+    def _attach_input(data_sample: BaseDataElement, inputs) -> None:
+        """Attach a detached training input to a copied data sample.
+
+        Training outputs are usually loss dictionaries and therefore do not
+        contain predictions.  Keeping the original sample fields and adding
+        the corresponding input gives visualizers enough context to render a
+        training snapshot.  Inputs are detached before attaching so a hook
+        cannot retain the autograd graph.
+        """
+        if inputs is None or 'input' in data_sample:
+            return
+
+        # Most editing models expose a tensor directly.  For the common
+        # ``{'img': tensor}`` form, use the image value; mappings with several
+        # unrelated inputs are left untouched rather than guessing a field.
+        if isinstance(inputs, Mapping):
+            image_values = [
+                inputs[key] for key in ('img', 'image', 'input')
+                if key in inputs
+            ]
+            if len(image_values) != 1:
+                return
+            inputs = image_values[0]
+
+        if isinstance(inputs, torch.Tensor):
+            inputs = inputs.detach()
+
+        try:
+            data_sample.set_tensor_data({'input': inputs})
+        except (AssertionError, TypeError, ValueError):
+            # Non-image inputs (for example text or sampler arguments) are
+            # not renderable by ConcatImageVisualizer.  The existing sample
+            # remains usable for visualizers that need no input field.
+            return
+
+    def _get_visualization_samples(self, data_batch, outputs,
+                                   mode) -> List[BaseDataElement]:
+        """Return visualizer-ready samples for any loop output type.
+
+        Validation/test loops already return data samples.  During training,
+        MMEngine passes a loss mapping instead; in that case fall back to the
+        collated input samples and copy them before adding ``input``.  This
+        avoids iterating over loss-dictionary keys (which previously produced
+        strings and failed inside ``ConcatImageVisualizer``).
+        """
+        output_samples = self._split_samples(outputs)
+        if output_samples:
+            return output_samples
+
+        # A few custom loops wrap predictions in a mapping.  Respect those
+        # samples when present, while treating ordinary loss dictionaries as
+        # a signal to use the data batch below.
+        if isinstance(outputs, Mapping):
+            for key in ('data_samples', 'predictions', 'outputs', 'results'):
+                output_samples = self._split_samples(outputs.get(key))
+                if output_samples:
+                    return output_samples
+
+        if mode != 'train':
+            return []
+
+        if not isinstance(data_batch, Mapping):
+            return []
+        source_samples = self._split_samples(data_batch.get('data_samples'))
+        if not source_samples:
+            return []
+
+        batch_size = len(source_samples)
+        inputs = data_batch.get('inputs')
+        visual_samples = []
+        for index, source_sample in enumerate(source_samples):
+            # Do not mutate the batch object: it may be reused by another
+            # hook or by a custom training loop after visualization.
+            data_sample = deepcopy(source_sample)
+            sample_input = self._sample_input(inputs, index, batch_size)
+            self._attach_input(data_sample, sample_input)
+            visual_samples.append(data_sample)
+        return visual_samples
 
 
 @HOOKS.register_module()

@@ -82,6 +82,53 @@ class TestBasicVisualizationHook(TestCase):
         hook._after_iter(runner, 1, self.data_batch, self.outputs, mode='test')
         assert runner.visualizer.assert_not_called
 
+    def test_after_train_iter_with_loss_mapping(self):
+        """Training loss dictionaries should use copied input samples."""
+        runner = Mock()
+        runner.iter = 3
+        runner.visualizer = Mock()
+        hook = BasicVisualizationHook(on_train=True)
+
+        hook._after_iter(
+            runner,
+            1,
+            self.data_batch,
+            outputs={'loss': torch.tensor(1.)},
+            mode='train')
+
+        self.assertEqual(runner.visualizer.add_datasample.call_count, 2)
+        for index, call in enumerate(
+                runner.visualizer.add_datasample.call_args_list):
+            sample = call.args[0]
+            self.assertIsInstance(sample, DataSample)
+            self.assertTrue(
+                torch.equal(sample.input, self.data_batch['inputs'][index]))
+        # The hook must not add fields to the batch samples in-place.
+        self.assertFalse(hasattr(self.data_batch['data_samples'][0], 'input'))
+
+    def test_after_train_iter_with_stacked_data_sample(self):
+        """A stacked ``data_samples`` field is split per visualized input."""
+        runner = Mock()
+        runner.iter = 4
+        runner.visualizer = Mock()
+        hook = BasicVisualizationHook(on_train=True)
+        stacked = DataSample.stack(self.data_batch['data_samples'])
+
+        hook._after_iter(
+            runner,
+            1, {
+                'inputs': self.data_batch['inputs'],
+                'data_samples': stacked
+            },
+            outputs=None,
+            mode='train')
+
+        self.assertEqual(runner.visualizer.add_datasample.call_count, 2)
+        self.assertTrue(
+            torch.equal(
+                runner.visualizer.add_datasample.call_args_list[1].args[0].
+                input, self.data_batch['inputs'][1]))
+
 
 class TestVisualizationHook(TestCase):
 
