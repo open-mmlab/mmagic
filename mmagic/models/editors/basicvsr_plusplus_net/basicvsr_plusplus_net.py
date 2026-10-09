@@ -1,4 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+"""BasicVSR++ network.
+
+The deformable alignment modules run on mmcv's compiled ops when available
+and fall back to torchvision.ops.deform_conv2d otherwise, which lets the
+model train and run on ROCm / CPU-only environments as well (validated on
+an RX 7900 XT: end-to-end inference, plus HIP graph capture with
+bit-identical output)."""
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
