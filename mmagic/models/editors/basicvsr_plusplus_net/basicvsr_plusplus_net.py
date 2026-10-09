@@ -2,7 +2,67 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmcv.ops import ModulatedDeformConv2d, modulated_deform_conv2d
+try:
+    from mmcv.ops import ModulatedDeformConv2d, modulated_deform_conv2d
+except ImportError:
+    # mmcv's deform-conv ops ship as compiled extensions and are unavailable on
+    # ROCm / CPU-only / plain-Windows builds, which made BasicVSR++ impossible
+    # to instantiate there. torchvision.ops.deform_conv2d implements the same
+    # modulated deformable convolution (with the mask argument), is included in
+    # torchvision's CUDA/ROCm/CPU wheels, and infers `groups` / `deform_groups`
+    # from the tensor shapes, so the two adapters below are drop-in replacements
+    # for the mmcv signatures. NVIDIA builds keep using mmcv unchanged.
+    import math
+
+    import torchvision
+    from torch.nn.modules.utils import _pair
+
+    def modulated_deform_conv2d(input, offset, mask, weight, bias=None,
+                                stride=1, padding=0, dilation=1, groups=1,
+                                deform_groups=1):
+        return torchvision.ops.deform_conv2d(input, offset, weight, bias,
+                                             stride, padding, dilation, mask)
+
+    class ModulatedDeformConv2d(nn.Module):
+        """Minimal stand-in for mmcv.ops.ModulatedDeformConv2d."""
+
+        def __init__(self, in_channels, out_channels, kernel_size, stride=1,
+                     padding=0, dilation=1, groups=1, deform_groups=1,
+                     bias=True):
+            super().__init__()
+            self.in_channels = in_channels
+            self.out_channels = out_channels
+            self.kernel_size = _pair(kernel_size)
+            self.stride = _pair(stride)
+            self.padding = _pair(padding)
+            self.dilation = _pair(dilation)
+            self.groups = groups
+            self.deform_groups = deform_groups
+            self.weight = nn.Parameter(
+                torch.Tensor(out_channels, in_channels // groups,
+                             *self.kernel_size))
+            if bias:
+                self.bias = nn.Parameter(torch.Tensor(out_channels))
+            else:
+                self.register_parameter('bias', None)
+            self.conv_offset = nn.Conv2d(
+                self.in_channels,
+                self.deform_groups * 3 * self.kernel_size[0] *
+                self.kernel_size[1], self.kernel_size, self.stride,
+                self.padding, bias=True)
+            self.init_weights()
+
+        def init_weights(self):
+            n = self.in_channels
+            for k in self.kernel_size:
+                n *= k
+            stdv = 1. / math.sqrt(n)
+            self.weight.data.uniform_(-stdv, stdv)
+            if self.bias is not None:
+                self.bias.data.zero_()
+            if hasattr(self, 'conv_offset'):
+                self.conv_offset.weight.data.zero_()
+                self.conv_offset.bias.data.zero_()
 from mmengine.model import BaseModule
 from mmengine.model.weight_init import constant_init
 
